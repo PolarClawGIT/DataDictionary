@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         }
 
         /// <inheritdoc/>
-        public DbLevelCatalog CatalogScope { get; } = DbLevelCatalog.Schema;
+        public DbLevelCatalogType CatalogScope { get; } = DbLevelCatalogType.Schema;
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.DatabaseSchema;

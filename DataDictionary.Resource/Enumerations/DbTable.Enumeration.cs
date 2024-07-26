@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-namespace DataDictionary.Resource.Enumerations;
+﻿namespace DataDictionary.Resource.Enumerations;
 
 /// <summary>
 /// Enumeration support class for Database Table type.

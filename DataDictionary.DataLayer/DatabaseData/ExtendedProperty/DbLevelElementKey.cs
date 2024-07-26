@@ -1,70 +1,14 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
-    /// <summary>
-    /// Level2 MS Extended Property Types. These are Element Level.
-    /// Not all types are supported by the Application.
-    /// </summary>
-    /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
-    public enum DbLevelElement
-    {
-        /// <summary>
-        /// Not defined, default value.
-        /// </summary>
-        NULL,
-
-        /// <summary>
-        /// MS SQL Default.
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// MS SQL Column. Application Supported.
-        /// </summary>
-        Column,
-
-        /// <summary>
-        /// MS SQL Constraint.
-        /// </summary>
-        Constraint,
-
-        /// <summary>
-        /// MS SQL EventNotification.
-        /// </summary>
-        EventNotification,
-
-        /// <summary>
-        /// MS SQL Index.
-        /// </summary>
-        Index,
-
-        /// <summary>
-        /// MS SQL Parameter. Application Supported.
-        /// </summary>
-        Parameter,
-
-        /// <summary>
-        /// MS SQL Trigger.
-        /// </summary>
-        Trigger,
-    }
-
+  
     /// <summary>
     /// Interface for Level2 MS Extended Property Type.
     /// </summary>
-    public interface IDbLevelElementKey: IDbLevelObjectKey
-    {
-        /// <summary>
-        /// Level2 MS Extended Property Type.
-        /// </summary>
-        public DbLevelElement ElementScope { get; }
-    }
+    public interface IDbLevelElementKey: IDbLevelObjectKey, IDbLevelElementType
+    { }
 
     /// <summary>
     /// Implementation of the Key for Level2 MS Extended Property Type.
@@ -75,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public class DbLevelElementKey : DbLevelObjectKey, IDbLevelElementKey, IKeyEquality<IDbLevelElementKey>
     {
         /// <inheritdoc/>
-        public DbLevelElement ElementScope { get; init; } = DbLevelElement.NULL;
+        public DbLevelElementType ElementScope { get; init; } = DbLevelElementType.Null;
 
         /// <summary>
         /// Constructor for a Element Scope.
@@ -95,8 +39,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             return
                 other is IDbLevelObjectKey
                 && new DbLevelObjectKey(this).Equals(other)
-                && ObjectScope != DbLevelObject.NULL
-                && other.ObjectScope != DbLevelObject.NULL
+                && ObjectScope != DbLevelObjectType.Null
+                && other.ObjectScope != DbLevelObjectType.Null
                 && ObjectScope == other.ObjectScope;
         }
 

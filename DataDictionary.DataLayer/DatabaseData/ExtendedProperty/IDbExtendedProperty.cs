@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.Resource.Enumerations;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -29,22 +30,22 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <inheritdoc/>
         public required Guid? CatalogId { get; init; }
 
-        public DbLevelCatalog CatalogScope
+        public DbLevelCatalogType CatalogScope
         {
-            get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); }
-            set { Level0Type = value.GetScope(); }
+            get { return DbLevelCatalog.GetDbLevel(Level0Type); }
+            set { Level0Type = value.GetName(); }
         }
 
-        public DbLevelObject ObjectScope
+        public DbLevelObjectType ObjectScope
         {
-            get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); }
-            set { Level1Type = value.GetScope(); }
+            get { return DbLevelObject.GetDbLevel(Level1Type); }
+            set { Level1Type = value.GetName(); }
         }
 
-        public DbLevelElement ItemScope
+        public DbLevelElementType ItemScope
         {
-            get { return ExtendedPropertyExtension.GetItemScope(Level2Type); }
-            set { Level2Type = value.GetScope(); }
+            get { return DbLevelElement.GetDbLevel(Level2Type); }
+            set { Level2Type = value.GetName(); }
         }
 
         readonly Command command;

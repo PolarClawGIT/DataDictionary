@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,89 +8,13 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
-    /// <summary>
-    /// Level1 MS Extended Property Types. These are Object Level.
-    /// Not all types are supported by the Application.
-    /// </summary>
-    /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
-    public enum DbLevelObject
-    {
-        /// <summary>
-        /// Not defined, default value.
-        /// </summary>
-        NULL,
 
-        /// <summary>
-        /// MS SQL Aggregate.
-        /// </summary>
-        Aggregate,
-
-        /// <summary>
-        /// MS SQL Default.
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// MS SQL Function. Application Supported.
-        /// </summary>
-        Function,
-
-        /// <summary>
-        /// MS SQL LogicalFileName.
-        /// </summary>
-        LogicalFileName,
-
-        /// <summary>
-        /// MS SQL Procedure. Application Supported.
-        /// </summary>
-        Procedure,
-
-        /// <summary>
-        /// MS SQL Queue.
-        /// </summary>
-        Queue,
-
-        /// <summary>
-        /// MS SQL Rule.
-        /// </summary>
-        Rule,
-
-        /// <summary>
-        /// MS SQL Synonym.
-        /// </summary>
-        Synonym,
-
-        /// <summary>
-        /// MS SQL Table. Application Supported.
-        /// </summary>
-        Table,
-
-        /// <summary>
-        /// MS SQL Type. Application Supported.
-        /// </summary>
-        Type,
-
-        /// <summary>
-        /// MS SQL View. Application Supported.
-        /// </summary>
-        View,
-
-        /// <summary>
-        /// MS SQL XmlSchemaCollection.
-        /// </summary>
-        XmlSchemaCollection,
-    }
 
     /// <summary>
     /// Interface for Level1 MS Extended Property Type.
     /// </summary>
-    public interface IDbLevelObjectKey: IDbLevelCatalogKey
-    {
-        /// <summary>
-        /// Level1 MS Extended Property Type.
-        /// </summary>
-        public DbLevelObject ObjectScope { get; }
-    }
+    public interface IDbLevelObjectKey : IDbLevelCatalogKey, IDbLevelObjectType
+    { }
 
     /// <summary>
     /// Implementation of the Key for Level1 MS Extended Property Type.
@@ -100,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public class DbLevelObjectKey : DbLevelCatalogKey, IDbLevelObjectKey, IKeyEquality<IDbLevelObjectKey>
     {
         /// <inheritdoc/>
-        public DbLevelObject ObjectScope { get; init; } = DbLevelObject.NULL;
+        public DbLevelObjectType ObjectScope { get; init; } = DbLevelObjectType.Null;
 
         /// <summary>
         /// Constructor for a Object Scope.
@@ -110,7 +35,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <summary>
         /// Constructor for a Object Scope.
         /// </summary>
-        public DbLevelObjectKey(IDbLevelObjectKey source) : base (source)
+        public DbLevelObjectKey(IDbLevelObjectKey source) : base(source)
         { ObjectScope = source.ObjectScope; }
 
         #region IEquatable
@@ -120,8 +45,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             return
                 other is IDbLevelObjectKey
                 && new DbLevelCatalogKey(this).Equals(other)
-                && ObjectScope != DbLevelObject.NULL
-                && other.ObjectScope != DbLevelObject.NULL
+                && ObjectScope != DbLevelObjectType.Null
+                && other.ObjectScope != DbLevelObjectType.Null
                 && ObjectScope == other.ObjectScope;
         }
 

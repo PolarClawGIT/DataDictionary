@@ -21,17 +21,17 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     {
         static Dictionary<ScopeType, IDbLevelKey> scopeCrossWalk = new Dictionary<ScopeType, IDbLevelKey>()
         {
-            {ScopeType.DatabaseSchema, new DbLevelCatalogKey(){ CatalogScope = DbLevelCatalog.Schema} },
-            {ScopeType.DatabaseFunction, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Function} },
-            {ScopeType.DatabaseProcedure, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Procedure} },
-            {ScopeType.DatabaseTable, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Table} },
-            {ScopeType.DatabaseDomain, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Type} },
-            {ScopeType.DatabaseView, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.View} },
-            {ScopeType.DatabaseViewColumn, new DbLevelElementKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.View, ElementScope= DbLevelElement.Column} },
-            {ScopeType.DatabaseTableColumn, new DbLevelElementKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Table, ElementScope= DbLevelElement.Column} },
-            {ScopeType.DatabaseTableConstraint, new DbLevelElementKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Table, ElementScope= DbLevelElement.Constraint} },
-            {ScopeType.DatabaseProcedureParameter, new DbLevelElementKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Procedure, ElementScope= DbLevelElement.Parameter} },
-            {ScopeType.DatabaseFunctionParameter, new DbLevelElementKey(){ CatalogScope = DbLevelCatalog.Schema, ObjectScope = DbLevelObject.Function, ElementScope= DbLevelElement.Parameter} },
+            {ScopeType.DatabaseSchema, new DbLevelCatalogKey(){ CatalogScope = DbLevelCatalogType.Schema} },
+            {ScopeType.DatabaseFunction, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Function} },
+            {ScopeType.DatabaseProcedure, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Procedure} },
+            {ScopeType.DatabaseTable, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table} },
+            {ScopeType.DatabaseDomain, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Type} },
+            {ScopeType.DatabaseView, new DbLevelObjectKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.View} },
+            {ScopeType.DatabaseViewColumn, new DbLevelElementKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.View, ElementScope= DbLevelElementType.Column} },
+            {ScopeType.DatabaseTableColumn, new DbLevelElementKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table, ElementScope= DbLevelElementType.Column} },
+            {ScopeType.DatabaseTableConstraint, new DbLevelElementKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table, ElementScope= DbLevelElementType.Constraint} },
+            {ScopeType.DatabaseProcedureParameter, new DbLevelElementKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Procedure, ElementScope= DbLevelElementType.Parameter} },
+            {ScopeType.DatabaseFunctionParameter, new DbLevelElementKey(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Function, ElementScope= DbLevelElementType.Parameter} },
         };
 
         /// <summary>
