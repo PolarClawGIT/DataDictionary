@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Enumerations
         /// When False, items will not be group together and appear as individual entries.
         /// This effects navigation components.
         /// </summary>
-        public Boolean GroupBy { get; init; } = false;
+        public Boolean GroupBy { get; init; } = true;
 
         /// <summary>
         /// Constructor for the Window Form Scope Enumeration.
