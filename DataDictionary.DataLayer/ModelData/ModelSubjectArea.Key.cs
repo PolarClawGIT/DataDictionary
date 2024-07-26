@@ -1,11 +1,6 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ModelData.SubjectArea
+namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Interface for the Model Subject Area Key

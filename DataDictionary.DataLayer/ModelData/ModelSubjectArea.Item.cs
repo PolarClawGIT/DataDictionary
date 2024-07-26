@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ModelData.SubjectArea
+namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Interface for Model Subject Area Item

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ModelData.SubjectArea;
+﻿using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Data;

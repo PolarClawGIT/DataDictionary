@@ -1,15 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Properties;
+﻿using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main
 {

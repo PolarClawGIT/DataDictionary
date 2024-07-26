@@ -4,10 +4,6 @@ using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
-using Toolbox.DbContext;
-using DataDictionary.BusinessLayer.Model;
-
 
 namespace DataDictionary.BusinessLayer
 {

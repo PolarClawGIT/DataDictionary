@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 

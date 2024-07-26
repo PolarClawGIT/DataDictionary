@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
