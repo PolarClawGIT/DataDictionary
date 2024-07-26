@@ -40,11 +40,6 @@ namespace DataDictionary.BusinessLayer.Scripting
         FileInfo? ScriptFile { get; }
 
         /// <summary>
-        /// The XML Document that was used as the Source
-        /// </summary>
-        //XDocument Source { get; }
-
-        /// <summary>
         /// Text version of Source. For Data Binding.
         /// </summary>
         String SourceAsText { get; }

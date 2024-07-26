@@ -11,6 +11,9 @@ using DataDictionary.BusinessLayer.Model;
 
 namespace DataDictionary.BusinessLayer
 {
+    /// <summary>
+    /// Interface for the Business Data.
+    /// </summary>
     public partial interface IBusinessLayerData
     { }
 
