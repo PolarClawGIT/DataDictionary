@@ -90,10 +90,4 @@ namespace DataDictionary.DataLayer.ModelData
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Model Subject Area
-    /// </summary>
-    public class ModelSubjectAreaCollection : ModelSubjectAreaCollection<ModelSubjectAreaItem>
-    { }
 }

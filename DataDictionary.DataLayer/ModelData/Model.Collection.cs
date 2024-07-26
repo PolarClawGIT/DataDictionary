@@ -106,10 +106,4 @@ namespace DataDictionary.DataLayer.ModelData
             return result;
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Models
-    /// </summary>
-    public class ModelCollection : ModelCollection<ModelItem>
-    { }
 }
