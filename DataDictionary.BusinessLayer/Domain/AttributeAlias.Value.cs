@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Domain
     }
 
     /// <inheritdoc/>
-    public class AttributeAliasValue : DomainAttributeAliasItem, IAttributeAliasValue, IScripting<IAttributeValue>
+    public class AttributeAliasValue : DomainAttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
         public List<String> AliasParts { get { return NamedScopePath.Parse(AliasName); } }
