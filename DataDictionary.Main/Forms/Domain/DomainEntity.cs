@@ -293,7 +293,7 @@ namespace DataDictionary.Main.Forms.Domain
                     AsIndex = (value) => { return new AttributeIndex(value); }
                 })
                 {
-                    if (dialog.ShowDialog() is DialogResult.OK)
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(dialog.Selected).ToList())
                         { // Remove

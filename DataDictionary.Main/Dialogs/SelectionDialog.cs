@@ -21,24 +21,50 @@ namespace DataDictionary.Main.Dialogs
         public SelectionDialog() : base()
         {
             InitializeComponent();
+
+            titleColumn.Width = selectionData.Width - SystemInformation.VerticalScrollBarWidth;
         }
 
-        private void AcceptCommand_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Shows the dialog initially position over the form that called it.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public DialogResult ShowDialog(Form source)
         {
-            DialogResult = DialogResult.OK;
-            this.Close();
+            if (source.IsMdiChild
+                && source.MdiParent is Form parent
+                && parent.Controls.Cast<Control>().FirstOrDefault(w => w is MdiClient) is Control mdiControl)
+            {
+                Point mdiTopLeft = mdiControl.Location;
+                Point formOffset = source.Location; // The Forms location is offset from the MDI container
+
+                // Get the sum of the controls that are on the top and left edges of the MDI Container
+                // Note: Menu Strips and some other controls are above or to the left of the MDI container.
+                // This places them outside of the MDI container.
+                // We are interested in controls that take up space within the MDI container.
+                // ToolStrips are within the MDI, but other controls may need to be accounted for.
+                Int32 topSum = parent.Controls.
+                    Cast<Control>().
+                    Where(w => w.Dock == DockStyle.Top && w is ToolStrip).
+                    Sum(s => s.Bottom);
+                Int32 leftSum = parent.Controls.
+                    Cast<Control>().
+                    Where(w => w.Dock == DockStyle.Left && w is ToolStrip).
+                    Sum(s => s.Right);
+
+                var topLeft = Point.Add(Point.Add(mdiControl.Location, new Size(leftSum, topSum)), new Size(source.Location));
+
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = topLeft;
+            }
+
+
+            return base.ShowDialog(source);
         }
 
-        private void CancelCommand_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
-        private void SelectionLayout_SizeChanged(object sender, EventArgs e)
-        { }
-
-
+        private void SelectionData_SizeChanged(object sender, EventArgs e)
+        { titleColumn.Width = selectionData.Width - SystemInformation.VerticalScrollBarWidth; }
     }
 
     class SelectionDialog<TValue, TIndex> : SelectionDialog
@@ -66,8 +92,6 @@ namespace DataDictionary.Main.Dialogs
             selectionData.SelectedIndexChanged += SelectionData_SelectedIndexChanged;
         }
 
-
-
         private void SelectionDialog_Load(Object? sender, EventArgs e)
         {
             foreach (TValue item in DataSource)
@@ -91,7 +115,7 @@ namespace DataDictionary.Main.Dialogs
                     && !Selected.Contains(addKey))
                 { Selected.Add(addKey); }
 
-                if(!e.Item.Checked
+                if (!e.Item.Checked
                     && AsIndex(listViewItems[e.Item]) is TIndex removeKey
                     && Selected.Contains(removeKey))
                 { Selected.Remove(removeKey); }
@@ -100,14 +124,14 @@ namespace DataDictionary.Main.Dialogs
 
         private void SelectionData_SelectedIndexChanged(Object? sender, EventArgs e)
         {
-            if(selectionData.SelectedItems.Count > 0 
+            if (selectionData.SelectedItems.Count > 0
                 && listViewItems.ContainsKey(selectionData.SelectedItems[0]))
             {
                 titleData.Text = listViewItems[selectionData.SelectedItems[0]].Title;
                 descriptionData.Text = GetDescription(listViewItems[selectionData.SelectedItems[0]]);
                 pathData.Text = listViewItems[selectionData.SelectedItems[0]].Path.MemberFullPath;
             }
-            
+
         }
 
     }

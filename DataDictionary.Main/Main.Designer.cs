@@ -107,6 +107,7 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            windowToolStripMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             toolStrip = new ToolStrip();
@@ -302,7 +303,8 @@
             // 
             catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             catalogContextMenu.Name = "dbSchemacontextMenu";
-            catalogContextMenu.Size = new Size(234, 268);
+            catalogContextMenu.OwnerItem = manageDatabasesCommand;
+            catalogContextMenu.Size = new Size(234, 246);
             // 
             // menuCatalogItem
             // 
@@ -472,8 +474,9 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
+            menuStrip.MdiWindowListItem = windowToolStripMenuItem;
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(0, 2, 0, 2);
             menuStrip.Size = new Size(917, 24);
@@ -747,6 +750,12 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
+            // windowToolStripMenuItem
+            // 
+            windowToolStripMenuItem.Name = "windowToolStripMenuItem";
+            windowToolStripMenuItem.Size = new Size(63, 20);
+            windowToolStripMenuItem.Text = "&Window";
+            // 
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
@@ -758,7 +767,7 @@
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(917, 25);
             toolStrip.TabIndex = 10;
-            toolStrip.Text = "toolStrip1";
+            toolStrip.Text = "mainToolStrip";
             // 
             // manageModelCommand
             // 
@@ -1024,5 +1033,6 @@
         private ToolStripMenuItem menuScriptingDocument;
         private ToolStripMenuItem menuScriptingNode;
         private ToolStripMenuItem menuScriptingAttribute;
+        private ToolStripMenuItem windowToolStripMenuItem;
     }
 }

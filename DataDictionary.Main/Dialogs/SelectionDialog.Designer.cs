@@ -63,7 +63,6 @@
             selectionLayout.RowStyles.Add(new RowStyle());
             selectionLayout.Size = new Size(319, 437);
             selectionLayout.TabIndex = 0;
-            selectionLayout.SizeChanged += SelectionLayout_SizeChanged;
             // 
             // selectionData
             // 
@@ -71,6 +70,7 @@
             selectionData.Columns.AddRange(new ColumnHeader[] { titleColumn });
             selectionData.Dock = DockStyle.Fill;
             selectionData.FullRowSelect = true;
+            selectionData.HeaderStyle = ColumnHeaderStyle.Nonclickable;
             selectionData.Location = new Point(3, 3);
             selectionData.MultiSelect = false;
             selectionData.Name = "selectionData";
@@ -78,6 +78,7 @@
             selectionData.TabIndex = 4;
             selectionData.UseCompatibleStateImageBehavior = false;
             selectionData.View = View.Details;
+            selectionData.SizeChanged += SelectionData_SizeChanged;
             // 
             // titleColumn
             // 
@@ -163,13 +164,16 @@
             // 
             // SelectionDialog
             // 
+            AcceptButton = okCommand;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = cancelCommand;
             ClientSize = new Size(319, 437);
             Controls.Add(selectionLayout);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SelectionDialog";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "SelectionDialog";
             selectionLayout.ResumeLayout(false);
             selectionLayout.PerformLayout();
