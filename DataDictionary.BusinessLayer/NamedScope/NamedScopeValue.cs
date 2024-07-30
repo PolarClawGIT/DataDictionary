@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// The NamedPath for the Value
         /// </summary>
-        NamedScopePath NamedPath { get; }
+        NamedScopePath Path { get; }
 
         /// <summary>
         /// The Title for the Value
@@ -41,7 +41,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public virtual NamedScopePath NamedPath { get; protected set; } = new NamedScopePath();
+        public virtual NamedScopePath Path { get; protected set; } = new NamedScopePath();
 
         /// <inheritdoc/>
         public virtual String Title { get; protected set; } = String.Empty;
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public Func<NamedScopePath> GetPath
         {
             get { return getPath; }
-            init { getPath = value; NamedPath = value(); }
+            init { getPath = value; Path = value(); }
         }
         Func<NamedScopePath> getPath = () => new NamedScopePath();
 

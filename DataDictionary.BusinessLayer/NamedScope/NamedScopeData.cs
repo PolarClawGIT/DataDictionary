@@ -56,18 +56,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
         IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key);
 
         /// <summary>
-        /// Returns the list of Values for the given list of keys or an empty list.
-        /// </summary>
-        /// <param name="keys"></param>
-        /// <returns></returns>
-        IReadOnlyList<INamedScopeSourceValue> Values(IEnumerable<NamedScopeIndex> keys);
-
-        /// <summary>
-        /// Return the list of Values for the Given Scopes specified.
+        /// Returns the list of Keys for the Scopes.
         /// </summary>
         /// <param name="scopes"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeSourceValue> Values(params ScopeType[] scopes);
+        IReadOnlyList<NamedScopeIndex> ScopeKeys(params ScopeType[] scopes);
+
+        /// <summary>
+        /// Returns the list of Keys for the Scopes.
+        /// </summary>
+        /// <param name="scopes"></param>
+        /// <returns></returns>
+        IReadOnlyList<NamedScopeIndex> ScopeKeys(IEnumerable<ScopeType> scopes);
 
         /// <inheritdoc cref="IDictionary{TKey, TValue}.ContainsKey(TKey)"/>
         Boolean ContainsKey(NamedScopeIndex key);
@@ -152,32 +152,34 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public virtual IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key)
         {
             NamedScopePath pathKey = new NamedScopePath(key);
-            return data.Where(w => pathKey.Equals(w.Value.NamedPath)).Select(s => s.Key).ToList();
+            return data.Where(w => pathKey.Equals(w.Value.Path)).Select(s => s.Key).ToList();
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeSourceValue> Values(IEnumerable<NamedScopeIndex> indices)
+        public virtual IReadOnlyList<NamedScopeIndex> ScopeKeys(params ScopeType[] scopes)
         {
-            List<INamedScopeSourceValue> result = new List<INamedScopeSourceValue>();
+            List<NamedScopeIndex> result = new List<NamedScopeIndex>();
 
-            foreach (NamedScopeIndex item in indices)
+            foreach (KeyValuePair<NamedScopeIndex, NamedScopeValue> item in data)
             {
-                if (data.ContainsKey(item))
-                { result.Add(data[item].Source); }
+                if (scopes.Length == 0
+                    || scopes.Contains(ScopeType.Null)
+                    || scopes.Contains(item.Value.Scope))
+                { result.Add(item.Key); }
             }
 
             return result;
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeSourceValue> Values(params ScopeType[] scopes)
+        public virtual IReadOnlyList<NamedScopeIndex> ScopeKeys(IEnumerable<ScopeType> scopes)
         {
-            List<INamedScopeSourceValue> result = new List<INamedScopeSourceValue>();
+            List<NamedScopeIndex> result = new List<NamedScopeIndex>();
 
             foreach (KeyValuePair<NamedScopeIndex, NamedScopeValue> item in data)
             {
-                if (scopes.Length == 0 || scopes.Contains(ScopeType.Null) || scopes.Contains(item.Value.Scope))
-                { result.Add(item.Value.Source); }
+                if (scopes.Count() == 0 || scopes.Contains(ScopeType.Null) || scopes.Contains(item.Value.Scope))
+                { result.Add(item.Key); }
             }
 
             return result;
@@ -190,7 +192,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 Exception ex = new ArgumentException("An element with the same key already exists.");
                 ex.Data.Add(nameof(value.Title), value.Title);
                 ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
-                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                ex.Data.Add(nameof(value.Path), value.Path.MemberFullPath);
                 throw ex;
             }
             else
@@ -246,7 +248,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 Exception ex = new InvalidOperationException("Could not find parent for value passed");
                 ex.Data.Add(nameof(value.Title), value.Title);
                 ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
-                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                ex.Data.Add(nameof(value.Path), value.Path.MemberFullPath);
                 throw ex;
             }
         }

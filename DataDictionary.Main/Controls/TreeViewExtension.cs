@@ -187,7 +187,7 @@ namespace DataDictionary.Main.Controls
                         TreeNode newNode = nodes.Add(value.Title);
                         newNode.ImageKey = valueScope.Name;
                         newNode.SelectedImageKey = valueScope.Name;
-                        newNode.ToolTipText = value.NamedPath.MemberFullPath;
+                        newNode.ToolTipText = value.Path.MemberFullPath;
                         value.OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
                         valueNodes.Add(newNode, item);
 
@@ -202,7 +202,7 @@ namespace DataDictionary.Main.Controls
                                     && nodeItem.Key is not null)
                                 {
                                     nodeItem.Key.Text = value.Title;
-                                    nodeItem.Key.ToolTipText = value.NamedPath.MemberFullPath;
+                                    nodeItem.Key.ToolTipText = value.Path.MemberFullPath;
                                 }
                             }
                         }
