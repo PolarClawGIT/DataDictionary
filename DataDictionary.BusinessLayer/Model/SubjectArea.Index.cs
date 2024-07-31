@@ -1,9 +1,5 @@
 ﻿using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Model
 {
@@ -12,10 +8,19 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaIndex : ModelSubjectAreaKey
+    public class SubjectAreaIndex : ModelSubjectAreaKey, IModelSubjectAreaKey,
+        IKeyEquality<ISubjectAreaIndex>, IKeyEquality<SubjectAreaIndex>
     {
         /// <inheritdoc cref="ModelSubjectAreaKey(IModelSubjectAreaKey)"/>
         public SubjectAreaIndex(ISubjectAreaIndex source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ISubjectAreaIndex? other)
+        { return other is IModelSubjectAreaKey key && Equals(new ModelSubjectAreaKey(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(SubjectAreaIndex? other)
+        { return other is IModelSubjectAreaKey key && Equals(new ModelSubjectAreaKey(key)); }
 
         /// <summary>
         /// Convert SubjectAreaIndex to a DataLayerIndex
@@ -30,9 +35,18 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaIndexName : ModelSubjectAreaUniqueKey
+    public class SubjectAreaIndexName : ModelSubjectAreaUniqueKey, ISubjectAreaIndexName,
+        IKeyEquality<ISubjectAreaIndexName>, IKeyEquality<SubjectAreaIndexName>
     {
         /// <inheritdoc cref="ModelSubjectAreaUniqueKey(IModelSubjectAreaUniqueKey)"/>
         public SubjectAreaIndexName(ISubjectAreaIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ISubjectAreaIndexName? other)
+        { return other is IModelSubjectAreaUniqueKey key && Equals(new ModelSubjectAreaUniqueKey(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(SubjectAreaIndexName? other)
+        { return other is IModelSubjectAreaUniqueKey key && Equals(new ModelSubjectAreaUniqueKey(key)); }
     }
 }

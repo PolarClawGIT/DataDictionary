@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -8,10 +9,19 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeIndex : DomainAttributeKey, IAttributeIndex
+    public class AttributeIndex : DomainAttributeKey, IAttributeIndex,
+        IKeyEquality<IAttributeIndex>, IKeyEquality<AttributeIndex>
     {
         /// <inheritdoc cref="DomainAttributeKey(IDomainAttributeKey)"/>
         public AttributeIndex(IAttributeIndex source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(AttributeIndex? other)
+        { return other is IDomainAttributeKey key && Equals(new DomainAttributeKey(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IAttributeIndex? other)
+        { return other is IDomainAttributeKey key && Equals(new DomainAttributeKey(key)); }
 
         /// <summary>
         /// Convert AttributeIndex to a DataLayerIndex
@@ -26,7 +36,8 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeIndexName : DomainAttributeKeyName
+    public class AttributeIndexName : DomainAttributeKeyName, IAttributeIndexName,
+        IKeyEquality<IAttributeIndexName>, IKeyEquality<AttributeIndexName>
     {
         /// <inheritdoc cref="DomainAttributeKeyName(IDomainAttributeKeyName)"/>
         public AttributeIndexName(IAttributeIndexName source) : base(source) { }
@@ -36,5 +47,13 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc cref="DomainAttributeKeyName(DataLayer.DatabaseData.Routine.IDbRoutineParameterKeyName)"/>
         internal AttributeIndexName(IRoutineParameterIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IAttributeIndexName? other)
+        { return other is IDomainAttributeKeyName value && Equals(new DomainAttributeKeyName(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(AttributeIndexName? other)
+        { return other is IDomainAttributeKeyName value && Equals(new DomainAttributeKeyName(value)); }
     }
 }

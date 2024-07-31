@@ -1,9 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -12,11 +8,20 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterIndex : DbRoutineParameterKey, IRoutineParameterIndex
+    public class RoutineParameterIndex : DbRoutineParameterKey, IRoutineParameterIndex,
+        IKeyEquality<IRoutineParameterIndex>, IKeyEquality<RoutineParameterIndex>
     {
         /// <inheritdoc cref="DbRoutineParameterKey(IDbRoutineParameterKey)"/>
         public RoutineParameterIndex(IDbRoutineParameterKey source) : base(source)
         { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IRoutineParameterIndex? other)
+        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(RoutineParameterIndex? other)
+        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
 
         /// <summary>
         /// Convert RoutineParameterIndex to a DataLayerIndex
@@ -31,9 +36,18 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterIndexName
+    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterIndexName,
+        IKeyEquality<IRoutineParameterIndexName>, IKeyEquality<RoutineParameterKeyName>
     {
         /// <inheritdoc cref="DbRoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
         public RoutineParameterKeyName(IRoutineParameterIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IRoutineParameterIndexName? other)
+        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(RoutineParameterKeyName? other)
+        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
     }
 }
