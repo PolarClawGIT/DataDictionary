@@ -283,14 +283,15 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 List<AttributeIndex> keys = attributes.Select(s => new AttributeIndex(s)).ToList();
 
-                using (var dialog = new SelectionDialog<AttributeValue, AttributeIndex>
+                using (var dialog = new SelectionDialog<AttributeValue, AttributeIndex>(ScopeType.ModelAttribute)
                 {
                     Icon = ImageEnumeration.Cast(ScopeType.ModelAttribute).WindowIcon,
                     Text = ImageEnumeration.Cast(ScopeType.ModelAttribute).Name,
-                    DataSource = BusinessData.DomainModel.Attributes,
+                    //DataSource = BusinessData.DomainModel.Attributes,
                     Selected = keys,
+                    
                     GetDescription = (value) => { return value.AttributeDescription ?? String.Empty; },
-                    AsIndex = (value) => { return new AttributeIndex(value); }
+                    GetResult = (value) => { return new AttributeIndex(value); },
                 })
                 {
                     if (dialog.ShowDialog(this) is DialogResult.OK)
