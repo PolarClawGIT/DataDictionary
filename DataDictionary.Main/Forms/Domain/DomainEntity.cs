@@ -10,6 +10,7 @@ using Toolbox.BindingTable;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
 using System.Linq;
+using DataDictionary.BusinessLayer;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -283,26 +284,21 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 List<AttributeIndex> keys = attributes.Select(s => new AttributeIndex(s)).ToList();
 
-                using (var dialog = new SelectionDialog<AttributeValue, AttributeIndex>(ScopeType.ModelAttribute)
+                using (var dialog = new NamedScopeSelection(ScopeType.ModelAttribute))
                 {
-                    Icon = ImageEnumeration.Cast(ScopeType.ModelAttribute).WindowIcon,
-                    Text = ImageEnumeration.Cast(ScopeType.ModelAttribute).Name,
-                    //DataSource = BusinessData.DomainModel.Attributes,
-                    Selected = keys,
-                    
-                    GetDescription = (value) => { return value.AttributeDescription ?? String.Empty; },
-                    GetResult = (value) => { return new AttributeIndex(value); },
-                })
-                {
+                    dialog.CheckByIndex(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)));
+
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(dialog.Selected).ToList())
+                        var selected = dialog.IsCheckedBySource().OfType<AttributeValue>().ToList();
+
+                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(selected.Select(s=> new AttributeIndex(s))).ToList())
                         { // Remove
                             if (attributes.FirstOrDefault(w => item.Equals(w)) is EntityAttributeValue removeItem)
                             { bindingAttribute.Remove(removeItem); }
                         }
 
-                        foreach (AttributeIndex item in dialog.Selected.Except(attributes.Select(s => new AttributeIndex(s))).ToList())
+                        foreach (AttributeIndex item in selected.Select(s => new AttributeIndex(s)).Except(attributes.Select(s => new AttributeIndex(s))).ToList())
                         { // Add
                             bindingAttribute.AddNew();
                             if (bindingAttribute.Current is EntityAttributeValue newItem)
