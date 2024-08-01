@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.ProofOfConcept
 {
     class SelectionDialog<TValue, TResult> : SelectionDialog
             where TValue : class, IScopeType
@@ -80,7 +81,7 @@ namespace DataDictionary.Main.Dialogs
 
         protected virtual void Initialize()
         {
-            this.Load += SelectionDialog_Load;
+            Load += SelectionDialog_Load;
             selectionData.ItemChecked += SelectionData_ItemChecked;
             selectionData.ItemSelectionChanged += SelectionData_ItemSelectionChanged;
         }

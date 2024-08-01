@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.ProofOfConcept
 {
-    class AttributeSelection: SelectionDialog<AttributeValue, AttributeIndex>
+    class AttributeSelection : SelectionDialog<AttributeValue, AttributeIndex>
     {
 
     }

@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Dialogs
+﻿namespace DataDictionary.Main.ProofOfConcept
 {
     partial class SelectionDialog
     {

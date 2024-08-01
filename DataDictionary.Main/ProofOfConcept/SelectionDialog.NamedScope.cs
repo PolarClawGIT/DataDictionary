@@ -1,9 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.ProofOfConcept
 {
     class NamedScopeSelection : SelectionDialog
     {

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.ProofOfConcept
 {
     partial class SelectionDialog : Form
     {

@@ -284,7 +284,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 List<AttributeIndex> keys = attributes.Select(s => new AttributeIndex(s)).ToList();
 
-                using (var dialog = new NamedScopeSelection(ScopeType.ModelAttribute))
+                using (var dialog = new DataDictionary.Main.ProofOfConcept.NamedScopeSelection(ScopeType.ModelAttribute))
                 {
                     dialog.CheckByIndex(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)));
 
