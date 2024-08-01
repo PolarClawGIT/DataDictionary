@@ -35,6 +35,11 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Object Name returned by sys.fn_listextendedproperty
         /// </summary>
         String? ObjectName { get; }
+
+        /// <summary>
+        /// Is the MS SQL ExtendedProperty the MS_Description property.
+        /// </summary>
+        Boolean IsDescription { get; }
     }
 
     /// <summary>
@@ -96,6 +101,10 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } }
+
+        /// <inheritdoc/>
+        public Boolean IsDescription
+        { get { return String.Equals(PropertyName, "PropertyName", StringComparison.OrdinalIgnoreCase); } }
 
         /// <summary>
         /// Constructor for DbExtendedPropertyItem.
