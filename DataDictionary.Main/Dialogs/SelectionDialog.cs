@@ -22,64 +22,115 @@ namespace DataDictionary.Main.Dialogs
         /// </summary>
         public Func<INamedScopeSourceValue, String> GetDescription { get; init; } = (value) => String.Empty;
 
-        public Type? FilterValueType { get; init; } = null;
+        public Func<INamedScopeSourceValue, Boolean> IsTypeOf { get; init; } = (value) => true;
+
         public BindingList<ScopeType> FilterScopes { get; } =
             new BindingList<ScopeType>()
-            { AllowEdit = false, AllowNew = true, AllowRemove = false };
+            { AllowEdit = false, AllowNew = true, AllowRemove = true };
         public BindingList<NamedScopePath> FilterPaths { get; } =
             new BindingList<NamedScopePath>()
-            { AllowEdit = false, AllowNew = true, AllowRemove = false };
+            { AllowEdit = false, AllowNew = true, AllowRemove = true };
         public BindingList<DataLayerIndex> Selected { get; } =
             new BindingList<DataLayerIndex>()
-            { AllowEdit = false, AllowNew = true, AllowRemove = false };
+            { AllowEdit = false, AllowNew = true, AllowRemove = true };
+
+        //TODO: Does not consider Filter to build lists.
         SelectionDialogData formData = new SelectionDialogData();
 
         public SelectionDialog() : base()
         {
             InitializeComponent();
             selectionData.SmallImageList = ImageEnumeration.AsImageList();
-            bindingSource.DataSource = formData;
+            bindingSource.DataSource = formData; 
             bindingSource.Position = 0;
 
-            formData.PropertyChanged += FormData_PropertyChanged;
+            //formData.PropertyChanged += FormData_PropertyChanged;
+            formData.FilterChanged += FormData_FilterChanged;
             FilterScopes.ListChanged += FilterScopes_ListChanged;
             FilterPaths.ListChanged += FilterPaths_ListChanged;
             Selected.ListChanged += Selected_ListChanged;
 
             // Data Bindings
-            //TODO: The radio button are not binding. Throws an error. May need to handle this manually?
-            groupByScope.DataBindings.Add(new Binding(nameof(groupByScope.Checked), formData, nameof(formData.GroupByScope), true, DataSourceUpdateMode.OnPropertyChanged, false));
-            groupByPath.DataBindings.Add(new Binding(nameof(groupByPath.Checked), formData, nameof(formData.GroupByPath), true, DataSourceUpdateMode.OnPropertyChanged, false));
+            //Issue: Could not get binding to Radio Buttons to work. Manual Binding is used.
+            formData.BindGroupBy(groupByScope);
 
-            //TODO: Combo box list are not binding.
-            formData.BindScopes(bindingSource, filterScope);
-            formData.BindPaths(bindingSource, filterPath);
+            //Issue: Could not get binding to Combo Boxes to work as desired. Manual Binding is used.
+            formData.BindScopes(filterScope);
+            formData.BindPaths(filterPath);
 
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingSource, nameof(SelectionDialogValue.Title)));
             scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingSource, nameof(SelectionDialogValue.ScopeName)));
             pathData.DataBindings.Add(new Binding(nameof(pathData.Text), bindingSource, nameof(SelectionDialogValue.PathName)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingSource, nameof(SelectionDialogValue.Description)));
+
+            LoadListView();
         }
 
-        private void FormData_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        protected void LoadListView()
         {
-            //throw new NotImplementedException();
+            selectionData.Columns.Clear();
+            selectionData.Groups.Clear();
+            selectionData.Items.Clear();
+
+            selectionData.Columns.Add(new ColumnHeader()
+            {
+                Text = nameof(SelectionDialogValue.Title),
+                Width = selectionData.Width - SystemInformation.VerticalScrollBarWidth - 5
+            });
+
+            IEnumerable<SelectionDialogValue> filtered = formData.Where(
+                w => (FilterScopes.Count() == 0 || FilterScopes.Contains(w.Scope))
+                && (FilterPaths.Count() == 0 || FilterPaths.Contains(w.Path))
+                && IsTypeOf(w.Source)
+                && (formData.SelectedPath == formData.PathNull || formData.SelectedPath == w.Path)
+                && (formData.SelectedScope == formData.ScopeNull || formData.SelectedScope == w.Scope)
+                );
+
+            var grouping = filtered.
+                Select(s => new { Group = formData.GroupByScope ? s.ScopeName : s.PathName, Data = s }).
+                OrderBy(o => o.Group, StringComparer.OrdinalIgnoreCase).
+                GroupBy(g => g.Group, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var viewGroup in grouping)
+            {
+                ListViewGroup? newGroup = null;
+                if (grouping.Count() > 1)
+                {
+                    newGroup = new ListViewGroup(viewGroup.Key);
+                    selectionData.Groups.Add(newGroup);
+                }
+
+                foreach (var item in viewGroup.OrderBy(o => o.Data.Title))
+                {
+                    ListViewItem newItem = item.Data.ListView;
+                    newItem.Group = newGroup;
+
+                    selectionData.Items.Add(newItem);
+                }
+            }
         }
+
+        private void FormData_FilterChanged(Object? sender, EventArgs e)
+        { LoadListView(); }
 
         private void Selected_ListChanged(Object? sender, ListChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            foreach (SelectionDialogValue item in formData)
+            {   
+                // Causes SelectionData_ItemCheck to trigger.
+                if (Selected.Contains(item.Source.Index) && !item.ListView.Checked)
+                { item.ListView.Checked = true; }
+                else if (!Selected.Contains(item.Source.Index) && item.ListView.Checked)
+                { item.ListView.Checked = false; }
+                // Everything else does not change the state. Avoids infinite Loop.
+            }
         }
 
         private void FilterPaths_ListChanged(Object? sender, ListChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
+        { LoadListView(); }
 
         private void FilterScopes_ListChanged(Object? sender, ListChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
+        { LoadListView(); }
 
         private void SelectionData_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
@@ -90,14 +141,28 @@ namespace DataDictionary.Main.Dialogs
             }
         }
 
-        private void GroupByScope_CheckedChanged(object sender, EventArgs e)
+        private void SelectionDialog_SizeChanged(object sender, EventArgs e)
         {
-            formData.GroupByScope = groupByScope.Checked;
+            if (selectionData.Columns.Count > 0) // Only expect one column.
+            { selectionData.Columns[0].Width = selectionData.Width - SystemInformation.VerticalScrollBarWidth - 5; }
         }
 
-        private void GroupByPath_CheckedChanged(object sender, EventArgs e)
-        {
-            formData.GroupByPath = groupByPath.Checked;
+        private void SelectionData_ItemChecked(object sender, ItemCheckedEventArgs e)
+        { } //This triggers on Initialization/Visible/Show in addition to ItemCheck
+
+        private void SelectionData_ItemCheck(object sender, ItemCheckEventArgs e)
+        {   // This triggers when the checked box is changed. Visible/Show does not trigger this event.
+            if (formData.FirstOrDefault(w => w.ListView == selectionData.Items[e.Index]) is SelectionDialogValue value)
+            {
+                DataLayerIndex key = value.Source.Index;
+
+                // Causes Selected_ListChanged to trigger
+                if (e.NewValue is CheckState.Checked && !Selected.Contains(key))
+                { Selected.Add(key); } 
+                else if (e.NewValue is CheckState.Unchecked && Selected.Contains(key))
+                { Selected.Remove(key); } 
+                // Everything else does not change state. Avoids infinite Loop.
+            }
         }
     }
 }

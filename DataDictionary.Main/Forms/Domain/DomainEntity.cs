@@ -282,8 +282,6 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
             {
-                List<AttributeIndex> keys = attributes.Select(s => new AttributeIndex(s)).ToList();
-
                 using (var dialog = new SelectionDialog()
                 {
                     GetDescription = (value) =>
@@ -294,8 +292,17 @@ namespace DataDictionary.Main.Forms.Domain
                     }
                 })
                 {
+                    dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+
+                    dialog.Selected.AddRange(
+                        attributes.
+                        Select(s => (DataLayerIndex)new AttributeIndex(s)));
+
                     if (dialog.ShowDialog(this) is DialogResult.OK)
-                    { }
+                    {
+                        // TODO: Mechanism to get the AttributeValues needed.
+                        var x = dialog.Selected;
+                    }
                 }
 
             }

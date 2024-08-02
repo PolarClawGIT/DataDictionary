@@ -133,7 +133,6 @@
             groupByScope.TabIndex = 0;
             groupByScope.Text = "by Scope";
             groupByScope.UseVisualStyleBackColor = true;
-            groupByScope.CheckedChanged += GroupByScope_CheckedChanged;
             // 
             // groupByPath
             // 
@@ -144,7 +143,6 @@
             groupByPath.TabIndex = 1;
             groupByPath.Text = "by Path";
             groupByPath.UseVisualStyleBackColor = true;
-            groupByPath.CheckedChanged += GroupByPath_CheckedChanged;
             // 
             // filterScope
             // 
@@ -174,6 +172,8 @@
             selectionData.TabIndex = 1;
             selectionData.UseCompatibleStateImageBehavior = false;
             selectionData.View = View.Details;
+            selectionData.ItemCheck += SelectionData_ItemCheck;
+            selectionData.ItemChecked += SelectionData_ItemChecked;
             selectionData.ItemSelectionChanged += SelectionData_ItemSelectionChanged;
             // 
             // titleData
@@ -266,6 +266,7 @@
             Controls.Add(selectionDialogLayout);
             Name = "SelectionDialog";
             Text = "SelectionDialog";
+            SizeChanged += SelectionDialog_SizeChanged;
             selectionDialogLayout.ResumeLayout(false);
             selectionDialogLayout.PerformLayout();
             selectionFilterGroup.ResumeLayout(false);
