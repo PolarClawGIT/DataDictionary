@@ -11,6 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Dialogs
 {
+
     class SelectionDialogValue : IBindingPropertyChanged
     {
         public NamedScopeIndex Index { get; }

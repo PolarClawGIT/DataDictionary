@@ -286,12 +286,13 @@ namespace DataDictionary.Main.Forms.Domain
                 {
                     GetDescription = (value) =>
                     {
-                        if(value is AttributeValue attribute)
+                        if (value is AttributeValue attribute)
                         { return attribute.AttributeDescription ?? String.Empty; }
                         else { return String.Empty; }
                     }
                 })
                 {
+
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
 
                     dialog.Selected.AddRange(

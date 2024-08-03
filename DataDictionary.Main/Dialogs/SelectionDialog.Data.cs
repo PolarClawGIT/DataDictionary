@@ -29,6 +29,7 @@ namespace DataDictionary.Main.Dialogs
         public ScopeType ScopeNull { get { return scopeNull; } }
         private static ScopeType scopeNull = ScopeType.Null;
         private ScopeType scopeValue = scopeNull;
+        private BindingList<ScopeType> filterScopes;
 
         /// <summary>
         /// The currently selected Path
@@ -45,6 +46,9 @@ namespace DataDictionary.Main.Dialogs
         public NamedScopePath PathNull { get { return pathNull; } }
         private static NamedScopePath pathNull = new NamedScopePath();
         private NamedScopePath pathValue = pathNull;
+        private BindingList<NamedScopePath> filterPaths;
+
+        public Func<INamedScopeSourceValue, String> GetDescription { get; init; } = (value) => String.Empty;
 
         /// <summary>
         /// Group By Scope is Selected
@@ -75,15 +79,18 @@ namespace DataDictionary.Main.Dialogs
         }
         private Boolean isGroupByScope = true;
 
-        public SelectionDialogData()
+        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths)
         {
+            this.filterScopes = scopes;
+            this.filterPaths = paths;
+
             foreach (NamedScopeIndex rootKey in BusinessData.NamedScope.RootKeys())
             { this.AddRange(Create(rootKey)); }
 
             IEnumerable<SelectionDialogValue> Create(NamedScopeIndex key)
             {
                 List<SelectionDialogValue> result = new List<SelectionDialogValue>();
-                result.Add(new SelectionDialogValue(key));
+                result.Add(new SelectionDialogValue(key) { GetDescription = GetDescription });
 
                 foreach (NamedScopeIndex childKey in BusinessData.NamedScope.ChildrenKeys(key))
                 { result.AddRange(Create(childKey)); }
@@ -94,24 +101,17 @@ namespace DataDictionary.Main.Dialogs
 
         public void BindScopes(ComboBox control)
         {
-            Dictionary<ScopeType, String> data = new Dictionary<ScopeType, String>();
-            data.Add(scopeNull, "(any)");
-
-            this.Select(s => new { s.Scope, s.ScopeName }).
-                DistinctBy(d => d.Scope).ToList().ForEach(a => data.Add(a.Scope, a.ScopeName));
-
-            control.ValueMember = nameof(SelectionDialogValue.Scope);
-            control.DisplayMember = nameof(SelectionDialogValue.ScopeName);
-            control.DataSource = data.Select(s => new { Scope = s.Key, ScopeName = s.Value }).ToList();
-            control.SelectedValue = SelectedScope;
-
             //Issue: Binding does not work with Enums
             //Binding bind = new Binding(nameof(control.SelectedValue), binding, nameof(this.SelectedScope));
             //bind.DataSourceNullValue = scopeNull;
             //bind.NullValue = scopeNull;
             //control.DataBindings.Add(bind);
 
+            BuildList();
+
             control.SelectionChangeCommitted += Control_SelectionChangeCommitted;
+            filterScopes.ListChanged += Filter_ListChanged;
+            filterPaths.ListChanged += Filter_ListChanged;
 
             void Control_SelectionChangeCommitted(Object? sender, EventArgs e)
             {
@@ -120,28 +120,50 @@ namespace DataDictionary.Main.Dialogs
 
                 OnFilterChanged();
             }
+
+            void Filter_ListChanged(Object? sender, ListChangedEventArgs e)
+            { BuildList(); }
+
+            void BuildList()
+            {
+                control.DataSource = null;
+
+                Dictionary<ScopeType, String> data = new Dictionary<ScopeType, String>();
+                data.Add(scopeNull, "(any)");
+
+                this.Where(w => 
+                        (filterScopes.Count == 0 || filterScopes.Contains(w.Scope))
+                        && (filterPaths.Count == 0 || filterPaths.Contains(w.Path))).
+                    Select(s => new { s.Scope, s.ScopeName }).
+                    DistinctBy(d => d.Scope).
+                    ToList().
+                    ForEach(a => data.Add(a.Scope, a.ScopeName));
+
+                control.ValueMember = nameof(SelectionDialogValue.Scope);
+                control.DisplayMember = nameof(SelectionDialogValue.ScopeName);
+                control.DataSource = data.Select(s => new { Scope = s.Key, ScopeName = s.Value }).ToList();
+
+                if (data.Count() == 1)
+                { SelectedScope = data.First().Key; }
+                else if (data.Count() == 2)
+                { SelectedScope = data.Last().Key; }
+                control.SelectedValue = SelectedScope;
+            }
         }
 
         public void BindPaths(ComboBox control)
         {
-            Dictionary<NamedScopePath, String> data = new Dictionary<NamedScopePath, String>();
-            data.Add(pathNull, "(any)");
-
-            this.Select(s => new { s.Path, s.PathName }).
-                DistinctBy(d => d.Path).ToList().ForEach(a => data.Add(a.Path, a.PathName));
-
-            control.ValueMember = nameof(SelectionDialogValue.Path);
-            control.DisplayMember = nameof(SelectionDialogValue.PathName);
-            control.DataSource = data.Select(s => new { Path = s.Key, PathName = s.Value }).ToList();
-            control.SelectedValue = SelectedPath;
 
             //Issue: Binding does not work with complex types such as Classes
             //Binding bind = new Binding(nameof(control.SelectedValue), binding, nameof(this.SelectedPath));
             //bind.DataSourceNullValue = pathNull;
             //bind.NullValue = pathNull;
             //control.DataBindings.Add(bind);
+            BuildList();
 
             control.SelectionChangeCommitted += Control_SelectionChangeCommitted;
+            filterScopes.ListChanged += Filter_ListChanged;
+            filterPaths.ListChanged += Filter_ListChanged;
 
             void Control_SelectionChangeCommitted(Object? sender, EventArgs e)
             {
@@ -149,6 +171,34 @@ namespace DataDictionary.Main.Dialogs
                 { SelectedPath = value; }
 
                 OnFilterChanged();
+            }
+
+            void Filter_ListChanged(Object? sender, ListChangedEventArgs e)
+            { BuildList(); }
+
+            void BuildList()
+            {
+                control.DataSource = null;
+                Dictionary<NamedScopePath, String> data = new Dictionary<NamedScopePath, String>();
+                data.Add(pathNull, "(any)");
+
+                this.Where(w =>
+                        (filterScopes.Count == 0 || filterScopes.Contains(w.Scope))
+                        && (filterPaths.Count == 0 || filterPaths.Contains(w.Path))).
+                    Select(s => new { s.Path, s.PathName }).
+                    DistinctBy(d => d.Path).
+                    ToList().
+                    ForEach(a => data.Add(a.Path, a.PathName));
+
+                control.ValueMember = nameof(SelectionDialogValue.Path);
+                control.DisplayMember = nameof(SelectionDialogValue.PathName);
+                control.DataSource = data.Select(s => new { Path = s.Key, PathName = s.Value }).ToList();
+
+                if (data.Count() == 1)
+                { SelectedPath = data.First().Key; }
+                else if (data.Count() == 2)
+                { SelectedPath = data.Last().Key; }
+                control.SelectedValue = SelectedPath;
             }
         }
 

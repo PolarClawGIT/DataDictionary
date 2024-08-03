@@ -34,11 +34,12 @@ namespace DataDictionary.Main.Dialogs
             new BindingList<DataLayerIndex>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
-        //TODO: Does not consider Filter to build lists.
-        SelectionDialogData formData = new SelectionDialogData();
+        //TODO: Cannot get GetDescription to be passed by Reference.
+        SelectionDialogData formData;// = new SelectionDialogData();
 
         public SelectionDialog() : base()
         {
+            formData = new SelectionDialogData(FilterScopes, FilterPaths);
             InitializeComponent();
             selectionData.SmallImageList = ImageEnumeration.AsImageList();
             bindingSource.DataSource = formData; 
@@ -108,6 +109,10 @@ namespace DataDictionary.Main.Dialogs
                     selectionData.Items.Add(newItem);
                 }
             }
+
+            //TODO: Not working as intended. Should only show ones from FilterScopes & FilterPaths
+            //formData.BindScopes(filterScope);
+            //formData.BindPaths(filterPath);
         }
 
         private void FormData_FilterChanged(Object? sender, EventArgs e)
