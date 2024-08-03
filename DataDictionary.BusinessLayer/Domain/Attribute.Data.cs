@@ -1,17 +1,14 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
@@ -222,7 +219,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
-            if (source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
+            if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
             {
                 CatalogIndexName catalogName = new CatalogIndexName(catalog);
 
@@ -239,7 +236,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
-            if (source.DbTables.Where(w => tableKey.Equals(w)) is TableValue table)
+            if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
             {
                 TableIndexName tableName = new TableIndexName(table);
                 foreach (TableColumnValue item in source.DbTableColumns.Where(w => tableName.Equals(w)))
@@ -308,85 +305,141 @@ namespace DataDictionary.BusinessLayer.Domain
         #endregion
 
         #region INamedScopeSource
+
+        [Obsolete]
+        IEnumerable<NamedScopePair> GetNamedScopes_old()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
+            foreach (AttributeValue attribute in this)
+            {
+                AttributeIndex attributeKey = new AttributeIndex(attribute);
+
+                List<AttributeSubjectAreaValue> subjects = subjectAreaValues.Where(w => attributeKey.Equals(w)).ToList();
+                List<NameSpaceSource> nodes = attribute.GetPath().Group().OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
+
+                if (nodes.Count == 0)
+                { throw new ArgumentNullException(nameof(attribute.GetPath)); }
+
+                DataLayerIndex parentIndex;
+                NamedScopePath parentPath;
+
+                if (Model.Models.FirstOrDefault() is ModelValue model)
+                {
+                    parentIndex = model.GetIndex();
+                    parentPath = model.GetPath();
+                }
+                else { throw new InvalidOperationException("Could not find the Model"); }
+
+                if (subjects.Count == 0)
+                {
+                    foreach (NameSpaceSource node in nodes)
+                    {
+                        if (node == nodes.Last())
+                        {
+                            result.Add(new NamedScopePair(
+                                parentIndex, new NamedScopeValue(attribute)
+                                { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
+                        }
+                        else
+                        {
+                            result.Add(new NamedScopePair(
+                                parentIndex, new NamedScopeValue(node)
+                                { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+
+                            parentIndex = node.GetIndex();
+                            parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (AttributeSubjectAreaValue subject in subjects)
+                    {
+                        SubjectAreaIndex subjectIndex = new SubjectAreaIndex(subject);
+
+                        if (Model.SubjectAreas.FirstOrDefault(w => subjectIndex.Equals(w)) is SubjectAreaValue subjectArea)
+                        {
+                            parentIndex = subjectArea.GetIndex();
+                            parentPath = subjectArea.GetPath();
+                        }
+                        else { throw new InvalidOperationException("Subject Area not found"); }
+
+                        foreach (NameSpaceSource node in nodes)
+                        {
+                            if (node == nodes.Last())
+                            {
+                                result.Add(new NamedScopePair(
+                                    parentIndex, new NamedScopeValue(attribute)
+                                    { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
+                            }
+                            else
+                            {
+                                result.Add(new NamedScopePair(
+                                    parentIndex, new NamedScopeValue(node)
+                                    { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+
+                                parentIndex = node.GetIndex();
+                                parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
+                            }
+                        }
+                    }
+                }
+
+            }
+            return result;
+
+        }
+
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            ModelValue? model = Model.Models.FirstOrDefault();
+            DataLayerIndex parentIndex;
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
 
-            foreach (AttributeValue attribute in this)
-            {
-                AttributeIndex attributeKey = new AttributeIndex(attribute);
-                Boolean hasSubjectArea = false;
-
-                foreach (AttributeSubjectAreaValue subjectArea in subjectAreaValues.Where(w => attributeKey.Equals(w)))
+            var values = this.GroupJoin(SubjectArea.Join(Model.SubjectAreas,
+                attribute => new SubjectAreaIndex(attribute),
+                subject => new SubjectAreaIndex(subject),
+                (attribute, subject) => new
                 {
-                    hasSubjectArea = true;
-                    SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
+                    attributeIndex = new AttributeIndex(attribute),
+                    subjectIndex = subject.GetIndex(),
+                    subjectPath = subject.GetPath()
+                }),
+                attribute => new AttributeIndex(attribute),
+                subject => subject.attributeIndex,
+                (attribute, subjects) => new { attribute, subjects }).
+                ToList();
 
-                    if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
-                    { result.Add(new NamedScopePair(subject.GetIndex(), GetSubjectValue(attribute, subject))); }
+
+            foreach (var item in values)
+            {
+                if (item.subjects.Count() == 0)
+                { result.Add(new NamedScopePair(parentIndex, new NamedScopeValue(item.attribute))); }
+                else
+                {
+                    foreach (var subject in item.subjects)
+                    {
+                        result.Add(new NamedScopePair(
+                            subject.subjectIndex,
+                            new NamedScopeValue(item.attribute)
+                            { // Create Full Path, including subject
+                                GetPath = () => new NamedScopePath(
+                                    subject.subjectPath,
+                                    item.attribute.GetPath())
+                            }));
+                    }
                 }
-
-                if (!hasSubjectArea && model is not null)
-                { result.Add(new NamedScopePair(model.GetIndex(), GetModelValue(attribute, model))); }
-                else if (!hasSubjectArea && model is null)
-                { result.Add(new NamedScopePair(GetValue(attribute))); } // Should not occur.
-
             }
 
             return result;
-
-            NamedScopeValueCore GetValue(AttributeValue source)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValueCore GetSubjectValue(AttributeValue source, SubjectAreaValue subject)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
-                { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                subject.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(subject.SubjectAreaNameSpace))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValueCore GetModelValue(AttributeValue source, ModelValue model)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
-                { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                model.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(model.ModelTitle))
-                    { result.TitleChanged(); }
-                }
-            }
         }
         #endregion
-
         #region XML Scripting
 
         /// <inheritdoc/>
@@ -420,7 +473,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (value is XObject)
                     {
-                        if (result is null) { result = new XElement(attribute.Scope.ToName()); }
+                        if (result is null) { result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name); }
                         result.Add(value);
 
                         IReadOnlyList<XAttribute> attributes = DomainProperties.GetXAttributes(scripting, node, Properties);
@@ -435,7 +488,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     XElement? aliasNode = alias.GetXElement(scripting, (node) => DomainProperties.GetXAttributes(scripting, node, Properties));
                     if (aliasNode is not null && result is null)
                     {
-                        result = new XElement(attribute.Scope.ToName());
+                        result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name);
                         result.Add(aliasNode);
                     }
                     else if (aliasNode is not null && result is XElement)

@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -26,6 +26,6 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public String GetTitle()
-        { return CatalogTitle ?? Scope.ToName(); }
+        { return CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name; }
     }
 }

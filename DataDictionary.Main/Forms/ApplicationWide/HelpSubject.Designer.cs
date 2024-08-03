@@ -47,9 +47,6 @@
             errorProvider = new ErrorProvider(components);
             helpBinding = new BindingSource(components);
             nameSpaceBinding = new BindingSource(components);
-            helpContextMenu = new ContextMenuStrip(components);
-            newHelpCommand = new ToolStripMenuItem();
-            deleteHelpCommand = new ToolStripMenuItem();
             helpSplitLayout = new SplitContainer();
             helpTabs = new TabControl();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
@@ -65,7 +62,6 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).BeginInit();
-            helpContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // helpSplitLayout
@@ -121,6 +117,7 @@
             helpSubjectData.ReadOnly = false;
             helpSubjectData.Size = new Size(571, 44);
             helpSubjectData.TabIndex = 0;
+            helpSubjectData.WordWrap = true;
             helpSubjectData.Validated += helpSubjectData_Validated;
             helpSubjectData.Validating += helpSubjectData_Validating;
             // 
@@ -151,6 +148,7 @@
             helpTextData.AutoSize = true;
             helpTextData.Dock = DockStyle.Fill;
             helpTextData.HeaderText = "Text";
+            helpTextData.HeaderVisible = true;
             helpTextData.Location = new Point(3, 3);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
@@ -200,6 +198,7 @@
             helpNameSpaceData.ReadOnly = false;
             helpNameSpaceData.Size = new Size(180, 44);
             helpNameSpaceData.TabIndex = 1;
+            helpNameSpaceData.WordWrap = true;
             // 
             // helpToolTipData
             // 
@@ -212,6 +211,7 @@
             helpToolTipData.ReadOnly = false;
             helpToolTipData.Size = new Size(180, 1);
             helpToolTipData.TabIndex = 4;
+            helpToolTipData.WordWrap = true;
             // 
             // controlsGroup
             // 
@@ -258,28 +258,6 @@
             helpBinding.DataError += helpBinding_DataError;
             helpBinding.CurrentChanged += helpBinding_CurrentChanged;
             // 
-            // helpContextMenu
-            // 
-            helpContextMenu.Items.AddRange(new ToolStripItem[] { newHelpCommand, deleteHelpCommand });
-            helpContextMenu.Name = "helpContextMenu";
-            helpContextMenu.Size = new Size(169, 48);
-            // 
-            // newHelpCommand
-            // 
-            newHelpCommand.Image = Properties.Resources.NewStatusHelp;
-            newHelpCommand.Name = "newHelpCommand";
-            newHelpCommand.Size = new Size(168, 22);
-            newHelpCommand.Text = "New Help Subject";
-            newHelpCommand.Click += newHelpCommand_Click;
-            // 
-            // deleteHelpCommand
-            // 
-            deleteHelpCommand.Image = Properties.Resources.DeleteStatusHelp;
-            deleteHelpCommand.Name = "deleteHelpCommand";
-            deleteHelpCommand.Size = new Size(168, 22);
-            deleteHelpCommand.Text = "Delete Help";
-            deleteHelpCommand.Click += deleteHelpCommand_Click;
-            // 
             // HelpSubject
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -307,7 +285,6 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).EndInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).EndInit();
-            helpContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -330,8 +307,5 @@
         private ColumnHeader controlNameColumn;
         private ColumnHeader controlTypeColumn;
         private GroupBox controlsGroup;
-        private ContextMenuStrip helpContextMenu;
-        private ToolStripMenuItem newHelpCommand;
-        private ToolStripMenuItem deleteHelpCommand;
     }
 }

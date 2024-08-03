@@ -210,12 +210,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutineDependency_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeModelAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetModelAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModelAttribute.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeModelEntity.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetModelEntity.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModelEntity.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
@@ -265,6 +259,15 @@
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectRelationship.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectProcess.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAttribute.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

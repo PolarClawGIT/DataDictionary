@@ -1,15 +1,7 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.Resource.Enumerations;
 using System.Xml;
 using System.Xml.Linq;
-using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -18,9 +10,6 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     class LibraryImport
     {
-        // TODO: The Parser is not working as expected when building NameSpaces.
-        // I Think this needs to be re-written.
-
         public Action<Int32, Int32> Progress { get; set; } = (x, y) => { };
 
         public IList<LibrarySourceValue> Sources { get { return librarySources; } }
@@ -31,6 +20,10 @@ namespace DataDictionary.BusinessLayer.Library
 
         public void Import(FileInfo file)
         {
+            //TODO: The Parser is not working as expected when building NameSpaces.
+            //TODO: Rewrite using XDocument.
+            //TODO: Break the method into smaller parts.
+
             try
             { // Parse the XML file and load to data objects
                 XmlDocument xmlData = new XmlDocument();
@@ -80,9 +73,12 @@ namespace DataDictionary.BusinessLayer.Library
                             // Parse the Member Type
                             LibraryMemberType memberType = LibraryMemberType.Null;
                             //String memberType = String.Empty;
-                            if (parseString.Split(':') is String[] types && types.Length > 0)
+                            if (parseString.Split(':') is String[] types
+                                && types.Length > 0 
+                                && LibraryMemberEnumeration.TryParse(types[0].First(), null, out LibraryMemberEnumeration? libType)
+                                && libType is not null)
                             {
-                                memberType = LibraryMemberTypeKey.Parse(types[0]);
+                                memberType = libType.Value;
                                 parseString = parseString.Substring(2);
                             }
 

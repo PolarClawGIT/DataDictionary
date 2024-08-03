@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Application
 {
@@ -8,11 +9,20 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndex : HelpKey, IHelpKey
+    public class HelpSubjectIndex : HelpKey, IHelpKey,
+        IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>
     {
         /// <inheritdoc cref="HelpKey.HelpKey(IHelpKey)"/>
         public HelpSubjectIndex(IHelpSubjectIndex source) : base(source)
         { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(HelpSubjectIndex? other)
+        { return other is IHelpKey value && Equals(new HelpKey(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IHelpSubjectIndex? other)
+        { return other is IHelpKey value && Equals(new HelpKey(value)); }
     }
 
     /// <inheritdoc/>
@@ -24,7 +34,8 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndexPath : NamedScopePath
+    public class HelpSubjectIndexPath : NamedScopePath, IHelpSubjectIndexPath,
+        IKeyEquality<IHelpSubjectIndexPath>, IKeyEquality<HelpSubjectIndexPath>
     {
         /// <inheritdoc cref="NamedScopePath.NamedScopePath(INamedScopePath[])"/>
         public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source) 
@@ -38,5 +49,12 @@ namespace DataDictionary.BusinessLayer.Application
         public HelpSubjectIndexPath(params String?[] source): base(source)
         { }
 
+        /// <inheritdoc/>
+        public Boolean Equals(HelpSubjectIndexPath? other)
+        { return other is INamedScopePath value && Equals(new NamedScopePath(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IHelpSubjectIndexPath? other)
+        { return other is INamedScopePath value && Equals(new NamedScopePath(value)); }
     }
 }

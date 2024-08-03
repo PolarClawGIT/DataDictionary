@@ -5,7 +5,7 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainEntitySubjectArea.
+/* Description: Performs Set on ModelSubjectEntity.
 */
 
 -- Transaction Handling
@@ -23,16 +23,54 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]       UniqueIdentifier Not Null,
 		[SubjectAreaId]		UniqueIdentifier Not Null,
+		[NameSpaceId]		UniqueIdentifier Not Null,
 		Primary Key ([EntityId], [SubjectAreaId]))
 
+	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+
+	Insert Into @NameSpace
+	Select	Null As [NameSpaceId],
+			X.[NameSpace]
+	From	@Data D
+			Inner Join [App_DataDictionary].[ModelEntity] A
+			On	A.[ModelId] = @ModelId And
+				D.[EntityId] = A.[EntityId] 
+			Inner Join [App_DataDictionary].[ModelSubjectArea] S
+			On	S.[ModelId] = @ModelId And
+				D.[SubjectAreaId] = S.[SubjectAreaId]
+			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
+	Group By X.[NameSpace]
+
+	-- Need to create & assign the NameSpaceID's
+	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
+
+	;With [NameSpace] As (
+		Select	M.[NameSpaceId],
+				N.[NameSpace]
+		From	[App_DataDictionary].[ModelNameSpace] M
+				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
-	Select	[EntityId],
-			[SubjectAreaId]
-	From	@Data
+	Select	D.[EntityId],
+			D.[SubjectAreaId],
+			N.[NameSpaceId]
+	From	@Data D
+			Inner Join [App_DataDictionary].[ModelEntity] A
+			On	A.[ModelId] = @ModelId And
+				D.[EntityId] = A.[EntityId] 
+			Inner Join [App_DataDictionary].[ModelSubjectArea] S
+			On	S.[ModelId] = @ModelId And
+				D.[SubjectAreaId] = S.[SubjectAreaId]
+			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
+			Inner Join [NameSpace] N
+			On	X.[NameSpace] = N.[NameSpace]
+	Where	X.[IsBase] = 1
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelEntity]
-	From	[App_DataDictionary].[ModelEntity] T
+	Delete From [App_DataDictionary].[ModelSubjectEntity]
+	From	[App_DataDictionary].[ModelSubjectEntity] T
 			Left Join @Values V
 			On	T.[EntityId] = V.[EntityId] And
 				T.[SubjectAreaId] = V.[SubjectAreaId] And
@@ -45,19 +83,41 @@ Begin Try
 					On	A.[EntityId] = C.[EntityId]
 			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelEntity] ([ModelId], [EntityId], [SubjectAreaId])
+	;With [Delta] As (
+		Select	--[ModelId],
+				[SubjectAreaId],
+				[EntityId],
+				[NameSpaceId]
+		From	@Values
+		Except
+		Select	[SubjectAreaId],
+				[EntityId],
+				[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectEntity]
+		Where	[ModelId] = @ModelId)
+	Update	[App_DataDictionary].[ModelSubjectEntity]
+	Set		[NameSpaceId] = S.[NameSpaceId]
+	From	[App_DataDictionary].[ModelSubjectEntity] T
+			Inner Join [Delta] S
+			On	T.[ModelId] = @ModelId And
+				T.[EntityId] = S.[EntityId] And
+				T.[SubjectAreaId] = S.[SubjectAreaId]
+	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[ModelSubjectEntity] ([ModelId], [EntityId], [SubjectAreaId], [NameSpaceId])
 	Select	@ModelId As [ModelId],
 			V.[EntityId],
-			V.[SubjectAreaId]
+			V.[SubjectAreaId],
+			V.[NameSpaceId]
 	From	@Values V
-			Left Join [App_DataDictionary].[ModelEntity] T
+			Left Join [App_DataDictionary].[ModelSubjectEntity] T
 			On	V.[EntityId] = T.[EntityId] And
 				V.[SubjectAreaId] = T.[SubjectAreaId] And
 				T.[ModelId] = @ModelId
 	Where	T.[EntityId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

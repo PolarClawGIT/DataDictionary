@@ -1,12 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
@@ -169,13 +164,14 @@ namespace DataDictionary.Main.Controls
                 foreach (IGrouping<ScopeType, NamedScopeIndex> scopeGroup in children.GroupBy(g => data.GetValue(g).Scope).OrderBy(o => o.Key))
                 {
                     TreeNodeCollection nodes = targetNodes;
+                    ImageEnumeration scopeValue = ImageEnumeration.Cast(scopeGroup.Key);
 
                     // Build Scope Groups
-                    if (scopeGroup.Count() > 1 && scopeGroup.Key.Setting().GroupByScope)
+                    if (scopeGroup.Count() > 1 && scopeValue.GroupBy)
                     {
-                        TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
-                        newNode.ImageKey = scopeGroup.Key.ToName();
-                        newNode.SelectedImageKey = scopeGroup.Key.ToName();
+                        TreeNode newNode = targetNodes.Add(scopeValue.Name.Split(".").Last());
+                        newNode.ImageKey = scopeValue.Name;
+                        newNode.SelectedImageKey = scopeValue.Name;
                         newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
                         newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
 
@@ -185,11 +181,14 @@ namespace DataDictionary.Main.Controls
                     // Build Data Nodes
                     foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data.GetValue(o).OrdinalPosition).ThenBy(o => data.GetValue(o).Title))
                     {
-                        TreeNode newNode = nodes.Add(data.GetValue(item).Title);
-                        newNode.ImageKey = data.GetValue(item).Scope.ToName();
-                        newNode.SelectedImageKey = data.GetValue(item).Scope.ToName();
-                        newNode.ToolTipText = data.GetValue(item).NamedPath.MemberFullPath;
-                        data.GetValue(item).OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
+                        INamedScopeValue value = data.GetValue(item);
+                        ImageEnumeration valueScope = ImageEnumeration.Cast(value.Scope);
+
+                        TreeNode newNode = nodes.Add(value.Title);
+                        newNode.ImageKey = valueScope.Name;
+                        newNode.SelectedImageKey = valueScope.Name;
+                        newNode.ToolTipText = value.Path.MemberFullPath;
+                        value.OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
                         valueNodes.Add(newNode, item);
 
                         // Handle 
@@ -203,7 +202,7 @@ namespace DataDictionary.Main.Controls
                                     && nodeItem.Key is not null)
                                 {
                                     nodeItem.Key.Text = value.Title;
-                                    nodeItem.Key.ToolTipText = value.NamedPath.MemberFullPath;
+                                    nodeItem.Key.ToolTipText = value.Path.MemberFullPath;
                                 }
                             }
                         }

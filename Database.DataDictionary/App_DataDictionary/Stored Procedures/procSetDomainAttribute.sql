@@ -28,7 +28,7 @@ Begin Try
 		    [AttributeId]          UniqueIdentifier Not Null,
 			[AttributeTitle]       [App_DataDictionary].[typeTitle] Not Null,
 			[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-			[TypeOfAttributeId]    UniqueIdentifier Null,
+			[MemberName]           [App_DataDictionary].[typeNameSpaceMember] NULL,
 			[IsSingleValue]        Bit Null,
 			[IsSimpleType]         Bit Null,
 			[IsDerived]            Bit Null,
@@ -44,7 +44,7 @@ Begin Try
 	Select	X.[AttributeId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
-			D.[TypeOfAttributeId],
+			M.[NameSpace] As [MemberName],
 			Case
 				When D.[IsSingleValue] = 1 Then 1
 				When D.[IsMultiValue] = 1 Then 0
@@ -66,8 +66,10 @@ Begin Try
 				When D.[IsNonKey] = 1 Then 0
 				Else Null End As [IsKey]
 	From	@Data D
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[AttributeTitle])) M
 			Cross apply (
 				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
+	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
 	Select	T.[AttributeId]
@@ -84,6 +86,12 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[DomainEntityAttribute]
+	From	[App_DataDictionary].[DomainEntityAttribute] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[DomainAttributeProperty]
 	From	[App_DataDictionary].[DomainAttributeProperty] T
 			Inner Join @Delete S
@@ -112,7 +120,6 @@ Begin Try
 		Select	[AttributeId],
 				[AttributeTitle],
 				[AttributeDescription],
-				[TypeOfAttributeId],
 				[IsSingleValue],
 				[IsSimpleType],
 				[IsDerived],
@@ -123,7 +130,6 @@ Begin Try
 		Select	[AttributeId],
 				[AttributeTitle],
 				[AttributeDescription],
-				[TypeOfAttributeId],
 				[IsSingleValue],
 				[IsSimpleType],
 				[IsDerived],
@@ -138,11 +144,28 @@ Begin Try
 			On	T.[AttributeId] = S.[AttributeId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	;With [Delta] As (
+		Select	@ModelId [ModelId],
+				[AttributeId],
+				[MemberName]
+		From	@Values
+		Except
+		Select	[ModelId],
+				[AttributeId],
+				[MemberName]
+		From	[App_DataDictionary].[ModelAttribute])
+	Update [App_DataDictionary].[ModelAttribute]
+	Set		[MemberName] = S.[MemberName]
+	From	[App_DataDictionary].[ModelAttribute] T
+			Inner Join [Delta] S
+			On	T.[ModelId] = S.[ModelId] And
+				T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Update [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Insert Into [App_DataDictionary].[DomainAttribute] (
 			[AttributeId],
 			[AttributeTitle],
 			[AttributeDescription],
-			[TypeOfAttributeId],
 			[IsSingleValue],
 			[IsSimpleType],
 			[IsDerived],
@@ -151,7 +174,6 @@ Begin Try
 	Select	S.[AttributeId],
 			S.[AttributeTitle],
 			S.[AttributeDescription],
-			S.[TypeOfAttributeId],
 			S.[IsSingleValue],
 			S.[IsSimpleType],
 			S.[IsDerived],
@@ -165,9 +187,11 @@ Begin Try
 
 	Insert Into [App_DataDictionary].[ModelAttribute] (
 			[ModelId],
-			[AttributeId])
+			[AttributeId],
+			[MemberName])
 	Select	@ModelId As [ModelId],
-			S.[AttributeId]
+			S.[AttributeId],
+			S.[MemberName]
 	From	@Values S
 			Left Join [App_DataDictionary].[ModelAttribute] T
 			On	S.[AttributeId] = T.[AttributeId] And

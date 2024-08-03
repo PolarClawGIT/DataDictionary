@@ -78,10 +78,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RtfPipe" Version="2.0.7677.4303" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="DataDictionary.Main.Global">
       <Static>True</Static>
     </Using>

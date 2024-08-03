@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
 
@@ -42,7 +42,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return this.TemplateTitle ?? Scope.ToName(); }
+        { return this.TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /// <inheritdoc/>
         public XDocument? TransformXml { get; private set; } = null;

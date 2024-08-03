@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.Main.Forms.Scripting
+﻿using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.Main.Forms.Scripting
 {
     partial class ScriptingTemplate
     {
@@ -101,8 +103,6 @@
             documentXMLData = new Controls.TextBoxData();
             documentScriptData = new Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
-            templateToolStrip = new ContextMenuStrip(components);
-            deleteTemplateCommand = new ToolStripMenuItem();
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
@@ -144,7 +144,6 @@
             documentToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
-            templateToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingPath).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
@@ -734,7 +733,7 @@
             templatePathSelect.Location = new Point(99, 3);
             templatePathSelect.Name = "templatePathSelect";
             templatePathSelect.ReadOnly = false;
-            templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            templatePathSelect.Scope = ScopeType.Null;
             templatePathSelect.ScopePath = namedScopePath1;
             templatePathSelect.Size = new Size(90, 66);
             templatePathSelect.TabIndex = 6;
@@ -847,7 +846,7 @@
             documentsTab.Controls.Add(documentTemplateLayout);
             documentsTab.Location = new Point(4, 24);
             documentsTab.Name = "documentsTab";
-            documentsTab.Size = new Size(849, 478);
+            documentsTab.Size = new Size(192, 72);
             documentsTab.TabIndex = 4;
             documentsTab.Text = "Documents (XML & Script)";
             // 
@@ -869,7 +868,7 @@
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            documentTemplateLayout.Size = new Size(849, 478);
+            documentTemplateLayout.Size = new Size(192, 72);
             documentTemplateLayout.TabIndex = 0;
             // 
             // documentToolStrip
@@ -878,7 +877,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildComand, documentSaveXMLCommand, documentSaveScriptCommand, documentSaveAllCommand, documentStatus });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(849, 25);
+            documentToolStrip.Size = new Size(192, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "toolStrip1";
             // 
@@ -940,7 +939,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(843, 107);
+            documentData.Size = new Size(186, 5);
             documentData.TabIndex = 1;
             documentData.SelectionChanged += DocumentData_SelectionChanged;
             // 
@@ -975,11 +974,11 @@
             documentTemplateLayout.SetColumnSpan(documentException, 2);
             documentException.Dock = DockStyle.Fill;
             documentException.HeaderText = "Exception";
-            documentException.Location = new Point(3, 367);
+            documentException.Location = new Point(3, 62);
             documentException.Multiline = true;
             documentException.Name = "documentException";
             documentException.ReadOnly = true;
-            documentException.Size = new Size(843, 108);
+            documentException.Size = new Size(186, 7);
             documentException.TabIndex = 3;
             documentException.WordWrap = false;
             // 
@@ -988,11 +987,11 @@
             documentXMLData.AutoSize = true;
             documentXMLData.Dock = DockStyle.Fill;
             documentXMLData.HeaderText = "XML";
-            documentXMLData.Location = new Point(3, 141);
+            documentXMLData.Location = new Point(3, 39);
             documentXMLData.Multiline = true;
             documentXMLData.Name = "documentXMLData";
             documentXMLData.ReadOnly = true;
-            documentXMLData.Size = new Size(418, 220);
+            documentXMLData.Size = new Size(90, 17);
             documentXMLData.TabIndex = 4;
             documentXMLData.WordWrap = false;
             // 
@@ -1001,27 +1000,13 @@
             documentScriptData.AutoSize = true;
             documentScriptData.Dock = DockStyle.Fill;
             documentScriptData.HeaderText = "Script";
-            documentScriptData.Location = new Point(427, 141);
+            documentScriptData.Location = new Point(99, 39);
             documentScriptData.Multiline = true;
             documentScriptData.Name = "documentScriptData";
             documentScriptData.ReadOnly = true;
-            documentScriptData.Size = new Size(419, 220);
+            documentScriptData.Size = new Size(90, 17);
             documentScriptData.TabIndex = 5;
             documentScriptData.WordWrap = false;
-            // 
-            // templateToolStrip
-            // 
-            templateToolStrip.Items.AddRange(new ToolStripItem[] { deleteTemplateCommand });
-            templateToolStrip.Name = "templateToolStrip";
-            templateToolStrip.Size = new Size(159, 26);
-            // 
-            // deleteTemplateCommand
-            // 
-            deleteTemplateCommand.Image = Properties.Resources.DeleteXSLTransform;
-            deleteTemplateCommand.Name = "deleteTemplateCommand";
-            deleteTemplateCommand.Size = new Size(158, 22);
-            deleteTemplateCommand.Text = "Delete Template";
-            deleteTemplateCommand.Click += DeleteTemplateCommand_Click;
             // 
             // bindingPath
             // 
@@ -1082,7 +1067,6 @@
             documentToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
-            templateToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingPath).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
@@ -1094,21 +1078,17 @@
         #endregion
 
         private BindingSource bindingTemplate;
-        private ContextMenuStrip templateToolStrip;
-        private TableLayoutPanel templateLayoutPanel;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData templateDescriptionData;
         private TabControl templateTabs;
         private TabPage documentSettingTab;
         private TabPage transformTab;
-        private TableLayoutPanel documentLayout;
         private Controls.ComboBoxData breakOnScopeData;
         private Controls.ComboBoxData rootDirectoryData;
         private Controls.TextBoxData rootDirectoryExpanded;
         private Controls.ComboBoxData scriptAsData;
         private GroupBox documentGroup;
         private GroupBox scriptingGroup;
-        private TableLayoutPanel documentGroupLayout;
         private Controls.TextBoxData documentDirectoryData;
         private Button documentDirectoryPicker;
         private Controls.TextBoxData documentPrefixData;
@@ -1120,7 +1100,6 @@
         private Controls.TextBoxData scriptingPrefixData;
         private Controls.TextBoxData scriptingSuffixData;
         private Controls.TextBoxData scriptingExtensionData;
-        private TableLayoutPanel transformLayout;
         private ToolStrip transformToolStrip;
         private Controls.TextBoxData transformExceptionData;
         private TextBox transformScriptData;
@@ -1130,7 +1109,6 @@
         private TabPage nodeDefinitionTab;
         private TabPage dataSelectionTab;
         private TabPage documentsTab;
-        private ToolStripMenuItem deleteTemplateCommand;
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;

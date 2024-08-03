@@ -1,7 +1,8 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Implementation for the Domain Alias Key
     /// </summary>
-    public class AliasKeyName : IAliasKeyName, IKeyComparable<IAliasKeyName>
+    public class AliasKeyName : IAliasKeyName,
+        IKeyComparable<IAliasKeyName>, IKeyComparable<AliasKeyName>
     {
         /// <inheritdoc/>
         public String AliasName { get; init; } = string.Empty;
@@ -98,64 +100,74 @@ namespace DataDictionary.DataLayer.DomainData.Alias
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IAliasKeyName? other)
+        public Boolean Equals(AliasKeyName? other)
         {
             return
-                other is IAliasKeyName &&
+                other is AliasKeyName &&
                 !string.IsNullOrEmpty(AliasName) &&
                 !string.IsNullOrEmpty(other.AliasName) &&
                 AliasName.Equals(other.AliasName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
+        public virtual Boolean Equals(IAliasKeyName? other)
+        { return other is IAliasKeyName value && Equals(new AliasKeyName(value)); }
+
+        /// <inheritdoc/>
+        public override Boolean Equals(object? obj)
         { return obj is IAliasKeyName value && Equals(new AliasKeyName(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IAliasKeyName? other)
+        public Int32 CompareTo(AliasKeyName? other)
         {
             if (other is null) { return 1; }
             else { return string.Compare(AliasName, other.AliasName, true); }
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(object? obj)
+        public virtual Int32 CompareTo(IAliasKeyName? other)
+        { if (other is IAliasKeyName value) { return CompareTo(new AliasKeyName(value)); } else { return 1; } }
+
+        /// <inheritdoc/>
+        public virtual Int32 CompareTo(object? obj)
         { if (obj is IAliasKeyName value) { return CompareTo(new AliasKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator ==(AliasKeyName left, AliasKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator !=(AliasKeyName left, AliasKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator <(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator <=(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator >(AliasKeyName left, AliasKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(AliasKeyName left, AliasKeyName right)
+        public static Boolean operator >=(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         { return AliasName.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>
-        public override string ToString()
+        public override String ToString()
         {
             if (AliasName is string) { return AliasName; }
             else { return string.Empty; }
         }
+
+
     }
 }

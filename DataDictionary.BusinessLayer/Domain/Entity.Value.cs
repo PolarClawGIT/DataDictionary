@@ -1,9 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
-using System.ComponentModel;
-using System.Xml.Linq;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -25,11 +23,15 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(EntityTitle); }
+        {
+            if (String.IsNullOrWhiteSpace(MemberName))
+            { return new NamedScopePath(EntityTitle); }
+            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+        }
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return EntityTitle ?? Scope.ToName(); }
+        { return EntityTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -7,11 +8,20 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableIndex : DbTableKey, ITableIndex
+    public class TableIndex : DbTableKey, ITableIndex,
+        IKeyEquality<ITableIndex>, IKeyEquality<TableIndex>
     {
         /// <inheritdoc cref="DbTableKey(IDbTableKey)"/>
         public TableIndex(IDbTableKey source) : base(source)
         { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ITableIndex? other)
+        { return other is IDbTableKey value && Equals(new DbTableKey(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(TableIndex? other)
+        { return other is IDbTableKey value && Equals(new DbTableKey(value)); }
 
         /// <summary>
         /// Convert TableIndex to a DataLayerIndex
@@ -26,9 +36,18 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableIndexName : DbTableKeyName, ITableIndexName
+    public class TableIndexName : DbTableKeyName, ITableIndexName,
+        IKeyEquality<ITableIndexName>, IKeyEquality<TableIndexName>
     {
         /// <inheritdoc cref="DbTableKeyName(IDbTableKeyName)"/>
         public TableIndexName(ITableIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ITableIndexName? other)
+        { return other is IDbTableKeyName value && Equals(new DbTableKeyName(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(TableIndexName? other)
+        { return other is IDbTableKeyName value && Equals(new DbTableKeyName(value)); }
     }
 }

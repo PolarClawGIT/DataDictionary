@@ -1,12 +1,5 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Template;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -19,7 +12,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for the Scripting Schema Column key.
     /// </summary>
-    public class NodePropertyIndex : ScriptingNodeKeyName
+    public class NodePropertyIndex : ScriptingNodeKeyName, INodePropertyIndex,
+        IKeyEquality<INodePropertyIndex>, IKeyEquality<NodePropertyIndex>
     {
         /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
         public NodePropertyIndex(INodePropertyIndex source) : base(source)
@@ -28,6 +22,13 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
         public NodePropertyIndex(IScriptingNodeKeyName source) : base(source)
         { }
-        
+
+        /// <inheritdoc/>
+        public Boolean Equals(INodePropertyIndex? other)
+        { return other is IScriptingNodeKeyName key && Equals(new ScriptingNodeKeyName(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(NodePropertyIndex? other)
+        { return other is IScriptingNodeKeyName key && Equals(new ScriptingNodeKeyName(key)); }
     }
 }

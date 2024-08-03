@@ -1,11 +1,7 @@
-﻿using DataDictionary.BusinessLayer.Model;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.ScriptingData.Template;
-using System.ComponentModel;
-using System.Xml.Linq;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -14,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue, IScripting<IDomainData>
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
@@ -26,12 +22,16 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public String GetTitle()
-        { return AttributeTitle ?? Scope.ToName(); }
+        { return AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
         public NamedScopePath GetPath()
-        { return new NamedScopePath(AttributeTitle); }
+        {
+            if (String.IsNullOrWhiteSpace(MemberName))
+            { return new NamedScopePath(AttributeTitle); }
+            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+        }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

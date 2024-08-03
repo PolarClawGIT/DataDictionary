@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Model
@@ -23,10 +23,10 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         public String GetTitle()
-        { return ModelTitle ?? Scope.ToName(); }
+        { return ModelTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /// <inheritdoc/>
         public NamedScopePath GetPath()
-        { return new NamedScopePath(Scope.ToName()); }
+        { return new NamedScopePath(ScopeEnumeration.Cast(Scope).Name); }
     }
 }

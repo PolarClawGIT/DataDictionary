@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -6,14 +8,11 @@ namespace DataDictionary.Main.Forms.Database
 {
     partial class DbConstraint : ApplicationData, IApplicationDataForm
     {
-
         public Boolean IsOpenItem(object? item)
         { return bindingConstraint.Current is IConstraintValue current && ReferenceEquals(current, item); }
 
-        public DbConstraint() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbConstraint() : base()
+        { InitializeComponent(); }
 
         public DbConstraint(IConstraintValue constraintItem) : this()
         {

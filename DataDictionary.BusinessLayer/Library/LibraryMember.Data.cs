@@ -3,8 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.DataLayer.LibraryData;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -55,18 +54,18 @@ namespace DataDictionary.BusinessLayer.Library
                 DataLayerIndex libraryKey = new LibrarySourceIndex(item);
                 DataLayerIndex parentKey = new LibraryMemberIndexParent(item);
 
-                if (libraryKey.HasValue)
-                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
-                else if (parentKey.HasValue)
+                if (parentKey.HasValue)
                 { result.Add(new NamedScopePair(parentKey, GetValue(item))); }
+                else if (libraryKey.HasValue)
+                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
                 else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 
             return result;
 
-            NamedScopeValueCore GetValue(LibraryMemberValue source)
+            NamedScopeValue GetValue(LibraryMemberValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

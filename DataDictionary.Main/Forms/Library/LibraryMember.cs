@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Library;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -9,10 +11,8 @@ namespace DataDictionary.Main.Forms.Library
         public Boolean IsOpenItem(object? item)
         { return bindingMember.Current is ILibraryMemberValue current && ReferenceEquals(current, item); }
 
-        public LibraryMember() : base()
-        {
-            InitializeComponent();
-        }
+        protected LibraryMember() : base()
+        { InitializeComponent(); }
 
         public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
@@ -21,10 +21,11 @@ namespace DataDictionary.Main.Forms.Library
             bindingMember.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberIndex(w)));
             bindingMember.Position = 0;
 
-            Setup(bindingMember);
-
             if (bindingMember.Current is ILibraryMemberValue current)
-            { bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key)); }
+            {
+                Setup(bindingMember);
+                bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key));
+            }
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)

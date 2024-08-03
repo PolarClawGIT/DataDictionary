@@ -1,6 +1,4 @@
-﻿--DROP PROCEDURE If Exists [App_DataDictionary].[procSetModelNameSpace]
---GO
-CREATE PROCEDURE [App_DataDictionary].[procSetModelNameSpace]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelNameSpace]
 		@ModelId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeNameSpace] ReadOnly
 As
@@ -62,6 +60,18 @@ Begin Try
 	;With [InUse] As (
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[ModelSubjectArea]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectAttribute]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectEntity]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectProcess]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectRelationship]
 		Union
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainAttributeAlias]

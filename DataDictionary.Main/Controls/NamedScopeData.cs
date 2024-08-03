@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 
@@ -46,9 +47,7 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
-            ImageList aliasImages = new ImageList();
-            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            { aliasImages.Images.Add(item.ToName(), item.ToImage()); }
+            ImageList aliasImages = ImageEnumeration.AsImageList();
 
             browser.SmallImageList = aliasImages;
             browser.Columns.Add("Path", browser.Width);
@@ -67,8 +66,8 @@ namespace DataDictionary.Main.Controls
             {
                 INamedScopeValue value = namedScope.GetValue(item);
 
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
-                browserItem.ToolTipText = value.NamedPath.MemberFullPath;
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
+                browserItem.ToolTipText = value.Path.MemberFullPath;
 
                 if (ScopeKey is null) { ScopeKey = value.Index; }
                 browser.Items.Add(browserItem);
@@ -87,8 +86,8 @@ namespace DataDictionary.Main.Controls
                 OrderBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
-                browserItem.ToolTipText = value.NamedPath.MemberFullPath;
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
+                browserItem.ToolTipText = value.Path.MemberFullPath;
 
                 browser.Items.Add(browserItem);
                 crossRefrence.Add(browserItem, value.Index);
@@ -103,8 +102,8 @@ namespace DataDictionary.Main.Controls
                     OrderBy(o => o.OrdinalPosition).
                     ThenBy(o => o.Title))
                 {
-                    ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
-                    browserItem.ToolTipText = value.NamedPath.MemberFullPath;
+                    ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
+                    browserItem.ToolTipText = value.Path.MemberFullPath;
 
                     if (ScopeKey is null) { ScopeKey = value.Index; }
                     browser.Items.Add(browserItem);
@@ -114,8 +113,8 @@ namespace DataDictionary.Main.Controls
 
             // Current Node
             INamedScopeValue currentValue = namedScope.GetValue(key);
-            ListViewItem currentItem = new ListViewItem(currentValue.Title, currentValue.Scope.ToName());
-            currentItem.ToolTipText = currentValue.NamedPath.MemberFullPath;
+            ListViewItem currentItem = new ListViewItem(currentValue.Title, ImageEnumeration.Cast(currentValue.Scope).Name);
+            currentItem.ToolTipText = currentValue.Path.MemberFullPath;
             currentItem.Font = new Font(currentItem.Font, FontStyle.Underline);
             currentItem.ForeColor = Color.Blue;
 
@@ -130,8 +129,8 @@ namespace DataDictionary.Main.Controls
                 ThenBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
-                browserItem.ToolTipText = value.NamedPath.MemberFullPath;
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
+                browserItem.ToolTipText = value.Path.MemberFullPath;
                 browserItem.IndentCount = 1;
 
                 browser.Items.Add(browserItem);
@@ -141,7 +140,7 @@ namespace DataDictionary.Main.Controls
             // Update form to match selected item
             if (ScopeKey is not null && namedScope.ContainsKey(ScopeKey) && namedScope.GetValue(ScopeKey) is INamedScopeValue setValue)
             {
-                ScopePath = setValue.NamedPath;
+                ScopePath = setValue.Path;
                 Scope = setValue.Scope;
             }
         }

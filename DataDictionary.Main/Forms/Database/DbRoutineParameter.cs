@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -10,10 +12,8 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingParameter.Current is IRoutineParameterValue current && ReferenceEquals(current, item); }
 
-        public DbRoutineParameter() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbRoutineParameter() : base()
+        {   InitializeComponent(); }
 
         public DbRoutineParameter(IRoutineParameterValue parameterItem) : this()
         {

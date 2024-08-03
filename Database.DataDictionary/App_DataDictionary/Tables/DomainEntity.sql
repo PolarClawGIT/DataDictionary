@@ -7,7 +7,6 @@
 	[EntityId]          UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntityId] DEFAULT (newid()),
 	[EntityTitle]       [App_DataDictionary].[typeTitle] Not Null,
 	[EntityDescription] [App_DataDictionary].[typeDescription] Null,
-	[TypeOfEntityId]    UniqueIdentifier Null,
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainEntity_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainEntity_SysStart] DEFAULT (sysdatetime()),
@@ -15,7 +14,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DomainEntity] PRIMARY KEY CLUSTERED ([EntityId] ASC),
-	CONSTRAINT [FK_DomainEntity_SubTypeEntity] FOREIGN KEY ([TypeOfEntityId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
 )
 GO
 

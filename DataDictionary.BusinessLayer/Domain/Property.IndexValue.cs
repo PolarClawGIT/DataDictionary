@@ -1,7 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -9,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Domain Property Index by Value.
     /// </summary>
-    public interface IPropertyIndexValue : IKey, IDomainPropertyTypeKey, IDbExtendedPropertyName
+    public interface IPropertyIndexValue : IKey, IDomainPropertyType, IDbExtendedPropertyName
     { }
 
     /// <summary>
@@ -92,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public override string ToString()
         {
-            String result = PropertyType.ToName();
+            String result = DomainPropertyEnumeration.Cast(PropertyType).Name;
             if (!String.IsNullOrWhiteSpace(PropertyName))
             { result = String.Format("{0}.{1}", result, PropertyName); }
 

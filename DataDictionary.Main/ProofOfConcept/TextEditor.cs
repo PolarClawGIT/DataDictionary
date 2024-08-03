@@ -1,5 +1,5 @@
 ﻿using DataDictionary.Main.Forms;
-using RtfPipe;
+//using RtfPipe; Removed the NuGet package. https://github.com/erdomke/RtfPipe
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -74,7 +74,8 @@ namespace DataDictionary.Main.ProofOfConcept
         String ToHtml(String text)
         {
             // Uses the RtfPipe tool. https://github.com/erdomke/RtfPipe
-            return Rtf.ToHtml(text);
+            //return Rtf.ToHtml(text);
+            return String.Empty;
         }
 
 

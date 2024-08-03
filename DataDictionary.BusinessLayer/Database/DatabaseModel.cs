@@ -1,11 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -80,6 +76,17 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="source"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Import(DbSchemaContext source);
+
+        /// <summary>
+        /// Gets the MS SQL ExtendedProperty "MS_Description", if any.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns>Value or Null if no MS_Description.</returns>
+        /// <example><![CDATA[
+        ///  TableValue dbObject = new TableValue(); // ExtendedPropertyIndexName takes an DbObject Name Keys
+        ///  String? result = GetDescription(new ExtendedPropertyIndexName(dbObject));
+        /// ]]></example>
+        String? GetDescription(ExtendedPropertyIndexName key);
     }
 
     /// <summary>
@@ -456,7 +463,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
-        {   return Delete(); }
+        { return Delete(); }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
@@ -476,9 +483,15 @@ namespace DataDictionary.BusinessLayer.Database
             result.AddRange(constraints.GetNamedScopes());
 
             return result;
-            
+
         }
 
-
+        /// <inheritdoc/>
+        public String? GetDescription(ExtendedPropertyIndexName key)
+        {
+            if (DbExtendedProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IExtendedPropertyValue value)
+            { return value.PropertyValue; }
+            else { return null; }
+        }
     }
 }

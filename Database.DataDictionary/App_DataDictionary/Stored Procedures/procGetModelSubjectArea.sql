@@ -11,7 +11,7 @@ Select	M.[SubjectAreaId],
 		M.[SubjectAreaTitle],
 		M.[SubjectAreaDescription],
 		--M.[NameSpaceId],
-		N.[NameSpace] As [SubjectAreaNameSpace]
+		N.[NameSpace] As [SubjectName]
 From	[App_DataDictionary].[ModelSubjectArea] M
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
 Where	(@ModelId is Null or @ModelId = M.[ModelId]) And

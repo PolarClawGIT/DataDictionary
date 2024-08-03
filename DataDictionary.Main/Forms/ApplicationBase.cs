@@ -1,10 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.Application;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;

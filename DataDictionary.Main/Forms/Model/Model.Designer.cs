@@ -33,12 +33,9 @@
             modelTitleData = new Controls.TextBoxData();
             modelDescriptionData = new Controls.TextBoxData();
             bindingModel = new BindingSource(components);
-            modelToolStrip = new ContextMenuStrip(components);
-            openModelManagerCommand = new ToolStripMenuItem();
             modelManagerLayout = new TableLayoutPanel();
             modelManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
-            modelToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // modelManagerLayout
@@ -68,6 +65,7 @@
             modelTitleData.ReadOnly = false;
             modelTitleData.Size = new Size(384, 44);
             modelTitleData.TabIndex = 1;
+            modelTitleData.WordWrap = true;
             // 
             // modelDescriptionData
             // 
@@ -80,20 +78,7 @@
             modelDescriptionData.ReadOnly = false;
             modelDescriptionData.Size = new Size(384, 237);
             modelDescriptionData.TabIndex = 2;
-            // 
-            // modelToolStrip
-            // 
-            modelToolStrip.Items.AddRange(new ToolStripItem[] { openModelManagerCommand });
-            modelToolStrip.Name = "modelToolStrip";
-            modelToolStrip.Size = new Size(191, 48);
-            // 
-            // openModelManagerCommand
-            // 
-            openModelManagerCommand.Image = Properties.Resources.SaveSoftwareDefinitionModel;
-            openModelManagerCommand.Name = "openModelManagerCommand";
-            openModelManagerCommand.Size = new Size(190, 22);
-            openModelManagerCommand.Text = "Open Model Manager";
-            openModelManagerCommand.Click += openModelManagerCommand_Click;
+            modelDescriptionData.WordWrap = true;
             // 
             // Model
             // 
@@ -108,7 +93,6 @@
             modelManagerLayout.ResumeLayout(false);
             modelManagerLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
-            modelToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -118,7 +102,5 @@
         private Controls.TextBoxData modelTitleData;
         private Controls.TextBoxData modelDescriptionData;
         private BindingSource bindingModel;
-        private ContextMenuStrip modelToolStrip;
-        private ToolStripMenuItem openModelManagerCommand;
     }
 }

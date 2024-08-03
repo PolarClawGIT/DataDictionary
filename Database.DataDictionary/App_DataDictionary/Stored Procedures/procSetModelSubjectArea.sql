@@ -35,9 +35,9 @@ Begin Try
 
 	Insert Into @NameSpace
 	Select	Null As [NameSpaceId],
-			[SubjectAreaNameSpace] As [NameSpace]
+			[SubjectName]
 	From	@Data
-	Group By [SubjectAreaNameSpace]
+	Group By [SubjectName]
 
 	-- Need to create & assign the NameSpaceID's
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
@@ -54,7 +54,7 @@ Begin Try
 			D.[SubjectAreaDescription],
 			N.[NameSpaceId]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectAreaNameSpace]) C
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectName]) C
 			Left Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1
@@ -76,29 +76,29 @@ Begin Try
 					(@ModelId is Null Or @ModelId = A.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelAttribute]
+	Delete From [App_DataDictionary].[ModelSubjectAttribute]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelEntity]
+	Delete From [App_DataDictionary].[ModelSubjectEntity]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelProcess]
+	Delete From [App_DataDictionary].[ModelSubjectProcess]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelRelationship]
+	Delete From [App_DataDictionary].[ModelSubjectRelationship]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelSubjectArea]
 	Where	[SubjectAreaId] In (

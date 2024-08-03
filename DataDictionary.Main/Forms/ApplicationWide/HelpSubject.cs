@@ -1,11 +1,10 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Application;
+﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
-//using DataDictionary.DataLayer;
-//using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.Threading;
@@ -53,14 +52,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public HelpSubject() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_HelpTableOfContent;
+
             controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
             controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
 
-            toolStrip.TransferItems(helpContextMenu,0);
             helpToolStripButton.Enabled = false;
-            newHelpCommand.Enabled = true;
-            deleteHelpCommand.Enabled = true;
 
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
@@ -68,14 +64,15 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpSubjectValue subject)
             { helpBinding.Position = subjects.IndexOf(subject); }
 
-            // Setup Images for Tree Control
-            SetImages(helpContentNavigation, helpContentImageItems.Values);
-
-            IsOpenDatabase = true;
-            IsSaveDatabase = true;
-            IsDeleteDatabase = true;
+            Setup(
+                helpBinding,
+                CommandImageType.Add,
+                CommandImageType.Delete,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
+            SetImages(helpContentNavigation);
         }
-
 
         public HelpSubject(Form targetForm) : this()
         {
@@ -144,27 +141,6 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         }
 
 
-        private void newHelpCommand_Click(object? sender, EventArgs e)
-        {
-            if (helpBinding.AddNew() is HelpSubjectValue newItem)
-            {
-                //TODO: Always added at end of list. Can it be added based on Name Space?
-
-                TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
-                helpContentNavigation.SelectedNode = newNode;
-            }
-        }
-
-        private void deleteHelpCommand_Click(object? sender, EventArgs e)
-        {
-            if (helpBinding.Current is HelpSubjectValue current)
-            {
-                RemoveNode(current);
-                helpBinding.RemoveCurrent();
-            }
-        }
-
-
         #region Help Content Tree
         Dictionary<TreeNode, HelpSubjectValue> helpContentNodes = new Dictionary<TreeNode, HelpSubjectValue>();
         enum helpContentImageIndex
@@ -173,10 +149,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, (String imageKey, Image image)> helpContentImageItems = new Dictionary<helpContentImageIndex, (String imageKey, Image image)>()
+        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, ImageEnumeration>()
         {
-            {helpContentImageIndex.HelpPage,    ("HelpPage",   Resources.StatusHelp) },
-            {helpContentImageIndex.HelpGroup,   ("HelpGroup",  Resources.HelpIndexFile) },
+            {helpContentImageIndex.HelpPage, ImageEnumeration.Cast(ScopeType.ApplicationHelpPage) },
+            {helpContentImageIndex.HelpGroup, ImageEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
         };
 
         void BuildHelpTree()
@@ -244,8 +220,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         private TreeNode CreateNode(HelpSubjectValue source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(source.HelpSubject);
-            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.ImageKey = helpContentImageItems[imageIndex].Name;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
 
             if (parentNode is null)
             { helpContentNavigation.Nodes.Add(result); }
@@ -264,8 +240,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         private TreeNode CreateNode(String nodeText, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(nodeText);
-            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.ImageKey = helpContentImageItems[imageIndex].Name;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
 
             if (parentNode is null)
             { helpContentNavigation.Nodes.Add(result); }
@@ -321,13 +297,13 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
+        void SetImages(TreeView tree)
         {
             if (tree.ImageList is null)
             { tree.ImageList = new ImageList(); }
 
-            foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
-            { tree.ImageList.Images.Add(image.imageKey, image.image); }
+            foreach (var image in helpContentImageItems.Values)
+            { tree.ImageList.Images.Add(image.Name, image.GetImage()); }
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -481,6 +457,26 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 }
 
                 currentItem = null;
+            }
+        }
+
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
+        {
+            if (helpBinding.AddNew() is HelpSubjectValue newItem)
+            {
+                //TODO: Always added at end of list. Can it be added based on Name Space?
+
+                TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
+                helpContentNavigation.SelectedNode = newNode;
+            }
+        }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            if (helpBinding.Current is HelpSubjectValue current)
+            {
+                RemoveNode(current);
+                helpBinding.RemoveCurrent();
             }
         }
 

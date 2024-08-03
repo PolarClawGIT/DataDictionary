@@ -1,0 +1,149 @@
+﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.DataLayer.DatabaseData.Table
+{
+    /// <summary>
+    /// Interface for the Database Table Column Key
+    /// </summary>
+    public interface IDbTableColumnKeyName : IKey, IDbTableKeyName, IToAliasName
+    {
+        /// <summary>
+        /// Name of the Database Column
+        /// </summary>
+        String? ColumnName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbTableColumnKeyName
+    /// </summary>
+    public static class DbTableColumnKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Table Column.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbTableColumnKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
+    }
+
+    /// <summary>
+    /// Implementation of the Database Table Column Key
+    /// </summary>
+    public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
+        IKeyComparable<IDbTableColumnKeyName>, IKeyComparable<DbTableColumnKeyName>
+    {
+        /// <inheritdoc/>
+        public string ColumnName { get; init; } = string.Empty;
+
+        /// <summary>
+        /// Constructor for a blank Database Column Key
+        /// </summary>
+        protected internal DbTableColumnKeyName() : base() { }
+
+        /// <summary>
+        /// Constructor for the Database Column Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DbTableColumnKeyName(IDbTableColumnKeyName source) : base(source)
+        { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
+
+        /// <summary>
+        /// Try to Create a Database Column Key from the Alias.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">A four part Alias name with a Scope of a Table/View Column.</param>
+        /// <returns>A Column Key or Null if a key could not be constructed.</returns>
+        public static new DbTableColumnKeyName? TryCreate<T>(T source)
+            where T : IAliasKeyName, IScopeType
+        {
+            if (source.AliasName is null) { return null; }
+
+            List<String> parsed = AliasExtension.NameParts(source.AliasName);
+            if (parsed.Count != 4) { return null; }
+
+            if (source.Scope is ScopeType.DatabaseTableColumn or ScopeType.DatabaseViewColumn)
+            {
+                return new DbTableColumnKeyName()
+                {
+                    DatabaseName = parsed[0],
+                    SchemaName = parsed[1],
+                    TableName = parsed[2],
+                    ColumnName = parsed[3]
+                };
+            }
+            else { return null; }
+        }
+
+        #region IEquatable, IComparable
+        /// <inheritdoc/>
+        public Boolean Equals(DbTableColumnKeyName? other)
+        {
+            return
+                other is IDbSchemaKeyName &&
+                new DbTableKeyName(this).Equals(other) &&
+                !string.IsNullOrEmpty(ColumnName) &&
+                !string.IsNullOrEmpty(other.ColumnName) &&
+                ColumnName.Equals(other.ColumnName, KeyExtension.CompareString);
+        }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IDbTableColumnKeyName? other)
+        { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+
+        /// <inheritdoc/>
+        public override Boolean Equals(object? obj)
+        { return obj is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+
+        /// <inheritdoc/>
+        public Int32 CompareTo(DbTableColumnKeyName? other)
+        {
+            if (other is null) { return 1; }
+            else if (new DbTableKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+            else { return string.Compare(ColumnName, other.ColumnName, true); }
+        }
+
+        /// <inheritdoc/>
+        public Int32 CompareTo(IDbTableColumnKeyName? other)
+        { if (other is IDbTableColumnKeyName value) { return CompareTo(new DbTableColumnKeyName(value)); } else { return 1; } }
+
+        /// <inheritdoc/>
+        public override Int32 CompareTo(object? obj)
+        { if (obj is IDbTableColumnKeyName value) { return CompareTo(new DbTableColumnKeyName(value)); } else { return 1; } }
+
+        /// <inheritdoc/>
+        public static Boolean operator ==(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static Boolean operator !=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return !left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static Boolean operator <(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
+
+        /// <inheritdoc/>
+        public static Boolean operator <=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
+
+        /// <inheritdoc/>
+        public static Boolean operator >(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
+
+        /// <inheritdoc/>
+        public static bool operator >=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
+
+        /// <inheritdoc/>
+        public override Int32 GetHashCode()
+        { return HashCode.Combine(base.GetHashCode(), ColumnName.GetHashCode(KeyExtension.CompareString)); }
+        #endregion
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return this.ToAliasName(); }
+    }
+}

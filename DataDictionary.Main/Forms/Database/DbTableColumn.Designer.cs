@@ -82,8 +82,8 @@
             columnNameData = new Controls.TextBoxData();
             bindingColumn = new BindingSource(components);
             bindingProperties = new BindingSource(components);
-            tableColumnToolStrip = new ContextMenuStrip(components);
-            exportCommand = new ToolStripMenuItem();
+            exportOptions = new ContextMenuStrip(components);
+            exportAttributes = new ToolStripMenuItem();
             dbTableLayout = new TableLayoutPanel();
             columnDetailLayout = new TabControl();
             columnsTab = new TabPage();
@@ -118,7 +118,7 @@
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
-            tableColumnToolStrip.SuspendLayout();
+            exportOptions.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -225,6 +225,7 @@
             dataTypeData.ReadOnly = true;
             dataTypeData.Size = new Size(404, 44);
             dataTypeData.TabIndex = 12;
+            dataTypeData.WordWrap = true;
             // 
             // characterGroup
             // 
@@ -264,6 +265,7 @@
             characterMaximumLengthData.ReadOnly = true;
             characterMaximumLengthData.Size = new Size(187, 44);
             characterMaximumLengthData.TabIndex = 13;
+            characterMaximumLengthData.WordWrap = true;
             // 
             // characterOctetLengthData
             // 
@@ -276,6 +278,7 @@
             characterOctetLengthData.ReadOnly = true;
             characterOctetLengthData.Size = new Size(187, 44);
             characterOctetLengthData.TabIndex = 14;
+            characterOctetLengthData.WordWrap = true;
             // 
             // numericGroup
             // 
@@ -317,6 +320,7 @@
             numericPrecisionData.ReadOnly = true;
             numericPrecisionData.Size = new Size(187, 44);
             numericPrecisionData.TabIndex = 17;
+            numericPrecisionData.WordWrap = true;
             // 
             // numericPrecisionRadixData
             // 
@@ -329,6 +333,7 @@
             numericPrecisionRadixData.ReadOnly = true;
             numericPrecisionRadixData.Size = new Size(187, 44);
             numericPrecisionRadixData.TabIndex = 18;
+            numericPrecisionRadixData.WordWrap = true;
             // 
             // numericScaleData
             // 
@@ -341,6 +346,7 @@
             numericScaleData.ReadOnly = true;
             numericScaleData.Size = new Size(187, 56);
             numericScaleData.TabIndex = 19;
+            numericScaleData.WordWrap = true;
             // 
             // columnFlagsLayout
             // 
@@ -378,6 +384,7 @@
             ordinalPositionData.ReadOnly = true;
             ordinalPositionData.Size = new Size(195, 44);
             ordinalPositionData.TabIndex = 11;
+            ordinalPositionData.WordWrap = true;
             // 
             // isHiddenData
             // 
@@ -437,6 +444,7 @@
             dateTimePrecisionData.ReadOnly = true;
             dateTimePrecisionData.Size = new Size(183, 44);
             dateTimePrecisionData.TabIndex = 20;
+            dateTimePrecisionData.WordWrap = true;
             // 
             // isIdentityData
             // 
@@ -507,6 +515,7 @@
             characterSetCatalogData.ReadOnly = true;
             characterSetCatalogData.Size = new Size(180, 44);
             characterSetCatalogData.TabIndex = 14;
+            characterSetCatalogData.WordWrap = true;
             // 
             // characterSetSchemaData
             // 
@@ -519,6 +528,7 @@
             characterSetSchemaData.ReadOnly = true;
             characterSetSchemaData.Size = new Size(180, 44);
             characterSetSchemaData.TabIndex = 15;
+            characterSetSchemaData.WordWrap = true;
             // 
             // characterSetNameData
             // 
@@ -531,6 +541,7 @@
             characterSetNameData.ReadOnly = true;
             characterSetNameData.Size = new Size(180, 44);
             characterSetNameData.TabIndex = 18;
+            characterSetNameData.WordWrap = true;
             // 
             // collationCatalogData
             // 
@@ -543,6 +554,7 @@
             collationCatalogData.ReadOnly = true;
             collationCatalogData.Size = new Size(180, 44);
             collationCatalogData.TabIndex = 19;
+            collationCatalogData.WordWrap = true;
             // 
             // collationSchemaData
             // 
@@ -555,6 +567,7 @@
             collationSchemaData.ReadOnly = true;
             collationSchemaData.Size = new Size(180, 44);
             collationSchemaData.TabIndex = 20;
+            collationSchemaData.WordWrap = true;
             // 
             // collationNameData
             // 
@@ -567,6 +580,7 @@
             collationNameData.ReadOnly = true;
             collationNameData.Size = new Size(180, 44);
             collationNameData.TabIndex = 21;
+            collationNameData.WordWrap = true;
             // 
             // defaultComputedTab
             // 
@@ -606,6 +620,7 @@
             columnComputedData.ReadOnly = true;
             columnComputedData.Size = new Size(180, 27);
             columnComputedData.TabIndex = 16;
+            columnComputedData.WordWrap = true;
             // 
             // columnDefaultData
             // 
@@ -619,6 +634,7 @@
             columnDefaultData.ReadOnly = true;
             columnDefaultData.Size = new Size(180, 27);
             columnDefaultData.TabIndex = 14;
+            columnDefaultData.WordWrap = true;
             // 
             // otherDataTab
             // 
@@ -663,6 +679,7 @@
             generatedAlwayTypeData.ReadOnly = true;
             generatedAlwayTypeData.Size = new Size(55, 44);
             generatedAlwayTypeData.TabIndex = 20;
+            generatedAlwayTypeData.WordWrap = true;
             // 
             // domainCatalogData
             // 
@@ -676,6 +693,7 @@
             domainCatalogData.ReadOnly = true;
             domainCatalogData.Size = new Size(180, 44);
             domainCatalogData.TabIndex = 21;
+            domainCatalogData.WordWrap = true;
             // 
             // domainSchemaData
             // 
@@ -689,6 +707,7 @@
             domainSchemaData.ReadOnly = true;
             domainSchemaData.Size = new Size(180, 44);
             domainSchemaData.TabIndex = 22;
+            domainSchemaData.WordWrap = true;
             // 
             // domainNameData
             // 
@@ -702,6 +721,7 @@
             domainNameData.ReadOnly = true;
             domainNameData.Size = new Size(180, 44);
             domainNameData.TabIndex = 23;
+            domainNameData.WordWrap = true;
             // 
             // extendedPropertiesTab
             // 
@@ -755,6 +775,7 @@
             catalogNameData.ReadOnly = true;
             catalogNameData.Size = new Size(639, 44);
             catalogNameData.TabIndex = 10;
+            catalogNameData.WordWrap = true;
             // 
             // schemaNameData
             // 
@@ -767,6 +788,7 @@
             schemaNameData.ReadOnly = true;
             schemaNameData.Size = new Size(639, 44);
             schemaNameData.TabIndex = 11;
+            schemaNameData.WordWrap = true;
             // 
             // tableNameData
             // 
@@ -779,6 +801,7 @@
             tableNameData.ReadOnly = true;
             tableNameData.Size = new Size(639, 44);
             tableNameData.TabIndex = 12;
+            tableNameData.WordWrap = true;
             // 
             // columnNameData
             // 
@@ -791,20 +814,21 @@
             columnNameData.ReadOnly = true;
             columnNameData.Size = new Size(639, 44);
             columnNameData.TabIndex = 13;
+            columnNameData.WordWrap = true;
             // 
-            // tableColumnToolStrip
+            // exportOptions
             // 
-            tableColumnToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
-            tableColumnToolStrip.Name = "tableColumnToolStrip";
-            tableColumnToolStrip.Size = new Size(219, 26);
+            exportOptions.Items.AddRange(new ToolStripItem[] { exportAttributes });
+            exportOptions.Name = "contextMenuStrip1";
+            exportOptions.Size = new Size(153, 26);
             // 
-            // exportCommand
+            // exportAttributes
             // 
-            exportCommand.Image = Properties.Resources.ExportAttribute;
-            exportCommand.Name = "exportCommand";
-            exportCommand.Size = new Size(218, 22);
-            exportCommand.Text = "Export Column to Attribute";
-            exportCommand.Click += exportCommand_Click;
+            exportAttributes.Name = "exportAttributes";
+            exportAttributes.Size = new Size(152, 22);
+            exportAttributes.Text = "Attributes only";
+            exportAttributes.ToolTipText = "Create domain Attribute from database Column";
+            exportAttributes.Click += ExportAttributes_Click;
             // 
             // DbTableColumn
             // 
@@ -848,7 +872,7 @@
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumn).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
-            tableColumnToolStrip.ResumeLayout(false);
+            exportOptions.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -896,7 +920,7 @@
         private Controls.TextBoxData numericScaleData;
         private BindingSource bindingColumn;
         private BindingSource bindingProperties;
-        private ContextMenuStrip tableColumnToolStrip;
-        private ToolStripMenuItem exportCommand;
+        private ContextMenuStrip exportOptions;
+        private ToolStripMenuItem exportAttributes;
     }
 }

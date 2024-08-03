@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.Library;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -11,13 +10,10 @@ namespace DataDictionary.Main.Forms.Library
         public Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ILibrarySourceValue current && ReferenceEquals(current, item); }
 
-        public LibrarySource() : base()
-        {
-            InitializeComponent();
-            this.Icon = Resources.Icon_Library;
-        }
+        protected LibrarySource() : base()
+        { InitializeComponent(); }
 
-        public LibrarySource(ILibrarySourceValue librarySource) : this ()
+        public LibrarySource(ILibrarySourceValue librarySource) : this()
         {
             LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
 

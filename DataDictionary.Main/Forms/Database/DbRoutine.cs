@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -9,12 +11,10 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingRoutine.Current is IRoutineValue current && ReferenceEquals(current, item); }
 
-        public DbRoutine() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbRoutine() : base()
+        { InitializeComponent(); }
 
-        public DbRoutine(IRoutineValue routineItem): this()
+        public DbRoutine(IRoutineValue routineItem) : this()
         {
             RoutineIndexName key = new RoutineIndexName(routineItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);

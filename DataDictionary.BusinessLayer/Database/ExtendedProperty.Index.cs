@@ -4,6 +4,7 @@ using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -12,7 +13,8 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyIndexName : DbExtendedPropertyKeyName, IDbExtendedPropertyKeyName
+    public class ExtendedPropertyIndexName : DbExtendedPropertyKeyName, IDbExtendedPropertyKeyName,
+        IKeyEquality<IExtendedPropertyIndexName>, IKeyEquality<ExtendedPropertyIndexName>
     {
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbExtendedPropertyKeyName)"/>
         public ExtendedPropertyIndexName(IExtendedPropertyIndexName source): base(source)
@@ -45,5 +47,13 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbDomainKeyName)"/>
         public ExtendedPropertyIndexName(IDomainIndexName source) : base(source)
         { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IExtendedPropertyIndexName? other)
+        { return other is IDbExtendedPropertyKeyName key && Equals(new DbExtendedPropertyKeyName(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ExtendedPropertyIndexName? other)
+        { return other is IDbExtendedPropertyKeyName key && Equals(new DbExtendedPropertyKeyName(key)); }
     }
 }

@@ -1,12 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.LibraryData.Source;
-using System;
-using System.Collections.Generic;
+using DataDictionary.DataLayer.LibraryData;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -144,7 +139,7 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DataLayer.LibraryData.Source.ILibrarySourceKey dbKey = new DataLayer.LibraryData.Source.LibrarySourceKey(key);
+            ILibrarySourceKey dbKey = new LibrarySourceKey(key);
 
             work.Add(new WorkItem()
             {

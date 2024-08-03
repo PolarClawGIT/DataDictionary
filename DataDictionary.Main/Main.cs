@@ -1,14 +1,12 @@
-using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
-using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -21,16 +19,27 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            Icon = Resources.Icon_Application;
+            Icon = ImageEnumeration.GetIcon(ScopeType.Application);
 
             IsLocked(true);
-
+            
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ScopeExtension.ToImageList();
-
+            contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
+
+            // Set the other images
+            // TODO: The designer does not execute this stuff.
+            // Image in design view may not match what is in the WinFormEnumeration.
+            // Result, there are two places that the image needs to be maintained.
+            // The Form (every form) and the WinFormEnumeration. 
+            // The desire is to have only one places of "truth"
+            //optionsToolStripMenuItem.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationOption);
+            //manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+            //viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+
+            //menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.ModelAttribute);
         }
 
         #region Form
@@ -164,9 +173,6 @@ namespace DataDictionary.Main
             if (ActiveMdiChild is Form currentForm)
             { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
         }
-
-        private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { throw new NotImplementedException(); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {

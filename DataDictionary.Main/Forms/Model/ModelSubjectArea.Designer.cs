@@ -41,12 +41,10 @@
             entityData = new DataGridView();
             entityTitleColumn = new DataGridViewTextBoxColumn();
             entityDescriptionColumn = new DataGridViewTextBoxColumn();
-            subjectAreaNameSpaceData = new Controls.TextBoxData();
+            memberNameData = new Controls.TextBoxData();
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
-            subjectAreaToolStrip = new ContextMenuStrip(components);
-            removeSubjectAreaCommand = new ToolStripMenuItem();
             subjectAreaLayout = new TableLayoutPanel();
             subjectAreaTab = new TabControl();
             subjectAreaLayout.SuspendLayout();
@@ -58,7 +56,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
-            subjectAreaToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // subjectAreaLayout
@@ -68,7 +65,7 @@
             subjectAreaLayout.Controls.Add(subjectAreaTitleData, 0, 0);
             subjectAreaLayout.Controls.Add(subjectAreaDescriptionData, 0, 1);
             subjectAreaLayout.Controls.Add(subjectAreaTab, 0, 3);
-            subjectAreaLayout.Controls.Add(subjectAreaNameSpaceData, 0, 2);
+            subjectAreaLayout.Controls.Add(memberNameData, 0, 2);
             subjectAreaLayout.Dock = DockStyle.Fill;
             subjectAreaLayout.Location = new Point(0, 25);
             subjectAreaLayout.Name = "subjectAreaLayout";
@@ -91,6 +88,7 @@
             subjectAreaTitleData.ReadOnly = false;
             subjectAreaTitleData.Size = new Size(373, 44);
             subjectAreaTitleData.TabIndex = 0;
+            subjectAreaTitleData.WordWrap = true;
             // 
             // subjectAreaDescriptionData
             // 
@@ -103,6 +101,7 @@
             subjectAreaDescriptionData.ReadOnly = false;
             subjectAreaDescriptionData.Size = new Size(373, 129);
             subjectAreaDescriptionData.TabIndex = 1;
+            subjectAreaDescriptionData.WordWrap = true;
             // 
             // subjectAreaTab
             // 
@@ -193,32 +192,19 @@
             entityDescriptionColumn.HeaderText = "Entity Description";
             entityDescriptionColumn.Name = "entityDescriptionColumn";
             // 
-            // subjectAreaNameSpaceData
+            // memberNameData
             // 
-            subjectAreaNameSpaceData.AutoSize = true;
-            subjectAreaNameSpaceData.Dock = DockStyle.Fill;
-            subjectAreaNameSpaceData.HeaderText = "Subject Area NameSpace";
-            subjectAreaNameSpaceData.Location = new Point(3, 188);
-            subjectAreaNameSpaceData.Multiline = false;
-            subjectAreaNameSpaceData.Name = "subjectAreaNameSpaceData";
-            subjectAreaNameSpaceData.ReadOnly = false;
-            subjectAreaNameSpaceData.Size = new Size(373, 44);
-            subjectAreaNameSpaceData.TabIndex = 3;
-            subjectAreaNameSpaceData.Validating += SubjectAreaNameSpaceData_Validating;
-            // 
-            // subjectAreaToolStrip
-            // 
-            subjectAreaToolStrip.Items.AddRange(new ToolStripItem[] { removeSubjectAreaCommand });
-            subjectAreaToolStrip.Name = "subjectAreaToolStrip";
-            subjectAreaToolStrip.Size = new Size(184, 26);
-            // 
-            // removeSubjectAreaCommand
-            // 
-            removeSubjectAreaCommand.Image = Properties.Resources.DeleteDiagram;
-            removeSubjectAreaCommand.Name = "removeSubjectAreaCommand";
-            removeSubjectAreaCommand.Size = new Size(183, 22);
-            removeSubjectAreaCommand.Text = "remove Subject Area";
-            removeSubjectAreaCommand.Click += RemoveSubjectAreaCommand_Click;
+            memberNameData.AutoSize = true;
+            memberNameData.Dock = DockStyle.Fill;
+            memberNameData.HeaderText = "Subject Member Name";
+            memberNameData.Location = new Point(3, 188);
+            memberNameData.Multiline = false;
+            memberNameData.Name = "memberNameData";
+            memberNameData.ReadOnly = false;
+            memberNameData.Size = new Size(373, 44);
+            memberNameData.TabIndex = 3;
+            memberNameData.WordWrap = true;
+            memberNameData.Validating += MemberNameData_Validating;
             // 
             // ModelSubjectArea
             // 
@@ -240,7 +226,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
-            subjectAreaToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -258,10 +243,8 @@
         private DataGridViewTextBoxColumn entityTitleColumn;
         private DataGridViewTextBoxColumn entityDescriptionColumn;
         private BindingSource bindingSubject;
-        private DataDictionary.Main.Controls.TextBoxData subjectAreaNameSpaceData;
+        private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private BindingSource bindingEntity;
         private BindingSource bindingAttribute;
-        private ContextMenuStrip subjectAreaToolStrip;
-        private ToolStripMenuItem removeSubjectAreaCommand;
     }
 }

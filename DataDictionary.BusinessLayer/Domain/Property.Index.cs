@@ -1,7 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData.Property;
+﻿using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -10,10 +8,19 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class PropertyIndex : DomainPropertyKey, IPropertyIndex
+    public class PropertyIndex : DomainPropertyKey, IPropertyIndex,
+        IKeyEquality<IPropertyIndex>, IKeyEquality<PropertyIndex>
     {
         /// <inheritdoc cref="DomainPropertyKey(IDomainPropertyKey)"/>
         public PropertyIndex(IPropertyIndex source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IPropertyIndex? other)
+        { return other is IDomainPropertyKey key && Equals(new DomainPropertyKey(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(PropertyIndex? other)
+        { return other is IDomainPropertyKey key && Equals(new DomainPropertyKey(key)); }
 
         /// <summary>
         /// Convert PropertyIndex to a DataLayerIndex
@@ -28,10 +35,19 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class PropertyIndexName : DomainPropertyKeyName
+    public class PropertyIndexName : DomainPropertyKeyName, IPropertyIndexName,
+        IKeyEquality<IPropertyIndexName>, IKeyEquality<PropertyIndexName>
     {
         /// <inheritdoc cref="DomainPropertyKeyName(IDomainPropertyKeyName)"/>
         public PropertyIndexName(IPropertyIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IPropertyIndexName? other)
+        { return other is IDomainPropertyKeyName key && Equals(new DomainPropertyKeyName(key)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(PropertyIndexName? other)
+        { return other is IDomainPropertyKeyName key && Equals(new DomainPropertyKeyName(key)); }
     }
 
 }

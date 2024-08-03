@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -14,7 +15,6 @@ namespace DataDictionary.Main.Forms.Model
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(subjectAreaToolStrip, 0);
         }
 
         public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
@@ -30,10 +30,9 @@ namespace DataDictionary.Main.Forms.Model
             bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.SubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
-            Setup(bindingSubject);
-
             if (bindingSubject.Current is ISubjectAreaValue current)
             {
+                Setup(bindingSubject, CommandImageType.Delete);
                 //List<AttributeIndex> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
                 //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
 
@@ -47,7 +46,7 @@ namespace DataDictionary.Main.Forms.Model
             ISubjectAreaValue bindingNames;
             subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), bindingSubject, nameof(bindingNames.SubjectAreaTitle)));
             subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), bindingSubject, nameof(bindingNames.SubjectAreaDescription)));
-            subjectAreaNameSpaceData.DataBindings.Add(new Binding(nameof(subjectAreaNameSpaceData.Text), bindingSubject, nameof(bindingNames.SubjectAreaNameSpace)));
+            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingSubject, nameof(bindingNames.SubjectName)));
 
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
@@ -58,9 +57,10 @@ namespace DataDictionary.Main.Forms.Model
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not ISubjectAreaValue);
         }
 
-
-        private void RemoveSubjectAreaCommand_Click(object sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             if (bindingSubject.Current is SubjectAreaValue current)
             {
                 this.IsLocked(true);
@@ -74,10 +74,10 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void SubjectAreaNameSpaceData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MemberNameData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(subjectAreaNameSpaceData.Text).ToArray());
-            subjectAreaNameSpaceData.Text = path.MemberFullPath;
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            memberNameData.Text = path.MemberFullPath;
         }
     }
 }

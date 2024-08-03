@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {

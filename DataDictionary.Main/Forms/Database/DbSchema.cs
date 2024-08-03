@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -9,10 +11,8 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingSchema.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
-        public DbSchema() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbSchema() : base()
+        { InitializeComponent(); }
 
         public DbSchema(ISchemaValue schemaItem) : this()
         {

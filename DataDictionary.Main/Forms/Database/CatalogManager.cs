@@ -2,8 +2,10 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -16,12 +18,13 @@ namespace DataDictionary.Main.Forms.Database
         public CatalogManager() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(catalogContextMenu, 0);
 
-            addDatabaseCommand.Enabled = true;
-            removeDatabaseCommand.Enabled = false;
-
-            this.Icon = Resources.Icon_Database;
+            Setup(ScopeType.Database,
+                CommandImageType.Add,
+                CommandImageType.Delete,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
         }
 
         private void CatalogManager_Load(object sender, EventArgs e)
@@ -61,8 +64,10 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        private void AddDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
+            base.AddCommand_Click(sender, e);
+
             using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
             {
                 if (catalogBinding.Current is ICatalogValue catalogItem
@@ -127,8 +132,10 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        private void RemoveDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             catalogNavigation.EndEdit();
             List<WorkItem> work = new List<WorkItem>();
 
@@ -245,10 +252,11 @@ namespace DataDictionary.Main.Forms.Database
 
         private void CatalogBinding_CurrentChanged(object sender, EventArgs e)
         {
-            removeDatabaseCommand.Enabled = GetInModel();
-            IsOpenDatabase = GetInDatabase() && !GetInModel();
-            IsSaveDatabase = GetInModel();
-            IsDeleteDatabase = GetInDatabase();
+            CommandButtons[CommandImageType.Delete].IsEnabled = GetInModel();
+            
+            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

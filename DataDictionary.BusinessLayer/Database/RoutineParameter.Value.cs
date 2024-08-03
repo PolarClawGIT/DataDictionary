@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using System.ComponentModel;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -28,6 +27,6 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return ParameterName ?? Scope.ToName(); }
+        { return ParameterName ?? ScopeEnumeration.Cast(Scope).Name; }
     }
 }

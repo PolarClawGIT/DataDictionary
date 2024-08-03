@@ -2,9 +2,8 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.Threading;
 
@@ -157,8 +156,14 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(attributeValues.GetNamedScopes());
-            result.AddRange(entityValues.GetNamedScopes());
+
+            IEnumerable<NamedScopePair> values = 
+                attributeValues.GetNamedScopes().
+                Union(entityValues.GetNamedScopes());
+
+            //result.AddRange(values);
+            result.AddRange(SubjectNameSpace.GetNamedScopes(values));
+
             return result;
         }
     }

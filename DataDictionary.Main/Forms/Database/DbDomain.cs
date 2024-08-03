@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -10,10 +11,8 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingDomain.Current is IDomainValue current && ReferenceEquals(current, item); }
 
-        public DbDomain() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbDomain() : base()
+        { InitializeComponent(); }
 
         public DbDomain(IDomainValue domainItem) : this()
         {

@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using Toolbox.BindingTable;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -32,7 +31,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IScopeKey
+    public interface INamedScopeSourceValue : IScopeType
     {
         // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
 
@@ -75,15 +74,43 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// Class to build NamedScope Pairs (Parent Key and Value).
     /// </summary>
     /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
-    struct NamedScopePair
+    class NamedScopePair
     {
         public DataLayerIndex? ParentKey { get; } = null;
-        public NamedScopeValueCore Value { get; }
+        public NamedScopeValue Value { get; }
 
-        public NamedScopePair(NamedScopeValueCore value)
+        public NamedScopePair(NamedScopeValue value)
         { this.Value = value; }
 
-        public NamedScopePair(DataLayerIndex parent, NamedScopeValueCore value) : this(value)
+        public NamedScopePair(DataLayerIndex parent, NamedScopeValue value) : this(value)
         { this.ParentKey = parent; }
+    }
+
+    /// <summary>
+    /// Represents NameSpace items that does not have a specific Scope for the node.
+    /// </summary>
+    class NameSpaceSource : INamedScopeSourceValue
+    {
+        protected Guid SystemId;
+        protected NamedScopePath SystemPath;
+        public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
+
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
+
+        public NamedScopePath GetPath()
+        { return SystemPath; }
+
+        public String GetTitle()
+        { return SystemPath.Member; }
+
+        public NameSpaceSource(NamedScopePath path)
+        {
+            SystemId = Guid.NewGuid();
+            SystemPath = path;
+        }
+
+        public override String ToString()
+        { return SystemPath.MemberFullPath; }
     }
 }

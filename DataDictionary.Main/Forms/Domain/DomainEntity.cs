@@ -3,9 +3,14 @@ using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
+using DataDictionary.Resource.Enumerations;
+using DataDictionary.Main.Dialogs;
+using System.Linq;
+using DataDictionary.BusinessLayer;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -14,10 +19,11 @@ namespace DataDictionary.Main.Forms.Domain
         public Boolean IsOpenItem(object? item)
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
-        public DomainEntity() : base()
+        protected DomainEntity() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(entityToolStrip, 0);
+
+            attributeSelect.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Default);
         }
 
         public DomainEntity(IEntityValue? entityItem) : this()
@@ -29,33 +35,35 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             EntityIndex key = new EntityIndex(entityItem);
+
             bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
-            Setup(bindingEntity);
-
             if (bindingEntity.Current is IEntityValue current)
             {
+                Setup(bindingEntity, CommandImageType.Delete);
+
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
+                bindingAttributeDetail.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => true);
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.DomainModel.Entities.Attributes, w => key.Equals(w));
             }
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            IEntityValue nameOfValues;
             PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(nameOfValues.EntityDescription)));
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            EntityNameList.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
-            typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(nameOfValues.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
+            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
+
+            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
@@ -66,15 +74,31 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
+            // TODO: Add fill of attribute data.
+            // Can this add the AttributeValue?
+            // What to display of the attribute?
+            // Navigation directly to the attribute?
+            AttributeNameList.Load(attributeColumn);
+
+
+
+            attributeData.AutoGenerateColumns = false;
+            attributeData.DataSource = bindingAttribute;
+
+            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
             subjectArea.BindTo(bindingSubjectArea);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             if (bindingEntity.Current is IEntityValue current)
-            { BusinessData.DomainModel.Entities.Delete(current); }
+            { DoWork(BusinessData.DomainModel.Entities.Delete(current)); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -183,8 +207,6 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
         {
-            var x = bindingDefinition.DataSource;
-
             if (bindingDefinition.Current is EntityDefinitionValue current)
             {
                 domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
@@ -206,6 +228,97 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingDefinition.Position = definition.IndexOf(value);
             }
             else { bindingDefinition.AddNew(); }
+        }
+
+        private void MemberNameData_Validating(object sender, CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            memberNameData.Text = path.MemberFullPath;
+        }
+
+        private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingEntity.Current is EntityValue current)
+            {
+                e.NewObject = new EntityAttributeValue(current)
+                {
+                    OrdinalPosition = bindingAttribute.Count + 1
+                };
+            }
+        }
+
+        private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
+        { SetAttributeDetail(); }
+
+        private void SetAttributeDetail()
+        {
+            if (bindingAttribute.Current is EntityAttributeValue current)
+            {
+                AttributeIndex key = new AttributeIndex(current);
+
+                if (bindingAttributeDetail.DataSource is IList<AttributeValue> attributes
+                    && attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
+                { bindingAttributeDetail.Position = attributes.IndexOf(attribute); }
+            }
+
+        }
+
+        private void BindingAttributeDetail_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            AttributeValue newValue = new AttributeValue();
+
+            if (bindingAttribute.Current is EntityAttributeValue attribute)
+            { attribute.AttributeId = newValue.AttributeId; }
+
+
+            e.NewObject = newValue;
+        }
+
+
+        private void AttributeTitleData_Validated(object sender, EventArgs e)
+        { AttributeNameList.Load(attributeColumn); }
+
+        private void AttributeSelect_Click(object sender, EventArgs e)
+        {
+            if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
+            {
+
+                using (var dialog = new SelectionDialog(GetDescription))
+                {
+                    dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+
+                    dialog.SelectByIndex(
+                        attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)));
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        var selected = dialog.SelectedByValue<AttributeValue>();
+
+                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(selected.Select(s => new AttributeIndex(s))).ToList())
+                        { // Remove
+                            if (attributes.FirstOrDefault(w => item.Equals(w)) is EntityAttributeValue removeItem)
+                            { bindingAttribute.Remove(removeItem); }
+                        }
+
+                        foreach (AttributeIndex item in selected.Select(s => new AttributeIndex(s)).Except(attributes.Select(s => new AttributeIndex(s))).ToList())
+                        { // Add
+                            bindingAttribute.AddNew();
+                            if (bindingAttribute.Current is EntityAttributeValue newItem)
+                            { newItem.AttributeId = item.AttributeId; }
+                        }
+                    }
+                }
+            }
+
+            String GetDescription (INamedScopeSourceValue value)
+            {   // Needed a physical method rather then a Lambda expression.
+                // Properties don't get passed as expected.
+                // I needed the property passed by Reference and that did not work.
+                if (value is AttributeValue attribute)
+                { return attribute.AttributeDescription ?? String.Empty; }
+                else { return String.Empty; }
+            }
+
         }
     }
 }

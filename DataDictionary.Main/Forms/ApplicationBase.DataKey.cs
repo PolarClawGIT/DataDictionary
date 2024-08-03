@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.Main.Messages;
+﻿using DataDictionary.Main.Messages;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Data;

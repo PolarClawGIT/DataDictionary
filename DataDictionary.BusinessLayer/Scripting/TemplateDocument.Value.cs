@@ -1,12 +1,6 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Template;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -44,11 +38,6 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// The Script file Name
         /// </summary>
         FileInfo? ScriptFile { get; }
-
-        /// <summary>
-        /// The XML Document that was used as the Source
-        /// </summary>
-        //XDocument Source { get; }
 
         /// <summary>
         /// Text version of Source. For Data Binding.
@@ -106,8 +95,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if (templateValue.RootDirectory is DirectoryType root &&
-                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
+                if (templateValue.RootDirectory is TemplateDirectoryType root &&
+                    TemplateDirectoryEnumeration.Cast(root).Directory is DirectoryInfo folder)
                 {
                     String directoryName =
                         Path.Combine(
@@ -139,8 +128,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if (templateValue.RootDirectory is DirectoryType root &&
-                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
+                if (templateValue.RootDirectory is TemplateDirectoryType root &&
+                    TemplateDirectoryEnumeration.Cast(root).Directory is DirectoryInfo folder)
                 {
                     String directoryName =
                         Path.Combine(
@@ -283,7 +272,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                         XslCompiledTransform transformer = new XslCompiledTransform();
                         transformer.Load(transformReader);
 
-                        if (templateValue.ScriptAs is ScriptAsType.Text)
+                        if (templateValue.ScriptAs is TemplateScriptAsType.Text)
                         {
                             using (StringWriter resultText = new StringWriter())
                             {
@@ -291,7 +280,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                                 ResultsAsText = resultText.ToString();
                             }
                         }
-                        else if (templateValue.ScriptAs is ScriptAsType.XML)
+                        else if (templateValue.ScriptAs is TemplateScriptAsType.XML)
                         {
                             ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
                             using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())

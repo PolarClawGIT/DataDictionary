@@ -6,7 +6,6 @@
 	[AttributeId]          UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttributeId] DEFAULT (newid()),
 	[AttributeTitle]       [App_DataDictionary].[typeTitle] Not Null,
 	[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-	[TypeOfAttributeId]    UniqueIdentifier Null, -- Allows for sub-types
 	[IsSingleValue]        Bit Null, -- A Simple Valued attribute has a distinct value (not Multi Valued)
 --	[IsMultiValue]         As (convert(bit, case when [IsSingleValue]=(0) then (1) when [IsSingleValue]=(1) then (0) end)),
 	[IsSimpleType]         Bit Null, -- A Simple attribute (not Composite)
@@ -23,7 +22,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DomainAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),
-	CONSTRAINT [FK_DomainAttribute_TypeOfAttribute] FOREIGN KEY ([TypeOfAttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
 )
 GO
 

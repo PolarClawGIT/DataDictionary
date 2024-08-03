@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.DataLayer.ScriptingData;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -68,9 +68,9 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             return this.Select(s => new NamedScopePair(GetValue(s)));
 
-            NamedScopeValueCore GetValue(TemplateValue source)
+            NamedScopeValue GetValue(TemplateValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

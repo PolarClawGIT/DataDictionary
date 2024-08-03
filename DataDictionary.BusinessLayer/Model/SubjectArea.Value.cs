@@ -1,12 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Model
@@ -29,10 +23,10 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         public String GetTitle()
-        { return SubjectAreaTitle ?? Scope.ToName(); }
+        { return SubjectAreaTitle ?? ScopeEnumeration.Cast(Scope).Name; ; }
 
         /// <inheritdoc/>
         public NamedScopePath GetPath()
-        { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(this.SubjectAreaNameSpace).ToArray())); }
+        { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(this.SubjectName).ToArray())); }
     }
 }

@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// List of Parts of the NameScope Path.
         /// </summary>
-        protected List<string> pathParts = new List<string>();
+        protected List<String> pathParts = new List<String>();
 
         /// <inheritdoc/>
         public String Member
@@ -102,7 +102,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <summary>
-        /// Constructor for a NamedScope Path
+        /// Constructor for a NamedScope Path (Combine)
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version allows multiple paths to be combined.</remarks>
@@ -113,11 +113,19 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <summary>
+        /// Constructor for a NamedScope Path (Append)
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="member"></param>
+        public NamedScopePath(INamedScopePath basePath, String member) : this(basePath)
+        { pathParts.AddRange(Parse(member)); }
+
+        /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
         internal NamedScopePath(ScopeType source) : this()
-        { pathParts.AddRange(Parse(source.ToName())); }
+        { pathParts.AddRange(Parse(ScopeEnumeration.Cast(source).Name)); }
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NamedScope Key.
@@ -128,6 +136,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             List<String> elements = new List<String>();
             String? parse = source;
+
+            // Names must be Letter or Digit or a narrow list of separators
+            if (!String.IsNullOrWhiteSpace(parse))
+            {
+                parse = parse.Trim();
+
+                foreach (Char item in parse.ToCharArray().Where(w => !(
+                    Char.IsLetterOrDigit(w) ||
+                    w is '[' or ']' or '.' || // Characters used for formating
+                    w is ' ' or '_' or '-' or ':' or ';' or '/' or '\\'))) // allowed separators & delimiter characters
+                { parse = parse.Replace(item.ToString(), String.Empty); }
+            }
 
             while (!String.IsNullOrWhiteSpace(parse))
             {
@@ -243,15 +263,22 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(NamedScopePath? other)
+        public Boolean Equals(NamedScopePath? other)
         {
             if (other is NamedScopePath otherKey)
-            { return pathParts.SequenceEqual(otherKey.pathParts); }
+            {
+                return pathParts.SequenceEqual(
+                    otherKey.pathParts,
+                    EqualityComparer<String>.Create(
+                        (first, second) => String.Equals(first, second, KeyExtension.CompareString),
+                        (hash) => String.GetHashCode(hash, KeyExtension.CompareString)
+                    ));
+            }
             else { return false; }
         }
 
         /// <inheritdoc/>
-        public int CompareTo(NamedScopePath? other)
+        public Int32 CompareTo(NamedScopePath? other)
         {
             if (other is NamedScopePath otherKey)
             {
@@ -259,7 +286,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
                 while (pathParts.Count > index
                     && otherKey.pathParts.Count > index
-                    && pathParts[index].CompareTo(otherKey.pathParts[index]) == 0)
+                    && String.Compare(pathParts[index], otherKey.pathParts[index], KeyExtension.CompareString) == 0)
                 { index = index + 1; }
 
                 if (pathParts.Count == index && otherKey.pathParts.Count == index) { return 0; }
@@ -271,7 +298,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(INamedScopePath? other)
+        public virtual Boolean Equals(INamedScopePath? other)
         {
             if (other is INamedScopePath)
             {
@@ -282,11 +309,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
+        public override Boolean Equals(object? obj)
         { return obj is INamedScopePath value && Equals(new NamedScopePath(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(INamedScopePath? other)
+        public virtual Int32 CompareTo(INamedScopePath? other)
         {
             if (other is null) { return 1; }
             else
@@ -297,7 +324,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(object? obj)
+        public virtual Int32 CompareTo(object? obj)
         {
             if (obj is INamedScopePath value)
             { return CompareTo(new NamedScopePath(value)); }
@@ -305,32 +332,32 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public static bool operator ==(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator ==(NamedScopePath left, NamedScopePath right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator !=(NamedScopePath left, NamedScopePath right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <=(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >(NamedScopePath left, NamedScopePath right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >=(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
-        public override int GetHashCode()
-        { return MemberFullPath.GetHashCode(); }
+        public override Int32 GetHashCode()
+        { return MemberFullPath.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <summary>
@@ -344,7 +371,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Delimiter placed between names.
         /// Default is "."</param>
         /// <returns></returns>
-        public virtual string Format(string pattern = "[{0}]", string delimiter = ".")
+        public virtual String Format(string pattern = "[{0}]", string delimiter = ".")
         { return string.Join(delimiter, pathParts.Select(s => string.Format(pattern, s))); }
 
         /// <summary>
@@ -359,25 +386,34 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<NamedScopePath> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
 
             foreach (NamedScopePath item in group)
+            { result.AddRange(item.Group()); }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Groups the NameSpaces based on Hierarchy.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<NamedScopePath> Group()
+        {
+            List<NamedScopePath> result = new List<NamedScopePath>() { this };
+
+            NamedScopePath? key = this.ParentPath;
+
+            while (key is not null)
             {
-                if (!result.Contains(item))
-                { result.Add(item); }
+                if (!result.Contains(key))
+                { result.Add(key); }
 
-                NamedScopePath? key = item.ParentPath;
-
-                while (key is not null)
-                {
-                    if (!result.Contains(key))
-                    { result.Add(key); }
-
-                    key = key.ParentPath;
-                }
+                key = key.ParentPath;
             }
+
             return result;
         }
 
         /// <inheritdoc/>
-        public override string ToString()
+        public override String ToString()
         { return this.MemberFullPath; }
     }
 }
