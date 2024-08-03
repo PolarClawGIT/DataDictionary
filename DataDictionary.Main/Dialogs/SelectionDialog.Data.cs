@@ -48,8 +48,6 @@ namespace DataDictionary.Main.Dialogs
         private NamedScopePath pathValue = pathNull;
         private BindingList<NamedScopePath> filterPaths;
 
-        public Func<INamedScopeSourceValue, String> GetDescription { get; init; } = (value) => String.Empty;
-
         /// <summary>
         /// Group By Scope is Selected
         /// </summary>
@@ -79,7 +77,7 @@ namespace DataDictionary.Main.Dialogs
         }
         private Boolean isGroupByScope = true;
 
-        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths)
+        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths, Func<INamedScopeSourceValue, String> getDescription)
         {
             this.filterScopes = scopes;
             this.filterPaths = paths;
@@ -90,7 +88,7 @@ namespace DataDictionary.Main.Dialogs
             IEnumerable<SelectionDialogValue> Create(NamedScopeIndex key)
             {
                 List<SelectionDialogValue> result = new List<SelectionDialogValue>();
-                result.Add(new SelectionDialogValue(key) { GetDescription = GetDescription });
+                result.Add(new SelectionDialogValue(key, getDescription));
 
                 foreach (NamedScopeIndex childKey in BusinessData.NamedScope.ChildrenKeys(key))
                 { result.AddRange(Create(childKey)); }
@@ -131,7 +129,7 @@ namespace DataDictionary.Main.Dialogs
                 Dictionary<ScopeType, String> data = new Dictionary<ScopeType, String>();
                 data.Add(scopeNull, "(any)");
 
-                this.Where(w => 
+                this.Where(w =>
                         (filterScopes.Count == 0 || filterScopes.Contains(w.Scope))
                         && (filterPaths.Count == 0 || filterPaths.Contains(w.Path))).
                     Select(s => new { s.Scope, s.ScopeName }).

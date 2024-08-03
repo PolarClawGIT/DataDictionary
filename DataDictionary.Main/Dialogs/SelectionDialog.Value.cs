@@ -12,6 +12,11 @@ using Toolbox.BindingTable;
 namespace DataDictionary.Main.Dialogs
 {
 
+    class SelectionDialogGetValue
+    { // So I can pass a Delegate by Reference
+        public required Func<INamedScopeSourceValue, String> GetValue { get; set; }
+    }
+
     class SelectionDialogValue : IBindingPropertyChanged
     {
         public NamedScopeIndex Index { get; }
@@ -19,24 +24,25 @@ namespace DataDictionary.Main.Dialogs
         public INamedScopeSourceValue Source { get; }
         public ListViewItem ListView { get; }
 
-        public Func<INamedScopeSourceValue, String> GetDescription { get; init; } = (value) => String.Empty;
-
         public String Title { get { return NamedScope.Title; } }
         public ScopeType Scope { get { return NamedScope.Scope; } }
         public String ScopeName { get { return ImageEnumeration.Cast(Scope).DisplayName; } }
         public NamedScopePath Path { get { return NamedScope.Path; } }
         public String PathName { get { return Path.MemberFullPath; } }
+
+        Func<INamedScopeSourceValue, String> GetDescription { get; }
         public String Description { get { return GetDescription(Source); } }
 
-        public SelectionDialogValue(NamedScopeIndex key)
+        public SelectionDialogValue(NamedScopeIndex key, Func<INamedScopeSourceValue, String> getDescription)
         {
-            Index = key;
-            NamedScope = BusinessData.NamedScope.GetValue(key);
-            Source = BusinessData.NamedScope.GetData(key);
+            this.Index = key;
+            this.NamedScope = BusinessData.NamedScope.GetValue(key);
+            this.Source = BusinessData.NamedScope.GetData(key);
+            this.GetDescription = getDescription;
 
             ImageEnumeration scopeItem = ImageEnumeration.Cast(NamedScope.Scope);
-            ListView = new ListViewItem(Title);
-            ListView.ImageKey = scopeItem.Name;
+            this.ListView = new ListViewItem(Title);
+            this.ListView.ImageKey = scopeItem.Name;
         }
 
         /// <summary>

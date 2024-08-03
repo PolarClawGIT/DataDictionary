@@ -17,11 +17,6 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class SelectionDialog : Form
     {
-        /// <summary>
-        /// Provides mechanism to inject a Description.
-        /// </summary>
-        public Func<INamedScopeSourceValue, String> GetDescription { get; init; } = (value) => String.Empty;
-
         public Func<INamedScopeSourceValue, Boolean> IsTypeOf { get; init; } = (value) => true;
 
         public BindingList<ScopeType> FilterScopes { get; } =
@@ -34,15 +29,15 @@ namespace DataDictionary.Main.Dialogs
             new BindingList<DataLayerIndex>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
-        //TODO: Cannot get GetDescription to be passed by Reference.
-        SelectionDialogData formData;// = new SelectionDialogData();
+        SelectionDialogData formData;
 
-        public SelectionDialog() : base()
+        public SelectionDialog(Func<INamedScopeSourceValue, String> getDescription) : base()
         {
-            formData = new SelectionDialogData(FilterScopes, FilterPaths);
+            formData = new SelectionDialogData(FilterScopes, FilterPaths, getDescription);
+
             InitializeComponent();
             selectionData.SmallImageList = ImageEnumeration.AsImageList();
-            bindingSource.DataSource = formData; 
+            bindingSource.DataSource = formData;
             bindingSource.Position = 0;
 
             //formData.PropertyChanged += FormData_PropertyChanged;
@@ -109,10 +104,6 @@ namespace DataDictionary.Main.Dialogs
                     selectionData.Items.Add(newItem);
                 }
             }
-
-            //TODO: Not working as intended. Should only show ones from FilterScopes & FilterPaths
-            //formData.BindScopes(filterScope);
-            //formData.BindPaths(filterPath);
         }
 
         private void FormData_FilterChanged(Object? sender, EventArgs e)
@@ -121,7 +112,7 @@ namespace DataDictionary.Main.Dialogs
         private void Selected_ListChanged(Object? sender, ListChangedEventArgs e)
         {
             foreach (SelectionDialogValue item in formData)
-            {   
+            {
                 // Causes SelectionData_ItemCheck to trigger.
                 if (Selected.Contains(item.Source.Index) && !item.ListView.Checked)
                 { item.ListView.Checked = true; }
@@ -163,9 +154,9 @@ namespace DataDictionary.Main.Dialogs
 
                 // Causes Selected_ListChanged to trigger
                 if (e.NewValue is CheckState.Checked && !Selected.Contains(key))
-                { Selected.Add(key); } 
+                { Selected.Add(key); }
                 else if (e.NewValue is CheckState.Unchecked && Selected.Contains(key))
-                { Selected.Remove(key); } 
+                { Selected.Remove(key); }
                 // Everything else does not change state. Avoids infinite Loop.
             }
         }
