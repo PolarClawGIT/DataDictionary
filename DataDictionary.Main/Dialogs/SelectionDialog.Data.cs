@@ -77,10 +77,15 @@ namespace DataDictionary.Main.Dialogs
         }
         private Boolean isGroupByScope = true;
 
-        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths, Func<INamedScopeSourceValue, String> getDescription)
+        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths)
         {
             this.filterScopes = scopes;
             this.filterPaths = paths;
+        }
+
+        public void BuildList(Func<INamedScopeSourceValue, String> getDescription)
+        {
+            this.Clear();
 
             foreach (NamedScopeIndex rootKey in BusinessData.NamedScope.RootKeys())
             { this.AddRange(Create(rootKey)); }

@@ -287,14 +287,25 @@ namespace DataDictionary.Main.Forms.Domain
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
 
-                    dialog.Selected.AddRange(
-                        attributes.
-                        Select(s => (DataLayerIndex)new AttributeIndex(s)));
+                    dialog.SelectByIndex(
+                        attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)));
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        // TODO: Mechanism to get the AttributeValues needed.
-                        var x = dialog.Selected;
+                        var selected = dialog.SelectedByValue<AttributeValue>();
+
+                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(selected.Select(s => new AttributeIndex(s))).ToList())
+                        { // Remove
+                            if (attributes.FirstOrDefault(w => item.Equals(w)) is EntityAttributeValue removeItem)
+                            { bindingAttribute.Remove(removeItem); }
+                        }
+
+                        foreach (AttributeIndex item in selected.Select(s => new AttributeIndex(s)).Except(attributes.Select(s => new AttributeIndex(s))).ToList())
+                        { // Add
+                            bindingAttribute.AddNew();
+                            if (bindingAttribute.Current is EntityAttributeValue newItem)
+                            { newItem.AttributeId = item.AttributeId; }
+                        }
                     }
                 }
             }

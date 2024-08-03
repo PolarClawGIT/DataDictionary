@@ -17,23 +17,37 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class SelectionDialog : Form
     {
-        public Func<INamedScopeSourceValue, Boolean> IsTypeOf { get; init; } = (value) => true;
-
+        /// <summary>
+        /// Filters the list by Scopes.
+        /// </summary>
         public BindingList<ScopeType> FilterScopes { get; } =
             new BindingList<ScopeType>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
+
+        /// <summary>
+        /// Filters the List by Paths
+        /// </summary>
         public BindingList<NamedScopePath> FilterPaths { get; } =
             new BindingList<NamedScopePath>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
-        public BindingList<DataLayerIndex> Selected { get; } =
-            new BindingList<DataLayerIndex>()
+
+        /// <summary>
+        /// The Selected items.
+        /// </summary>
+        public BindingList<NamedScopeIndex> Selected { get; } =
+            new BindingList<NamedScopeIndex>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
         SelectionDialogData formData;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="getDescription">Function that returns the Description</param>
         public SelectionDialog(Func<INamedScopeSourceValue, String> getDescription) : base()
         {
-            formData = new SelectionDialogData(FilterScopes, FilterPaths, getDescription);
+            formData = new SelectionDialogData(FilterScopes, FilterPaths);
+            formData.BuildList(getDescription); // Could not create getDescription as a Property and pass it to the data class.
 
             InitializeComponent();
             selectionData.SmallImageList = ImageEnumeration.AsImageList();
@@ -62,6 +76,64 @@ namespace DataDictionary.Main.Dialogs
             LoadListView();
         }
 
+        /// <summary>
+        /// Shows the dialog initially position over the form that called it.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public DialogResult ShowDialog(Form source)
+        {
+            if (source.IsMdiChild
+                && source.MdiParent is Form parent
+                && parent.Controls.Cast<Control>().FirstOrDefault(w => w is MdiClient) is Control mdiControl)
+            {
+                Point mdiTopLeft = mdiControl.Location;
+                Point formOffset = source.Location; // The Forms location is offset from the MDI container
+
+                // Get the sum of the controls that are on the top and left edges of the MDI Container
+                // Note: Menu Strips and some other controls are above or to the left of the MDI container.
+                // This places them outside of the MDI container.
+                // We are interested in controls that take up space within the MDI container.
+                // ToolStrips are within the MDI, but other controls may need to be accounted for.
+                Int32 topSum = parent.Controls.
+                    Cast<Control>().
+                    Where(w => w.Dock == DockStyle.Top && w is ToolStrip).
+                    Sum(s => s.Bottom);
+                Int32 leftSum = parent.Controls.
+                    Cast<Control>().
+                    Where(w => w.Dock == DockStyle.Left && w is ToolStrip).
+                    Sum(s => s.Right);
+
+                var topLeft = Point.Add(Point.Add(mdiControl.Location, new Size(leftSum, topSum)), new Size(source.Location));
+
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = topLeft;
+            }
+
+
+            return base.ShowDialog(source);
+        }
+
+        public void SelectByValue<TValue>(IEnumerable<TValue> values)
+            where TValue : INamedScopeSourceValue
+        {
+            IEnumerable<DataLayerIndex> indexes = values.Select(s => s.Index);
+
+            SelectByIndex(indexes);
+        }
+
+        public void SelectByIndex(IEnumerable<DataLayerIndex> indexes)
+        {
+            foreach (NamedScopeIndex item in formData.
+                Where(w => indexes.Contains(w.Source.Index)).
+                Select(s => s.Index))
+            { if (!Selected.Contains(item)) { Selected.Add(item); } }
+        }
+
+        public IEnumerable<TValue> SelectedByValue<TValue>()
+            where TValue : INamedScopeSourceValue
+        { return formData.Where(w => Selected.Contains(w.Index)).Select(s => s.Source).OfType<TValue>().Distinct(); }
+
         protected void LoadListView()
         {
             selectionData.Columns.Clear();
@@ -77,7 +149,6 @@ namespace DataDictionary.Main.Dialogs
             IEnumerable<SelectionDialogValue> filtered = formData.Where(
                 w => (FilterScopes.Count() == 0 || FilterScopes.Contains(w.Scope))
                 && (FilterPaths.Count() == 0 || FilterPaths.Contains(w.Path))
-                && IsTypeOf(w.Source)
                 && (formData.SelectedPath == formData.PathNull || formData.SelectedPath == w.Path)
                 && (formData.SelectedScope == formData.ScopeNull || formData.SelectedScope == w.Scope)
                 );
@@ -114,9 +185,9 @@ namespace DataDictionary.Main.Dialogs
             foreach (SelectionDialogValue item in formData)
             {
                 // Causes SelectionData_ItemCheck to trigger.
-                if (Selected.Contains(item.Source.Index) && !item.ListView.Checked)
+                if (Selected.Contains(item.Index) && !item.ListView.Checked)
                 { item.ListView.Checked = true; }
-                else if (!Selected.Contains(item.Source.Index) && item.ListView.Checked)
+                else if (!Selected.Contains(item.Index) && item.ListView.Checked)
                 { item.ListView.Checked = false; }
                 // Everything else does not change the state. Avoids infinite Loop.
             }
@@ -150,7 +221,7 @@ namespace DataDictionary.Main.Dialogs
         {   // This triggers when the checked box is changed. Visible/Show does not trigger this event.
             if (formData.FirstOrDefault(w => w.ListView == selectionData.Items[e.Index]) is SelectionDialogValue value)
             {
-                DataLayerIndex key = value.Source.Index;
+                NamedScopeIndex key = value.Index;
 
                 // Causes Selected_ListChanged to trigger
                 if (e.NewValue is CheckState.Checked && !Selected.Contains(key))
