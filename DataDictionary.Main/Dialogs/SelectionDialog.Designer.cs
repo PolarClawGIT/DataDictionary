@@ -264,8 +264,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(424, 522);
             Controls.Add(selectionDialogLayout);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SelectionDialog";
-            Text = "SelectionDialog";
+            Text = "Selection Dialog";
+            Load += SelectionDialog_Load;
             SizeChanged += SelectionDialog_SizeChanged;
             selectionDialogLayout.ResumeLayout(false);
             selectionDialogLayout.PerformLayout();
@@ -281,7 +284,6 @@
         #endregion
 
         private GroupBox selectionFilterGroup;
-        private TableLayoutPanel filterSelectionLayout;
         private RadioButton groupByScope;
         private RadioButton groupByPath;
         private ComboBox filterScope;

@@ -283,12 +283,10 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
             {
 
-                using (var dialog = new SelectionDialog(GetDescription))
+                using (var dialog = new SelectionDialog(this))
                 {
+                    dialog.BuildData(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)), GetDescription);
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
-
-                    dialog.SelectByIndex(
-                        attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)));
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
@@ -310,7 +308,7 @@ namespace DataDictionary.Main.Forms.Domain
                 }
             }
 
-            String GetDescription (INamedScopeSourceValue value)
+            String GetDescription(INamedScopeSourceValue value)
             {   // Needed a physical method rather then a Lambda expression.
                 // Properties don't get passed as expected.
                 // I needed the property passed by Reference and that did not work.
