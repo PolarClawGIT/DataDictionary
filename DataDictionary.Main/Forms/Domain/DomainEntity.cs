@@ -132,10 +132,10 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAlias.Current is EntityAliasValue current)
             {
-                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
-                //aliasScopeData.Text = ImageEnumeration.Cast(current.AliasScope).DisplayName;
-                //aliasNameData.Text = current.AliasName??String.Empty;
-
+                Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
+                isAliasInModelData.Checked = inModel;
+                aliasNameData.ReadOnly = inModel;
+                aliasScopeData.ReadOnly = inModel;
             }
         }
 
@@ -235,9 +235,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is EntityValue current)
             {
                 e.NewObject = new EntityAttributeValue(current)
-                {
-                    OrdinalPosition = bindingAttribute.Count + 1
-                };
+                { OrdinalPosition = bindingAttribute.Count + 1 };
             }
         }
 
@@ -266,7 +264,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             e.NewObject = newValue;
         }
-
 
         private void AttributeTitleData_Validated(object sender, EventArgs e)
         { AttributeNameList.Load(attributeColumn); }
@@ -309,14 +306,9 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void AliasAddCommand_Click(object sender, EventArgs e)
         {
-            bindingAlias.AddNew();
-
-            if (bindingAlias.Current is EntityAliasValue current)
+            if (bindingAlias.AddNew() is EntityAliasValue newValue)
             {
-                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
-                current.AliasPath = path;
-                if (aliasScopeData.SelectedValue is ScopeType scope)
-                { current.AliasScope = scope; }
+
             }
         }
 
@@ -333,12 +325,17 @@ namespace DataDictionary.Main.Forms.Domain
 
                     dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
 
+
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
+                        IEnumerable<EntityAliasValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.AliasPath).Count() > 0);
 
                         foreach (EntityAliasValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.AliasPath)).ToList())
-                        { alias.Remove(removeItem); }
+                        {
+                            if (inModel.Contains(removeItem)) // Only remove items that are in this model
+                            { alias.Remove(removeItem); }
+                        }
 
                         foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.AliasPath).Contains(w.Path)).ToList())
                         { // Add
