@@ -34,6 +34,10 @@ namespace DataDictionary.Main.Controls
             {
                 readOnly = value;
                 comboBox.Enabled = !value;
+
+                if (this.Enabled && !readOnly)
+                { controlLayout.BackColor = SystemColors.ControlDarkDark; }
+                else { controlLayout.BackColor = SystemColors.Control; }
             }
         }
         Boolean readOnly;

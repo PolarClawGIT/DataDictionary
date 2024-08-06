@@ -40,6 +40,7 @@
             // controlLayout
             // 
             controlLayout.AutoSize = true;
+            controlLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             controlLayout.BackColor = SystemColors.ControlDarkDark;
             controlLayout.ColumnCount = 1;
             comboBoxLayout.SetColumnSpan(controlLayout, 2);
