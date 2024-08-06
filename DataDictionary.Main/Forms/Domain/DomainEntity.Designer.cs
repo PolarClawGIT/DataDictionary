@@ -33,7 +33,6 @@ namespace DataDictionary.Main.Forms.Domain
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
-            TableLayoutPanel attributeDetailLayout;
             TableLayoutPanel propertyLayout;
             TableLayoutPanel definitionLayout;
             TableLayoutPanel aliasCommandLayout;
@@ -44,10 +43,10 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData = new DataGridView();
             attributeColumn = new DataGridViewComboBoxColumn();
             attributeOrderColumn = new DataGridViewTextBoxColumn();
-            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeSelectCommand = new Button();
             attributeMemberData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeSelectCommand = new Button();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -81,7 +80,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAttributeDetail = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
-            attributeDetailLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
             definitionLayout = new TableLayoutPanel();
             aliasCommandLayout = new TableLayoutPanel();
@@ -90,7 +88,6 @@ namespace DataDictionary.Main.Forms.Domain
             detailTab.SuspendLayout();
             detailsLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
-            attributeDetailLayout.SuspendLayout();
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
@@ -182,27 +179,35 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             // detailsLayout
             // 
-            detailsLayout.ColumnCount = 1;
+            detailsLayout.ColumnCount = 2;
             detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailsLayout.ColumnStyles.Add(new ColumnStyle());
             detailsLayout.Controls.Add(attributeData, 0, 0);
-            detailsLayout.Controls.Add(attributeDetailLayout, 0, 1);
+            detailsLayout.Controls.Add(attributeOrderData, 1, 1);
+            detailsLayout.Controls.Add(attributeSelectCommand, 1, 2);
+            detailsLayout.Controls.Add(attributeMemberData, 0, 2);
+            detailsLayout.Controls.Add(attributeTitleData, 0, 1);
             detailsLayout.Dock = DockStyle.Fill;
             detailsLayout.Location = new Point(3, 3);
             detailsLayout.Name = "detailsLayout";
-            detailsLayout.RowCount = 2;
-            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            detailsLayout.RowCount = 3;
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.Size = new Size(406, 334);
             detailsLayout.TabIndex = 0;
             // 
             // attributeData
             // 
+            attributeData.AllowUserToAddRows = false;
             attributeData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeColumn, attributeOrderColumn });
+            detailsLayout.SetColumnSpan(attributeData, 2);
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 3);
             attributeData.Name = "attributeData";
-            attributeData.Size = new Size(400, 227);
+            attributeData.ReadOnly = true;
+            attributeData.Size = new Size(400, 228);
             attributeData.TabIndex = 0;
             // 
             // attributeColumn
@@ -222,75 +227,57 @@ namespace DataDictionary.Main.Forms.Domain
             attributeOrderColumn.HeaderText = "Order";
             attributeOrderColumn.Name = "attributeOrderColumn";
             // 
-            // attributeDetailLayout
-            // 
-            attributeDetailLayout.ColumnCount = 2;
-            attributeDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            attributeDetailLayout.ColumnStyles.Add(new ColumnStyle());
-            attributeDetailLayout.Controls.Add(attributeTitleData, 0, 0);
-            attributeDetailLayout.Controls.Add(attributeMemberData, 0, 1);
-            attributeDetailLayout.Controls.Add(attributeOrderData, 1, 0);
-            attributeDetailLayout.Controls.Add(attributeSelectCommand, 1, 1);
-            attributeDetailLayout.Dock = DockStyle.Fill;
-            attributeDetailLayout.Location = new Point(3, 236);
-            attributeDetailLayout.Name = "attributeDetailLayout";
-            attributeDetailLayout.RowCount = 3;
-            attributeDetailLayout.RowStyles.Add(new RowStyle());
-            attributeDetailLayout.RowStyles.Add(new RowStyle());
-            attributeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            attributeDetailLayout.Size = new Size(400, 95);
-            attributeDetailLayout.TabIndex = 1;
-            // 
-            // attributeOrderData
-            // 
-            attributeOrderData.AutoSize = true;
-            attributeOrderData.HeaderText = "Order";
-            attributeOrderData.Location = new Point(277, 3);
-            attributeOrderData.Multiline = false;
-            attributeOrderData.Name = "attributeOrderData";
-            attributeOrderData.ReadOnly = false;
-            attributeOrderData.Size = new Size(120, 44);
-            attributeOrderData.TabIndex = 2;
-            attributeOrderData.WordWrap = true;
-            // 
             // attributeTitleData
             // 
             attributeTitleData.AutoSize = true;
             attributeTitleData.Dock = DockStyle.Fill;
             attributeTitleData.HeaderText = "Attribute Title";
-            attributeTitleData.Location = new Point(3, 3);
+            attributeTitleData.Location = new Point(3, 237);
             attributeTitleData.Multiline = false;
             attributeTitleData.Name = "attributeTitleData";
             attributeTitleData.ReadOnly = true;
-            attributeTitleData.Size = new Size(268, 44);
-            attributeTitleData.TabIndex = 3;
+            attributeTitleData.Size = new Size(274, 44);
+            attributeTitleData.TabIndex = 1;
             attributeTitleData.WordWrap = true;
             attributeTitleData.Validated += AttributeTitleData_Validated;
-            // 
-            // attributeSelectCommand
-            // 
-            attributeSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            attributeSelectCommand.Location = new Point(322, 73);
-            attributeSelectCommand.Name = "attributeSelectCommand";
-            attributeSelectCommand.Size = new Size(75, 24);
-            attributeSelectCommand.TabIndex = 4;
-            attributeSelectCommand.Text = "Select";
-            attributeSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            attributeSelectCommand.UseVisualStyleBackColor = true;
-            attributeSelectCommand.Click += AttributeSelect_Click;
             // 
             // attributeMemberData
             // 
             attributeMemberData.AutoSize = true;
             attributeMemberData.Dock = DockStyle.Fill;
             attributeMemberData.HeaderText = "Subject Member";
-            attributeMemberData.Location = new Point(3, 53);
+            attributeMemberData.Location = new Point(3, 287);
             attributeMemberData.Multiline = false;
             attributeMemberData.Name = "attributeMemberData";
             attributeMemberData.ReadOnly = true;
-            attributeMemberData.Size = new Size(268, 44);
-            attributeMemberData.TabIndex = 5;
+            attributeMemberData.Size = new Size(274, 44);
+            attributeMemberData.TabIndex = 2;
             attributeMemberData.WordWrap = true;
+            // 
+            // attributeOrderData
+            // 
+            attributeOrderData.AutoSize = true;
+            attributeOrderData.HeaderText = "Order";
+            attributeOrderData.Location = new Point(283, 237);
+            attributeOrderData.Multiline = false;
+            attributeOrderData.Name = "attributeOrderData";
+            attributeOrderData.ReadOnly = false;
+            attributeOrderData.Size = new Size(120, 44);
+            attributeOrderData.TabIndex = 3;
+            attributeOrderData.WordWrap = true;
+            // 
+            // attributeSelectCommand
+            // 
+            attributeSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            attributeSelectCommand.AutoSize = true;
+            attributeSelectCommand.Location = new Point(328, 306);
+            attributeSelectCommand.Name = "attributeSelectCommand";
+            attributeSelectCommand.Size = new Size(75, 25);
+            attributeSelectCommand.TabIndex = 4;
+            attributeSelectCommand.Text = "Select";
+            attributeSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            attributeSelectCommand.UseVisualStyleBackColor = true;
+            attributeSelectCommand.Click += AttributeSelect_Click;
             // 
             // propertyTab
             // 
@@ -299,7 +286,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 340);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -315,7 +302,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 334);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -327,7 +314,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 20);
+            propertiesData.Size = new Size(400, 127);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -353,12 +340,12 @@ namespace DataDictionary.Main.Forms.Domain
             domainProperty.ApplyImage = null;
             domainProperty.ApplyText = "apply";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 29);
+            domainProperty.Location = new Point(3, 136);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 34);
+            domainProperty.Size = new Size(400, 195);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
             // 
@@ -369,7 +356,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(412, 340);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -377,8 +364,8 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             definitionLayout.ColumnCount = 1;
             definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            definitionLayout.Controls.Add(definitionData, 0, 0);
             definitionLayout.Controls.Add(domainDefinition, 0, 1);
+            definitionLayout.Controls.Add(definitionData, 0, 0);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(3, 3);
             definitionLayout.Name = "definitionLayout";
@@ -386,7 +373,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(186, 66);
+            definitionLayout.Size = new Size(406, 334);
             definitionLayout.TabIndex = 1;
             // 
             // definitionData
@@ -395,10 +382,11 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
             definitionData.Dock = DockStyle.Fill;
-            definitionData.Location = new Point(6, 6);
+            definitionData.Location = new Point(3, 3);
+            definitionData.Margin = new Padding(0);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(174, 12);
+            definitionData.Size = new Size(400, 98);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -426,10 +414,10 @@ namespace DataDictionary.Main.Forms.Domain
             domainDefinition.DefinitionSummary = "";
             domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 24);
+            domainDefinition.Location = new Point(6, 104);
             domainDefinition.Name = "domainDefinition";
             domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(174, 36);
+            domainDefinition.Size = new Size(394, 224);
             domainDefinition.TabIndex = 1;
             domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
@@ -503,7 +491,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasNameData.Name = "aliasNameData";
             aliasNameData.ReadOnly = true;
             aliasNameData.Size = new Size(313, 44);
-            aliasNameData.TabIndex = 1;
+            aliasNameData.TabIndex = 2;
             aliasNameData.WordWrap = true;
             aliasNameData.Validating += AliasNameData_Validating;
             // 
@@ -518,7 +506,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasScopeData.Name = "aliasScopeData";
             aliasScopeData.ReadOnly = true;
             aliasScopeData.Size = new Size(313, 46);
-            aliasScopeData.TabIndex = 0;
+            aliasScopeData.TabIndex = 1;
             // 
             // aliasCommandLayout
             // 
@@ -546,7 +534,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasSelectCommand.Location = new Point(3, 39);
             aliasSelectCommand.Name = "aliasSelectCommand";
             aliasSelectCommand.Size = new Size(75, 24);
-            aliasSelectCommand.TabIndex = 2;
+            aliasSelectCommand.TabIndex = 1;
             aliasSelectCommand.Text = "Select";
             aliasSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             aliasSelectCommand.UseVisualStyleBackColor = true;
@@ -558,7 +546,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasAddCommand.Location = new Point(3, 69);
             aliasAddCommand.Name = "aliasAddCommand";
             aliasAddCommand.Size = new Size(75, 24);
-            aliasAddCommand.TabIndex = 3;
+            aliasAddCommand.TabIndex = 2;
             aliasAddCommand.Text = "New";
             aliasAddCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             aliasAddCommand.UseVisualStyleBackColor = true;
@@ -571,7 +559,7 @@ namespace DataDictionary.Main.Forms.Domain
             isAliasInModelData.Location = new Point(3, 3);
             isAliasInModelData.Name = "isAliasInModelData";
             isAliasInModelData.Size = new Size(73, 19);
-            isAliasInModelData.TabIndex = 3;
+            isAliasInModelData.TabIndex = 0;
             isAliasInModelData.Text = "in Model";
             isAliasInModelData.UseVisualStyleBackColor = true;
             // 
@@ -581,7 +569,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(412, 340);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -597,7 +585,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(192, 72);
+            subjectAreaLayout.Size = new Size(412, 340);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -605,7 +593,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(186, 16);
+            subjectArea.Size = new Size(406, 284);
             subjectArea.TabIndex = 0;
             subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
             subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
@@ -619,7 +607,7 @@ namespace DataDictionary.Main.Forms.Domain
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(186, 44);
+            memberNameData.Size = new Size(406, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
@@ -668,9 +656,8 @@ namespace DataDictionary.Main.Forms.Domain
             detailTabLayout.ResumeLayout(false);
             detailTab.ResumeLayout(false);
             detailsLayout.ResumeLayout(false);
+            detailsLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
-            attributeDetailLayout.ResumeLayout(false);
-            attributeDetailLayout.PerformLayout();
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
