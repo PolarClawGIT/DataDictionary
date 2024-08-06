@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Domain
             TableLayoutPanel propertyLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainEntity));
             TableLayoutPanel definitionLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
+            TableLayoutPanel aliasCommandLayout;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -47,7 +47,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeOrderColumn = new DataGridViewTextBoxColumn();
             attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeSelect = new Button();
+            attributeSelectCommand = new Button();
             attributeMemberData = new DataDictionary.Main.Controls.TextBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
@@ -64,7 +64,11 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData = new DataGridView();
             aliaseScopeColumn = new DataGridViewComboBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
-            namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
+            aliasNameData = new DataDictionary.Main.Controls.TextBoxData();
+            aliasScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            aliasSelectCommand = new Button();
+            aliasAddCommand = new Button();
+            isAliasInModelData = new CheckBox();
             subjectAreaTab = new TabPage();
             subjectAreaLayout = new TableLayoutPanel();
             subjectArea = new Controls.SubjectArea();
@@ -81,6 +85,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeDetailLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
             definitionLayout = new TableLayoutPanel();
+            aliasCommandLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
@@ -96,6 +101,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
+            aliasCommandLayout.SuspendLayout();
             subjectAreaTab.SuspendLayout();
             subjectAreaLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
@@ -121,7 +127,7 @@ namespace DataDictionary.Main.Forms.Domain
             mainLayout.RowStyles.Add(new RowStyle());
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            mainLayout.Size = new Size(426, 521);
+            mainLayout.Size = new Size(426, 517);
             mainLayout.TabIndex = 2;
             // 
             // titleData
@@ -146,7 +152,7 @@ namespace DataDictionary.Main.Forms.Domain
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = false;
-            descriptionData.Size = new Size(420, 88);
+            descriptionData.Size = new Size(420, 87);
             descriptionData.TabIndex = 1;
             descriptionData.WordWrap = true;
             // 
@@ -158,10 +164,10 @@ namespace DataDictionary.Main.Forms.Domain
             detailTabLayout.Controls.Add(aliasTab);
             detailTabLayout.Controls.Add(subjectAreaTab);
             detailTabLayout.Dock = DockStyle.Fill;
-            detailTabLayout.Location = new Point(3, 147);
+            detailTabLayout.Location = new Point(3, 146);
             detailTabLayout.Name = "detailTabLayout";
             detailTabLayout.SelectedIndex = 0;
-            detailTabLayout.Size = new Size(420, 371);
+            detailTabLayout.Size = new Size(420, 368);
             detailTabLayout.TabIndex = 2;
             // 
             // detailTab
@@ -171,7 +177,7 @@ namespace DataDictionary.Main.Forms.Domain
             detailTab.Location = new Point(4, 24);
             detailTab.Name = "detailTab";
             detailTab.Padding = new Padding(3);
-            detailTab.Size = new Size(412, 343);
+            detailTab.Size = new Size(412, 340);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
@@ -187,7 +193,7 @@ namespace DataDictionary.Main.Forms.Domain
             detailsLayout.RowCount = 2;
             detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            detailsLayout.Size = new Size(406, 337);
+            detailsLayout.Size = new Size(406, 334);
             detailsLayout.TabIndex = 0;
             // 
             // attributeData
@@ -197,7 +203,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 3);
             attributeData.Name = "attributeData";
-            attributeData.Size = new Size(400, 229);
+            attributeData.Size = new Size(400, 227);
             attributeData.TabIndex = 0;
             // 
             // attributeColumn
@@ -224,15 +230,16 @@ namespace DataDictionary.Main.Forms.Domain
             attributeDetailLayout.ColumnStyles.Add(new ColumnStyle());
             attributeDetailLayout.Controls.Add(attributeOrderData, 1, 1);
             attributeDetailLayout.Controls.Add(attributeTitleData, 0, 0);
-            attributeDetailLayout.Controls.Add(attributeSelect, 1, 0);
+            attributeDetailLayout.Controls.Add(attributeSelectCommand, 1, 0);
             attributeDetailLayout.Controls.Add(attributeMemberData, 0, 1);
             attributeDetailLayout.Dock = DockStyle.Fill;
-            attributeDetailLayout.Location = new Point(3, 238);
+            attributeDetailLayout.Location = new Point(3, 236);
             attributeDetailLayout.Name = "attributeDetailLayout";
-            attributeDetailLayout.RowCount = 2;
+            attributeDetailLayout.RowCount = 3;
             attributeDetailLayout.RowStyles.Add(new RowStyle());
             attributeDetailLayout.RowStyles.Add(new RowStyle());
-            attributeDetailLayout.Size = new Size(400, 96);
+            attributeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            attributeDetailLayout.Size = new Size(400, 95);
             attributeDetailLayout.TabIndex = 1;
             // 
             // attributeOrderData
@@ -262,17 +269,17 @@ namespace DataDictionary.Main.Forms.Domain
             attributeTitleData.WordWrap = true;
             attributeTitleData.Validated += AttributeTitleData_Validated;
             // 
-            // attributeSelect
+            // attributeSelectCommand
             // 
-            attributeSelect.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            attributeSelect.Location = new Point(322, 24);
-            attributeSelect.Name = "attributeSelect";
-            attributeSelect.Size = new Size(75, 23);
-            attributeSelect.TabIndex = 4;
-            attributeSelect.Text = "Select";
-            attributeSelect.TextImageRelation = TextImageRelation.ImageBeforeText;
-            attributeSelect.UseVisualStyleBackColor = true;
-            attributeSelect.Click += AttributeSelect_Click;
+            attributeSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            attributeSelectCommand.Location = new Point(322, 24);
+            attributeSelectCommand.Name = "attributeSelectCommand";
+            attributeSelectCommand.Size = new Size(75, 23);
+            attributeSelectCommand.TabIndex = 4;
+            attributeSelectCommand.Text = "Select";
+            attributeSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            attributeSelectCommand.UseVisualStyleBackColor = true;
+            attributeSelectCommand.Click += AttributeSelect_Click;
             // 
             // attributeMemberData
             // 
@@ -435,23 +442,27 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(412, 340);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
             // aliaseLayout
             // 
-            aliaseLayout.ColumnCount = 1;
+            aliaseLayout.ColumnCount = 2;
             aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            aliaseLayout.ColumnStyles.Add(new ColumnStyle());
             aliaseLayout.Controls.Add(aliasesData, 0, 0);
-            aliaseLayout.Controls.Add(namedScopeData, 0, 1);
+            aliaseLayout.Controls.Add(aliasNameData, 0, 2);
+            aliaseLayout.Controls.Add(aliasScopeData, 0, 1);
+            aliaseLayout.Controls.Add(aliasCommandLayout, 1, 1);
             aliaseLayout.Dock = DockStyle.Fill;
             aliaseLayout.Location = new Point(3, 3);
             aliaseLayout.Name = "aliaseLayout";
-            aliaseLayout.RowCount = 2;
-            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.RowCount = 3;
+            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            aliaseLayout.RowStyles.Add(new RowStyle());
+            aliaseLayout.RowStyles.Add(new RowStyle());
+            aliaseLayout.Size = new Size(406, 334);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -459,11 +470,12 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.AllowUserToAddRows = false;
             aliasesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             aliasesData.Columns.AddRange(new DataGridViewColumn[] { aliaseScopeColumn, aliasNameColumn });
+            aliaseLayout.SetColumnSpan(aliasesData, 2);
             aliasesData.Dock = DockStyle.Fill;
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 20);
+            aliasesData.Size = new Size(400, 226);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -483,20 +495,87 @@ namespace DataDictionary.Main.Forms.Domain
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
-            // namedScopeData
+            // aliasNameData
             // 
-            namedScopeData.ApplyImage = Properties.Resources.NewSynonym;
-            namedScopeData.ApplyText = "apply";
-            namedScopeData.Dock = DockStyle.Fill;
-            namedScopeData.HeaderText = "Alias";
-            namedScopeData.Location = new Point(3, 29);
-            namedScopeData.Name = "namedScopeData";
-            namedScopeData.ReadOnly = false;
-            namedScopeData.Scope = ScopeType.Null;
-            namedScopeData.ScopePath = namedScopePath1;
-            namedScopeData.Size = new Size(180, 34);
-            namedScopeData.TabIndex = 1;
-            namedScopeData.OnApply += NamedScopeData_OnApply;
+            aliasNameData.AutoSize = true;
+            aliasNameData.Dock = DockStyle.Fill;
+            aliasNameData.HeaderText = "Alias Name";
+            aliasNameData.Location = new Point(3, 287);
+            aliasNameData.Multiline = false;
+            aliasNameData.Name = "aliasNameData";
+            aliasNameData.ReadOnly = false;
+            aliasNameData.Size = new Size(313, 44);
+            aliasNameData.TabIndex = 1;
+            aliasNameData.WordWrap = true;
+            aliasNameData.Validating += AliasNameData_Validating;
+            // 
+            // aliasScopeData
+            // 
+            aliasScopeData.AutoSize = true;
+            aliasScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            aliasScopeData.Dock = DockStyle.Fill;
+            aliasScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            aliasScopeData.HeaderText = "Scope";
+            aliasScopeData.Location = new Point(3, 235);
+            aliasScopeData.Name = "aliasScopeData";
+            aliasScopeData.ReadOnly = false;
+            aliasScopeData.Size = new Size(313, 46);
+            aliasScopeData.TabIndex = 0;
+            // 
+            // aliasCommandLayout
+            // 
+            aliasCommandLayout.AutoSize = true;
+            aliasCommandLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            aliasCommandLayout.ColumnCount = 1;
+            aliasCommandLayout.ColumnStyles.Add(new ColumnStyle());
+            aliasCommandLayout.Controls.Add(aliasSelectCommand, 0, 1);
+            aliasCommandLayout.Controls.Add(aliasAddCommand, 0, 0);
+            aliasCommandLayout.Controls.Add(isAliasInModelData, 0, 2);
+            aliasCommandLayout.Dock = DockStyle.Fill;
+            aliasCommandLayout.Location = new Point(322, 235);
+            aliasCommandLayout.Name = "aliasCommandLayout";
+            aliasCommandLayout.RowCount = 3;
+            aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
+            aliasCommandLayout.RowStyles.Add(new RowStyle());
+            aliasCommandLayout.RowStyles.Add(new RowStyle());
+            aliasCommandLayout.RowStyles.Add(new RowStyle());
+            aliasCommandLayout.Size = new Size(81, 96);
+            aliasCommandLayout.TabIndex = 4;
+            // 
+            // aliasSelectCommand
+            // 
+            aliasSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            aliasSelectCommand.Location = new Point(3, 32);
+            aliasSelectCommand.Name = "aliasSelectCommand";
+            aliasSelectCommand.Size = new Size(75, 23);
+            aliasSelectCommand.TabIndex = 2;
+            aliasSelectCommand.Text = "Select";
+            aliasSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            aliasSelectCommand.UseVisualStyleBackColor = true;
+            aliasSelectCommand.Click += AliasSelectCommand_Click;
+            // 
+            // aliasAddCommand
+            // 
+            aliasAddCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            aliasAddCommand.Location = new Point(3, 3);
+            aliasAddCommand.Name = "aliasAddCommand";
+            aliasAddCommand.Size = new Size(75, 23);
+            aliasAddCommand.TabIndex = 3;
+            aliasAddCommand.Text = "Add";
+            aliasAddCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            aliasAddCommand.UseVisualStyleBackColor = true;
+            aliasAddCommand.Click += AliasAddCommand_Click;
+            // 
+            // isAliasInModelData
+            // 
+            isAliasInModelData.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            isAliasInModelData.AutoSize = true;
+            isAliasInModelData.Location = new Point(3, 74);
+            isAliasInModelData.Name = "isAliasInModelData";
+            isAliasInModelData.Size = new Size(73, 19);
+            isAliasInModelData.TabIndex = 3;
+            isAliasInModelData.Text = "in Model";
+            isAliasInModelData.UseVisualStyleBackColor = true;
             // 
             // subjectAreaTab
             // 
@@ -550,6 +629,7 @@ namespace DataDictionary.Main.Forms.Domain
             // bindingAlias
             // 
             bindingAlias.AddingNew += BindingAlias_AddingNew;
+            bindingAlias.DataError += bindingAlias_DataError;
             bindingAlias.CurrentChanged += BindingAlias_CurrentChanged;
             // 
             // bindingProperty
@@ -579,7 +659,7 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(426, 546);
+            ClientSize = new Size(426, 542);
             Controls.Add(mainLayout);
             Name = "DomainEntity";
             Text = "DomainEntity";
@@ -601,7 +681,10 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)definitionData).EndInit();
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
+            aliaseLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
+            aliasCommandLayout.ResumeLayout(false);
+            aliasCommandLayout.PerformLayout();
             subjectAreaTab.ResumeLayout(false);
             subjectAreaLayout.ResumeLayout(false);
             subjectAreaLayout.PerformLayout();
@@ -634,7 +717,6 @@ namespace DataDictionary.Main.Forms.Domain
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
-        private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
@@ -652,9 +734,14 @@ namespace DataDictionary.Main.Forms.Domain
         private BindingSource bindingAttributeDetail;
         private DataDictionary.Main.Controls.TextBoxData attributeOrderData;
         private DataDictionary.Main.Controls.TextBoxData attributeTitleData;
-        private Button attributeSelect;
+        private Button attributeSelectCommand;
         private DataDictionary.Main.Controls.TextBoxData attributeMemberData;
         private DataGridViewComboBoxColumn attributeColumn;
         private DataGridViewTextBoxColumn attributeOrderColumn;
+        private DataDictionary.Main.Controls.ComboBoxData aliasScopeData;
+        private DataDictionary.Main.Controls.TextBoxData aliasNameData;
+        private Button aliasSelectCommand;
+        private CheckBox isAliasInModelData;
+        private Button aliasAddCommand;
     }
 }

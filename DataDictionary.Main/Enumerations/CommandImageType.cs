@@ -22,6 +22,11 @@ namespace DataDictionary.Main.Enumerations
         Browse,
         
         /// <summary>
+        /// Select: Select and Item(s) in the collection
+        /// </summary>
+        Select,
+
+        /// <summary>
         /// Add: Adding/New items to the Model.
         /// </summary>
         Add,

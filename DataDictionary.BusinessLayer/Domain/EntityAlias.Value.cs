@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData.Entity;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.DomainData.Entity;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -17,5 +18,15 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         internal EntityAliasValue(IDomainEntityKey key) : base(key) { }
+
+
+        /// <summary>
+        /// The Alias Path derived from AliasName
+        /// </summary>
+        public NamedScopePath AliasPath
+        {
+            get { return new NamedScopePath(NamedScopePath.Parse(AliasName).ToArray()); }
+            set { AliasName = value.MemberFullPath; }
+        }
     }
 }

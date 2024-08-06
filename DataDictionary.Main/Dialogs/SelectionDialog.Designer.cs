@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel selectionDialogLayout;
             TableLayoutPanel filterSelectionLayout;
             TableLayoutPanel commandLayout;
+            selectionDialogLayout = new TableLayoutPanel();
             descriptionData = new Controls.TextBoxData();
             selectionFilterGroup = new GroupBox();
             groupByScope = new RadioButton();
@@ -45,7 +45,6 @@
             acceptCommand = new Button();
             cancelCommand = new Button();
             bindingSource = new BindingSource(components);
-            selectionDialogLayout = new TableLayoutPanel();
             filterSelectionLayout = new TableLayoutPanel();
             commandLayout = new TableLayoutPanel();
             selectionDialogLayout.SuspendLayout();
@@ -296,5 +295,6 @@
         private Button cancelCommand;
         private Controls.TextBoxData descriptionData;
         private BindingSource bindingSource;
+        private TableLayoutPanel selectionDialogLayout;
     }
 }

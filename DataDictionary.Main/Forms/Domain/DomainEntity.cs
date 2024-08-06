@@ -23,7 +23,9 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
 
-            attributeSelect.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Default);
+            attributeSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
+            aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
 
         public DomainEntity(IEntityValue? entityItem) : this()
@@ -71,16 +73,8 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
 
-            aliasesData.AutoGenerateColumns = false;
-            aliasesData.DataSource = bindingAlias;
-
-            // TODO: Add fill of attribute data.
-            // Can this add the AttributeValue?
-            // What to display of the attribute?
-            // Navigation directly to the attribute?
+            // Attribute Handling
             AttributeNameList.Load(attributeColumn);
-
-
 
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
@@ -89,6 +83,17 @@ namespace DataDictionary.Main.Forms.Domain
             attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
             attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
             subjectArea.BindTo(bindingSubjectArea);
+
+            // Alias Handling
+            ScopeNameList.Load(aliaseScopeColumn);
+            ScopeNameList.Load(aliasScopeData);
+
+            aliasesData.AutoGenerateColumns = false;
+            aliasesData.DataSource = bindingAlias;
+
+            //TODO: Need to parse the string into a NameSpacePath for formating.
+            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasName), false, DataSourceUpdateMode.OnPropertyChanged));
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
@@ -117,32 +122,21 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is EntityValue current)
             {
                 EntityAliasValue newItem = new EntityAliasValue(current);
-                newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                newItem.AliasScope = namedScopeData.Scope;
+                //newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
+                //newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is IAliasValue current)
+            if (bindingAlias.Current is EntityAliasValue current)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
+                //aliasScopeData.Text = ImageEnumeration.Cast(current.AliasScope).DisplayName;
+                //aliasNameData.Text = current.AliasName??String.Empty;
 
-                namedScopeData.ScopePath = path;
-                namedScopeData.Scope = current.AliasScope;
             }
-        }
-
-        private void NamedScopeData_OnApply(object sender, EventArgs e)
-        {
-            if (bindingAlias.DataSource is IList<IAliasValue> aliases
-                && aliases.FirstOrDefault(
-                    w => w.AliasScope == namedScopeData.Scope
-                    && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
-                is IAliasValue value)
-            { bindingAlias.Position = aliases.IndexOf(value); }
-            else { bindingAlias.AddNew(); }
         }
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
@@ -270,7 +264,6 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is EntityAttributeValue attribute)
             { attribute.AttributeId = newValue.AttributeId; }
 
-
             e.NewObject = newValue;
         }
 
@@ -282,27 +275,22 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
             {
-
-                using (var dialog = new SelectionDialog(this))
+                using (SelectionDialog dialog = new SelectionDialog(this))
                 {
-                    dialog.BuildData(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)), GetDescription);
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                    dialog.BuildData(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)), GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        var selected = dialog.SelectedByValue<AttributeValue>();
+                        IEnumerable<AttributeValue> selected = dialog.SelectedByValue<AttributeValue>();
 
-                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(selected.Select(s => new AttributeIndex(s))).ToList())
-                        { // Remove
-                            if (attributes.FirstOrDefault(w => item.Equals(w)) is EntityAttributeValue removeItem)
-                            { bindingAttribute.Remove(removeItem); }
-                        }
+                        foreach (EntityAttributeValue removeItem in attributes.Where(w => !selected.Select(s => new AttributeIndex(s)).Contains(new AttributeIndex(w))).ToList())
+                        { bindingAttribute.Remove(removeItem); }
 
-                        foreach (AttributeIndex item in selected.Select(s => new AttributeIndex(s)).Except(attributes.Select(s => new AttributeIndex(s))).ToList())
+                        foreach (AttributeValue addItem in selected.Where(w => !attributes.Select(s => new AttributeIndex(s)).Contains(new AttributeIndex(w))).ToList())
                         { // Add
-                            bindingAttribute.AddNew();
-                            if (bindingAttribute.Current is EntityAttributeValue newItem)
-                            { newItem.AttributeId = item.AttributeId; }
+                            if (bindingAttribute.AddNew() is EntityAttributeValue newItem)
+                            { newItem.AttributeId = addItem.AttributeId; }
                         }
                     }
                 }
@@ -318,5 +306,64 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
         }
+
+        private void AliasAddCommand_Click(object sender, EventArgs e)
+        {
+            bindingAlias.AddNew();
+
+            if (bindingAlias.Current is EntityAliasValue current)
+            {
+                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
+                current.AliasPath = path;
+                if (aliasScopeData.SelectedValue is ScopeType scope)
+                { current.AliasScope = scope; }
+            }
+        }
+
+        private void AliasSelectCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingAlias.DataSource is IList<EntityAliasValue> alias)
+            {
+                using (var dialog = new SelectionDialog(this))
+                {
+                    dialog.FilterScopes.Add(ScopeType.ModelEntity);
+                    dialog.FilterScopes.Add(ScopeType.DatabaseTable);
+                    dialog.FilterScopes.Add(ScopeType.DatabaseView);
+                    dialog.FilterScopes.Add(ScopeType.LibraryType);
+
+                    dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
+
+                        foreach (EntityAliasValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.AliasPath)).ToList())
+                        { alias.Remove(removeItem); }
+
+                        foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.AliasPath).Contains(w.Path)).ToList())
+                        { // Add
+                            if (bindingAlias.AddNew() is EntityAliasValue newValue)
+                            {
+                                newValue.AliasPath = addItem.Path;
+                                newValue.AliasScope = addItem.Scope;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AliasNameData_Validating(object sender, CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
+            aliasNameData.Text = path.MemberFullPath;
+        }
+
+        private void bindingAlias_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        {
+
+        }
+
+
     }
 }

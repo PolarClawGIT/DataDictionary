@@ -88,12 +88,19 @@ namespace DataDictionary.Main.Dialogs
             FilterScopes.ListChanged += FilterScopes_ListChanged;
             FilterPaths.ListChanged += FilterPaths_ListChanged;
             Selected.ListChanged += Selected_ListChanged;
-
-            var x = FormBorderStyle;
         }
 
         public void BuildData(Func<INamedScopeSourceValue, String>? getDescription = null)
-        { formData.BuildList(getDescription); }
+        {
+            Int32 rowNumber = selectionDialogLayout.GetRow(descriptionData);
+            if (getDescription is null && rowNumber >= 0)
+            { // Hide the Description field if no description function is provided.
+                descriptionData.Visible = false;
+                selectionDialogLayout.RowStyles[rowNumber].SizeType = SizeType.AutoSize;
+            }
+
+            formData.BuildList(getDescription); 
+        }
 
         public void BuildData(IEnumerable<DataLayerIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
         {
@@ -101,6 +108,16 @@ namespace DataDictionary.Main.Dialogs
 
             foreach (NamedScopeIndex item in formData.
                 Where(w => selected.Contains(w.Source.Index)).
+                Select(s => s.Index))
+            { if (!Selected.Contains(item)) { Selected.Add(item); } }
+        }
+
+        public void BuildData(IEnumerable<NamedScopeIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        {
+            BuildData(getDescription);
+
+            foreach (NamedScopeIndex item in formData.
+                Where(w => selected.Contains(w.Index)).
                 Select(s => s.Index))
             { if (!Selected.Contains(item)) { Selected.Add(item); } }
         }
@@ -117,6 +134,8 @@ namespace DataDictionary.Main.Dialogs
             where TValue : INamedScopeSourceValue
         { return formData.Where(w => Selected.Contains(w.Index)).Select(s => s.Source).OfType<TValue>().Distinct(); }
 
+        public IEnumerable<INamedScopeValue> SelectedByNamedScope()
+        { return formData.Where(w => Selected.Contains(w.Index)).Select(s => s.NamedScope); }
 
         private void SelectionDialog_Load(object sender, EventArgs e)
         {
