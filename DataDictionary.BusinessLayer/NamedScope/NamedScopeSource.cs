@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -68,6 +69,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         NamedScopePath GetPath();
+
+        /// <summary>
+        /// Condition to test if the Title or Path changed when the PropertyChanged event occurs.
+        /// </summary>
+        /// <param name="eventArgs"></param>
+        /// <returns></returns>
+        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs);
     }
 
     /// <summary>
@@ -112,5 +120,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public override String ToString()
         { return SystemPath.MemberFullPath; }
+
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return false; }
     }
 }

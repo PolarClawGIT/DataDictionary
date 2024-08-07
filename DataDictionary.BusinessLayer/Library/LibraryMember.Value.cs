@@ -29,5 +29,9 @@ namespace DataDictionary.BusinessLayer.Library
         /// <inheritdoc/>
         public virtual String GetTitle()
         { return MemberName ?? ScopeEnumeration.Cast(Scope).Name; }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(MemberName) or nameof(MemberNameSpace); }
     }
 }

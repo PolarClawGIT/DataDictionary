@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -39,5 +40,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="path"></param>
         public SubjectNameSpaceValue(NamedScopePath path) : base()
         { NameSpacePath = path; }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return false; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -92,5 +93,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public NamedScopePath GetPath()
         { return new NamedScopePath(PropertyTitle); }
 
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(PropertyTitle); }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Library
@@ -28,5 +29,9 @@ namespace DataDictionary.BusinessLayer.Library
         /// <inheritdoc/>
         public virtual String GetTitle()
         { return LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name; }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(LibraryTitle) or nameof(AssemblyName); }
     }
 }

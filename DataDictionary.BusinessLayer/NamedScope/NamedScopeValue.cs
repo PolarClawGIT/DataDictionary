@@ -1,4 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -32,7 +34,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Internal structure of a NamedScopeValue
     /// </summary>
-    class NamedScopeValue : INamedScopeValue, INamedScopeSourceValue
+    class NamedScopeValue : INamedScopeValue
     {
         /// <inheritdoc/>
         public NamedScopeIndex Index { get; } = new NamedScopeIndex(Guid.NewGuid());
@@ -53,8 +55,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Get the current Path of the Value
         /// </summary>
         /// <remarks>
-        /// Allows for overriding how NamedPath is created.
-        /// NamedPath is updated when GetPath is set or on TitleChanged is called.
+        /// Allows for overriding how Path is created.
+        /// Path is updated when GetPath is set or on TitleChanged is called.
         /// </remarks>
         public Func<NamedScopePath> GetPath
         {
@@ -62,6 +64,20 @@ namespace DataDictionary.BusinessLayer.NamedScope
             init { getPath = value; Path = value(); }
         }
         Func<NamedScopePath> getPath = () => new NamedScopePath();
+
+        /// <summary>
+        /// Get the current Title of the Value
+        /// </summary>
+        /// <remarks>
+        /// Allows for overriding how Title is created.
+        /// Title is updated when GetTitle is set or on TitleChanged is called.
+        /// </remarks>
+        public Func<String> GetTitle
+        {
+            get { return getTitle; }
+            init { getTitle = value; Title = value(); }
+        }
+        Func<String> getTitle = () => String.Empty;
 
         /// <summary>
         /// The Data used to create the NamedScope Value
@@ -76,8 +92,21 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             Scope = source.Scope;
             Source = source;
-            Title = source.Title;
+            GetTitle = source.GetTitle;
             GetPath = source.GetPath;
+
+            if (source is IBindingPropertyChanged propertyChanged)
+            { propertyChanged.PropertyChanged += PropertyChanged_PropertyChanged; }
+
+            void PropertyChanged_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+            {
+                if (source.IsTitleChanged(e) && OnTitleChanged is EventHandler handler)
+                {
+                    Title = GetTitle();
+                    Path = GetPath();
+                    handler(this, EventArgs.Empty); 
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -91,15 +120,5 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
-
-        public DataLayerIndex GetIndex()
-        { return new DataLayerIndex() { BusinessLayerId = Index.NamedScopeId }; }
-
-        public String GetTitle()
-        { return Title; }
-
-        /// <inheritdoc/>
-        NamedScopePath INamedScopeSourceValue.GetPath()
-        { return this.GetPath(); }
     }
 }
