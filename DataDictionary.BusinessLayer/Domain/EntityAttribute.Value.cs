@@ -4,7 +4,8 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IEntityAttributeValue : IDomainEntityAttributeItem, IAttributeIndex, IEntityIndex
+    public interface IEntityAttributeValue : IDomainEntityAttributeItem,
+        IAttributeIndex, IEntityIndex, IEntityAttributeIndex
     { }
 
     /// <inheritdoc/>

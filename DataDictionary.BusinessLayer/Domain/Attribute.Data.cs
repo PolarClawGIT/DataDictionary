@@ -266,6 +266,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 { attributeKey = new AttributeIndex(existing); }
                 else
                 {
+                    //TODO: The MemberName logic needs to look at Primary/FK's to determine what is the best entity to connect it to.
+
                     AttributeValue newItem = new AttributeValue()
                     {
                         AttributeTitle = item.ColumnName,
@@ -282,11 +284,23 @@ namespace DataDictionary.BusinessLayer.Domain
                 // Create Alias
                 if (aliasValues.Count(w => aliasKey.Equals(w) && attributeKey.Equals(w)) == 0)
                 {
-                    aliasValues.Add(new AttributeAliasValue(attributeKey)
+                    AttributeAliasValue newAlias = new AttributeAliasValue(attributeKey)
                     {
                         AliasName = item.ToAliasName(),
                         AliasScope = item.Scope
-                    });
+                    };
+
+                    aliasValues.Add(newAlias);
+
+                    // Look for related Entities
+                    foreach (EntityAliasValue entity in Model.Entities.Aliases.
+                        Where(w => w.AliasPath.Equals(newAlias.AliasPath.ParentPath)))
+                    {
+                        EntityAttributeValue entityAttribute = new EntityAttributeValue(entity, attributeKey);
+                        EntityAttributeIndex entityAttributeKey = new EntityAttributeIndex(entityAttribute);
+                        if (Model.Entities.Attributes.FirstOrDefault(w => entityAttributeKey.Equals(w)) is null)
+                        { Model.Entities.Attributes.Add(entityAttribute); }
+                    }
                 }
 
                 // Create Properties
@@ -302,6 +316,8 @@ namespace DataDictionary.BusinessLayer.Domain
                             && new PropertyIndexValue(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new AttributePropertyValue(attributeKey, appProperty, property)); }
                 }
+
+
             }
         }
         #endregion

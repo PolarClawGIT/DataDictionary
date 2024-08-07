@@ -19,7 +19,6 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         internal EntityAliasValue(IDomainEntityKey key) : base(key) { }
 
-
         /// <summary>
         /// The Alias Path derived from AliasName
         /// </summary>

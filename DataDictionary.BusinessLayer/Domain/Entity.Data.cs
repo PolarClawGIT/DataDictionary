@@ -264,11 +264,25 @@ namespace DataDictionary.BusinessLayer.Domain
                 // Create Alias, if they do not exist
                 if (aliasValues.Count(w => aliasKey.Equals(w) && entityKey.Equals(w)) == 0)
                 {
-                    aliasValues.Add(new EntityAliasValue(entityKey)
+                    var newAlias = new EntityAliasValue(entityKey)
                     {
                         AliasName = item.ToAliasName(),
                         AliasScope = item.Scope
-                    });
+                    };
+
+                    aliasValues.Add(newAlias);
+
+                    // Look for related attributes
+                    foreach (AttributeAliasValue attribute in Model.Attributes.Aliases.
+                        Where(w => w.AliasPath.ParentPath is NamedScopePath
+                            && w.AliasPath.ParentPath.Equals(newAlias.AliasPath)))
+                    {
+                        EntityAttributeValue entityAttribute = new EntityAttributeValue(entityKey, attribute);
+                        EntityAttributeIndex entityAttributeKey = new EntityAttributeIndex(entityAttribute);
+                        if (Model.Entities.Attributes.FirstOrDefault(w => entityAttributeKey.Equals(w)) is null)
+                        { Model.Entities.Attributes.Add(entityAttribute); }
+                    }
+
                 }
 
                 // Create Properties

@@ -30,6 +30,15 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         internal AttributeAliasValue(IDomainAttributeKey key) : base(key) { }
 
+        /// <summary>
+        /// The Alias Path derived from AliasName
+        /// </summary>
+        public NamedScopePath AliasPath
+        {
+            get { return new NamedScopePath(NamedScopePath.Parse(AliasName).ToArray()); }
+            set { AliasName = value.MemberFullPath; }
+        }
+
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeAlias;
