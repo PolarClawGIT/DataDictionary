@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (isNew) { SendMessage(new RefreshNavigation()); }
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
 
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
@@ -85,9 +85,9 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
 
-            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
             attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
-            attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName)));
             subjectArea.BindTo(bindingSubjectArea);
 
             // Alias Handling

@@ -54,9 +54,9 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (isNew) { SendMessage(new RefreshNavigation()); }
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
 
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));

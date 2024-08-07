@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Database
                 catalogNavigation.AutoGenerateColumns = false;
                 catalogNavigation.DataSource = catalogBinding;
 
-                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
+                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogTitle))));
                 catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
                 sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceServerName))));
                 sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDatabaseName))));

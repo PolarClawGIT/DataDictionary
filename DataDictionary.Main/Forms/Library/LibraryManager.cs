@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.Library
                 libraryNavigation.AutoGenerateColumns = false;
                 libraryNavigation.DataSource = libraryBinding;
 
-                libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
+                libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryTitle))));
                 libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
                 asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.AssemblyName))));
                 sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceFile))));
