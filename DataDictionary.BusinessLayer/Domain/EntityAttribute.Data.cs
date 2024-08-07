@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -8,13 +10,15 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Model Entity Attribute
     /// </summary>
-    public interface IEntityAttributeData : IBindingData<EntityAttributeValue> 
+    public interface IEntityAttributeData : IBindingData<EntityAttributeValue>,
+        IRemoveItem<IDomainAttributeKey>, IRemoveItem<IDomainEntityKey>
     { }
 
     /// <summary>
     /// Implementation for the Model Entity Attribute
     /// </summary>
-    public class EntityAttributeData : DomainEntityAttributeCollection<EntityAttributeValue>, IEntityAttributeData,
+    public class EntityAttributeData : DomainEntityAttributeCollection<EntityAttributeValue>,
+        IEntityAttributeData,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
@@ -27,6 +31,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>EntityDefinition</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
+
         /// <inheritdoc/>
         /// <remarks>EntityDefinition</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)

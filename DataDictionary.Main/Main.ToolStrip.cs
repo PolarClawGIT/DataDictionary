@@ -93,6 +93,9 @@ namespace DataDictionary.Main
         private void menuEntityAlias_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.ModelEntityAlias)), BusinessData.DomainModel.Entities.Aliases); }
 
+        private void menuEntityAttributes_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.ModelEntityAttribute)), BusinessData.DomainModel.Entities.Attributes); }
+
         private void menuModelProperty_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.ModelProperty)), BusinessData.DomainModel.Properties); }
 

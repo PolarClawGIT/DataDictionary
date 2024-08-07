@@ -22,7 +22,7 @@ namespace DataDictionary.Main
             Icon = ImageEnumeration.GetIcon(ScopeType.Application);
 
             IsLocked(true);
-            
+
             // Setup Images for Tree Control
             contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 

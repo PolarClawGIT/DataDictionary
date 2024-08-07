@@ -101,13 +101,13 @@
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
             textEditorToolStripMenuItem = new ToolStripMenuItem();
+            windowToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
             helpIndexMenuItem = new ToolStripMenuItem();
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            windowToolStripMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             toolStrip = new ToolStrip();
@@ -127,6 +127,7 @@
             menuScriptingAttribute = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
+            menuEntityAttributes = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -225,10 +226,9 @@
             // 
             // entityContextMenu
             // 
-            entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions });
+            entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions, menuEntityAttributes });
             entityContextMenu.Name = "entityContextMenu";
-            entityContextMenu.OwnerItem = newEntityCommand;
-            entityContextMenu.Size = new Size(206, 92);
+            entityContextMenu.Size = new Size(206, 136);
             // 
             // menuEntities
             // 
@@ -710,6 +710,12 @@
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
+            // windowToolStripMenuItem
+            // 
+            windowToolStripMenuItem.Name = "windowToolStripMenuItem";
+            windowToolStripMenuItem.Size = new Size(63, 20);
+            windowToolStripMenuItem.Text = "&Window";
+            // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { helpContentsMenuItem, helpIndexMenuItem, searchToolStripMenuItem, toolStripSeparator5, helpAboutMenuItem });
@@ -749,12 +755,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // windowToolStripMenuItem
-            // 
-            windowToolStripMenuItem.Name = "windowToolStripMenuItem";
-            windowToolStripMenuItem.Size = new Size(63, 20);
-            windowToolStripMenuItem.Text = "&Window";
             // 
             // openFileDialog
             // 
@@ -899,6 +899,14 @@
             refreshCommand.Text = "Refresh navigation tree";
             refreshCommand.Click += RefreshCommand_Click;
             // 
+            // menuEntityAttributes
+            // 
+            menuEntityAttributes.Image = Properties.Resources.Attribute;
+            menuEntityAttributes.Name = "menuEntityAttributes";
+            menuEntityAttributes.Size = new Size(205, 22);
+            menuEntityAttributes.Text = "browse Entity Attributes";
+            menuEntityAttributes.Click += menuEntityAttributes_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1034,5 +1042,6 @@
         private ToolStripMenuItem menuScriptingNode;
         private ToolStripMenuItem menuScriptingAttribute;
         private ToolStripMenuItem windowToolStripMenuItem;
+        private ToolStripMenuItem menuEntityAttributes;
     }
 }

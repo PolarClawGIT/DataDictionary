@@ -97,6 +97,7 @@ namespace DataDictionary.BusinessLayer.Domain
             propertyValues.Remove(key);
             definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
+            Model.Entities.Attributes.Remove(key);
         }
 
         #region ILoadData, ISaveData
