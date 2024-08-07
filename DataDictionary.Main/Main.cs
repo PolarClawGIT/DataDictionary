@@ -117,7 +117,6 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.Create());
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
@@ -133,6 +132,7 @@ namespace DataDictionary.Main
                 }
             }
 
+            work.AddRange(BusinessData.Create());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             this.DoWork(work, OnComplete);
