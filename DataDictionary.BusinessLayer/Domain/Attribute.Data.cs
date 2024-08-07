@@ -269,6 +269,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     AttributeValue newItem = new AttributeValue()
                     {
                         AttributeTitle = item.ColumnName,
+                        MemberName = new NamedScopePath(item.SchemaName, item.TableName, item.ColumnName).MemberFullPath,
                         IsDerived = item.IsComputed ?? false,
                         IsIntegral = !item.IsComputed ?? false,
                         IsNullable = item.IsNullable ?? false,

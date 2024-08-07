@@ -253,7 +253,10 @@ namespace DataDictionary.BusinessLayer.Domain
                 else
                 {
                     EntityValue newItem = new EntityValue()
-                    { EntityTitle = item.TableName, };
+                    { 
+                        EntityTitle = item.TableName,
+                        MemberName = new NamedScopePath(item.SchemaName, item.TableName).MemberFullPath,
+                    };
                     this.Add(newItem);
                     entityKey = new EntityIndex(newItem);
                 }
