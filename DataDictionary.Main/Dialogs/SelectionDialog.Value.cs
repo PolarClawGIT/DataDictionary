@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Dialogs
         public Func<INamedScopeSourceValue, String> GetDescription { get; set; } = (value) => String.Empty;
         public String Description { get { return GetDescription(Source); } }
 
-        public SelectionDialogValue(NamedScopeIndex key, Func<INamedScopeSourceValue, String>? getDescription = null) : base ()
+        public SelectionDialogValue(NamedScopeIndex key, Func<INamedScopeSourceValue, String>? getDescription = null) : base()
         {
             this.Index = key;
             this.NamedScope = BusinessData.NamedScope.GetValue(key);
@@ -46,6 +46,9 @@ namespace DataDictionary.Main.Dialogs
 
             if (getDescription is null) { this.GetDescription = (value) => String.Empty; }
             else { this.GetDescription = getDescription; }
+
+            // Dummy Statement. Removes a warning that PropertyChanged is never called.
+            if (PropertyChanged is PropertyChangedEventHandler) { }
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
+using DataDictionary.Main.Messages;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -14,6 +15,8 @@ namespace DataDictionary.Main.Forms.Domain
     {
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
+
+        Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
         protected DomainAttribute() : base()
         { InitializeComponent(); }
@@ -24,6 +27,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 attributeItem = new AttributeValue();
                 BusinessData.DomainModel.Attributes.Add(attributeItem);
+                isNew = true;
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
@@ -47,6 +51,8 @@ namespace DataDictionary.Main.Forms.Domain
             PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
+
+            if (isNew) { SendMessage(new RefreshNavigation()); }
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -85,7 +91,10 @@ namespace DataDictionary.Main.Forms.Domain
             base.DeleteCommand_Click(sender, e);
 
             if (bindingAttribute.Current is IAttributeValue current)
-            { DoWork(BusinessData.DomainModel.Attributes.Delete(current)); }
+            { DoWork(BusinessData.DomainModel.Attributes.Delete(current), Complete); }
+
+            void Complete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)

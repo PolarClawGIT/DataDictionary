@@ -11,6 +11,7 @@ using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
 using System.Linq;
 using DataDictionary.BusinessLayer;
+using DataDictionary.Main.Messages;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -18,6 +19,8 @@ namespace DataDictionary.Main.Forms.Domain
     {
         public Boolean IsOpenItem(object? item)
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
+
+        Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
         protected DomainEntity() : base()
         {
@@ -34,6 +37,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 entityItem = new EntityValue();
                 BusinessData.DomainModel.Entities.Add(entityItem);
+                SendMessage(new RefreshNavigation());
             }
 
             EntityIndex key = new EntityIndex(entityItem);
@@ -59,6 +63,8 @@ namespace DataDictionary.Main.Forms.Domain
             PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
+
+            if (isNew) { SendMessage(new RefreshNavigation()); }
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -103,7 +109,10 @@ namespace DataDictionary.Main.Forms.Domain
             base.DeleteCommand_Click(sender, e);
 
             if (bindingEntity.Current is IEntityValue current)
-            { DoWork(BusinessData.DomainModel.Entities.Delete(current)); }
+            { DoWork(BusinessData.DomainModel.Entities.Delete(current), Complete); }
+
+            void Complete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -122,8 +131,6 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is EntityValue current)
             {
                 EntityAliasValue newItem = new EntityAliasValue(current);
-                //newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                //newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
