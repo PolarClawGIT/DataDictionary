@@ -248,13 +248,75 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
+        public void Import_New(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key)
+        {
+            TableColumnIndex colunKey = new TableColumnIndex(key);
+
+            if (source.DbTableColumns.FirstOrDefault(w => colunKey.Equals(w)) is TableColumnValue column)
+            {
+                TableColumnIndexName columnName = new TableColumnIndexName(column);
+                ConstraintIndexReference referenceName = new ConstraintIndexReference(column);
+                AliasKeyName aliasKey = new AliasKeyName(column);
+                AttributeValue attribute;
+
+                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is AttributeAliasValue existingAlias)
+                { // Attribute already exists by Alias
+                    AttributeIndex attributeKey = new AttributeIndex(existingAlias);
+
+                    if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeValue existingAttribute)
+                    { attribute = existingAttribute; }
+                    else
+                    { // Should not Occur
+                        Exception ex = new InvalidOperationException("Attribute for Alias is missing");
+                        ex.Data.Add(nameof(attributeKey), attributeKey);
+                        ex.Data.Add(nameof(existingAlias), existingAlias);
+                        throw ex;
+                    }
+                }
+                else if (source.DbConstraintColumns.Where(w => columnName.Equals(w)) is IEnumerable<ConstraintColumnValue> primaryKeys)
+                { // Look for the Alias by PK
+                    var a = primaryKeys.ToList();
+                }
+                else if (source.DbConstraintColumns.Where(w => referenceName.Equals(w)) is IEnumerable<ConstraintColumnValue> foreignKeys)
+                { // Look for Alias by FK 
+
+                }
+                else if (1 == 2) // TODO: add dependences
+                { }
+                else
+                {
+
+                }
+
+                
+                var y = source.DbConstraintColumns.Where(w => referenceName.Equals(w)).ToList(); //FK's
+
+
+
+
+
+
+
+
+
+            }
+            else
+            {   // This should never occur
+                Exception ex = new ArgumentException("Column not Found");
+                ex.Data.Add(nameof(key), key.ColumnId);
+            }
+
+        }
+
         /// <inheritdoc/>
         /// <remarks>Attribute by Column</remarks>
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key)
         {
             TableColumnIndex colunKey = new TableColumnIndex(key);
-            foreach (TableColumnValue item in source.DbTableColumns.Where(w => colunKey.Equals(w)))
+
+            if (source.DbTableColumns.FirstOrDefault(w => colunKey.Equals(w)) is TableColumnValue item)
             {
+                TableColumnIndexName columnKey = new TableColumnIndexName(item);
                 AliasKeyName aliasKey = new AliasKeyName(item);
                 AttributeIndexName attributeName = new AttributeIndexName(item);
                 AttributeIndex attributeKey;
@@ -266,7 +328,49 @@ namespace DataDictionary.BusinessLayer.Domain
                 { attributeKey = new AttributeIndex(existing); }
                 else
                 {
-                    //TODO: The MemberName logic needs to look at Primary/FK's to determine what is the best entity to connect it to.
+
+
+                    // See if there is a Primary Key for this column. Use that for Path, if possible.
+                    // TODO: Debug this. It is not picking up the right values (SampleParentId)
+                    // Issue: If the column name is defined elsewhere, the code does not reach this point.
+                    var constraint = source.DbConstraintColumns.
+                        Where(w => columnKey.Equals(w)).
+                        Join(source.DbConstraints,
+                            left => new ConstraintIndexName(left),
+                            right => new ConstraintIndexName(right),
+                            (left, right) => new
+                            {
+                                left.SchemaName,
+                                left.TableName,
+                                left.ColumnName,
+                                right.ConstraintType,
+                                MemberPath = new NamedScopePath(left.SchemaName, left.TableName, left.ColumnName),
+                                Count = source.DbConstraintColumns.Count(w => new ConstraintIndexName(right).Equals(w))
+                            }).
+                        OrderBy(o => o.Count). //Ideally Count == 1 but it may not.
+                        FirstOrDefault(w => w.ConstraintType is "PRIMARY KEY");
+
+                    var x = source.DbConstraints.
+                        Join(source.DbConstraintColumns,
+                            left => new ConstraintIndexName(left),
+                            right => new ConstraintIndexName(right),
+                            (left, right) => new
+                            {
+                                left.ConstraintName,
+                                left.ConstraintType,
+                                left.SchemaName,
+                                left.TableName,
+                                right.ColumnName,
+                                Key = new TableColumnIndexName(right)
+                            }
+                        ).ToList();
+
+                    var y = x.Where(w => columnKey.Equals(w));
+
+                    NamedScopePath MemberPath;
+                    if (constraint is null)
+                    { MemberPath = new NamedScopePath(item.SchemaName, item.TableName, item.ColumnName); }
+                    else { MemberPath = constraint.MemberPath; }
 
                     AttributeValue newItem = new AttributeValue()
                     {
@@ -319,6 +423,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
             }
+            else { throw new Exception("Column Not Found."); } // Should never occur.
         }
         #endregion
 

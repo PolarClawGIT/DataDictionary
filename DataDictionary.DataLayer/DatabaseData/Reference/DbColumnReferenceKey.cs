@@ -1,4 +1,6 @@
-﻿using DataDictionary.Resource;
+﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +29,22 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         public string ReferenceColumnName { get; init; } = String.Empty;
 
         /// <summary>
-        /// Constructor for the Database Table Reference Key
+        /// Constructor for the Database Column Reference Key
         /// </summary>
         /// <param name="source"></param>
         public DbColumnReferenceKey(IDbColumnReferenceKey source) : base(source)
         {
             if (source.ReferenceColumnName is string) { ReferenceColumnName = source.ReferenceColumnName; }
+            else { ReferenceColumnName = string.Empty; }
+        }
+
+        /// <summary>
+        /// Constructor for the Database Column (Table Column) Reference Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DbColumnReferenceKey(IDbTableColumnKeyName source) : base(source)
+        {
+            if (source.ColumnName is string) { ReferenceColumnName = source.ColumnName; }
             else { ReferenceColumnName = string.Empty; }
         }
 

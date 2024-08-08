@@ -1,4 +1,6 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Reference;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -47,5 +49,27 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         public Boolean Equals(ConstraintIndexName? other)
         { return other is IDbConstraintKeyName value && Equals(new DbConstraintKeyName(value)); }
+    }
+
+    /// <inheritdoc/>
+    public interface IConstraintIndexReference : IDbColumnReferenceKey { }
+
+    /// <inheritdoc/>
+    public class ConstraintIndexReference: DbColumnReferenceKey, IConstraintIndexReference,
+        IKeyEquality<IConstraintIndexReference>, IKeyEquality<ConstraintIndexReference>
+    {
+        /// <inheritdoc cref="DbColumnReferenceKey(IDbColumnReferenceKey)"/>
+        public ConstraintIndexReference(IConstraintIndexReference source) : base(source) { }
+
+        /// <inheritdoc cref="DbColumnReferenceKey(IDbTableColumnKeyName)"/>
+        public ConstraintIndexReference(ITableColumnIndexName source) : base(source) { }
+
+        /// <inheritdoc/>
+        public Boolean Equals(IConstraintIndexReference? other)
+        { return other is IConstraintIndexReference value && Equals(new DbColumnReferenceKey(value)); }
+
+        /// <inheritdoc/>
+        public Boolean Equals(ConstraintIndexReference? other)
+        { return other is IConstraintIndexReference value && Equals(new DbColumnReferenceKey(value)); }
     }
 }

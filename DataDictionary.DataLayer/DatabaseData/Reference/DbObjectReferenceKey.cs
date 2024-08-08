@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
@@ -37,7 +38,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         public string ReferenceObjectName { get; init; }
 
         /// <summary>
-        /// Constructor for the Database Table Reference Key
+        /// Constructor for the Database Object Reference Key
         /// </summary>
         /// <param name="source"></param>
         public DbObjectReferenceKey(IDbObjectReferenceKey source) : base(source)
@@ -48,6 +49,20 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
             if (source.ReferenceObjectName is string) { ReferenceObjectName = source.ReferenceObjectName; }
             else { ReferenceObjectName = string.Empty; }
         }
+
+        /// <summary>
+        /// Constructor for the Database Object (Table) Reference Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DbObjectReferenceKey(IDbTableKeyName source) : base (source)
+        {
+            if (source.SchemaName is string) { ReferenceSchemaName = source.SchemaName; }
+            else { ReferenceSchemaName = string.Empty; }
+
+            if (source.TableName is string) { ReferenceObjectName = source.TableName; }
+            else { ReferenceObjectName = string.Empty; }
+        }
+
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
