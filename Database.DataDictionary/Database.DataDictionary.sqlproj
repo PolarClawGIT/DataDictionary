@@ -270,6 +270,9 @@
     <Build Include="Obsolete\DatabaseRoutineDependency.sql" />
     <Build Include="Obsolete\procSetDatabaseRoutineDependency.sql" />
     <Build Include="Obsolete\procGetDatabaseRoutineDependency.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseReference.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseReference.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

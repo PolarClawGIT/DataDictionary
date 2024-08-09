@@ -7,13 +7,13 @@
 	-- The system function will also return exceptions for routines not specifically called for.
 	[ReferenceId]             UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseReferenceId] DEFAULT (newid()),
 	--[CatalogId]               UniqueIdentifier Not Null,
-	[ReferencingObjectId]     UniqueIdentifier Not Null, -- Could be Table, View, Procedure, Function or something else
+	[ObjectId]                UniqueIdentifier Not Null, -- Could be Table, View, Procedure, Function or something else
 	--[ReferencingDatabaseName] SysName Not Null,
 	--[ReferencingSchemaName]   SysName Not Null,
 	--[ReferencingObjectName]   SysName Not Null,
-	[ReferencingType]	      [App_DataDictionary].[typeObjectSubType] Not Null, -- USER_TABLE, VIEW, FUNCTION, PROCEDURE, ...
+	[ObjectType]		      [App_DataDictionary].[typeObjectSubType] Not Null, -- USER_TABLE, VIEW, FUNCTION, PROCEDURE, ...
 	-- Source has Referenced objects as null-able and may not reflect the current state of the database.
-	[ReferencedServerName]    SysName Null,
+	--[ReferencedServerName]    SysName Null,
 	[ReferencedDatabaseName]  SysName Null,
 	[ReferencedSchemaName]    SysName Null,
 	[ReferencedObjectName]    SysName Null,
@@ -35,4 +35,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseReference] PRIMARY KEY CLUSTERED ([ReferenceId] ASC),
 )
+GO
+CREATE UNIQUE INDEX [AK_DatabaseReference]
+    ON [App_DataDictionary].[DatabaseReference]([ObjectId] ASC, [ReferencedDatabaseName] ASC, [ReferencedSchemaName] ASC, [ReferencedObjectName] ASC, [ReferencedColumnName] ASC)
 GO
