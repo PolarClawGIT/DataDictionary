@@ -61,6 +61,24 @@ namespace DataDictionary.DataLayer.DatabaseData {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Begin Try;
+        ///Select	@CatalogId As [CatalogId],
+        ///	NewId() As [DependencyId],
+        ///	DB_Name() As [ReferencingDatabaseName],
+        ///	Object_Schema_Name(Object_id(@ObjectName)) As [ReferencingSchemaName],
+        ///	Object_Name(Object_id(@ObjectName)) As [ReferencingObjectName],
+        ///	D.[type_desc] As [ReferencingType],
+        ///	R.[referenced_server_name] As [ReferencedServerName],
+        ///	IIF(O.[object_id] is Null Or T.[user_type_id] is Null, R.[referenced_database_name], DB_Name()) As [ReferencedDatabaseName],
+        ///	R.[referenced_schema_name] As [Re [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DatabaseReference {
+            get {
+                return ResourceManager.GetString("DatabaseReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	Db_Name() As [CatalogTitle],
         ///	Convert(NvarChar,Null) As [CatalogDescription],

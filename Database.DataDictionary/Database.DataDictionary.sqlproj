@@ -131,14 +131,12 @@
     <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutine.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineParameter.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutine.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutineParameter.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraint.sql" />
@@ -149,8 +147,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutine.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineParameter.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineParameter.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineDependency.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
@@ -268,6 +264,12 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\DatabaseReference.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseReference.sql" />
+    <Build Include="Obsolete\typeDatabaseRoutineDependency.sql" />
+    <Build Include="Obsolete\DatabaseRoutineDependency.sql" />
+    <Build Include="Obsolete\procSetDatabaseRoutineDependency.sql" />
+    <Build Include="Obsolete\procGetDatabaseRoutineDependency.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
