@@ -18,6 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete]
     public abstract class DbRoutineDependencyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbRoutineItem>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
@@ -116,9 +117,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
     }
 
-    /// <summary>
-    /// Default List/Collection of Database Routine Dependencies
-    /// </summary>
-    public class DbRoutineDependencyCollection : DbRoutineDependencyCollection<DbRoutineDependencyItem>
-    { }
 }

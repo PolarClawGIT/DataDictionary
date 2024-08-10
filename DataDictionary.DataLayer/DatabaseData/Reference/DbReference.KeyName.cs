@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Interface for the Database Reference Key
     /// </summary>
-    public interface IDbReferenceKeyName : IKey, IDbSchemaKeyName, IToAliasName
+    public interface IDbReferenceKeyName : IKey, IDbSchemaKeyName
     {
         /// <summary>
         /// Name of the Database Reference Object (Table, View, Procedure, Function, ...)

@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Interface for a Routine Dependency Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
+    [Obsolete]
     public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDbRoutineDependencyKeyName, IDbRoutineDependencyKey
     {
         /// <summary>
@@ -61,7 +62,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Implementation of the Database Routine Dependencies Item
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, ISerializable
     {
         /// <inheritdoc/>

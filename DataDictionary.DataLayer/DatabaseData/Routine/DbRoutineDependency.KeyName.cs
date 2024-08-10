@@ -13,12 +13,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Dependencies Key
     /// </summary>
+    [Obsolete]
     public interface IDbRoutineDependencyKeyName : IKey, IDbRoutineKeyName, IDbColumnReferenceKey
     { }
 
     /// <summary>
     /// Implementation of the Database Routine Dependencies Key
     /// </summary>
+    [Obsolete]
     public class DbRoutineDependencyKeyName : DbRoutineKeyName, IDbRoutineDependencyKeyName,
         IKeyComparable<IDbRoutineDependencyKeyName>, IKeyComparable<DbRoutineDependencyKeyName>,
         IKeyEquality<IDbTableColumnKeyName>

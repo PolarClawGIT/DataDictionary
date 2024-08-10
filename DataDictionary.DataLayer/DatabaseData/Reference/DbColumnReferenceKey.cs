@@ -12,6 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Interface for the Database Column Reference Key
     /// </summary>
+    [Obsolete]
     public interface IDbColumnReferenceKey : IDbObjectReferenceKey
     {
         /// <summary>
@@ -23,6 +24,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Implementation of the Database Column Reference Key
     /// </summary>
+    [Obsolete]
     public class DbColumnReferenceKey : DbObjectReferenceKey, IDbColumnReferenceKey, IKeyComparable<IDbColumnReferenceKey>
     {
         /// <inheritdoc/>

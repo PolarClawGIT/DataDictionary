@@ -112,24 +112,6 @@ namespace DataDictionary.DataLayer.DatabaseData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Begin Try;
-        ///Select	@CatalogId As [CatalogId],
-        ///	NewId() As [DependencyId],
-        ///	DB_Name() As [ReferencingDatabaseName],
-        ///	Object_Schema_Name(Object_id(@ObjectName)) As [ReferencingSchemaName],
-        ///	Object_Name(Object_id(@ObjectName)) As [ReferencingObjectName],
-        ///	D.[type_desc] As [ReferencingType],
-        ///	R.[referenced_server_name] As [ReferencedServerName],
-        ///	IIF(O.[object_id] is Null Or T.[user_type_id] is Null, R.[referenced_database_name], DB_Name()) As [ReferencedDatabaseName],
-        ///	R.[referenced_schema_name] As [Re [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DbDatabaseReference {
-            get {
-                return ResourceManager.GetString("DbDatabaseReference", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	NewId() As [DomainId],
         ///	[DOMAIN_CATALOG] As [DatabaseName],
@@ -175,6 +157,25 @@ namespace DataDictionary.DataLayer.DatabaseData {
         internal static string DbExtendedPropertyItem {
             get {
                 return ResourceManager.GetString("DbExtendedPropertyItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Begin Try;
+        ///Select	@CatalogId As [CatalogId],
+        ///	NewId() As [ReferenceId],
+        ///	DB_Name() As [DatabaseName],
+        ///	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
+        ///	Object_Name(Object_id(@ObjectName)) As [ObjectName],
+        ///	D.[type_desc] As [ObjectType],
+        ///	IIF(O.[object_id] is Null Or T.[user_type_id] is Null, R.[referenced_database_name], DB_Name()) As [ReferencedDatabaseName],
+        ///	R.[referenced_schema_name] As [ReferencedSchemaName],
+        ///	R.[referenced_entity_name] As [ReferencedObjectName],
+        ///	R.[referenced_mi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbReferenceItem {
+            get {
+                return ResourceManager.GetString("DbReferenceItem", resourceCulture);
             }
         }
         

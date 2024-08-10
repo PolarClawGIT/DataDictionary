@@ -13,6 +13,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Interface for the Database Table Reference Key
     /// </summary>
+    [Obsolete]
     public interface IDbObjectReferenceKey : IKey, IDbCatalogKeyName
     {
         /// <summary>
@@ -29,6 +30,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Implementation of the Database Table Reference Key
     /// </summary>
+    [Obsolete]
     public class DbObjectReferenceKey : DbCatalogKeyName, IDbObjectReferenceKey, IKeyComparable<IDbObjectReferenceKey>, IKeyEquality<IDbTableKeyName>
     {
         /// <inheritdoc/>

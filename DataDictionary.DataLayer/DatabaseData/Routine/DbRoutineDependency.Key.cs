@@ -11,6 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Dependency Key.
     /// </summary>
+    [Obsolete]
     public interface IDbRoutineDependencyKey : IKey
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Implementation for the Database Routine Dependency Key.
     /// </summary>
+    [Obsolete]
     public class DbRoutineDependencyKey : IDbRoutineDependencyKey,
         IKeyEquality<IDbRoutineDependencyKey>, IKeyEquality<DbRoutineDependencyKey>
     {
