@@ -7,7 +7,7 @@
 	[SchemaId]            UniqueIdentifier Not Null,
 	[ConstraintName]      SysName Not Null,
 	[ParentTableId]       UniqueIdentifier Not Null,
-	[ConstraintType]      NVarChar(60) Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
+	[ConstraintType]      [App_DataDictionary].[typeObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseConstraint_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseConstraint_SysStart] DEFAULT (sysdatetime()),

@@ -8,7 +8,7 @@
 	[TableId]             UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableId] DEFAULT (newid()),
 	[SchemaId]            UniqueIdentifier Not Null,
 	[TableName]           SysName Not Null,
-	[TableType]           [App_DataDictionary].[typeObjectSubType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
+	[TableType]           [App_DataDictionary].[typeObjectType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseTable_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTable_SysStart] DEFAULT (sysdatetime()),

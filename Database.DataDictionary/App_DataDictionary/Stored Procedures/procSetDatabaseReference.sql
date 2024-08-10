@@ -1,4 +1,4 @@
-﻿alter PROCEDURE [App_DataDictionary].[procSetDatabaseReference]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseReference]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseReference] ReadOnly
@@ -23,12 +23,12 @@ Begin Try
 	Declare @Values Table (
 		[ReferenceId]				uniqueidentifier NOT NULL,
 		[ObjectId]					uniqueidentifier NOT NULL,
-		[ObjectType]				[App_DataDictionary].[typeObjectSubType] NOT NULL,
+		[ObjectType]				[App_DataDictionary].[typeObjectType] NOT NULL,
 		[ReferencedDatabaseName]	sysname NULL,
 		[ReferencedSchemaName]		sysname NULL,
 		[ReferencedObjectName]		sysname NULL,
 		[ReferencedColumnName]		sysname NULL,
-		[ReferencedType]			[App_DataDictionary].[typeObjectSubType] NULL,
+		[ReferencedType]			[App_DataDictionary].[typeObjectType] NULL,
 		[IsCallerDependent]			bit NULL,
 		[IsAmbiguous]				bit NULL,
 		[IsSelected]				bit NULL,

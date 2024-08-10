@@ -29,7 +29,7 @@ Begin Try
 		[SchemaId]            UniqueIdentifier Not Null,
 		[ConstraintName]      SysName Not Null,
 		[ParentTableId]       UniqueIdentifier Not Null,
-		[ConstraintType]      NVarChar(60) Null,
+		[ConstraintType]      [App_DataDictionary].[typeObjectType] Null,
 		Primary Key ([ConstraintId]))
 
 	Insert Into @Values

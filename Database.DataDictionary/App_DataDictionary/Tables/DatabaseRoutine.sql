@@ -3,7 +3,7 @@
 	[RoutineId]          UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseRoutineId] DEFAULT (newid()),
 	[SchemaId]           UniqueIdentifier Not Null,
 	[RoutineName]        SysName Not Null,
-	[RoutineType]        [App_DataDictionary].[typeObjectSubType] Null, -- Known types: PROCEDURE, FUNCTION
+	[RoutineType]        [App_DataDictionary].[typeObjectType] Null, -- Known types: PROCEDURE, FUNCTION
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseRoutine_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseRoutine_SysStart] DEFAULT (sysdatetime()),

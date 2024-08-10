@@ -28,7 +28,7 @@ Begin Try
 		[TableId]   UniqueIdentifier Not Null,
 		[SchemaId]  UniqueIdentifier Not Null,
 		[TableName] SysName Not Null,
-		[TableType] NVarChar(60) Null,
+		[TableType] [App_DataDictionary].[typeObjectType] Null,
 		Primary Key ([TableId]))
 
 	Insert Into @Values

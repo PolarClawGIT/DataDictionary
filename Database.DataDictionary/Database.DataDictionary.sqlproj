@@ -189,7 +189,7 @@
     <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeObjectSubType.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
     <None Include="App_DataDictionary\ApplicationScope Data.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />

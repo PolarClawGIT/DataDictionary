@@ -756,4 +756,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procSetScriptingAttribute]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="36dcb2d4-80dc-43d2-821a-9db8a37680c7" ChangeDateTime="08/10/2024 15:30:59">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeObjectSubType]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeObjectType]" />
+  </Operation>
 </Operations>

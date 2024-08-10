@@ -5,5 +5,5 @@
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,
-	[TableType]              [App_DataDictionary].[typeObjectSubType] Null
+	[TableType]              [App_DataDictionary].[typeObjectType] Null
 )

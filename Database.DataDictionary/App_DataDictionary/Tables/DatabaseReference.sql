@@ -11,14 +11,14 @@
 	--[ReferencingDatabaseName] SysName Not Null,
 	--[ReferencingSchemaName]   SysName Not Null,
 	--[ReferencingObjectName]   SysName Not Null,
-	[ObjectType]		      [App_DataDictionary].[typeObjectSubType] Not Null, -- USER_TABLE, VIEW, FUNCTION, PROCEDURE, ...
+	[ObjectType]		      [App_DataDictionary].[typeObjectType] Not Null, -- USER_TABLE, VIEW, FUNCTION, PROCEDURE, ...
 	-- Source has Referenced objects as null-able and may not reflect the current state of the database.
 	--[ReferencedServerName]    SysName Null,
 	[ReferencedDatabaseName]  SysName Null,
 	[ReferencedSchemaName]    SysName Null,
 	[ReferencedObjectName]    SysName Null,
 	[ReferencedColumnName]    SysName Null,
-	[ReferencedType]          [App_DataDictionary].[typeObjectSubType] Null,
+	[ReferencedType]          [App_DataDictionary].[typeObjectType] Null,
 	[IsCallerDependent]       Bit Null,
 	[IsAmbiguous]             Bit Null,
 	[IsSelected]              Bit Null,
