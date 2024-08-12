@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -41,6 +42,9 @@ namespace DataDictionary.BusinessLayer.Database
     {
         /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
         public TableColumnIndexName(ITableColumnIndexName source) : base(source) { }
+
+        /// <inheritdoc cref="DbTableColumnKeyName(DbConstraintColumnKeyName)"/>
+        public TableColumnIndexName(ConstraintColumnIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ITableColumnIndexName? other)

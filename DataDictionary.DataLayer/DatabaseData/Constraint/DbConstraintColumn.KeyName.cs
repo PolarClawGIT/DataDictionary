@@ -36,7 +36,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Constructor for the Database Column (Table Column) Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbConstraintColumnKeyName(IDbTableColumnKeyName source) : base(source)
+        public DbConstraintColumnKeyName(DbTableColumnKeyName source) : base(source)
         {
             if (source.ColumnName is string) { ReferenceColumnName = source.ColumnName; }
             else { ReferenceColumnName = string.Empty; }

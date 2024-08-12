@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
@@ -49,6 +50,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <param name="source"></param>
         public DbTableColumnKeyName(IDbTableColumnKeyName source) : base(source)
         { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
+
+        public DbTableColumnKeyName(DbConstraintColumnKeyName source)
+        {
+            this.DatabaseName = source.DatabaseName;
+            this.SchemaName = source.ReferenceSchemaName;
+            this.TableName = source.ReferenceTableName;
+            this.ColumnName = source.ReferenceColumnName;
+        }
 
         /// <summary>
         /// Try to Create a Database Column Key from the Alias.

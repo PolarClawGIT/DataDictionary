@@ -45,13 +45,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <inheritdoc/>
         public string? ReferenceSchemaName { get { return GetValue(nameof(ReferenceSchemaName)); } }
 
-        /// <summary>
-        /// Alis of ReferenceObjectName
-        /// </summary>
-        String? ReferenceTableName { get { return GetValue(nameof(ReferenceTableName)); } }
-
         /// <inheritdoc/>
-        public string? ReferenceObjectName { get { return ReferenceTableName; } }
+        public string? ReferenceTableName { get { return GetValue(nameof(ReferenceTableName)); } }
 
         /// <inheritdoc/>
         public string? ReferenceColumnName { get { return GetValue(nameof(ReferenceColumnName)); } }

@@ -12,12 +12,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <summary>
         /// Name of the Database Schema being Referenced
         /// </summary>
-        string? ReferenceSchemaName { get; }
+        String? ReferenceSchemaName { get; }
 
         /// <summary>
-        /// Name of the Database Object being Referenced
+        /// Name of the Database Table being Referenced
         /// </summary>
-        string? ReferenceObjectName { get; }
+        String? ReferenceTableName { get; }
     }
 
     /// <summary>
@@ -26,10 +26,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public class DbConstraintKeyObject : DbCatalogKeyName, IDbConstraintKeyObject, IKeyComparable<IDbConstraintKeyObject>, IKeyEquality<IDbTableKeyName>
     {
         /// <inheritdoc/>
-        public string ReferenceSchemaName { get; init; }
+        public String ReferenceSchemaName { get; init; }
 
         /// <inheritdoc/>
-        public string ReferenceObjectName { get; init; }
+        public String ReferenceTableName { get; init; }
 
         /// <summary>
         /// Constructor for the Database Object Reference Key
@@ -40,21 +40,21 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             if (source.ReferenceSchemaName is string) { ReferenceSchemaName = source.ReferenceSchemaName; }
             else { ReferenceSchemaName = string.Empty; }
 
-            if (source.ReferenceObjectName is string) { ReferenceObjectName = source.ReferenceObjectName; }
-            else { ReferenceObjectName = string.Empty; }
+            if (source.ReferenceTableName is string) { ReferenceTableName = source.ReferenceTableName; }
+            else { ReferenceTableName = string.Empty; }
         }
 
         /// <summary>
         /// Constructor for the Database Object (Table) Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbConstraintKeyObject(IDbTableKeyName source) : base(source)
+        public DbConstraintKeyObject(DbTableKeyName source) : base(source)
         {
             if (source.SchemaName is string) { ReferenceSchemaName = source.SchemaName; }
             else { ReferenceSchemaName = string.Empty; }
 
-            if (source.TableName is string) { ReferenceObjectName = source.TableName; }
-            else { ReferenceObjectName = string.Empty; }
+            if (source.TableName is string) { ReferenceTableName = source.TableName; }
+            else { ReferenceTableName = string.Empty; }
         }
 
 
@@ -67,10 +67,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
                 new DbCatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferenceSchemaName) &&
-                !string.IsNullOrEmpty(ReferenceObjectName) &&
-                !string.IsNullOrEmpty(other.ReferenceObjectName) &&
+                !string.IsNullOrEmpty(ReferenceTableName) &&
+                !string.IsNullOrEmpty(other.ReferenceTableName) &&
                 ReferenceSchemaName.Equals(other.ReferenceSchemaName, KeyExtension.CompareString) &&
-                ReferenceObjectName.Equals(other.ReferenceObjectName, KeyExtension.CompareString);
+                ReferenceTableName.Equals(other.ReferenceTableName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -81,10 +81,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
                 new DbCatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.SchemaName) &&
-                !string.IsNullOrEmpty(ReferenceObjectName) &&
+                !string.IsNullOrEmpty(ReferenceTableName) &&
                 !string.IsNullOrEmpty(other.TableName) &&
                 ReferenceSchemaName.Equals(other.SchemaName, KeyExtension.CompareString) &&
-                ReferenceObjectName.Equals(other.TableName, KeyExtension.CompareString);
+                ReferenceTableName.Equals(other.TableName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -106,7 +106,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
                                    other.ReferenceSchemaName,
                                    true) is int schemaValue && schemaValue != 0)
                 { return schemaValue; }
-                else { return string.Compare(ReferenceObjectName, other.ReferenceObjectName, true); }
+                else { return string.Compare(ReferenceTableName, other.ReferenceTableName, true); }
             }
         }
 
@@ -144,15 +144,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             return HashCode.Combine(
                 base.GetHashCode(),
                 ReferenceSchemaName.GetHashCode(KeyExtension.CompareString),
-                ReferenceObjectName.GetHashCode(KeyExtension.CompareString));
+                ReferenceTableName.GetHashCode(KeyExtension.CompareString));
         }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (ReferenceSchemaName is string && ReferenceObjectName is string)
-            { return string.Format("{0}.{1}.{2}", base.ToString(), ReferenceSchemaName, ReferenceObjectName); }
+            if (ReferenceSchemaName is string && ReferenceTableName is string)
+            { return string.Format("{0}.{1}.{2}", base.ToString(), ReferenceSchemaName, ReferenceTableName); }
             else { return string.Empty; }
         }
     }

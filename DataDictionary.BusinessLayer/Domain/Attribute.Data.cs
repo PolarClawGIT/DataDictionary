@@ -232,9 +232,24 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
+
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
+        {
+            TableIndex tableKey = new TableIndex(key);
+
+            var stuff = new DatabaseImport(source, Model);
+            if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
+            {
+                CatalogIndex catalog = new CatalogIndex(table);
+
+                stuff.Import(catalog, table);
+            }
+                
+        }
+
         /// <inheritdoc/>
         /// <remarks>Attribute by Table</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
+        public void Import_Old(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
             if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
@@ -248,65 +263,6 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public void Import_New(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key)
-        {
-            TableColumnIndex colunKey = new TableColumnIndex(key);
-
-            if (source.DbTableColumns.FirstOrDefault(w => colunKey.Equals(w)) is TableColumnValue column)
-            {
-                TableColumnIndexName columnName = new TableColumnIndexName(column);
-                ConstraintColumnIndexName referenceName = new ConstraintColumnIndexName(column);
-                AliasKeyName aliasKey = new AliasKeyName(column);
-                AttributeValue attribute;
-
-                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is AttributeAliasValue existingAlias)
-                { // Attribute already exists by Alias
-                    AttributeIndex attributeKey = new AttributeIndex(existingAlias);
-
-                    if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeValue existingAttribute)
-                    { attribute = existingAttribute; }
-                    else
-                    { // Should not Occur
-                        Exception ex = new InvalidOperationException("Attribute for Alias is missing");
-                        ex.Data.Add(nameof(attributeKey), attributeKey);
-                        ex.Data.Add(nameof(existingAlias), existingAlias);
-                        throw ex;
-                    }
-                }
-                else if (source.DbConstraintColumns.Where(w => columnName.Equals(w)) is IEnumerable<ConstraintColumnValue> primaryKeys)
-                { // Look for the Alias by PK
-                    var a = primaryKeys.ToList();
-                }
-                else if (source.DbConstraintColumns.Where(w => referenceName.Equals(w)) is IEnumerable<ConstraintColumnValue> foreignKeys)
-                { // Look for Alias by FK 
-
-                }
-                else if (1 == 2) // TODO: add dependences
-                { }
-                else
-                {
-
-                }
-
-                
-                var y = source.DbConstraintColumns.Where(w => referenceName.Equals(w)).ToList(); //FK's
-
-
-
-
-
-
-
-
-
-            }
-            else
-            {   // This should never occur
-                Exception ex = new ArgumentException("Column not Found");
-                ex.Data.Add(nameof(key), key.ColumnId);
-            }
-
-        }
 
         /// <inheritdoc/>
         /// <remarks>Attribute by Column</remarks>

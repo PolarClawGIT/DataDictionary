@@ -8,7 +8,7 @@ namespace DataDictionary.BusinessLayer.Database;
 
 /// <inheritdoc/>
 public interface IReferenceValue : IDbReferenceItem,
-    IReferenceIndex, IReferencedIndexObject, IReferencedIndexColumn,
+    IReferenceIndex, IReferencedIndexObject, IReferencedIndexColumn, ICatalogIndex,
     IBindingTableRow, IBindingRowState, IBindingPropertyChanged
 { }
 

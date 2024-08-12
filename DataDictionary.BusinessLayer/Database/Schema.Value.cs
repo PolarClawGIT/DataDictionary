@@ -7,7 +7,8 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : IDbSchemaItem, ISchemaIndex, ISchemaIndexName,
+    public interface ISchemaValue : IDbSchemaItem,
+        ISchemaIndex, ISchemaIndexName, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

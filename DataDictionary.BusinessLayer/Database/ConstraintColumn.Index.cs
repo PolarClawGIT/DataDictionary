@@ -14,8 +14,8 @@ public class ConstraintColumnIndexName : DbConstraintColumnKeyName, IConstraintC
     /// <inheritdoc cref="DbConstraintColumnKeyName(IDbConstraintColumnKeyName)"/>
     public ConstraintColumnIndexName(IConstraintColumnIndexName source) : base(source) { }
 
-    /// <inheritdoc cref="DbConstraintColumnKeyName(IDbTableColumnKeyName)"/>
-    public ConstraintColumnIndexName(ITableColumnIndexName source) : base(source) { }
+    /// <inheritdoc cref="DbConstraintColumnKeyName(DbTableColumnKeyName)"/>
+    public ConstraintColumnIndexName(TableColumnIndexName source) : base(source) { }
 
     /// <inheritdoc/>
     public Boolean Equals(IConstraintColumnIndexName? other)
