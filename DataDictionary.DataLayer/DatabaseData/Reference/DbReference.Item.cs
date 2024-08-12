@@ -28,6 +28,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         DbObjectType ReferencedType { get; }
 
         /// <summary>
+        /// Application Scope of the object referenced
+        /// </summary>
+        ScopeType ReferencedScope { get; }
+
+        /// <summary>
         /// Is the Reference Item Dependent on the Caller
         /// </summary>
         Boolean? IsCallerDependent { get; }
@@ -75,10 +80,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     public class DbReferenceItem : BindingTableRow, IDbReferenceItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId => throw new NotImplementedException();
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? ReferenceId => throw new NotImplementedException();
+        public Guid? ReferenceId { get { return GetValue<Guid>(nameof(ReferenceId)); } }
 
         /// <inheritdoc/>
         public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
@@ -122,6 +127,48 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
                 if (DbObjectEnumeration.TryParse(value, null, out DbObjectEnumeration? result))
                 { return result.Value; }
                 else { return DbObjectType.Null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public ScopeType ReferencedScope
+        {
+            get
+            {
+                switch (ReferencedType)
+                {
+                    case DbObjectType.Null: return ScopeType.Null;
+                    case DbObjectType.AggregateFunction: return ScopeType.DatabaseFunction;
+                    case DbObjectType.CheckConstraint: return ScopeType.DatabaseTableConstraint;
+                    case DbObjectType.ClrScalarFunction: return ScopeType.DatabaseFunction; 
+                    case DbObjectType.ClrStoredProcedure: return ScopeType.DatabaseProcedure;
+                    case DbObjectType.ClrTableValuedFunction: return ScopeType.DatabaseFunction;
+                    case DbObjectType.ClrTrigger: return ScopeType.Null; // Not supported
+                    case DbObjectType.DefaultConstraint: return ScopeType.DatabaseTableConstraint;
+                    case DbObjectType.EdgeConstraint: return ScopeType.Null; // Not supported
+                    case DbObjectType.ExtendedStoredProcedure: return ScopeType.DatabaseProcedure;
+                    case DbObjectType.ForeignKeyConstraint: return ScopeType.DatabaseTableConstraint;
+                    case DbObjectType.InternalTable: return ScopeType.Null; // Not supported
+                    case DbObjectType.PlanGuide: return ScopeType.Null; // Not supported
+                    case DbObjectType.PrimaryKeyConstraint: return ScopeType.DatabaseTableConstraint;
+                    case DbObjectType.ReplicationFilterProcedure: return ScopeType.Null; // Not supported
+                    case DbObjectType.Rule: return ScopeType.Null; // Not supported
+                    case DbObjectType.SequenceObject: return ScopeType.Null; // Not supported
+                    case DbObjectType.ServiceQueue: return ScopeType.Null; // Not supported
+                    case DbObjectType.InlineTableValuedFunction: return ScopeType.DatabaseFunction;
+                    case DbObjectType.ScalarFunction: return ScopeType.DatabaseFunction;
+                    case DbObjectType.StoredProcedure: return ScopeType.DatabaseProcedure;
+                    case DbObjectType.TableValuedFunction: return ScopeType.DatabaseFunction;
+                    case DbObjectType.Trigger: return ScopeType.Null; // Not supported
+                    case DbObjectType.Synonym: return ScopeType.Null; // Not supported
+                    case DbObjectType.SystemTable: return ScopeType.DatabaseTable;
+                    case DbObjectType.TypeTable: return ScopeType.DatabaseTable;
+                    case DbObjectType.UniqueConstraint: return ScopeType.DatabaseTableConstraint;
+                    case DbObjectType.UserTable: return ScopeType.DatabaseTable;
+                    case DbObjectType.View: return ScopeType.DatabaseView;
+                    case DbObjectType.Column: return ScopeType.DatabaseTableColumn;
+                    default: return ScopeType.Null;
+                }
             }
         }
 

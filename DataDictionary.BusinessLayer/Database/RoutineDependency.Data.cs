@@ -9,9 +9,11 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog RoutineDependency data
     /// </summary>
+    [Obsolete]
     public interface IRoutineDependencyData : IBindingData<RoutineDependencyValue>
     { }
 
+    [Obsolete]
     class RoutineDependencyData : DbRoutineDependencyCollection<RoutineDependencyValue>, IRoutineDependencyData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,

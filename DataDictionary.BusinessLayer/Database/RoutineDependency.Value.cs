@@ -9,11 +9,13 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
+    [Obsolete]
     public interface IRoutineDependencyValue : IDbRoutineDependencyItem,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class RoutineDependencyValue : DbRoutineDependencyItem,  IRoutineDependencyValue
     { }
 }

@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
+using DataDictionary.DataLayer.DatabaseData.Table;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -58,7 +59,13 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Dependencies for the Routines within the Model.
         /// </summary>
+        [Obsolete]
         IRoutineDependencyData DbRoutineDependencies { get; }
+
+        /// <summary>
+        /// List of Database References
+        /// </summary>
+        IReferenceData DbReferences { get; }
 
         /// <summary>
         /// List of Database Tables and Views within the Model.
@@ -138,8 +145,14 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly RoutineParameterData routineParameters;
 
         /// <inheritdoc/>
+        [Obsolete]
         public IRoutineDependencyData DbRoutineDependencies { get { return routineDependencies; } }
+        [Obsolete]
         private readonly RoutineDependencyData routineDependencies;
+
+        /// <inheritdoc/>
+        public IReferenceData DbReferences { get { return references; } }
+        private readonly ReferenceData references;
 
         /// <inheritdoc/>
         public ITableData DbTables { get { return tables; } }
@@ -161,6 +174,7 @@ namespace DataDictionary.BusinessLayer.Database
             routines = new RoutineData() { Database = this };
             routineParameters = new RoutineParameterData() { Database = this };
             routineDependencies = new RoutineDependencyData() { Database = this };
+            references = new ReferenceData() { Database = this };
 
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };
@@ -184,6 +198,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
             work.AddRange(routineDependencies.Load(factory, dataKey));
+            work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
             work.AddRange(constraintColumns.Load(factory, dataKey));
@@ -207,6 +222,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
             work.AddRange(routineDependencies.Save(factory, dataKey));
+            work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
             work.AddRange(constraintColumns.Save(factory, dataKey));
@@ -230,6 +246,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
             work.AddRange(routineDependencies.Load(factory, dataKey));
+            work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
             work.AddRange(constraintColumns.Load(factory, dataKey));
@@ -253,6 +270,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
             work.AddRange(routineDependencies.Save(factory, dataKey));
+            work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
             work.AddRange(constraintColumns.Save(factory, dataKey));
@@ -275,6 +293,7 @@ namespace DataDictionary.BusinessLayer.Database
             result.Add(routines.ToDataTable());
             result.Add(routineParameters.ToDataTable());
             result.Add(routineDependencies.ToDataTable());
+            result.Add(references.ToDataTable());
 
             result.Add(constraints.ToDataTable());
             result.Add(constraintColumns.ToDataTable());
@@ -297,6 +316,7 @@ namespace DataDictionary.BusinessLayer.Database
             routines.Load(source);
             routineParameters.Load(source);
             routineDependencies.Load(source);
+            references.Load(source);
 
             constraints.Load(source);
             constraintColumns.Load(source);
@@ -375,6 +395,31 @@ namespace DataDictionary.BusinessLayer.Database
                 IsCanceling = () => factory.IsCanceling
             });
 
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load DbRoutineDependencies",
+                DoWork = () =>
+                {
+                    foreach (DbTableItem item in tables)
+                    {
+                        references.Load(
+                            factory.Connection.ExecuteReader(
+                                references.SchemaCommand(
+                                    factory.Connection, item)));
+                    }
+
+                    foreach (DbRoutineItem item in routines)
+                    {
+                        references.Load(
+                            factory.Connection.ExecuteReader(
+                                references.SchemaCommand(
+                                    factory.Connection, item)));
+                    }
+                },
+                IsCanceling = () => factory.IsCanceling
+            });
+
+
             work.Add(factory.CreateWork(
                 workName: "Load DbExtendedProperties, DbSchemta",
                 source: schemta,
@@ -428,6 +473,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Delete(key));
             work.AddRange(routineParameters.Delete(key));
             work.AddRange(routineDependencies.Delete(key));
+            work.AddRange(references.Delete(key));
 
             work.AddRange(constraints.Delete(key));
             work.AddRange(constraintColumns.Delete(key));
@@ -451,6 +497,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(routines.Delete());
             work.AddRange(routineParameters.Delete());
             work.AddRange(routineDependencies.Delete());
+            work.AddRange(references.Delete());
 
             work.AddRange(constraints.Delete());
             work.AddRange(constraintColumns.Delete());
