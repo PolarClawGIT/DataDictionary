@@ -1,19 +1,12 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Reference
+namespace DataDictionary.DataLayer.DatabaseData.Constraint
 {
     /// <summary>
     /// Interface for the Database Column Reference Key
     /// </summary>
-    [Obsolete]
-    public interface IDbColumnReferenceKey : IDbObjectReferenceKey
+    public interface IDbConstraintColumnKeyName : IDbConstraintKeyObject
     {
         /// <summary>
         /// Reference Column Name
@@ -24,8 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Implementation of the Database Column Reference Key
     /// </summary>
-    [Obsolete]
-    public class DbColumnReferenceKey : DbObjectReferenceKey, IDbColumnReferenceKey, IKeyComparable<IDbColumnReferenceKey>
+    public class DbConstraintColumnKeyName : DbConstraintKeyObject, IDbConstraintColumnKeyName, IKeyComparable<IDbConstraintColumnKeyName>
     {
         /// <inheritdoc/>
         public string ReferenceColumnName { get; init; } = String.Empty;
@@ -34,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Column Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbColumnReferenceKey(IDbColumnReferenceKey source) : base(source)
+        public DbConstraintColumnKeyName(IDbConstraintColumnKeyName source) : base(source)
         {
             if (source.ReferenceColumnName is string) { ReferenceColumnName = source.ReferenceColumnName; }
             else { ReferenceColumnName = string.Empty; }
@@ -44,7 +36,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Column (Table Column) Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbColumnReferenceKey(IDbTableColumnKeyName source) : base(source)
+        public DbConstraintColumnKeyName(IDbTableColumnKeyName source) : base(source)
         {
             if (source.ColumnName is string) { ReferenceColumnName = source.ColumnName; }
             else { ReferenceColumnName = string.Empty; }
@@ -52,11 +44,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(IDbColumnReferenceKey? other)
+        public bool Equals(IDbConstraintColumnKeyName? other)
         {
             return
-                other is IDbObjectReferenceKey &&
-                new DbObjectReferenceKey(this).Equals(other) &&
+                other is IDbConstraintKeyObject &&
+                new DbConstraintKeyObject(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceColumnName) &&
                 !string.IsNullOrEmpty(other.ReferenceColumnName) &&
                 ReferenceColumnName.Equals(other.ReferenceColumnName, KeyExtension.CompareString);
@@ -64,51 +56,51 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDbColumnReferenceKey value && Equals(new DbColumnReferenceKey(value)); }
+        { return obj is IDbConstraintColumnKeyName value && Equals(new DbConstraintColumnKeyName(value)); }
 
         /// <inheritdoc/>
-        public int CompareTo(IDbColumnReferenceKey? other)
+        public int CompareTo(IDbConstraintColumnKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbObjectReferenceKey(this).CompareTo(other) is int value && value != 0) { return value; }
+            else if (new DbConstraintKeyObject(this).CompareTo(other) is int value && value != 0) { return value; }
             else { return string.Compare(ReferenceColumnName, other.ReferenceColumnName, true); }
         }
 
         /// <inheritdoc/>
         public override int CompareTo(object? obj)
-        { if (obj is IDbColumnReferenceKey value) { return CompareTo(new DbColumnReferenceKey(value)); } else { return 1; } }
+        { if (obj is IDbConstraintColumnKeyName value) { return CompareTo(new DbConstraintColumnKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator ==(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator !=(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator <(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator <=(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator >(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DbColumnReferenceKey left, DbColumnReferenceKey right)
+        public static bool operator >=(DbConstraintColumnKeyName left, DbConstraintColumnKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         { return HashCode.Combine(base.GetHashCode(), ReferenceColumnName.GetHashCode(KeyExtension.CompareString)); }
-    #endregion
+        #endregion
 
-    /// <inheritdoc/>
-    public override string ToString()
+        /// <inheritdoc/>
+        public override string ToString()
         {
             if (ReferenceColumnName is string)
             { return string.Format("{0}.{1}", base.ToString(), ReferenceColumnName); }

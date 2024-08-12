@@ -57,8 +57,8 @@ namespace DataDictionary.Main
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.DatabaseProcedureParameter)), BusinessData.DatabaseModel.DbRoutineParameters); }
 
-        private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.DatabaseDependency)), BusinessData.DatabaseModel.DbRoutineDependencies); }
+        private void menuDependencyItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.DatabaseDependency)), BusinessData.DatabaseModel.DbReferences); }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.DatabaseSchema)), BusinessData.DatabaseModel.DbSchemta); }

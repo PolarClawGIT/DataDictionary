@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
     public interface IConstraintColumnValue : IDbConstraintColumnItem,
-        IConstraintIndexName, ITableColumnIndexName, IConstraintIndexReference,
+        IConstraintIndexName, ITableColumnIndexName, IConstraintColumnIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

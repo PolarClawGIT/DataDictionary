@@ -57,12 +57,6 @@ namespace DataDictionary.BusinessLayer.Database
         IRoutineParameterData DbRoutineParameters { get; }
 
         /// <summary>
-        /// List of Database Dependencies for the Routines within the Model.
-        /// </summary>
-        [Obsolete]
-        IRoutineDependencyData DbRoutineDependencies { get; }
-
-        /// <summary>
         /// List of Database References
         /// </summary>
         IReferenceData DbReferences { get; }
@@ -145,12 +139,6 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly RoutineParameterData routineParameters;
 
         /// <inheritdoc/>
-        [Obsolete]
-        public IRoutineDependencyData DbRoutineDependencies { get { return routineDependencies; } }
-        [Obsolete]
-        private readonly RoutineDependencyData routineDependencies;
-
-        /// <inheritdoc/>
         public IReferenceData DbReferences { get { return references; } }
         private readonly ReferenceData references;
 
@@ -173,7 +161,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             routines = new RoutineData() { Database = this };
             routineParameters = new RoutineParameterData() { Database = this };
-            routineDependencies = new RoutineDependencyData() { Database = this };
             references = new ReferenceData() { Database = this };
 
             constraints = new ConstraintData() { Database = this };
@@ -197,7 +184,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineDependencies.Load(factory, dataKey));
             work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
@@ -221,7 +207,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
-            work.AddRange(routineDependencies.Save(factory, dataKey));
             work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
@@ -245,7 +230,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineDependencies.Load(factory, dataKey));
             work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
@@ -269,7 +253,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
-            work.AddRange(routineDependencies.Save(factory, dataKey));
             work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
@@ -292,7 +275,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             result.Add(routines.ToDataTable());
             result.Add(routineParameters.ToDataTable());
-            result.Add(routineDependencies.ToDataTable());
             result.Add(references.ToDataTable());
 
             result.Add(constraints.ToDataTable());
@@ -315,7 +297,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             routines.Load(source);
             routineParameters.Load(source);
-            routineDependencies.Load(source);
             references.Load(source);
 
             constraints.Load(source);
@@ -379,25 +360,10 @@ namespace DataDictionary.BusinessLayer.Database
                 target: routineParameters,
                 command: (conn) => routineParameters.SchemaCommand(conn, key)));
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load DbRoutineDependencies",
-                DoWork = () =>
-                {
-                    foreach (DbRoutineItem item in routines)
-                    {
-                        routineDependencies.Load(
-                            factory.Connection.ExecuteReader(
-                                routineDependencies.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
-                },
-                IsCanceling = () => factory.IsCanceling
-            });
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load DbRoutineDependencies",
+                WorkName = "Load DbReferences",
                 DoWork = () =>
                 {
                     foreach (DbTableItem item in tables)
@@ -472,7 +438,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Delete(key));
             work.AddRange(routineParameters.Delete(key));
-            work.AddRange(routineDependencies.Delete(key));
             work.AddRange(references.Delete(key));
 
             work.AddRange(constraints.Delete(key));
@@ -496,7 +461,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Delete());
             work.AddRange(routineParameters.Delete());
-            work.AddRange(routineDependencies.Delete());
             work.AddRange(references.Delete());
 
             work.AddRange(constraints.Delete());

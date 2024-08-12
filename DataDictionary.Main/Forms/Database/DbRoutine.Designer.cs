@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel routineLayout;
             TabControl routineTab;
+            TableLayoutPanel dependencyLayout;
             catalogNameData = new Controls.TextBoxData();
             schemaNameData = new Controls.TextBoxData();
             routineNameData = new Controls.TextBoxData();
@@ -43,10 +44,6 @@
             IsNullableValue = new DataGridViewCheckBoxColumn();
             routineDependencyData = new TabPage();
             dependenciesData = new DataGridView();
-            referenceSchemaValue = new DataGridViewTextBoxColumn();
-            referenceObjectValue = new DataGridViewTextBoxColumn();
-            referenceObjectTypeValue = new DataGridViewTextBoxColumn();
-            referenceColumnValue = new DataGridViewTextBoxColumn();
             extendedPropertyData = new TabPage();
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
@@ -55,13 +52,19 @@
             bindingParameters = new BindingSource(components);
             bindingDependencies = new BindingSource(components);
             bindingProperties = new BindingSource(components);
+            referencedSchemaColumn = new DataGridViewTextBoxColumn();
+            referencedObjectColumn = new DataGridViewTextBoxColumn();
+            referencedColumnColumn = new DataGridViewTextBoxColumn();
+            referencedTypeColumn = new DataGridViewTextBoxColumn();
             routineLayout = new TableLayoutPanel();
             routineTab = new TabControl();
+            dependencyLayout = new TableLayoutPanel();
             routineLayout.SuspendLayout();
             routineTab.SuspendLayout();
             routineParameterData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)parametersData).BeginInit();
             routineDependencyData.SuspendLayout();
+            dependencyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dependenciesData).BeginInit();
             extendedPropertyData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
@@ -106,6 +109,7 @@
             catalogNameData.ReadOnly = true;
             catalogNameData.Size = new Size(526, 44);
             catalogNameData.TabIndex = 0;
+            catalogNameData.WordWrap = true;
             // 
             // schemaNameData
             // 
@@ -119,6 +123,7 @@
             schemaNameData.ReadOnly = true;
             schemaNameData.Size = new Size(526, 44);
             schemaNameData.TabIndex = 1;
+            schemaNameData.WordWrap = true;
             // 
             // routineNameData
             // 
@@ -132,6 +137,7 @@
             routineNameData.ReadOnly = true;
             routineNameData.Size = new Size(526, 44);
             routineNameData.TabIndex = 2;
+            routineNameData.WordWrap = true;
             // 
             // routineTypeData
             // 
@@ -144,6 +150,7 @@
             routineTypeData.ReadOnly = true;
             routineTypeData.Size = new Size(445, 44);
             routineTypeData.TabIndex = 3;
+            routineTypeData.WordWrap = true;
             // 
             // isSystemData
             // 
@@ -216,53 +223,37 @@
             // routineDependencyData
             // 
             routineDependencyData.BackColor = SystemColors.Control;
-            routineDependencyData.Controls.Add(dependenciesData);
+            routineDependencyData.Controls.Add(dependencyLayout);
             routineDependencyData.Location = new Point(4, 24);
             routineDependencyData.Name = "routineDependencyData";
-            routineDependencyData.Size = new Size(425, 219);
+            routineDependencyData.Size = new Size(518, 288);
             routineDependencyData.TabIndex = 2;
             routineDependencyData.Text = "Dependencies";
+            // 
+            // dependencyLayout
+            // 
+            dependencyLayout.ColumnCount = 1;
+            dependencyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            dependencyLayout.Controls.Add(dependenciesData, 0, 0);
+            dependencyLayout.Dock = DockStyle.Fill;
+            dependencyLayout.Location = new Point(0, 0);
+            dependencyLayout.Name = "dependencyLayout";
+            dependencyLayout.RowCount = 1;
+            dependencyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            dependencyLayout.Size = new Size(518, 288);
+            dependencyLayout.TabIndex = 1;
             // 
             // dependenciesData
             // 
             dependenciesData.AllowUserToAddRows = false;
             dependenciesData.AllowUserToDeleteRows = false;
             dependenciesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dependenciesData.Columns.AddRange(new DataGridViewColumn[] { referenceSchemaValue, referenceObjectValue, referenceObjectTypeValue, referenceColumnValue });
+            dependenciesData.Columns.AddRange(new DataGridViewColumn[] { referencedSchemaColumn, referencedObjectColumn, referencedColumnColumn, referencedTypeColumn });
             dependenciesData.Dock = DockStyle.Fill;
-            dependenciesData.Location = new Point(0, 0);
+            dependenciesData.Location = new Point(3, 3);
             dependenciesData.Name = "dependenciesData";
-            dependenciesData.Size = new Size(425, 219);
+            dependenciesData.Size = new Size(512, 282);
             dependenciesData.TabIndex = 0;
-            // 
-            // referenceSchemaValue
-            // 
-            referenceSchemaValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            referenceSchemaValue.DataPropertyName = "ReferenceSchemaName";
-            referenceSchemaValue.HeaderText = "Schema Name";
-            referenceSchemaValue.Name = "referenceSchemaValue";
-            // 
-            // referenceObjectValue
-            // 
-            referenceObjectValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            referenceObjectValue.DataPropertyName = "ReferenceObjectName";
-            referenceObjectValue.HeaderText = "Object Name";
-            referenceObjectValue.Name = "referenceObjectValue";
-            // 
-            // referenceObjectTypeValue
-            // 
-            referenceObjectTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            referenceObjectTypeValue.DataPropertyName = "ReferenceObjectType";
-            referenceObjectTypeValue.FillWeight = 70F;
-            referenceObjectTypeValue.HeaderText = "Object Type";
-            referenceObjectTypeValue.Name = "referenceObjectTypeValue";
-            // 
-            // referenceColumnValue
-            // 
-            referenceColumnValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            referenceColumnValue.DataPropertyName = "ReferenceColumnName";
-            referenceColumnValue.HeaderText = "Column Name";
-            referenceColumnValue.Name = "referenceColumnValue";
             // 
             // extendedPropertyData
             // 
@@ -271,7 +262,7 @@
             extendedPropertyData.Location = new Point(4, 24);
             extendedPropertyData.Name = "extendedPropertyData";
             extendedPropertyData.Padding = new Padding(3);
-            extendedPropertyData.Size = new Size(425, 219);
+            extendedPropertyData.Size = new Size(518, 288);
             extendedPropertyData.TabIndex = 0;
             extendedPropertyData.Text = "Extended Properties";
             // 
@@ -285,7 +276,7 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.Size = new Size(419, 213);
+            extendedPropertiesData.Size = new Size(512, 282);
             extendedPropertiesData.TabIndex = 6;
             // 
             // propertyNameData
@@ -305,6 +296,35 @@
             propertyValueData.Name = "propertyValueData";
             propertyValueData.ReadOnly = true;
             // 
+            // referencedSchemaColumn
+            // 
+            referencedSchemaColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedSchemaColumn.DataPropertyName = "ReferencedSchemaName";
+            referencedSchemaColumn.HeaderText = "Schema Name";
+            referencedSchemaColumn.Name = "referencedSchemaColumn";
+            // 
+            // referencedObjectColumn
+            // 
+            referencedObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedObjectColumn.DataPropertyName = "ReferencedObjectName";
+            referencedObjectColumn.HeaderText = "Object Name";
+            referencedObjectColumn.Name = "referencedObjectColumn";
+            // 
+            // referencedColumnColumn
+            // 
+            referencedColumnColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedColumnColumn.DataPropertyName = "ReferencedColumnName";
+            referencedColumnColumn.HeaderText = "Column Name";
+            referencedColumnColumn.Name = "referencedColumnColumn";
+            // 
+            // referencedTypeColumn
+            // 
+            referencedTypeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedTypeColumn.DataPropertyName = "ReferencedType";
+            referencedTypeColumn.FillWeight = 70F;
+            referencedTypeColumn.HeaderText = "Type";
+            referencedTypeColumn.Name = "referencedTypeColumn";
+            // 
             // DbRoutine
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -321,6 +341,7 @@
             routineParameterData.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)parametersData).EndInit();
             routineDependencyData.ResumeLayout(false);
+            dependencyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dependenciesData).EndInit();
             extendedPropertyData.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
@@ -350,13 +371,13 @@
         private DataGridViewTextBoxColumn DataTypeValue;
         private DataGridViewCheckBoxColumn IsNullableValue;
         private DataGridView dependenciesData;
-        private DataGridViewTextBoxColumn referenceSchemaValue;
-        private DataGridViewTextBoxColumn referenceObjectValue;
-        private DataGridViewTextBoxColumn referenceObjectTypeValue;
-        private DataGridViewTextBoxColumn referenceColumnValue;
         private BindingSource bindingRoutine;
         private BindingSource bindingParameters;
         private BindingSource bindingDependencies;
         private BindingSource bindingProperties;
+        private DataGridViewTextBoxColumn referencedSchemaColumn;
+        private DataGridViewTextBoxColumn referencedObjectColumn;
+        private DataGridViewTextBoxColumn referencedColumnColumn;
+        private DataGridViewTextBoxColumn referencedTypeColumn;
     }
 }

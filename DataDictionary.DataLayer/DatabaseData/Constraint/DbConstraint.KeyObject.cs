@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Reference
+namespace DataDictionary.DataLayer.DatabaseData.Constraint
 {
     /// <summary>
-    /// Interface for the Database Table Reference Key
+    /// Interface for the Database Object Reference Key
     /// </summary>
-    [Obsolete]
-    public interface IDbObjectReferenceKey : IKey, IDbCatalogKeyName
+    public interface IDbConstraintKeyObject : IKey, IDbCatalogKeyName
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
@@ -28,10 +21,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     }
 
     /// <summary>
-    /// Implementation of the Database Table Reference Key
+    /// Implementation of the Database Object Reference Key
     /// </summary>
-    [Obsolete]
-    public class DbObjectReferenceKey : DbCatalogKeyName, IDbObjectReferenceKey, IKeyComparable<IDbObjectReferenceKey>, IKeyEquality<IDbTableKeyName>
+    public class DbConstraintKeyObject : DbCatalogKeyName, IDbConstraintKeyObject, IKeyComparable<IDbConstraintKeyObject>, IKeyEquality<IDbTableKeyName>
     {
         /// <inheritdoc/>
         public string ReferenceSchemaName { get; init; }
@@ -43,7 +35,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Object Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbObjectReferenceKey(IDbObjectReferenceKey source) : base(source)
+        public DbConstraintKeyObject(IDbConstraintKeyObject source) : base(source)
         {
             if (source.ReferenceSchemaName is string) { ReferenceSchemaName = source.ReferenceSchemaName; }
             else { ReferenceSchemaName = string.Empty; }
@@ -56,7 +48,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Object (Table) Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbObjectReferenceKey(IDbTableKeyName source) : base (source)
+        public DbConstraintKeyObject(IDbTableKeyName source) : base(source)
         {
             if (source.SchemaName is string) { ReferenceSchemaName = source.SchemaName; }
             else { ReferenceSchemaName = string.Empty; }
@@ -68,10 +60,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(IDbObjectReferenceKey? other)
+        public bool Equals(IDbConstraintKeyObject? other)
         {
             return
-                other is IDbObjectReferenceKey &&
+                other is IDbConstraintKeyObject &&
                 new DbCatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferenceSchemaName) &&
@@ -98,12 +90,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return obj is IDbObjectReferenceKey value && Equals(new DbObjectReferenceKey(value))
+            return obj is IDbConstraintKeyObject value && Equals(new DbConstraintKeyObject(value))
                 || obj is IDbTableKeyName talbeValue && Equals(new DbTableKeyName(talbeValue));
         }
 
         /// <inheritdoc/>
-        public int CompareTo(IDbObjectReferenceKey? other)
+        public int CompareTo(IDbConstraintKeyObject? other)
         {
             if (other is null) { return 1; }
             else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0)
@@ -120,30 +112,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         /// <inheritdoc/>
         public override int CompareTo(object? obj)
-        { if (obj is IDbObjectReferenceKey value) { return CompareTo(new DbObjectReferenceKey(value)); } else { return 1; } }
+        { if (obj is IDbConstraintKeyObject value) { return CompareTo(new DbConstraintKeyObject(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator ==(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator !=(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator <(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator <=(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator >(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DbObjectReferenceKey left, DbObjectReferenceKey right)
+        public static bool operator >=(DbConstraintKeyObject left, DbConstraintKeyObject right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

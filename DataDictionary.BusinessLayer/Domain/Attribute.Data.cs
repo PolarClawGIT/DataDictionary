@@ -255,7 +255,7 @@ namespace DataDictionary.BusinessLayer.Domain
             if (source.DbTableColumns.FirstOrDefault(w => colunKey.Equals(w)) is TableColumnValue column)
             {
                 TableColumnIndexName columnName = new TableColumnIndexName(column);
-                ConstraintIndexReference referenceName = new ConstraintIndexReference(column);
+                ConstraintColumnIndexName referenceName = new ConstraintColumnIndexName(column);
                 AliasKeyName aliasKey = new AliasKeyName(column);
                 AttributeValue attribute;
 

@@ -123,7 +123,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         {
             get
             {
-                String? value = GetValue(nameof(ObjectType));
+                String? value = GetValue(nameof(ReferencedType));
                 if (DbObjectEnumeration.TryParse(value, null, out DbObjectEnumeration? result))
                 { return result.Value; }
                 else { return DbObjectType.Null; }

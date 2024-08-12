@@ -26,8 +26,9 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingRoutine.Current is IRoutineValue current)
             {
+                ReferenceIndexName referenceName = new ReferenceIndexName(current);
                 bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
-                bindingDependencies.DataSource = new BindingView<RoutineDependencyValue>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
+                bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.DatabaseModel.DbReferences, w => referenceName.Equals(w));
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
