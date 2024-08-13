@@ -96,31 +96,44 @@ namespace DataDictionary.BusinessLayer.Domain
             TableColumnIndexName columnIndex = new TableColumnIndexName(column);
             List<TableColumnIndexName> alias = new List<TableColumnIndexName>();
 
-            var columns = database.DbTableColumns.
+            var currentColumn = database.DbTableColumns.FirstOrDefault(w => columnIndex.Equals(w));
+
+            var aliasColumns = database.DbTableColumns.
                 Where(w => key.Equals(w) && String.Equals(w.ColumnName, columnIndex.ColumnName, KeyExtension.CompareString)).
                 ToList();
 
-            foreach (TableColumnValue item in columns)
+            foreach (TableColumnValue item in aliasColumns)
             { GetAlias(item); }
 
-            //var constraints = columns.GroupJoin(database.DbConstraintColumns,
-            //    column => new ConstraintColumnIndexName(column),
-            //    constraint => new ConstraintColumnIndexName((IConstraintColumnIndexName)constraint),
-            //    (column, constraints) => new { column, constraints = constraints.ToList() }).
-            //    ToList();
+            // Discover any existing Alias
 
+
+            // Experiment to find Table and Constraint for each alias
             var x = alias.Join(
-                database.DbTableColumns,
-                alias => alias,
-                column => new TableColumnIndexName(column),
-                (alias, column) => new
+                    database.DbTables,
+                    alias => new TableIndexName(alias),
+                    table => new TableIndexName(table),
+                    (alias, table) => new { alias , table }).
+                Join (
+                    database.DbConstraints,
+                    alias => new TableIndexName(alias.alias),
+                    constraint => new TableIndexName(constraint),
+                    (alias, constraint) => new {alias.alias, alias.table, constraint }).
+                ToList();
+
+            if (currentColumn is not null)
+            {
+                AttributeValue newAttribute = new AttributeValue()
                 {
-                    alias,
-                    column,
-                    a = database.DbConstraintColumns.Where(w => alias.Equals(w)).ToList(),
-                    isBaseTable = column.TableType is DbTableType.Table or DbTableType.TemporalTable
-                        && database.DbConstraintColumns.Count(w => alias.Equals(w) && String.IsNullOrWhiteSpace(w.ReferenceColumnName)) == 0
-                }).ToList();
+                    AttributeTitle = currentColumn.ColumnName,
+                    MemberName = currentColumn.ColumnName,
+                    IsDerived = currentColumn.IsComputed ?? false,
+                    IsIntegral = !currentColumn.IsComputed ?? false,
+                    IsNullable = currentColumn.IsNullable ?? false,
+                    IsValued = !currentColumn.IsNullable ?? false,
+                };
+            }
+
 
             var breakPoint = 1;
 

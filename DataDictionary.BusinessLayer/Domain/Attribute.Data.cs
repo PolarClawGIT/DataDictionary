@@ -304,7 +304,7 @@ namespace DataDictionary.BusinessLayer.Domain
                                 Count = source.DbConstraintColumns.Count(w => new ConstraintIndexName(right).Equals(w))
                             }).
                         OrderBy(o => o.Count). //Ideally Count == 1 but it may not.
-                        FirstOrDefault(w => w.ConstraintType is "PRIMARY KEY");
+                        FirstOrDefault(w => w.ConstraintType is DbConstraintType.PrimaryKey);
 
                     var x = source.DbConstraints.
                         Join(source.DbConstraintColumns,

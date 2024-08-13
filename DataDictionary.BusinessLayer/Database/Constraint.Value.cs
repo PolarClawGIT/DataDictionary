@@ -8,7 +8,7 @@ namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
     public interface IConstraintValue : IDbConstraintItem,
-        IConstraintIndex, IConstraintIndexName, ICatalogIndex,
+        IConstraintIndex, IConstraintIndexName, ICatalogIndex, ITableIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
