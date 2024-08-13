@@ -3,9 +3,6 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
@@ -273,7 +270,7 @@ namespace DataDictionary.BusinessLayer.Domain
             if (source.DbTableColumns.FirstOrDefault(w => colunKey.Equals(w)) is TableColumnValue item)
             {
                 TableColumnIndexName columnKey = new TableColumnIndexName(item);
-                AliasKeyName aliasKey = new AliasKeyName(item);
+                AliasIndex aliasKey = new AliasIndex(item);
                 AttributeIndexName attributeName = new AttributeIndexName(item);
                 AttributeIndex attributeKey;
 
@@ -344,11 +341,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 // Create Alias
                 if (aliasValues.Count(w => aliasKey.Equals(w) && attributeKey.Equals(w)) == 0)
                 {
-                    AttributeAliasValue newAlias = new AttributeAliasValue(attributeKey)
-                    {
-                        AliasName = item.ToAliasName(),
-                        AliasScope = item.Scope
-                    };
+                    AttributeAliasValue newAlias = new AttributeAliasValue(attributeKey, new AliasIndex(item));
 
                     aliasValues.Add(newAlias);
 

@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DatabaseData
         /// </summary>
         /// <param name="parts"></param>
         /// <returns></returns>
-        public static String Format(params String[] parts)
+        public static String Format(params String?[] parts)
         {
             String result = String.Empty;
 

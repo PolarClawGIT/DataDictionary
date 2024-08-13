@@ -7,17 +7,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the NamedScope Value.
     /// </summary>
-    public interface INamedScopeValue : IScopeType, IOnTitleChanged
+    public interface INamedScopeValue : IScopeType, IOnTitleChanged, IGetNamedScopePath
     {
         /// <summary>
         /// The Index for the NamedScopeValue.
         /// </summary>
         NamedScopeIndex Index { get; }
-
-        /// <summary>
-        /// The NamedPath for the Value
-        /// </summary>
-        NamedScopePath Path { get; }
 
         /// <summary>
         /// The Title for the Value

@@ -7,7 +7,8 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeAliasValue : IDomainAttributeAliasItem, IAttributeIndex, IAliasValue
+    public interface IAttributeAliasValue : IDomainAttributeAliasItem,
+        IAttributeIndex, IAliasIndex
     {
         /// <summary>
         /// Attribute Alias Name returned as parts.
@@ -26,6 +27,17 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc cref="DomainAttributeAliasItem(IDomainAttributeKey)"/>
         public AttributeAliasValue(IAttributeIndex key) : base(key) { }
+
+        /// <summary>
+        /// Create Attribute Alias from Attribute and Alias.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="alias"></param>
+        public AttributeAliasValue(IAttributeIndex key, IAliasIndex alias) : base(key)
+        {
+            AliasName = alias.AliasName;
+            AliasScope = alias.AliasScope;
+        }
 
         /// <inheritdoc/>
         internal AttributeAliasValue(IDomainAttributeKey key) : base(key) { }

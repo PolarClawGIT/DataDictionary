@@ -3,9 +3,6 @@ using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
@@ -240,7 +237,7 @@ namespace DataDictionary.BusinessLayer.Domain
             TableIndex tableKey = new TableIndex(key);
             foreach (TableValue item in source.DbTables.Where(w => tableKey.Equals(w)))
             {
-                AliasKeyName aliasKey = new AliasKeyName(item);
+                AliasIndex aliasKey = new AliasIndex(item);
                 EntityIndexName entityName = new EntityIndexName(item);
                 EntityIndex entityKey;
 
@@ -264,11 +261,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 // Create Alias, if they do not exist
                 if (aliasValues.Count(w => aliasKey.Equals(w) && entityKey.Equals(w)) == 0)
                 {
-                    var newAlias = new EntityAliasValue(entityKey)
-                    {
-                        AliasName = item.ToAliasName(),
-                        AliasScope = item.Scope
-                    };
+                    var newAlias = new EntityAliasValue(entityKey, new AliasIndex(item));
 
                     aliasValues.Add(newAlias);
 

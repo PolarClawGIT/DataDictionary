@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is IAliasValue current)
+            if (bindingAlias.Current is IAliasIndex current)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
@@ -132,11 +132,11 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void NamedScopeData_OnApply(object sender, EventArgs e)
         {
-            if (bindingAlias.DataSource is IList<IAliasValue> aliases
+            if (bindingAlias.DataSource is IList<IAliasIndex> aliases
                 && aliases.FirstOrDefault(
                     w => w.AliasScope == namedScopeData.Scope
                     && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
-                is IAliasValue value)
+                is IAliasIndex value)
             { bindingAlias.Position = aliases.IndexOf(value); }
             else { bindingAlias.AddNew(); }
         }

@@ -1,4 +1,6 @@
-﻿using DataDictionary.Resource;
+﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace DataDictionary.DataLayer.DomainData
     /// <summary>
     /// Interface for the Name part of the Key used by Domain Aliases
     /// </summary>
-    public interface IAliasKeyName: IKey
+    public interface IAliasKeyName : IKey
     {
         /// <summary>
         /// Name of the Alias.
@@ -21,7 +23,7 @@ namespace DataDictionary.DataLayer.DomainData
     /// <summary>
     /// Implement Name part of the Key used by Domain Aliases
     /// </summary>
-    public class AliasKeyName : IAliasKeyName, 
+    public class AliasKeyName : IAliasKeyName,
         IKeyEquality<IAliasKeyName>, IKeyEquality<AliasKeyName>
     {
         /// <inheritdoc/>
@@ -36,6 +38,20 @@ namespace DataDictionary.DataLayer.DomainData
             if (source.AliasName is string) { AliasName = source.AliasName; }
             else { AliasName = string.Empty; }
         }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from TableColumn
+        /// </summary>
+        /// <param name="source"></param>
+        public AliasKeyName(IDbTableColumnKeyName source) : base()
+        { AliasName = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Table
+        /// </summary>
+        /// <param name="source"></param>
+        public AliasKeyName(IDbTableKeyName source) : base()
+        { AliasName = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName); }
 
         #region IEquatable
         /// <inheritdoc/>
