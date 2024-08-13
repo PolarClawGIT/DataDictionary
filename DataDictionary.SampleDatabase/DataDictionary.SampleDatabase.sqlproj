@@ -69,6 +69,8 @@
     <Build Include="dbo\Tables\SampleHistory.sql" />
     <Build Include="dbo\Tables\SampleParent.sql" />
     <Build Include="dbo\Views\SampleView.sql" />
+    <Build Include="dbo\Tables\SampleDouble.sql" />
+    <Build Include="dbo\Tables\SampleTree.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
