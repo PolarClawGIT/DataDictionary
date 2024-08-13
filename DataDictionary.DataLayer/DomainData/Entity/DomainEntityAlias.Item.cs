@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Alias Items
     /// </summary>
-    public interface IDomainEntityAliasItem : IDomainEntityKey, IAliasItem, IScopeType
+    public interface IDomainEntityAliasItem : IDomainEntityKey, IAliasKey, IScopeType
     { }
 
     /// <summary>
