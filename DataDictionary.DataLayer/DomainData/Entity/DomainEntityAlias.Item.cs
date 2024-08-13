@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;

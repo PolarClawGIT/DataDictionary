@@ -127,6 +127,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         /// <inheritdoc/>
         public override String ToString()
-        { return this.ToAliasName(); }
+        { return DbObjectName.Format(DatabaseName, SchemaName, ObjectName); }
     }
 }

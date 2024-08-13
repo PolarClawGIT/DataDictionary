@@ -1,20 +1,20 @@
 ﻿using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DomainData.Alias
+namespace DataDictionary.DataLayer.DomainData
 {
     /// <summary>
     /// Interface common to Alias Items.
     /// </summary>
-    public interface IAliasItem : IAliasKeyName
-    { 
+    public interface IAliasItem
+    {
         /// <summary>
         /// Application Scope of the Alias.
         /// </summary>
         ScopeType AliasScope { get; }
+
+        /// <summary>
+        /// Name of the Alias.
+        /// </summary>
+        String? AliasName { get; }
     }
 }
