@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <summary>
         /// Type of the Database Constraint.
         /// </summary>
-        string? ConstraintType { get; }
+        DbConstraintType ConstraintType { get; }
     }
 
     /// <summary>
@@ -33,19 +33,28 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public Guid? ConstraintId { get { return GetValue<Guid>(nameof(ConstraintId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ConstraintName { get { return GetValue(nameof(ConstraintName)); } }
+        public String? ConstraintName { get { return GetValue(nameof(ConstraintName)); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue(nameof(TableName)); } }
+        public String? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
-        public string? ConstraintType { get { return GetValue(nameof(ConstraintType)); } }
+        public DbConstraintType ConstraintType
+        {
+            get
+            {
+                String? value = GetValue(nameof(ConstraintType));
+                if (DbConstraintEnumeration.TryParse(value, null, out DbConstraintEnumeration? result))
+                { return result.Value; }
+                else { return DbConstraintType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.DatabaseTableConstraint;
