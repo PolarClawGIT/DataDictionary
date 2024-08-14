@@ -115,7 +115,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 var constraints = database.DbConstraintColumns.
                     Where(w => columnKey.Equals(w)).
                     Join(database.DbTableColumns,
-                        constraint => new TableColumnIndexName(new ConstraintColumnIndexName(constraint)),
+                        constraint => new ConstraintColumnIndexReferenced(constraint).AsColumnName(),
                         column => new TableColumnIndexName(column),
                         (constraint, column) => new { constraint, column }).
                     Where(w => !alias.Contains(new AliasIndex(w.column))).

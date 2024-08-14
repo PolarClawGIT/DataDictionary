@@ -64,7 +64,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
 			On	T.[ConstraintId] = P.[ConstraintId]
 			Left Join @Values S
-			On	P.[ParentTableId] = S.[TableId]
+			On	P.[TableId] = S.[TableId]
 	Where	S.[TableId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
@@ -80,7 +80,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S
-			On	T.[ParentTableId] = S.[TableId]
+			On	T.[TableId] = S.[TableId]
 	Where	S.[TableId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]

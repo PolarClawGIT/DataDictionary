@@ -5,23 +5,23 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.Database;
 
 /// <inheritdoc/>
-public interface IConstraintColumnIndexName : IDbConstraintColumnKeyName { }
+public interface IConstraintColumnIndexReferenced : IDbConstraintColumnKeyReferenced { }
 
 /// <inheritdoc/>
-public class ConstraintColumnIndexName : DbConstraintColumnKeyName, IConstraintColumnIndexName,
-    IKeyEquality<IConstraintColumnIndexName>, IKeyEquality<ConstraintColumnIndexName>
+public class ConstraintColumnIndexReferenced : DbConstraintColumnKeyReferenced, IConstraintColumnIndexReferenced,
+    IKeyEquality<IConstraintColumnIndexReferenced>, IKeyEquality<ConstraintColumnIndexReferenced>
 {
-    /// <inheritdoc cref="DbConstraintColumnKeyName(IDbConstraintColumnKeyName)"/>
-    public ConstraintColumnIndexName(IConstraintColumnIndexName source) : base(source) { }
+    /// <inheritdoc cref="DbConstraintColumnKeyReferenced(IDbConstraintColumnKeyReferenced)"/>
+    public ConstraintColumnIndexReferenced(IConstraintColumnIndexReferenced source) : base(source) { }
 
-    /// <inheritdoc cref="DbConstraintColumnKeyName(DbTableColumnKeyName)"/>
-    public ConstraintColumnIndexName(TableColumnIndexName source) : base(source) { }
-
-    /// <inheritdoc/>
-    public Boolean Equals(IConstraintColumnIndexName? other)
-    { return other is IConstraintColumnIndexName value && Equals(new DbConstraintColumnKeyName(value)); }
+    /// <inheritdoc cref="DbConstraintColumnKeyReferenced(DbTableColumnKeyName)"/>
+    //public ConstraintColumnIndexReferenced(TableColumnIndexName source) : base(source) { }
 
     /// <inheritdoc/>
-    public Boolean Equals(ConstraintColumnIndexName? other)
-    { return other is IConstraintColumnIndexName value && Equals(new DbConstraintColumnKeyName(value)); }
+    public Boolean Equals(IConstraintColumnIndexReferenced? other)
+    { return other is IConstraintColumnIndexReferenced value && Equals(new DbConstraintColumnKeyReferenced(value)); }
+
+    /// <inheritdoc/>
+    public Boolean Equals(ConstraintColumnIndexReferenced? other)
+    { return other is IConstraintColumnIndexReferenced value && Equals(new DbConstraintColumnKeyReferenced(value)); }
 }

@@ -36,18 +36,6 @@ public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
     public DbTableColumnKeyName(IDbTableColumnKeyName source) : base(source)
     { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="source"></param>
-    public DbTableColumnKeyName(DbConstraintColumnKeyName source)
-    {
-        this.DatabaseName = source.DatabaseName;
-        this.SchemaName = source.ReferenceSchemaName;
-        this.TableName = source.ReferenceTableName;
-        this.ColumnName = source.ReferenceColumnName;
-    }
-
     #region IEquatable, IComparable
     /// <inheritdoc/>
     public Boolean Equals(DbTableColumnKeyName? other)

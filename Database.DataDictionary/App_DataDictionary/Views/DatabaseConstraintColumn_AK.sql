@@ -6,8 +6,8 @@ Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[ConstraintId],
 		L.[ConstraintColumnId],
-		T.[ParentTableId],
-		L.[ParentColumnId],
+		T.[TableId],
+		L.[ColumnId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[ConstraintName],
@@ -21,9 +21,9 @@ From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseConstraintColumn] L
 		On	T.[ConstraintId] = L.[ConstraintId]
 		Inner Join [App_DataDictionary].[DatabaseTable] N
-		On	T.[ParentTableId] = N.[TableId]
+		On	T.[TableId] = N.[TableId]
 		Inner Join [App_DataDictionary].[DatabaseTableColumn] M
-		On	L.[ParentColumnId] = M.[ColumnId]
+		On	L.[ColumnId] = M.[ColumnId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseConstraintColumn]
     ON [App_DataDictionary].[DatabaseConstraintColumn_AK]([ConstraintColumnId])

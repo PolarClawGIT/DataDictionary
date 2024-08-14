@@ -763,4 +763,46 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[typeObjectType]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2824d7fb-d38d-4594-8d58-624ca66ac799" ChangeDateTime="08/14/2024 16:17:19">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn].[ReferenceSchemaName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ReferencedSchemaName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bb4863bc-f999-4dcc-a3e1-4a5292ce350c" ChangeDateTime="08/14/2024 16:17:34">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn].[ReferenceTableName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ReferencedTableName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0e15ea8c-6023-44b7-84cb-706a711742b3" ChangeDateTime="08/14/2024 16:17:46">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn].[ReferenceColumnName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ReferencedColumnName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9cd60170-9256-404f-8d79-bfbd70b0f01b" ChangeDateTime="08/14/2024 16:45:35">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraint].[ParentTableId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraint]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[OwnerTableId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="64135cdd-e6f5-495b-956a-4931a44f6d50" ChangeDateTime="08/14/2024 16:48:20">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraint].[OwnerTableId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraint]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[TableId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3c6299d7-f50e-469d-a1ca-56cd27cc620d" ChangeDateTime="08/14/2024 16:48:39">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn].[ParentColumnId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseConstraintColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ColumnId]" />
+  </Operation>
 </Operations>

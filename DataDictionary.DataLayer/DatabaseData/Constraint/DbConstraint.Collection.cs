@@ -95,10 +95,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Database Constraint Items.
-    /// </summary>
-    public class DbConstraintCollection : DbConstraintCollection<DbConstraintItem>
-    { }
 }

@@ -27,21 +27,21 @@ Begin Try
 	Declare @Values Table (
 		[ConstraintColumnId]  UniqueIdentifier Not Null,
 		[ConstraintId]        UniqueIdentifier Not Null,
-		[ParentColumnId]      UniqueIdentifier Not Null,
+		[ColumnId]            UniqueIdentifier Not Null,
 		[OrdinalPosition]     Int Null,
-		[ReferenceSchemaName] SysName Null,
-		[ReferenceTableName]  SysName Null,
-		[ReferenceColumnName] SysName Null,
+		[ReferencedSchemaName] SysName Null,
+		[ReferencedTableName]  SysName Null,
+		[ReferencedColumnName] SysName Null,
 		Primary Key ([ConstraintColumnId]))
 
 	Insert Into @Values
 	Select	X.[ConstraintColumnId],
 			X.[ConstraintId],
-			R.[ColumnId] As [ParentColumnId],
+			R.[ColumnId],
 			D.[OrdinalPosition],
-			NullIf(Trim([ReferenceSchemaName]),'') As [ReferenceSchemaName],
-			NullIf(Trim([ReferenceTableName]),'') As [ReferenceTableName],
-			NullIf(Trim([ReferenceColumnName]),'') As [ReferenceColumnName]
+			NullIf(Trim([ReferencedSchemaName]),'') As [ReferencedSchemaName],
+			NullIf(Trim([ReferencedTableName]),'') As [ReferencedTableName],
+			NullIf(Trim([ReferencedColumnName]),'') As [ReferencedColumnName]
 	From	@Data D
 			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName] And
@@ -93,28 +93,28 @@ Begin Try
 	;With [Delta] As (
 		Select	[ConstraintColumnId],
 				[ConstraintId],
-				[ParentColumnId],
+				[ColumnId],
 				[OrdinalPosition],
-				[ReferenceSchemaName],
-				[ReferenceTableName],
-				[ReferenceColumnName]
+				[ReferencedSchemaName],
+				[ReferencedTableName],
+				[ReferencedColumnName]
 		From	@Values
 		Except
 		Select	[ConstraintColumnId],
 				[ConstraintId],
-				[ParentColumnId],
+				[ColumnId],
 				[OrdinalPosition],
-				[ReferenceSchemaName],
-				[ReferenceTableName],
-				[ReferenceColumnName]
+				[ReferencedSchemaName],
+				[ReferencedTableName],
+				[ReferencedColumnName]
 		From	[App_DataDictionary].[DatabaseConstraintColumn])
 	Update [App_DataDictionary].[DatabaseConstraintColumn]
 	Set		[ConstraintId] = S.[ConstraintId],
-			[ParentColumnId] = S.[ParentColumnId],
+			[ColumnId] = S.[ColumnId],
 			[OrdinalPosition] = S.[OrdinalPosition],
-			[ReferenceSchemaName] = S.[ReferenceSchemaName],
-			[ReferenceTableName] = S.[ReferenceTableName],
-			[ReferenceColumnName] = S.[ReferenceColumnName]
+			[ReferencedSchemaName] = S.[ReferencedSchemaName],
+			[ReferencedTableName] = S.[ReferencedTableName],
+			[ReferencedColumnName] = S.[ReferencedColumnName]
 	From	[App_DataDictionary].[DatabaseConstraintColumn] T
 			Inner Join [Delta] S
 			On	T.[ConstraintColumnId] = S.[ConstraintColumnId]
@@ -123,18 +123,18 @@ Begin Try
 	Insert Into [App_DataDictionary].[DatabaseConstraintColumn] (
 			[ConstraintColumnId],
 			[ConstraintId],
-			[ParentColumnId],
+			[ColumnId],
 			[OrdinalPosition],
-			[ReferenceSchemaName],
-			[ReferenceTableName],
-			[ReferenceColumnName])
+			[ReferencedSchemaName],
+			[ReferencedTableName],
+			[ReferencedColumnName])
 	Select	S.[ConstraintColumnId],
 			S.[ConstraintId],
-			S.[ParentColumnId],
+			S.[ColumnId],
 			S.[OrdinalPosition],
-			S.[ReferenceSchemaName],
-			S.[ReferenceTableName],
-			S.[ReferenceColumnName]
+			S.[ReferencedSchemaName],
+			S.[ReferencedTableName],
+			S.[ReferencedColumnName]
 	From	@Values S
 			Left Join [App_DataDictionary].[DatabaseConstraintColumn] T
 			On	S.[ConstraintColumnId] = T.[ConstraintColumnId]
