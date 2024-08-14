@@ -12,48 +12,6 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
-    /// <summary>
-    /// Interface for Importing a Catalog into a Domain
-    /// </summary>
-    public interface ICatalogImport
-    {
-        /// <summary>
-        /// Imports the Catalog into the Domain
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="propertyDefinition"></param>
-        /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key);
-    }
-
-    /// <summary>
-    /// Interface for Importing a Catalog Table into a Domain
-    /// </summary>
-    public interface ITableImport : ICatalogImport
-    {
-        /// <summary>
-        /// Imports the Catalog Table into the Domain
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="propertyDefinition"></param>
-        /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key);
-    }
-
-    /// <summary>
-    /// Interface for Importing a Catalog Table Column into a Domain
-    /// </summary>
-    public interface ITableColumnImport : ITableImport
-    {
-        /// <summary>
-        /// Interface for Importing a Catalog Table Column into a Domain
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="propertyDefinition"></param>
-        /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key);
-    }
-
     public class DatabaseImport
     {
         IDatabaseModel database;
@@ -70,10 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
             CatalogIndex key = new CatalogIndex(catalog);
 
             foreach (TableValue item in database.DbTables.Where(w => key.Equals(w)))
-            {
-                Import(catalog, item);
-            }
-
+            { Import(catalog, item); }
         }
 
         public void Import(ICatalogIndex catalog, ITableIndexName table)
@@ -83,7 +38,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             foreach (TableColumnValue item in database.DbTableColumns.Where(w => key.Equals(w) && tableName.Equals(w)))
             {
-                // Build Entities
+                // TODO: Build Entities
 
                 // Build Attributes
                 Import(catalog, item);
@@ -94,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             CatalogIndex key = new CatalogIndex(catalog);
             TableColumnIndexName columnIndex = new TableColumnIndexName(column);
-            List<TableColumnIndexName> alias = new List<TableColumnIndexName>();
+            List<AliasIndex> alias = new List<AliasIndex>();
 
             var currentColumn = database.DbTableColumns.FirstOrDefault(w => columnIndex.Equals(w));
 
@@ -102,24 +57,22 @@ namespace DataDictionary.BusinessLayer.Domain
                 Where(w => key.Equals(w) && String.Equals(w.ColumnName, columnIndex.ColumnName, KeyExtension.CompareString)).
                 ToList();
 
+            // Discover all Alias
             foreach (TableColumnValue item in aliasColumns)
             { GetAlias(item); }
 
-            // Discover any existing Alias
-
-
             // Experiment to find Table and Constraint for each alias
-            var x = alias.Join(
-                    database.DbTables,
-                    alias => new TableIndexName(alias),
-                    table => new TableIndexName(table),
-                    (alias, table) => new { alias , table }).
-                Join (
-                    database.DbConstraints,
-                    alias => new TableIndexName(alias.alias),
-                    constraint => new TableIndexName(constraint),
-                    (alias, constraint) => new {alias.alias, alias.table, constraint }).
-                ToList();
+            //var x = alias.Join(
+            //        database.DbTables,
+            //        alias => new TableIndexName(alias),
+            //        table => new TableIndexName(table),
+            //        (alias, table) => new { alias , table }).
+            //    Join (
+            //        database.DbConstraints,
+            //        alias => new TableIndexName(alias.alias),
+            //        constraint => new TableIndexName(constraint),
+            //        (alias, constraint) => new {alias.alias, alias.table, constraint }).
+            //    ToList();
 
             if (currentColumn is not null)
             {
@@ -132,27 +85,44 @@ namespace DataDictionary.BusinessLayer.Domain
                     IsNullable = currentColumn.IsNullable ?? false,
                     IsValued = !currentColumn.IsNullable ?? false,
                 };
+
+                List<AttributeAliasValue> attributeAliases = alias.
+                    Select(s => new AttributeAliasValue(newAttribute, s)).
+                    ToList();
+
+                List<AttributePropertyValue> attributeProperties = model.Properties.
+                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+                    Join(database.DbExtendedProperties.
+                        Where(w => new ExtendedPropertyIndexName(currentColumn).Equals(w)),
+                        model => model.ExtendedPropertyName,
+                        data => data.PropertyName,
+                        (model, data) => new AttributePropertyValue(newAttribute, model, data)).
+                    ToList();
+
+                //TODO: Handle items that already exists.
+                model.Attributes.Add(newAttribute);
+                attributeAliases.ForEach(f => model.Attributes.Aliases.Add(f));
+                attributeProperties.ForEach(f => model.Attributes.Properties.Add(f));
+
+                //TODO: Hook up to the Entities
             }
 
-
-            var breakPoint = 1;
-
-            void GetAlias(ITableColumnIndexName value)
+            void GetAlias(TableColumnValue value)
             {
-                TableColumnIndexName column = new TableColumnIndexName(value);
-                alias.Add(column);
+                TableColumnIndexName columnKey = new TableColumnIndexName(value);
+                alias.Add(new AliasIndex(value));
 
                 var constraints = database.DbConstraintColumns.
-                    Where(w => column.Equals(w)).
+                    Where(w => columnKey.Equals(w)).
                     Join(database.DbTableColumns,
-                    constraint => new TableColumnIndexName(new ConstraintColumnIndexName(constraint)),
-                    column => new TableColumnIndexName(column),
-                    (constraint, column) => new TableColumnIndexName(constraint)).
-                    Except(alias).
+                        constraint => new TableColumnIndexName(new ConstraintColumnIndexName(constraint)),
+                        column => new TableColumnIndexName(column),
+                        (constraint, column) => new { constraint, column }).
+                    Where(w => !alias.Contains(new AliasIndex(w.column))).
                     ToList();
 
                 foreach (var item in constraints)
-                { GetAlias(item); }
+                { GetAlias(item.column); }
 
             }
 

@@ -16,8 +16,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IEntityData :
         IBindingData<EntityValue>,
-        ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
-        ITableImport
+        ILoadData<IEntityIndex>, ISaveData<IEntityIndex>
     {
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
@@ -215,6 +214,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity by Catalog</remarks>
+        [Obsolete]
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
@@ -232,6 +232,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity by Table</remarks>
+        [Obsolete]
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
@@ -296,6 +297,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
+        [Obsolete]
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();

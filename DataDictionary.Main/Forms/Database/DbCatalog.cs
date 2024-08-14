@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -51,28 +52,34 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingSource.Current is ICatalogValue current)
             {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                var import = new DatabaseImport(BusinessData.DatabaseModel, BusinessData.DomainModel);
+                import.Import(current);
+                //TODO: Validate both entities and attributes are working.
+                //BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                //BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                
                 SendMessage(new RefreshNavigation());
             }
         }
 
         private void ExportEntites_Click(object sender, EventArgs e)
         {
-            if (bindingSource.Current is ICatalogValue current)
-            {
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingSource.Current is ICatalogValue current)
+            //{
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
         }
 
         private void ExportAttributes_Click(object sender, EventArgs e)
         {
-            if (bindingSource.Current is ICatalogValue current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingSource.Current is ICatalogValue current)
+            //{
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
         }
 
         private void ExportProcesses_Click(object sender, EventArgs e)

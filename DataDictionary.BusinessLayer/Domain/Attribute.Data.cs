@@ -18,8 +18,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IAttributeData :
         IBindingData<AttributeValue>,
-        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
-        ITableColumnImport
+        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>
     {
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
@@ -214,7 +213,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute by Catalog</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
+        [Obsolete]
+        public void Import_Old(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
             if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
@@ -229,7 +229,15 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
+        [Obsolete]
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
+        {
+            var stuff = new DatabaseImport(source, Model);
+            stuff.Import(key);
 
+        }
+
+        [Obsolete]
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
@@ -246,6 +254,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute by Table</remarks>
+        [Obsolete]
         public void Import_Old(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
@@ -263,6 +272,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute by Column</remarks>
+        [Obsolete]
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key)
         {
             TableColumnIndex colunKey = new TableColumnIndex(key);

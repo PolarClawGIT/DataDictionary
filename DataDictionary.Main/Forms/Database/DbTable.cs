@@ -67,30 +67,33 @@ namespace DataDictionary.Main.Forms.Database
 
         private void ExportAll_Click(object sender, EventArgs e)
         {
-            if (bindingTable.Current is ITableValue current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingTable.Current is ITableValue current)
+            //{
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
         }
 
         private void ExportEntites_Click(object sender, EventArgs e)
         {
-            if (bindingTable.Current is ITableValue current)
-            {
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingTable.Current is ITableValue current)
+            //{
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
         }
 
         private void ExportAttributes_Click(object sender, EventArgs e)
         {
-            if (bindingTable.Current is ITableValue current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingTable.Current is ITableValue current)
+            //{
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
         }
     }
 }

@@ -80,11 +80,12 @@ namespace DataDictionary.Main.Forms.Database
 
         private void ExportAttributes_Click(object sender, EventArgs e)
         {
-            if (bindingColumn.Current is ITableColumnValue current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-                SendMessage(new RefreshNavigation());
-            }
+            throw new NotImplementedException();
+            //if (bindingColumn.Current is ITableColumnValue current)
+            //{
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    SendMessage(new RefreshNavigation());
+            //}
 
         }
     }
