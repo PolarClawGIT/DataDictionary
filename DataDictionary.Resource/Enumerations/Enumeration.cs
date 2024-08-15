@@ -172,6 +172,7 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
         else
         {
             Exception ex = new ArgumentException("Could not parse value", nameof(source));
+            ex.Data.Add("Type", typeof(TEnum).ToString());
             ex.Data.Add(nameof(source), source);
             throw ex;
         }

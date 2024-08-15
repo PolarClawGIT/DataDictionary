@@ -131,13 +131,13 @@
 	NewId() As [ConstraintColumnId],
 	T.[CONSTRAINT_CATALOG] As [DatabaseName],
 	T.[CONSTRAINT_SCHEMA] As [SchemaName],
+	T.[TABLE_NAME] As [TableName],
 	T.[CONSTRAINT_NAME] As [ConstraintName],
-	C.[TABLE_NAME] As [TableName],
 	C.[COLUMN_NAME] As [ColumnName],
 	C.[ORDINAL_POSITION] As [OrdinalPosition],
-	F.[TABLE_SCHEMA] As [ReferenceSchemaName],
-	F.[TABLE_NAME] As [ReferenceTableName],
-	F.[COLUMN_NAME] As [ReferenceColumnName]
+	F.[TABLE_SCHEMA] As [ReferencedSchemaName],
+	F.[TABLE_NAME] As [ReferencedTableName],
+	F.[COLUMN_NAME] As [ReferencedColumnName]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
 	Inner Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
 	On T.[CONSTRAINT_CATALOG] = C.[CONSTRAINT_CATALOG] And
@@ -191,24 +191,24 @@ From	[INFORMATION_SCHEMA].[DOMAINS]</value>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
 	Db_Name() [DatabaseName],
-	@Level0Type [Level0Type],
-	@Level0Name [Level0Name],
-	@Level1Type [Level1Type],
-	@Level1Name [Level1Name],
-	@Level2Type [Level2Type],
-	@Level2Name [Level2Name],
+	NullIf(@Level0Type,'') [Level0Type],
+	NullIf(@Level0Name,'') [Level0Name],
+	NullIf(@Level1Type,'') [Level1Type],
+	NullIf(@Level1Name,'') [Level1Name],
+	NullIf(@Level2Type,'') [Level2Type],
+	NullIf(@Level2Name,'') [Level2Name],
 	[objtype] As [ObjType],
 	[objname] As [ObjName],
 	[name] As [PropertyName],
 	Convert(NVarChar(Max),[value]) As [PropertyValue]
 FROM [fn_listextendedproperty] (
-	@PropertyName,
-	@Level0Type,
-	@Level0Name,
-	@Level1Type,
-	@Level1Name,
-	@Level2Type,
-	@Level2Name)</value>
+	NullIf(@PropertyName,''),
+	NullIf(@Level0Type,''),
+	NullIf(@Level0Name,''),
+	NullIf(@Level1Type,''),
+	NullIf(@Level1Name,''),
+	NullIf(@Level2Type,''),
+	NullIf(@Level2Name,''))</value>
     <comment>SQL Script to get data for DbExtendedPropertyItem.</comment>
   </data>
   <data name="DbReferenceItem" xml:space="preserve">

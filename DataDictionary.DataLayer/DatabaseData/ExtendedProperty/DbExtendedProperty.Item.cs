@@ -60,7 +60,16 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level0Name { get { return GetValue(nameof(Level0Name)); } }
 
         /// <inheritdoc/>
-        public DbLevelCatalogType CatalogScope { get { return DbLevelCatalog.GetDbLevel(Level0Type); } }
+        public DbLevelCatalogType CatalogScope
+        {
+            get
+            {
+                String? value = GetValue(nameof(Level2Type));
+                if (DbLevelCatalogEnumeration.TryParse(value, null, out DbLevelCatalogEnumeration? result))
+                { return result.Value; }
+                else { return DbLevelCatalogType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public string? Level1Type { get { return GetValue(nameof(Level1Type)); } }
@@ -69,7 +78,16 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level1Name { get { return GetValue(nameof(Level1Name)); } }
 
         /// <inheritdoc/>
-        public DbLevelObjectType ObjectScope { get { return DbLevelObject.GetDbLevel(Level1Type); } }
+        public DbLevelObjectType ObjectScope
+        {
+            get
+            {
+                String? value = GetValue(nameof(Level2Type));
+                if (DbLevelObjectEnumeration.TryParse(value, null, out DbLevelObjectEnumeration? result))
+                { return result.Value; }
+                else { return DbLevelObjectType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public string? Level2Type { get { return GetValue(nameof(Level2Type)); } }
@@ -78,7 +96,16 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level2Name { get { return GetValue(nameof(Level2Name)); } }
 
         /// <inheritdoc/>
-        public DbLevelElementType ElementScope { get { return DbLevelElement.GetDbLevel(Level2Type); } }
+        public DbLevelElementType ElementScope
+        {
+            get
+            {
+                String? value = GetValue(nameof(Level2Type));
+                if (DbLevelElementEnumeration.TryParse(value, null, out DbLevelElementEnumeration? result))
+                { return result.Value; }
+                else { return DbLevelElementType.Null; }
+            }
+        }
 
         /// <summary>
         /// Alias of ObjectType

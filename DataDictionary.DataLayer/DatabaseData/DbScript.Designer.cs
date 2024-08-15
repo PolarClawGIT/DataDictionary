@@ -79,15 +79,15 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	NewId() As [ConstraintColumnId],
         ///	T.[CONSTRAINT_CATALOG] As [DatabaseName],
         ///	T.[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	T.[TABLE_NAME] As [TableName],
         ///	T.[CONSTRAINT_NAME] As [ConstraintName],
-        ///	C.[TABLE_NAME] As [TableName],
         ///	C.[COLUMN_NAME] As [ColumnName],
         ///	C.[ORDINAL_POSITION] As [OrdinalPosition],
-        ///	F.[TABLE_SCHEMA] As [ReferenceSchemaName],
-        ///	F.[TABLE_NAME] As [ReferenceTableName],
-        ///	F.[COLUMN_NAME] As [ReferenceColumnName]
+        ///	F.[TABLE_SCHEMA] As [ReferencedSchemaName],
+        ///	F.[TABLE_NAME] As [ReferencedTableName],
+        ///	F.[COLUMN_NAME] As [ReferencedColumnName]
         ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
-        ///	Inner Join [INFORMATI [rest of string was truncated]&quot;;.
+        ///	Inner Join [INFORM [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbConstraintColumnItem {
             get {
@@ -135,24 +135,19 @@ namespace DataDictionary.DataLayer.DatabaseData {
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	Db_Name() [DatabaseName],
-        ///	@Level0Type [Level0Type],
-        ///	@Level0Name [Level0Name],
-        ///	@Level1Type [Level1Type],
-        ///	@Level1Name [Level1Name],
-        ///	@Level2Type [Level2Type],
-        ///	@Level2Name [Level2Name],
+        ///	NullIf(@Level0Type,&apos;&apos;) [Level0Type],
+        ///	NullIf(@Level0Name,&apos;&apos;) [Level0Name],
+        ///	NullIf(@Level1Type,&apos;&apos;) [Level1Type],
+        ///	NullIf(@Level1Name,&apos;&apos;) [Level1Name],
+        ///	NullIf(@Level2Type,&apos;&apos;) [Level2Type],
+        ///	NullIf(@Level2Name,&apos;&apos;) [Level2Name],
         ///	[objtype] As [ObjType],
         ///	[objname] As [ObjName],
         ///	[name] As [PropertyName],
         ///	Convert(NVarChar(Max),[value]) As [PropertyValue]
         ///FROM [fn_listextendedproperty] (
-        ///	@PropertyName,
-        ///	@Level0Type,
-        ///	@Level0Name,
-        ///	@Level1Type,
-        ///	@Level1Name,
-        ///	@Level2Type,
-        ///	@Level2Name).
+        ///	NullIf(@PropertyName,&apos;&apos;),
+        ///	NullIf(@Level0Type,&apos; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbExtendedPropertyItem {
             get {
