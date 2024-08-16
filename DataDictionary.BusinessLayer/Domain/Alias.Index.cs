@@ -22,10 +22,10 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public Boolean Equals(AliasIndex? other)
-        { return other is IAliasIndex key && Equals(new AliasIndex(key)); }
+        { return other is IAliasIndex key && Equals(new AliasKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IAliasIndex? other)
-        { return other is IAliasIndex key && Equals(new AliasIndex(key)); }
+        { return other is IAliasIndex key && Equals(new AliasKey(key)); }
     }
 }
