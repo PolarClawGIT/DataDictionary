@@ -163,10 +163,10 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
         ///	Object_Name(Object_id(@ObjectName)) As [ObjectName],
         ///	D.[type_desc] As [ObjectType],
-        ///	IIF(O.[object_id] is Null Or T.[user_type_id] is Null, R.[referenced_database_name], DB_Name()) As [ReferencedDatabaseName],
+        ///	IIF(O.[object_id] is Null And T.[user_type_id] is Null, R.[referenced_database_name], DB_Name()) As [ReferencedDatabaseName],
         ///	R.[referenced_schema_name] As [ReferencedSchemaName],
         ///	R.[referenced_entity_name] As [ReferencedObjectName],
-        ///	R.[referenced_mi [rest of string was truncated]&quot;;.
+        ///	R.[referenced_m [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbReferenceItem {
             get {

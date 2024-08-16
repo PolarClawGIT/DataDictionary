@@ -60,6 +60,34 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
             else { ObjectName = string.Empty; }
         }
 
+        /// <summary>
+        /// Converts Reference Object Key into a Table Key.
+        /// </summary>
+        /// <returns></returns>
+        public DbTableKeyName AsTable()
+        {
+            return new DbTableKeyName()
+            {
+                DatabaseName = this.DatabaseName,
+                SchemaName = this.SchemaName,
+                TableName = this.ObjectName
+            };
+        }
+
+        /// <summary>
+        /// Converts Reference Object Key into a Routine Key.
+        /// </summary>
+        /// <returns></returns>
+        public DbRoutineKeyName AsRoutine()
+        {
+            return new DbRoutineKeyName()
+            {
+                DatabaseName = this.DatabaseName,
+                SchemaName = this.SchemaName,
+                RoutineName = this.ObjectName
+            };
+        }
+
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public Boolean Equals(DbReferenceKeyName? other)

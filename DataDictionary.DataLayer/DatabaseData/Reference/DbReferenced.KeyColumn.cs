@@ -45,6 +45,21 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
         else { ReferencedColumnName = string.Empty; }
     }
 
+    /// <summary>
+    /// Converts Reference Column Key into a Table Column Key.
+    /// </summary>
+    /// <returns></returns>
+    public DbTableColumnKeyName AsColumn()
+    {
+        return new DbTableColumnKeyName()
+        {
+            DatabaseName = this.ReferencedDatabaseName,
+            SchemaName = this.ReferencedSchemaName,
+            TableName = this.ReferencedObjectName,
+            ColumnName = this.ReferencedColumnName
+        };
+    }
+
     #region IEquatable, IComparable
     /// <inheritdoc/>
     public Boolean Equals(DbReferencedKeyColumn? other)

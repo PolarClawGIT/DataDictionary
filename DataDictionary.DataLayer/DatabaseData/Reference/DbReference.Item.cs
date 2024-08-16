@@ -107,7 +107,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         }
 
         /// <inheritdoc/>
-        public String? ReferencedDatabaseName { get { return GetValue(nameof(ReferencedDatabaseName)); } }
+        public String? ReferencedDatabaseName
+        {
+            get
+            {
+                String? value = GetValue(nameof(ReferencedDatabaseName));
+                if (String.IsNullOrWhiteSpace(value))
+                { value = GetValue(nameof(DatabaseName)); }
+                return value;
+            }
+        }
 
         /// <inheritdoc/>
         public String? ReferencedSchemaName { get { return GetValue(nameof(ReferencedSchemaName)); } }
@@ -140,7 +149,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
                     case DbObjectType.Null: return ScopeType.Null;
                     case DbObjectType.AggregateFunction: return ScopeType.DatabaseFunction;
                     case DbObjectType.CheckConstraint: return ScopeType.DatabaseTableConstraint;
-                    case DbObjectType.ClrScalarFunction: return ScopeType.DatabaseFunction; 
+                    case DbObjectType.ClrScalarFunction: return ScopeType.DatabaseFunction;
                     case DbObjectType.ClrStoredProcedure: return ScopeType.DatabaseProcedure;
                     case DbObjectType.ClrTableValuedFunction: return ScopeType.DatabaseFunction;
                     case DbObjectType.ClrTrigger: return ScopeType.Null; // Not supported

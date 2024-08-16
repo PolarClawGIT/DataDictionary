@@ -98,6 +98,35 @@ public class DbReferencedKeyObject : IDbReferencedKeyObject,
         else { ReferencedObjectName = string.Empty; }
     }
 
+    /// <summary>
+    /// Converts Reference Object Key into a Table Key.
+    /// </summary>
+    /// <returns></returns>
+    public DbTableKeyName AsTable()
+    {
+        return new DbTableKeyName()
+        {
+            DatabaseName = this.ReferencedDatabaseName,
+            SchemaName = this.ReferencedSchemaName,
+            TableName = this.ReferencedObjectName
+        };
+    }
+
+    /// <summary>
+    /// Converts Reference Object Key into a Routine Key.
+    /// </summary>
+    /// <returns></returns>
+    public DbRoutineKeyName AsRoutine()
+    {
+        return new DbRoutineKeyName()
+        {
+            DatabaseName = this.ReferencedDatabaseName,
+            SchemaName = this.ReferencedSchemaName,
+            RoutineName = this.ReferencedObjectName
+        };
+    }
+
+
     #region IEquatable, IComparable
     /// <inheritdoc/>
     public Boolean Equals(DbReferencedKeyObject? other)
