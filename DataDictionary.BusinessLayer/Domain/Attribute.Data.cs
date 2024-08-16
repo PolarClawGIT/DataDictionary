@@ -232,8 +232,8 @@ namespace DataDictionary.BusinessLayer.Domain
         [Obsolete]
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
-            var stuff = new DatabaseImport(source, Model);
-            stuff.Import(key);
+            //var stuff = new DatabaseImport(source, Model);
+            //stuff.Import(key);
 
         }
 
@@ -242,13 +242,13 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             TableIndex tableKey = new TableIndex(key);
 
-            var stuff = new DatabaseImport(source, Model);
-            if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
-            {
-                CatalogIndex catalog = new CatalogIndex(table);
+            //var stuff = new DatabaseImport(source, Model);
+            //if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
+            //{
+            //    CatalogIndex catalog = new CatalogIndex(table);
 
-                stuff.Import(catalog, table);
-            }
+            //    stuff.Import(catalog, table);
+            //}
                 
         }
 
