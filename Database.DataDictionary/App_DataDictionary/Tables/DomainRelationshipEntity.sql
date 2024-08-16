@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainRelationshipEntity]
-(
+(	-- This may be a property of the Relationship as there is always an owner Entity.
+	-- May not be needed as [DomainRelationshipAttribute] may cover this.
 	[RelationshipId]    UniqueIdentifier Not Null,
 	[EntityId]          UniqueIdentifier Not Null,
 	[Cardinality]       TinyInt Null, -- Null = infinite. Expected Null, 0 or 1. X is allowed where X is a known fixed value.
