@@ -43,8 +43,8 @@ public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
         return
             other is IDbSchemaKeyName &&
             new DbTableKeyName(this).Equals(other) &&
-            !string.IsNullOrEmpty(ColumnName) &&
-            !string.IsNullOrEmpty(other.ColumnName) &&
+            !String.IsNullOrEmpty(ColumnName) &&
+            !String.IsNullOrEmpty(other.ColumnName) &&
             ColumnName.Equals(other.ColumnName, KeyExtension.CompareString);
     }
 

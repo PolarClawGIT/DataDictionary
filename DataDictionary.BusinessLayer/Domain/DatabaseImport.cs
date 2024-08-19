@@ -277,6 +277,11 @@ namespace DataDictionary.BusinessLayer.Domain
                 IReadOnlyList<TableColumnValue> alias = GetAlias(column);
 
                 // Add or find the existing Attribute
+                // Note: Duplicates Attributes can exist.
+                // This is caused by two fields with the same name but
+                // the relationship between them cannot be determined.
+                // As such, the fields have different alias chains.
+                // TODO: Check for grand-child relations?
                 AttributeValue attribute;
                 AttributeIndex attributeIndex;
 
@@ -328,17 +333,19 @@ namespace DataDictionary.BusinessLayer.Domain
             alias.Add(column);
 
             // Alias by Constraint
-            List<TableColumnValue> constraint = tableConstraintColumns.
+            List<TableColumnValue> constraint = tableConstraints.Join(tableConstraintColumns,
+                parent => new ConstraintIndexName(parent),
+                child => new ConstraintIndexName(child),
+                (constraint, column) => new { constraint, column }).
+                Where(w => columnName.Equals(w.column)).
+                Join(tableConstraintColumns,
+                left => new ConstraintColumnIndexReferenced(left.column),
+                right => new ConstraintColumnIndexReferenced(right),
+                (left, right) => new TableColumnIndexName(right)).
                 Join(tableColumns,
-                    constraint => new TableColumnIndexName(constraint),
+                    key => key,
                     column => new TableColumnIndexName(column),
-                    (constraint, column) => new
-                    {
-                        key = new ConstraintColumnIndexReferenced(constraint).AsColumnName(),
-                        column
-                    }).
-                Where(w => columnName.Equals(w.key)).
-                Select(s => s.column).
+                    (key, column) => column).
                 ToList();
 
             // Alias by Reference
@@ -352,14 +359,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 Select(s => s.column).
                 ToList();
 
-            // TODO: Alias by Table??? Temporal Table & History Table. Add as References?
-
-            foreach (TableColumnValue item in constraint.Union(reference))
-            {
-                TableColumnIndexName refrenceName = new TableColumnIndexName(item);
-                if (!alias.Any(w => refrenceName.Equals(w)))
-                { alias.AddRange(GetAlias(item)); }
-            }
+            // Combine both lists
+            alias.AddRange(constraint.Union(reference));
 
             return alias;
         }
