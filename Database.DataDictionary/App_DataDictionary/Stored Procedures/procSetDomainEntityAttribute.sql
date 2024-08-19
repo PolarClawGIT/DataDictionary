@@ -25,27 +25,42 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
+		[EntityAttributeId] UniqueIdentifier Not Null,
 		[EntityId]          UniqueIdentifier Not Null,
-		[AttributeId]		UniqueIdentifier Not Null,
+		[AttributeId]		UniqueIdentifier Null,
+		[AttributeName]     [App_DataDictionary].[typeTitle] Null,
+		[IsNullable]        Bit Null,
 		[OrdinalPosition]	Int Not Null,
-		Primary Key ([EntityId], [AttributeId]))
+		Primary Key ([EntityAttributeId]))
 
 	Insert Into @Values
-	Select	IsNull([EntityId], @EntityId) As [EntityId],
-			[AttributeId],
-			IsNull([OrdinalPosition],
+	Select	X.[EntityAttributeId],
+			IsNull(D.[EntityId], @EntityId) As [EntityId],
+			D.[AttributeId],
+			IIF(D.[AttributeName] = A.[AttributeTitle], Null, D.[AttributeName]) As [AttributeName],
+			D.[IsNullable],
+			IsNull(D.[OrdinalPosition],
 				Row_Number() Over (
-					Partition By IsNull([EntityId], @EntityId)
-					Order By [AttributeId]))
+					Partition By IsNull(D.[EntityId], @EntityId)
+					Order By D.[AttributeId]))
 				As [OrdinalPosition]
-	From	@Data
+	From	@Data D
+			Left Join [App_DataDictionary].[DomainEntityAttribute] I
+			On	IsNull(D.[EntityId], @EntityId) = I.[EntityId] And
+				D.[AttributeId] = I.[AttributeId]
+			Left Join [App_DataDictionary].[DomainEntityAttribute] N
+			On	IsNull(D.[EntityId], @EntityId) = N.[EntityId] And
+				D.[AttributeName] = N.[AttributeName]
+			Left Join [App_DataDictionary].[DomainAttribute] A
+			On	D.[AttributeId] = A.[AttributeId]
+			Cross apply (
+				Select	Coalesce(I.[EntityAttributeId], N.[EntityAttributeId], NewId()) As [EntityAttributeId])  X
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DomainEntityAttribute]
 	From	[App_DataDictionary].[DomainEntityAttribute] T
 			Left Join @Values V
-			On	T.[EntityId] = V.[EntityId] And
-				T.[AttributeId] = V.[AttributeId]
+			On	T.[EntityAttributeId] = V.[EntityAttributeId]
 	Where	V.[EntityId] is Null And
 			T.[EntityId] In (
 			Select	A.[EntityId]
@@ -57,13 +72,19 @@ Begin Try
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[EntityId],
+		Select	[EntityAttributeId],
+				[EntityId],
 				[AttributeId],
+				[AttributeName],
+				[IsNullable],
 				[OrdinalPosition]
 		From	@Values
 		Except
-		Select	[EntityId],
+		Select	[EntityAttributeId],
+				[EntityId],
 				[AttributeId],
+				[AttributeName],
+				[IsNullable],
 				[OrdinalPosition]
 		From	[App_DataDictionary].[DomainEntityAttribute])
 	Update	[App_DataDictionary].[DomainEntityAttribute]
@@ -75,16 +96,21 @@ Begin Try
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainEntityAttribute] (
+			[EntityAttributeId],
 			[EntityId],
 			[AttributeId],
+			[AttributeName],
+			[IsNullable],
 			[OrdinalPosition])
-	Select	S.[EntityId],
+	Select	S.[EntityAttributeId],
+			S.[EntityId],
 			S.[AttributeId],
+			S.[AttributeName],
+			S.[IsNullable],
 			S.[OrdinalPosition]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainEntityAttribute] T
-			On	S.[EntityId] = T.[EntityId] And
-				S.[AttributeId] = T.[AttributeId]
+			On	S.[EntityAttributeId] = T.[EntityAttributeId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
