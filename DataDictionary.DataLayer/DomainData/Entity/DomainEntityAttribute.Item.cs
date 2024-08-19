@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿// Ignore Spelling: Nullable
+
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -11,6 +13,16 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// </summary>
     public interface IDomainEntityAttributeItem : IDomainEntityAttributeKey, IScopeType
     {
+        /// <summary>
+        /// The Name of the Attribute as known to the Entity. Null = use Attribute Title.
+        /// </summary>
+        String? AttributeName { get; }
+
+        /// <summary>
+        /// Is the Attribute Nullable
+        /// </summary>
+        Boolean? IsNullable { get; }
+
         /// <summary>
         /// The Position/Order of the Attribute
         /// </summary>
@@ -37,6 +49,20 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         }
 
         /// <inheritdoc/>
+        public String? AttributeName
+        {
+            get { return GetValue(nameof(AttributeName)); }
+            set { SetValue(nameof(AttributeName), value); }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsNullable
+        {
+            get { return GetValue<Boolean>(nameof(IsNullable), BindingItemParsers.BooleanTryParse); }
+            set { SetValue(nameof(IsNullable), value); }
+        }
+
+        /// <inheritdoc/>
         public Nullable<Int32> OrdinalPosition
         {
             get { return GetValue<Int32>(nameof(OrdinalPosition)); }
@@ -57,9 +83,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// </summary>
         /// <param name="entity"></param>
         public DomainEntityAttributeItem(IDomainEntityKey entity) : this()
-        {
-            EntityId = entity.EntityId;
-        }
+        { EntityId = entity.EntityId; }
 
 
         /// <summary>
@@ -78,6 +102,8 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         {
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
         };
 

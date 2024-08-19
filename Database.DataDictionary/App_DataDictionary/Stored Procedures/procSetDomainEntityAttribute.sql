@@ -37,7 +37,7 @@ Begin Try
 	Select	X.[EntityAttributeId],
 			IsNull(D.[EntityId], @EntityId) As [EntityId],
 			D.[AttributeId],
-			IIF(D.[AttributeName] = A.[AttributeTitle], Null, D.[AttributeName]) As [AttributeName],
+			NullIf(Trim(IIf(D.[AttributeName] = A.[AttributeTitle], Null, D.[AttributeName])),'')  As [AttributeName],
 			D.[IsNullable],
 			IsNull(D.[OrdinalPosition],
 				Row_Number() Over (
