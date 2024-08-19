@@ -71,6 +71,9 @@
     <Build Include="dbo\Views\SampleView.sql" />
     <Build Include="dbo\Tables\SampleDouble.sql" />
     <Build Include="dbo\Tables\SampleTree.sql" />
+    <Build Include="dbo\Tables\SampleGrandChild.sql" />
+    <Build Include="dbo\Tables\SampleShared.sql" />
+    <Build Include="dbo\Tables\SampleShareChild.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
