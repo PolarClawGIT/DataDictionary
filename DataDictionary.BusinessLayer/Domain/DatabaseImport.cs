@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -269,19 +270,42 @@ namespace DataDictionary.BusinessLayer.Domain
             attributeAliases = target.Attributes.Aliases;
             attributeProperties = target.Attributes.Properties;
 
+            var constraints = tableConstraints.
+                Where(w => w.ConstraintType is DbConstraintType.ForeignKey).
+                Join(tableConstraintColumns,
+                constraint => new ConstraintIndexName(constraint),
+                columns => new ConstraintIndexName(columns),
+                (constraint, column) => new
+                {
+                    constraint,
+                    parentKey = new ConstraintColumnIndexReferenced(column).AsColumnName(),
+                    childKey = new TableColumnIndexName(column),
+                }).ToList();
+
+            var columns = tableColumns.
+                Select(s => new
+                {
+                    value = s,
+                    count = constraints.Count(w => new TableColumnIndexName(s).Equals(w.childKey))
+                }).OrderBy(o => o.count).
+                ToList();
+
             // Build Model
-            foreach (TableColumnValue column in tableColumns)
+            foreach (var column in columns)
             {
-                TableIndexName tableName = new TableIndexName(column);
-                TableColumnIndexName columnName = new TableColumnIndexName(column);
-                IReadOnlyList<TableColumnValue> alias = GetAlias(column);
+                TableIndexName tableName = new TableIndexName(column.value);
+                TableColumnIndexName columnName = new TableColumnIndexName(column.value);
+
+                var alias = new List<TableColumnValue>() { column.value }.
+                        Union(GetConstraint(column.value).
+                        Union(GetReference(column.value))).
+                        ToList();
 
                 // Add or find the existing Attribute
                 // Note: Duplicates Attributes can exist.
                 // This is caused by two fields with the same name but
                 // the relationship between them cannot be determined.
                 // As such, the fields have different alias chains.
-                // TODO: Check for grand-child relations?
                 AttributeValue attribute;
                 AttributeIndex attributeIndex;
 
@@ -298,11 +322,11 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     attribute = new AttributeValue()
                     {
-                        AttributeTitle = column.ColumnName,
-                        IsDerived = column.IsComputed ?? false,
-                        IsIntegral = !column.IsComputed ?? false,
-                        IsNullable = column.IsNullable ?? false,
-                        IsValued = !column.IsNullable ?? false,
+                        AttributeTitle = column.value.ColumnName,
+                        IsDerived = column.value.IsComputed ?? false,
+                        IsIntegral = !column.value.IsComputed ?? false,
+                        IsNullable = column.value.IsNullable ?? false,
+                        IsValued = !column.value.IsNullable ?? false,
                     };
 
                     attributes.Add(attribute);
@@ -323,7 +347,50 @@ namespace DataDictionary.BusinessLayer.Domain
 
             }
 
+            IReadOnlyList<TableColumnValue> GetConstraint(TableColumnValue value)
+            {
+                List<TableColumnValue> result = new List<TableColumnValue>();
 
+                result.AddRange(constraints.
+                    Where(w => w.childKey.Equals(value)).
+                    Join(tableColumns,
+                        constraint => constraint.parentKey,
+                        column => new TableColumnIndexName(column),
+                        (constraint, column) => column
+                    ));
+
+                //result.AddRange(constraints.
+                //    Where(w => w.parentKey.Equals(value)).
+                //    Join(tableColumns,
+                //        constraint => constraint.childKey,
+                //        column => new TableColumnIndexName(column),
+                //        (constraint, column) => column
+                //    ));
+
+                foreach (var item in result.ToList())
+                {
+                    //TODO: Validate this handles recursive relationships.
+                    var alias = GetConstraint(item).Except(result);
+                    result.AddRange(alias);
+                }
+
+                return result;
+            }
+
+            IReadOnlyList<TableColumnValue> GetReference(TableColumnValue column)
+            {
+                TableColumnIndexName columnName = new TableColumnIndexName(column);
+
+                return tableReferences.
+                    Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
+                    Join(tableColumns,
+                        reference => new ReferenceIndexName(reference).AsTable(),
+                        column => new TableIndexName(column),
+                        (reference, column) => new { reference, column }).
+                    Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
+                    Select(s => s.column).
+                    ToList();
+            }
         }
 
         IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
@@ -348,8 +415,17 @@ namespace DataDictionary.BusinessLayer.Domain
                     (key, column) => column).
                 ToList();
 
-            // Alias by Reference
-            List<TableColumnValue> reference = tableReferences.
+            // Combine both lists
+            alias.AddRange(constraint);
+
+            return alias;
+        }
+
+        IReadOnlyList<TableColumnValue> GetReferenceAlias(TableColumnValue column)
+        {
+            TableColumnIndexName columnName = new TableColumnIndexName(column);
+
+            return tableReferences.
                 Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
                 Join(tableColumns,
                     reference => new ReferenceIndexName(reference).AsTable(),
@@ -358,11 +434,6 @@ namespace DataDictionary.BusinessLayer.Domain
                 Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
                 Select(s => s.column).
                 ToList();
-
-            // Combine both lists
-            alias.AddRange(constraint.Union(reference));
-
-            return alias;
         }
 
         [Obsolete]
