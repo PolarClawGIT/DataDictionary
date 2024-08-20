@@ -62,6 +62,10 @@ namespace DataDictionary.BusinessLayer.Database
         public ConstraintIndexReferenced(IConstraintIndexReferenced source) : base(source) { }
 
         /// <inheritdoc/>
+        public override TableIndexName AsTableName()
+        { return new TableIndexName(base.AsTableName()); }
+
+        /// <inheritdoc/>
         public Boolean Equals(IConstraintIndexReferenced? other)
         { return other is IConstraintIndexReferenced value && Equals(new DbConstraintKeyReferenced(value)); }
 

@@ -37,7 +37,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Converts Constraint Column Referenced Key into a Table Column Key.
         /// </summary>
         /// <returns></returns>
-        public DbTableColumnKeyName AsColumnName()
+        public virtual DbTableColumnKeyName AsColumnName()
         {
             return new DbTableColumnKeyName()
             {

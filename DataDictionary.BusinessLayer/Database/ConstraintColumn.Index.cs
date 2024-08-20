@@ -14,8 +14,9 @@ public class ConstraintColumnIndexReferenced : DbConstraintColumnKeyReferenced, 
     /// <inheritdoc cref="DbConstraintColumnKeyReferenced(IDbConstraintColumnKeyReferenced)"/>
     public ConstraintColumnIndexReferenced(IConstraintColumnIndexReferenced source) : base(source) { }
 
-    /// <inheritdoc cref="DbConstraintColumnKeyReferenced(DbTableColumnKeyName)"/>
-    //public ConstraintColumnIndexReferenced(TableColumnIndexName source) : base(source) { }
+    /// <inheritdoc/>
+    public override TableColumnIndexName AsColumnName()
+    { return new TableColumnIndexName(base.AsColumnName()); }
 
     /// <inheritdoc/>
     public Boolean Equals(IConstraintColumnIndexReferenced? other)

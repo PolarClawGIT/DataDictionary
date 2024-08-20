@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Converts the Constraint Referenced Key into a Table Key.
         /// </summary>
         /// <returns></returns>
-        public DbTableKeyName AsTableName()
+        public virtual DbTableKeyName AsTableName()
         {
             return new DbTableKeyName()
             {
@@ -58,20 +58,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
                 TableName = this.ReferencedTableName
             };
         }
-
-        /// <summary>
-        /// Constructor for the Database Object (Table) Reference Key
-        /// </summary>
-        /// <param name="source"></param>
-        //public DbConstraintKeyReferenced(DbTableKeyName source) : base(source)
-        //{
-        //    if (source.SchemaName is string) { ReferencedSchemaName = source.SchemaName; }
-        //    else { ReferencedSchemaName = string.Empty; }
-
-        //    if (source.TableName is string) { ReferencedTableName = source.TableName; }
-        //    else { ReferencedTableName = string.Empty; }
-        //}
-
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
