@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
@@ -316,6 +317,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     attribute = new AttributeValue()
                     {
                         AttributeTitle = column.ColumnName,
+                        MemberName = GetMemberName(column).MemberFullPath,
                         IsDerived = column.IsComputed ?? false,
                         IsIntegral = !column.IsComputed ?? false,
                         IsNullable = column.IsNullable ?? false,
@@ -375,6 +377,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 void ByConstraint(TableColumnValue column)
                 {   // Recursive Function that add values to result
+                    // So Long as the Name of the column does not change,
+                    // keep working down the constraint tree (parent to child).
                     List<TableColumnValue> newAlias = constraints.
                         Where(w => w.parentKey.Equals(column)).
                         Join(tableColumns,
@@ -382,6 +386,7 @@ namespace DataDictionary.BusinessLayer.Domain
                             column => new TableColumnIndexName(column),
                             (constraint, column) => column
                         ).Except(result).
+                        Where(w => String.Equals(column.ColumnName, w.ColumnName, KeyExtension.CompareString)).
                         ToList();
 
                     result.AddRange(newAlias);
@@ -389,6 +394,45 @@ namespace DataDictionary.BusinessLayer.Domain
                     foreach (var item in newAlias)
                     { ByConstraint(item); }
                 }
+            }
+
+            NamedScopePath GetMemberName(TableColumnValue column)
+            {
+                TableColumnIndexName columnName = new TableColumnIndexName(column);
+                List<String> nameParts = new List<String>();
+                List<TableColumnValue> result = new List<TableColumnValue>();
+                if (column.ColumnName is String value) { nameParts.Add(value); }
+
+                ByConstraint(column);
+
+                void ByConstraint(TableColumnValue column)
+                {   // Recursive Function that add values to result.
+                    // Works up the constraint tree (child to parent).
+                    // In case of a circular relationship, the top cannot be determined.
+                    // This will result in two (possible more) entries.
+                    List<TableColumnValue> newNamePart = constraints.
+                        Where(w => w.childKey.Equals(column)).
+                        Join(tableColumns,
+                            constraint => constraint.parentKey,
+                            column => new TableColumnIndexName(column),
+                            (constraint, column) => column
+                        ).Except(result).
+                        Where (w => !nameParts.Any(a => String.Equals(w.ColumnName,a, KeyExtension.CompareString))).
+                        ToList();
+
+                    result.AddRange(newNamePart);
+
+                    // Most cases there is exactly one value.
+                    // In complex db models, multiple could exist.
+                    // Application cannot determine best option, so just pick one.
+                    if (newNamePart.Count > 0 && newNamePart.First().ColumnName is String value)
+                    { nameParts.Insert(0, value); }
+
+                    foreach (var item in newNamePart)
+                    { ByConstraint(item); }
+                }
+
+                return new NamedScopePath(nameParts.ToArray());
             }
         }
 
