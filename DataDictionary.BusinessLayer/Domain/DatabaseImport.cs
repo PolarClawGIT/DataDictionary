@@ -28,6 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
         IList<EntityValue> entities = new List<EntityValue>();
         IList<EntityAliasValue> entityAliases = new List<EntityAliasValue>();
         IList<EntityPropertyValue> entityProperties = new List<EntityPropertyValue>();
+        IList<EntityAttributeValue> entityAttributes = new List<EntityAttributeValue>();
 
         IList<AttributeValue> attributes = new List<AttributeValue>();
         IList<AttributeAliasValue> attributeAliases = new List<AttributeAliasValue>();
@@ -261,12 +262,12 @@ namespace DataDictionary.BusinessLayer.Domain
 
         void BuildModel(IDomainModel target)
         {
-            //Associate results with target
-            entities = target.Entities;
-            entityAliases = target.Entities.Aliases;
-            entityProperties = target.Entities.Properties;
+            BuildAttributes(target);
+            BuildEntities(target);
+        }
 
-            // Build Attributes
+        void BuildAttributes(IDomainModel target)
+        {
             attributes = target.Attributes;
             attributeAliases = target.Attributes.Aliases;
             attributeProperties = target.Attributes.Properties;
@@ -336,7 +337,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
 
                 // Add any missing Properties
-                List<AttributePropertyValue> attributeProperties = properties.
+                List<AttributePropertyValue> newProperties = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
                     Join(tableColumnProperties.
                         Where(w => new ExtendedPropertyIndexName(column).Equals(w)),
@@ -344,6 +345,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         data => data.PropertyName,
                         (model, data) => new AttributePropertyValue(attribute, model, data)).
                     ToList();
+
+                foreach (AttributePropertyValue item in newProperties)
+                { attributeProperties.Add(item); }
             }
 
             IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
@@ -388,5 +392,83 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
+        void BuildEntities(IDomainModel target)
+        {
+            entities = target.Entities;
+            entityAliases = target.Entities.Aliases;
+            entityProperties = target.Entities.Properties;
+            entityAttributes = target.Entities.Attributes;
+
+            foreach (TableValue table in tables)
+            {
+                TableIndexName tableName = new TableIndexName(table);
+                IReadOnlyList<TableValue> alias = new List<TableValue>() { table };
+
+                // Add or find the existing Entity
+                EntityValue entity;
+                EntityIndex entityIndex;
+                if (entityAliases.
+                    FirstOrDefault(w => alias.Any(a => new AliasIndex(a).Equals(w)))
+                    is EntityAliasValue existingAlias &&
+                    entities.FirstOrDefault(w => new EntityIndex(existingAlias).Equals(w))
+                    is EntityValue existingEntity)
+                {
+                    entity = existingEntity;
+                    entityIndex = new EntityIndex(entity);
+                }
+                else
+                {
+                    entity = new EntityValue()
+                    { EntityTitle = table.TableName };
+                    entityIndex = new EntityIndex(entity);
+
+                    entities.Add(entity);
+                }
+
+                // Add any missing Aliases
+                foreach (TableValue item in alias)
+                {
+                    AliasIndex aliasIndex = new AliasIndex(item);
+
+                    if (!attributeAliases.
+                        Any(a => entityIndex.Equals(a) && aliasIndex.Equals(a)))
+                    { entityAliases.Add(new EntityAliasValue(entity, aliasIndex)); }
+                }
+
+                // Add any missing Properties
+                List<EntityPropertyValue> newProperties = properties.
+                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+                    Join(tableColumnProperties.
+                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)),
+                        model => model.ExtendedPropertyName,
+                        data => data.PropertyName,
+                        (model, data) => new EntityPropertyValue(entity, model, data)).
+                    ToList();
+
+                foreach (EntityPropertyValue item in newProperties)
+                { entityProperties.Add(item); }
+
+                // Associate Attributes to Entity (by column)
+                foreach (TableColumnValue column in tableColumns.Where(w => tableName.Equals(w)))
+                {
+                    AliasIndex aliasName = new AliasIndex(column);
+                    List<EntityAttributeValue> newAttributes = attributeAliases.
+                        Where(w => aliasName.Equals(w)).
+                        Join(attributes,
+                            alias => new AttributeIndex(alias),
+                            attribute => new AttributeIndex(attribute),
+                            (alias, attribute) => new EntityAttributeValue(entity, attribute)
+                            {
+                                AttributeName = column.ColumnName,
+                                IsNullable = column.IsNullable,
+                                OrdinalPosition = column.OrdinalPosition
+                            }).
+                        ToList();
+
+                    foreach (EntityAttributeValue attribute in newAttributes)
+                    { entityAttributes.Add(attribute); }
+                }
+            }
+        }
     }
 }
