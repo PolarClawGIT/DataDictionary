@@ -266,6 +266,7 @@ namespace DataDictionary.BusinessLayer.Domain
             entityAliases = target.Entities.Aliases;
             entityProperties = target.Entities.Properties;
 
+            // Build Attributes
             attributes = target.Attributes;
             attributeAliases = target.Attributes.Aliases;
             attributeProperties = target.Attributes.Properties;
@@ -282,24 +283,15 @@ namespace DataDictionary.BusinessLayer.Domain
                     childKey = new TableColumnIndexName(column),
                 }).ToList();
 
-            var columns = tableColumns.
-                Select(s => new
-                {
-                    value = s,
-                    count = constraints.Count(w => new TableColumnIndexName(s).Equals(w.childKey))
-                }).OrderBy(o => o.count).
-                ToList();
-
-            // Build Model
-            foreach (var column in columns)
+            foreach (TableColumnValue column
+                in tableColumns.
+                OrderBy(o => constraints.
+                    Count(w => new TableColumnIndexName(o).Equals(w.childKey))).
+                ToList())
             {
-                TableIndexName tableName = new TableIndexName(column.value);
-                TableColumnIndexName columnName = new TableColumnIndexName(column.value);
-
-                var alias = new List<TableColumnValue>() { column.value }.
-                        Union(GetConstraint(column.value).
-                        Union(GetReference(column.value))).
-                        ToList();
+                TableIndexName tableName = new TableIndexName(column);
+                TableColumnIndexName columnName = new TableColumnIndexName(column);
+                IReadOnlyList<TableColumnValue> alias = GetAlias(column);
 
                 // Add or find the existing Attribute
                 // Note: Duplicates Attributes can exist.
@@ -322,11 +314,11 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     attribute = new AttributeValue()
                     {
-                        AttributeTitle = column.value.ColumnName,
-                        IsDerived = column.value.IsComputed ?? false,
-                        IsIntegral = !column.value.IsComputed ?? false,
-                        IsNullable = column.value.IsNullable ?? false,
-                        IsValued = !column.value.IsNullable ?? false,
+                        AttributeTitle = column.ColumnName,
+                        IsDerived = column.IsComputed ?? false,
+                        IsIntegral = !column.IsComputed ?? false,
+                        IsNullable = column.IsNullable ?? false,
+                        IsValued = !column.IsNullable ?? false,
                     };
 
                     attributes.Add(attribute);
@@ -344,180 +336,57 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
 
                 // Add any missing Properties
-
+                List<AttributePropertyValue> attributeProperties = properties.
+                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+                    Join(tableColumnProperties.
+                        Where(w => new ExtendedPropertyIndexName(column).Equals(w)),
+                        model => model.ExtendedPropertyName,
+                        data => data.PropertyName,
+                        (model, data) => new AttributePropertyValue(attribute, model, data)).
+                    ToList();
             }
 
-            IReadOnlyList<TableColumnValue> GetConstraint(TableColumnValue value)
-            {
-                List<TableColumnValue> result = new List<TableColumnValue>();
-
-                result.AddRange(constraints.
-                    Where(w => w.childKey.Equals(value)).
-                    Join(tableColumns,
-                        constraint => constraint.parentKey,
-                        column => new TableColumnIndexName(column),
-                        (constraint, column) => column
-                    ));
-
-                //result.AddRange(constraints.
-                //    Where(w => w.parentKey.Equals(value)).
-                //    Join(tableColumns,
-                //        constraint => constraint.childKey,
-                //        column => new TableColumnIndexName(column),
-                //        (constraint, column) => column
-                //    ));
-
-                foreach (var item in result.ToList())
-                {
-                    //TODO: Validate this handles recursive relationships.
-                    var alias = GetConstraint(item).Except(result);
-                    result.AddRange(alias);
-                }
-
-                return result;
-            }
-
-            IReadOnlyList<TableColumnValue> GetReference(TableColumnValue column)
+            IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
             {
                 TableColumnIndexName columnName = new TableColumnIndexName(column);
+                List<TableColumnValue> result = new List<TableColumnValue>();
 
-                return tableReferences.
+                // Itself
+                result.Add(column);
+
+                // Alias by Reference
+                result.AddRange(tableReferences.
                     Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
                     Join(tableColumns,
                         reference => new ReferenceIndexName(reference).AsTable(),
                         column => new TableIndexName(column),
                         (reference, column) => new { reference, column }).
                     Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
-                    Select(s => s.column).
-                    ToList();
+                    Select(s => s.column));
+
+                // Alias by Constraint
+                ByConstraint(column);
+
+                return result;
+
+                void ByConstraint(TableColumnValue column)
+                {   // Recursive Function that add values to result
+                    List<TableColumnValue> newAlias = constraints.
+                        Where(w => w.parentKey.Equals(column)).
+                        Join(tableColumns,
+                            constraint => constraint.childKey,
+                            column => new TableColumnIndexName(column),
+                            (constraint, column) => column
+                        ).Except(result).
+                        ToList();
+
+                    result.AddRange(newAlias);
+
+                    foreach (var item in newAlias)
+                    { ByConstraint(item); }
+                }
             }
         }
 
-        IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
-        {
-            TableColumnIndexName columnName = new TableColumnIndexName(column);
-            List<TableColumnValue> alias = new List<TableColumnValue>();
-            alias.Add(column);
-
-            // Alias by Constraint
-            List<TableColumnValue> constraint = tableConstraints.Join(tableConstraintColumns,
-                parent => new ConstraintIndexName(parent),
-                child => new ConstraintIndexName(child),
-                (constraint, column) => new { constraint, column }).
-                Where(w => columnName.Equals(w.column)).
-                Join(tableConstraintColumns,
-                left => new ConstraintColumnIndexReferenced(left.column),
-                right => new ConstraintColumnIndexReferenced(right),
-                (left, right) => new TableColumnIndexName(right)).
-                Join(tableColumns,
-                    key => key,
-                    column => new TableColumnIndexName(column),
-                    (key, column) => column).
-                ToList();
-
-            // Combine both lists
-            alias.AddRange(constraint);
-
-            return alias;
-        }
-
-        IReadOnlyList<TableColumnValue> GetReferenceAlias(TableColumnValue column)
-        {
-            TableColumnIndexName columnName = new TableColumnIndexName(column);
-
-            return tableReferences.
-                Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
-                Join(tableColumns,
-                    reference => new ReferenceIndexName(reference).AsTable(),
-                    column => new TableIndexName(column),
-                    (reference, column) => new { reference, column }).
-                Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
-                Select(s => s.column).
-                ToList();
-        }
-
-        [Obsolete]
-        public void Import(ICatalogIndex catalog, ITableColumnIndexName column)
-        {
-            CatalogIndex key = new CatalogIndex(catalog);
-            TableColumnIndexName columnIndex = new TableColumnIndexName(column);
-            List<AliasIndex> alias = new List<AliasIndex>();
-
-            var currentColumn = tableColumns.FirstOrDefault(w => columnIndex.Equals(w));
-
-            var aliasColumns = tableColumns.
-                Where(w => key.Equals(w) && String.Equals(w.ColumnName, columnIndex.ColumnName, KeyExtension.CompareString)).
-                ToList();
-
-            // Discover all Alias
-            foreach (TableColumnValue item in aliasColumns)
-            { GetAlias(item); }
-
-            // Experiment to find Table and Constraint for each alias
-            //var x = alias.Join(
-            //        database.DbTables,
-            //        alias => new TableIndexName(alias),
-            //        table => new TableIndexName(table),
-            //        (alias, table) => new { alias , table }).
-            //    Join (
-            //        database.DbConstraints,
-            //        alias => new TableIndexName(alias.alias),
-            //        constraint => new TableIndexName(constraint),
-            //        (alias, constraint) => new {alias.alias, alias.table, constraint }).
-            //    ToList();
-
-            if (currentColumn is not null)
-            {
-                AttributeValue newAttribute = new AttributeValue()
-                {
-                    AttributeTitle = currentColumn.ColumnName,
-                    MemberName = currentColumn.ColumnName,
-                    IsDerived = currentColumn.IsComputed ?? false,
-                    IsIntegral = !currentColumn.IsComputed ?? false,
-                    IsNullable = currentColumn.IsNullable ?? false,
-                    IsValued = !currentColumn.IsNullable ?? false,
-                };
-
-                List<AttributeAliasValue> attributeAliases = alias.
-                    Select(s => new AttributeAliasValue(newAttribute, s)).
-                    ToList();
-
-                List<AttributePropertyValue> attributeProperties = properties.
-                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableColumnProperties.
-                        Where(w => new ExtendedPropertyIndexName(currentColumn).Equals(w)),
-                        model => model.ExtendedPropertyName,
-                        data => data.PropertyName,
-                        (model, data) => new AttributePropertyValue(newAttribute, model, data)).
-                    ToList();
-
-                //TODO: Handle items that already exists.
-                attributes.Add(newAttribute);
-                attributeAliases.ForEach(f => attributeAliases.Add(f));
-                attributeProperties.ForEach(f => attributeProperties.Add(f));
-
-                //TODO: Hook up to the Entities
-            }
-
-            void GetAlias(TableColumnValue value)
-            {
-                TableColumnIndexName columnKey = new TableColumnIndexName(value);
-                alias.Add(new AliasIndex(value));
-
-                var constraints = tableConstraintColumns.
-                    Where(w => columnKey.Equals(w)).
-                    Join(tableColumns,
-                        constraint => new ConstraintColumnIndexReferenced(constraint).AsColumnName(),
-                        column => new TableColumnIndexName(column),
-                        (constraint, column) => new { constraint, column }).
-                    Where(w => !alias.Contains(new AliasIndex(w.column))).
-                    ToList();
-
-                foreach (var item in constraints)
-                { GetAlias(item.column); }
-
-            }
-
-        }
     }
 }
