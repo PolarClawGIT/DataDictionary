@@ -417,7 +417,7 @@ namespace DataDictionary.BusinessLayer.Domain
                             column => new TableColumnIndexName(column),
                             (constraint, column) => column
                         ).Except(result).
-                        Where (w => !nameParts.Any(a => String.Equals(w.ColumnName,a, KeyExtension.CompareString))).
+                        Where(w => !nameParts.Any(a => String.Equals(w.ColumnName, a, KeyExtension.CompareString))).
                         ToList();
 
                     result.AddRange(newNamePart);
@@ -463,7 +463,10 @@ namespace DataDictionary.BusinessLayer.Domain
                 else
                 {
                     entity = new EntityValue()
-                    { EntityTitle = table.TableName };
+                    {
+                        EntityTitle = table.TableName,
+                        MemberName = new NamedScopePath(table.SchemaName, table.TableName).MemberFullPath,
+                    };
                     entityIndex = new EntityIndex(entity);
 
                     entities.Add(entity);
