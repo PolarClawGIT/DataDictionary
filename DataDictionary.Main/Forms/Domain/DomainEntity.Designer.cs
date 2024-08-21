@@ -41,14 +41,12 @@ namespace DataDictionary.Main.Forms.Domain
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
             attributeData = new DataGridView();
-            attributeColumn = new DataGridViewComboBoxColumn();
-            attributeOrderColumn = new DataGridViewTextBoxColumn();
             attributeSelectCommand = new Button();
             attributeMemberData = new DataDictionary.Main.Controls.TextBoxData();
             attributeNameData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             attributeNullable = new CheckBox();
+            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -80,6 +78,9 @@ namespace DataDictionary.Main.Forms.Domain
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingAttributeDetail = new BindingSource(components);
+            attributeNameColumn = new DataGridViewTextBoxColumn();
+            attributeColumn = new DataGridViewComboBoxColumn();
+            attributeOrderColumn = new DataGridViewTextBoxColumn();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -206,7 +207,7 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             attributeData.AllowUserToAddRows = false;
             attributeData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeColumn, attributeOrderColumn });
+            attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeNameColumn, attributeColumn, attributeOrderColumn });
             detailsLayout.SetColumnSpan(attributeData, 2);
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 3);
@@ -214,24 +215,6 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.ReadOnly = true;
             attributeData.Size = new Size(400, 178);
             attributeData.TabIndex = 0;
-            // 
-            // attributeColumn
-            // 
-            attributeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            attributeColumn.DataPropertyName = "AttributeId";
-            attributeColumn.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            attributeColumn.HeaderText = "Attribute";
-            attributeColumn.Name = "attributeColumn";
-            attributeColumn.ReadOnly = true;
-            // 
-            // attributeOrderColumn
-            // 
-            attributeOrderColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            attributeOrderColumn.DataPropertyName = "OrdinalPosition";
-            attributeOrderColumn.FillWeight = 30F;
-            attributeOrderColumn.HeaderText = "Order";
-            attributeOrderColumn.Name = "attributeOrderColumn";
-            attributeOrderColumn.ReadOnly = true;
             // 
             // attributeSelectCommand
             // 
@@ -286,6 +269,16 @@ namespace DataDictionary.Main.Forms.Domain
             attributeTitleData.WordWrap = true;
             attributeTitleData.Validated += AttributeTitleData_Validated;
             // 
+            // attributeNullable
+            // 
+            attributeNullable.AutoSize = true;
+            attributeNullable.Location = new Point(283, 237);
+            attributeNullable.Name = "attributeNullable";
+            attributeNullable.Size = new Size(86, 19);
+            attributeNullable.TabIndex = 6;
+            attributeNullable.Text = "Allow Nulls";
+            attributeNullable.UseVisualStyleBackColor = true;
+            // 
             // attributeOrderData
             // 
             attributeOrderData.AutoSize = true;
@@ -298,16 +291,6 @@ namespace DataDictionary.Main.Forms.Domain
             attributeOrderData.Size = new Size(120, 44);
             attributeOrderData.TabIndex = 3;
             attributeOrderData.WordWrap = true;
-            // 
-            // attributeNullable
-            // 
-            attributeNullable.AutoSize = true;
-            attributeNullable.Location = new Point(283, 237);
-            attributeNullable.Name = "attributeNullable";
-            attributeNullable.Size = new Size(86, 19);
-            attributeNullable.TabIndex = 6;
-            attributeNullable.Text = "Allow Nulls";
-            attributeNullable.UseVisualStyleBackColor = true;
             // 
             // propertyTab
             // 
@@ -671,6 +654,34 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             bindingAttributeDetail.AddingNew += BindingAttributeDetail_AddingNew;
             // 
+            // attributeNameColumn
+            // 
+            attributeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeNameColumn.DataPropertyName = "AttributeName";
+            attributeNameColumn.FillWeight = 40F;
+            attributeNameColumn.HeaderText = "Name";
+            attributeNameColumn.Name = "attributeNameColumn";
+            attributeNameColumn.ReadOnly = true;
+            // 
+            // attributeColumn
+            // 
+            attributeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeColumn.DataPropertyName = "AttributeId";
+            attributeColumn.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            attributeColumn.FillWeight = 40F;
+            attributeColumn.HeaderText = "Attribute";
+            attributeColumn.Name = "attributeColumn";
+            attributeColumn.ReadOnly = true;
+            // 
+            // attributeOrderColumn
+            // 
+            attributeOrderColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeOrderColumn.DataPropertyName = "OrdinalPosition";
+            attributeOrderColumn.FillWeight = 20F;
+            attributeOrderColumn.HeaderText = "Order";
+            attributeOrderColumn.Name = "attributeOrderColumn";
+            attributeOrderColumn.ReadOnly = true;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -749,8 +760,6 @@ namespace DataDictionary.Main.Forms.Domain
         private BindingSource bindingAttributeDetail;
         private DataDictionary.Main.Controls.TextBoxData attributeOrderData;
         private DataDictionary.Main.Controls.TextBoxData attributeTitleData;
-        private DataGridViewComboBoxColumn attributeColumn;
-        private DataGridViewTextBoxColumn attributeOrderColumn;
         private DataDictionary.Main.Controls.ComboBoxData aliasScopeData;
         private DataDictionary.Main.Controls.TextBoxData aliasNameData;
         private Button aliasSelectCommand;
@@ -760,5 +769,8 @@ namespace DataDictionary.Main.Forms.Domain
         private DataDictionary.Main.Controls.TextBoxData attributeMemberData;
         private DataDictionary.Main.Controls.TextBoxData attributeNameData;
         private CheckBox attributeNullable;
+        private DataGridViewTextBoxColumn attributeNameColumn;
+        private DataGridViewComboBoxColumn attributeColumn;
+        private DataGridViewTextBoxColumn attributeOrderColumn;
     }
 }
