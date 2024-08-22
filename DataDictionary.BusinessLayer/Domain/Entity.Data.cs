@@ -329,7 +329,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         NamedScopeValue newValue = new NamedScopeValue(entityItem)
                         { GetPath = () => new NamedScopePath(subject.GetPath(), entityItem.GetPath()) };
 
-                        result.Add(new NamedScopePair(subject.GetIndex(), newValue));
+                        NamedScopePair newScope = new NamedScopePair(subject.GetIndex(), newValue);
+
+                        result.AddRange(newScope.CreateNameSpace());
                     }
                 }
                 else { result.Add(new NamedScopePair(modelIndex, new NamedScopeValue(entityItem))); }

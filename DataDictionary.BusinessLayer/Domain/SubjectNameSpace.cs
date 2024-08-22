@@ -8,6 +8,7 @@ static class SubjectNameSpace
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
+    [Obsolete]
     public static IEnumerable<NamedScopePair> GetNamedScopes(IEnumerable<NamedScopePair> source)
     {
         List<NamedScopePair> result = new List<NamedScopePair>();

@@ -92,6 +92,63 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public NamedScopePair(DataLayerIndex parent, NamedScopeValue value) : this(value)
         { this.ParentKey = parent; }
+
+        /// <summary>
+        /// Returns the intermediary NameSpaces for the NamedScope.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public IEnumerable<NamedScopePair> CreateNameSpace()
+        {
+            //TODO: Move Logic to NamedScopeData.AddRange?
+            // Might be able to remove duplicates that way.
+
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            INamedScopeSourceValue source = this.Value.Source;
+            NamedScopeValue nameScope = this.Value;
+
+            NamedScopePath parentPath;
+            if (nameScope.Path.Group().
+                Where(w => !source.Path.Group().
+                    Any(n => w.MemberFullPath.EndsWith(n.MemberFullPath))).
+                OrderBy(o => o.MemberFullPath.Length).
+                LastOrDefault() is NamedScopePath path)
+            { parentPath = path; }
+            else { parentPath = nameScope.Path; }
+
+            DataLayerIndex parentIndex;
+            if (this.ParentKey is null)
+            { throw new ArgumentNullException(nameof(this.ParentKey)); }
+            else { parentIndex = this.ParentKey; }
+
+            List<NameSpaceSource> nodes = source.
+                GetPath().
+                Group().
+                OrderBy(o => o.MemberFullPath.Length).
+                Select(s => new NameSpaceSource(s)).
+                ToList();
+
+            foreach (NameSpaceSource node in nodes)
+            {
+                if (node == nodes.Last())
+                {
+                    result.Add(new NamedScopePair(
+                        parentIndex, new NamedScopeValue(source)
+                        { GetPath = () => new NamedScopePath(parentPath, source.GetPath().Member) }));
+                }
+                else
+                {
+                    result.Add(new NamedScopePair(
+                        parentIndex, new NamedScopeValue(node)
+                        { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+
+                    parentIndex = node.GetIndex();
+                    parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
+                }
+            }
+
+            return result;
+        }
     }
 
     /// <summary>

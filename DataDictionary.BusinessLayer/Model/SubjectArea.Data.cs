@@ -74,14 +74,14 @@ namespace DataDictionary.BusinessLayer.Model
             { parentIndex = model.GetIndex(); }
             else { throw new InvalidOperationException("Could not find the Model"); }
 
-
             foreach (SubjectAreaValue item in this)
             {
                 NamedScopeValue value = new NamedScopeValue(item);
-                result.Add(new NamedScopePair(parentIndex, value));
+                NamedScopePair newScope = new NamedScopePair(parentIndex, value);
+                result.AddRange(newScope.CreateNameSpace());
             }
 
-            return SubjectNameSpace.GetNamedScopes(result);
+            return result;
         }
 
     }
