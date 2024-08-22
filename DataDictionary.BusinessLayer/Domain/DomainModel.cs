@@ -156,13 +156,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-
-            IEnumerable<NamedScopePair> values = 
-                attributeValues.GetNamedScopes().
-                Union(entityValues.GetNamedScopes());
-
-            //result.AddRange(values);
-            result.AddRange(SubjectNameSpace.GetNamedScopes(values));
+            result.AddRange(entityValues.GetNamedScopes());
+            result.AddRange(attributeValues.GetNamedScopes());
 
             return result;
         }

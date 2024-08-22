@@ -251,7 +251,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 else
                 {
                     EntityValue newItem = new EntityValue()
-                    { 
+                    {
                         EntityTitle = item.TableName,
                         MemberName = new NamedScopePath(item.SchemaName, item.TableName).MemberFullPath,
                     };
@@ -297,51 +297,43 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        [Obsolete]
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            DataLayerIndex parentIndex;
+            DataLayerIndex modelIndex;
             if (Model.Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
+            { modelIndex = model.GetIndex(); }
             else { throw new InvalidOperationException("Could not find the Model"); }
 
-            var values = this.GroupJoin(SubjectArea.Join(Model.SubjectAreas,
-                entity => new SubjectAreaIndex(entity),
-                subject => new SubjectAreaIndex(subject),
-                (entity, subject) => new
-                {
-                    entityIndex = new EntityIndex(entity),
-                    subjectIndex = subject.GetIndex(),
-                    subjectPath = subject.GetPath()
-                }),
-                entity => new EntityIndex(entity),
-                subject => subject.entityIndex,
-                (entity, subjects) => new { entity, subjects }).
-                ToList();
-
-
-            foreach (var item in values)
+            foreach (EntityValue entityItem in this)
             {
-                NamedScopeValue value = new NamedScopeValue(item.entity);
+                EntityIndex key = new EntityIndex(entityItem);
 
-                if (item.subjects.Count() == 0)
-                { result.Add(new NamedScopePair(parentIndex, value)); }
-                else
+                var subjects = this.
+                    Where(w => key.Equals(w)).
+                    Join(SubjectArea,
+                        entity => new EntityIndex(entity),
+                        subject => new EntityIndex(subject),
+                        (entity, subject) => subject).
+                    Join(Model.SubjectAreas,
+                        entity => new SubjectAreaIndex(entity),
+                        subject => new SubjectAreaIndex(subject),
+                        (entity, subject) => subject).
+                    ToList();
+
+                if (subjects.Count > 0)
                 {
-                    foreach (var subject in item.subjects)
+                    foreach (SubjectAreaValue subject in subjects)
                     {
-                        result.Add(new NamedScopePair(
-                            subject.subjectIndex,
-                            new NamedScopeValue(item.entity)
-                            { // Create Full Path, including subject
-                                GetPath = () => new NamedScopePath(
-                                    subject.subjectPath,
-                                    item.entity.GetPath())
-                            }));
+                        NamedScopeValue newValue = new NamedScopeValue(entityItem)
+                        { GetPath = () => new NamedScopePath(subject.GetPath(), entityItem.GetPath()) };
+
+                        result.Add(new NamedScopePair(subject.GetIndex(), newValue));
                     }
                 }
+                else { result.Add(new NamedScopePair(modelIndex, new NamedScopeValue(entityItem))); }
+
             }
 
             return result;
