@@ -494,7 +494,10 @@ namespace DataDictionary.BusinessLayer.Domain
                 if (newItems.Count == 0)
                 { newItems.Add(new NamedScopePair(modelIndex, new NamedScopeValue(attributeItem))); }
                 else
-                { result.AddRange(newItems.SelectMany(s => s.CreateNameSpace())); }
+                {
+                    //result.AddRange(newItems.SelectMany(s => s.CreateNameSpace())); 
+                    result.AddRange(newItems);
+                }
             }
 
             return result;

@@ -25,9 +25,8 @@ namespace DataDictionary.BusinessLayer.Model
         IReadOnlyList<WorkItem> Create();
     }
 
-    class ModelData : ModelCollection<ModelValue>, IModelData, 
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
-        INamedScopeSource
+    class ModelData : ModelCollection<ModelValue>, IModelData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -64,28 +63,35 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
 
-        /// <inheritdoc/>
-        /// <remarks>Model</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add Models to NamedScopes.
+        /// </summary>
+        /// <param name="addNamedScope"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> AddNamedScopes(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return this.Select(s => new NamedScopePair(GetValue(s)));
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { };
 
-            NamedScopeValue GetValue(ModelValue source)
+            work.Add(new WorkItem(ref progressChanged)
             {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                WorkName = "Adding NamedScopes (Model)",
+                DoWork = () =>
                 {
-                    if (e.PropertyName is
-                        nameof(source.ModelTitle))
-                    { result.TitleChanged(); }
+                    Int32 completed = 0;
+                    Int32 total = this.Count();
+                    foreach (ModelValue model in this)
+                    {
+                        NamedScopeValue newItem = new NamedScopeValue(model);
+                        addNamedScope(null, newItem);
+                        progressChanged(completed++, total);
+                    }
                 }
-            }
-        }
+            });
 
+
+            return work;
+        }
 
     }
 }

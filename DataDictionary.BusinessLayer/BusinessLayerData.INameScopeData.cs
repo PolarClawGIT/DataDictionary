@@ -26,14 +26,18 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
+            work.Add(new WorkItem() { DoWork= () => namedScopeValue.Clear() });
+
+            work.AddRange(modelValues.AddNamedScopes(namedScopeValue.Add));
+            work.AddRange(subjectAreaValues.AddNamedScopes(namedScopeValue.Add));
+
             work.Add(new WorkItem()
             {
                 WorkName = "Load NamedScope",
                 DoWork = () =>
                 {
-                    namedScopeValue.Clear();
-                    namedScopeValue.AddRange(modelValue.GetNamedScopes());
-                    namedScopeValue.AddRange(subjectAreaValues.GetNamedScopes());
+                    //namedScopeValue.AddRange(modelValue.GetNamedScopes());
+                    //namedScopeValue.AddRange(subjectAreaValues.GetNamedScopes());
                     namedScopeValue.AddRange(domainValue.GetNamedScopes());
                     namedScopeValue.AddRange(databaseValue.GetNamedScopes());
                     namedScopeValue.AddRange(libraryValue.GetNamedScopes());

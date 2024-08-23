@@ -98,6 +98,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete]
         public IEnumerable<NamedScopePair> CreateNameSpace()
         {
             //TODO: Move Logic to NamedScopeData.AddRange?

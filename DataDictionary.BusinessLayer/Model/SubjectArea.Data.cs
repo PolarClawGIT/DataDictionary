@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -63,26 +63,37 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
-        /// <inheritdoc/>
-        /// <remarks>SubjectArea</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add Subjects to NamedScopes.
+        /// </summary>
+        /// <param name="addNamedScope"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> AddNamedScopes(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-   
-            DataLayerIndex parentIndex;
-            if (Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { };
 
-            foreach (SubjectAreaValue item in this)
+            WorkItem newWork = new WorkItem(ref progressChanged)
             {
-                NamedScopeValue value = new NamedScopeValue(item);
-                NamedScopePair newScope = new NamedScopePair(parentIndex, value);
-                result.AddRange(newScope.CreateNameSpace());
-            }
+                WorkName = "Adding NamedScopes (Subject Area)",
+                DoWork = () =>
+                {
+                    Int32 completed = 0;
+                    Int32 total = this.Count();
 
-            return result;
+                    ModelValue? model = Models.FirstOrDefault();
+                    foreach (SubjectAreaValue subject in this)
+                    {
+                        NamedScopeValue newItem = new NamedScopeValue(subject);
+                        addNamedScope(model, newItem);
+                        progressChanged(completed++, total);
+                    }
+                }
+            };
+
+            work.Add(newWork);
+
+            return work;
         }
-
     }
 }

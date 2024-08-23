@@ -81,7 +81,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // Primary Data
         SortedDictionary<NamedScopeIndex, NamedScopeValue> data = new SortedDictionary<NamedScopeIndex, NamedScopeValue>();
 
-        // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
+        // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed.
+        // TODO:Combined children/parents as one list as the data is redundant.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
@@ -185,6 +186,61 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
+        internal virtual void Add(INamedScopeSourceValue? parent, NamedScopeValue newValue)
+        {
+            if (!data.ContainsKey(newValue.Index))
+            { data.Add(newValue.Index, newValue); }
+
+            if (!crossWalk.ContainsKey(newValue.Source.Index))
+            { crossWalk.Add(newValue.Source.Index, new List<NamedScopeIndex>()); }
+
+            if (!crossWalk[newValue.Source.Index].Contains(newValue.Index))
+            { crossWalk[newValue.Source.Index].Add(newValue.Index); }
+
+            if (parent is null && !roots.Contains(newValue.Index))
+            { roots.Add(newValue.Index); }
+
+            if (!parents.ContainsKey(newValue.Index))
+            { parents.Add(newValue.Index, new List<NamedScopeIndex>()); }
+
+            if (!children.ContainsKey(newValue.Index))
+            { children.Add(newValue.Index, new List<NamedScopeIndex>()); }
+
+            foreach (NamedScopeIndex parentItem in crossWalk.
+                Where(w => parent is INamedScopeSourceValue 
+                    && w.Key.Equals(parent.Index)).
+                SelectMany(s => s.Value))
+            {
+                // TODO: Work out nesting mechanism for NameSpaces.
+                // Needs to create NameSpace nodes between Parent and Child.
+                // If the NameSpace node already exists, attach to that node.
+                // The existing node may be something other then a NameSpace node.
+                NamedScopePath parentPath;
+                if (newValue.Path.Group().
+                    Where(w => !newValue.Source.Path.Group().
+                        Any(a => w.MemberFullPath.EndsWith(a.MemberFullPath))).
+                    OrderBy(o => o.MemberFullPath.Length).
+                    LastOrDefault() is NamedScopePath path)
+                { parentPath = path; }
+                else { parentPath = newValue.Source.Path; }
+
+                var nodes = newValue.Source.
+                    GetPath().
+                    Group().
+                    OrderBy(o => o.MemberFullPath.Length).
+                    //Select(s => new NameSpaceSource(s)).
+                    ToList();
+
+
+                // Existing logic (no nesting for NameSpaces)
+                if (children.ContainsKey(parentItem) && !children[parentItem].Contains(newValue.Index))
+                { children[parentItem].Add(newValue.Index); }
+
+                if (!parents[newValue.Index].Contains(parentItem))
+                { parents[newValue.Index].Add(parentItem); }
+            }
+        }
+
         internal virtual void Add(NamedScopeValue value)
         {
             if (data.ContainsKey(value.Index))
@@ -226,10 +282,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (!data.ContainsKey(value.Index))
             { data.Add(value.Index, value); }
 
+
+
             if (crossWalk.ContainsKey(parent) && crossWalk[parent].Count > 0)
             {
                 foreach (NamedScopeIndex index in crossWalk[parent])
                 {
+                    var parentNode = data[index];
+
+
                     if (!children.ContainsKey(index))
                     { children.Add(index, new List<NamedScopeIndex>()); }
 
