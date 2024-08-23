@@ -112,6 +112,8 @@ namespace DataDictionary.Main
             FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
             List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(BusinessData.Create());
+
             if (Settings.Default.IsOnLineMode)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -132,8 +134,7 @@ namespace DataDictionary.Main
                 }
             }
 
-            work.AddRange(BusinessData.Create());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(contextNameNavigation.Load());
 
             this.DoWork(work, OnComplete);
 
@@ -178,8 +179,7 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-            work.AddRange(BusinessData.LoadNamedScope());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(contextNameNavigation.Load());
 
             DoWork(work, onCompleting);
 

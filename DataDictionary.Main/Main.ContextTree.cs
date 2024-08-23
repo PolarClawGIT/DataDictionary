@@ -16,16 +16,14 @@ namespace DataDictionary.Main
         {
             base.HandleMessage(message);
             List<WorkItem> work = new List<WorkItem>();
-            //work.AddRange(BusinessData.LoadNamedScope());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(contextNameNavigation.Load());
             this.DoWork(work);
         }
 
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            //work.AddRange(BusinessData.LoadNamedScope());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(contextNameNavigation.Load());
             this.DoWork(work);
         }
 
