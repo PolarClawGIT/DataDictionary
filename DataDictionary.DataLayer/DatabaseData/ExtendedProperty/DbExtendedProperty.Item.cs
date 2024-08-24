@@ -131,7 +131,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public Boolean IsDescription
-        { get { return String.Equals(PropertyName, "PropertyName", StringComparison.OrdinalIgnoreCase); } }
+        { get { return String.Equals(PropertyName, "MS_Description", StringComparison.OrdinalIgnoreCase); } }
 
         /// <summary>
         /// Constructor for DbExtendedPropertyItem.

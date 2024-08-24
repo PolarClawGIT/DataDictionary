@@ -350,6 +350,21 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 foreach (AttributePropertyValue item in newProperties)
                 { attributeProperties.Add(item); }
+
+                // Apply any Property Description, if there is one
+                String? newDescription = properties.
+                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+                    Join(tableColumnProperties.
+                        Where(w => new ExtendedPropertyIndexName(column).Equals(w)
+                            && w.IsDescription),
+                        model => model.ExtendedPropertyName,
+                        data => data.PropertyName,
+                        (model, data) => data.PropertyValue).
+                    FirstOrDefault();
+
+                if (String.IsNullOrWhiteSpace(attribute.AttributeDescription) &&
+                    !String.IsNullOrWhiteSpace(newDescription))
+                { attribute.AttributeDescription = newDescription; }
             }
 
             IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
@@ -485,15 +500,33 @@ namespace DataDictionary.BusinessLayer.Domain
                 // Add any missing Properties
                 List<EntityPropertyValue> newProperties = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableColumnProperties.
+                    Join(tableProperties.
                         Where(w => new ExtendedPropertyIndexName(table).Equals(w)),
                         model => model.ExtendedPropertyName,
                         data => data.PropertyName,
                         (model, data) => new EntityPropertyValue(entity, model, data)).
                     ToList();
+                var x = tableProperties.
+                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)).
+                        ToList();
 
                 foreach (EntityPropertyValue item in newProperties)
                 { entityProperties.Add(item); }
+
+                // Apply any Property Description, if there is one
+                String? newDescription = properties.
+                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+                    Join(tableProperties.
+                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)
+                            && w.IsDescription),
+                        model => model.ExtendedPropertyName,
+                        data => data.PropertyName,
+                        (model, data) => data.PropertyValue).
+                    FirstOrDefault();
+
+                if (String.IsNullOrWhiteSpace(entity.EntityDescription) &&
+                    !String.IsNullOrWhiteSpace(newDescription))
+                { entity.EntityDescription = newDescription; }
 
                 // Associate Attributes to Entity (by column)
                 foreach (TableColumnValue column in tableColumns.Where(w => tableName.Equals(w)))

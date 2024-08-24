@@ -72,9 +72,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
 
-        public required IPropertyData DomainProperties { get; init; }
-        public required IDefinitionData DomainDefinitions { get; init; }
-
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
@@ -627,7 +624,7 @@ namespace DataDictionary.BusinessLayer.Domain
                         if (result is null) { result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name); }
                         result.Add(value);
 
-                        IReadOnlyList<XAttribute> attributes = DomainProperties.GetXAttributes(scripting, node, Properties);
+                        IReadOnlyList<XAttribute> attributes = Model.Properties.GetXAttributes(scripting, node, Properties);
 
                         if (value is XElement element) { element.Add(attributes.ToArray()); }
                         else if (value.Parent is XElement) { value.Parent.Add(attributes.ToArray()); }
@@ -636,7 +633,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 foreach (AttributeAliasValue alias in Aliases.Where(w => key.Equals(w)))
                 {
-                    XElement? aliasNode = alias.GetXElement(scripting, (node) => DomainProperties.GetXAttributes(scripting, node, Properties));
+                    XElement? aliasNode = alias.GetXElement(scripting, (node) => Model.Properties.GetXAttributes(scripting, node, Properties));
                     if (aliasNode is not null && result is null)
                     {
                         result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name);

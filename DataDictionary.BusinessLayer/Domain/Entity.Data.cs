@@ -54,7 +54,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityAliasData Aliases { get { return aliasValues; } }
         private readonly EntityAliasData aliasValues;
 
-
         /// <inheritdoc/>
         public IEntityDefinitionData Definitions { get { return definitionValues; } }
         private readonly EntityDefinitionData definitionValues;
