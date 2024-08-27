@@ -151,15 +151,14 @@ namespace DataDictionary.BusinessLayer.Domain
 
         #endregion
 
-        /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(entityValues.GetNamedScopes());
-            result.AddRange(attributeValues.GetNamedScopes());
+            List<WorkItem> work = new List<WorkItem>();
 
-            return result;
+            work.AddRange(entityValues.LoadNamedScope(addNamedScope));
+            work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
+
+            return work;
         }
     }
 }

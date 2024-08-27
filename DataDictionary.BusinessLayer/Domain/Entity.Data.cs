@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile
     {
         public required DomainModel Model { get; init; }
 
@@ -210,134 +210,64 @@ namespace DataDictionary.BusinessLayer.Domain
             subjectAreaValues.Load(source);
         }
 
-
-        /// <inheritdoc/>
-        /// <remarks>Entity by Catalog</remarks>
-        [Obsolete]
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add Entity to NamedScopes.
+        /// </summary>
+        /// <param name="addNamedScope"></param>
+        /// <returns></returns>
+        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            CatalogIndex catalogKey = new CatalogIndex(key);
-            if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { };
+
+            WorkItem newWork = new WorkItem(ref progressChanged)
             {
-                CatalogIndexName catalogName = new CatalogIndexName(catalog);
-
-                foreach (TableValue item in source.DbTables.Where(w => catalogName.Equals(w)))
+                WorkName = "Adding NamedScopes (Entities)",
+                DoWork = () =>
                 {
-                    TableIndex tableKey = new TableIndex(item);
-                    Import(source, propertyDefinition, tableKey);
-                }
-            }
-        }
+                    Int32 completed = 0;
+                    Int32 total = this.Count();
 
-        /// <inheritdoc/>
-        /// <remarks>Entity by Table</remarks>
-        [Obsolete]
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
-        {
-            TableIndex tableKey = new TableIndex(key);
-            foreach (TableValue item in source.DbTables.Where(w => tableKey.Equals(w)))
-            {
-                AliasIndex aliasKey = new AliasIndex(item);
-                EntityIndexName entityName = new EntityIndexName(item);
-                EntityIndex entityKey;
+                    ModelValue? model = Model.Models.FirstOrDefault();
 
-
-                // Create Entity or get existing
-                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is EntityAliasValue existingAlias)
-                { entityKey = new EntityIndex(existingAlias); }
-                else if (this.FirstOrDefault(w => entityName.Equals(w)) is EntityValue existing)
-                { entityKey = new EntityIndex(existing); }
-                else
-                {
-                    EntityValue newItem = new EntityValue()
+                    foreach (EntityValue entity in this)
                     {
-                        EntityTitle = item.TableName,
-                        MemberName = new NamedScopePath(item.SchemaName, item.TableName).MemberFullPath,
-                    };
-                    this.Add(newItem);
-                    entityKey = new EntityIndex(newItem);
-                }
+                        NamedScopeValue newItem = new NamedScopeValue(entity);
+                        Boolean hasParent = false;
 
-                // Create Alias, if they do not exist
-                if (aliasValues.Count(w => aliasKey.Equals(w) && entityKey.Equals(w)) == 0)
-                {
-                    var newAlias = new EntityAliasValue(entityKey, new AliasIndex(item));
+                        foreach (SubjectAreaValue subjectParent in ParentSubjects(entity))
+                        { addNamedScope(subjectParent, newItem); hasParent = true; }
 
-                    aliasValues.Add(newAlias);
+                        if (!hasParent) // No Parents found
+                        { addNamedScope(model, newItem); }
 
-                    // Look for related attributes
-                    foreach (AttributeAliasValue attribute in Model.Attributes.Aliases.
-                        Where(w => w.AliasPath.ParentPath is NamedScopePath
-                            && w.AliasPath.ParentPath.Equals(newAlias.AliasPath)))
-                    {
-                        EntityAttributeValue entityAttribute = new EntityAttributeValue(entityKey, attribute);
-                        EntityAttributeIndex entityAttributeKey = new EntityAttributeIndex(entityAttribute);
-                        if (Model.Entities.Attributes.FirstOrDefault(w => entityAttributeKey.Equals(w)) is null)
-                        { Model.Entities.Attributes.Add(entityAttribute); }
+                        progressChanged(completed++, total);
                     }
-
                 }
+            };
 
-                // Create Properties
-                ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
-                foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
-                {
-                    PropertyIndexValue appKey = new PropertyIndexValue(property);
+            work.Add(newWork);
 
-                    if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is IPropertyValue appProperty
-                        && propertyValues.Count(w =>
-                            entityKey.Equals(w)
-                            && new PropertyIndexValue(appProperty).Equals(w)) == 0)
-                    { propertyValues.Add(new EntityPropertyValue(entityKey, appProperty, property)); }
-                }
-            }
-        }
+            return work;
 
-        /// <inheritdoc/>
-        /// <remarks>Entity</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-
-            DataLayerIndex modelIndex;
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { modelIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-            foreach (EntityValue entityItem in this)
+            IEnumerable<SubjectAreaValue> ParentSubjects(EntityValue entity)
             {
-                EntityIndex key = new EntityIndex(entityItem);
+                EntityIndex key = new EntityIndex(entity);
 
-                var subjects = this.
+                return this.
                     Where(w => key.Equals(w)).
                     Join(SubjectArea,
                         entity => new EntityIndex(entity),
                         subject => new EntityIndex(subject),
-                        (entity, subject) => subject).
+                        (entity, subject) => new SubjectAreaIndex(subject)).
                     Join(Model.SubjectAreas,
-                        entity => new SubjectAreaIndex(entity),
+                        subjectKey => subjectKey,
                         subject => new SubjectAreaIndex(subject),
-                        (entity, subject) => subject).
+                        (key, subject) => subject).
                     ToList();
-
-                if (subjects.Count > 0)
-                {
-                    foreach (SubjectAreaValue subject in subjects)
-                    {
-                        NamedScopeValue newValue = new NamedScopeValue(entityItem)
-                        { GetPath = () => new NamedScopePath(subject.GetPath(), entityItem.GetPath()) };
-
-                        NamedScopePair newScope = new NamedScopePair(subject.GetIndex(), newValue);
-                        result.Add(newScope);
-                        //result.AddRange(newScope.CreateNameSpace());
-                    }
-                }
-                else { result.Add(new NamedScopePair(modelIndex, new NamedScopeValue(entityItem))); }
-
             }
 
-            return result;
         }
+
     }
 }

@@ -28,8 +28,9 @@ namespace DataDictionary.BusinessLayer
 
             work.Add(new WorkItem() { DoWork= () => namedScopeValue.Clear() });
 
-            work.AddRange(modelValues.AddNamedScopes(namedScopeValue.Add));
-            work.AddRange(subjectAreaValues.AddNamedScopes(namedScopeValue.Add));
+            work.AddRange(modelValues.LoadNamedScope(namedScopeValue.Add));
+            work.AddRange(subjectAreaValues.LoadNamedScope(namedScopeValue.Add));
+            work.AddRange(domainValue.LoadNamedScope(namedScopeValue.Add));
 
             work.Add(new WorkItem()
             {
@@ -38,7 +39,7 @@ namespace DataDictionary.BusinessLayer
                 {
                     //namedScopeValue.AddRange(modelValue.GetNamedScopes());
                     //namedScopeValue.AddRange(subjectAreaValues.GetNamedScopes());
-                    namedScopeValue.AddRange(domainValue.GetNamedScopes());
+                    //namedScopeValue.AddRange(domainValue.GetNamedScopes());
                     namedScopeValue.AddRange(databaseValue.GetNamedScopes());
                     namedScopeValue.AddRange(libraryValue.GetNamedScopes());
                     namedScopeValue.AddRange(scriptingValue.GetNamedScopes());

@@ -68,7 +68,7 @@ namespace DataDictionary.BusinessLayer.Model
         /// </summary>
         /// <param name="addNamedScope"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> AddNamedScopes(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { };

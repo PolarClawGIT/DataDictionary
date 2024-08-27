@@ -52,7 +52,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeSource, IDataTableFile
+        IDataTableFile
     {
         public required DomainModel Model { get; init; }
 
@@ -383,211 +383,85 @@ namespace DataDictionary.BusinessLayer.Domain
         }
         #endregion
 
-        #region INamedScopeSource
-
-        [Obsolete]
-        IEnumerable<NamedScopePair> GetNamedScopes_old()
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add Attribute to NamedScopes.
+        /// </summary>
+        /// <param name="addNamedScope"></param>
+        /// <returns></returns>
+        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { };
 
-            foreach (AttributeValue attribute in this)
+            WorkItem newWork = new WorkItem(ref progressChanged)
             {
-                AttributeIndex attributeKey = new AttributeIndex(attribute);
-
-                List<AttributeSubjectAreaValue> subjects = subjectAreaValues.Where(w => attributeKey.Equals(w)).ToList();
-                List<NameSpaceSource> nodes = attribute.GetPath().Group().OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
-
-                if (nodes.Count == 0)
-                { throw new ArgumentNullException(nameof(attribute.GetPath)); }
-
-                DataLayerIndex parentIndex;
-                NamedScopePath parentPath;
-
-                if (Model.Models.FirstOrDefault() is ModelValue model)
+                WorkName = "Adding NamedScopes (Attribute)",
+                DoWork = () =>
                 {
-                    parentIndex = model.GetIndex();
-                    parentPath = model.GetPath();
-                }
-                else { throw new InvalidOperationException("Could not find the Model"); }
+                    Int32 completed = 0;
+                    Int32 total = this.Count();
 
-                if (subjects.Count == 0)
-                {
-                    foreach (NameSpaceSource node in nodes)
+                    ModelValue? model = Model.Models.FirstOrDefault();
+
+                    foreach (AttributeValue attribute in this)
                     {
-                        if (node == nodes.Last())
-                        {
-                            result.Add(new NamedScopePair(
-                                parentIndex, new NamedScopeValue(attribute)
-                                { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
-                        }
-                        else
-                        {
-                            result.Add(new NamedScopePair(
-                                parentIndex, new NamedScopeValue(node)
-                                { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+                        NamedScopeValue newItem = new NamedScopeValue(attribute);
+                        Boolean hasParent = false;
 
-                            parentIndex = node.GetIndex();
-                            parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
-                        }
+                        foreach (EntityValue entityParent in ParentEntites(attribute))
+                        { addNamedScope(entityParent, newItem); hasParent = true; }
+
+                        foreach (SubjectAreaValue subjectParent in ParentSubjects(attribute))
+                        { addNamedScope(subjectParent, newItem); hasParent = true; }
+
+                        if (!hasParent) // No Parents found
+                        { addNamedScope(model, newItem); }
+
+                        progressChanged(completed++, total);
                     }
                 }
-                else
-                {
-                    foreach (AttributeSubjectAreaValue subject in subjects)
-                    {
-                        SubjectAreaIndex subjectIndex = new SubjectAreaIndex(subject);
+            };
 
-                        if (Model.SubjectAreas.FirstOrDefault(w => subjectIndex.Equals(w)) is SubjectAreaValue subjectArea)
-                        {
-                            parentIndex = subjectArea.GetIndex();
-                            parentPath = subjectArea.GetPath();
-                        }
-                        else { throw new InvalidOperationException("Subject Area not found"); }
+            work.Add(newWork);
 
-                        foreach (NameSpaceSource node in nodes)
-                        {
-                            if (node == nodes.Last())
-                            {
-                                result.Add(new NamedScopePair(
-                                    parentIndex, new NamedScopeValue(attribute)
-                                    { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
-                            }
-                            else
-                            {
-                                result.Add(new NamedScopePair(
-                                    parentIndex, new NamedScopeValue(node)
-                                    { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+            return work;
 
-                                parentIndex = node.GetIndex();
-                                parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
-                            }
-                        }
-                    }
-                }
-
-            }
-            return result;
-
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            DataLayerIndex modelIndex;
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { modelIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-            foreach (AttributeValue attributeItem in this)
+            IEnumerable<EntityValue> ParentEntites (AttributeValue attribute)
             {
-                AttributeIndex key = new AttributeIndex(attributeItem);
-                List<NamedScopePair> newItems = new List<NamedScopePair>();
+                AttributeIndex key = new AttributeIndex(attribute);
 
-                newItems.AddRange(GetNamedScopesByEntity(attributeItem));
-                newItems.AddRange(GetNamedScopesBySubject(attributeItem));
-
-                if (newItems.Count == 0)
-                { newItems.Add(new NamedScopePair(modelIndex, new NamedScopeValue(attributeItem))); }
-                else
-                {
-                    //result.AddRange(newItems.SelectMany(s => s.CreateNameSpace())); 
-                    result.AddRange(newItems);
-                }
+                return this.
+                    Where(w => key.Equals(w)).
+                    Join(Model.Entities.Attributes,
+                        attribute => new AttributeIndex(attribute),
+                        entity => new AttributeIndex(entity),
+                        (attribute, entity) => new EntityIndex(entity)).
+                    Join(Model.Entities,
+                        entityKey => entityKey,
+                        entity => new EntityIndex(entity),
+                        (key, entity) => entity).
+                    ToList();
             }
 
-            return result;
+            IEnumerable<SubjectAreaValue> ParentSubjects(AttributeValue attribute)
+            {
+
+                AttributeIndex key = new AttributeIndex(attribute);
+
+                return this.
+                    Where(w => key.Equals(w)).
+                    Join(SubjectArea,
+                        attribute => new AttributeIndex(attribute),
+                        subject => new AttributeIndex(subject),
+                        (attribute, subject) => new SubjectAreaIndex(subject)).
+                    Join(Model.SubjectAreas,
+                        subjectKey => subjectKey,
+                        subject => new SubjectAreaIndex(subject),
+                        (key, subject) => subject).
+                    ToList();
+            }
         }
 
-
-        IEnumerable<NamedScopePair> GetNamedScopesByEntity(AttributeValue value)
-        {
-            AttributeIndex key = new AttributeIndex(value);
-
-            var entity = this.
-                Where(w => key.Equals(w)).
-                Join(Model.Entities.Attributes,
-                    attribute => new AttributeIndex(attribute),
-                    entity => new AttributeIndex(entity),
-                    (attribute, entity) => new EntityIndex(entity)).
-                Join(Model.Entities,
-                    entityKey => entityKey,
-                    entity => new EntityIndex(entity),
-                    (key, entity) => new
-                    {
-                        key,
-                        entityKey = entity.GetIndex(),
-                        entityPath = entity.GetPath(),
-                        node = new NamedScopePair(
-                            entity.GetIndex(),
-                            new NamedScopeValue(value)
-                            {
-                                GetPath = () => new NamedScopePath(
-                                    entity.GetPath(),
-                                    value.GetPath())
-                            })
-                    }).
-                ToList();
-
-            var entitySubject = entity.
-                Join(Model.Entities.SubjectArea,
-                    entityKey => entityKey.key,
-                    subject => new EntityIndex(subject),
-                    (key, subject) => new
-                    {
-                        key = new SubjectAreaIndex(subject),
-                        key.entityKey,
-                        key.entityPath
-                    }).
-                Join(Model.SubjectAreas,
-                    subjectKey => subjectKey.key,
-                    subject => new SubjectAreaIndex(subject),
-                    (key, subject) =>
-                        new NamedScopePair(
-                            key.entityKey,
-                            new NamedScopeValue(value)
-                            {
-                                GetPath = () => new NamedScopePath(
-                                    subject.GetPath(),
-                                    key.entityPath,
-                                    value.GetPath())
-                            })).
-                ToList();
-
-            if (entitySubject.Count > 0)
-            { return entitySubject; }
-            else { return entity.Select(s => s.node); }
-        }
-
-        IEnumerable<NamedScopePair> GetNamedScopesBySubject(AttributeValue value)
-        {
-            AttributeIndex key = new AttributeIndex(value);
-
-            var subject = this.
-                Where(w => key.Equals(w)).
-                Join(SubjectArea,
-                    attribute => new AttributeIndex(attribute),
-                    subject => new AttributeIndex(subject),
-                    (attribute, subject) => new SubjectAreaIndex(subject)).
-                Join(Model.SubjectAreas,
-                    subjectKey => subjectKey,
-                    subject => new SubjectAreaIndex(subject),
-                    (key, subject) => new NamedScopePair(
-                        subject.GetIndex(),
-                        new NamedScopeValue(value)
-                        {
-                            GetPath = () => new NamedScopePath(
-                                subject.GetPath(),
-                                value.GetPath())
-                        })).
-                ToList();
-
-            return subject;
-        }
-
-
-        #endregion
         #region XML Scripting
 
         /// <inheritdoc/>

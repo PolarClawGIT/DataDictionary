@@ -206,32 +206,33 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (!children.ContainsKey(newValue.Index))
             { children.Add(newValue.Index, new List<NamedScopeIndex>()); }
 
+            // TODO: Work out nesting mechanism for NameSpaces.
+            // Needs to create NameSpace nodes between Parent and Child.
+            // If the NameSpace node already exists, attach to that node.
+            // The existing node may be something other then a NameSpace node.
+            NamedScopePath parentPath;
+            if (newValue.Path.Group().
+                Where(w => !newValue.Source.Path.Group().
+                    Any(a => w.MemberFullPath.EndsWith(a.MemberFullPath))).
+                OrderBy(o => o.MemberFullPath.Length).
+                LastOrDefault() is NamedScopePath path)
+            { parentPath = path; }
+            else { parentPath = newValue.Source.Path; }
+
+            var nodes = newValue.Source.
+                GetPath().
+                Group().
+                OrderBy(o => o.MemberFullPath.Length).
+                //Select(s => new NameSpaceSource(s)).
+                ToList();
+
+            var breakpoint = 1;
+
             foreach (NamedScopeIndex parentItem in crossWalk.
                 Where(w => parent is INamedScopeSourceValue 
                     && w.Key.Equals(parent.Index)).
                 SelectMany(s => s.Value))
             {
-                // TODO: Work out nesting mechanism for NameSpaces.
-                // Needs to create NameSpace nodes between Parent and Child.
-                // If the NameSpace node already exists, attach to that node.
-                // The existing node may be something other then a NameSpace node.
-                NamedScopePath parentPath;
-                if (newValue.Path.Group().
-                    Where(w => !newValue.Source.Path.Group().
-                        Any(a => w.MemberFullPath.EndsWith(a.MemberFullPath))).
-                    OrderBy(o => o.MemberFullPath.Length).
-                    LastOrDefault() is NamedScopePath path)
-                { parentPath = path; }
-                else { parentPath = newValue.Source.Path; }
-
-                var nodes = newValue.Source.
-                    GetPath().
-                    Group().
-                    OrderBy(o => o.MemberFullPath.Length).
-                    //Select(s => new NameSpaceSource(s)).
-                    ToList();
-
-
                 // Existing logic (no nesting for NameSpaces)
                 if (children.ContainsKey(parentItem) && !children[parentItem].Contains(newValue.Index))
                 { children[parentItem].Add(newValue.Index); }
