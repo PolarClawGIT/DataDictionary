@@ -82,7 +82,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         SortedDictionary<NamedScopeIndex, NamedScopeValue> data = new SortedDictionary<NamedScopeIndex, NamedScopeValue>();
 
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed.
-        // TODO:Combined children/parents as one list as the data is redundant.
+        // TODO: Combined children/parents as one list as the data is redundant.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
@@ -188,60 +188,104 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         internal virtual void Add(INamedScopeSourceValue? parent, NamedScopeValue newValue)
         {
-            if (!data.ContainsKey(newValue.Index))
-            { data.Add(newValue.Index, newValue); }
-
-            if (!crossWalk.ContainsKey(newValue.Source.Index))
-            { crossWalk.Add(newValue.Source.Index, new List<NamedScopeIndex>()); }
-
-            if (!crossWalk[newValue.Source.Index].Contains(newValue.Index))
-            { crossWalk[newValue.Source.Index].Add(newValue.Index); }
-
-            if (parent is null && !roots.Contains(newValue.Index))
-            { roots.Add(newValue.Index); }
-
-            if (!parents.ContainsKey(newValue.Index))
-            { parents.Add(newValue.Index, new List<NamedScopeIndex>()); }
-
-            if (!children.ContainsKey(newValue.Index))
-            { children.Add(newValue.Index, new List<NamedScopeIndex>()); }
-
             // TODO: Work out nesting mechanism for NameSpaces.
             // Needs to create NameSpace nodes between Parent and Child.
             // If the NameSpace node already exists, attach to that node.
             // The existing node may be something other then a NameSpace node.
-            NamedScopePath parentPath;
-            if (newValue.Path.Group().
-                Where(w => !newValue.Source.Path.Group().
-                    Any(a => w.MemberFullPath.EndsWith(a.MemberFullPath))).
-                OrderBy(o => o.MemberFullPath.Length).
-                LastOrDefault() is NamedScopePath path)
-            { parentPath = path; }
-            else { parentPath = newValue.Source.Path; }
 
-            var nodes = newValue.Source.
+            List<NamedScopePath> nameSpaces = newValue.Source.
                 GetPath().
                 Group().
+                Where(w => !newValue.Path.Equals(w)).
                 OrderBy(o => o.MemberFullPath.Length).
-                //Select(s => new NameSpaceSource(s)).
                 ToList();
 
-            var breakpoint = 1;
-
-            foreach (NamedScopeIndex parentItem in crossWalk.
-                Where(w => parent is INamedScopeSourceValue 
-                    && w.Key.Equals(parent.Index)).
-                SelectMany(s => s.Value))
+            foreach (NamedScopePath item in nameSpaces)
             {
-                // Existing logic (no nesting for NameSpaces)
-                if (children.ContainsKey(parentItem) && !children[parentItem].Contains(newValue.Index))
-                { children[parentItem].Add(newValue.Index); }
+                INamedScopeSourceValue? newItem = null;
 
-                if (!parents[newValue.Index].Contains(parentItem))
-                { parents[newValue.Index].Add(parentItem); }
+                //Think LINQ solution is slower because it will not use the SortedIndex TryGetValue
+                //var x = crossWalk.
+                //    Where(w => parent is INamedScopeSourceValue
+                //        && w.Key.Equals(parent.Index)).
+                //    SelectMany(s => s.Value).
+                //    Join(children,
+                //        parent => parent,
+                //        child => child.Key,
+                //        (parent, child) => child.Value).
+                //    SelectMany(s => s).
+                //    Join(data,
+                //        child => child,
+                //        value => value.Key,
+                //        (child, value) => value.Value).
+                //    Where(w => item.Equals(w.Path)).
+                //    ToList();
+
+                if (parent is INamedScopeSourceValue
+                    && crossWalk.TryGetValue(parent.Index, out List<NamedScopeIndex>? parentIndexs))
+                {
+                    foreach (var parentIndex in parentIndexs)
+                    {
+                        if (children.TryGetValue(parentIndex, out List<NamedScopeIndex>? childIndexs))
+                        {
+                            foreach (var childIndex in childIndexs)
+                            {
+                                if (data.TryGetValue(childIndex, out NamedScopeValue? childValue)
+                                    && item.Equals(childValue.Path))
+                                { newItem = childValue.Source; }
+                            }
+                        }
+                    }
+                }
+
+                if (newItem is null)
+                {
+                    newItem = new NameSpaceSource(item);
+                    DoAdd(parent, new NamedScopeValue(newItem));
+                }
+
+                parent = newItem;
+            }
+
+            DoAdd(parent, newValue);
+
+            void DoAdd(INamedScopeSourceValue? parent, NamedScopeValue newValue)
+            {
+                if (!data.ContainsKey(newValue.Index))
+                { data.Add(newValue.Index, newValue); }
+
+                if (!crossWalk.ContainsKey(newValue.Source.Index))
+                { crossWalk.Add(newValue.Source.Index, new List<NamedScopeIndex>()); }
+
+                if (!crossWalk[newValue.Source.Index].Contains(newValue.Index))
+                { crossWalk[newValue.Source.Index].Add(newValue.Index); }
+
+                if (parent is null && !roots.Contains(newValue.Index))
+                { roots.Add(newValue.Index); }
+
+                if (!parents.ContainsKey(newValue.Index))
+                { parents.Add(newValue.Index, new List<NamedScopeIndex>()); }
+
+                if (!children.ContainsKey(newValue.Index))
+                { children.Add(newValue.Index, new List<NamedScopeIndex>()); }
+
+                foreach (NamedScopeIndex parentItem in crossWalk.
+                    Where(w => parent is INamedScopeSourceValue
+                        && w.Key.Equals(parent.Index)).
+                    SelectMany(s => s.Value))
+                {
+
+                    // Existing logic (no nesting for NameSpaces)
+                    if (children.ContainsKey(parentItem) && !children[parentItem].Contains(newValue.Index))
+                    { children[parentItem].Add(newValue.Index); }
+
+                    if (!parents[newValue.Index].Contains(parentItem))
+                    { parents[newValue.Index].Add(parentItem); }
+                }
             }
         }
 
+        [Obsolete]
         internal virtual void Add(NamedScopeValue value)
         {
             if (data.ContainsKey(value.Index))
@@ -268,6 +312,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             }
         }
 
+        [Obsolete]
         internal virtual void Add(DataLayerIndex parent, NamedScopeValue value)
         {
             //TODO: Need a trap for infinite loop.
@@ -315,6 +360,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             }
         }
 
+        [Obsolete]
         internal virtual void AddRange(IEnumerable<NamedScopePair> source)
         {
             foreach (NamedScopePair item in source)

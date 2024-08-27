@@ -99,7 +99,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 {
                     Title = GetTitle();
                     Path = GetPath();
-                    handler(this, EventArgs.Empty); 
+                    handler(this, EventArgs.Empty);
                 }
             }
         }
@@ -115,5 +115,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
+
+        public override String ToString()
+        { return Title; }
     }
 }
