@@ -82,7 +82,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         SortedDictionary<NamedScopeIndex, NamedScopeValue> data = new SortedDictionary<NamedScopeIndex, NamedScopeValue>();
 
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed.
-        // TODO: Combined children/parents as one list as the data is redundant.
+        // Provides performance improvement for alt-keys.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
@@ -205,21 +205,24 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 INamedScopeSourceValue? newItem = null;
 
                 //Think LINQ solution is slower because it will not use the SortedIndex TryGetValue
-                //var x = crossWalk.
-                //    Where(w => parent is INamedScopeSourceValue
-                //        && w.Key.Equals(parent.Index)).
-                //    SelectMany(s => s.Value).
-                //    Join(children,
-                //        parent => parent,
-                //        child => child.Key,
-                //        (parent, child) => child.Value).
-                //    SelectMany(s => s).
-                //    Join(data,
-                //        child => child,
-                //        value => value.Key,
-                //        (child, value) => value.Value).
-                //    Where(w => item.Equals(w.Path)).
-                //    ToList();
+                var x = crossWalk.
+                    Where(w => parent is INamedScopeSourceValue
+                        && w.Key.Equals(parent.Index)).
+                    SelectMany(s => s.Value).
+                    Join(children,
+                        parent => parent,
+                        child => child.Key,
+                        (parent, child) => child.Value).
+                    SelectMany(s => s).
+                    Join(data,
+                        child => child,
+                        value => value.Key,
+                        (child, value) => value.Value).
+                    Where(w => item.Equals(w.Path)).
+                    ToList();
+
+                // TODO: Not exactly correct.
+                // An extra namespace is being added when not needed.
 
                 if (parent is INamedScopeSourceValue
                     && crossWalk.TryGetValue(parent.Index, out List<NamedScopeIndex>? parentIndexs))

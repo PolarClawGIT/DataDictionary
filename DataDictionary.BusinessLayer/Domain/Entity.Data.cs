@@ -232,14 +232,25 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     foreach (EntityValue entity in this)
                     {
-                        NamedScopeValue newItem = new NamedScopeValue(entity);
                         Boolean hasParent = false;
 
                         foreach (SubjectAreaValue subjectParent in ParentSubjects(entity))
-                        { addNamedScope(subjectParent, newItem); hasParent = true; }
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(entity)
+                            {
+                                GetPath = () => new NamedScopePath(
+                                    subjectParent.GetPath(),
+                                    entity.GetPath())
+                            };
+
+                            addNamedScope(subjectParent, newItem);
+                            hasParent = true;
+                        }
 
                         if (!hasParent) // No Parents found
-                        { addNamedScope(model, newItem); }
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(entity);
+                            addNamedScope(model, newItem); }
 
                         progressChanged(completed++, total);
                     }

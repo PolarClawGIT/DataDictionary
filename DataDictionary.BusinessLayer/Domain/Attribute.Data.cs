@@ -405,17 +405,38 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     foreach (AttributeValue attribute in this)
                     {
-                        NamedScopeValue newItem = new NamedScopeValue(attribute);
+                        //NamedScopeValue newItem = new NamedScopeValue(attribute);
                         Boolean hasParent = false;
 
                         foreach (EntityValue entityParent in ParentEntites(attribute))
-                        { addNamedScope(entityParent, newItem); hasParent = true; }
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(attribute)
+                            {
+                                GetPath = () => new NamedScopePath(
+                                    entityParent.GetPath(),
+                                    attribute.GetPath())
+                            };
+                            addNamedScope(entityParent, newItem);
+                            hasParent = true;
+                        }
 
                         foreach (SubjectAreaValue subjectParent in ParentSubjects(attribute))
-                        { addNamedScope(subjectParent, newItem); hasParent = true; }
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(attribute)
+                            {
+                                GetPath = () => new NamedScopePath(
+                                    subjectParent.GetPath(),
+                                    attribute.GetPath())
+                            };
+                            addNamedScope(subjectParent, newItem);
+                            hasParent = true; 
+                        }
 
                         if (!hasParent) // No Parents found
-                        { addNamedScope(model, newItem); }
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(attribute);
+                            addNamedScope(model, newItem); 
+                        }
 
                         progressChanged(completed++, total);
                     }
@@ -426,7 +447,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return work;
 
-            IEnumerable<EntityValue> ParentEntites (AttributeValue attribute)
+            IEnumerable<EntityValue> ParentEntites(AttributeValue attribute)
             {
                 AttributeIndex key = new AttributeIndex(attribute);
 
