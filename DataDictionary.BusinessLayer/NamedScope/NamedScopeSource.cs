@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -23,8 +24,58 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Get the NamedScope Pairs that are used to build the values for NameScope Data.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<NamedScopePair> GetNamedScopes();
+        [Obsolete]
+        IEnumerable<NamedScopePair> GetNamedScopes() { return new List<NamedScopePair>(); }
+
+        //IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
+
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add items to NamedScopes, generic version.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="data">A list of TValue</param>
+        /// <param name="addNamedScope">Action that loads the Named Scope item. This is: NamedScopeData.Add.</param>
+        /// <param name="getParent">Function that returns the Parent for the given TValue. Example: </param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This covers the most common use case.
+        /// Each TValue in TData has a simple parent/child relationship.
+        /// </remarks>
+        static IReadOnlyList<WorkItem> LoadNamedScope<TData, TValue>(
+            TData data, 
+            Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope,
+            Func<TValue, INamedScopeSourceValue?>? getParent = null)
+            where TValue : INamedScopeSourceValue
+            where TData : IList<TValue>, INamedScopeSource
+        { 
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
+
+            work.Add(new WorkItem(ref progressChanged)
+            {
+                WorkName = String.Format("Adding NamedScopes ({0})", typeof(TData).Name),
+                DoWork = () =>
+                {
+                    Int32 completed = 0;
+                    Int32 total = data.Count();
+                    foreach (TValue item in data)
+                    {
+                        INamedScopeSourceValue? parent = null;
+                        if(getParent is not null) { parent = getParent(item); }
+
+                        NamedScopeValue newItem = new NamedScopeValue(item);
+                        addNamedScope(parent, newItem);
+
+                        progressChanged(completed++, total);
+                    }
+                }
+            });
+
+            return work;
+        }
     }
+
 
     /// <summary>
     /// Interface for the NamedScope Source Value.

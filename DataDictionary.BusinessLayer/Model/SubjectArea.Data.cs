@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IDataTableFile, INamedScopeSource
     {
         /// <summary>
         /// Reference to the containing Model
@@ -68,32 +68,12 @@ namespace DataDictionary.BusinessLayer.Model
         /// </summary>
         /// <param name="addNamedScope"></param>
         /// <returns></returns>
-        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { };
-
-            WorkItem newWork = new WorkItem(ref progressChanged)
-            {
-                WorkName = "Adding NamedScopes (Subject Area)",
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = this.Count();
-
-                    ModelValue? model = Models.FirstOrDefault();
-                    foreach (SubjectAreaValue subject in this)
-                    {
-                        NamedScopeValue newItem = new NamedScopeValue(subject);
-                        addNamedScope(model, newItem);
-                        progressChanged(completed++, total);
-                    }
-                }
-            };
-
-            work.Add(newWork);
-
-            return work;
+            return INamedScopeSource.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
+                data: this,
+                addNamedScope: addNamedScope,
+                getParent: (value) => Models.FirstOrDefault());
         }
     }
 }

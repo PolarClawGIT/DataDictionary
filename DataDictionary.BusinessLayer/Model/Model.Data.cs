@@ -26,7 +26,8 @@ namespace DataDictionary.BusinessLayer.Model
     }
 
     class ModelData : ModelCollection<ModelValue>, IModelData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
+        INamedScopeSource
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -68,30 +69,10 @@ namespace DataDictionary.BusinessLayer.Model
         /// </summary>
         /// <param name="addNamedScope"></param>
         /// <returns></returns>
-        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { };
-
-            work.Add(new WorkItem(ref progressChanged)
-            {
-                WorkName = "Adding NamedScopes (Model)",
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = this.Count();
-                    foreach (ModelValue model in this)
-                    {
-                        NamedScopeValue newItem = new NamedScopeValue(model);
-                        addNamedScope(null, newItem);
-                        progressChanged(completed++, total);
-                    }
-                }
-            });
-
-
-            return work;
+            return INamedScopeSource.LoadNamedScope<ModelData, ModelValue>
+                (data: this, addNamedScope: addNamedScope);
         }
-
     }
 }

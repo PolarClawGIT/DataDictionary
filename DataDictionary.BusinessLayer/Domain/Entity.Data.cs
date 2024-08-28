@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IDataTableFile, INamedScopeSource
     {
         public required DomainModel Model { get; init; }
 
@@ -279,6 +279,5 @@ namespace DataDictionary.BusinessLayer.Domain
             }
 
         }
-
     }
 }

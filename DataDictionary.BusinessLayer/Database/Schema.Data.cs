@@ -45,6 +45,16 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            return INamedScopeSource.LoadNamedScope<SchemaData,SchemaValue>
+                (this, addNamedScope, 
+                (value) => Database.DbCatalogs.
+                    FirstOrDefault(w => new DbCatalogKeyName(value).Equals(w)));
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Schema</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
