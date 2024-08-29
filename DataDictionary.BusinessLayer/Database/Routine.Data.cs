@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineData : DbRoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSource
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -45,34 +45,12 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Routine</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (RoutineValue item in this)
-            {
-                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(RoutineValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.DatabaseName) or
-                        nameof(source.SchemaName) or
-                        nameof(source.RoutineName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<RoutineData, RoutineValue>
+                (this, addNamedScope,
+                (value) => Database.DbSchemta.
+                    FirstOrDefault(w => new DbSchemaKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

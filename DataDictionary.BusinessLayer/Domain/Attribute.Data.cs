@@ -52,7 +52,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IDataTableFile, INamedScopeSourceData
     {
         public required DomainModel Model { get; init; }
 
@@ -383,12 +383,9 @@ namespace DataDictionary.BusinessLayer.Domain
         }
         #endregion
 
-        /// <summary>
-        /// Creates WorkItems that invoke a method to add Attribute to NamedScopes.
-        /// </summary>
-        /// <param name="addNamedScope"></param>
-        /// <returns></returns>
-        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { };

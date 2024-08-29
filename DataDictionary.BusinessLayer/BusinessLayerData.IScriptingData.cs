@@ -12,8 +12,8 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Catalog (database) Data
         /// </summary>
-        public IScriptingEngine ScriptingEngine { get { return scriptingValue; } }
-        private readonly ScriptingEngine scriptingValue;
+        public IScriptingEngine ScriptingEngine { get { return scriptingValues; } }
+        private readonly ScriptingEngine scriptingValues;
 
         /// <summary>
         /// Builds the XML and Script documents for the Template.
@@ -43,12 +43,12 @@ namespace DataDictionary.BusinessLayer
                     {
                         NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(item.PathName).ToArray());
 
-                        foreach (NamedScopeIndex value in namedScopeValue.PathKeys(path))
+                        foreach (NamedScopeIndex value in namedScopeValues.PathKeys(path))
                         {
-                            INamedScopeSourceValue namedScope = namedScopeValue.GetData(value);
+                            INamedScopeSourceValue namedScope = namedScopeValues.GetData(value);
                             String elementName = namedScope.Title;
                             ScopeType scope = namedScope.Scope;
-                            dynamic data = namedScopeValue.GetData(value);
+                            dynamic data = namedScopeValues.GetData(value);
 
                             if (scripting.Template.BreakOnScope == namedScope.Scope)
                             {
@@ -152,7 +152,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <returns></returns>
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
-        { return domainValue.Attributes.GetXElement(scripting, data); }
+        { return domainValues.Attributes.GetXElement(scripting, data); }
 
     }
 }

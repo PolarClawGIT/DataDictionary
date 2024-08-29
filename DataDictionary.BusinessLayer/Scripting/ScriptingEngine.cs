@@ -50,7 +50,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile
+    class ScriptingEngine : IScriptingEngine, IDataTableFile,
+        INamedScopeSourceData
     {
         /// <summary>
         /// Reference to the containing Model
@@ -149,6 +150,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
         public IReadOnlyList<WorkItem> Delete(IScriptingTemplateKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -159,12 +162,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(templateValues.GetNamedScopes());
-            return result;
-        }
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
@@ -213,7 +210,15 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(attributeValues.Load(factory, dataKey));
             return work;
         }
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(templateValues.LoadNamedScope(addNamedScope));
+
+            return work;
+        }
 
     }
 }

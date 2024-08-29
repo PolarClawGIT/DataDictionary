@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
     class ConstraintData: DbConstraintCollection<ConstraintValue>, IConstraintData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSource
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -46,37 +46,12 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (ConstraintValue item in this)
-            {
-                DbTableKeyName tableKey = new DbTableKeyName(item);
-                DbSchemaKeyName schemaKey = new DbSchemaKeyName(item);
-                if (Database.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
-                { result.Add(new NamedScopePair(table.GetIndex(), GetValue(item))); }
-                else if (Database.DbSchemta.FirstOrDefault(w => tableKey.Equals(w)) is SchemaValue schema)
-                { result.Add(new NamedScopePair(schema.GetIndex(), GetValue(item))); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(ConstraintValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.DatabaseName) or 
-                        nameof(source.SchemaName) or
-                        nameof(source.ConstraintName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<ConstraintData, ConstraintValue>
+                (this, addNamedScope,
+                (value) => Database.DbTables.
+                    FirstOrDefault(w => new DbTableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

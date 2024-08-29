@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     class DomainData : DbDomainCollection<DomainValue>, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSource
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -45,36 +45,14 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (DomainValue item in this)
-            {
-                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(DomainValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.DatabaseName) or
-                        nameof(source.SchemaName) or 
-                        nameof(source.DomainName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<DomainData, DomainValue>
+                (this, addNamedScope,
+                (value) => Database.DbSchemta.
+                    FirstOrDefault(w => new DbSchemaKeyName(value).Equals(w)));
         }
-
+  
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)

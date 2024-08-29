@@ -38,7 +38,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IDefinitionData Definitions { get; }
     }
 
-    class DomainModel : IDomainModel, IDataTableFile
+    class DomainModel : IDomainModel, IDataTableFile,
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required ISubjectAreaData SubjectAreas { get; init; }
@@ -151,7 +152,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
         #endregion
 
-        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
 

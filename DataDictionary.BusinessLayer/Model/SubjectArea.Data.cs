@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile, INamedScopeSourceData
     {
         /// <summary>
         /// Reference to the containing Model
@@ -63,14 +63,12 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
-        /// <summary>
-        /// Creates WorkItems that invoke a method to add Subjects to NamedScopes.
-        /// </summary>
-        /// <param name="addNamedScope"></param>
-        /// <returns></returns>
+
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSource.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
+            return INamedScopeSourceData.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
                 data: this,
                 addNamedScope: addNamedScope,
                 getParent: (value) => Models.FirstOrDefault());

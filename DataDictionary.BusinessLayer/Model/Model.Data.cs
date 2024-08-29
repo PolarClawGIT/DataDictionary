@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class ModelData : ModelCollection<ModelValue>, IModelData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -64,14 +64,11 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
 
-        /// <summary>
-        /// Creates WorkItems that invoke a method to add Models to NamedScopes.
-        /// </summary>
-        /// <param name="addNamedScope"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSource.LoadNamedScope<ModelData, ModelValue>
+            return INamedScopeSourceData.LoadNamedScope<ModelData, ModelValue>
                 (data: this, addNamedScope: addNamedScope);
         }
     }

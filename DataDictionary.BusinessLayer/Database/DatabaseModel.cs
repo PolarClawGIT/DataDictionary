@@ -104,7 +104,8 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseModel : IDatabaseModel, IDataTableFile
+    class DatabaseModel : IDatabaseModel, IDataTableFile,
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -477,32 +478,31 @@ namespace DataDictionary.BusinessLayer.Database
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(catalogs.GetNamedScopes());
-            result.AddRange(schemta.GetNamedScopes());
-            result.AddRange(domains.GetNamedScopes());
-
-            result.AddRange(tables.GetNamedScopes());
-            result.AddRange(tableColumns.GetNamedScopes());
-
-            result.AddRange(routines.GetNamedScopes());
-            result.AddRange(routineParameters.GetNamedScopes());
-
-            result.AddRange(constraints.GetNamedScopes());
-
-            return result;
-
-        }
-
-        /// <inheritdoc/>
         public String? GetDescription(ExtendedPropertyIndexName key)
         {
             if (DbExtendedProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IExtendedPropertyValue value)
             { return value.PropertyValue; }
             else { return null; }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(catalogs.LoadNamedScope(addNamedScope));
+            work.AddRange(schemta.LoadNamedScope(addNamedScope));
+            work.AddRange(domains.LoadNamedScope(addNamedScope));
+
+            work.AddRange(tables.LoadNamedScope(addNamedScope));
+            work.AddRange(tableColumns.LoadNamedScope(addNamedScope));
+
+            work.AddRange(routines.LoadNamedScope(addNamedScope));
+            work.AddRange(routineParameters.LoadNamedScope(addNamedScope));
+
+            work.AddRange(constraints.LoadNamedScope(addNamedScope));
+
+            return work;
         }
     }
 }

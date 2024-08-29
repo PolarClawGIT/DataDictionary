@@ -117,9 +117,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual IReadOnlyList<NamedScopeIndex> ChildrenKeys(NamedScopeIndex index)
         {
+            List<NamedScopeIndex> results = new List<NamedScopeIndex>();
+
             if (children.ContainsKey(index))
-            { return children[index].AsReadOnly(); }
-            else { return new List<NamedScopeIndex>().AsReadOnly(); }
+            { results.AddRange(children[index]); }
+
+            return results;
         }
 
         /// <inheritdoc/>
@@ -186,7 +189,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
-        internal virtual void Add(INamedScopeSourceValue? parent, NamedScopeValue newValue)
+        /// <summary>
+        /// Adds items to the NamedScope structure.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="newValue"></param>
+        /// <remarks>This method is passed to INamedScopeSource.LoadNamedScope.</remarks>
+        public virtual void Add(INamedScopeSourceValue? parent, NamedScopeValue newValue)
         {
             // TODO: Work out nesting mechanism for NameSpaces.
             // Needs to create NameSpace nodes between Parent and Child.
@@ -197,6 +206,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 GetPath().
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
+                Where(w => 1==2). // TODO: 
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 
@@ -285,91 +295,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
                     if (!parents[newValue.Index].Contains(parentItem))
                     { parents[newValue.Index].Add(parentItem); }
                 }
-            }
-        }
-
-        [Obsolete]
-        internal virtual void Add(NamedScopeValue value)
-        {
-            if (data.ContainsKey(value.Index))
-            {
-                Exception ex = new ArgumentException("An element with the same key already exists.");
-                ex.Data.Add(nameof(value.Title), value.Title);
-                ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
-                ex.Data.Add(nameof(value.Path), value.Path.MemberFullPath);
-                throw ex;
-            }
-            else
-            {
-                if (!crossWalk.ContainsKey(value.Source.Index))
-                { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
-
-                if (!crossWalk[value.Source.Index].Contains(value.Index))
-                { crossWalk[value.Source.Index].Add(value.Index); }
-
-                if (!data.ContainsKey(value.Index))
-                { data.Add(value.Index, value); }
-
-                if (!roots.Contains(value.Index))
-                { roots.Add(value.Index); }
-            }
-        }
-
-        [Obsolete]
-        internal virtual void Add(DataLayerIndex parent, NamedScopeValue value)
-        {
-            //TODO: Need a trap for infinite loop.
-            //      It is when the parent (or child) directly or indirectly points to itself.
-            //      Not sure how to detect that.
-
-            if (!crossWalk.ContainsKey(value.Source.Index))
-            { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
-
-            if (!crossWalk[value.Source.Index].Contains(value.Index))
-            { crossWalk[value.Source.Index].Add(value.Index); }
-
-            if (!data.ContainsKey(value.Index))
-            { data.Add(value.Index, value); }
-
-
-
-            if (crossWalk.ContainsKey(parent) && crossWalk[parent].Count > 0)
-            {
-                foreach (NamedScopeIndex index in crossWalk[parent])
-                {
-                    var parentNode = data[index];
-
-
-                    if (!children.ContainsKey(index))
-                    { children.Add(index, new List<NamedScopeIndex>()); }
-
-                    if (!parents.ContainsKey(value.Index))
-                    { parents.Add(value.Index, new List<NamedScopeIndex>()); }
-
-                    if (children.ContainsKey(index) && !children[index].Contains(value.Index))
-                    { children[index].Add(value.Index); }
-
-                    if (parents.ContainsKey(value.Index) && !parents[value.Index].Contains(index))
-                    { parents[value.Index].Add(index); }
-                }
-            }
-            else
-            {
-                Exception ex = new InvalidOperationException("Could not find parent for value passed");
-                ex.Data.Add(nameof(value.Title), value.Title);
-                ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
-                ex.Data.Add(nameof(value.Path), value.Path.MemberFullPath);
-                throw ex;
-            }
-        }
-
-        [Obsolete]
-        internal virtual void AddRange(IEnumerable<NamedScopePair> source)
-        {
-            foreach (NamedScopePair item in source)
-            {
-                if (item.ParentKey is null) { Add(item.Value); }
-                else { Add(item.ParentKey, item.Value); }
             }
         }
 

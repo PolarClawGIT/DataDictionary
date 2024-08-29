@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// This interface and the inherited interfaces are used with the internal data classes.
     /// They are not intended to be exposed to the UI layer.
     /// </remarks>
-    interface INamedScopeSource
+    interface INamedScopeSourceData
     {
         // These interfaces addresses language limitations on how interfaces & abstract classes are inherited and enforced.
         // These methods are hidden by the Data objects.
@@ -21,13 +21,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // CS0060: Base class must be at least as accessible then inherited classes.
 
         /// <summary>
-        /// Get the NamedScope Pairs that are used to build the values for NameScope Data.
+        /// Creates WorkItems that invoke a method to add items to NamedScopes.
         /// </summary>
+        /// <param name="addNamedScope"></param>
         /// <returns></returns>
-        [Obsolete]
-        IEnumerable<NamedScopePair> GetNamedScopes() { return new List<NamedScopePair>(); }
+        IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
 
-        //IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
+        //TODO: Update all object to use this method.
+        //TODO: Remove old version
 
         /// <summary>
         /// Creates WorkItems that invoke a method to add items to NamedScopes, generic version.
@@ -47,7 +48,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope,
             Func<TValue, INamedScopeSourceValue?>? getParent = null)
             where TValue : INamedScopeSourceValue
-            where TData : IList<TValue>, INamedScopeSource
+            where TData : IList<TValue>, INamedScopeSourceData
         { 
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
@@ -133,6 +134,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// Class to build NamedScope Pairs (Parent Key and Value).
     /// </summary>
     /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
+    [Obsolete]
     class NamedScopePair
     {
         public DataLayerIndex? ParentKey { get; } = null;

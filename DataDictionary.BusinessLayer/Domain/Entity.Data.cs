@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile, INamedScopeSourceData
     {
         public required DomainModel Model { get; init; }
 
@@ -210,12 +210,9 @@ namespace DataDictionary.BusinessLayer.Domain
             subjectAreaValues.Load(source);
         }
 
-        /// <summary>
-        /// Creates WorkItems that invoke a method to add Entity to NamedScopes.
-        /// </summary>
-        /// <param name="addNamedScope"></param>
-        /// <returns></returns>
-        internal IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { };

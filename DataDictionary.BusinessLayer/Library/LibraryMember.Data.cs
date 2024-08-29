@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Library
     class LibraryMemberData : LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -41,43 +41,24 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
+
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        /// <inheritdoc/>
-        /// <remarks>Library Source</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-
-            foreach (LibraryMemberValue item in this)
-            {
-                DataLayerIndex libraryKey = new LibrarySourceIndex(item);
-                DataLayerIndex parentKey = new LibraryMemberIndexParent(item);
-
-                if (parentKey.HasValue)
-                { result.Add(new NamedScopePair(parentKey, GetValue(item))); }
-                else if (libraryKey.HasValue)
-                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
-                else { throw new InvalidOperationException("Could not determine Parent"); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(LibraryMemberValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+            return INamedScopeSourceData.LoadNamedScope<LibraryMemberData, LibraryMemberValue>
+                (this, addNamedScope,
+                (value) =>
                 {
-                    if (e.PropertyName is
-                        nameof(source.MemberName) or
-                        nameof(source.MemberNameSpace))
-                    { result.TitleChanged(); }
-                }
-            }
+                    LibrarySourceIndex libraryKey = new LibrarySourceIndex(value);
+                    LibraryMemberIndexParent parentKey = new LibraryMemberIndexParent(value);
+
+                    if (this.FirstOrDefault(w => parentKey.Equals(w)) is LibraryMemberValue memberParent)
+                    { return memberParent; }
+                    else if (Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceValue sourceParent)
+                    { return sourceParent; }
+                    else { return null; }
+                });
         }
 
         /// <inheritdoc/>

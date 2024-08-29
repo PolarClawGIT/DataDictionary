@@ -15,8 +15,8 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for NameScope Data (NameSpace)
         /// </summary>
-        public INamedScopeData NamedScope { get { return namedScopeValue; } }
-        private readonly NamedScopeData namedScopeValue;
+        public INamedScopeData NamedScope { get { return namedScopeValues; } }
+        private readonly NamedScopeData namedScopeValues;
 
         /// <summary>
         /// Work Items to Clears then Load the NamedScope
@@ -26,25 +26,14 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork= () => namedScopeValue.Clear() });
+            work.Add(new WorkItem() { DoWork= () => namedScopeValues.Clear() });
 
-            work.AddRange(modelValues.LoadNamedScope(namedScopeValue.Add));
-            work.AddRange(subjectAreaValues.LoadNamedScope(namedScopeValue.Add));
-            work.AddRange(domainValue.LoadNamedScope(namedScopeValue.Add));
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load NamedScope",
-                DoWork = () =>
-                {
-                    //namedScopeValue.AddRange(modelValue.GetNamedScopes());
-                    //namedScopeValue.AddRange(subjectAreaValues.GetNamedScopes());
-                    //namedScopeValue.AddRange(domainValue.GetNamedScopes());
-                    namedScopeValue.AddRange(databaseValue.GetNamedScopes());
-                    namedScopeValue.AddRange(libraryValue.GetNamedScopes());
-                    namedScopeValue.AddRange(scriptingValue.GetNamedScopes());
-                }
-            });
+            work.AddRange(modelValues.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(subjectAreaValues.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(domainValues.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(databaseValues.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(libraryValues.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(scriptingValues.LoadNamedScope(namedScopeValues.Add));
 
             return work;
         }

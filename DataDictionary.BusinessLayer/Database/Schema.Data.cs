@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, ISchemaData,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -47,41 +47,10 @@ namespace DataDictionary.BusinessLayer.Database
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSource.LoadNamedScope<SchemaData,SchemaValue>
+            return INamedScopeSourceData.LoadNamedScope<SchemaData,SchemaValue>
                 (this, addNamedScope, 
                 (value) => Database.DbCatalogs.
                     FirstOrDefault(w => new DbCatalogKeyName(value).Equals(w)));
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Schema</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (SchemaValue item in this.Where(w => w.IsSystem == false))
-            {
-                DbCatalogKeyName nameKey = new DbCatalogKeyName(item);
-                if (Database.DbCatalogs.FirstOrDefault(w => nameKey.Equals(w)) is CatalogValue parent)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(SchemaValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is 
-                        nameof(source.DatabaseName) or
-                        nameof(source.SchemaName))
-                    { result.TitleChanged(); }
-                }
-            }
         }
 
         /// <inheritdoc/>

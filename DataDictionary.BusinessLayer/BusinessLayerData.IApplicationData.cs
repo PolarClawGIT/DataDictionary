@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer
 		/// <summary>
 		/// Wrapper for Application Data
 		/// </summary>
-		public IApplicationData ApplicationData { get { return applicationValue; } }
-        private readonly ApplicationData applicationValue;
+		public IApplicationData ApplicationData { get { return applicationValues; } }
+        private readonly ApplicationData applicationValues;
     }
 }
