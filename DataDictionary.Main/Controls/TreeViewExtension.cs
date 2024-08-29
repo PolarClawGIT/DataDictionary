@@ -106,6 +106,7 @@ namespace DataDictionary.Main.Controls
             });
 
             //Reload the NamedScope
+            //TODO: Can individual add/remove also update NamedScope?
             result.AddRange(BusinessData.LoadNamedScope());
 
             // Build the Tree

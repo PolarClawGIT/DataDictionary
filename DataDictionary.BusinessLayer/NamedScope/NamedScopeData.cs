@@ -206,7 +206,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 GetPath().
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
-                Where(w => 1==2). // TODO: 
+                Where(w => 1==2). // This is disabling NameSpace handling
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 
