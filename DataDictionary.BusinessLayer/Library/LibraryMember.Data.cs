@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Library
                 (value) =>
                 {
                     LibrarySourceIndex libraryKey = new LibrarySourceIndex(value);
-                    LibraryMemberIndexParent parentKey = new LibraryMemberIndexParent(value);
+                    LibraryMemberIndex parentKey = new LibraryMemberIndex(new LibraryMemberIndexParent(value));
 
                     if (this.FirstOrDefault(w => parentKey.Equals(w)) is LibraryMemberValue memberParent)
                     { return memberParent; }
