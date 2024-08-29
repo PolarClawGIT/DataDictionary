@@ -201,6 +201,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // Needs to create NameSpace nodes between Parent and Child.
             // If the NameSpace node already exists, attach to that node.
             // The existing node may be something other then a NameSpace node.
+            // Try putting it in the build of the tree instead of here.
 
             List<NamedScopePath> nameSpaces = newValue.Source.
                 GetPath().
