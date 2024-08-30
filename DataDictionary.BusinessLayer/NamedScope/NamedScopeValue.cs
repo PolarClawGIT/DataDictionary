@@ -23,6 +23,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// The Position to place the value. Overrides order by Title.
         /// </summary>
         Int32 OrdinalPosition { get; }
+
+        /// <summary>
+        /// The Data used to create the NamedScope Value
+        /// </summary>
+        INamedScopeSourceValue Source { get; }
     }
 
 
@@ -74,9 +79,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
         Func<String> getTitle = () => String.Empty;
 
-        /// <summary>
-        /// The Data used to create the NamedScope Value
-        /// </summary>
+        /// <inheritdoc/>
         public INamedScopeSourceValue Source { get; }
 
         /// <summary>

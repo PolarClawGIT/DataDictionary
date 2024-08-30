@@ -194,89 +194,76 @@ namespace DataDictionary.Main.Controls
                     ToList();
 
                 TreeNodeCollection nodes = targetNodes;
-                NamedScopePath? priorPath = null;
-
-                //TODO: This duplicates the original but does not generate the extra path levels desired.
-
-                foreach (var pathGroup in childPaths)
+                foreach (var pathNodes in childValues.Select(s => s.Source.Path).Distinct())
                 {
-                    if(pathGroup.scopes.Count > 1)
-                    {
-                        TreeNode newNode = nodes.Add(pathGroup.path.Member);
-                        newNode.ImageKey = ImageEnumeration.Cast(ScopeType.ModelNameSpace).Name;
-                        newNode.SelectedImageKey = ImageEnumeration.Cast(ScopeType.ModelNameSpace).Name;
-                        newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
-                        newNode.ToolTipText = pathGroup.path.MemberFullPath;
-
-                        if (pathGroup.path.ParentPath is NamedScopePath parentPath
-                            && parentPath.Equals(priorPath))
-                        { // Child Node
-                            nodes = newNode.Nodes;
-                            priorPath = pathGroup.path;
-                        }
-                        else
-                        { // New Top Node
-                            nodes = targetNodes;
-                            priorPath = null;
-                        }
-                    }
-
-                    foreach (var scopeGroup in pathGroup.scopes.
-                        OrderBy(o => ImageEnumeration.Cast(o.scope).DisplayName))
-                    {
-                        ImageEnumeration scopeValue = ImageEnumeration.Cast(scopeGroup.scope);
-
-                        // Build Scope Groups
-                        if (scopeGroup.values.Count > 1 && scopeValue.GroupBy)
-                        {
-                            TreeNode newNode = targetNodes.Add(scopeValue.Name.Split(".").Last());
-                            newNode.ImageKey = scopeValue.Name;
-                            newNode.SelectedImageKey = scopeValue.Name;
-                            newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
-                            newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
-
-                            nodes = newNode.Nodes;
-                        }
-
-                        foreach (INamedScopeValue value in scopeGroup.values.
-                            OrderBy(o => o.OrdinalPosition).
-                            ThenBy(o => o.Title))
-                        {
-                            ImageEnumeration valueScope = ImageEnumeration.Cast(value.Scope);
-
-                            TreeNode newNode = nodes.Add(value.Title);
-                            newNode.ImageKey = valueScope.Name;
-                            newNode.SelectedImageKey = valueScope.Name;
-                            newNode.ToolTipText = value.Path.MemberFullPath;
-                            value.OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
-                            valueNodes.Add(newNode, value.Index);
-
-                            // Handle 
-                            void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
-                            {
-                                if (sender is INamedScopeValue value)
-                                {
-
-                                    if (valueNodes.FirstOrDefault(w => value.Index.Equals(w.Value))
-                                        is KeyValuePair<TreeNode, NamedScopeIndex> nodeItem
-                                        && nodeItem.Key is not null)
-                                    {
-                                        nodeItem.Key.Text = value.Title;
-                                        nodeItem.Key.ToolTipText = value.Path.MemberFullPath;
-                                    }
-                                }
-                            }
-
-                            if (BusinessData.NamedScope.ChildrenKeys(value.Index) is IList<NamedScopeIndex> values && values.Count > 0)
-                            { CreateNodes(newNode.Nodes, values); }
-                        }
-                    }
-
+                    nodes.Add(CreatePath(pathNodes));
+                    // TODO: Duplicate paths are still showing up. Sometimes as an extra level.
+                    // Partially caused by naming conventions. EI: [Database].[Schema].[Table].[Column]
+                    // But this should be something that can be worked out.
+                    // Maybe loop threw all the paths instead of just the ones for this node? (higher Level)
 
                 }
 
+                TreeNode CreatePath(NamedScopePath path)
+                {
+                    TreeNode? result = null;
+
+                    var items = childValues.Where(w => path.Equals(w.Source.Path)).ToList();
+
+                    if (path.ParentPath is NamedScopePath parent)
+                    { result = CreatePath(parent); }
+
+                    if (result is null && items.Count == 1)
+                    {
+                        result = CreateNodeByValue(items[0]);
+
+                        if (BusinessData.NamedScope.ChildrenKeys(items[0].Index) is IList<NamedScopeIndex> values && values.Count > 0)
+                        { CreateNodes(result.Nodes, values); }
+
+                        return result;
+                    }
+                    else
+                    {
+                        if (result is null)
+                        { result = CreateNodeByPath(path); }
+
+                        foreach (var scopeGroup in items.
+                            Select(s => s.Scope).
+                            Distinct().
+                            OrderBy(o => ImageEnumeration.Cast(o).DisplayName))
+                        {
+                            TreeNode scopeNode = result;
+                            ImageEnumeration scopeValue = ImageEnumeration.Cast(scopeGroup);
+                            if (scopeValue.GroupBy && items.Count(w => w.Scope == scopeGroup) > 1)
+                            {
+                                scopeNode = CreateNodeByScope(scopeGroup);
+                                result.Nodes.Add(scopeNode);
+                            }
+
+                            foreach (var item in items.
+                                Where(w => w.Scope == scopeGroup).
+                                OrderBy(o => o.OrdinalPosition).
+                                ThenBy(o => o.Title))
+                            {
+                                TreeNode newNode = CreateNodeByValue(item);
+                                scopeNode.Nodes.Add(newNode);
+
+                                if (BusinessData.NamedScope.ChildrenKeys(item.Index) is IList<NamedScopeIndex> values && values.Count > 0)
+                                { CreateNodes(newNode.Nodes, values); }
+                            }
+
+                        }
+
+                        return result;
+                    }
+                }
+
+
+
 
             }
+
+
 
             void CreateNodes_Old(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
             {
@@ -338,7 +325,56 @@ namespace DataDictionary.Main.Controls
                     }
                 }
             }
+
+
+            TreeNode CreateNodeByValue(INamedScopeValue source)
+            {
+                TreeNode result = new TreeNode(source.Title);
+                ImageEnumeration scopeImage = ImageEnumeration.Cast(source.Scope);
+
+                result.ImageKey = scopeImage.Name;
+                result.SelectedImageKey = scopeImage.Name;
+                result.ToolTipText = source.Path.MemberFullPath;
+                source.OnTitleChanged += (source, eventArg) =>
+                {
+                    if (source is INamedScopeValue item)
+                    {
+                        result.Text = item.Title;
+                        result.ToolTipText = item.Path.MemberFullPath;
+                    }
+                };
+
+                treeNodeDictionary[target].Add(result, source.Index);
+                return result;
+            }
+
+            TreeNode CreateNodeByPath(NamedScopePath source)
+            {
+                TreeNode result = new TreeNode(source.Member);
+                ImageEnumeration scopeImage = ImageEnumeration.Cast(ScopeType.ModelNameSpace);
+
+                result.ImageKey = scopeImage.Name;
+                result.SelectedImageKey = scopeImage.Name;
+                result.ToolTipText = source.MemberFullPath;
+
+                return result;
+            }
+
+            TreeNode CreateNodeByScope(ScopeType source)
+            {
+                ImageEnumeration scopeImage = ImageEnumeration.Cast(source);
+                TreeNode result = new TreeNode(scopeImage.Name.Split(".").Last());
+
+                result.ImageKey = scopeImage.Name;
+                result.SelectedImageKey = scopeImage.Name;
+                result.NodeFont = new Font(target.Font, FontStyle.Italic);
+                result.ToolTipText = String.Format("set of {0}", scopeImage.Name);
+
+                return result;
+            }
         }
+
+
 
         /// <summary>
         /// Gets the NameScope from the TreeNode
