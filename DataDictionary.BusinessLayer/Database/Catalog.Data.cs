@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         IDatabaseModelItem, ICatalogData,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -44,25 +44,10 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return this.Where(w => w.IsSystem == false).Select(s => new NamedScopePair(GetValue(s)));
-
-            NamedScopeValue GetValue(CatalogValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.CatalogTitle) or
-                        nameof(source.DatabaseName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<CatalogData, CatalogValue>
+                (this, addNamedScope, null);
         }
 
         /// <inheritdoc/>
@@ -79,5 +64,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <remarks>Catalog</remarks>
         public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+
     }
 }

@@ -53,7 +53,7 @@ namespace DataDictionary.Main.Forms.Model
                 modelNavigation.AutoGenerateColumns = false;
                 modelNavigation.DataSource = modelBinding;
 
-                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
+                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelTitle))));
                 modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
             }
         }

@@ -4,11 +4,11 @@
 	[ConstraintColumnId]     UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
-	[ConstraintName]         SysName Null,
 	[TableName]              SysName Null,
+	[ConstraintName]         SysName Null,
 	[ColumnName]             SysName Null,
 	[OrdinalPosition]        Int Null,
-	[ReferenceSchemaName]    SysName Null,
-	[ReferenceTableName]     SysName Null,
-	[ReferenceColumnName]    SysName Null
+	[ReferencedSchemaName]   SysName Null,
+	[ReferencedTableName]    SysName Null,
+	[ReferencedColumnName]   SysName Null
 )

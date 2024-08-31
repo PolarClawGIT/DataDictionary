@@ -27,6 +27,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
     }
 
     /// <summary>
+    /// Interface for a class that can Get a NameScopePath
+    /// </summary>
+    public interface IGetNamedScopePath
+    {
+        /// <summary>
+        /// The NamedPath for the Value
+        /// </summary>
+        NamedScopePath Path { get; }
+    }
+
+    /// <summary>
     /// Implementation for a NamedScope Path (aka NameSpace, Alias)
     /// </summary>
     public class NamedScopePath : INamedScopePath, IKeyComparable<INamedScopePath>

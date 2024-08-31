@@ -52,8 +52,39 @@ namespace Toolbox.Threading
         /// <inheritdoc/>
         public virtual Func<Boolean> IsCanceling { get; init; } = () => false;
 
+        /// <summary>
+        /// Creates a WorkItem object.
+        /// </summary>
         public WorkItem() : base()
         { }
+
+        /// <summary>
+        /// Creates a WorkItem with a Progress Tracker method.
+        /// </summary>
+        /// <param name="onProgress">The method that is assigned to OnProgressChanged</param>
+        /// <remarks>
+        /// Provides mechanism to call a method that can be invoked during DoWork.
+        /// This method passed is assigned to OnProgressChanged method of this object.
+        /// </remarks>
+        /// <example>
+        /// public WorkItem Example()
+        /// {
+        ///     Action<Int32, Int32> progressChanged = (completed, total) => { };
+        ///     return new WorkItem(ref progressChanged)
+        ///     {
+        ///         DoWork = () =>
+        ///         {
+        ///             Int32 completed = 0;
+        ///             Int32 total = 10;
+        ///
+        ///             for (completed = 0; completed < total; completed++)
+        ///             { progressChanged(completed, total); }
+        ///         }
+        ///     };
+        /// }
+        /// </example>
+        public WorkItem(ref Action<Int32, Int32> onProgress) : base()
+        { onProgress = OnProgressChanged; }
 
         /// <summary>
         /// This triggers after the DoWork method is complete.

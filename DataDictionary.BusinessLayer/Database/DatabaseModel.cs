@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
+using DataDictionary.DataLayer.DatabaseData.Table;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -56,9 +57,9 @@ namespace DataDictionary.BusinessLayer.Database
         IRoutineParameterData DbRoutineParameters { get; }
 
         /// <summary>
-        /// List of Database Dependencies for the Routines within the Model.
+        /// List of Database References
         /// </summary>
-        IRoutineDependencyData DbRoutineDependencies { get; }
+        IReferenceData DbReferences { get; }
 
         /// <summary>
         /// List of Database Tables and Views within the Model.
@@ -103,7 +104,8 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseModel : IDatabaseModel, IDataTableFile
+    class DatabaseModel : IDatabaseModel, IDataTableFile,
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -138,8 +140,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly RoutineParameterData routineParameters;
 
         /// <inheritdoc/>
-        public IRoutineDependencyData DbRoutineDependencies { get { return routineDependencies; } }
-        private readonly RoutineDependencyData routineDependencies;
+        public IReferenceData DbReferences { get { return references; } }
+        private readonly ReferenceData references;
 
         /// <inheritdoc/>
         public ITableData DbTables { get { return tables; } }
@@ -160,7 +162,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             routines = new RoutineData() { Database = this };
             routineParameters = new RoutineParameterData() { Database = this };
-            routineDependencies = new RoutineDependencyData() { Database = this };
+            references = new ReferenceData() { Database = this };
 
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };
@@ -183,7 +185,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineDependencies.Load(factory, dataKey));
+            work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
             work.AddRange(constraintColumns.Load(factory, dataKey));
@@ -206,7 +208,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
-            work.AddRange(routineDependencies.Save(factory, dataKey));
+            work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
             work.AddRange(constraintColumns.Save(factory, dataKey));
@@ -229,7 +231,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Load(factory, dataKey));
             work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineDependencies.Load(factory, dataKey));
+            work.AddRange(references.Load(factory, dataKey));
 
             work.AddRange(constraints.Load(factory, dataKey));
             work.AddRange(constraintColumns.Load(factory, dataKey));
@@ -252,7 +254,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Save(factory, dataKey));
             work.AddRange(routineParameters.Save(factory, dataKey));
-            work.AddRange(routineDependencies.Save(factory, dataKey));
+            work.AddRange(references.Save(factory, dataKey));
 
             work.AddRange(constraints.Save(factory, dataKey));
             work.AddRange(constraintColumns.Save(factory, dataKey));
@@ -274,7 +276,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             result.Add(routines.ToDataTable());
             result.Add(routineParameters.ToDataTable());
-            result.Add(routineDependencies.ToDataTable());
+            result.Add(references.ToDataTable());
 
             result.Add(constraints.ToDataTable());
             result.Add(constraintColumns.ToDataTable());
@@ -296,7 +298,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             routines.Load(source);
             routineParameters.Load(source);
-            routineDependencies.Load(source);
+            references.Load(source);
 
             constraints.Load(source);
             constraintColumns.Load(source);
@@ -359,21 +361,31 @@ namespace DataDictionary.BusinessLayer.Database
                 target: routineParameters,
                 command: (conn) => routineParameters.SchemaCommand(conn, key)));
 
+
             work.Add(new WorkItem()
             {
-                WorkName = "Load DbRoutineDependencies",
+                WorkName = "Load DbReferences",
                 DoWork = () =>
                 {
+                    foreach (DbTableItem item in tables)
+                    {
+                        references.Load(
+                            factory.Connection.ExecuteReader(
+                                references.SchemaCommand(
+                                    factory.Connection, item)));
+                    }
+
                     foreach (DbRoutineItem item in routines)
                     {
-                        routineDependencies.Load(
+                        references.Load(
                             factory.Connection.ExecuteReader(
-                                routineDependencies.SchemaCommand(
+                                references.SchemaCommand(
                                     factory.Connection, item)));
                     }
                 },
                 IsCanceling = () => factory.IsCanceling
             });
+
 
             work.Add(factory.CreateWork(
                 workName: "Load DbExtendedProperties, DbSchemta",
@@ -427,7 +439,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Delete(key));
             work.AddRange(routineParameters.Delete(key));
-            work.AddRange(routineDependencies.Delete(key));
+            work.AddRange(references.Delete(key));
 
             work.AddRange(constraints.Delete(key));
             work.AddRange(constraintColumns.Delete(key));
@@ -450,7 +462,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             work.AddRange(routines.Delete());
             work.AddRange(routineParameters.Delete());
-            work.AddRange(routineDependencies.Delete());
+            work.AddRange(references.Delete());
 
             work.AddRange(constraints.Delete());
             work.AddRange(constraintColumns.Delete());
@@ -466,32 +478,31 @@ namespace DataDictionary.BusinessLayer.Database
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(catalogs.GetNamedScopes());
-            result.AddRange(schemta.GetNamedScopes());
-            result.AddRange(domains.GetNamedScopes());
-
-            result.AddRange(tables.GetNamedScopes());
-            result.AddRange(tableColumns.GetNamedScopes());
-
-            result.AddRange(routines.GetNamedScopes());
-            result.AddRange(routineParameters.GetNamedScopes());
-
-            result.AddRange(constraints.GetNamedScopes());
-
-            return result;
-
-        }
-
-        /// <inheritdoc/>
         public String? GetDescription(ExtendedPropertyIndexName key)
         {
             if (DbExtendedProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IExtendedPropertyValue value)
             { return value.PropertyValue; }
             else { return null; }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(catalogs.LoadNamedScope(addNamedScope));
+            work.AddRange(schemta.LoadNamedScope(addNamedScope));
+            work.AddRange(domains.LoadNamedScope(addNamedScope));
+
+            work.AddRange(tables.LoadNamedScope(addNamedScope));
+            work.AddRange(tableColumns.LoadNamedScope(addNamedScope));
+
+            work.AddRange(routines.LoadNamedScope(addNamedScope));
+            work.AddRange(routineParameters.LoadNamedScope(addNamedScope));
+
+            work.AddRange(constraints.LoadNamedScope(addNamedScope));
+
+            return work;
         }
     }
 }

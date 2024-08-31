@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel selectionDialogLayout;
             TableLayoutPanel filterSelectionLayout;
             TableLayoutPanel commandLayout;
+            selectionDialogLayout = new TableLayoutPanel();
             descriptionData = new Controls.TextBoxData();
             selectionFilterGroup = new GroupBox();
             groupByScope = new RadioButton();
@@ -45,7 +45,6 @@
             acceptCommand = new Button();
             cancelCommand = new Button();
             bindingSource = new BindingSource(components);
-            selectionDialogLayout = new TableLayoutPanel();
             filterSelectionLayout = new TableLayoutPanel();
             commandLayout = new TableLayoutPanel();
             selectionDialogLayout.SuspendLayout();
@@ -264,8 +263,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(424, 522);
             Controls.Add(selectionDialogLayout);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SelectionDialog";
-            Text = "SelectionDialog";
+            Text = "Selection Dialog";
+            Load += SelectionDialog_Load;
             SizeChanged += SelectionDialog_SizeChanged;
             selectionDialogLayout.ResumeLayout(false);
             selectionDialogLayout.PerformLayout();
@@ -281,7 +283,6 @@
         #endregion
 
         private GroupBox selectionFilterGroup;
-        private TableLayoutPanel filterSelectionLayout;
         private RadioButton groupByScope;
         private RadioButton groupByPath;
         private ComboBox filterScope;
@@ -294,5 +295,6 @@
         private Button cancelCommand;
         private Controls.TextBoxData descriptionData;
         private BindingSource bindingSource;
+        private TableLayoutPanel selectionDialogLayout;
     }
 }

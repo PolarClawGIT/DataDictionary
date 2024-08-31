@@ -44,8 +44,12 @@
             IsNullableValue = new DataGridViewCheckBoxColumn();
             constraintTab = new TabPage();
             tableConstraintData = new DataGridView();
-            ConstraintNameValue = new DataGridViewTextBoxColumn();
-            ConstraintTypeValue = new DataGridViewTextBoxColumn();
+            dependencyData = new TabPage();
+            dependenciesData = new DataGridView();
+            referencedSchemaColumn = new DataGridViewTextBoxColumn();
+            referencedObjectColumn = new DataGridViewTextBoxColumn();
+            referencedColumnColumn = new DataGridViewTextBoxColumn();
+            referencedTypeColumn = new DataGridViewTextBoxColumn();
             catalogNameData = new Controls.TextBoxData();
             schemaNameData = new Controls.TextBoxData();
             tableNameData = new Controls.TextBoxData();
@@ -59,6 +63,9 @@
             exportAll = new ToolStripMenuItem();
             exportEntites = new ToolStripMenuItem();
             exportAttributes = new ToolStripMenuItem();
+            bindingDependencies = new BindingSource(components);
+            ConstraintNameValue = new DataGridViewTextBoxColumn();
+            ConstraintTypeValue = new DataGridViewTextBoxColumn();
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
@@ -73,12 +80,15 @@
             constraintTab.SuspendLayout();
             constraintLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).BeginInit();
+            dependencyData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dependenciesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTable).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).BeginInit();
             exportOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingDependencies).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -105,14 +115,14 @@
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            dbTableLayout.Size = new Size(433, 358);
+            dbTableLayout.Size = new Size(540, 402);
             dbTableLayout.TabIndex = 0;
             // 
             // isSystemData
             // 
             isSystemData.AutoCheck = false;
             isSystemData.AutoSize = true;
-            isSystemData.Location = new Point(355, 153);
+            isSystemData.Location = new Point(462, 153);
             isSystemData.Name = "isSystemData";
             isSystemData.Size = new Size(75, 19);
             isSystemData.TabIndex = 3;
@@ -125,11 +135,12 @@
             tableDetailLayout.Controls.Add(extendedPropertiesTab);
             tableDetailLayout.Controls.Add(columnsTab);
             tableDetailLayout.Controls.Add(constraintTab);
+            tableDetailLayout.Controls.Add(dependencyData);
             tableDetailLayout.Dock = DockStyle.Fill;
             tableDetailLayout.Location = new Point(3, 203);
             tableDetailLayout.Name = "tableDetailLayout";
             tableDetailLayout.SelectedIndex = 0;
-            tableDetailLayout.Size = new Size(427, 152);
+            tableDetailLayout.Size = new Size(534, 196);
             tableDetailLayout.TabIndex = 7;
             // 
             // extendedPropertiesTab
@@ -138,7 +149,7 @@
             extendedPropertiesTab.Location = new Point(4, 24);
             extendedPropertiesTab.Name = "extendedPropertiesTab";
             extendedPropertiesTab.Padding = new Padding(3);
-            extendedPropertiesTab.Size = new Size(419, 124);
+            extendedPropertiesTab.Size = new Size(526, 168);
             extendedPropertiesTab.TabIndex = 0;
             extendedPropertiesTab.Text = "Extended Properties";
             extendedPropertiesTab.UseVisualStyleBackColor = true;
@@ -153,7 +164,7 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.Size = new Size(413, 118);
+            extendedPropertiesData.Size = new Size(520, 162);
             extendedPropertiesData.TabIndex = 5;
             // 
             // propertyNameData
@@ -179,7 +190,7 @@
             columnsTab.Location = new Point(4, 24);
             columnsTab.Name = "columnsTab";
             columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(419, 124);
+            columnsTab.Size = new Size(526, 168);
             columnsTab.TabIndex = 1;
             columnsTab.Text = "Columns";
             columnsTab.UseVisualStyleBackColor = true;
@@ -193,7 +204,7 @@
             tableColumnsData.Dock = DockStyle.Fill;
             tableColumnsData.Location = new Point(3, 3);
             tableColumnsData.Name = "tableColumnsData";
-            tableColumnsData.Size = new Size(413, 118);
+            tableColumnsData.Size = new Size(520, 162);
             tableColumnsData.TabIndex = 0;
             // 
             // ColumnNameValue
@@ -223,7 +234,7 @@
             constraintTab.Controls.Add(constraintLayout);
             constraintTab.Location = new Point(4, 24);
             constraintTab.Name = "constraintTab";
-            constraintTab.Size = new Size(419, 124);
+            constraintTab.Size = new Size(526, 168);
             constraintTab.TabIndex = 2;
             constraintTab.Text = "Constraints";
             constraintTab.UseVisualStyleBackColor = true;
@@ -238,7 +249,7 @@
             constraintLayout.Name = "constraintLayout";
             constraintLayout.RowCount = 1;
             constraintLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            constraintLayout.Size = new Size(419, 124);
+            constraintLayout.Size = new Size(526, 168);
             constraintLayout.TabIndex = 1;
             // 
             // tableConstraintData
@@ -251,25 +262,60 @@
             tableConstraintData.Location = new Point(3, 3);
             tableConstraintData.Name = "tableConstraintData";
             tableConstraintData.ReadOnly = true;
-            tableConstraintData.Size = new Size(413, 118);
+            tableConstraintData.Size = new Size(520, 162);
             tableConstraintData.TabIndex = 0;
             // 
-            // ConstraintNameValue
+            // dependencyData
             // 
-            ConstraintNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ConstraintNameValue.DataPropertyName = "ConstraintName";
-            ConstraintNameValue.HeaderText = "Constraint Name";
-            ConstraintNameValue.Name = "ConstraintNameValue";
-            ConstraintNameValue.ReadOnly = true;
+            dependencyData.BackColor = SystemColors.Control;
+            dependencyData.Controls.Add(dependenciesData);
+            dependencyData.Location = new Point(4, 24);
+            dependencyData.Name = "dependencyData";
+            dependencyData.Padding = new Padding(3);
+            dependencyData.Size = new Size(526, 168);
+            dependencyData.TabIndex = 3;
+            dependencyData.Text = "Dependencies";
             // 
-            // ConstraintTypeValue
+            // dependenciesData
             // 
-            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            ConstraintTypeValue.DataPropertyName = "ConstraintType";
-            ConstraintTypeValue.HeaderText = "Constraint Type";
-            ConstraintTypeValue.Name = "ConstraintTypeValue";
-            ConstraintTypeValue.ReadOnly = true;
-            ConstraintTypeValue.Width = 105;
+            dependenciesData.AllowUserToAddRows = false;
+            dependenciesData.AllowUserToDeleteRows = false;
+            dependenciesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dependenciesData.Columns.AddRange(new DataGridViewColumn[] { referencedSchemaColumn, referencedObjectColumn, referencedColumnColumn, referencedTypeColumn });
+            dependenciesData.Dock = DockStyle.Fill;
+            dependenciesData.Location = new Point(3, 3);
+            dependenciesData.Name = "dependenciesData";
+            dependenciesData.Size = new Size(520, 162);
+            dependenciesData.TabIndex = 0;
+            // 
+            // referencedSchemaColumn
+            // 
+            referencedSchemaColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedSchemaColumn.DataPropertyName = "ReferencedSchemaName";
+            referencedSchemaColumn.HeaderText = "Schema Name";
+            referencedSchemaColumn.Name = "referencedSchemaColumn";
+            // 
+            // referencedObjectColumn
+            // 
+            referencedObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedObjectColumn.DataPropertyName = "ReferencedObjectName";
+            referencedObjectColumn.HeaderText = "Object Name";
+            referencedObjectColumn.Name = "referencedObjectColumn";
+            // 
+            // referencedColumnColumn
+            // 
+            referencedColumnColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedColumnColumn.DataPropertyName = "ReferencedColumnName";
+            referencedColumnColumn.HeaderText = "Column Name";
+            referencedColumnColumn.Name = "referencedColumnColumn";
+            // 
+            // referencedTypeColumn
+            // 
+            referencedTypeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referencedTypeColumn.DataPropertyName = "ReferencedType";
+            referencedTypeColumn.FillWeight = 70F;
+            referencedTypeColumn.HeaderText = "Type";
+            referencedTypeColumn.Name = "referencedTypeColumn";
             // 
             // catalogNameData
             // 
@@ -281,7 +327,7 @@
             catalogNameData.Multiline = false;
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = true;
-            catalogNameData.Size = new Size(427, 44);
+            catalogNameData.Size = new Size(534, 44);
             catalogNameData.TabIndex = 8;
             catalogNameData.WordWrap = true;
             // 
@@ -295,7 +341,7 @@
             schemaNameData.Multiline = false;
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = true;
-            schemaNameData.Size = new Size(427, 44);
+            schemaNameData.Size = new Size(534, 44);
             schemaNameData.TabIndex = 9;
             schemaNameData.WordWrap = true;
             // 
@@ -309,7 +355,7 @@
             tableNameData.Multiline = false;
             tableNameData.Name = "tableNameData";
             tableNameData.ReadOnly = true;
-            tableNameData.Size = new Size(427, 44);
+            tableNameData.Size = new Size(534, 44);
             tableNameData.TabIndex = 10;
             tableNameData.WordWrap = true;
             // 
@@ -322,7 +368,7 @@
             tableTypeData.Multiline = false;
             tableTypeData.Name = "tableTypeData";
             tableTypeData.ReadOnly = true;
-            tableTypeData.Size = new Size(346, 44);
+            tableTypeData.Size = new Size(453, 44);
             tableTypeData.TabIndex = 11;
             tableTypeData.WordWrap = true;
             // 
@@ -334,12 +380,12 @@
             // 
             exportOptions.Items.AddRange(new ToolStripItem[] { exportAll, exportEntites, exportAttributes });
             exportOptions.Name = "contextMenuStrip1";
-            exportOptions.Size = new Size(181, 92);
+            exportOptions.Size = new Size(153, 70);
             // 
             // exportAll
             // 
             exportAll.Name = "exportAll";
-            exportAll.Size = new Size(180, 22);
+            exportAll.Size = new Size(152, 22);
             exportAll.Text = "All items";
             exportAll.ToolTipText = "Create all domain model items from database model";
             exportAll.Click += ExportAll_Click;
@@ -347,7 +393,7 @@
             // exportEntites
             // 
             exportEntites.Name = "exportEntites";
-            exportEntites.Size = new Size(180, 22);
+            exportEntites.Size = new Size(152, 22);
             exportEntites.Text = "Entity only";
             exportEntites.ToolTipText = "Create domain Entity from database Tables or View";
             exportEntites.Click += ExportEntites_Click;
@@ -355,16 +401,33 @@
             // exportAttributes
             // 
             exportAttributes.Name = "exportAttributes";
-            exportAttributes.Size = new Size(180, 22);
+            exportAttributes.Size = new Size(152, 22);
             exportAttributes.Text = "Attributes only";
             exportAttributes.ToolTipText = "Create domain Attributes from database Columns";
             exportAttributes.Click += ExportAttributes_Click;
+            // 
+            // ConstraintNameValue
+            // 
+            ConstraintNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ConstraintNameValue.DataPropertyName = "ConstraintName";
+            ConstraintNameValue.HeaderText = "Constraint Name";
+            ConstraintNameValue.Name = "ConstraintNameValue";
+            ConstraintNameValue.ReadOnly = true;
+            // 
+            // ConstraintTypeValue
+            // 
+            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            ConstraintTypeValue.DataPropertyName = "ConstraintType";
+            ConstraintTypeValue.HeaderText = "Type";
+            ConstraintTypeValue.Name = "ConstraintTypeValue";
+            ConstraintTypeValue.ReadOnly = true;
+            ConstraintTypeValue.Width = 56;
             // 
             // DbTable
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(433, 383);
+            ClientSize = new Size(540, 427);
             Controls.Add(dbTableLayout);
             Name = "DbTable";
             Text = "Database Table";
@@ -380,12 +443,15 @@
             constraintTab.ResumeLayout(false);
             constraintLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).EndInit();
+            dependencyData.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dependenciesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTable).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).EndInit();
             exportOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingDependencies).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -407,8 +473,6 @@
         private DataGridViewCheckBoxColumn IsNullableValue;
         private TabPage constraintTab;
         private DataGridView tableConstraintData;
-        private DataGridViewTextBoxColumn ConstraintNameValue;
-        private DataGridViewTextBoxColumn ConstraintTypeValue;
         private BindingSource bindingTable;
         private BindingSource bindingProperties;
         private BindingSource bindingColumns;
@@ -417,5 +481,14 @@
         private ToolStripMenuItem exportAll;
         private ToolStripMenuItem exportEntites;
         private ToolStripMenuItem exportAttributes;
+        private TabPage dependencyData;
+        private BindingSource bindingDependencies;
+        private DataGridView dependenciesData;
+        private DataGridViewTextBoxColumn referencedSchemaColumn;
+        private DataGridViewTextBoxColumn referencedObjectColumn;
+        private DataGridViewTextBoxColumn referencedColumnColumn;
+        private DataGridViewTextBoxColumn referencedTypeColumn;
+        private DataGridViewTextBoxColumn ConstraintNameValue;
+        private DataGridViewTextBoxColumn ConstraintTypeValue;
     }
 }

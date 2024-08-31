@@ -175,7 +175,7 @@ namespace DataDictionary.Main.Forms.ProofOfConcept
         private void TransformEditor_Load(object sender, EventArgs e)
         {
             FormData nameOfValues;
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingTransform, nameof(nameOfValues.TransformTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingTransform, nameof(nameOfValues.TransformTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingTransform, nameof(nameOfValues.TransformDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
             sourceData.DataBindings.Add(new Binding(nameof(sourceData.Text), bindingTransform, nameof(nameOfValues.SourceData), false, DataSourceUpdateMode.OnPropertyChanged));

@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData: IDomainData
     {
         /// <inheritdoc/>
-        public IDomainModel DomainModel { get { return domainValue; } }
-        private readonly DomainModel domainValue;
+        public IDomainModel DomainModel { get { return domainValues; } }
+        private readonly DomainModel domainValues;
     }
 }

@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Library
     class LibrarySourceData: LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -43,25 +43,10 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return this.Select(s => new NamedScopePair(GetValue(s)));
-
-            NamedScopeValue GetValue(LibrarySourceValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.LibraryTitle) or
-                        nameof(source.AssemblyName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<LibrarySourceData, LibrarySourceValue>
+                (this, addNamedScope);
         }
 
         /// <inheritdoc/>

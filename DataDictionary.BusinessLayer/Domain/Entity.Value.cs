@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -32,6 +33,10 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public virtual String GetTitle()
         { return EntityTitle ?? ScopeEnumeration.Cast(Scope).Name; }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(EntityTitle) or nameof(MemberName); }
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile, INamedScopeSourceData
     {
         /// <summary>
         /// Reference to the containing Model
@@ -63,26 +63,15 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
+
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-   
-            DataLayerIndex parentIndex;
-            if (Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-
-            foreach (SubjectAreaValue item in this)
-            {
-                NamedScopeValue value = new NamedScopeValue(item);
-                result.Add(new NamedScopePair(parentIndex, value));
-            }
-
-            return SubjectNameSpace.GetNamedScopes(result);
+            return INamedScopeSourceData.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
+                data: this,
+                addNamedScope: addNamedScope,
+                getParent: (value) => Models.FirstOrDefault());
         }
-
     }
 }

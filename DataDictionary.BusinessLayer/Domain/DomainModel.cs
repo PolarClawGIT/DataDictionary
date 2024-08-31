@@ -38,7 +38,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IDefinitionData Definitions { get; }
     }
 
-    class DomainModel : IDomainModel, IDataTableFile
+    class DomainModel : IDomainModel, IDataTableFile,
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required ISubjectAreaData SubjectAreas { get; init; }
@@ -67,7 +68,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         public DomainModel() : base()
         {
-            attributeValues = new AttributeData() { Model = this, DomainDefinitions = Definitions, DomainProperties = Properties };
+            attributeValues = new AttributeData() { Model = this };
             entityValues = new EntityData() { Model = this };
         }
 
@@ -152,19 +153,14 @@ namespace DataDictionary.BusinessLayer.Domain
         #endregion
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
+            List<WorkItem> work = new List<WorkItem>();
 
-            IEnumerable<NamedScopePair> values = 
-                attributeValues.GetNamedScopes().
-                Union(entityValues.GetNamedScopes());
+            work.AddRange(entityValues.LoadNamedScope(addNamedScope));
+            work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
 
-            //result.AddRange(values);
-            result.AddRange(SubjectNameSpace.GetNamedScopes(values));
-
-            return result;
+            return work;
         }
     }
 }

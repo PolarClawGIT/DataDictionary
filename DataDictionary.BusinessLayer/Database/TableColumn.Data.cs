@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class TableColumnData : DbTableColumnCollection<TableColumnValue>, ITableColumnData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSource
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -44,35 +44,12 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (TableColumnValue item in this)
-            {
-                DbTableKeyName nameKey = new DbTableKeyName(item);
-                if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is TableValue parent)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(TableColumnValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.DatabaseName) or
-                        nameof(source.SchemaName) or
-                        nameof(source.TableName) or
-                        nameof(source.ColumnName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<TableColumnData, TableColumnValue>
+                (this, addNamedScope,
+                (value) => Database.DbTables.
+                    FirstOrDefault(w => new DbTableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

@@ -15,9 +15,10 @@ namespace DataDictionary.BusinessLayer.Scripting
     public interface ITemplateData : IBindingData<TemplateValue>
     { }
 
-    class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, INamedScopeSource,
+    class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, 
         ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INamedScopeSourceData
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -61,27 +62,12 @@ namespace DataDictionary.BusinessLayer.Scripting
         public IReadOnlyList<DataTable> Export()
         { return this.ToDataTable().ToList(); }
 
-
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return this.Select(s => new NamedScopePair(GetValue(s)));
-
-            NamedScopeValue GetValue(TemplateValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.TemplateTitle))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<TemplateData, TemplateValue>
+                (this, addNamedScope);
         }
 
         /// <inheritdoc/>

@@ -29,7 +29,7 @@ Begin Try
 		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
 		[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[MemberType]            [App_DataDictionary].[typeObjectSubType] Not Null,
+		[MemberType]            [App_DataDictionary].[typeObjectType] Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
 

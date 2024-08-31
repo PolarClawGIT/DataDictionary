@@ -17,12 +17,12 @@ Select	T.[CatalogId],
 		T.[ConstraintName],
 		C.[ColumnName],
 		D.[OrdinalPosition],
-		D.[ReferenceSchemaName],
-		D.[ReferenceTableName],
-		D.[ReferenceColumnName]
+		D.[ReferencedSchemaName],
+		D.[ReferencedTableName],
+		D.[ReferencedColumnName]
 From	[App_DataDictionary].[DatabaseConstraintColumn] D
 		Inner Join [App_DataDictionary].[DatabaseTableColumn] C
-		On	D.[ParentColumnId] = C.[ColumnId]
+		On	D.[ColumnId] = C.[ColumnId]
 		Inner Join [App_DataDictionary].[DatabaseConstraintColumn_AK] T
 		On	D.[ConstraintColumnId] = T.[ConstraintColumnId]
 		Left Join [App_DataDictionary].[ModelCatalog] A

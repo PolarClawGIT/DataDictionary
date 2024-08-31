@@ -1,4 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -9,7 +11,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// This interface and the inherited interfaces are used with the internal data classes.
     /// They are not intended to be exposed to the UI layer.
     /// </remarks>
-    interface INamedScopeSource
+    interface INamedScopeSourceData
     {
         // These interfaces addresses language limitations on how interfaces & abstract classes are inherited and enforced.
         // These methods are hidden by the Data objects.
@@ -19,10 +21,60 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // CS0060: Base class must be at least as accessible then inherited classes.
 
         /// <summary>
-        /// Get the NamedScope Pairs that are used to build the values for NameScope Data.
+        /// Creates WorkItems that invoke a method to add items to NamedScopes.
         /// </summary>
+        /// <param name="addNamedScope"></param>
         /// <returns></returns>
-        IEnumerable<NamedScopePair> GetNamedScopes();
+        IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
+
+        //TODO: Update all object to use this method.
+        //TODO: Remove old version
+
+        /// <summary>
+        /// Creates WorkItems that invoke a method to add items to NamedScopes, generic version.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="data">A list of TValue</param>
+        /// <param name="addNamedScope">Action that loads the Named Scope item. This is: NamedScopeData.Add.</param>
+        /// <param name="getParent">Function that returns the Parent for the given TValue. Example: </param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This covers the most common use case.
+        /// Each TValue in TData has a simple parent/child relationship.
+        /// </remarks>
+        static IReadOnlyList<WorkItem> LoadNamedScope<TData, TValue>(
+            TData data, 
+            Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope,
+            Func<TValue, INamedScopeSourceValue?>? getParent = null)
+            where TValue : INamedScopeSourceValue
+            where TData : IList<TValue>, INamedScopeSourceData
+        { 
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
+
+            work.Add(new WorkItem(ref progressChanged)
+            {
+                WorkName = String.Format("Adding NamedScopes ({0})", typeof(TData).Name),
+                DoWork = () =>
+                {
+                    Int32 completed = 0;
+                    Int32 total = data.Count();
+                    foreach (TValue item in data)
+                    {
+                        INamedScopeSourceValue? parent = null;
+                        if(getParent is not null) { parent = getParent(item); }
+
+                        NamedScopeValue newItem = new NamedScopeValue(item);
+                        addNamedScope(parent, newItem);
+
+                        progressChanged(completed++, total);
+                    }
+                }
+            });
+
+            return work;
+        }
     }
 
     /// <summary>
@@ -68,22 +120,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         NamedScopePath GetPath();
-    }
 
-    /// <summary>
-    /// Class to build NamedScope Pairs (Parent Key and Value).
-    /// </summary>
-    /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
-    class NamedScopePair
-    {
-        public DataLayerIndex? ParentKey { get; } = null;
-        public NamedScopeValue Value { get; }
-
-        public NamedScopePair(NamedScopeValue value)
-        { this.Value = value; }
-
-        public NamedScopePair(DataLayerIndex parent, NamedScopeValue value) : this(value)
-        { this.ParentKey = parent; }
+        /// <summary>
+        /// Condition to test if the Title or Path changed when the PropertyChanged event occurs.
+        /// </summary>
+        /// <param name="eventArgs"></param>
+        /// <returns></returns>
+        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs);
     }
 
     /// <summary>
@@ -112,5 +155,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public override String ToString()
         { return SystemPath.MemberFullPath; }
+
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return false; }
     }
 }

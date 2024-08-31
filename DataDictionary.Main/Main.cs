@@ -22,7 +22,7 @@ namespace DataDictionary.Main
             Icon = ImageEnumeration.GetIcon(ScopeType.Application);
 
             IsLocked(true);
-            
+
             // Setup Images for Tree Control
             contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 
@@ -117,7 +117,6 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.Create());
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
@@ -132,8 +131,8 @@ namespace DataDictionary.Main
                     work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
             }
-
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(BusinessData.Create());
+            work.AddRange(contextNameNavigation.Load());
 
             this.DoWork(work, OnComplete);
 
@@ -178,8 +177,7 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-            work.AddRange(BusinessData.LoadNamedScope());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            work.AddRange(contextNameNavigation.Load());
 
             DoWork(work, onCompleting);
 

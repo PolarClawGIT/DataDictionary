@@ -40,49 +40,17 @@ namespace DataDictionary.Main.Dialogs
 
         SelectionDialogData formData;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="getDescription">Function that returns the Description</param>
-        public SelectionDialog(Func<INamedScopeSourceValue, String> getDescription) : base()
+        protected SelectionDialog() : base()
         {
-            formData = new SelectionDialogData(FilterScopes, FilterPaths);
-            formData.BuildList(getDescription); // Could not create getDescription as a Property and pass it to the data class.
-
             InitializeComponent();
+            formData = new SelectionDialogData(FilterScopes, FilterPaths);
+
             selectionData.SmallImageList = ImageEnumeration.AsImageList();
-            bindingSource.DataSource = formData;
-            bindingSource.Position = 0;
-
-            //formData.PropertyChanged += FormData_PropertyChanged;
-            formData.FilterChanged += FormData_FilterChanged;
-            FilterScopes.ListChanged += FilterScopes_ListChanged;
-            FilterPaths.ListChanged += FilterPaths_ListChanged;
-            Selected.ListChanged += Selected_ListChanged;
-
-            // Data Bindings
-            //Issue: Could not get binding to Radio Buttons to work. Manual Binding is used.
-            formData.BindGroupBy(groupByScope);
-
-            //Issue: Could not get binding to Combo Boxes to work as desired. Manual Binding is used.
-            formData.BindScopes(filterScope);
-            formData.BindPaths(filterPath);
-
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingSource, nameof(SelectionDialogValue.Title)));
-            scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingSource, nameof(SelectionDialogValue.ScopeName)));
-            pathData.DataBindings.Add(new Binding(nameof(pathData.Text), bindingSource, nameof(SelectionDialogValue.PathName)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingSource, nameof(SelectionDialogValue.Description)));
-
-            LoadListView();
         }
 
-        /// <summary>
-        /// Shows the dialog initially position over the form that called it.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public DialogResult ShowDialog(Form source)
+        public SelectionDialog(Form source) : this()
         {
+            // Set the Position
             if (source.IsMdiChild
                 && source.MdiParent is Form parent
                 && parent.Controls.Cast<Control>().FirstOrDefault(w => w is MdiClient) is Control mdiControl)
@@ -108,31 +76,84 @@ namespace DataDictionary.Main.Dialogs
 
                 this.StartPosition = FormStartPosition.Manual;
                 this.Location = topLeft;
+                Icon = source.Icon;
+                Text = String.Format("Selection: {0}", source.Text);
             }
 
+            // Setup BindingSource
+            bindingSource.DataSource = formData;
+            bindingSource.Position = 0;
 
-            return base.ShowDialog(source);
+            formData.FilterChanged += FormData_FilterChanged;
+            FilterScopes.ListChanged += FilterScopes_ListChanged;
+            FilterPaths.ListChanged += FilterPaths_ListChanged;
+            Selected.ListChanged += Selected_ListChanged;
         }
 
-        public void SelectByValue<TValue>(IEnumerable<TValue> values)
-            where TValue : INamedScopeSourceValue
+        public void BuildData(Func<INamedScopeSourceValue, String>? getDescription = null)
         {
-            IEnumerable<DataLayerIndex> indexes = values.Select(s => s.Index);
+            Int32 rowNumber = selectionDialogLayout.GetRow(descriptionData);
+            if (getDescription is null && rowNumber >= 0)
+            { // Hide the Description field if no description function is provided.
+                descriptionData.Visible = false;
+                selectionDialogLayout.RowStyles[rowNumber].SizeType = SizeType.AutoSize;
+            }
 
-            SelectByIndex(indexes);
+            formData.BuildList(getDescription); 
         }
 
-        public void SelectByIndex(IEnumerable<DataLayerIndex> indexes)
+        public void BuildData(IEnumerable<DataLayerIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
         {
+            BuildData(getDescription);
+
             foreach (NamedScopeIndex item in formData.
-                Where(w => indexes.Contains(w.Source.Index)).
+                Where(w => selected.Contains(w.Source.Index)).
                 Select(s => s.Index))
             { if (!Selected.Contains(item)) { Selected.Add(item); } }
+        }
+
+        public void BuildData(IEnumerable<NamedScopeIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        {
+            BuildData(getDescription);
+
+            foreach (NamedScopeIndex item in formData.
+                Where(w => selected.Contains(w.Index)).
+                Select(s => s.Index))
+            { if (!Selected.Contains(item)) { Selected.Add(item); } }
+        }
+
+        public void BuildData<TValue>(IEnumerable<TValue> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+            where TValue : INamedScopeSourceValue
+        {
+            IEnumerable<DataLayerIndex> indexes = selected.Select(s => s.Index);
+
+            BuildData(indexes, getDescription);
         }
 
         public IEnumerable<TValue> SelectedByValue<TValue>()
             where TValue : INamedScopeSourceValue
         { return formData.Where(w => Selected.Contains(w.Index)).Select(s => s.Source).OfType<TValue>().Distinct(); }
+
+        public IEnumerable<INamedScopeValue> SelectedByNamedScope()
+        { return formData.Where(w => Selected.Contains(w.Index)).Select(s => s.NamedScope); }
+
+        private void SelectionDialog_Load(object sender, EventArgs e)
+        {
+            // Data Bindings
+            //Issue: Could not get binding to Radio Buttons to work. Manual Binding is used.
+            formData.BindGroupBy(groupByScope);
+
+            //Issue: Could not get binding to Combo Boxes to work as desired. Manual Binding is used.
+            formData.BindScopes(filterScope);
+            formData.BindPaths(filterPath);
+
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingSource, nameof(SelectionDialogValue.Title)));
+            scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingSource, nameof(SelectionDialogValue.ScopeName)));
+            pathData.DataBindings.Add(new Binding(nameof(pathData.Text), bindingSource, nameof(SelectionDialogValue.PathName)));
+            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingSource, nameof(SelectionDialogValue.Description)));
+
+            LoadListView();
+        }
 
         protected void LoadListView()
         {
@@ -231,5 +252,7 @@ namespace DataDictionary.Main.Dialogs
                 // Everything else does not change state. Avoids infinite Loop.
             }
         }
+
+
     }
 }

@@ -7,6 +7,7 @@ using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
+using DataDictionary.Main.Messages;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -14,6 +15,8 @@ namespace DataDictionary.Main.Forms.Domain
     {
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
+
+        Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
         protected DomainAttribute() : base()
         { InitializeComponent(); }
@@ -24,6 +27,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 attributeItem = new AttributeValue();
                 BusinessData.DomainModel.Attributes.Add(attributeItem);
+                isNew = true;
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
@@ -48,9 +52,11 @@ namespace DataDictionary.Main.Forms.Domain
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            if (isNew) { SendMessage(new RefreshNavigation()); }
 
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
+
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -85,7 +91,10 @@ namespace DataDictionary.Main.Forms.Domain
             base.DeleteCommand_Click(sender, e);
 
             if (bindingAttribute.Current is IAttributeValue current)
-            { DoWork(BusinessData.DomainModel.Attributes.Delete(current)); }
+            { DoWork(BusinessData.DomainModel.Attributes.Delete(current), Complete); }
+
+            void Complete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -112,7 +121,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is IAliasValue current)
+            if (bindingAlias.Current is IAliasIndex current)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
@@ -123,11 +132,11 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void NamedScopeData_OnApply(object sender, EventArgs e)
         {
-            if (bindingAlias.DataSource is IList<IAliasValue> aliases
+            if (bindingAlias.DataSource is IList<IAliasIndex> aliases
                 && aliases.FirstOrDefault(
                     w => w.AliasScope == namedScopeData.Scope
                     && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
-                is IAliasValue value)
+                is IAliasIndex value)
             { bindingAlias.Position = aliases.IndexOf(value); }
             else { bindingAlias.AddNew(); }
         }

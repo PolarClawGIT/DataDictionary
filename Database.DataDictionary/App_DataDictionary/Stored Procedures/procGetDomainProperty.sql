@@ -14,8 +14,9 @@ Select	D.[PropertyId],
 		D.[PropertyData]
 From	[App_DataDictionary].[DomainProperty] D
 		Left Join [App_DataDictionary].[ModelProperty] M
-		On	D.[PropertyId] = M.[PropertyId]
-Where	(@ModelId is Null Or @ModelId = M.[ModelId] Or D.[IsCommon] = 1) And
+		On	D.[PropertyId] = M.[PropertyId] And
+			M.[ModelId] = @ModelId
+Where	(D.[IsCommon] = 1 Or @ModelId is Null Or @ModelId = M.[ModelId]) And
 		(@PropertyId is Null Or @PropertyId = D.[PropertyId]) And
 		(@PropertyTitle is Null Or @PropertyTitle = D.[PropertyTitle])
 GO

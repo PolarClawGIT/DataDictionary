@@ -42,6 +42,9 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbTableKeyName(IDbTableKeyName)"/>
         public TableIndexName(ITableIndexName source) : base(source) { }
 
+        /// <inheritdoc cref="DbTableKeyName(IDbTableKeyName)"/>
+        public TableIndexName(IDbTableKeyName source) : base(source) { }
+
         /// <inheritdoc/>
         public Boolean Equals(ITableIndexName? other)
         { return other is IDbTableKeyName value && Equals(new DbTableKeyName(value)); }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Model
@@ -28,5 +29,9 @@ namespace DataDictionary.BusinessLayer.Model
         /// <inheritdoc/>
         public NamedScopePath GetPath()
         { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(this.SubjectName).ToArray())); }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(SubjectName) or nameof(SubjectAreaTitle); }
     }
 }

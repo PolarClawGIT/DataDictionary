@@ -30,19 +30,25 @@ namespace DataDictionary.Main.Dialogs
         public NamedScopePath Path { get { return NamedScope.Path; } }
         public String PathName { get { return Path.MemberFullPath; } }
 
-        Func<INamedScopeSourceValue, String> GetDescription { get; }
+        public Func<INamedScopeSourceValue, String> GetDescription { get; set; } = (value) => String.Empty;
         public String Description { get { return GetDescription(Source); } }
 
-        public SelectionDialogValue(NamedScopeIndex key, Func<INamedScopeSourceValue, String> getDescription)
+        public SelectionDialogValue(NamedScopeIndex key, Func<INamedScopeSourceValue, String>? getDescription = null) : base()
         {
             this.Index = key;
             this.NamedScope = BusinessData.NamedScope.GetValue(key);
             this.Source = BusinessData.NamedScope.GetData(key);
-            this.GetDescription = getDescription;
+            this.GetDescription = (value) => String.Empty;
 
             ImageEnumeration scopeItem = ImageEnumeration.Cast(NamedScope.Scope);
             this.ListView = new ListViewItem(Title);
             this.ListView.ImageKey = scopeItem.Name;
+
+            if (getDescription is null) { this.GetDescription = (value) => String.Empty; }
+            else { this.GetDescription = getDescription; }
+
+            // Dummy Statement. Removes a warning that PropertyChanged is never called.
+            if (PropertyChanged is PropertyChangedEventHandler) { }
         }
 
         /// <summary>

@@ -28,15 +28,15 @@ Begin Try
 		[ConstraintId]        UniqueIdentifier Not Null,
 		[SchemaId]            UniqueIdentifier Not Null,
 		[ConstraintName]      SysName Not Null,
-		[ParentTableId]       UniqueIdentifier Not Null,
-		[ConstraintType]      NVarChar(60) Null,
+		[TableId]        UniqueIdentifier Not Null,
+		[ConstraintType]      [App_DataDictionary].[typeObjectType] Null,
 		Primary Key ([ConstraintId]))
 
 	Insert Into @Values
 	Select	X.[ConstraintId],
 			X.[SchemaId],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
-			R.[TableId] As [ParentTableId],
+			R.[TableId],
 			NullIf(Trim(D.[ConstraintType]),'') As [ConstraintType]
 	From	@Data D
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
@@ -101,20 +101,20 @@ Begin Try
 		Select	[ConstraintId],
 				[SchemaId],
 				[ConstraintName],
-				[ParentTableId],
+				[TableId],
 				[ConstraintType]
 		From	@Values
 		Except
 		Select	[ConstraintId],
 				[SchemaId],
 				[ConstraintName],
-				[ParentTableId],
+				[TableId],
 				[ConstraintType]
 		From	[App_DataDictionary].[DatabaseConstraint])
 	Update	[App_DataDictionary].[DatabaseConstraint]
 	Set		[SchemaId] = S.[SchemaId],
 			[ConstraintName] = S.[ConstraintName],
-			[ParentTableId] = S.[ParentTableId],
+			[TableId] = S.[TableId],
 			[ConstraintType] = S.[ConstraintType]
 	From	[App_DataDictionary].[DatabaseConstraint] T
 			Inner Join [Delta] S
@@ -125,12 +125,12 @@ Begin Try
 			[ConstraintId],	
 			[SchemaId],
 			[ConstraintName],
-			[ParentTableId],
+			[TableId],
 			[ConstraintType])
 	Select	S.[ConstraintId],	
 			S.[SchemaId],
 			S.[ConstraintName],
-			S.[ParentTableId],
+			S.[TableId],
 			S.[ConstraintType]
 	From	@Values S
 			Left Join [App_DataDictionary].[DatabaseConstraint] T

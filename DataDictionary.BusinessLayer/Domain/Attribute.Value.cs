@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -32,6 +33,10 @@ namespace DataDictionary.BusinessLayer.Domain
             { return new NamedScopePath(AttributeTitle); }
             else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
         }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(AttributeTitle) or nameof(MemberName); }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

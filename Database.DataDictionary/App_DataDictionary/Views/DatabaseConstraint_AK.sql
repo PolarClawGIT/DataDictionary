@@ -5,7 +5,7 @@ WITH SCHEMABINDING AS
 Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[ConstraintId],
-		T.[ParentTableId],
+		T.[TableId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[ConstraintName],
@@ -16,7 +16,7 @@ From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseConstraint] T
 		On	S.[SchemaId] = T.[SchemaId]
 		Inner Join [App_DataDictionary].[DatabaseTable] N
-		On	T.[ParentTableId] = N.[TableId]
+		On	T.[TableId] = N.[TableId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseConstraint]
     ON [App_DataDictionary].[DatabaseConstraint_AK]([ConstraintId])

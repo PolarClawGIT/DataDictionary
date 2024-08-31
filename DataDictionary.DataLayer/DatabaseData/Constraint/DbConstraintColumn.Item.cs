@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System.Data;
 using System.Runtime.Serialization;
@@ -10,7 +9,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbColumnReferenceKey
+    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbConstraintColumnKeyReferenced
     { }
 
     /// <summary>
@@ -44,18 +43,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public int? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceSchemaName { get { return GetValue(nameof(ReferenceSchemaName)); } }
-
-        /// <summary>
-        /// Alis of ReferenceObjectName
-        /// </summary>
-        String? ReferenceTableName { get { return GetValue(nameof(ReferenceTableName)); } }
+        public string? ReferencedSchemaName { get { return GetValue(nameof(ReferencedSchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceObjectName { get { return ReferenceTableName; } }
+        public string? ReferencedTableName { get { return GetValue(nameof(ReferencedTableName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceColumnName { get { return GetValue(nameof(ReferenceColumnName)); } }
+        public string? ReferencedColumnName { get { return GetValue(nameof(ReferencedColumnName)); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -63,13 +57,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             new DataColumn(nameof(ConstraintColumnId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ConstraintName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ConstraintName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(ColumnName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(OrdinalPosition), typeof(int)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferenceSchemaName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferenceTableName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferenceColumnName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedSchemaName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedTableName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedColumnName), typeof(string)){ AllowDBNull = true},
         };
 
         /// <summary>

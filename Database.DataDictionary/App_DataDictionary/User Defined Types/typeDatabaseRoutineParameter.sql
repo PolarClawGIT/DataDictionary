@@ -5,7 +5,7 @@
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[RoutineName]            SysName Null,
-	[RoutineType]            NVarChar(60) Null,
+	[RoutineType]            [App_DataDictionary].[typeObjectType] Null,
 	[ParameterName]          SysName Null,
 	[OrdinalPosition]        Int Null,
 	[DataType]               SysName Null,

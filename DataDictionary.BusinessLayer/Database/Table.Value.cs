@@ -7,7 +7,8 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ITableValue : IDbTableItem, ITableIndex, ITableIndexName,
+    public interface ITableValue : IDbTableItem,
+        ITableIndex, ITableIndexName, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
@@ -29,5 +30,9 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         public String GetTitle()
         { return TableName ?? ScopeEnumeration.Cast(Scope).Name; }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName); }
     }
 }

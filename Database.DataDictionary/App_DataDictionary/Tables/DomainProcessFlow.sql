@@ -18,6 +18,4 @@
 	CONSTRAINT [FK_DomainProcessFlow_Process] FOREIGN KEY ([ProcessId]) REFERENCES [App_DataDictionary].[DomainProcess] ([ProcessId]),
 	CONSTRAINT [FK_DomainProcessFlow_Attribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
 	CONSTRAINT [FK_DomainProcessFlow_Entity] FOREIGN KEY ([EntityId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
-	-- Only applies if both an Entity and Attribute are defined
-	CONSTRAINT [FK_DomainProcessFlow_EntityAttribute] FOREIGN KEY ([EntityId], [AttributeId]) REFERENCES [App_DataDictionary].[DomainEntityAttribute] ([EntityId], [AttributeId]),
 )

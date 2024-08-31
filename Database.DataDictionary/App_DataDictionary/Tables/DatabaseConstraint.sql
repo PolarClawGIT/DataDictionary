@@ -6,8 +6,8 @@
 	[ConstraintId]        UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseConstraintId] DEFAULT (newid()),
 	[SchemaId]            UniqueIdentifier Not Null,
 	[ConstraintName]      SysName Not Null,
-	[ParentTableId]       UniqueIdentifier Not Null,
-	[ConstraintType]      NVarChar(60) Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
+	[TableId]             UniqueIdentifier Not Null,
+	[ConstraintType]      [App_DataDictionary].[typeObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseConstraint_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseConstraint_SysStart] DEFAULT (sysdatetime()),
@@ -16,7 +16,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseConstraint] PRIMARY KEY CLUSTERED ([ConstraintId] ASC),
 	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
-	CONSTRAINT [FK_DatabaseConstraintTable] FOREIGN KEY ([ParentTableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
+	CONSTRAINT [FK_DatabaseConstraintTable] FOREIGN KEY ([TableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseConstraint]

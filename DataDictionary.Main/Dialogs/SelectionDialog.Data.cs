@@ -83,7 +83,7 @@ namespace DataDictionary.Main.Dialogs
             this.filterPaths = paths;
         }
 
-        public void BuildList(Func<INamedScopeSourceValue, String> getDescription)
+        public void BuildList(Func<INamedScopeSourceValue, String>? getDescription = null)
         {
             this.Clear();
 

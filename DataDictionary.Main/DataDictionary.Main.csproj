@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
+    <Copyright>© 2024 William Howard, All Rights Reserved</Copyright>
     <ApplicationIcon>Resources\Icon\DataDictionaryApplication.ico</ApplicationIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Description>A Data Dictionary application that works with meta-data provided by MS SQL and Visual Studio.

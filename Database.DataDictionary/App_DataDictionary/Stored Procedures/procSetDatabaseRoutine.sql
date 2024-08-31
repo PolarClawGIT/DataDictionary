@@ -28,7 +28,7 @@ Begin Try
 		[RoutineId]          UniqueIdentifier Not Null,
 		[SchemaId]           UniqueIdentifier Not Null,
 		[RoutineName]        SysName Not Null,
-		[RoutineType]        NVarChar(60) Null,
+		[RoutineType]        [App_DataDictionary].[typeObjectType] Null,
 		Primary Key ([RoutineId]))
 
 	Insert Into @Values

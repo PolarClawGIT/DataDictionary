@@ -3,9 +3,6 @@ using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
@@ -19,8 +16,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IEntityData :
         IBindingData<EntityValue>,
-        ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
-        ITableImport
+        ILoadData<IEntityIndex>, ISaveData<IEntityIndex>
     {
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
@@ -50,14 +46,13 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeSource
+        IDataTableFile, INamedScopeSourceData
     {
         public required DomainModel Model { get; init; }
 
         /// <inheritdoc/>
         public IEntityAliasData Aliases { get { return aliasValues; } }
         private readonly EntityAliasData aliasValues;
-
 
         /// <inheritdoc/>
         public IEntityDefinitionData Definitions { get { return definitionValues; } }
@@ -215,124 +210,71 @@ namespace DataDictionary.BusinessLayer.Domain
             subjectAreaValues.Load(source);
         }
 
-
-        /// <inheritdoc/>
-        /// <remarks>Entity by Catalog</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
-        {
-            CatalogIndex catalogKey = new CatalogIndex(key);
-            if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
-            {
-                CatalogIndexName catalogName = new CatalogIndexName(catalog);
-
-                foreach (TableValue item in source.DbTables.Where(w => catalogName.Equals(w)))
-                {
-                    TableIndex tableKey = new TableIndex(item);
-                    Import(source, propertyDefinition, tableKey);
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Entity by Table</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
-        {
-            TableIndex tableKey = new TableIndex(key);
-            foreach (TableValue item in source.DbTables.Where(w => tableKey.Equals(w)))
-            {
-                AliasKeyName aliasKey = new AliasKeyName(item);
-                EntityIndexName entityName = new EntityIndexName(item);
-                EntityIndex entityKey;
-
-
-                // Create Entity or get existing
-                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is EntityAliasValue existingAlias)
-                { entityKey = new EntityIndex(existingAlias); }
-                else if (this.FirstOrDefault(w => entityName.Equals(w)) is EntityValue existing)
-                { entityKey = new EntityIndex(existing); }
-                else
-                {
-                    EntityValue newItem = new EntityValue()
-                    { EntityTitle = item.TableName, };
-                    this.Add(newItem);
-                    entityKey = new EntityIndex(newItem);
-                }
-
-                // Create Alias, if they do not exist
-                if (aliasValues.Count(w => aliasKey.Equals(w) && entityKey.Equals(w)) == 0)
-                {
-                    aliasValues.Add(new EntityAliasValue(entityKey)
-                    {
-                        AliasName = item.ToAliasName(),
-                        AliasScope = item.Scope
-                    });
-                }
-
-                // Create Properties
-                ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
-                foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
-                {
-                    PropertyIndexValue appKey = new PropertyIndexValue(property);
-
-                    if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is IPropertyValue appProperty
-                        && propertyValues.Count(w =>
-                            entityKey.Equals(w)
-                            && new PropertyIndexValue(appProperty).Equals(w)) == 0)
-                    { propertyValues.Add(new EntityPropertyValue(entityKey, appProperty, property)); }
-                }
-            }
-        }
-
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progressChanged = (completed, total) => { };
 
-            DataLayerIndex parentIndex;
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-            var values = this.GroupJoin(SubjectArea.Join(Model.SubjectAreas,
-                entity => new SubjectAreaIndex(entity),
-                subject => new SubjectAreaIndex(subject),
-                (entity, subject) => new
-                {
-                    entityIndex = new EntityIndex(entity),
-                    subjectIndex = subject.GetIndex(),
-                    subjectPath = subject.GetPath()
-                }),
-                entity => new EntityIndex(entity),
-                subject => subject.entityIndex,
-                (entity, subjects) => new { entity, subjects }).
-                ToList();
-
-
-            foreach (var item in values)
+            WorkItem newWork = new WorkItem(ref progressChanged)
             {
-                NamedScopeValue value = new NamedScopeValue(item.entity);
-
-                if (item.subjects.Count() == 0)
-                { result.Add(new NamedScopePair(parentIndex, value)); }
-                else
+                WorkName = "Adding NamedScopes (Entities)",
+                DoWork = () =>
                 {
-                    foreach (var subject in item.subjects)
+                    Int32 completed = 0;
+                    Int32 total = this.Count();
+
+                    ModelValue? model = Model.Models.FirstOrDefault();
+
+                    foreach (EntityValue entity in this)
                     {
-                        result.Add(new NamedScopePair(
-                            subject.subjectIndex,
-                            new NamedScopeValue(item.entity)
-                            { // Create Full Path, including subject
+                        Boolean hasParent = false;
+
+                        foreach (SubjectAreaValue subjectParent in ParentSubjects(entity))
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(entity)
+                            {
                                 GetPath = () => new NamedScopePath(
-                                    subject.subjectPath,
-                                    item.entity.GetPath())
-                            }));
+                                    subjectParent.GetPath(),
+                                    entity.GetPath())
+                            };
+
+                            addNamedScope(subjectParent, newItem);
+                            hasParent = true;
+                        }
+
+                        if (!hasParent) // No Parents found
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(entity);
+                            addNamedScope(model, newItem); }
+
+                        progressChanged(completed++, total);
                     }
                 }
+            };
+
+            work.Add(newWork);
+
+            return work;
+
+            IEnumerable<SubjectAreaValue> ParentSubjects(EntityValue entity)
+            {
+                EntityIndex key = new EntityIndex(entity);
+
+                return this.
+                    Where(w => key.Equals(w)).
+                    Join(SubjectArea,
+                        entity => new EntityIndex(entity),
+                        subject => new EntityIndex(subject),
+                        (entity, subject) => new SubjectAreaIndex(subject)).
+                    Join(Model.SubjectAreas,
+                        subjectKey => subjectKey,
+                        subject => new SubjectAreaIndex(subject),
+                        (key, subject) => subject).
+                    ToList();
             }
 
-            return result;
         }
     }
 }

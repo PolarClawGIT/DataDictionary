@@ -9,6 +9,8 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[EntityId],
 		D.[AttributeId],
+		D.[AttributeName],
+		D.[IsNullable],
 		D.[OrdinalPosition]
 From	[App_DataDictionary].[DomainEntityAttribute] D
 		Left Join [App_DataDictionary].[ModelEntity] E

@@ -25,9 +25,9 @@ namespace DataDictionary.BusinessLayer.Model
         IReadOnlyList<WorkItem> Create();
     }
 
-    class ModelData : ModelCollection<ModelValue>, IModelData, 
+    class ModelData : ModelCollection<ModelValue>, IModelData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
-        INamedScopeSource
+        INamedScopeSourceData
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -65,27 +65,11 @@ namespace DataDictionary.BusinessLayer.Model
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Model</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        /// <remarks>SubjectArea</remarks>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return this.Select(s => new NamedScopePair(GetValue(s)));
-
-            NamedScopeValue GetValue(ModelValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.ModelTitle))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<ModelData, ModelValue>
+                (data: this, addNamedScope: addNamedScope);
         }
-
-
     }
 }

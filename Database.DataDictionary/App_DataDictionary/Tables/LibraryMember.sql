@@ -3,7 +3,7 @@
 	[LibraryId]             UniqueIdentifier Not Null,
 	[MemberParentId]        UniqueIdentifier Null,
 	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
-	[MemberType]            [App_DataDictionary].[typeObjectSubType] Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.
+	[MemberType]            [App_DataDictionary].[typeObjectType] Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.
 	[MemberData]            XML Null, -- Raw data as XML
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_LibraryMember_ModfiedBy] DEFAULT (original_login()),

@@ -4,7 +4,8 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IExtendedPropertyValue : IDbExtendedPropertyItem, 
+    public interface IExtendedPropertyValue : IDbExtendedPropertyItem,
+        ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

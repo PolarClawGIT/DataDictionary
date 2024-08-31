@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +8,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Alias Items
     /// </summary>
-    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IAliasItem, IScopeType
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IAliasKey, IScopeType
     { }
 
     /// <summary>

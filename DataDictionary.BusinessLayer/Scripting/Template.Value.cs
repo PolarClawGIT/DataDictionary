@@ -77,5 +77,9 @@ namespace DataDictionary.BusinessLayer.Scripting
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+        { return eventArgs.PropertyName is nameof(TemplateTitle); }
     }
 }

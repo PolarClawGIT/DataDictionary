@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineParameterData: DbRoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSource
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -44,35 +44,12 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-            foreach (RoutineParameterValue item in this)
-            {
-                DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
-                if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is RoutineValue parent)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
-            }
-            
-            return result;
-
-            NamedScopeValue GetValue(RoutineParameterValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is
-                        nameof(source.DatabaseName) or
-                        nameof(source.SchemaName) or
-                        nameof(source.RoutineName) or
-                        nameof(source.ParameterName))
-                    { result.TitleChanged(); }
-                }
-            }
+            return INamedScopeSourceData.LoadNamedScope<RoutineParameterData, RoutineParameterValue>
+                (this, addNamedScope,
+                (value) => Database.DbRoutines.
+                    FirstOrDefault(w => new DbRoutineKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

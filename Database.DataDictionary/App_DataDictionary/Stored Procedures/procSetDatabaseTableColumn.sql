@@ -113,7 +113,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
 			On	T.[ConstraintId] = P.[ConstraintId]
 			Left Join @Values S
-			On	T.[ParentColumnId] = S.[ColumnId]
+			On	T.[ColumnId] = S.[ColumnId]
 	Where	S.[ColumnId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
