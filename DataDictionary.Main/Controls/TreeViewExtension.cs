@@ -162,7 +162,7 @@ namespace DataDictionary.Main.Controls
             }
 
 
-            void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
+            void CreateNodes_Proto(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
             {
                 var childValues = children.
                     Select(s => BusinessData.NamedScope.GetValue(s)).
@@ -265,7 +265,7 @@ namespace DataDictionary.Main.Controls
 
 
 
-            void CreateNodes_Old(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
+            void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
             {
 
 
