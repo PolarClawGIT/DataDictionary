@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -92,6 +93,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
             Source = source;
             GetTitle = source.GetTitle;
             GetPath = source.GetPath;
+
+            if (source is IDbColumnPosition position)
+            { OrdinalPosition = position.OrdinalPosition ?? 0; }
 
             if (source is IBindingPropertyChanged propertyChanged)
             { propertyChanged.PropertyChanged += PropertyChanged_PropertyChanged; }

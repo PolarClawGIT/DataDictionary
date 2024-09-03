@@ -160,8 +160,6 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-
-
         void BuildNodes(NamedScopeIndex rootIndex, INamedScopeData treeData)
         {
             List<NamedScopeNode> nodePaths = new List<NamedScopeNode>();
@@ -173,26 +171,19 @@ namespace DataDictionary.Main.Controls
             Dictionary<NamedScopePath, List<NamedScopeNode>> pathGroup = nodePaths.
                 SelectMany(s => s.Path.Group()).
                 Distinct().
-                OrderBy(o => o).
                 GroupJoin(nodePaths,
                     path => path,
                     node => node.Path,
                     (path, nodes) => new
                     {
                         path,
-                        nodes = nodes.
-                            OrderBy(o => o.OrdinalPosition).
-                            ThenBy(o => o.Title).
-                            ToList()
+                        nodes = nodes.ToList()
                     }).
                 ToDictionary(k => k.path, e => e.nodes);
 
 
-
             foreach (var pathItem in pathGroup.Where(w => w.Key.ParentPath is null))
-            {
-                BuildTree(pathItem, treeControl.Nodes);
-            }
+            { BuildTree(pathItem, treeControl.Nodes); }
 
             IReadOnlyList<NamedScopeNode> BuildPath(NamedScopeNode parent, INamedScopeData treeData)
             {
@@ -234,7 +225,7 @@ namespace DataDictionary.Main.Controls
                 else
                 {
                     // Deal with Scopes?
-                    newNode = CreateNode(path); 
+                    newNode = CreateNode(path);
                     nodes.Add(newNode);
 
                     foreach (var item in values)
@@ -246,36 +237,7 @@ namespace DataDictionary.Main.Controls
                 { BuildTree(item, newNode.Nodes); }
             }
 
-
-
-            //TODO: Build logic. 
-
-            //var x = values.
-            //    SelectMany(s => s.Path.Group()).
-            //    Distinct().
-            //    GroupJoin(values,
-            //        path => path,
-            //        node => node.Path,
-            //        (path, nodes) => new { path, nodes = nodes.Select(s => s).ToList() }).
-            //    OrderBy(o => o.path).
-            //    ToList();
-
-            // Build list of all NameSpaces within rootIndex.
-            // NameSpace by itself is not sufficient.
-            // It also needs to be aware of parent/child.
-            // Maybe build extended paths?
-            //
-            // Parent may contain the path equal to the child parent path.
-            // Example: parent = [Database], child = [Database].[Schema]
-            //
-            // Or parent may not contain the path.
-            // Example: parent = [Subject], child = [entity]
-
-
-
         }
-
-
 
         TreeNode CreateNode(NamedScopeNode value)
         {
