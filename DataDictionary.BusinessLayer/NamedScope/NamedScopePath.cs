@@ -423,6 +423,40 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
+        public NamedScopePath Merge(NamedScopePath parent)
+        {
+            List<String> parts = new List<String>();
+            Int32 childIndex = 0;
+            Int32 parentIndex = 0;
+
+            while (childIndex < pathParts.Count || parentIndex < parent.pathParts.Count)
+            {
+                if (childIndex < pathParts.Count
+                    && parentIndex < parent.pathParts.Count
+                    && pathParts[childIndex].Equals(parent.pathParts[parentIndex], KeyExtension.CompareString))
+                {
+                    parts.Add(pathParts[childIndex]);
+                    childIndex = childIndex + 1;
+                    parentIndex = parentIndex + 1;
+                }
+                else
+                {
+                    if(parentIndex < parent.pathParts.Count)
+                    {
+                        parts.Add(parent.pathParts[parentIndex]);
+                        parentIndex = parentIndex + 1;
+                    }
+                    else if(childIndex < pathParts.Count)
+                    {
+                        parts.Add(pathParts[childIndex]);
+                        childIndex = childIndex + 1;
+                    }
+                }
+            }
+
+            return new NamedScopePath(parts.ToArray());
+        }
+
         /// <inheritdoc/>
         public override String ToString()
         { return this.MemberFullPath; }

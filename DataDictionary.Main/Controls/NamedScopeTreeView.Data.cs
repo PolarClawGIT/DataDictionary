@@ -15,7 +15,35 @@ namespace DataDictionary.Main.Controls
     {
         TreeView treeControl;
 
-        Dictionary<TreeNode, INamedScopeValue> treeValues = new Dictionary<TreeNode, INamedScopeValue>();
+        class NamedScopeNode
+        {
+            public NamedScopeNode? Parent { get; init; } = null;
+            public INamedScopeValue NamedScope { get; init; }
+            public NamedScopePath Path { get; init; }
+            public DataLayerIndex DataIndex { get { return NamedScope.Source.Index; } }
+            public NamedScopeIndex ScopeIndex { get { return NamedScope.Index; } }
+            public ScopeType Scope { get { return NamedScope.Scope; } }
+            public String Title { get { return NamedScope.Title; } }
+            public Int32 OrdinalPosition { get { return NamedScope.OrdinalPosition; } }
+
+            public NamedScopeNode(INamedScopeValue value)
+            {
+                NamedScope = value;
+                Path = value.Path;
+            }
+
+            public NamedScopeNode(NamedScopeNode parent, INamedScopeValue value) : this(value)
+            {
+                Parent = parent;
+                Path = value.Path.Merge(parent.Path);
+            }
+
+            public override String ToString()
+            { return Path.MemberFullPath; }
+
+        }
+
+        Dictionary<TreeNode, NamedScopeNode> treeValues = new Dictionary<TreeNode, NamedScopeNode>();
         List<DataLayerIndex> expandedIndexes = new List<DataLayerIndex>();
 
         public NamedScopeTreeViewData(TreeView tree)
@@ -23,8 +51,8 @@ namespace DataDictionary.Main.Controls
 
         public INamedScopeSourceValue? GetValue(TreeNode node)
         {
-            if (treeValues.TryGetValue(node, out INamedScopeValue? value))
-            { return value.Source; }
+            if (treeValues.TryGetValue(node, out NamedScopeNode? value))
+            { return value.NamedScope.Source; }
             else { return null; }
         }
 
@@ -47,14 +75,14 @@ namespace DataDictionary.Main.Controls
                         //Save Expended State
                         expandedIndexes.Clear();
                         expandedIndexes.AddRange(treeValues.Where(w =>
-                                    (w.Key.IsExpanded && treeValues.Any(a => w.Value.Index.Equals(a.Value.Index))
+                                    (w.Key.IsExpanded && treeValues.Any(a => w.Value.NamedScope.Index.Equals(a.Value.ScopeIndex))
                                     || (w.Key.Nodes.Count == 0
                                         && w.Key.Parent is not null
                                         && w.Key.Parent.IsExpanded)
-                                        && treeValues.Any(a => w.Value.Index.Equals(a.Value.Index)))).
+                                        && treeValues.Any(a => w.Value.ScopeIndex.Equals(a.Value.ScopeIndex)))).
                                         Select(s => s.Value). // Get the NamedScope Index
                                         Distinct().
-                                        Select(s => s.Source.Index)); // Translate to DataLayer Index
+                                        Select(s => s.DataIndex)); // Translate to DataLayer Index
                     });
                 }
             });
@@ -78,7 +106,7 @@ namespace DataDictionary.Main.Controls
                             Join(treeValues.
                                 Where(w => !w.Key.IsExpanded),
                                 index => index,
-                                node => node.Value.Source.Index,
+                                node => node.Value.DataIndex,
                             (index, node) => node.Key))
                         { item.ExpandParent(); }
 
@@ -132,25 +160,124 @@ namespace DataDictionary.Main.Controls
             }
         }
 
+
+
         void BuildNodes(NamedScopeIndex rootIndex, INamedScopeData treeData)
         {
-            List<INamedScopeValue> values = new List<INamedScopeValue>();
-            values.AddRange(GetValues(rootIndex));
+            List<NamedScopeNode> nodePaths = new List<NamedScopeNode>();
+            NamedScopeNode rootnode = new NamedScopeNode(treeData.GetValue(rootIndex));
+            nodePaths.Add(rootnode);
 
-            IReadOnlyList<INamedScopeValue> GetValues(NamedScopeIndex index)
+            nodePaths.AddRange(BuildPath(rootnode, treeData));
+
+            Dictionary<NamedScopePath, List<NamedScopeNode>> pathGroup = nodePaths.
+                SelectMany(s => s.Path.Group()).
+                Distinct().
+                OrderBy(o => o).
+                GroupJoin(nodePaths,
+                    path => path,
+                    node => node.Path,
+                    (path, nodes) => new
+                    {
+                        path,
+                        nodes = nodes.
+                            OrderBy(o => o.OrdinalPosition).
+                            ThenBy(o => o.Title).
+                            ToList()
+                    }).
+                ToDictionary(k => k.path, e => e.nodes);
+
+
+
+            foreach (var pathItem in pathGroup.Where(w => w.Key.ParentPath is null))
             {
-                List<INamedScopeValue> result = new List<INamedScopeValue>();
-                result.Add(treeData.GetValue(index));
+                BuildTree(pathItem, treeControl.Nodes);
+            }
 
-                foreach (var item in treeData.ChildrenKeys(index))
-                { result.Add(treeData.GetValue(item)); }
+            IReadOnlyList<NamedScopeNode> BuildPath(NamedScopeNode parent, INamedScopeData treeData)
+            {
+                List<NamedScopeNode> result = new List<NamedScopeNode>();
+
+                List<INamedScopeValue> nodes = treeData.
+                    ChildrenKeys(parent.NamedScope.Index).
+                    Select(s => treeData.GetValue(s)).
+                    OrderBy(o => o.OrdinalPosition).
+                    ThenBy(o => o.Title).
+                    ToList();
+
+                foreach (var item in nodes)
+                {
+                    NamedScopeNode newNode = new NamedScopeNode(parent, item);
+                    result.Add(newNode);
+                    result.AddRange(BuildPath(newNode, treeData));
+                }
+
                 return result;
             }
-            //TODO: Build out rest of logic.
+
+            void BuildTree(KeyValuePair<NamedScopePath, List<NamedScopeNode>> pathItem, TreeNodeCollection nodes)
+            {
+                NamedScopePath path = pathItem.Key;
+                List<NamedScopeNode> values = pathItem.Value;
+                TreeNode newNode;
+
+                if (values.Count == 0)
+                {
+                    newNode = CreateNode(path);
+                    nodes.Add(newNode);
+                }
+                else if (values.Count == 1)
+                {
+                    newNode = CreateNode(values[0]);
+                    nodes.Add(newNode);
+                }
+                else
+                {
+                    // Deal with Scopes?
+                    newNode = CreateNode(path); 
+                    nodes.Add(newNode);
+
+                    foreach (var item in values)
+                    { newNode.Nodes.Add(CreateNode(item)); }
+                }
+
+                foreach (var item in pathGroup.
+                    Where(w => path.Equals(w.Key.ParentPath)))
+                { BuildTree(item, newNode.Nodes); }
+            }
+
+
+
+            //TODO: Build logic. 
+
+            //var x = values.
+            //    SelectMany(s => s.Path.Group()).
+            //    Distinct().
+            //    GroupJoin(values,
+            //        path => path,
+            //        node => node.Path,
+            //        (path, nodes) => new { path, nodes = nodes.Select(s => s).ToList() }).
+            //    OrderBy(o => o.path).
+            //    ToList();
+
+            // Build list of all NameSpaces within rootIndex.
+            // NameSpace by itself is not sufficient.
+            // It also needs to be aware of parent/child.
+            // Maybe build extended paths?
+            //
+            // Parent may contain the path equal to the child parent path.
+            // Example: parent = [Database], child = [Database].[Schema]
+            //
+            // Or parent may not contain the path.
+            // Example: parent = [Subject], child = [entity]
+
+
 
         }
 
-        TreeNode CreateNode(INamedScopeValue value)
+
+
+        TreeNode CreateNode(NamedScopeNode value)
         {
             ImageEnumeration scopeImage = ImageEnumeration.Cast(value.Scope);
             TreeNode result = new TreeNode(value.Title);
@@ -158,7 +285,7 @@ namespace DataDictionary.Main.Controls
             result.ImageKey = scopeImage.Name;
             result.SelectedImageKey = scopeImage.Name;
             result.ToolTipText = value.Path.MemberFullPath;
-            value.OnTitleChanged += (source, eventArg) =>
+            value.NamedScope.OnTitleChanged += (source, eventArg) =>
             {
                 if (source is INamedScopeValue item)
                 {

@@ -24,7 +24,7 @@ namespace DataDictionary.Main.ProofOfConcept
 
         private void NavigationTree_Load(object sender, EventArgs e)
         {
-            mainTree.Reload();
+            mainTree.Refresh();
         }
     }
 }
