@@ -192,7 +192,8 @@ namespace DataDictionary.Main.Controls
                 List<INamedScopeValue> nodes = treeData.
                     ChildrenKeys(parent.NamedScope.Index).
                     Select(s => treeData.GetValue(s)).
-                    OrderBy(o => o.OrdinalPosition).
+                    OrderBy(o => o.Scope).
+                    ThenBy(o => o.OrdinalPosition).
                     ThenBy(o => o.Title).
                     ToList();
 
@@ -213,18 +214,19 @@ namespace DataDictionary.Main.Controls
                 TreeNode newNode;
 
                 if (values.Count == 0)
-                {
+                {   // NameSpace node
+                    // Occurs at top level and when a child node has an extra level.
                     newNode = CreateNode(path);
                     nodes.Add(newNode);
                 }
                 else if (values.Count == 1)
-                {
+                { // Normal Condition. 
                     newNode = CreateNode(values[0]);
                     nodes.Add(newNode);
                 }
                 else
-                {
-                    // Deal with Scopes?
+                {   // This does not generally happen.
+                    // Paths are often unique.
                     newNode = CreateNode(path);
                     nodes.Add(newNode);
 
