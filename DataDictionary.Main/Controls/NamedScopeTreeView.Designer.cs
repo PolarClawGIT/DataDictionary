@@ -90,6 +90,7 @@
             treeViewData.Dock = DockStyle.Fill;
             treeViewData.Location = new Point(3, 28);
             treeViewData.Name = "treeViewData";
+            treeViewData.ShowNodeToolTips = true;
             treeViewData.Size = new Size(201, 320);
             treeViewData.TabIndex = 1;
             treeViewData.BeforeCollapse += TreeViewData_BeforeCollapse;

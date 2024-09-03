@@ -248,7 +248,7 @@ namespace DataDictionary.Main.Controls
 
             result.ImageKey = scopeImage.Name;
             result.SelectedImageKey = scopeImage.Name;
-            result.ToolTipText = value.Path.MemberFullPath;
+            result.ToolTipText = value.NamedScope.Path.MemberFullPath;
             value.NamedScope.OnTitleChanged += (source, eventArg) =>
             {
                 if (source is INamedScopeValue item)
