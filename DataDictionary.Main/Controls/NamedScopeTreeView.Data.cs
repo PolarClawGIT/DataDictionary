@@ -182,6 +182,8 @@ namespace DataDictionary.Main.Controls
                 ToDictionary(k => k.path, e => e.nodes);
 
 
+            // TODO: Scope grouping not being handled.
+
             foreach (var pathItem in pathGroup.Where(w => w.Key.ParentPath is null))
             { BuildTree(pathItem, treeControl.Nodes); }
 
@@ -218,27 +220,66 @@ namespace DataDictionary.Main.Controls
                     // Occurs at top level and when a child node has an extra level.
                     newNode = CreateNode(path);
                     nodes.Add(newNode);
+
+                    // Children
+                    foreach (var item in pathGroup.
+                        Where(w => path.Equals(w.Key.ParentPath)))
+                    { BuildTree(item, newNode.Nodes); }
                 }
                 else if (values.Count == 1)
                 { // Normal Condition. 
                     newNode = CreateNode(values[0]);
                     nodes.Add(newNode);
+
+                    // Children
+                    foreach (var item in pathGroup.
+                        Where(w => path.Equals(w.Key.ParentPath)))
+                    { BuildTree(item, newNode.Nodes); }
                 }
                 else
-                {   // This does not generally happen.
-                    // Paths are often unique.
-                    newNode = CreateNode(path);
-                    nodes.Add(newNode);
+                {   // This occurs when multiple items have the same path.
+                    // Example, overloads for a C# method.
+                    // The children/grand-children have to be handled differently.
+                    TreeNode pathNode = CreateNode(path);
+                    nodes.Add(pathNode);
 
+                    // Children
                     foreach (var item in values)
-                    { newNode.Nodes.Add(CreateNode(item)); }
+                    {
+                        var childPaths = pathGroup.Where(w => path.Equals(w.Key.ParentPath)).ToList();
+
+                        var childItems = childPaths.
+                            SelectMany(s => s.Value).
+                            Where(w => w.Parent is not null && item.DataIndex.Equals(w.Parent.DataIndex)).
+                            ToList();
+
+                        TreeNode childNode = CreateNode(item);
+                        pathNode.Nodes.Add(childNode);
+
+                        // Grand-Children
+                        if (childItems.Count == 0)
+                        {   // Grand-Child by NameSpace go down this path
+                            foreach (var childPath in childPaths)
+                            { BuildTree(childPath, childNode.Nodes); }
+                        }
+                        else
+                        {   // Grand-Child by reference goes down this path
+                            foreach (var childItem in childItems)
+                            {
+                                TreeNode grandChildNode = CreateNode(childItem);
+                                childNode.Nodes.Add(grandChildNode);
+
+                                // Handle Grand-Child by NameSpace.
+                                // Does this happen?
+                                // Can it attached to wrong node? Most Likely.
+                                foreach (var childPath in pathGroup.
+                                        Where(w => childItem.Path.Equals(w.Key.ParentPath)))
+                                { BuildTree(childPath, grandChildNode.Nodes); }
+                            }
+                        }
+                    }
                 }
-
-                foreach (var item in pathGroup.
-                    Where(w => path.Equals(w.Key.ParentPath)))
-                { BuildTree(item, newNode.Nodes); }
             }
-
         }
 
         TreeNode CreateNode(NamedScopeNode value)
