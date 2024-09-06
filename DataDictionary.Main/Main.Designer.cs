@@ -112,7 +112,7 @@
             helpAboutMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
-            toolStrip = new ToolStrip();
+            mainToolStrip = new ToolStrip();
             manageModelCommand = new ToolStripSplitButton();
             modelContextMenu = new ContextMenuStrip(components);
             menuModelProperty = new ToolStripMenuItem();
@@ -138,7 +138,7 @@
             libraryContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
-            toolStrip.SuspendLayout();
+            mainToolStrip.SuspendLayout();
             modelContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
@@ -148,9 +148,9 @@
             // 
             navigationPanel.Controls.Add(namedScopeData);
             navigationPanel.Dock = DockStyle.Left;
-            navigationPanel.Location = new Point(0, 49);
+            navigationPanel.Location = new Point(0, 24);
             navigationPanel.Name = "navigationPanel";
-            navigationPanel.Size = new Size(300, 591);
+            navigationPanel.Size = new Size(300, 616);
             navigationPanel.TabIndex = 6;
             // 
             // namedScopeData
@@ -160,15 +160,15 @@
             namedScopeData.HeaderText = "(header)";
             namedScopeData.Location = new Point(0, 0);
             namedScopeData.Name = "namedScopeData";
-            namedScopeData.Size = new Size(300, 591);
+            namedScopeData.Size = new Size(300, 616);
             namedScopeData.TabIndex = 0;
             namedScopeData.OnNamedScopeSelected += namedScopeData_OnNamedScopeSelected;
             // 
             // navigationSpliter
             // 
-            navigationSpliter.Location = new Point(300, 49);
+            navigationSpliter.Location = new Point(300, 24);
             navigationSpliter.Name = "navigationSpliter";
-            navigationSpliter.Size = new Size(3, 591);
+            navigationSpliter.Size = new Size(3, 616);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
             // 
@@ -774,14 +774,14 @@
             // 
             openFileDialog.FileName = "openFileDialog";
             // 
-            // toolStrip
+            // mainToolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { manageModelCommand, newAttributeCommand, newEntityCommand, newRelationshipCommand, newProcessCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, manageScriptingCommand });
-            toolStrip.Location = new Point(0, 24);
-            toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(917, 25);
-            toolStrip.TabIndex = 10;
-            toolStrip.Text = "mainToolStrip";
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { manageModelCommand, newAttributeCommand, newEntityCommand, newRelationshipCommand, newProcessCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, manageScriptingCommand });
+            mainToolStrip.Location = new Point(303, 24);
+            mainToolStrip.Name = "mainToolStrip";
+            mainToolStrip.Size = new Size(614, 25);
+            mainToolStrip.TabIndex = 10;
+            mainToolStrip.Text = "mainToolStrip";
             // 
             // manageModelCommand
             // 
@@ -798,7 +798,6 @@
             // 
             modelContextMenu.Items.AddRange(new ToolStripItem[] { menuModelProperty, menuModelDefinition });
             modelContextMenu.Name = "modelContextMenu";
-            modelContextMenu.OwnerItem = manageModelCommand;
             modelContextMenu.Size = new Size(173, 48);
             // 
             // menuModelProperty
@@ -907,10 +906,10 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(917, 662);
+            Controls.Add(mainToolStrip);
             Controls.Add(navigationSpliter);
             Controls.Add(navigationPanel);
             Controls.Add(statusStrip);
-            Controls.Add(toolStrip);
             Controls.Add(menuStrip);
             HelpButton = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -932,8 +931,8 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
-            toolStrip.ResumeLayout(false);
-            toolStrip.PerformLayout();
+            mainToolStrip.ResumeLayout(false);
+            mainToolStrip.PerformLayout();
             modelContextMenu.ResumeLayout(false);
             scriptingContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
@@ -1012,7 +1011,7 @@
         private ContextMenuStrip libraryContextMenu;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
-        private ToolStrip toolStrip;
+        private ToolStrip mainToolStrip;
         private ToolStripSplitButton newAttributeCommand;
         private ToolStripSplitButton newEntityCommand;
         private ToolStripSplitButton newSubjectAreaCommand;
