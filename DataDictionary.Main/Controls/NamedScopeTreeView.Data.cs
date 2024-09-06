@@ -281,8 +281,6 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-
-
         IReadOnlyList<NamedScopeNode> BuildPath(NamedScopeNode parent, INamedScopeData treeData)
         {
             List<NamedScopeNode> result = new List<NamedScopeNode>();

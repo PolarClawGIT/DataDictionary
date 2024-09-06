@@ -30,6 +30,7 @@
         {
             TableLayoutPanel treeViewLayout;
             treeViewMenu = new ToolStrip();
+            headerTitle = new ToolStripLabel();
             refreshCommand = new ToolStripButton();
             reloadCommand = new ToolStripButton();
             treeViewData = new TreeView();
@@ -56,12 +57,18 @@
             // treeViewMenu
             // 
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { refreshCommand, reloadCommand });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { headerTitle, refreshCommand, reloadCommand });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(207, 25);
             treeViewMenu.TabIndex = 2;
             treeViewMenu.Text = "treeViewMenu";
+            // 
+            // headerTitle
+            // 
+            headerTitle.Name = "headerTitle";
+            headerTitle.Size = new Size(51, 22);
+            headerTitle.Text = "(header)";
             // 
             // refreshCommand
             // 
@@ -71,7 +78,7 @@
             refreshCommand.ImageTransparentColor = Color.Magenta;
             refreshCommand.Name = "refreshCommand";
             refreshCommand.Size = new Size(23, 22);
-            refreshCommand.Text = "refresh View";
+            refreshCommand.Text = "refresh Navigation";
             refreshCommand.Click += RefreshCommand_Click;
             // 
             // reloadCommand
@@ -82,7 +89,7 @@
             reloadCommand.ImageTransparentColor = Color.Magenta;
             reloadCommand.Name = "reloadCommand";
             reloadCommand.Size = new Size(23, 22);
-            reloadCommand.Text = "refresh Data";
+            reloadCommand.Text = "refresh Navigation Data";
             reloadCommand.Click += ReloadCommand_Click;
             // 
             // treeViewData
@@ -118,5 +125,6 @@
         private ToolStrip treeViewMenu;
         private ToolStripButton refreshCommand;
         private ToolStripButton reloadCommand;
+        private ToolStripLabel headerTitle;
     }
 }

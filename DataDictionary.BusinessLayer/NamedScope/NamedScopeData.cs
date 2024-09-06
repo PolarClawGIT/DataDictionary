@@ -2,6 +2,7 @@
 
 using DataDictionary.Resource.Enumerations;
 using System.Collections;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -71,6 +72,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc cref="IDictionary{TKey, TValue}.ContainsKey(TKey)"/>
         Boolean ContainsKey(NamedScopeIndex key);
+
+        /// <inheritdoc cref="BusinessLayerData.LoadNamedScope"/>
+        IEnumerable<WorkItem> Load();
     }
 
     /// <summary>
@@ -91,6 +95,22 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // Root Nodes
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="loadNamedScopes">BusinessLayerData.LoadNamedScope</param>
+        public NamedScopeData(Func<IEnumerable<WorkItem>> loadNamedScopes)
+        { LoadNamedScopes = loadNamedScopes; }
+
+        /// <summary>
+        /// Function to be called when the data needs to be reloaded.
+        /// </summary>
+        public Func<IEnumerable<WorkItem>> LoadNamedScopes { get; init; }
+
+        /// <inheritdoc/>
+        public IEnumerable<WorkItem> Load()
+        { return LoadNamedScopes(); }
+        
         /// <inheritdoc/>
         public virtual INamedScopeValue GetValue(NamedScopeIndex index)
         { return data[index]; }
@@ -207,7 +227,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 GetPath().
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
-                Where(w => 1==2). // This is disabling NameSpace handling
+                Where(w => 1 == 2). // This is disabling NameSpace handling
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 

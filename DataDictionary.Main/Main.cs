@@ -1,4 +1,5 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -20,11 +21,9 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             Icon = ImageEnumeration.GetIcon(ScopeType.Application);
+            namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);
-
-            // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
@@ -78,7 +77,7 @@ namespace DataDictionary.Main
                     Settings.Default.IsOnLineMode = false;
                     Settings.Default.Save();
                 }
-
+                bindingModel.DataSource = BusinessData.Models;
                 SendMessage(new OnlineStatusChanged());
                 LoadData(OnLoadComplete);
             }
@@ -132,12 +131,13 @@ namespace DataDictionary.Main
                 }
             }
             work.AddRange(BusinessData.Create());
-            work.AddRange(contextNameNavigation.Load());
-
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { onLoadComplete(args); }
+            {
+                namedScopeData.ReloadCommand();
+                onLoadComplete(args);
+            }
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
@@ -177,12 +177,11 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-            work.AddRange(contextNameNavigation.Load());
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { namedScopeData.ReloadCommand(); }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -317,6 +316,11 @@ namespace DataDictionary.Main
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         { Application.Exit(); }
 
-
+        private void BindingModel_ListChanged(object sender, ListChangedEventArgs e)
+        { 
+            if(bindingModel.Current is IModelItem current)
+            {   namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
+            else { namedScopeData.HeaderText = "(no Model)"; }
+        }
     }
 }

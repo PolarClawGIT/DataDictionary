@@ -15,16 +15,16 @@ namespace DataDictionary.Main
         protected override void HandleMessage(RefreshNavigation message)
         {
             base.HandleMessage(message);
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(contextNameNavigation.Load());
-            this.DoWork(work);
+            namedScopeData.ReloadCommand();
         }
 
-        private void RefreshCommand_Click(object? sender, EventArgs e)
+        private void namedScopeData_OnNamedScopeSelected(object sender, NamedScopeValueEventArgs e)
         {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(contextNameNavigation.Load());
-            this.DoWork(work);
+            if (e.Value is INamedScopeSourceValue target)
+            {
+                dynamic dataNode = target;
+                Activate(dataNode);
+            }
         }
 
         /// <summary>
@@ -42,45 +42,6 @@ namespace DataDictionary.Main
         ///   False = Something other then the +/- of the node was clicked (possibly double clicked).
         /// </remarks>
         Boolean? isTreeNodePlusMinus = null;
-
-        private void contextNameNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
-            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
-        }
-
-        private void contextNameNavigation_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterExpanded does not fire
-            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
-            else { } // Was not triggered by Click event
-
-            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
-        }
-
-        private void contextNameNavigation_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
-        {
-            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterCollapse does not fire
-            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
-            else { } // Was not triggered by Click event
-
-            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
-        }
-
-        private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            // Need to get the Hit Location itself because the flag may have been reset.
-            Boolean isPlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
-
-            if (!isPlusMinus && contextNameNavigation.SelectedNode is TreeNode node)
-            {
-                if (node.GetNamedScope() is INamedScopeSourceValue target)
-                {
-                    dynamic dataNode = target;
-                    Activate(dataNode);
-                }
-            }
-        }
 
         void Activate(ICatalogValue catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }

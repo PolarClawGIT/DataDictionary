@@ -20,11 +20,21 @@ namespace DataDictionary.Main.Controls
     partial class NamedScopeTreeView : UserControl
     {
         NamedScopeTreeViewData data;
+        INamedScopeData sourceData = BusinessData.NamedScope;
 
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
         public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?>? DoWork { get; set; } = null;
+
+        /// <summary>
+        /// Text that appears at the top of the control
+        /// </summary>
+        public String HeaderText
+        {
+            get { return headerTitle.Text ?? String.Empty; }
+            set { headerTitle.Text = value; }
+        }
 
         public NamedScopeTreeView()
         {
@@ -34,44 +44,62 @@ namespace DataDictionary.Main.Controls
             treeViewData.ImageList = ImageEnumeration.AsImageList();
         }
 
-        private void RefreshCommand_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Causes the Tree to re-read the Data and rebuild.
+        /// </summary>
+        public void RefreshCommand()
         {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(data.BeginUpdate());
-            work.AddRange(data.BuildNodes(BusinessData.NamedScope));
-            work.AddRange(data.EndUpdate());
-
             if (DoWork is not null)
-            { DoWork(work, onComplete); }
+            { DoWork(RefreshWork(), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            {
-
-            }
+            { }
         }
 
         /// <summary>
-        /// Causes the Reload event to occur.
+        /// Create Work Items version of the RefreshCommand
         /// </summary>
-        public void Reload()
-        { ReloadCommand_Click(this, EventArgs.Empty); }
-
-        private void ReloadCommand_Click(object sender, EventArgs e)
+        /// <returns></returns>
+        public IEnumerable<WorkItem> RefreshWork()
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(data.BeginUpdate());
-            work.AddRange(BusinessData.LoadNamedScope());
-            work.AddRange(data.BuildNodes(BusinessData.NamedScope));
+            work.AddRange(data.BuildNodes(sourceData));
             work.AddRange(data.EndUpdate());
+            return work;
+        }
 
+        private void RefreshCommand_Click(object sender, EventArgs e)
+        { RefreshCommand(); }
+
+        /// <summary>
+        /// Causes the Tree to re-load the Data and rebuild.
+        /// </summary>
+        public void ReloadCommand()
+        {
             if (DoWork is not null)
-            { DoWork(work, onComplete); }
+            { DoWork(ReloadWork(), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            {
-
-            }
+            { }
         }
+
+        /// <summary>
+        /// Create Work Items version of the ReloadCommand
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<WorkItem> ReloadWork()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(data.BeginUpdate());
+            work.AddRange(sourceData.Load());
+            work.AddRange(data.BuildNodes(sourceData));
+            work.AddRange(data.EndUpdate());
+            return work;
+        }
+
+        private void ReloadCommand_Click(object sender, EventArgs e)
+        { ReloadCommand(); }
 
         /// <summary>
         /// A NamedScope item was selected.
@@ -126,15 +154,15 @@ namespace DataDictionary.Main.Controls
 
             if (!isPlusMinus
                 && OnNamedScopeSelected is EventHandler<NamedScopeValueEventArgs> hander
-                && data.GetValue(e.Node) is INamedScopeValue value)
+                && data.GetValue(e.Node) is INamedScopeSourceValue value)
             { hander(this, new NamedScopeValueEventArgs(value)); }
         }
     }
 
     class NamedScopeValueEventArgs : EventArgs
     {
-        public INamedScopeValue Value { get; }
-        public NamedScopeValueEventArgs(INamedScopeValue value) : base()
+        public INamedScopeSourceValue Value { get; }
+        public NamedScopeValueEventArgs(INamedScopeSourceValue value) : base()
         { Value = value; }
     }
 
