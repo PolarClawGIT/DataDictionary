@@ -188,7 +188,12 @@ namespace DataDictionary.Main.Enumerations
                 new ImageEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
-                new ImageEnumeration(ScopeType.ScriptingTemplatePath,      Resources.Icon_XPath, Resources.XPath) ,
+                new ImageEnumeration(ScopeType.ScriptingTemplatePath,      Resources.Icon_XPath,
+                    new(CommandImageType.Default, Resources.XPath),
+                    //new(CommandImageType.Select, Resources.SelectXPath), TODO: VS 17.11.2 does not support adding Bitmaps to resource file.
+                    new(CommandImageType.Select, Resources.SelectDocument), 
+                    new(CommandImageType.Add, Resources.NewXPath)),
+                //Resources.XPath) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
             };
 

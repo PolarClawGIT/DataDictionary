@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ScriptingData;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ScriptingData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,15 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc/>
         public TemplatePathValue() : base() { }
+
+        /// <summary>
+        /// The Template Path derived from PathName
+        /// </summary>
+        public NamedScopePath Path
+        {
+            get { return new NamedScopePath(NamedScopePath.Parse(PathName).ToArray()); }
+            set { PathName = value.MemberFullPath; }
+        }
 
         /// <inheritdoc cref="ScriptingPathItem(IScriptingTemplateKey)"/>
         public TemplatePathValue(ITemplateIndex source) : base(source)

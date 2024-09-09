@@ -37,8 +37,7 @@ namespace DataDictionary.Main.Forms.Scripting
             ListViewGroup listViewGroup1 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
             ListViewItem listViewItem1 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
             GroupBox attributeGroup;
-            TableLayoutPanel elementPathLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
+            TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentTemplateLayout;
             templateTitleData = new Controls.TextBoxData();
@@ -76,10 +75,15 @@ namespace DataDictionary.Main.Forms.Scripting
             attributePropertyColumn = new DataGridViewComboBoxColumn();
             propertyScopeData = new Controls.ComboBoxData();
             dataSelectionTab = new TabPage();
-            templatePathData = new DataGridView();
-            scopeNameData = new DataGridViewTextBoxColumn();
-            selectionMemberData = new DataGridViewTextBoxColumn();
-            templatePathSelect = new Controls.NamedScopeData();
+            aliaseLayout = new TableLayoutPanel();
+            pathsData = new DataGridView();
+            pathScopeColumn = new DataGridViewComboBoxColumn();
+            pathNameColumn = new DataGridViewTextBoxColumn();
+            pathNameData = new Controls.TextBoxData();
+            pathScopeData = new Controls.ComboBoxData();
+            pathSelectCommand = new Button();
+            pathAddCommand = new Button();
+            isPathInModelData = new CheckBox();
             transformTab = new TabPage();
             transformToolStrip = new ToolStrip();
             transformParseCommand = new ToolStripButton();
@@ -114,7 +118,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
             attributeGroup = new GroupBox();
-            elementPathLayout = new TableLayoutPanel();
+            aliasCommandLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
             documentTemplateLayout = new TableLayoutPanel();
             templateLayoutPanel.SuspendLayout();
@@ -134,8 +138,9 @@ namespace DataDictionary.Main.Forms.Scripting
             attributeGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
             dataSelectionTab.SuspendLayout();
-            elementPathLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)templatePathData).BeginInit();
+            aliaseLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pathsData).BeginInit();
+            aliasCommandLayout.SuspendLayout();
             transformTab.SuspendLayout();
             transformLayout.SuspendLayout();
             transformToolStrip.SuspendLayout();
@@ -676,68 +681,143 @@ namespace DataDictionary.Main.Forms.Scripting
             // dataSelectionTab
             // 
             dataSelectionTab.BackColor = SystemColors.Control;
-            dataSelectionTab.Controls.Add(elementPathLayout);
+            dataSelectionTab.Controls.Add(aliaseLayout);
             dataSelectionTab.Location = new Point(4, 24);
             dataSelectionTab.Name = "dataSelectionTab";
-            dataSelectionTab.Size = new Size(192, 72);
+            dataSelectionTab.Size = new Size(849, 478);
             dataSelectionTab.TabIndex = 3;
             dataSelectionTab.Text = "Data Selection (XPath)";
             // 
-            // elementPathLayout
+            // aliaseLayout
             // 
-            elementPathLayout.ColumnCount = 2;
-            elementPathLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            elementPathLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            elementPathLayout.Controls.Add(templatePathData, 0, 0);
-            elementPathLayout.Controls.Add(templatePathSelect, 1, 0);
-            elementPathLayout.Dock = DockStyle.Fill;
-            elementPathLayout.Location = new Point(0, 0);
-            elementPathLayout.Name = "elementPathLayout";
-            elementPathLayout.RowCount = 1;
-            elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            elementPathLayout.Size = new Size(192, 72);
-            elementPathLayout.TabIndex = 1;
+            aliaseLayout.ColumnCount = 2;
+            aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            aliaseLayout.ColumnStyles.Add(new ColumnStyle());
+            aliaseLayout.Controls.Add(pathsData, 0, 0);
+            aliaseLayout.Controls.Add(pathNameData, 0, 2);
+            aliaseLayout.Controls.Add(pathScopeData, 0, 1);
+            aliaseLayout.Controls.Add(aliasCommandLayout, 1, 1);
+            aliaseLayout.Dock = DockStyle.Fill;
+            aliaseLayout.Location = new Point(0, 0);
+            aliaseLayout.Name = "aliaseLayout";
+            aliaseLayout.RowCount = 3;
+            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            aliaseLayout.RowStyles.Add(new RowStyle());
+            aliaseLayout.RowStyles.Add(new RowStyle());
+            aliaseLayout.Size = new Size(849, 478);
+            aliaseLayout.TabIndex = 2;
             // 
-            // templatePathData
+            // pathsData
             // 
-            templatePathData.AllowUserToAddRows = false;
-            templatePathData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            templatePathData.Columns.AddRange(new DataGridViewColumn[] { scopeNameData, selectionMemberData });
-            templatePathData.Dock = DockStyle.Fill;
-            templatePathData.Location = new Point(3, 3);
-            templatePathData.Name = "templatePathData";
-            templatePathData.Size = new Size(90, 66);
-            templatePathData.TabIndex = 5;
+            pathsData.AllowUserToAddRows = false;
+            pathsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            pathsData.Columns.AddRange(new DataGridViewColumn[] { pathScopeColumn, pathNameColumn });
+            aliaseLayout.SetColumnSpan(pathsData, 2);
+            pathsData.Dock = DockStyle.Fill;
+            pathsData.Location = new Point(3, 3);
+            pathsData.Name = "pathsData";
+            pathsData.ReadOnly = true;
+            pathsData.Size = new Size(843, 370);
+            pathsData.TabIndex = 0;
             // 
-            // scopeNameData
+            // pathScopeColumn
             // 
-            scopeNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameData.DataPropertyName = "PathScope";
-            scopeNameData.FillWeight = 50F;
-            scopeNameData.HeaderText = "Scope";
-            scopeNameData.Name = "scopeNameData";
+            pathScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            pathScopeColumn.DataPropertyName = "PathScope";
+            pathScopeColumn.FillWeight = 50F;
+            pathScopeColumn.HeaderText = "Scope";
+            pathScopeColumn.Name = "pathScopeColumn";
+            pathScopeColumn.ReadOnly = true;
             // 
-            // selectionMemberData
+            // pathNameColumn
             // 
-            selectionMemberData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            selectionMemberData.DataPropertyName = "PathName";
-            selectionMemberData.HeaderText = "Path";
-            selectionMemberData.Name = "selectionMemberData";
+            pathNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            pathNameColumn.DataPropertyName = "PathName";
+            pathNameColumn.HeaderText = "Path";
+            pathNameColumn.Name = "pathNameColumn";
+            pathNameColumn.ReadOnly = true;
             // 
-            // templatePathSelect
+            // pathNameData
             // 
-            templatePathSelect.ApplyImage = Properties.Resources.NewXPath;
-            templatePathSelect.ApplyText = "apply";
-            templatePathSelect.Dock = DockStyle.Fill;
-            templatePathSelect.HeaderText = "Selected Path";
-            templatePathSelect.Location = new Point(99, 3);
-            templatePathSelect.Name = "templatePathSelect";
-            templatePathSelect.ReadOnly = false;
-            templatePathSelect.Scope = ScopeType.Null;
-            templatePathSelect.ScopePath = namedScopePath1;
-            templatePathSelect.Size = new Size(90, 66);
-            templatePathSelect.TabIndex = 6;
-            templatePathSelect.OnApply += NamedScopeData_OnApply;
+            pathNameData.AutoSize = true;
+            pathNameData.Dock = DockStyle.Fill;
+            pathNameData.HeaderText = "Path";
+            pathNameData.Location = new Point(3, 431);
+            pathNameData.Multiline = false;
+            pathNameData.Name = "pathNameData";
+            pathNameData.ReadOnly = true;
+            pathNameData.Size = new Size(756, 44);
+            pathNameData.TabIndex = 2;
+            pathNameData.WordWrap = true;
+            pathNameData.Validating += pathNameData_Validating;
+            // 
+            // pathScopeData
+            // 
+            pathScopeData.AutoSize = true;
+            pathScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            pathScopeData.Dock = DockStyle.Fill;
+            pathScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            pathScopeData.HeaderText = "Scope";
+            pathScopeData.Location = new Point(3, 379);
+            pathScopeData.Name = "pathScopeData";
+            pathScopeData.ReadOnly = true;
+            pathScopeData.Size = new Size(756, 46);
+            pathScopeData.TabIndex = 1;
+            // 
+            // aliasCommandLayout
+            // 
+            aliasCommandLayout.AutoSize = true;
+            aliasCommandLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            aliasCommandLayout.ColumnCount = 1;
+            aliasCommandLayout.ColumnStyles.Add(new ColumnStyle());
+            aliasCommandLayout.Controls.Add(pathSelectCommand, 0, 1);
+            aliasCommandLayout.Controls.Add(pathAddCommand, 0, 2);
+            aliasCommandLayout.Controls.Add(isPathInModelData, 0, 0);
+            aliasCommandLayout.Dock = DockStyle.Fill;
+            aliasCommandLayout.Location = new Point(765, 379);
+            aliasCommandLayout.Name = "aliasCommandLayout";
+            aliasCommandLayout.RowCount = 3;
+            aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
+            aliasCommandLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            aliasCommandLayout.RowStyles.Add(new RowStyle());
+            aliasCommandLayout.RowStyles.Add(new RowStyle());
+            aliasCommandLayout.Size = new Size(81, 96);
+            aliasCommandLayout.TabIndex = 4;
+            // 
+            // pathSelectCommand
+            // 
+            pathSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            pathSelectCommand.Location = new Point(3, 39);
+            pathSelectCommand.Name = "pathSelectCommand";
+            pathSelectCommand.Size = new Size(75, 24);
+            pathSelectCommand.TabIndex = 1;
+            pathSelectCommand.Text = "Select";
+            pathSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            pathSelectCommand.UseVisualStyleBackColor = true;
+            pathSelectCommand.Click += PathSelectCommand_Click;
+            // 
+            // pathAddCommand
+            // 
+            pathAddCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            pathAddCommand.Location = new Point(3, 69);
+            pathAddCommand.Name = "pathAddCommand";
+            pathAddCommand.Size = new Size(75, 24);
+            pathAddCommand.TabIndex = 2;
+            pathAddCommand.Text = "New";
+            pathAddCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            pathAddCommand.UseVisualStyleBackColor = true;
+            pathAddCommand.Click += PathAddCommand_Click;
+            // 
+            // isPathInModelData
+            // 
+            isPathInModelData.AutoSize = true;
+            isPathInModelData.Enabled = false;
+            isPathInModelData.Location = new Point(3, 3);
+            isPathInModelData.Name = "isPathInModelData";
+            isPathInModelData.Size = new Size(73, 19);
+            isPathInModelData.TabIndex = 0;
+            isPathInModelData.Text = "in Model";
+            isPathInModelData.UseVisualStyleBackColor = true;
             // 
             // transformTab
             // 
@@ -1053,8 +1133,11 @@ namespace DataDictionary.Main.Forms.Scripting
             attributeGroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
             dataSelectionTab.ResumeLayout(false);
-            elementPathLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)templatePathData).EndInit();
+            aliaseLayout.ResumeLayout(false);
+            aliaseLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pathsData).EndInit();
+            aliasCommandLayout.ResumeLayout(false);
+            aliasCommandLayout.PerformLayout();
             transformTab.ResumeLayout(false);
             transformLayout.ResumeLayout(false);
             transformLayout.PerformLayout();
@@ -1112,11 +1195,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;
-        private Controls.NamedScopeData templatePathSelect;
-        private DataGridView templatePathData;
         private BindingSource bindingPath;
-        private DataGridViewTextBoxColumn scopeNameData;
-        private DataGridViewTextBoxColumn selectionMemberData;
         private ListView elementSelection;
         private ColumnHeader columnName;
         private SplitContainer schemaDefinitionLayout;
@@ -1146,5 +1225,14 @@ namespace DataDictionary.Main.Forms.Scripting
         private DataGridViewComboBoxColumn attributePropertyColumn;
         private ToolStripLabel documentStatus;
         private ToolStripLabel transformFilePath;
+        private TableLayoutPanel aliaseLayout;
+        private DataGridView pathsData;
+        private Controls.TextBoxData pathNameData;
+        private Controls.ComboBoxData pathScopeData;
+        private Button pathSelectCommand;
+        private Button pathAddCommand;
+        private CheckBox isPathInModelData;
+        private DataGridViewComboBoxColumn pathScopeColumn;
+        private DataGridViewTextBoxColumn pathNameColumn;
     }
 }
