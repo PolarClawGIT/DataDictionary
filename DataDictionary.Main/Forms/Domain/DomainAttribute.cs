@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using DataDictionary.Main.Messages;
+using DataDictionary.Resource.Enumerations;
+using DataDictionary.Main.Dialogs;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -19,7 +21,12 @@ namespace DataDictionary.Main.Forms.Domain
         Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
         protected DomainAttribute() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+        }
 
         public DomainAttribute(IAttributeValue? attributeItem) : this()
         {
@@ -78,10 +85,18 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
 
+            subjectArea.BindTo(bindingSubjectArea);
+
+            // Alias Handling
+            ScopeNameList.Load(aliaseScopeColumn);
+            ScopeNameList.Load(aliasScopeData);
+
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
-            subjectArea.BindTo(bindingSubjectArea);
+            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasName), false, DataSourceUpdateMode.OnPropertyChanged));
+
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
@@ -113,32 +128,19 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributeAliasValue newItem = new AttributeAliasValue(current);
-                newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is IAliasIndex current)
+            if (bindingAlias.Current is AttributeAliasValue current)
             {
-                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
-
-                namedScopeData.ScopePath = path;
-                namedScopeData.Scope = current.AliasScope;
+                Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
+                isAliasInModelData.Checked = inModel;
+                aliasNameData.ReadOnly = inModel;
+                aliasScopeData.ReadOnly = inModel;
             }
-        }
-
-        private void NamedScopeData_OnApply(object sender, EventArgs e)
-        {
-            if (bindingAlias.DataSource is IList<IAliasIndex> aliases
-                && aliases.FirstOrDefault(
-                    w => w.AliasScope == namedScopeData.Scope
-                    && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
-                is IAliasIndex value)
-            { bindingAlias.Position = aliases.IndexOf(value); }
-            else { bindingAlias.AddNew(); }
         }
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
@@ -230,6 +232,56 @@ namespace DataDictionary.Main.Forms.Domain
         {
             NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
+        }
+
+        private void AliasSelectCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingAlias.DataSource is IList<AttributeAliasValue> alias)
+            {
+                using (var dialog = new SelectionDialog(this))
+                {
+                    dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                    dialog.FilterScopes.Add(ScopeType.DatabaseTableColumn);
+                    dialog.FilterScopes.Add(ScopeType.DatabaseViewColumn);
+                    dialog.FilterScopes.Add(ScopeType.LibraryTypeField);
+                    dialog.FilterScopes.Add(ScopeType.LibraryTypeProperty);
+
+                    dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
+                        IEnumerable<AttributeAliasValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.AliasPath).Count() > 0);
+
+                        foreach (AttributeAliasValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.AliasPath)).ToList())
+                        {
+                            if (inModel.Contains(removeItem)) // Only remove items that are in this model
+                            { alias.Remove(removeItem); }
+                        }
+
+                        foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.AliasPath).Contains(w.Path)).ToList())
+                        { // Add
+                            if (bindingAlias.AddNew() is AttributeAliasValue newValue)
+                            {
+                                newValue.AliasPath = addItem.Path;
+                                newValue.AliasScope = addItem.Scope;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AliasAddCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingAlias.AddNew() is AttributeAliasValue newValue)
+            { }
+        }
+
+        private void AliasNameData_Validating(object sender, CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
+            aliasNameData.Text = path.MemberFullPath;
         }
     }
 }

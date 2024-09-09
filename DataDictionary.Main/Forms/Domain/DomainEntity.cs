@@ -99,7 +99,6 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
-            //TODO: Need to parse the string into a NameSpacePath for formating.
             aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasName), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -316,9 +315,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void AliasAddCommand_Click(object sender, EventArgs e)
         {
             if (bindingAlias.AddNew() is EntityAliasValue newValue)
-            {
-
-            }
+            { }
         }
 
         private void AliasSelectCommand_Click(object sender, EventArgs e)
