@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [Hs_General]
+    AUTHORIZATION [dbo];
