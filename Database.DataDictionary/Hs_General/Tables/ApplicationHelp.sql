@@ -4,7 +4,7 @@
     [HelpToolTip] NVARCHAR (500)   NULL,
     [HelpText]    NVARCHAR (MAX)   NOT NULL,
     [NameSpace]   NVARCHAR (1023)  NULL,
-    [ModfiedBy]   [sysname]        NOT NULL,
+    [ModifiedBy]  SysName          NOT NULL,
     [SysStart]    DATETIME2 (7)    NOT NULL,
     [SysEnd]      DATETIME2 (7)    NOT NULL
 );

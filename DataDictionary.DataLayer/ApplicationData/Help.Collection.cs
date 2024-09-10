@@ -22,21 +22,20 @@ namespace DataDictionary.DataLayer.ApplicationData
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IHelpKey key)
-        { return LoadCommand(connection, (key.HelpId, null, null)); }
+        { return LoadCommand(connection, (key.HelpId, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null)); }
+        { return LoadCommand(connection, (null, false)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, string? helpSubject, string? nameSpace) parameters)
+        Command LoadCommand(IConnection connection, (Guid? helpId, Boolean IncludeHistory) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
+            command.CommandText = "[App_General].[procGetApplicationHelp]";
 
             command.AddParameter("@HelpId", parameters.helpId);
-            command.AddParameter("@HelpSubject", parameters.helpSubject);
-            command.AddParameter("@NameSpace", parameters.nameSpace);
+            command.AddParameter("@IncludeHistory", parameters.helpId);
             return command;
         }
 
@@ -52,11 +51,11 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
+            command.CommandText = "[App_General].[procSetApplicationHelp]";
             command.AddParameter("@HelpId", parameters.helpId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", data);
+            command.AddParameter("@Data", "[App_General].[typeApplicationHelp]", data);
             return command;
         }
 

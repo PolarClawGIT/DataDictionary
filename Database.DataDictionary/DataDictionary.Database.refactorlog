@@ -805,4 +805,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ColumnId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="4531ff8d-1bde-4ddf-a251-1a1485d85a60" ChangeDateTime="09/10/2024 17:58:55">
+    <Property Name="ElementName" Value="[Hs_General].[ApplicationHelp].[ModfiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Hs_General].[ApplicationHelp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ModifiedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a68f719c-0c30-44f0-bdcc-f65d99661fb8" ChangeDateTime="09/10/2024 17:59:23">
+    <Property Name="ElementName" Value="[App_General].[ApplicationHelp].[ModfiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_General].[ApplicationHelp]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ModifiedBy]" />
+  </Operation>
 </Operations>

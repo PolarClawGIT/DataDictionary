@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType
+    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType, ITemporalTable
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -68,9 +68,26 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
 
-
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ApplicationHelp;
+
+        /// <inheritdoc/>
+        public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? ModifiedOn { get { return GetValue<DateTime>(nameof(ModifiedOn)); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                String? value = GetValue(nameof(Modification));
+                if (DbModificationEnumeration.TryParse(value, null, out DbModificationEnumeration? result))
+                { return result.Value; }
+                else { return DbModificationType.Null; }
+            }
+        }
 
         /// <summary>
         /// Creates an Instance of a Help Document Item.
@@ -83,10 +100,13 @@ namespace DataDictionary.DataLayer.ApplicationData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(HelpSubject), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(HelpToolTip), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(HelpText), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(NameSpace), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpSubject), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(HelpToolTip), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(Modification), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

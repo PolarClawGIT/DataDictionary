@@ -11,13 +11,12 @@ Select	A.[HelpId],
 		A.[HelpToolTip],
 		A.[HelpText],
 		A.[NameSpace],
-		A.[ModfiedBy],
-		A.[SysStart],
+		A.[ModifiedBy],
+		A.[SysStart] As [ModifiedOn],
 		Convert(NVarChar(10),
 		Case	When P.[HelpId] is Null Then 'Inserted'
-				When N.[HelpId] is Null And A.[SysEnd] > sysUtcDateTime() Then 'Current'
 				When N.[HelpId] is Null And A.[SysEnd] <= sysUtcDateTime() Then 'Deleted'
-				Else 'Updated' End) As [RowState]
+				Else 'Updated' End) As [Modification]
 From	[App_General].[ApplicationHelp] For System_Time All A -- All values
 		Left Join [App_General].[ApplicationHelp] For System_Time All P -- Prior
 		On	A.[HelpId] = P.[HelpId] And

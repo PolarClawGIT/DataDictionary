@@ -1,0 +1,2 @@
+﻿namespace DataDictionary.Resource.Enumerations;
+
