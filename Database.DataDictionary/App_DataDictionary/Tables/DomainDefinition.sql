@@ -7,7 +7,7 @@
 	-- Note: IsCommon Definitions cannot be deleted or updated using the stored procedures. They must be modified directly.
 	--       IsCommon flag must also be set directly. This avoids the application accidentally changing these.
 	-- TODO: Add System Version later once the schema is locked down
-	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainDefinitionModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
+	[ModifiedBy] SysName Not Null CONSTRAINT [DF_DomainDefinitionModifiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_DomainDefinition_SysStart] Default (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL Constraint [DF_DomainDefinition_SysEnd] Default ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
