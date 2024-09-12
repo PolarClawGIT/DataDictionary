@@ -57,7 +57,7 @@
             // treeViewMenu
             // 
             treeViewMenu.GripStyle = ToolStripGripStyle.Hidden;
-            treeViewMenu.Items.AddRange(new ToolStripItem[] { headerTitle, refreshCommand, reloadCommand });
+            treeViewMenu.Items.AddRange(new ToolStripItem[] { refreshCommand, reloadCommand, headerTitle });
             treeViewMenu.Location = new Point(0, 0);
             treeViewMenu.Name = "treeViewMenu";
             treeViewMenu.Size = new Size(207, 25);
@@ -72,7 +72,6 @@
             // 
             // refreshCommand
             // 
-            refreshCommand.Alignment = ToolStripItemAlignment.Right;
             refreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             refreshCommand.Image = Properties.Resources.RefreshTree;
             refreshCommand.ImageTransparentColor = Color.Magenta;
@@ -83,7 +82,6 @@
             // 
             // reloadCommand
             // 
-            reloadCommand.Alignment = ToolStripItemAlignment.Right;
             reloadCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             reloadCommand.Image = Properties.Resources.ReloadTree;
             reloadCommand.ImageTransparentColor = Color.Magenta;
