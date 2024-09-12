@@ -44,6 +44,7 @@
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
+            historyCommand = new ToolStripButton();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -87,7 +88,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, historyCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
@@ -203,6 +204,17 @@
             helpToolStripButton.Size = new Size(23, 22);
             helpToolStripButton.Text = "He&lp";
             // 
+            // historyCommand
+            // 
+            historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            historyCommand.Enabled = false;
+            historyCommand.Image = Properties.Resources.HistoryTable;
+            historyCommand.ImageTransparentColor = Color.Magenta;
+            historyCommand.Name = "historyCommand";
+            historyCommand.Size = new Size(23, 22);
+            historyCommand.Text = "Table History";
+            historyCommand.Click += HistoryCommand_Click;
+            // 
             // ApplicationData
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -234,5 +246,6 @@
         private ToolStripSeparator toolStripSeparator;
         private ToolStripDropDownButton importCommand;
         private ToolStripDropDownButton exportCommand;
+        private ToolStripButton historyCommand;
     }
 }

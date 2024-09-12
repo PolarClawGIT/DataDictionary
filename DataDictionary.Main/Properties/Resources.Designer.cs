@@ -591,6 +591,16 @@ namespace DataDictionary.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HistoryTable {
+            get {
+                object obj = ResourceManager.GetObject("HistoryTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon Icon_Application {
@@ -1726,6 +1736,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap SelectSynonym {
             get {
                 object obj = ResourceManager.GetObject("SelectSynonym", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectXPath {
+            get {
+                object obj = ResourceManager.GetObject("SelectXPath", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

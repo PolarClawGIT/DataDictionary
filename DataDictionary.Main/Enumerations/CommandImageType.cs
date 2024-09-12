@@ -69,6 +69,11 @@ namespace DataDictionary.Main.Enumerations
         /// <summary>
         /// Delete from Database
         /// </summary>
-        DeleteDatabase
+        DeleteDatabase,
+
+        /// <summary>
+        /// History from Database
+        /// </summary>
+        HistoryDatabase
     }
 }
