@@ -1,12 +1,1 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.BusinessLayer.Application
-{
-    static class HelpSubject
-    {
-    }
-}
+﻿namespace DataDictionary.BusinessLayer.Application;

@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         String? HelpText { get; }
 
         /// <summary>
-        /// ToolTipe of the Help Document. May appear on individual controls.
+        /// ToolTip of the Help Document. May appear on individual controls.
         /// </summary>
         String? HelpToolTip { get; }
     }

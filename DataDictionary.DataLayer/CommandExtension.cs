@@ -71,7 +71,7 @@ namespace DataDictionary.DataLayer
         {
             if (value is not null)
             {
-                command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.NVarChar)
+                command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.Bit)
                 { Value = value });
             }
         }

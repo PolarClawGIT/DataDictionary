@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -208,11 +209,11 @@ namespace DataDictionary.Main.Forms
                 binding.RowStateChanged += RowStateChanged;
             }
 
-            if (data.Current is INamedScopeSourceValue namedScope)
-            {
-                Text = namedScope.GetTitle();
-                Setup(namedScope.Scope, commands);
-            }
+            if (data.Current is ITitle titleValue)
+            { Text = titleValue.Title; }
+
+            if (data.Current is IScopeType scopeValue)
+            { Setup(scopeValue.Scope, commands); }
         }
 
         /// <summary>

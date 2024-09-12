@@ -70,7 +70,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandImageType.DeleteDatabase,
+                CommandImageType.HistoryDatabase);
             SetImages(helpContentNavigation);
         }
 
@@ -581,5 +582,14 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+            if (helpBinding.Current is HelpSubjectValue current)
+            {
+                Activate(() => new HistoryView<HelpSubjectValue, HelpSubjectIndex>(BusinessData.ApplicationData.HelpSubjects.Create));
+            }
+            
+        }
     }
 }

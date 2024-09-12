@@ -28,14 +28,18 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Command LoadCommand(IConnection connection)
         { return LoadCommand(connection, (null, false)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, Boolean IncludeHistory) parameters)
+        /// <inheritdoc cref="LoadCommand(IConnection)"/>
+        public Command LoadCommand(IConnection connection, Boolean includeHistory)
+        { return LoadCommand(connection, (null, includeHistory)); }
+
+        Command LoadCommand(IConnection connection, (Guid? helpId, Boolean includeHistory) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_General].[procGetApplicationHelp]";
 
             command.AddParameter("@HelpId", parameters.helpId);
-            command.AddParameter("@IncludeHistory", parameters.helpId);
+            command.AddParameter("@IncludeHistory", parameters.includeHistory);
             return command;
         }
 
