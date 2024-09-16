@@ -15,9 +15,9 @@ namespace DataDictionary.BusinessLayer
         //TODO: Not sure if this is the best name.
 
         /// <summary>
-        /// System Id of the Named Scope item.
+        /// System Id of the a Data Layer value.
         /// </summary>
-        public Guid BusinessLayerId { get; }
+        public Guid DataLayerId { get; }
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer
     public partial class DataLayerIndex : IDataLayerIndex, IKeyComparable<IDataLayerIndex>
     {
         /// <inheritdoc/>
-        public Guid BusinessLayerId { get; internal init; } = Guid.Empty;
+        public Guid DataLayerId { get; internal init; } = Guid.Empty;
 
         internal DataLayerIndex() : base() { }
 
@@ -40,10 +40,10 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="source" >A ModelNameSpace</param>
         public DataLayerIndex(IDataLayerIndex source) : this()
-        { BusinessLayerId = source.BusinessLayerId; }
+        { DataLayerId = source.DataLayerId; }
 
         /// <inheritdoc cref="Nullable{T}.HasValue"/>
-        public Boolean HasValue { get { return BusinessLayerId != Guid.Empty; } }
+        public Boolean HasValue { get { return DataLayerId != Guid.Empty; } }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer
         {
             return
                 other is IDataLayerIndex &&
-                BusinessLayerId.Equals(other.BusinessLayerId);
+                DataLayerId.Equals(other.DataLayerId);
         }
 
         /// <inheritdoc/>
@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer
         public virtual int CompareTo(IDataLayerIndex? other)
         {
             if (other is null) { return 1; }
-            else { return BusinessLayerId.CompareTo(other.BusinessLayerId); }
+            else { return DataLayerId.CompareTo(other.DataLayerId); }
         }
 
         /// <inheritdoc/>
@@ -95,7 +95,7 @@ namespace DataDictionary.BusinessLayer
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return BusinessLayerId.GetHashCode(); }
+        { return DataLayerId.GetHashCode(); }
         #endregion
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public override String? ToString()
         {
-            if (BusinessLayerId is Guid value) { return value.ToString(); }
+            if (DataLayerId is Guid value) { return value.ToString(); }
             else { return base.ToString(); }
         }
     }

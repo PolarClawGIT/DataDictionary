@@ -28,6 +28,6 @@ namespace DataDictionary.BusinessLayer.Library
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataLayerIndex(LibrarySourceIndex source)
-        { return new DataLayerIndex() { BusinessLayerId = source.LibraryId ?? Guid.Empty }; }
+        { return new DataLayerIndex() { DataLayerId = source.LibraryId ?? Guid.Empty }; }
     }
 }

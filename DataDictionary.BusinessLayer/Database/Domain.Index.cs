@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataLayerIndex(DomainIndex source)
-        { return new DataLayerIndex() { BusinessLayerId = source.DomainId ?? Guid.Empty }; }
+        { return new DataLayerIndex() { DataLayerId = source.DomainId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

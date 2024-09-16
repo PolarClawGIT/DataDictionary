@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.Library
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataLayerIndex(LibraryMemberIndex source)
-        { return new DataLayerIndex() { BusinessLayerId = source.MemberId ?? Guid.Empty }; }
+        { return new DataLayerIndex() { DataLayerId = source.MemberId ?? Guid.Empty }; }
 
         /// <inheritdoc/>
         public Int32 CompareTo(ILibraryMemberIndex? other)
@@ -69,6 +69,6 @@ namespace DataDictionary.BusinessLayer.Library
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataLayerIndex(LibraryMemberIndexParent source)
-        { return new DataLayerIndex() { BusinessLayerId = source.MemberParentId ?? Guid.Empty }; }
+        { return new DataLayerIndex() { DataLayerId = source.MemberParentId ?? Guid.Empty }; }
     }
 }

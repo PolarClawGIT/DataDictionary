@@ -139,7 +139,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
+        { return new DataLayerIndex() { DataLayerId = SystemId }; }
 
         public NamedScopePath GetPath()
         { return SystemPath; }

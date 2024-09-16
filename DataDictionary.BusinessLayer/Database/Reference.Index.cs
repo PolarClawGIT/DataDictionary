@@ -27,5 +27,5 @@ public class ReferenceIndex: DbReferenceKey, IReferenceIndex,
     /// </summary>
     /// <param name="source"></param>
     public static implicit operator DataLayerIndex(ReferenceIndex source)
-    { return new DataLayerIndex() { BusinessLayerId = source.ReferenceId ?? Guid.Empty }; }
+    { return new DataLayerIndex() { DataLayerId = source.ReferenceId ?? Guid.Empty }; }
 }
