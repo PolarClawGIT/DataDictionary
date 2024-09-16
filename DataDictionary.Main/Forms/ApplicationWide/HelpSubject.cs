@@ -587,7 +587,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             base.HistoryCommand_Click(sender, e);
             if (helpBinding.Current is HelpSubjectValue current)
             {
-                Activate(() => new HistoryView<HelpSubjectValue, HelpSubjectIndex>(BusinessData.ApplicationData.HelpSubjects.Create));
+                Activate(() => new HistoryView(BusinessData.ApplicationData.HelpSubjects.Create));
             }
             
         }

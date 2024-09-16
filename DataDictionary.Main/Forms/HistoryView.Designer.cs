@@ -28,22 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             TableLayoutPanel historyLayout;
             GroupBox modificationsGroup;
             TableLayoutPanel modificationLayout;
             TableLayoutPanel modificationFilterLayout;
             TableLayoutPanel modificationOptionLayout;
+            ListViewGroup listViewGroup1 = new ListViewGroup("Title/Name", HorizontalAlignment.Left);
             GroupBox historySummaryGroup;
             TableLayoutPanel historyDetailLayout;
             TableLayoutPanel restoreLayout;
             Label restoreWarning;
-            historyData = new DataGridView();
             asOfFilter = new Controls.TextBoxData();
             requeryCommand = new Button();
-            filterByOnAfter = new CheckBox();
+            filterByDate = new CheckBox();
             filterByObject = new CheckBox();
             filterDistinct = new CheckBox();
+            historyData = new ListView();
+            modificationColumn = new ColumnHeader();
+            modificationOnColumn = new ColumnHeader();
             titleData = new Controls.TextBoxData();
             descriptionData = new Controls.TextBoxData();
             modificationData = new Controls.TextBoxData();
@@ -51,9 +53,6 @@
             modifiedOnDate = new Controls.TextBoxData();
             viewDetailCommand = new Button();
             restoreCommand = new Button();
-            bindingModification = new BindingSource(components);
-            titleColumn = new DataGridViewTextBoxColumn();
-            modifiedOnColumn = new DataGridViewTextBoxColumn();
             historyLayout = new TableLayoutPanel();
             modificationsGroup = new GroupBox();
             modificationLayout = new TableLayoutPanel();
@@ -66,29 +65,26 @@
             historyLayout.SuspendLayout();
             modificationsGroup.SuspendLayout();
             modificationLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)historyData).BeginInit();
             modificationFilterLayout.SuspendLayout();
             modificationOptionLayout.SuspendLayout();
             historySummaryGroup.SuspendLayout();
             historyDetailLayout.SuspendLayout();
             restoreLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingModification).BeginInit();
             SuspendLayout();
             // 
             // historyLayout
             // 
             historyLayout.ColumnCount = 2;
-            historyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            historyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            historyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            historyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             historyLayout.Controls.Add(modificationsGroup, 0, 0);
             historyLayout.Controls.Add(historySummaryGroup, 1, 0);
             historyLayout.Dock = DockStyle.Fill;
             historyLayout.Location = new Point(0, 25);
             historyLayout.Name = "historyLayout";
             historyLayout.RowCount = 1;
-            historyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            historyLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            historyLayout.Size = new Size(556, 419);
+            historyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            historyLayout.Size = new Size(507, 419);
             historyLayout.TabIndex = 4;
             // 
             // modificationsGroup
@@ -97,7 +93,7 @@
             modificationsGroup.Dock = DockStyle.Fill;
             modificationsGroup.Location = new Point(3, 3);
             modificationsGroup.Name = "modificationsGroup";
-            modificationsGroup.Size = new Size(272, 413);
+            modificationsGroup.Size = new Size(298, 413);
             modificationsGroup.TabIndex = 0;
             modificationsGroup.TabStop = false;
             modificationsGroup.Text = "Modifications";
@@ -106,35 +102,23 @@
             // 
             modificationLayout.ColumnCount = 1;
             modificationLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            modificationLayout.Controls.Add(historyData, 0, 0);
             modificationLayout.Controls.Add(modificationFilterLayout, 0, 1);
+            modificationLayout.Controls.Add(historyData, 0, 0);
             modificationLayout.Dock = DockStyle.Fill;
             modificationLayout.Location = new Point(3, 19);
             modificationLayout.Name = "modificationLayout";
             modificationLayout.RowCount = 2;
             modificationLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             modificationLayout.RowStyles.Add(new RowStyle());
-            modificationLayout.Size = new Size(266, 391);
+            modificationLayout.Size = new Size(292, 391);
             modificationLayout.TabIndex = 1;
-            // 
-            // historyData
-            // 
-            historyData.AllowUserToAddRows = false;
-            historyData.AllowUserToDeleteRows = false;
-            historyData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            historyData.Columns.AddRange(new DataGridViewColumn[] { titleColumn, modifiedOnColumn });
-            historyData.Dock = DockStyle.Fill;
-            historyData.Location = new Point(3, 3);
-            historyData.Name = "historyData";
-            historyData.Size = new Size(260, 300);
-            historyData.TabIndex = 0;
             // 
             // modificationFilterLayout
             // 
             modificationFilterLayout.AutoSize = true;
             modificationFilterLayout.ColumnCount = 2;
-            modificationFilterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            modificationFilterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            modificationFilterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            modificationFilterLayout.ColumnStyles.Add(new ColumnStyle());
             modificationFilterLayout.Controls.Add(asOfFilter, 1, 0);
             modificationFilterLayout.Controls.Add(requeryCommand, 1, 1);
             modificationFilterLayout.Controls.Add(modificationOptionLayout, 0, 0);
@@ -144,14 +128,14 @@
             modificationFilterLayout.RowCount = 2;
             modificationFilterLayout.RowStyles.Add(new RowStyle());
             modificationFilterLayout.RowStyles.Add(new RowStyle());
-            modificationFilterLayout.Size = new Size(260, 79);
+            modificationFilterLayout.Size = new Size(286, 79);
             modificationFilterLayout.TabIndex = 1;
             // 
             // asOfFilter
             // 
             asOfFilter.AutoSize = true;
             asOfFilter.HeaderText = "Target Date";
-            asOfFilter.Location = new Point(133, 3);
+            asOfFilter.Location = new Point(163, 3);
             asOfFilter.Multiline = false;
             asOfFilter.Name = "asOfFilter";
             asOfFilter.ReadOnly = false;
@@ -162,7 +146,7 @@
             // requeryCommand
             // 
             requeryCommand.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            requeryCommand.Location = new Point(182, 53);
+            requeryCommand.Location = new Point(208, 53);
             requeryCommand.Name = "requeryCommand";
             requeryCommand.Size = new Size(75, 23);
             requeryCommand.TabIndex = 0;
@@ -175,7 +159,7 @@
             modificationOptionLayout.AutoSize = true;
             modificationOptionLayout.ColumnCount = 1;
             modificationOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            modificationOptionLayout.Controls.Add(filterByOnAfter, 0, 0);
+            modificationOptionLayout.Controls.Add(filterByDate, 0, 0);
             modificationOptionLayout.Controls.Add(filterByObject, 0, 1);
             modificationOptionLayout.Controls.Add(filterDistinct, 0, 2);
             modificationOptionLayout.Dock = DockStyle.Fill;
@@ -186,18 +170,18 @@
             modificationOptionLayout.RowStyles.Add(new RowStyle());
             modificationOptionLayout.RowStyles.Add(new RowStyle());
             modificationOptionLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            modificationOptionLayout.Size = new Size(124, 73);
+            modificationOptionLayout.Size = new Size(154, 73);
             modificationOptionLayout.TabIndex = 3;
             // 
-            // filterByOnAfter
+            // filterByDate
             // 
-            filterByOnAfter.AutoSize = true;
-            filterByOnAfter.Location = new Point(3, 3);
-            filterByOnAfter.Name = "filterByOnAfter";
-            filterByOnAfter.Size = new Size(85, 19);
-            filterByOnAfter.TabIndex = 2;
-            filterByOnAfter.Text = "On or After";
-            filterByOnAfter.UseVisualStyleBackColor = true;
+            filterByDate.AutoSize = true;
+            filterByDate.Location = new Point(3, 3);
+            filterByDate.Name = "filterByDate";
+            filterByDate.Size = new Size(87, 19);
+            filterByDate.TabIndex = 2;
+            filterByDate.Text = "As of (date)";
+            filterByDate.UseVisualStyleBackColor = true;
             // 
             // filterByObject
             // 
@@ -215,18 +199,43 @@
             filterDistinct.Dock = DockStyle.Fill;
             filterDistinct.Location = new Point(3, 53);
             filterDistinct.Name = "filterDistinct";
-            filterDistinct.Size = new Size(118, 17);
+            filterDistinct.Size = new Size(148, 17);
             filterDistinct.TabIndex = 3;
             filterDistinct.Text = "Distinct Items";
             filterDistinct.UseVisualStyleBackColor = true;
+            // 
+            // historyData
+            // 
+            historyData.Columns.AddRange(new ColumnHeader[] { modificationColumn, modificationOnColumn });
+            historyData.Dock = DockStyle.Fill;
+            listViewGroup1.Header = "Title/Name";
+            listViewGroup1.Name = "historyTitleGroup";
+            historyData.Groups.AddRange(new ListViewGroup[] { listViewGroup1 });
+            historyData.Location = new Point(3, 3);
+            historyData.Name = "historyData";
+            historyData.Size = new Size(286, 300);
+            historyData.TabIndex = 2;
+            historyData.UseCompatibleStateImageBehavior = false;
+            historyData.View = View.Details;
+            historyData.SelectedIndexChanged += HistoryData_SelectedIndexChanged;
+            // 
+            // modificationColumn
+            // 
+            modificationColumn.Text = "Modification";
+            modificationColumn.Width = 100;
+            // 
+            // modificationOnColumn
+            // 
+            modificationOnColumn.Text = "Modifed On";
+            modificationOnColumn.Width = 120;
             // 
             // historySummaryGroup
             // 
             historySummaryGroup.Controls.Add(historyDetailLayout);
             historySummaryGroup.Dock = DockStyle.Fill;
-            historySummaryGroup.Location = new Point(281, 3);
+            historySummaryGroup.Location = new Point(307, 3);
             historySummaryGroup.Name = "historySummaryGroup";
-            historySummaryGroup.Size = new Size(272, 413);
+            historySummaryGroup.Size = new Size(197, 413);
             historySummaryGroup.TabIndex = 2;
             historySummaryGroup.TabStop = false;
             historySummaryGroup.Text = "Summary";
@@ -251,7 +260,7 @@
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
-            historyDetailLayout.Size = new Size(266, 391);
+            historyDetailLayout.Size = new Size(191, 391);
             historyDetailLayout.TabIndex = 0;
             // 
             // titleData
@@ -263,7 +272,7 @@
             titleData.Multiline = false;
             titleData.Name = "titleData";
             titleData.ReadOnly = true;
-            titleData.Size = new Size(260, 44);
+            titleData.Size = new Size(185, 44);
             titleData.TabIndex = 0;
             titleData.WordWrap = true;
             // 
@@ -276,7 +285,7 @@
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = true;
-            descriptionData.Size = new Size(260, 121);
+            descriptionData.Size = new Size(185, 121);
             descriptionData.TabIndex = 1;
             descriptionData.WordWrap = true;
             // 
@@ -289,7 +298,7 @@
             modificationData.Multiline = false;
             modificationData.Name = "modificationData";
             modificationData.ReadOnly = true;
-            modificationData.Size = new Size(260, 44);
+            modificationData.Size = new Size(185, 44);
             modificationData.TabIndex = 2;
             modificationData.WordWrap = true;
             // 
@@ -302,7 +311,7 @@
             modifiedByData.Multiline = false;
             modifiedByData.Name = "modifiedByData";
             modifiedByData.ReadOnly = true;
-            modifiedByData.Size = new Size(260, 44);
+            modifiedByData.Size = new Size(185, 44);
             modifiedByData.TabIndex = 3;
             modifiedByData.WordWrap = true;
             // 
@@ -315,7 +324,7 @@
             modifiedOnDate.Multiline = false;
             modifiedOnDate.Name = "modifiedOnDate";
             modifiedOnDate.ReadOnly = true;
-            modifiedOnDate.Size = new Size(260, 44);
+            modifiedOnDate.Size = new Size(185, 44);
             modifiedOnDate.TabIndex = 4;
             modifiedOnDate.WordWrap = true;
             // 
@@ -334,13 +343,13 @@
             restoreLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             restoreLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             restoreLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            restoreLayout.Size = new Size(260, 58);
+            restoreLayout.Size = new Size(185, 58);
             restoreLayout.TabIndex = 7;
             // 
             // viewDetailCommand
             // 
             viewDetailCommand.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            viewDetailCommand.Location = new Point(182, 3);
+            viewDetailCommand.Location = new Point(107, 3);
             viewDetailCommand.Name = "viewDetailCommand";
             viewDetailCommand.Size = new Size(75, 23);
             viewDetailCommand.TabIndex = 7;
@@ -351,7 +360,7 @@
             // restoreCommand
             // 
             restoreCommand.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            restoreCommand.Location = new Point(182, 32);
+            restoreCommand.Location = new Point(107, 32);
             restoreCommand.Name = "restoreCommand";
             restoreCommand.Size = new Size(75, 23);
             restoreCommand.TabIndex = 6;
@@ -363,31 +372,18 @@
             // 
             restoreWarning.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             restoreWarning.AutoSize = true;
-            restoreWarning.Location = new Point(3, 28);
+            restoreWarning.Location = new Point(3, 13);
             restoreWarning.Name = "restoreWarning";
             restoreLayout.SetRowSpan(restoreWarning, 2);
-            restoreWarning.Size = new Size(173, 30);
+            restoreWarning.Size = new Size(82, 45);
             restoreWarning.TabIndex = 5;
             restoreWarning.Text = "Restoring a record effects child records.";
-            // 
-            // titleColumn
-            // 
-            titleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            titleColumn.DataPropertyName = "Title";
-            titleColumn.HeaderText = "Title/Name";
-            titleColumn.Name = "titleColumn";
-            // 
-            // modifiedOnColumn
-            // 
-            modifiedOnColumn.DataPropertyName = "ModifiedOn";
-            modifiedOnColumn.HeaderText = "Modified On";
-            modifiedOnColumn.Name = "modifiedOnColumn";
             // 
             // HistoryView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(556, 444);
+            ClientSize = new Size(507, 444);
             Controls.Add(historyLayout);
             Name = "HistoryView";
             Text = "HistoryView";
@@ -397,7 +393,6 @@
             modificationsGroup.ResumeLayout(false);
             modificationLayout.ResumeLayout(false);
             modificationLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)historyData).EndInit();
             modificationFilterLayout.ResumeLayout(false);
             modificationFilterLayout.PerformLayout();
             modificationOptionLayout.ResumeLayout(false);
@@ -407,7 +402,6 @@
             historyDetailLayout.PerformLayout();
             restoreLayout.ResumeLayout(false);
             restoreLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingModification).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -423,16 +417,15 @@
         private Button requeryCommand;
         private Controls.TextBoxData asOfFilter;
         private CheckBox filterByObject;
-        private CheckBox filterByOnAfter;
+        private CheckBox filterByDate;
         private CheckBox filterDistinct;
-        protected BindingSource bindingModification;
-        protected DataGridView historyData;
         protected Controls.TextBoxData titleData;
         protected Controls.TextBoxData descriptionData;
         protected Controls.TextBoxData modificationData;
         protected Controls.TextBoxData modifiedByData;
         protected Controls.TextBoxData modifiedOnDate;
-        private DataGridViewTextBoxColumn titleColumn;
-        private DataGridViewTextBoxColumn modifiedOnColumn;
+        protected ListView historyData;
+        private ColumnHeader modificationColumn;
+        private ColumnHeader modificationOnColumn;
     }
 }

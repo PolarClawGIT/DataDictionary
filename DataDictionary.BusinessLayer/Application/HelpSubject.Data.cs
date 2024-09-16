@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Application
         IModificationData
     {
         /// <summary>
-        /// Returns a ModificationData holding HelpSubjects.
+        /// Returns an empty ModificationData holding HelpSubjects.
         /// </summary>
         /// <returns></returns>
         public IModificationData Create() { return new HelpSubjectData(); }

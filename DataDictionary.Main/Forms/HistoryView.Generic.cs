@@ -21,7 +21,6 @@ namespace DataDictionary.Main.Forms
         public HistoryView(Func<IModificationData> data) : base()
         {
             modificationValues = data();
-            bindingModification.DataSource = modificationValues;
         }
 
         protected override void HistoryView_Load(Object sender, EventArgs e)
