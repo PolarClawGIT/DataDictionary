@@ -83,7 +83,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IScopeType, ITitle
+    public interface INamedScopeSourceValue : IScopeType
     {
         // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
 
@@ -91,6 +91,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Index of the Source Value.
         /// </summary>
         DataLayerIndex Index { get { return GetIndex(); } }
+
+        /// <summary>
+        /// Title of the Source Value.
+        /// </summary>
+        String Title { get { return GetTitle(); } }
 
         /// <summary>
         /// Path of the Source Value.
@@ -103,6 +108,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         DataLayerIndex GetIndex();
+
+        /// <summary>
+        /// Gets the generic Title from the Value
+        /// </summary>
+        /// <returns></returns>
+        String GetTitle();
 
         /// <summary>
         /// Gets the generic NameScope Path from the Value
