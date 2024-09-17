@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Modification
     /// <summary>
     /// Item can be cast as a Generic Modification Value
     /// </summary>
-    public interface IModificationValue: ITemporalTable, IDataLayerValue,
+    public interface IModificationValue: ITemporalTable, IDataLayerSource,
         IBindingPropertyChanged, IBindingRowState
     { }
 }

@@ -11,16 +11,16 @@ namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,
-        IHelpSubjectIndex, IHelpSubjectIndexNameSpace, IModificationValue
+        IHelpSubjectIndex, IHelpSubjectIndexNameSpace
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectValue : HelpItem, IHelpItem,
-        IDataLayerSource
+    public class HelpSubjectValue : HelpItem, IHelpSubjectValue,
+        IModificationValue
     {
         /// <inheritdoc/>
-        public Guid GetId()
-        { return this.HelpId ?? Guid.Empty; }
+        public DataLayerIndex GetIndex()
+        { return new HelpSubjectIndex(this); }
 
         /// <inheritdoc/>
         public String GetTitle()

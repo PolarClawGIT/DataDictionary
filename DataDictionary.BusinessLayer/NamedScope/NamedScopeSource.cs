@@ -83,19 +83,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IScopeType
+    public interface INamedScopeSourceValue : IDataLayerSource, IScopeType
     {
         // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
-
-        /// <summary>
-        /// Index of the Source Value.
-        /// </summary>
-        DataLayerIndex Index { get { return GetIndex(); } }
-
-        /// <summary>
-        /// Title of the Source Value.
-        /// </summary>
-        String Title { get { return GetTitle(); } }
 
         /// <summary>
         /// Path of the Source Value.
@@ -104,29 +94,10 @@ namespace DataDictionary.BusinessLayer.NamedScope
         NamedScopePath Path { get { return GetPath(); } }
 
         /// <summary>
-        /// Gets the generic DataLayer Index from  the Value
-        /// </summary>
-        /// <returns></returns>
-        DataLayerIndex GetIndex();
-
-        /// <summary>
-        /// Gets the generic Title from the Value
-        /// </summary>
-        /// <returns></returns>
-        String GetTitle();
-
-        /// <summary>
         /// Gets the generic NameScope Path from the Value
         /// </summary>
         /// <returns></returns>
         NamedScopePath GetPath();
-
-        /// <summary>
-        /// Condition to test if the Title or Path changed when the PropertyChanged event occurs.
-        /// </summary>
-        /// <param name="eventArgs"></param>
-        /// <returns></returns>
-        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs);
     }
 
     /// <summary>
@@ -136,6 +107,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     {
         protected Guid SystemId;
         protected NamedScopePath SystemPath;
+
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
         public DataLayerIndex GetIndex()
@@ -158,5 +130,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
         { return false; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

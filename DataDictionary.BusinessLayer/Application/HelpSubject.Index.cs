@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndex : HelpKey, IHelpKey,
+    public class HelpSubjectIndex : HelpKey, IHelpSubjectIndex,
         IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>
     {
         /// <inheritdoc cref="HelpKey.HelpKey(IHelpKey)"/>
@@ -23,6 +23,13 @@ namespace DataDictionary.BusinessLayer.Application
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectIndex? other)
         { return other is IHelpKey value && Equals(new HelpKey(value)); }
+
+        /// <summary>
+        /// Convert HelpSubjectIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(HelpSubjectIndex source)
+        { return new DataLayerIndex() { DataLayerId = source.HelpId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

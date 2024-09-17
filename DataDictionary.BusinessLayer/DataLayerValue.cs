@@ -11,22 +11,26 @@ namespace DataDictionary.BusinessLayer
     public interface IDataLayerSource : IBindingPropertyChanged
     {
         /// <summary>
+        /// Index of the Source Value.
+        /// </summary>
+        DataLayerIndex Index { get { return GetIndex(); } }
+
+        /// <summary>
+        /// Generic Title/Name for the value
+        /// </summary>
+        String Title { get { return GetTitle(); } }
+
+        /// <summary>
         /// Return the DataLayer ID.
         /// </summary>
         /// <returns></returns>
-        Guid GetId();
+        DataLayerIndex GetIndex();
 
         /// <summary>
         /// Generic Title/Name for the value
         /// </summary>
         /// <returns></returns>
         String GetTitle();
-
-        /// <summary>
-        /// Generic Description for the value. Null = does not apply.
-        /// </summary>
-        /// <returns></returns>
-        String? GetDescription();
 
         /// <summary>
         /// Condition to test if the Title was the property that changed.
@@ -39,23 +43,18 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// 
     /// </summary>
-    public interface IDataLayerValue: IKey, IKeyComparable<IDataLayerValue>,
+    public interface IDataLayerValue: 
         IBindingPropertyChanged
     {
         /// <summary>
-        /// Generic version of the specific data layer ID.
+        /// Index of the Source Value.
         /// </summary>
-        Guid SystemId { get; }
+        DataLayerIndex Index { get; }
 
         /// <summary>
         /// Generic Title/Name for the value
         /// </summary>
-        public String Title { get; }
-
-        /// <summary>
-        /// Generic Description for the value. Null = does not apply.
-        /// </summary>
-        public String? Description { get; }
+        String Title { get; }
     }
 
     /// <summary>
@@ -65,23 +64,12 @@ namespace DataDictionary.BusinessLayer
     {
         IDataLayerSource source;
 
-        /// <summary>
-        /// Generic version of the specific data layer ID.
-        /// </summary>
-        public Guid SystemId { get { return systemIdValue; } }
-        Guid systemIdValue;
+        /// <inheritdoc/>
+        public DataLayerIndex Index { get; }
 
-        /// <summary>
-        /// Generic Title/Name for the value
-        /// </summary>
+        /// <inheritdoc/>
         public String Title { get { return titleValue; } }
         String titleValue;
-
-        /// <summary>
-        /// Generic Description for the value. Null = does not apply.
-        /// </summary>
-        public String? Description { get { return descriptionValue; } }
-        String? descriptionValue;
 
         /// <summary>
         /// Creates a DataLayerValue from a source value
@@ -90,9 +78,8 @@ namespace DataDictionary.BusinessLayer
         public DataLayerValue(IDataLayerSource source)
         {
             this.source = source;
-            systemIdValue = source.GetId();
+            Index = source.GetIndex();
             titleValue = source.GetTitle();
-            descriptionValue = source.GetDescription();
             source.PropertyChanged += Source_PropertyChanged;
         }
 
@@ -101,66 +88,12 @@ namespace DataDictionary.BusinessLayer
             if (source.IsTitleChanged(e))
             {
                 titleValue = source.GetTitle();
-                descriptionValue = source.GetDescription();
                 IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, e.PropertyName);
             }
         }
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        #region IEquatable, IComparable
-        /// <inheritdoc/>
-        public virtual Boolean Equals(IDataLayerValue? other)
-        {
-            return
-                other is IDataLayerValue &&
-                SystemId.Equals(other.SystemId);
-        }
-
-        /// <inheritdoc/>
-        public override Boolean Equals(object? obj)
-        { return obj is IDataLayerSource value && Equals(new DataLayerValue(value)); }
-
-        /// <inheritdoc/>
-        public virtual Int32 CompareTo(IDataLayerValue? other)
-        {
-            if (other is null) { return 1; }
-            else { return SystemId.CompareTo(other.SystemId); }
-        }
-
-        /// <inheritdoc/>
-        public virtual Int32 CompareTo(object? obj)
-        { if (obj is IDataLayerIndex value) { return CompareTo(new DataLayerIndex(value)); } else { return 1; } }
-
-        /// <inheritdoc/>
-        public static Boolean operator ==(DataLayerValue left, DataLayerValue right)
-        { return left.Equals(right); }
-
-        /// <inheritdoc/>
-        public static Boolean operator !=(DataLayerValue left, DataLayerValue right)
-        { return !left.Equals(right); }
-
-        /// <inheritdoc/>
-        public static Boolean operator <(DataLayerValue left, DataLayerValue right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator <=(DataLayerValue left, DataLayerValue right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator >(DataLayerValue left, DataLayerValue right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator >=(DataLayerValue left, DataLayerValue right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
-        public override Int32 GetHashCode()
-        { return systemIdValue.GetHashCode(); }
-        #endregion
 
         /// <summary>
         /// Returns a string that represents the current object.
