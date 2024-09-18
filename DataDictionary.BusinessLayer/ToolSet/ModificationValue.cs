@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Modification
+namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
     /// Item can be cast as a Generic Modification Value
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Modification
         { return AsModificationValue(); }
 
         /// <summary>
-        /// Returns the value as the generic ModificationValue.
+        /// Returns the value as the generic Modification Value.
         /// </summary>
         /// <returns></returns>
         IModificationValue AsModificationValue();

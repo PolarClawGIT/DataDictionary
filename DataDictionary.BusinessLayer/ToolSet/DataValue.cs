@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer
+namespace DataDictionary.BusinessLayer.ToolSet
 {
     // TODO: Trying this approach.
     // DataValue is intended to replace DataLayerIndex and DataLayerValue.

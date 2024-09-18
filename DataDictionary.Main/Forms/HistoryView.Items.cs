@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Modification;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;

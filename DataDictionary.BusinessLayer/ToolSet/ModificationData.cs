@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Modification
+namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
     /// Interface describing Modification Data
