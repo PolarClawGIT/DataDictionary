@@ -22,8 +22,9 @@ namespace DataDictionary.Main.Forms
             { sourceValue = source; }
 
             //public DataLayerIndex DataLayerId => sourceValue.Get;
+            public Guid Index => sourceValue.Index;
             public String Title => sourceValue.Title;
-            public String Description => sourceValue.Description;
+            public String Description => String.Empty;
             public String? ModifiedBy => sourceValue.ModifiedBy;
             public DateTime? ModifiedOn => sourceValue.ModifiedOn;
             public DbModificationType Modification => sourceValue.Modification;
@@ -34,20 +35,13 @@ namespace DataDictionary.Main.Forms
                 remove { sourceValue.PropertyChanged -= value; }
             }
 
-            public event EventHandler<RowStateEventArgs>? RowStateChanged
+            public IModificationValue AsModificationValue()
+            { return sourceValue; }
+
+            IDataValue IDataValue.AsDataValue()
             {
-                add { sourceValue.RowStateChanged += value; }
-                remove { sourceValue.RowStateChanged -= value; }
+                throw new NotImplementedException();
             }
-
-            public String GetDescription()
-            { return sourceValue.GetDescription(); }
-
-            public String GetTitle()
-            { return sourceValue.GetTitle(); }
-
-            public DataRowState RowState()
-            { return sourceValue.RowState(); }
         }
 
         protected class HistoryViewItems : BindingList<HistoryViewItem>

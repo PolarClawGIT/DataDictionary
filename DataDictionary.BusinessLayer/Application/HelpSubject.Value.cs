@@ -1,37 +1,39 @@
 ﻿using DataDictionary.BusinessLayer.Modification;
 using DataDictionary.DataLayer.ApplicationData;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,
-        IHelpSubjectIndex, IHelpSubjectIndexNameSpace
+        IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
+        IModificationValue
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectValue : HelpItem, IHelpSubjectValue,
-        IModificationValue
+    public class HelpSubjectValue : HelpItem, IHelpSubjectValue
     {
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new HelpSubjectIndex(this); }
+
 
         /// <inheritdoc/>
-        public String GetTitle()
-        { return this.HelpSubject ?? String.Empty; }
+        public IModificationValue AsModificationValue()
+        {
+            if (modificationValue is null)
+            {
+                modificationValue = new ModificationValue(this)
+                {
+                    GetIndex = () => HelpId ?? Guid.Empty,
+                    GetTitle = () => HelpSubject ?? String.Empty,
+                    IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
+                };
+            }
 
-        /// <inheritdoc/>
-        public String? GetDescription()
-        { return this.HelpToolTip; }
+            return modificationValue;
+        }
 
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return (eventArgs.PropertyName is nameof(HelpSubject)); }
+        IDataValue IDataValue.AsDataValue()
+        { return AsModificationValue(); }
+
+        // Backing field so the object is not recreated every time AsModificationValue is executed.
+        IModificationValue? modificationValue;
     }
 }

@@ -70,12 +70,10 @@ namespace DataDictionary.Main.Forms
             historyData.Items.Clear();
             historyValues.Clear();
 
-            //TODO: Needs to group on DataLayerIndex. DataLayerIndex needs some re-work.
-            foreach (var historyGroups in dataValues.OrderBy(o => o.Title).GroupBy(g => g.Title))
+            foreach (var historyGroups in dataValues.OrderBy(o => o.ModifiedOn).GroupBy(g => g.Index))
             {
                 HistoryViewItem LastItem = historyGroups.OrderBy(o => o.ModifiedOn).Last();
                 ListViewGroup newGroup = new ListViewGroup(LastItem.Title);
-                historyData.Groups.Add(newGroup);
 
                 foreach (HistoryViewItem historyItem in historyGroups)
                 {
@@ -86,8 +84,11 @@ namespace DataDictionary.Main.Forms
                     else { values.Add(String.Empty); }
 
                     ListViewItem newItem = new ListViewItem(values.ToArray(), newGroup);
+                    historyData.Items.Add(newItem);
                     historyValues.Add(newItem, historyItem);
                 }
+
+                historyData.Groups.Add(newGroup);
             }
         }
 

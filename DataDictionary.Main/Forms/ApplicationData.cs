@@ -209,7 +209,7 @@ namespace DataDictionary.Main.Forms
                 binding.RowStateChanged += RowStateChanged;
             }
 
-            if (data.Current is IDataLayerTitle titleValue)
+            if (data.Current is INamedScopeValue titleValue)
             { Text = titleValue.Title; }
 
             if (data.Current is IScopeType scopeValue)

@@ -222,12 +222,12 @@
             // modificationColumn
             // 
             modificationColumn.Text = "Modification";
-            modificationColumn.Width = 100;
+            modificationColumn.Width = 120;
             // 
             // modificationOnColumn
             // 
             modificationOnColumn.Text = "Modifed On";
-            modificationOnColumn.Width = 120;
+            modificationOnColumn.Width = 140;
             // 
             // historySummaryGroup
             // 
