@@ -78,6 +78,22 @@ namespace DataDictionary.DataLayer
 
         /// <summary>
         /// Conditionally adds the parameter to the command.
+        /// Allows data be passed to the Db using Boolean.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
+        public static void AddParameter(this Command command, String parameterName, DateTime? value)
+        {
+            if (value is not null)
+            {
+                command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.DateTime2)
+                { Value = value });
+            }
+        }
+
+        /// <summary>
+        /// Conditionally adds the parameter to the command.
         /// Allows data be passed to the Db using a SQL Table Type.
         /// </summary>
         /// <param name="command"></param>

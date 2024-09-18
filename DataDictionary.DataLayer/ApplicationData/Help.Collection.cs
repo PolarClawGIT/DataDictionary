@@ -22,24 +22,28 @@ namespace DataDictionary.DataLayer.ApplicationData
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IHelpKey key)
-        { return LoadCommand(connection, (key.HelpId, false)); }
+        { return LoadCommand(connection, (key.HelpId, null, false, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, false)); }
+        { return LoadCommand(connection, (null, null, false, false)); }
 
         /// <inheritdoc cref="LoadCommand(IConnection)"/>
         public Command LoadCommand(IConnection connection, Boolean includeHistory)
-        { return LoadCommand(connection, (null, includeHistory)); }
+        { return LoadCommand(connection, (null, null, includeHistory, true)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, Boolean includeHistory) parameters)
+        //TODO: Add methods that pass a date
+
+        Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_General].[procGetApplicationHelp]";
 
             command.AddParameter("@HelpId", parameters.helpId);
+            command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
             command.AddParameter("@IncludeHistory", parameters.includeHistory);
+            command.AddParameter("@IncludeDeleted", parameters.includeDeleted);
             return command;
         }
 
@@ -95,10 +99,4 @@ namespace DataDictionary.DataLayer.ApplicationData
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Help Items.
-    /// </summary>
-    public class HelpCollection : HelpCollection<HelpItem>
-    { }
 }
