@@ -15,13 +15,9 @@ namespace DataDictionary.BusinessLayer.Application
         IBindingData<HelpSubjectValue>,
         ILoadData, ILoadData<IHelpSubjectIndex>,
         ISaveData, ISaveData<IHelpSubjectIndex>,
-        IModificationData
+        ILoadHistoryData
     {
-        /// <summary>
-        /// Returns an empty ModificationData holding HelpSubjects.
-        /// </summary>
-        /// <returns></returns>
-        public IModificationData Create() { return new HelpSubjectData(); }
+
     }
 
     /// <summary>
@@ -41,14 +37,18 @@ namespace DataDictionary.BusinessLayer.Application
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, Boolean includeHistory)
+        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<IModificationValue> target)
         {
             List<WorkItem> work = new List<WorkItem>();
-            
+            HelpSubjectData data = new HelpSubjectData();
+
             work.Add(factory.CreateWork(
                 workName: "Load HelpSubject History",
-                target: this,
-                command: (conn) => LoadCommand(conn, includeHistory)));
+                target: data,
+                command: (conn) => HistoryCommand(conn)));
+
+            work.Add(new WorkItem()
+            { DoWork = () => target.AddRange(data.OfType<IModificationValue>()) });
 
             return work;
         }

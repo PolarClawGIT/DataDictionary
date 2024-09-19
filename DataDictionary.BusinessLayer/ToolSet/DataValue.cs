@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
 {
-    // TODO: Trying this approach.
-    // DataValue is intended to replace DataLayerIndex and DataLayerValue.
-    // This requires less to implement and can be more exact in what it is doing.
+    // TODO: Approach appears to work. Convert Index to a type, replacing DataLayerIndex.
+    // Use that for IKeyComparable.
 
     /// <summary>
     /// Interface for the classes that implement the DataValue
     /// </summary>
-    public interface IDataValue : IKey, IBindingPropertyChanged
+    public interface IDataValue : IKey, IBindingPropertyChanged, IBindingRowState
     {
         /// <summary>
         /// Index of the Source Value.
@@ -61,16 +61,32 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         public required Func<PropertyChangedEventArgs, Boolean> IsTitleChanged { get; init; }
 
+        Func<DataRowState> GetRowState { get; init; }
+
         public DataValue(IDataValue source)
-        { source.PropertyChanged += Source_PropertyChanged; }
+        {
+            GetRowState = source.RowState;
+            source.PropertyChanged += Source_PropertyChanged;
+            source.RowStateChanged += Source_RowStateChanged;
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
         void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (IsTitleChanged(e))
             { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(IDataValue.Title)); }
         }
+
+        void Source_RowStateChanged(Object? sender, RowStateEventArgs e)
+        {
+            if (RowStateChanged is EventHandler<RowStateEventArgs> handler)
+            { handler(this, new RowStateEventArgs(GetRowState())); }
+        }
+
+        public DataRowState RowState()
+        { return GetRowState(); }
 
         public IDataValue AsDataValue()
         { return this; }
@@ -134,5 +150,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
         public override String ToString()
         { return Title; }
+
     }
 }
