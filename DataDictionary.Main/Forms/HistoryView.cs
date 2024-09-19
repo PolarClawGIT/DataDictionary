@@ -22,18 +22,26 @@ namespace DataDictionary.Main.Forms
     partial class HistoryView : ApplicationData
     {
 
-        IModificationData? sourceData = null;
-        HistoryViewItems dataValues = new HistoryViewItems() { };
+        ILoadHistoryData? loader;
+        List<IModificationValue> modificationValues = new List<IModificationValue>();
+
+        // Initial width of the columns, for resizing calculations.
+        Int32 titleColumnWidth;
+        Int32 lastModificationColumnWidth;
+        Int32 modificationColumnWidth;
+        Int32 modifiedOnColumnWidth;
 
         public HistoryView() : base()
         {
             InitializeComponent();
+            titleColumnWidth = historyTitleColumn.Width;
+            lastModificationColumnWidth = historyLastModificationColumn.Width;
+            modificationColumnWidth = historyModificationColumn.Width;
+            modifiedOnColumnWidth = historyModifiedOnColumn.Width;
         }
 
-        public HistoryView(Func<IModificationData> data) : this()
-        {
-            sourceData = data();
-        }
+        public HistoryView(ILoadHistoryData loader) : this()
+        { this.loader = loader; }
 
         protected virtual void HistoryView_Load(object sender, EventArgs e)
         {
@@ -41,75 +49,36 @@ namespace DataDictionary.Main.Forms
             List<WorkItem> work = new List<WorkItem>();
             IDatabaseWork factory = BusinessData.GetDbFactory();
             work.Add(factory.OpenConnection());
-            if (sourceData is not null)
-            {
-                work.AddRange(sourceData.Load(factory, true));
-                work.Add(new WorkItem()
-                {
-                    DoWork = () =>
-                    {
-                        if (sourceData is IEnumerable<IModificationValue> values)
-                        {
-                            foreach (IModificationValue item in values)
-                            { dataValues.Add(new HistoryViewItem(item)); }
-                        }
-                    }
-                });
-            }
+
+            if (loader is not null)
+            { work.AddRange(loader.LoadHistory(factory, modificationValues)); }
 
             DoWork(work, onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { HistoryData_Load(); }
+            { HistoryValueData_Load(); }
         }
 
-        Dictionary<ListViewItem, HistoryViewItem> historyValues = new Dictionary<ListViewItem, HistoryViewItem>();
-        void HistoryData_Load()
+
+        void HistoryValueData_Load()
         {
-            historyData.Groups.Clear();
-            historyData.Items.Clear();
-            historyValues.Clear();
+            historyValuesData.Items.Clear();
 
-            foreach (var historyGroups in dataValues.OrderBy(o => o.ModifiedOn).GroupBy(g => g.Index))
+            foreach (var item in modificationValues.GroupBy(g => g.Index))
             {
-                HistoryViewItem LastItem = historyGroups.OrderBy(o => o.ModifiedOn).Last();
-                ListViewGroup newGroup = new ListViewGroup(LastItem.Title);
-
-                foreach (HistoryViewItem historyItem in historyGroups)
-                {
-                    List<String> values = new List<string>();
-                    values.Add(DbModificationEnumeration.Cast(historyItem.Modification).DisplayName);
-                    if (historyItem.ModifiedOn is DateTime modifiedOnValue)
-                    { values.Add(modifiedOnValue.ToString()); }
-                    else { values.Add(String.Empty); }
-
-                    ListViewItem newItem = new ListViewItem(values.ToArray(), newGroup);
-                    historyData.Items.Add(newItem);
-                    historyValues.Add(newItem, historyItem);
-                }
-
-                historyData.Groups.Add(newGroup);
+                IModificationValue lastValue = item.OrderBy(o => o.ModifiedOn).Last();
+                ListViewItem newItem = new ListViewItem([lastValue.Title, DbModificationEnumeration.Cast(lastValue.Modification).DisplayName]);
+                historyValuesData.Items.Add(newItem);
             }
+
         }
 
-        private void HistoryData_SelectedIndexChanged(object sender, EventArgs e)
+        void HistoryModificationData_Load()
         {
-            if (historyData.SelectedItems.Count > 0 && historyValues.ContainsKey(historyData.SelectedItems[0]))
-            {
-                var selectedItem = historyValues[(historyData.SelectedItems[0])];
-                titleData.Text = selectedItem.Title;
-                descriptionData.Text = selectedItem.Description;
-                modificationData.Text = DbModificationEnumeration.Cast(selectedItem.Modification).DisplayName;
-
-                if(selectedItem.ModifiedOn is DateTime modifiedOnValue)
-                { modifiedOnDate.Text = modifiedOnValue.ToString(); }
-                else { modifiedOnDate.Text = String.Empty; }
-
-                if (selectedItem.ModifiedBy is String modifiedByValue)
-                { modifiedByData.Text = modifiedByValue; }
-                else { modifiedByData.Text = String.Empty; }
-            }
+            historyModificationData.Items.Clear();
         }
+
+
 
         protected virtual void ViewDetailCommand_Click(object sender, EventArgs e)
         {
@@ -121,16 +90,20 @@ namespace DataDictionary.Main.Forms
 
         }
 
-        protected virtual void ReQueryCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
         protected virtual void BindingModification_CurrentItemChanged(object sender, EventArgs e)
         {
 
         }
 
 
+        private void HistoryValuesData_Resize(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void HistoryModificationData_Resize(object sender, EventArgs e)
+        {
+
+        }
     }
 }

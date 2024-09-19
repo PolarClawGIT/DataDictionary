@@ -150,7 +150,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, ImageEnumeration>()
+        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems = new Dictionary<helpContentImageIndex, ImageEnumeration>()
         {
             {helpContentImageIndex.HelpPage, ImageEnumeration.Cast(ScopeType.ApplicationHelpPage) },
             {helpContentImageIndex.HelpGroup, ImageEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
@@ -585,11 +585,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
-            if (helpBinding.Current is HelpSubjectValue current)
-            {
-                Activate(() => new HistoryView(BusinessData.ApplicationData.HelpSubjects.Create));
-            }
-            
+
+            if (helpBinding.DataSource is ILoadHistoryData history)
+            { Activate(() => new HistoryView(history)); }
+
+
         }
     }
 }
