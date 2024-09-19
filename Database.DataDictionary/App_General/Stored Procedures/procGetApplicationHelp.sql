@@ -40,7 +40,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			Left Join [App_General].[ApplicationHelp] For System_Time All N -- Next
 			On	A.[HelpId] = N.[HelpId] And
 				A.[SysEnd] = N.[SysStart]
-	Where	@HelpId is Null or @HelpId = A.[HelpId] And
+	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And
 			@IncludeDeleted = 1 And
 			N.[HelpId] is Null And
 			IsNull(@AsOfUtcDate,sysUtcDateTime()) > A.[SysStart] And
