@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Application
             {
                 modificationValue = new ModificationValue(this)
                 {
-                    GetIndex = () => HelpId ?? Guid.Empty,
+                    GetIndex = () => new HelpSubjectIndex(this),
                     GetTitle = () => HelpSubject ?? String.Empty,
                     IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
                 };

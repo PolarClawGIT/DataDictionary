@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <summary>
         /// Index of the Source Value.
         /// </summary>
-        Guid Index { get { return AsDataValue().Index; } }
+        DataIndex Index { get { return AsDataValue().Index; } }
 
         /// <summary>
         /// Generic Title/Name for the value
@@ -38,10 +38,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Base Class for holding a generic DataLayer Value
     /// </summary>
-    class DataValue : IDataValue, IKeyComparable<IDataValue>
+    class DataValue : IDataValue
     {
         /// <inheritdoc/>
-        public Guid Index { get { return GetIndex(); } }
+        public DataIndex Index { get { return GetIndex(); } }
 
         /// <inheritdoc/>
         public String Title { get { return GetTitle(); } }
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <summary>
         /// Function that returns the GUID of the source value key.
         /// </summary>
-        public required Func<Guid> GetIndex { get; init; }
+        public required Func<DataIndex> GetIndex { get; init; }
 
         /// <summary>
         /// Function that returns the Title of the source value
@@ -90,63 +90,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
         public IDataValue AsDataValue()
         { return this; }
-
-        #region IEquatable, IComparable
-        /// <inheritdoc/>
-        public virtual Boolean Equals(IDataValue? other)
-        {
-            return
-                other is IDataValue &&
-                !Index.Equals(Guid.Empty) &&
-                !other.Index.Equals(Guid.Empty) &&
-                Index.Equals(other.Index);
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDataValue value && Equals(value); }
-
-        /// <inheritdoc/>
-        public virtual int CompareTo(IDataValue? other)
-        {
-            if (other is null) { return 1; }
-            else if (Index.Equals(Guid.Empty)) { return 1; }
-            else if (other.Index.Equals(Guid.Empty)) { return -1; }
-            else { return Index.CompareTo(other.Index); }
-        }
-
-        /// <inheritdoc/>
-        public virtual int CompareTo(object? obj)
-        { if (obj is IDataValue value) { return CompareTo(value); } else { return 1; } }
-
-        /// <inheritdoc/>
-        public static bool operator ==(DataValue left, DataValue right)
-        { return left.Equals(right); }
-
-        /// <inheritdoc/>
-        public static bool operator !=(DataValue left, DataValue right)
-        { return !left.Equals(right); }
-
-        /// <inheritdoc/>
-        public static bool operator <(DataValue left, DataValue right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DataValue left, DataValue right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DataValue left, DataValue right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DataValue left, DataValue right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        { return Index.GetHashCode(); }
-        #endregion
 
         public override String ToString()
         { return Title; }
