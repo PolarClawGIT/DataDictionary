@@ -293,10 +293,6 @@
 
         #endregion
 
-        private TableLayoutPanel historyLayout;
-        private GroupBox modificationsGroup;
-        private TableLayoutPanel historyDetailLayout;
-        private Label restoreWarning;
         private Button restoreCommand;
         private Button viewDetailCommand;
         protected Controls.TextBoxData titleData;

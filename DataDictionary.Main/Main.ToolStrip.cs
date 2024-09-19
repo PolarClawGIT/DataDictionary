@@ -120,9 +120,5 @@ namespace DataDictionary.Main
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, ImageEnumeration.GetIcon(ScopeType.ScriptingTemplateAttribute)), BusinessData.ScriptingEngine.TemplateAttributes); }
 
-        [Obsolete("Get rid of this when done with POC")]
-        private void navTreeToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new ProofOfConcept.NavigationTree()); }
-
     }
 }

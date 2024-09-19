@@ -102,7 +102,6 @@
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
             textEditorToolStripMenuItem = new ToolStripMenuItem();
-            navTreeToolStripMenuItem = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
@@ -176,7 +175,6 @@
             // 
             attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeAlaises, menuAttributeProperties, menuAttributeDefinitions });
             attributeContextMenu.Name = "attributeContextMenu";
-            attributeContextMenu.OwnerItem = newAttributeCommand;
             attributeContextMenu.Size = new Size(223, 92);
             // 
             // menuAttributes
@@ -226,7 +224,6 @@
             // 
             entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions, menuEntityAttributes });
             entityContextMenu.Name = "entityContextMenu";
-            entityContextMenu.OwnerItem = newEntityCommand;
             entityContextMenu.Size = new Size(206, 114);
             // 
             // menuEntities
@@ -284,7 +281,6 @@
             // 
             subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { subjectAreaToolStripMenuItem });
             subjectAreaContextMenu.Name = "subjectAreaContextMenu";
-            subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
             // subjectAreaToolStripMenuItem
@@ -416,7 +412,6 @@
             // 
             libraryContextMenu.Items.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLibraryMemberCommand });
             libraryContextMenu.Name = "libraryContextMenu";
-            libraryContextMenu.OwnerItem = manageLibrariesCommand;
             libraryContextMenu.Size = new Size(205, 48);
             // 
             // viewLibrarySourceCommand
@@ -665,13 +660,13 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(135, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(135, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -679,7 +674,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(135, 22);
+            applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browseHelpCommand
@@ -692,37 +687,30 @@
             // 
             // unitTestingToolStripMenuItem
             // 
-            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem, navTreeToolStripMenuItem });
+            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(135, 22);
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(129, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(129, 22);
+            testFormToolStripMenuItem.Size = new Size(180, 22);
             testFormToolStripMenuItem.Text = "Test Form";
             // 
             // textEditorToolStripMenuItem
             // 
             textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
-            textEditorToolStripMenuItem.Size = new Size(129, 22);
+            textEditorToolStripMenuItem.Size = new Size(180, 22);
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
-            // 
-            // navTreeToolStripMenuItem
-            // 
-            navTreeToolStripMenuItem.Name = "navTreeToolStripMenuItem";
-            navTreeToolStripMenuItem.Size = new Size(129, 22);
-            navTreeToolStripMenuItem.Text = "Nav Tree";
-            navTreeToolStripMenuItem.Click += navTreeToolStripMenuItem_Click;
             // 
             // windowToolStripMenuItem
             // 
@@ -854,7 +842,6 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
             scriptingContextMenu.Size = new Size(228, 114);
             // 
             // menuScriptingTemplate
@@ -1035,7 +1022,6 @@
         private ToolStripMenuItem menuScriptingAttribute;
         private ToolStripMenuItem windowToolStripMenuItem;
         private ToolStripMenuItem menuEntityAttributes;
-        private ToolStripMenuItem navTreeToolStripMenuItem;
         private Controls.NamedScopeTreeView namedScopeData;
         private BindingSource bindingModel;
     }
