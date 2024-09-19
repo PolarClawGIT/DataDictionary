@@ -17,7 +17,8 @@ namespace DataDictionary.DataLayer.ApplicationData
     public abstract class HelpCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
         IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IRemoveItem<IHelpKey>
+        IRemoveItem<IHelpKey>,
+        ITemporalData, ITemporalData<IHelpKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>
@@ -28,11 +29,13 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Command LoadCommand(IConnection connection)
         { return LoadCommand(connection, (null, null, false, false)); }
 
-        /// <inheritdoc cref="LoadCommand(IConnection)"/>
-        public Command LoadCommand(IConnection connection, Boolean includeHistory)
-        { return LoadCommand(connection, (null, null, includeHistory, true)); }
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection)
+        { return LoadCommand(connection, (null, null, true, true)); }
 
-        //TODO: Add methods that pass a date
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IHelpKey key)
+        { return LoadCommand(connection, (key.HelpId, null, true, true)); }
 
         Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
         {

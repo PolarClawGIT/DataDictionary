@@ -5,7 +5,7 @@ namespace DataDictionary.DataLayer;
 /// <summary>
 /// Interface describes a Temporal Table
 /// </summary>
-public interface ITemporalTable
+public interface ITemporalItem
 {
     /// <summary>
     /// Account Name that Modified this record
