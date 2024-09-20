@@ -13,10 +13,27 @@ using Toolbox.Threading;
 namespace DataDictionary.Main.Forms
 {
 
-    class HistoryView<TValue, TKey> : HistoryView
+    class HistoryView<TValue> : HistoryView
         where TValue : IModificationValue
     {
+        
+        public HistoryView(ILoadHistoryData loader) : base(loader) 
+        { }
 
+        protected override void ViewDetailCommand_Click(Object sender, EventArgs e)
+        {
+            //base.ViewDetailCommand_Click(sender, e);
+
+            if(base.SelectedValue is TValue)
+            {
+
+            }
+        }
+
+        protected override void RestoreCommand_Click(Object sender, EventArgs e)
+        {
+            base.RestoreCommand_Click(sender, e);
+        }
 
     }
 }

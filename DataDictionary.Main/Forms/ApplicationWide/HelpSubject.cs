@@ -587,8 +587,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             base.HistoryCommand_Click(sender, e);
 
             if (helpBinding.DataSource is ILoadHistoryData history)
-            { Activate(() => new HistoryView(history)); }
-
+            {
+                Activate(() => new HistoryView<HelpSubjectValue>(history));
+            }
 
         }
     }

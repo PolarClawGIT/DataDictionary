@@ -71,17 +71,16 @@
             historyLayout.Location = new Point(0, 25);
             historyLayout.Name = "historyLayout";
             historyLayout.RowCount = 2;
-            historyLayout.RowStyles.Add(new RowStyle());
             historyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            historyLayout.Size = new Size(623, 419);
+            historyLayout.RowStyles.Add(new RowStyle());
+            historyLayout.Size = new Size(623, 515);
             historyLayout.TabIndex = 4;
             // 
             // historySummaryGroup
             // 
-            historySummaryGroup.AutoSize = true;
             historySummaryGroup.Controls.Add(historyDetailLayout);
             historySummaryGroup.Dock = DockStyle.Fill;
-            historySummaryGroup.Location = new Point(314, 105);
+            historySummaryGroup.Location = new Point(314, 201);
             historySummaryGroup.Name = "historySummaryGroup";
             historySummaryGroup.Size = new Size(306, 311);
             historySummaryGroup.TabIndex = 2;
@@ -217,7 +216,7 @@
             modificationsGroup.Dock = DockStyle.Fill;
             modificationsGroup.Location = new Point(314, 3);
             modificationsGroup.Name = "modificationsGroup";
-            modificationsGroup.Size = new Size(306, 96);
+            modificationsGroup.Size = new Size(306, 192);
             modificationsGroup.TabIndex = 0;
             modificationsGroup.TabStop = false;
             modificationsGroup.Text = "Modifications";
@@ -229,10 +228,11 @@
             historyModificationData.Location = new Point(3, 19);
             historyModificationData.MultiSelect = false;
             historyModificationData.Name = "historyModificationData";
-            historyModificationData.Size = new Size(300, 74);
+            historyModificationData.Size = new Size(300, 170);
             historyModificationData.TabIndex = 0;
             historyModificationData.UseCompatibleStateImageBehavior = false;
             historyModificationData.View = View.Details;
+            historyModificationData.SelectedIndexChanged += HistoryModificationData_SelectedIndexChanged;
             historyModificationData.Resize += HistoryModificationData_Resize;
             // 
             // historyModificationColumn
@@ -253,10 +253,11 @@
             historyValuesData.MultiSelect = false;
             historyValuesData.Name = "historyValuesData";
             historyLayout.SetRowSpan(historyValuesData, 2);
-            historyValuesData.Size = new Size(305, 413);
+            historyValuesData.Size = new Size(305, 509);
             historyValuesData.TabIndex = 0;
             historyValuesData.UseCompatibleStateImageBehavior = false;
             historyValuesData.View = View.Details;
+            historyValuesData.SelectedIndexChanged += HistoryValuesData_SelectedIndexChanged;
             historyValuesData.Resize += HistoryValuesData_Resize;
             // 
             // historyTitleColumn
@@ -273,14 +274,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 444);
+            ClientSize = new Size(623, 540);
             Controls.Add(historyLayout);
             Name = "HistoryView";
             Text = "HistoryView";
             Load += HistoryView_Load;
             Controls.SetChildIndex(historyLayout, 0);
             historyLayout.ResumeLayout(false);
-            historyLayout.PerformLayout();
             historySummaryGroup.ResumeLayout(false);
             historyDetailLayout.ResumeLayout(false);
             historyDetailLayout.PerformLayout();
