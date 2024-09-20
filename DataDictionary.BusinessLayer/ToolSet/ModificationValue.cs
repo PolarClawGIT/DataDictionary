@@ -15,8 +15,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     public interface IModificationValue : ITemporalItem, IDataValue, IBindingRowState
     {
         /// <inheritdoc/>
-        new IDataValue AsDataValue()
-        { return AsModificationValue(); }
+        DataIndex IDataValue.Index { get { return AsModificationValue().Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return AsModificationValue().Title; } }
 
         /// <summary>
         /// Returns the value as the generic Modification Value.
