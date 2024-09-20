@@ -10,6 +10,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Interface for the BusinessLayer Index
     /// </summary>
+    [Obsolete]
     public interface IDataLayerIndex : IKey
     {
         //TODO: Not sure if this is the best name.
@@ -28,6 +29,7 @@ namespace DataDictionary.BusinessLayer
     /// Implementation, it is just a GUID.
     /// Logically, this is the parent class to all the GUID's used be the database.
     /// </remarks>
+    [Obsolete]
     public partial class DataLayerIndex : IDataLayerIndex, IKeyComparable<IDataLayerIndex>
     {
         /// <inheritdoc/>

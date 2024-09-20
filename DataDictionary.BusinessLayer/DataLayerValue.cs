@@ -8,6 +8,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Interface for a generic DataLayer Value Source
     /// </summary>
+    [Obsolete]
     public interface IDataLayerSource : IBindingPropertyChanged
     {
         /// <summary>
@@ -43,6 +44,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete]
     public interface IDataLayerValue: 
         IBindingPropertyChanged
     {
@@ -60,6 +62,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Generic Data Layer Value
     /// </summary>
+    [Obsolete]
     class DataLayerValue : IDataLayerValue
     {
         IDataLayerSource source;
