@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -597,7 +598,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void pathNameData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(pathNameData.Text).ToArray());
+            PathIndex path = new PathIndex(PathIndex.Parse(pathNameData.Text).ToArray());
             pathNameData.Text = path.MemberFullPath;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -37,8 +38,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         { return new TemplateIndex(this); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        public virtual PathIndex GetPath()
+        { return new PathIndex(Scope); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -23,8 +24,8 @@ public class ReferenceValue : DbReferenceItem, IReferenceValue, INamedScopeSourc
     { return new ReferenceIndex(this); }
 
     /// <inheritdoc/>
-    public NamedScopePath GetPath()
-    { return new NamedScopePath(ReferencedDatabaseName, ReferencedSchemaName, ReferencedObjectName, ReferencedColumnName); }
+    public PathIndex GetPath()
+    { return new PathIndex(ReferencedDatabaseName, ReferencedSchemaName, ReferencedObjectName, ReferencedColumnName); }
 
     /// <inheritdoc/>
     public String GetTitle()

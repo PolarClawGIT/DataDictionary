@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -27,8 +28,8 @@ namespace DataDictionary.BusinessLayer.Model
         { return ModelTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(ScopeEnumeration.Cast(Scope).Name); }
+        public PathIndex GetPath()
+        { return new PathIndex(ScopeEnumeration.Cast(Scope).Name); }
 
         /// <inheritdoc/>
         public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)

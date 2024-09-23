@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ScriptingData;
 using System;
 using System.Collections.Generic;
@@ -21,9 +21,9 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// The Template Path derived from PathName
         /// </summary>
-        public NamedScopePath Path
+        public PathIndex Path
         {
-            get { return new NamedScopePath(NamedScopePath.Parse(PathName).ToArray()); }
+            get { return new PathIndex(PathIndex.Parse(PathName).ToArray()); }
             set { PathName = value.MemberFullPath; }
         }
 

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.Threading;
@@ -41,7 +42,7 @@ namespace DataDictionary.BusinessLayer
 
                     foreach (TemplatePathValue item in scripting.Paths)
                     {
-                        NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(item.PathName).ToArray());
+                        PathIndex path = new PathIndex(PathIndex.Parse(item.PathName).ToArray());
 
                         foreach (NamedScopeIndex value in namedScopeValues.PathKeys(path))
                         {

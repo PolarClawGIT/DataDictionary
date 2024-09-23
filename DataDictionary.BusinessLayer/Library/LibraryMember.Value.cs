@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -23,8 +24,8 @@ namespace DataDictionary.BusinessLayer.Library
         { return new LibraryMemberIndex(this); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(NamedScopePath.Parse(MemberNameSpace).ToArray()); }
+        public virtual PathIndex GetPath()
+        { return new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

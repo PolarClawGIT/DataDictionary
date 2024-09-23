@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
@@ -411,7 +411,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
 
-            NamedScopePath GetMemberName(TableColumnValue column)
+            PathIndex GetMemberName(TableColumnValue column)
             {
                 TableColumnIndexName columnName = new TableColumnIndexName(column);
                 List<String> nameParts = new List<String>();
@@ -447,7 +447,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     { ByConstraint(item); }
                 }
 
-                return new NamedScopePath(nameParts.ToArray());
+                return new PathIndex(nameParts.ToArray());
             }
         }
 
@@ -480,7 +480,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     entity = new EntityValue()
                     {
                         EntityTitle = table.TableName,
-                        MemberName = new NamedScopePath(table.SchemaName, table.TableName).MemberFullPath,
+                        MemberName = new PathIndex(table.SchemaName, table.TableName).MemberFullPath,
                     };
                     entityIndex = new EntityIndex(entity);
 

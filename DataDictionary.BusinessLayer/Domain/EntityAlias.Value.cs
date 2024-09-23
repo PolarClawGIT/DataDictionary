@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Entity;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -34,9 +34,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// The Alias Path derived from AliasName
         /// </summary>
-        public NamedScopePath AliasPath
+        public PathIndex AliasPath
         {
-            get { return new NamedScopePath(NamedScopePath.Parse(AliasName).ToArray()); }
+            get { return new PathIndex(PathIndex.Parse(AliasName).ToArray()); }
             set { AliasName = value.MemberFullPath; }
         }
     }

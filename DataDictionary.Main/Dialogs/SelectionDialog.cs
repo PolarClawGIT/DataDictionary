@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -27,8 +28,8 @@ namespace DataDictionary.Main.Dialogs
         /// <summary>
         /// Filters the List by Paths
         /// </summary>
-        public BindingList<NamedScopePath> FilterPaths { get; } =
-            new BindingList<NamedScopePath>()
+        public BindingList<PathIndex> FilterPaths { get; } =
+            new BindingList<PathIndex>()
             { AllowEdit = false, AllowNew = true, AllowRemove = true };
 
         /// <summary>

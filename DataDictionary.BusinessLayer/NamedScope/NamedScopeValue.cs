@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -8,7 +9,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the NamedScope Value.
     /// </summary>
-    public interface INamedScopeValue : IScopeType, IOnTitleChanged, IGetNamedScopePath
+    public interface INamedScopeValue : IScopeType, IOnTitleChanged, IPathIndex
     {
         /// <summary>
         /// The Index for the NamedScopeValue.
@@ -44,7 +45,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public virtual NamedScopePath Path { get; protected set; } = new NamedScopePath();
+        public virtual PathIndex Path { get; protected set; } = new PathIndex();
 
         /// <inheritdoc/>
         public virtual String Title { get; protected set; } = String.Empty;
@@ -59,12 +60,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Allows for overriding how Path is created.
         /// Path is updated when GetPath is set or on TitleChanged is called.
         /// </remarks>
-        public Func<NamedScopePath> GetPath
+        public Func<PathIndex> GetPath
         {
             get { return getPath; }
             init { getPath = value; Path = value(); }
         }
-        Func<NamedScopePath> getPath = () => new NamedScopePath();
+        Func<PathIndex> getPath = () => new PathIndex();
 
         /// <summary>
         /// Get the current Title of the Value

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace DataDictionary.Main.Dialogs
         /// <summary>
         /// The currently selected Path
         /// </summary>
-        public NamedScopePath SelectedPath
+        public PathIndex SelectedPath
         {
             get { return pathValue; }
             set
@@ -43,10 +44,10 @@ namespace DataDictionary.Main.Dialogs
                 IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(SelectedPath));
             }
         }
-        public NamedScopePath PathNull { get { return pathNull; } }
-        private static NamedScopePath pathNull = new NamedScopePath();
-        private NamedScopePath pathValue = pathNull;
-        private BindingList<NamedScopePath> filterPaths;
+        public PathIndex PathNull { get { return pathNull; } }
+        private static PathIndex pathNull = new PathIndex();
+        private PathIndex pathValue = pathNull;
+        private BindingList<PathIndex> filterPaths;
 
         /// <summary>
         /// Group By Scope is Selected
@@ -77,7 +78,7 @@ namespace DataDictionary.Main.Dialogs
         }
         private Boolean isGroupByScope = true;
 
-        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<NamedScopePath> paths)
+        public SelectionDialogData(BindingList<ScopeType> scopes, BindingList<PathIndex> paths)
         {
             this.filterScopes = scopes;
             this.filterPaths = paths;
@@ -170,7 +171,7 @@ namespace DataDictionary.Main.Dialogs
 
             void Control_SelectionChangeCommitted(Object? sender, EventArgs e)
             {
-                if (control.SelectedValue is NamedScopePath value)
+                if (control.SelectedValue is PathIndex value)
                 { SelectedPath = value; }
 
                 OnFilterChanged();
@@ -182,7 +183,7 @@ namespace DataDictionary.Main.Dialogs
             void BuildList()
             {
                 control.DataSource = null;
-                Dictionary<NamedScopePath, String> data = new Dictionary<NamedScopePath, String>();
+                Dictionary<PathIndex, String> data = new Dictionary<PathIndex, String>();
                 data.Add(pathNull, "(any)");
 
                 this.Where(w =>

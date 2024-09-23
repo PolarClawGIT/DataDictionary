@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
@@ -32,13 +33,13 @@ namespace DataDictionary.Main.ProofOfConcept
             }
         };
 
-        public Func<TValue, NamedScopePath> GetPath { get; init; } = (value) =>
+        public Func<TValue, PathIndex> GetPath { get; init; } = (value) =>
         {
             switch (value)
             {
                 case INamedScopeValue: return ((INamedScopeValue)value).Path;
                 case INamedScopeSourceValue: return ((INamedScopeSourceValue)value).Path;
-                default: return new NamedScopePath();
+                default: return new PathIndex();
             }
         };
 

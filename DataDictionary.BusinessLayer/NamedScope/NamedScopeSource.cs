@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -91,13 +92,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Path of the Source Value.
         /// </summary>
         /// <remarks>This may not be a complete path.</remarks>
-        NamedScopePath Path { get { return GetPath(); } }
+        PathIndex Path { get { return GetPath(); } }
 
         /// <summary>
         /// Gets the generic NameScope Path from the Value
         /// </summary>
         /// <returns></returns>
-        NamedScopePath GetPath();
+        PathIndex GetPath();
     }
 
     /// <summary>
@@ -106,20 +107,20 @@ namespace DataDictionary.BusinessLayer.NamedScope
     class NameSpaceSource : INamedScopeSourceValue
     {
         protected Guid SystemId;
-        protected NamedScopePath SystemPath;
+        protected PathIndex SystemPath;
 
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
         public DataLayerIndex GetIndex()
         { return new DataLayerIndex() { DataLayerId = SystemId }; }
 
-        public NamedScopePath GetPath()
+        public PathIndex GetPath()
         { return SystemPath; }
 
         public String GetTitle()
         { return SystemPath.Member; }
 
-        public NameSpaceSource(NamedScopePath path)
+        public NameSpaceSource(PathIndex path)
         {
             SystemId = Guid.NewGuid();
             SystemPath = path;

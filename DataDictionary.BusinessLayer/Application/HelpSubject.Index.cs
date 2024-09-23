@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Resource;
 
@@ -41,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Application
     }
 
     /// <inheritdoc/>
-    public interface IHelpSubjectIndexPath : INamedScopePath
+    public interface IHelpSubjectIndexPath : IPath
     { }
 
     /// <inheritdoc/>
@@ -49,27 +48,27 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndexPath : NamedScopePath, IHelpSubjectIndexPath,
+    public class HelpSubjectIndexPath : PathIndex, IHelpSubjectIndexPath,
         IKeyEquality<IHelpSubjectIndexPath>, IKeyEquality<HelpSubjectIndexPath>
     {
-        /// <inheritdoc cref="NamedScopePath.NamedScopePath(INamedScopePath[])"/>
+        /// <inheritdoc cref="PathIndex.PathIndex(IPath[])"/>
         public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source) 
         { }
 
         /// <inheritdoc cref="HelpKeyNameSpace(IHelpKeyNameSpace)"/>
-        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(NamedScopePath.Parse(source.NameSpace).ToArray())
+        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(PathIndex.Parse(source.NameSpace).ToArray())
         { }
 
-        /// <inheritdoc cref="NamedScopePath(String?[])"/>
+        /// <inheritdoc cref="PathIndex(String?[])"/>
         public HelpSubjectIndexPath(params String?[] source): base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(HelpSubjectIndexPath? other)
-        { return other is INamedScopePath value && Equals(new NamedScopePath(value)); }
+        { return other is IPath value && Equals(new PathIndex(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectIndexPath? other)
-        { return other is INamedScopePath value && Equals(new NamedScopePath(value)); }
+        { return other is IPath value && Equals(new PathIndex(value)); }
     }
 }

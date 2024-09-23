@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -23,11 +24,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
-        public virtual NamedScopePath GetPath()
+        public virtual PathIndex GetPath()
         {
             if (String.IsNullOrWhiteSpace(MemberName))
-            { return new NamedScopePath(EntityTitle); }
-            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+            { return new PathIndex(EntityTitle); }
+            else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
         }
 
         /// <inheritdoc/>

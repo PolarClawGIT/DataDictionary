@@ -12,6 +12,7 @@ using DataDictionary.Main.Dialogs;
 using System.Linq;
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -234,7 +235,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
         }
 
@@ -358,7 +359,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void AliasNameData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
+            PathIndex path = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
             aliasNameData.Text = path.MemberFullPath;
         }
 

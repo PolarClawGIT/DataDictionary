@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -24,8 +25,8 @@ namespace DataDictionary.BusinessLayer.Database
         { return new ConstraintIndex(this); }
 
         /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName, SchemaName, ConstraintName); }
+        public PathIndex GetPath()
+        { return new PathIndex(DatabaseName, SchemaName, ConstraintName); }
 
         /// <inheritdoc/>
         public String GetTitle()

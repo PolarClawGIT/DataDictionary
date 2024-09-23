@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -24,8 +25,8 @@ namespace DataDictionary.BusinessLayer.Database
         { return new SchemaIndex(this); }
 
         /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName, SchemaName); }
+        public PathIndex GetPath()
+        { return new PathIndex(DatabaseName, SchemaName); }
 
         /// <inheritdoc/>
         public String GetTitle()

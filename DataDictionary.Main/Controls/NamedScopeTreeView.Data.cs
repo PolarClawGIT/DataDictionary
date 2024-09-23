@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -19,7 +20,7 @@ namespace DataDictionary.Main.Controls
         {
             public NamedScopeNode? Parent { get; init; } = null;
             public INamedScopeValue NamedScope { get; init; }
-            public NamedScopePath Path { get; init; }
+            public PathIndex Path { get; init; }
             public DataLayerIndex DataIndex { get { return NamedScope.Source.Index; } }
             public NamedScopeIndex ScopeIndex { get { return NamedScope.Index; } }
             public ScopeType Scope { get { return NamedScope.Scope; } }
@@ -168,7 +169,7 @@ namespace DataDictionary.Main.Controls
             NamedScopeNode rootnode = new NamedScopeNode(treeData.GetValue(rootIndex));
             List<NamedScopeNode> values = BuildPath(rootnode, treeData).ToList();
 
-            Dictionary<NamedScopePath, List<NamedScopeNode>> pathGroup = values.
+            Dictionary<PathIndex, List<NamedScopeNode>> pathGroup = values.
                 SelectMany(s => s.Path.Group()).
                 Distinct().
                 GroupJoin(values,
@@ -187,7 +188,7 @@ namespace DataDictionary.Main.Controls
             foreach (var pathItem in pathGroup.Where(w => w.Key.ParentPath is null))
             { BuildNodes(treeControl.Nodes, pathItem.Key, pathItem.Value); }
 
-            void BuildNodes(TreeNodeCollection treeNodes, NamedScopePath path, IReadOnlyList<NamedScopeNode> values)
+            void BuildNodes(TreeNodeCollection treeNodes, PathIndex path, IReadOnlyList<NamedScopeNode> values)
             {
                 if (values.Count == 0)
                 {   // NameSpace node
@@ -324,7 +325,7 @@ namespace DataDictionary.Main.Controls
             return result;
         }
 
-        TreeNode CreateNode(NamedScopePath path)
+        TreeNode CreateNode(PathIndex path)
         {
             ImageEnumeration scopeImage = ImageEnumeration.Cast(ScopeType.ModelNameSpace);
             TreeNode result = new TreeNode(path.Member);

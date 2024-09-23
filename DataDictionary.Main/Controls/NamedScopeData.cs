@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -19,12 +20,12 @@ namespace DataDictionary.Main.Controls
         public NamedScopeIndex? ScopeKey { get; private set; }
 
         [Browsable(false)]
-        public NamedScopePath ScopePath
+        public PathIndex ScopePath
         {
             get { return scopePath; }
             set { scopePath = value; pathData.Text = value.MemberFullPath; }
         }
-        private NamedScopePath scopePath = new NamedScopePath();
+        private PathIndex scopePath = new PathIndex();
 
         [Browsable(false)]
         public ScopeType Scope
@@ -145,7 +146,7 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        void SetNamedScope(NamedScopePath path)
+        void SetNamedScope(PathIndex path)
         {
             if (namedScope.PathKeys(path).FirstOrDefault() is NamedScopeIndex key)
             { SetNamedScope(key); }
@@ -171,7 +172,7 @@ namespace DataDictionary.Main.Controls
 
         private void PathData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath value = new NamedScopePath(NamedScopePath.Parse(pathData.Text).ToArray());
+            PathIndex value = new PathIndex(PathIndex.Parse(pathData.Text).ToArray());
             SetNamedScope(value);
             pathData.Text = value.MemberFullPath;
         }

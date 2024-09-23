@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Domain
     public class AttributeAliasValue : DomainAttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
-        public List<String> AliasParts { get { return NamedScopePath.Parse(AliasName); } }
+        public List<String> AliasParts { get { return PathIndex.Parse(AliasName); } }
 
         /// <inheritdoc/>
         public AttributeAliasValue() : base() { }
@@ -45,9 +45,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// The Alias Path derived from AliasName
         /// </summary>
-        public NamedScopePath AliasPath
+        public PathIndex AliasPath
         {
-            get { return new NamedScopePath(NamedScopePath.Parse(AliasName).ToArray()); }
+            get { return new PathIndex(PathIndex.Parse(AliasName).ToArray()); }
             set { AliasName = value.MemberFullPath; }
         }
 
@@ -78,7 +78,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     case nameof(AliasScope): AddValue(node.BuildXObject(ScopeEnumeration.Cast(AliasScope).Name)); break;
                     case nameof(AliasName): AddValue(node.BuildXObject(AliasName)); break;
                     case nameof(AliasParts):
-                        List<String> scopeParts = NamedScopePath.Parse(ScopeEnumeration.Cast(AliasScope).Name);
+                        List<String> scopeParts = PathIndex.Parse(ScopeEnumeration.Cast(AliasScope).Name);
                         String levelValue = String.Empty;
 
                         for (Int32 i = 0; i < AliasParts.Count; i++)

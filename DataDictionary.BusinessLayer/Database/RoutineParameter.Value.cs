@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -23,8 +24,8 @@ namespace DataDictionary.BusinessLayer.Database
         { return new RoutineParameterIndex(this); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName, SchemaName, RoutineName, ParameterName); }
+        public virtual PathIndex GetPath()
+        { return new PathIndex(DatabaseName, SchemaName, RoutineName, ParameterName); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

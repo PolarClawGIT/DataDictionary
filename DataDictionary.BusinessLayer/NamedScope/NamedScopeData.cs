@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: indices
 
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Collections;
 using Toolbox.Threading;
@@ -54,7 +55,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks>This is scan of all item.</remarks>
-        IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key);
+        IReadOnlyList<NamedScopeIndex> PathKeys(IPath key);
 
         /// <summary>
         /// Returns the list of Keys for the Scopes.
@@ -173,9 +174,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key)
+        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(IPath key)
         {
-            NamedScopePath pathKey = new NamedScopePath(key);
+            PathIndex pathKey = new PathIndex(key);
             return data.Where(w => pathKey.Equals(w.Value.Path)).Select(s => s.Key).ToList();
         }
 
@@ -223,7 +224,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // The existing node may be something other then a NameSpace node.
             // Try putting it in the build of the tree instead of here.
 
-            List<NamedScopePath> nameSpaces = newValue.Source.
+            List<PathIndex> nameSpaces = newValue.Source.
                 GetPath().
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
@@ -231,7 +232,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 
-            foreach (NamedScopePath item in nameSpaces)
+            foreach (PathIndex item in nameSpaces)
             {
                 INamedScopeSourceValue? newItem = null;
 

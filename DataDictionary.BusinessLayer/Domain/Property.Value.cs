@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -90,8 +91,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(PropertyTitle); }
+        public PathIndex GetPath()
+        { return new PathIndex(PropertyTitle); }
 
         /// <inheritdoc/>
         public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
