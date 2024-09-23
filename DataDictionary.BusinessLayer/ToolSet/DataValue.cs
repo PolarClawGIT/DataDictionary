@@ -78,20 +78,20 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public DataValue(IDataValue source)
         {
             GetRowState = source.RowState;
-            source.PropertyChanged += Source_PropertyChanged;
-            source.RowStateChanged += Source_RowStateChanged;
+            source.PropertyChanged += OnPropertyChanged;
+            source.RowStateChanged += OnRowStateChanged;
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
-        void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (IsTitleChanged(e))
-            { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(IDataValue.Title)); }
+            { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Title)); }
         }
 
-        void Source_RowStateChanged(Object? sender, RowStateEventArgs e)
+        void OnRowStateChanged(Object? sender, RowStateEventArgs e)
         {
             if (RowStateChanged is EventHandler<RowStateEventArgs> handler)
             { handler(this, new RowStateEventArgs(GetRowState())); }

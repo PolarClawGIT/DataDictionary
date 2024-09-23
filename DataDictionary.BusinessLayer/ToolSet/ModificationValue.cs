@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Item can be cast as a Generic Modification Value
     /// </summary>
-    public interface IModificationValue : ITemporalItem, IDataValue, IBindingRowState
+    public interface IModificationValue : ITemporalItem, IDataValue
     {
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return AsModificationValue().Index; } }
