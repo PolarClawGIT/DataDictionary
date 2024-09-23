@@ -10,7 +10,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Item can be cast as a Generic Modification Value
+    /// Item can be cast as a Modification Value
     /// </summary>
     public interface IModificationValue : ITemporalItem, IDataValue
     {
@@ -21,14 +21,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String IDataValue.Title { get { return AsModificationValue().Title; } }
 
         /// <summary>
-        /// Returns the value as the generic Modification Value.
+        /// Returns the value as the general Modification Value.
         /// </summary>
         /// <returns></returns>
         IModificationValue AsModificationValue();
     }
 
     /// <summary>
-    /// Implementation for an Item can be cast as a Generic Modification Value
+    /// Implementation for an Item can be cast as a Modification Value
     /// </summary>
     class ModificationValue : DataValue, IModificationValue
     {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Interface for the Data Layer generic Index
+    /// Interface for the Data Layer Index
     /// </summary>
     public interface IDataIndex : IKey
     {
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     }
 
     /// <summary>
-    /// Interface for the Data Layer generic Index Name (title)
+    /// Interface for the Data Layer Index Name (title)
     /// </summary>
     public interface IDataIndexName : IKey
     {
@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     }
 
     /// <summary>
-    /// Interface for the Data Layer generic Index
+    /// Interface for the Data Layer general Index
     /// </summary>
     /// <remarks>
     /// This is a common index used the DataLayer.
@@ -126,7 +126,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     }
 
     /// <summary>
-    /// Interface for the Data Layer generic Index Name
+    /// Interface for the Data Layer Index Name
     /// </summary>
     /// <remarks>
     /// Most Data Layer object have a Name or Title or both.

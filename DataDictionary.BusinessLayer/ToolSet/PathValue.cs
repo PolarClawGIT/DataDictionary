@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Item can be cast as a Generic Path Value
+    /// Item can be cast as a general Path Value
     /// </summary>
     public interface IPathValue : IPathIndex, IDataValue
     {
@@ -23,14 +23,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
         PathIndex IPathIndex.Path { get { return AsPathValue().Path; } }
 
         /// <summary>
-        /// Returns the value as the generic Path Value.
+        /// Returns the value as the Path Value.
         /// </summary>
         /// <returns></returns>
         IPathValue AsPathValue();
     }
 
     /// <summary>
-    /// Implementation for an Item can be cast as a Generic Path Value
+    /// Implementation for an Item can be cast as a Path Value
     /// </summary>
     class PathValue : DataValue, IPathValue
     {

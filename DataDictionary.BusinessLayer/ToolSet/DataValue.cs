@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         DataIndex Index { get { return AsDataValue().Index; } }
 
         /// <summary>
-        /// Generic Title/Name for the value
+        /// Title/Name for the value
         /// </summary>
         String Title { get { return AsDataValue().Title; } }
 
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     }
 
     /// <summary>
-    /// Base Class for holding a generic DataLayer Value
+    /// Base Class for holding a DataLayer Value
     /// </summary>
     class DataValue : IDataValue
     {
