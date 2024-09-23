@@ -23,6 +23,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         DbModificationType ITemporalItem.Modification { get { return AsModificationValue().Modification; } }
 
+        /// <inheritdoc/>
+        IDataValue IDataValue.AsDataValue() { return AsModificationValue(); }
+
         /// <summary>
         /// Returns the value as the general Modification Value.
         /// </summary>

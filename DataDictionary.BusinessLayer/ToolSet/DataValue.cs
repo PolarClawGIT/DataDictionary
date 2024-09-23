@@ -81,6 +81,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         // Because DataValue overrides the default implantation, the properties are visible.
         //
         // Child classes can be used to extend DataValue for additional interfaces.
+        //
+        // What this is trying to solve is a couple of limitations of interfaces.
+        // * Data Binding does not work against interface properties that have default implementations.
+        // * Events cannot be owned by an interface as there is no backing field for the event.
+        // Because the interface is being backed by an instance of a class,
+        // this approach allows data binding and events.
 
         /// <inheritdoc/>
         public virtual DataIndex Index { get { return GetIndex(); } }

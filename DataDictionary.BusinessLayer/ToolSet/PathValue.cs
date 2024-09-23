@@ -16,6 +16,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return AsPathValue().Path; } }
 
+        /// <inheritdoc/>
+        IDataValue IDataValue.AsDataValue() { return AsPathValue(); }
+
         /// <summary>
         /// Returns the value as the Path Value.
         /// </summary>

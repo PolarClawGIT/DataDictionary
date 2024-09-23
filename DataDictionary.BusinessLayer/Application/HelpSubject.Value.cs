@@ -12,7 +12,6 @@ namespace DataDictionary.BusinessLayer.Application
     /// <inheritdoc/>
     public class HelpSubjectValue : HelpItem, IHelpSubjectValue
     {
-
         /// <inheritdoc/>
         public IModificationValue AsModificationValue()
         {
@@ -29,9 +28,6 @@ namespace DataDictionary.BusinessLayer.Application
 
             return modificationValue;
         }
-
-        IDataValue IDataValue.AsDataValue()
-        { return AsModificationValue(); }
 
         // Backing field so the object is not recreated every time AsModificationValue is executed.
         IModificationValue? modificationValue;
