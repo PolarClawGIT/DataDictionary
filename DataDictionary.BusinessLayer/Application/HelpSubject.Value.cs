@@ -23,6 +23,7 @@ namespace DataDictionary.BusinessLayer.Application
                 {
                     GetIndex = () => new HelpSubjectIndex(this),
                     GetTitle = () => HelpSubject ?? String.Empty,
+                    GetScope = () => Scope,
                     IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
                 };
             }

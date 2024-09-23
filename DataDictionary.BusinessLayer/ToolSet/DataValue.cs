@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface for the classes that implement the DataValue
     /// </summary>
-    public interface IDataValue : IKey, IBindingPropertyChanged, IBindingRowState
+    public interface IDataValue : IKey, IBindingPropertyChanged, IBindingRowState, IScopeType
     {
         /// <summary>
         /// Index of the Source Value.
@@ -27,6 +28,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Generic Title/Name for the value
         /// </summary>
         String Title { get { return AsDataValue().Title; } }
+
+        /// <inheritdoc/>
+        ScopeType IScopeType.Scope { get { return AsDataValue().Scope; } }
 
         /// <summary>
         /// Returns the value as the generic DataValue.
@@ -46,6 +50,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         public String Title { get { return GetTitle(); } }
 
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return GetScope(); } }
+
         /// <summary>
         /// Function that returns the GUID of the source value key.
         /// </summary>
@@ -55,6 +62,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// Function that returns the Title of the source value
         /// </summary>
         public required Func<String> GetTitle { get; init; }
+
+        /// <summary>
+        /// Function that returns the Scope of the source value
+        /// </summary>
+        public required Func<ScopeType> GetScope { get; init; }
 
         /// <summary>
         /// Function to indicate that the Title has changed.
