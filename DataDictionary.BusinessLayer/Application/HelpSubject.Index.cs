@@ -25,18 +25,10 @@ namespace DataDictionary.BusinessLayer.Application
         { return other is IHelpKey value && Equals(new HelpKey(value)); }
 
         /// <summary>
-        /// Convert HelpSubjectIndex to a DataLayerIndex
-        /// </summary>
-        /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(HelpSubjectIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.HelpId ?? Guid.Empty }; }
-
-        /// <summary>
         /// Convert HelpSubjectIndex to a DataIndex
         /// </summary>
-        /// <param name="source"></param>
-        public static implicit operator DataIndex(HelpSubjectIndex source)
-        { return new DataIndex() { SystemId = source.HelpId ?? Guid.Empty }; }
+        public DataIndex AsDataIndex()
+        { return new DataIndex() { SystemId = HelpId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>
