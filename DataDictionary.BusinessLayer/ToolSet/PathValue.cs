@@ -14,12 +14,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
     public interface IPathValue : IPathIndex, IDataValue
     {
         /// <inheritdoc/>
-        DataIndex IDataValue.Index { get { return AsPathValue().Index; } }
-
-        /// <inheritdoc/>
-        String IDataValue.Title { get { return AsPathValue().Title; } }
-
-        /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return AsPathValue().Path; } }
 
         /// <summary>
@@ -35,7 +29,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     class PathValue : DataValue, IPathValue
     {
         /// <inheritdoc/>
-        public PathIndex Path { get { return GetPath(); } }
+        public virtual PathIndex Path { get { return GetPath(); } }
 
         /// <summary>
         /// Function that returns the Path of the source.

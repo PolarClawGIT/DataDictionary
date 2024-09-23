@@ -13,7 +13,6 @@ namespace DataDictionary.BusinessLayer.Application
     public class HelpSubjectValue : HelpItem, IHelpSubjectValue
     {
 
-
         /// <inheritdoc/>
         public IModificationValue AsModificationValue()
         {

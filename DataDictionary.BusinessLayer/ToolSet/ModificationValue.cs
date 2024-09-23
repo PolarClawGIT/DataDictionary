@@ -12,13 +12,16 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Item can be cast as a Modification Value
     /// </summary>
-    public interface IModificationValue : ITemporalItem, IDataValue
+    public interface IModificationValue : IDataValue, ITemporalItem
     {
         /// <inheritdoc/>
-        DataIndex IDataValue.Index { get { return AsModificationValue().Index; } }
+        String? ITemporalItem.ModifiedBy { get { return AsModificationValue().ModifiedBy; } }
 
         /// <inheritdoc/>
-        String IDataValue.Title { get { return AsModificationValue().Title; } }
+        DateTime? ITemporalItem.ModifiedOn { get { return AsModificationValue().ModifiedOn; } }
+
+        /// <inheritdoc/>
+        DbModificationType ITemporalItem.Modification { get { return AsModificationValue().Modification; } }
 
         /// <summary>
         /// Returns the value as the general Modification Value.
@@ -33,13 +36,13 @@ namespace DataDictionary.BusinessLayer.ToolSet
     class ModificationValue : DataValue, IModificationValue
     {
         /// <inheritdoc/>
-        public String ModifiedBy { get { return GetModifiedBy(); } }
+        public virtual String ModifiedBy { get { return GetModifiedBy(); } }
 
         /// <inheritdoc/>
-        public DateTime? ModifiedOn { get { return GetModifiedOn(); } }
+        public virtual DateTime? ModifiedOn { get { return GetModifiedOn(); } }
 
         /// <inheritdoc/>
-        public DbModificationType Modification { get { return GetModification(); } }
+        public virtual DbModificationType Modification { get { return GetModification(); } }
 
         /// <summary>
         /// Function that returns the ModifiedBy of the source.

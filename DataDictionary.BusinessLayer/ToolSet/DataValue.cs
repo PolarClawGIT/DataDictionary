@@ -11,23 +11,36 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
 {
-    // TODO: Approach appears to work. Convert Index to a type, replacing DataLayerIndex.
-    // Use that for IKeyComparable.
-
     /// <summary>
-    /// Interface for the classes that implement the DataValue
+    /// Base interface for a DataValue
     /// </summary>
-    public interface IDataValue : IKey, IBindingPropertyChanged, IBindingRowState, IScopeType
+    public interface IDataItem: IScopeType
     {
         /// <summary>
         /// Index of the Source Value.
         /// </summary>
-        DataIndex Index { get { return AsDataValue().Index; } }
+        DataIndex Index { get; }
 
         /// <summary>
         /// Title/Name for the value
         /// </summary>
-        String Title { get { return AsDataValue().Title; } }
+        String Title { get; }
+    }
+
+    /// <summary>
+    /// Interface for the classes that implement the DataValue
+    /// </summary>
+    public interface IDataValue : IKey, IBindingPropertyChanged, IDataItem
+    {
+        /// <summary>
+        /// Index of the Source Value.
+        /// </summary>
+        DataIndex IDataItem.Index { get { return AsDataValue().Index; } }
+
+        /// <summary>
+        /// Title/Name for the value
+        /// </summary>
+        String IDataItem.Title { get { return AsDataValue().Title; } }
 
         /// <inheritdoc/>
         ScopeType IScopeType.Scope { get { return AsDataValue().Scope; } }
@@ -44,14 +57,39 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     class DataValue : IDataValue
     {
-        /// <inheritdoc/>
-        public DataIndex Index { get { return GetIndex(); } }
+        // Understanding what is going on:
+        // Unlike Class methods and Properties, Interface Methods and Properties are Implicitly overridden.
+        // That is, the interface Methods and Properties are overridden without the key word override.
+        //
+        // IDataItem sets up the basic definitions of the properties, without any extra code.
+        // IDataValue overrides the properties and points the calls to the AsDataValue.
+        // The class that implements IDataValue (except DataValue) needs only implements the AsDataValue method.
+        // The class that implements IDataValue creates an instance of DataValue and returns it as IDataValue.
+        // The class DataValue then overrides the Properties to return the values the implementing class specified.
+        //
+        // This gives two ways into the interface properties but returns the same values.
+        // * The code can request the object directly by calling AsDataValue from the implementing class.
+        //   This simply returns the DataValue instance created by the implementing class.
+        // * The code can cast the implementing class into IDataItem or IDataValue and access the properties.
+        //   When the property is referenced, the interface property is called.
+        //   That causes the implementing class to create, if needed, and returns the DataValue.
+        //   The property is then returned from the DataValue class.
+        // The implementing class can also override the property.
+        // In this case, the property can be accessed directly without using DataValue.
+        //
+        // Interface properties and methods with default implantation are always hidden unless specifically overridden.
+        // Because DataValue overrides the default implantation, the properties are visible.
+        //
+        // Child classes can be used to extend DataValue for additional interfaces.
 
         /// <inheritdoc/>
-        public String Title { get { return GetTitle(); } }
+        public virtual DataIndex Index { get { return GetIndex(); } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get { return GetScope(); } }
+        public virtual String Title { get { return GetTitle(); } }
+
+        /// <inheritdoc/>
+        public virtual ScopeType Scope { get { return GetScope(); } }
 
         /// <summary>
         /// Function that returns the GUID of the source value key.
@@ -73,14 +111,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         public required Func<PropertyChangedEventArgs, Boolean> IsTitleChanged { get; init; }
 
-        Func<DataRowState> GetRowState { get; init; }
-
         public DataValue(IDataValue source)
-        {
-            GetRowState = source.RowState;
-            source.PropertyChanged += OnPropertyChanged;
-            source.RowStateChanged += OnRowStateChanged;
-        }
+        { source.PropertyChanged += OnPropertyChanged; }
 
         public virtual event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<RowStateEventArgs>? RowStateChanged;
@@ -91,20 +123,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
             { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Title)); }
         }
 
-        void OnRowStateChanged(Object? sender, RowStateEventArgs e)
-        {
-            if (RowStateChanged is EventHandler<RowStateEventArgs> handler)
-            { handler(this, new RowStateEventArgs(GetRowState())); }
-        }
-
-        public DataRowState RowState()
-        { return GetRowState(); }
-
         public IDataValue AsDataValue()
         { return this; }
 
         public override String ToString()
-        { return Title; }
+        { return  Title; }
 
     }
 }
