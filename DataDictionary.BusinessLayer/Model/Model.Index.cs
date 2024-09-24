@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Model
@@ -23,10 +24,10 @@ namespace DataDictionary.BusinessLayer.Model
         { return other is IModelKey key && Equals(new ModelKey(key)); }
 
         /// <summary>
-        /// Convert ModelIndex to a DataLayerIndex
+        /// Convert ModelIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(ModelIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.ModelId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(ModelIndex source)
+        { return new DataIndex() { SystemId = source.ModelId ?? Guid.Empty }; }
     }
 }

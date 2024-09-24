@@ -20,19 +20,23 @@ namespace DataDictionary.BusinessLayer.Model
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new ModelIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new ModelIndex(this),
+                    GetPath = () => new PathIndex(ModelTitle),
+                    GetScope = () => Scope,
+                    GetTitle = () => ModelTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(ModelTitle),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(ModelTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return ModelTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public PathIndex GetPath()
-        { return new PathIndex(ScopeEnumeration.Cast(Scope).Name); }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(ModelTitle); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

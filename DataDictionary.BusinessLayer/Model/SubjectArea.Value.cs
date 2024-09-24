@@ -20,19 +20,28 @@ namespace DataDictionary.BusinessLayer.Model
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new SubjectAreaIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new SubjectAreaIndex(this),
+                    GetPath = () =>
+                    {
+                        if (String.IsNullOrWhiteSpace(SubjectName))
+                        { return new PathIndex(SubjectAreaTitle); }
+                        else { return new PathIndex(new PathIndex(PathIndex.Parse(SubjectName).ToArray())); }
+                    },
+                    GetScope = () => Scope,
+                    GetTitle = () => SubjectAreaTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(SubjectAreaTitle) or nameof(SubjectName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(SubjectAreaTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return SubjectAreaTitle ?? ScopeEnumeration.Cast(Scope).Name; ; }
-
-        /// <inheritdoc/>
-        public PathIndex GetPath()
-        { return new PathIndex(new PathIndex(PathIndex.Parse(this.SubjectName).ToArray())); }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(SubjectName) or nameof(SubjectAreaTitle); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }
