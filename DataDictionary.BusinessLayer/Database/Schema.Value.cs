@@ -21,20 +21,23 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new SchemaIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new SchemaIndex(this),
+                    GetPath = () => new PathIndex(DatabaseName, SchemaName),
+                    GetScope = () => Scope,
+                    GetTitle = () => SchemaName ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(SchemaName)
+                };
+            }
 
-        /// <inheritdoc/>
-        public PathIndex GetPath()
-        { return new PathIndex(DatabaseName, SchemaName); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return SchemaName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName); }
-
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

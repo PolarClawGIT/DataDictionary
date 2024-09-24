@@ -14,26 +14,30 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableColumnValue : DbTableColumnItem, ITableColumnValue, INamedScopeSourceValue
+    public class TableColumnValue : DbTableColumnItem, ITableColumnValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbTableItem()"/>
         public TableColumnValue() : base()
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new TableColumnIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new TableColumnIndex(this),
+                    GetPath = () => new PathIndex(DatabaseName, SchemaName, TableName, ColumnName),
+                    GetScope = () => Scope,
+                    GetTitle = () => ColumnName ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName) or nameof(ColumnName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(ColumnName)
+                };
+            }
 
-        /// <inheritdoc/>
-        public virtual PathIndex GetPath()
-        { return new PathIndex(DatabaseName, SchemaName, TableName, ColumnName); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return ColumnName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName) or nameof(ColumnName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

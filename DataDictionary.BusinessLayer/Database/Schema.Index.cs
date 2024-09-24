@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -24,30 +25,12 @@ namespace DataDictionary.BusinessLayer.Database
         { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
 
         /// <summary>
-        /// Convert SchemaIndex to a DataLayerIndex
+        /// Convert SchemaIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(SchemaIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.SchemaId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(SchemaIndex source)
+        { return new DataIndex() { SystemId = source.SchemaId ?? Guid.Empty }; }
     }
 
-    /// <inheritdoc/>
-    public interface ISchemaIndexName : IDbSchemaKeyName, ICatalogIndexName
-    { }
 
-    /// <inheritdoc/>
-    public class SchemaIndexName : DbSchemaKeyName, ISchemaIndexName,
-        IKeyEquality<ISchemaIndexName>, IKeyEquality<SchemaIndexName>
-    {
-        /// <inheritdoc cref="DbSchemaKeyName(IDbSchemaKeyName)"/>
-        public SchemaIndexName(ISchemaIndexName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ISchemaIndexName? other)
-        { return other is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(SchemaIndexName? other)
-        { return other is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
-    }
 }

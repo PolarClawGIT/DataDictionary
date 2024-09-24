@@ -14,30 +14,28 @@ public interface IReferenceValue : IDbReferenceItem,
 { }
 
 /// <inheritdoc/>
-public class ReferenceValue : DbReferenceItem, IReferenceValue, INamedScopeSourceValue
+public class ReferenceValue : DbReferenceItem, IReferenceValue, IPathValue, INamedScopeSourceValue
 {
     /// <inheritdoc/>
     public ScopeType Scope { get { return ScopeType.DatabaseDependency; } }
 
     /// <inheritdoc/>
-    public DataLayerIndex GetIndex()
-    { return new ReferenceIndex(this); }
-
-    /// <inheritdoc/>
-    public PathIndex GetPath()
-    { return new PathIndex(ReferencedDatabaseName, ReferencedSchemaName, ReferencedObjectName, ReferencedColumnName); }
-
-    /// <inheritdoc/>
-    public String GetTitle()
-    { return ReferencedColumnName ?? ReferencedObjectName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-    /// <inheritdoc/>
-    public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
+    public IPathValue AsPathValue()
     {
-        return eventArgs.PropertyName is
-            nameof(ReferencedDatabaseName) or
-            nameof(ReferencedSchemaName) or
-            nameof(ReferencedObjectName) or
-            nameof(ReferencedColumnName);
+        if (pathValue is null)
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new ReferenceIndex(this),
+                GetPath = () => new PathIndex(ReferencedDatabaseName, ReferencedSchemaName, ReferencedObjectName, ReferencedColumnName),
+                GetScope = () => Scope,
+                GetTitle = () => ReferencedColumnName ?? ReferencedObjectName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(ReferencedDatabaseName) or nameof(ReferencedSchemaName) or nameof(ReferencedObjectName) or nameof(ReferencedColumnName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ReferencedObjectName) or nameof(ReferencedColumnName)
+            };
+        }
+
+        return pathValue;
     }
+    IPathValue? pathValue; // Backing field for AsPathValue
 }

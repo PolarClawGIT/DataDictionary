@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Reference;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
@@ -29,4 +30,11 @@ public class ReferenceIndexName : DbReferenceKeyName, IReferenceIndexName,
     /// <inheritdoc/>
     public Boolean Equals(ReferenceIndexName? other)
     { return other is IDbReferenceKeyName value && Equals(new DbReferenceKeyName(value)); }
+
+    /// <summary>
+    /// Convert DomainIndexName to a DataIndexName
+    /// </summary>
+    /// <param name="source"></param>
+    public static implicit operator DataIndexName(ReferenceIndexName source)
+    { return new DataIndexName() { Title = source.ObjectName ?? String.Empty }; }
 }

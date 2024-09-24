@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -24,30 +25,10 @@ namespace DataDictionary.BusinessLayer.Database
         { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
 
         /// <summary>
-        /// Convert RoutineIndex to a DataLayerIndex
+        /// Convert RoutineIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(RoutineIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.RoutineId ?? Guid.Empty }; }
-    }
-
-    /// <inheritdoc/>
-    public interface IRoutineIndexName : IDbRoutineKeyName, ISchemaIndexName
-    { }
-
-    /// <inheritdoc/>
-    public class RoutineIndexName : DbRoutineKeyName, IRoutineIndexName,
-        IKeyEquality<IRoutineIndexName>, IKeyEquality<RoutineIndexName>
-    {
-        /// <inheritdoc cref="DbRoutineKeyName(IDbRoutineKeyName)"/>
-        public RoutineIndexName(IRoutineIndexName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(IRoutineIndexName? other)
-        { return other is IDbRoutineKeyName value && Equals(new DbRoutineKeyName(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(RoutineIndexName? other)
-        { return other is IDbRoutineKeyName value && Equals(new DbRoutineKeyName(value)); }
+        public static implicit operator DataIndex(RoutineIndex source)
+        { return new DataIndex() { SystemId = source.RoutineId ?? Guid.Empty }; }
     }
 }

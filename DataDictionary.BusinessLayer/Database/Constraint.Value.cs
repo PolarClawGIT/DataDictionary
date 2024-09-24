@@ -14,26 +14,30 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ConstraintValue : DbConstraintItem, IConstraintValue, INamedScopeSourceValue
+    public class ConstraintValue : DbConstraintItem, IConstraintValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbConstraintItem()"/>
         public ConstraintValue() : base()
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new ConstraintIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new ConstraintIndex(this),
+                    GetPath = () => new PathIndex(DatabaseName, SchemaName, ConstraintName),
+                    GetScope = () => Scope,
+                    GetTitle = () => ConstraintName ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(ConstraintName)
+                };
+            }
 
-        /// <inheritdoc/>
-        public PathIndex GetPath()
-        { return new PathIndex(DatabaseName, SchemaName, ConstraintName); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return ConstraintName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

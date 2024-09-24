@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -24,30 +25,12 @@ namespace DataDictionary.BusinessLayer.Database
         { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
 
         /// <summary>
-        /// Convert RoutineParameterIndex to a DataLayerIndex
+        /// Convert RoutineParameterIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(RoutineParameterIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.ParameterId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(RoutineParameterIndex source)
+        { return new DataIndex() { SystemId = source.ParameterId ?? Guid.Empty }; }
     }
 
-    /// <inheritdoc/>
-    public interface IRoutineParameterIndexName : IDbRoutineParameterKeyName, IRoutineIndexName
-    { }
 
-    /// <inheritdoc/>
-    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterIndexName,
-        IKeyEquality<IRoutineParameterIndexName>, IKeyEquality<RoutineParameterKeyName>
-    {
-        /// <inheritdoc cref="DbRoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
-        public RoutineParameterKeyName(IRoutineParameterIndexName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(IRoutineParameterIndexName? other)
-        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(RoutineParameterKeyName? other)
-        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
-    }
 }

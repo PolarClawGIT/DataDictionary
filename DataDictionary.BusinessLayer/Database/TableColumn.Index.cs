@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
@@ -25,33 +26,10 @@ namespace DataDictionary.BusinessLayer.Database
         { return other is IDbTableColumnKey value && Equals(new DbTableColumnKey(value)); }
 
         /// <summary>
-        /// Convert TableColumnIndex to a DataLayerIndex
+        /// Convert TableColumnIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(TableColumnIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.ColumnId ?? Guid.Empty }; }
-    }
-
-    /// <inheritdoc/>
-    public interface ITableColumnIndexName : IDbTableColumnKeyName, ITableIndexName
-    { }
-
-    /// <inheritdoc/>
-    public class TableColumnIndexName : DbTableColumnKeyName, ITableColumnIndexName,
-        IKeyEquality<ITableColumnIndexName>, IKeyEquality<TableColumnIndexName>
-    {
-        /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
-        public TableColumnIndexName(ITableColumnIndexName source) : base(source) { }
-
-        /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
-        public TableColumnIndexName(IDbTableColumnKeyName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ITableColumnIndexName? other)
-        { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(TableColumnIndexName? other)
-        { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+        public static implicit operator DataIndex(TableColumnIndex source)
+        { return new DataIndex() { SystemId = source.ColumnId ?? Guid.Empty }; }
     }
 }

@@ -14,26 +14,30 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class DomainValue : DbDomainItem, IDomainValue, INamedScopeSourceValue
+    public class DomainValue : DbDomainItem, IDomainValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbDomainItem()"/>
         public DomainValue() : base()
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new DomainIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new DomainIndex(this),
+                    GetPath = () => new PathIndex(DatabaseName, SchemaName, DomainName),
+                    GetScope = () => Scope,
+                    GetTitle = () => DomainName ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(DomainName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(DomainName)
+                };
+            }
 
-        /// <inheritdoc/>
-        public virtual PathIndex GetPath()
-        { return new PathIndex(DatabaseName, SchemaName, DomainName); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return DomainName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(DomainName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }
