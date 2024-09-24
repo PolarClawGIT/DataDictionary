@@ -5,7 +5,7 @@ namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,
-        IHelpSubjectIndex, 
+        IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
         IModificationValue
     { }
 

@@ -32,14 +32,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// </summary>
     public interface IDataValue : IKey, IBindingPropertyChanged, IDataItem
     {
-        /// <summary>
-        /// Index of the Source Value.
-        /// </summary>
+        /// <inheritdoc/>
         DataIndex IDataItem.Index { get { return AsDataValue().Index; } }
 
-        /// <summary>
-        /// Title/Name for the value
-        /// </summary>
+        /// <inheritdoc/>
         String IDataItem.Title { get { return AsDataValue().Title; } }
 
         /// <inheritdoc/>
@@ -120,8 +116,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public DataValue(IDataValue source)
         { source.PropertyChanged += OnPropertyChanged; }
 
+        /// <inheritdoc/>
         public virtual event PropertyChangedEventHandler? PropertyChanged;
-        public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
         protected virtual void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {

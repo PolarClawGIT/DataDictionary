@@ -91,7 +91,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
-        SortedDictionary<DataLayerIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataLayerIndex, List<NamedScopeIndex>>();
+        SortedDictionary<DataIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataIndex, List<NamedScopeIndex>>();
 
         // Root Nodes
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
@@ -224,8 +224,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // The existing node may be something other then a NameSpace node.
             // Try putting it in the build of the tree instead of here.
 
-            List<PathIndex> nameSpaces = newValue.Source.
-                GetPath().
+            List<PathIndex> nameSpaces = newValue.Source.AsPathValue().Path.
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
                 Where(w => 1 == 2). // This is disabling NameSpace handling

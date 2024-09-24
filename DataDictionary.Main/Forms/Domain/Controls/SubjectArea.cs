@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             foreach (SubjectAreaValue item in BusinessData.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
             {
                 ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
-                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.GetPath().MemberFullPath });
+                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.AsPathValue().Path.MemberFullPath });
                 SubjectAreaIndex key = new SubjectAreaIndex(item);
 
                 if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> subject

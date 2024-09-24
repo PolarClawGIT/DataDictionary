@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Controls
             public NamedScopeNode? Parent { get; init; } = null;
             public INamedScopeValue NamedScope { get; init; }
             public PathIndex Path { get; init; }
-            public DataLayerIndex DataIndex { get { return NamedScope.Source.Index; } }
+            public DataIndex DataIndex { get { return NamedScope.Source.Index; } }
             public NamedScopeIndex ScopeIndex { get { return NamedScope.Index; } }
             public ScopeType Scope { get { return NamedScope.Scope; } }
             public String Title { get { return NamedScope.Title; } }
@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Controls
         }
 
         Dictionary<TreeNode, NamedScopeNode> treeValues = new Dictionary<TreeNode, NamedScopeNode>();
-        List<DataLayerIndex> expandedIndexes = new List<DataLayerIndex>();
+        List<DataIndex> expandedIndexes = new List<DataIndex>();
 
         public NamedScopeTreeViewData(TreeView tree)
         { treeControl = tree; }

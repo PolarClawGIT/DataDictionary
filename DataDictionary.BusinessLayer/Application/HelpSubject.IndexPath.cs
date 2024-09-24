@@ -9,6 +9,10 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
+    public interface IHelpSubjectIndexNameSpace : IHelpKeyNameSpace
+    { }
+
+    /// <inheritdoc/>
     public class HelpSubjectIndexPath : PathIndex, IHelpSubjectIndexPath,
         IKeyEquality<IHelpSubjectIndexPath>, IKeyEquality<HelpSubjectIndexPath>
     {

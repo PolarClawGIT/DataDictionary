@@ -284,7 +284,7 @@ namespace DataDictionary.Main.Forms.Domain
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
-                    dialog.BuildData(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)), GetDescription);
+                    dialog.BuildData(attributes.Select(s => (DataIndex)new AttributeIndex(s)), GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {

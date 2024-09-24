@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class PropertyValue : DomainPropertyItem, IPropertyValue, INamedScopeSourceValue
+    public class PropertyValue : DomainPropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
     {
         /// <summary>
         /// Provides the List of Choices for PropertyType is List

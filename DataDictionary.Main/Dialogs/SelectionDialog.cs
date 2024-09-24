@@ -103,7 +103,7 @@ namespace DataDictionary.Main.Dialogs
             formData.BuildList(getDescription); 
         }
 
-        public void BuildData(IEnumerable<DataLayerIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        public void BuildData(IEnumerable<DataIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
         {
             BuildData(getDescription);
 
@@ -126,7 +126,7 @@ namespace DataDictionary.Main.Dialogs
         public void BuildData<TValue>(IEnumerable<TValue> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
             where TValue : INamedScopeSourceValue
         {
-            IEnumerable<DataLayerIndex> indexes = selected.Select(s => s.Index);
+            IEnumerable<DataIndex> indexes = selected.Select(s => s.Index);
 
             BuildData(indexes, getDescription);
         }

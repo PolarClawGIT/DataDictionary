@@ -30,7 +30,4 @@ namespace DataDictionary.BusinessLayer.Domain
         public static implicit operator DataIndex(PropertyIndex source)
         { return new DataIndex() { SystemId = source.PropertyId ?? Guid.Empty }; }
     }
-
-
-
 }

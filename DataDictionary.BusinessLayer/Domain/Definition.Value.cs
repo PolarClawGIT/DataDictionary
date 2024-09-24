@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, INamedScopeSourceValue
+    public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DomainDefinitionItem()"/>
         public DefinitionValue() : base()

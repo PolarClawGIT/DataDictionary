@@ -92,8 +92,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             Scope = source.Scope;
             Source = source;
-            GetTitle = source.GetTitle;
-            GetPath = source.GetPath;
+            GetTitle = () => source.Title;
+            GetPath = () => source.Path;
 
             if (source is IDbColumnPosition position)
             { OrdinalPosition = position.OrdinalPosition ?? 0; }
@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
             void PropertyChanged_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (source.IsTitleChanged(e) && OnTitleChanged is EventHandler handler)
+                if (e.PropertyName is nameof(source.Title) && OnTitleChanged is EventHandler handler)
                 {
                     Title = GetTitle();
                     Path = GetPath();

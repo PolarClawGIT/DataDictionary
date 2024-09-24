@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class EntityValue : DomainEntityItem, IEntityValue, INamedScopeSourceValue
+    public class EntityValue : DomainEntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DomainEntityItem()"/>
         public EntityValue() : base()

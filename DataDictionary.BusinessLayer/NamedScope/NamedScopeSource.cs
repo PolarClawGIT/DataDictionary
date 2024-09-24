@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -46,12 +47,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Each TValue in TData has a simple parent/child relationship.
         /// </remarks>
         static IReadOnlyList<WorkItem> LoadNamedScope<TData, TValue>(
-            TData data, 
+            TData data,
             Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope,
             Func<TValue, INamedScopeSourceValue?>? getParent = null)
             where TValue : INamedScopeSourceValue
             where TData : IList<TValue>, INamedScopeSourceData
-        { 
+        {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
 
@@ -65,7 +66,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                     foreach (TValue item in data)
                     {
                         INamedScopeSourceValue? parent = null;
-                        if(getParent is not null) { parent = getParent(item); }
+                        if (getParent is not null) { parent = getParent(item); }
 
                         NamedScopeValue newItem = new NamedScopeValue(item);
                         addNamedScope(parent, newItem);
@@ -85,7 +86,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IPathValue, IDataLayerSource
+    public interface INamedScopeSourceValue : IPathValue
     {
 
         /// <summary>
@@ -115,11 +116,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public IPathValue AsPathValue()
         {
-            if(pathValue is null)
+            if (pathValue is null)
             {
                 pathValue = new PathValue(this)
                 {
-                    GetIndex = () => new DataIndex() { SystemId = SystemId }, 
+                    GetIndex = () => new DataIndex() { SystemId = SystemId },
                     GetPath = () => SystemPath,
                     GetScope = () => Scope,
                     GetTitle = () => SystemPath.MemberFullPath,
@@ -135,6 +136,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public override String ToString()
         { return SystemPath.MemberFullPath; }
 
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+        void OnPropertyChanged(String propertyName)
+        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
     }
 }
