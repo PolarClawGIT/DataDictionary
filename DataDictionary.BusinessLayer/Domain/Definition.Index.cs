@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData.Definition;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DomainData.Definition;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -23,30 +24,10 @@ namespace DataDictionary.BusinessLayer.Domain
         { return other is IDomainDefinitionKey key && Equals(new DomainDefinitionKey(key)); }
 
         /// <summary>
-        /// Convert DefinitionIndex to a DataLayerIndex
+        /// Convert DefinitionIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(DefinitionIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.DefinitionId ?? Guid.Empty }; }
-    }
-
-    /// <inheritdoc/>
-    public interface IDefinitionIndexName : IDomainDefinitionKeyName
-    { }
-
-    /// <inheritdoc/>
-    public class DefinitionIndexName : DomainDefinitionKeyName, IDefinitionIndexName,
-        IKeyEquality<IDefinitionIndexName>, IKeyEquality<DefinitionIndexName>
-    {
-        /// <inheritdoc cref="DomainDefinitionKeyName(IDomainDefinitionKeyName)"/>
-        public DefinitionIndexName(IDefinitionIndexName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(IDefinitionIndexName? other)
-        { return other is IDomainDefinitionKeyName key && Equals(new DomainDefinitionKeyName(key)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(DefinitionIndexName? other)
-        { return other is IDomainDefinitionKeyName key && Equals(new DomainDefinitionKeyName(key)); }
+        public static implicit operator DataIndex(DefinitionIndex source)
+        { return new DataIndex() { SystemId = source.DefinitionId ?? Guid.Empty }; }
     }
 }

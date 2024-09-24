@@ -19,25 +19,29 @@ namespace DataDictionary.BusinessLayer.Domain
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new EntityIndex(this); }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public virtual PathIndex GetPath()
+        public IPathValue AsPathValue()
         {
-            if (String.IsNullOrWhiteSpace(MemberName))
-            { return new PathIndex(EntityTitle); }
-            else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new EntityIndex(this),
+                    GetPath = () =>
+                    {
+                        if (String.IsNullOrWhiteSpace(MemberName))
+                        { return new PathIndex(EntityTitle); }
+                        else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                    },
+                    GetScope = () => Scope,
+                    GetTitle = () => EntityTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(EntityTitle) or nameof(MemberName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(EntityTitle)
+                };
+            }
+
+            return pathValue;
         }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return EntityTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(EntityTitle) or nameof(MemberName); }
+        IPathValue? pathValue; // Backing field for AsPathValue
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

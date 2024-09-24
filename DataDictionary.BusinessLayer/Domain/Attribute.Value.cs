@@ -19,25 +19,29 @@ namespace DataDictionary.BusinessLayer.Domain
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new AttributeIndex(this); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public PathIndex GetPath()
+        public IPathValue AsPathValue()
         {
-            if (String.IsNullOrWhiteSpace(MemberName))
-            { return new PathIndex(AttributeTitle); }
-            else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
-        }
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new AttributeIndex(this),
+                    GetPath = () =>
+                    {
+                        if (String.IsNullOrWhiteSpace(MemberName))
+                        { return new PathIndex(AttributeTitle); }
+                        else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                    },
+                    GetScope = () => Scope,
+                    GetTitle = () => AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(AttributeTitle) or nameof(MemberName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(AttributeTitle) or nameof(MemberName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
