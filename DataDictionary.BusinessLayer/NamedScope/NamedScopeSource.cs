@@ -26,6 +26,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="addNamedScope"></param>
         /// <returns></returns>
+        [Obsolete("Think this is the old and should not be used")]
         IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
 
         //TODO: Update all object to use this method.
@@ -84,41 +85,27 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IDataLayerSource, IScopeType
+    public interface INamedScopeSourceValue : IPathValue, IDataLayerSource
     {
-        // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
 
         /// <summary>
-        /// Path of the Source Value.
-        /// </summary>
-        /// <remarks>This may not be a complete path.</remarks>
-        PathIndex Path { get { return GetPath(); } }
-
-        /// <summary>
-        /// Gets the generic NameScope Path from the Value
+        /// Obsolete: Gets the generic NameScope Path from the Value
         /// </summary>
         /// <returns></returns>
-        PathIndex GetPath();
+        [Obsolete]
+        PathIndex GetPath() { throw new NotSupportedException(); }
+
     }
 
     /// <summary>
     /// Represents NameSpace items that does not have a specific Scope for the node.
     /// </summary>
-    class NameSpaceSource : INamedScopeSourceValue
+    class NameSpaceSource : IPathValue, INamedScopeSourceValue
     {
         protected Guid SystemId;
         protected PathIndex SystemPath;
 
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
-
-        public DataLayerIndex GetIndex()
-        { return new DataLayerIndex() { DataLayerId = SystemId }; }
-
-        public PathIndex GetPath()
-        { return SystemPath; }
-
-        public String GetTitle()
-        { return SystemPath.Member; }
 
         public NameSpaceSource(PathIndex path)
         {
@@ -126,11 +113,27 @@ namespace DataDictionary.BusinessLayer.NamedScope
             SystemPath = path;
         }
 
+        public IPathValue AsPathValue()
+        {
+            if(pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new DataIndex() { SystemId = SystemId }, 
+                    GetPath = () => SystemPath,
+                    GetScope = () => Scope,
+                    GetTitle = () => SystemPath.MemberFullPath,
+                    IsPathChanged = (e) => false,
+                    IsTitleChanged = (e) => false
+                };
+            }
+
+            return pathValue;
+        }
+        IPathValue? pathValue;
+
         public override String ToString()
         { return SystemPath.MemberFullPath; }
-
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return false; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

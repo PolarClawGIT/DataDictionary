@@ -6,7 +6,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface for a Path (aka NameSpace, Alias)
     /// </summary>
-    public interface IPath : IKey
+    public interface IPathItem : IKey
     {
         /// <summary>
         /// Name of the Member
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Implementation for a Path (aka NameSpace, Alias)
     /// </summary>
-    public class PathIndex : IPath, IKeyComparable<IPath>
+    public class PathIndex : IPathItem, IKeyComparable<IPathItem>
     {
         /// <summary>
         /// List of Parts of the Path.
@@ -117,7 +117,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version allows multiple paths to be combined.</remarks>
-        public PathIndex(params IPath[] source)
+        public PathIndex(params IPathItem[] source)
         {
             foreach (PathIndex item in source)
             { pathParts.AddRange(item.pathParts); }
@@ -128,7 +128,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <param name="basePath"></param>
         /// <param name="member"></param>
-        public PathIndex(IPath basePath, String member) : this(basePath)
+        public PathIndex(IPathItem basePath, String member) : this(basePath)
         { pathParts.AddRange(Parse(member)); }
 
         /// <summary>
@@ -309,9 +309,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IPath? other)
+        public virtual Boolean Equals(IPathItem? other)
         {
-            if (other is IPath)
+            if (other is IPathItem)
             {
                 PathIndex otherKey = new PathIndex(other);
                 return Equals(otherKey);
@@ -321,10 +321,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IPath value && Equals(new PathIndex(value)); }
+        { return obj is IPathItem value && Equals(new PathIndex(value)); }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(IPath? other)
+        public virtual Int32 CompareTo(IPathItem? other)
         {
             if (other is null) { return 1; }
             else
@@ -337,7 +337,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
         {
-            if (obj is IPath value)
+            if (obj is IPathItem value)
             { return CompareTo(new PathIndex(value)); }
             else { return 1; }
         }

@@ -27,40 +27,8 @@ namespace DataDictionary.BusinessLayer.Application
         /// <summary>
         /// Convert HelpSubjectIndex to a DataIndex
         /// </summary>
-        public DataIndex AsDataIndex()
-        { return new DataIndex() { SystemId = HelpId ?? Guid.Empty }; }
-    }
-
-    /// <inheritdoc/>
-    public interface IHelpSubjectIndexPath : IPath
-    { }
-
-    /// <inheritdoc/>
-    public interface IHelpSubjectIndexNameSpace : IHelpKeyNameSpace
-    { }
-
-    /// <inheritdoc/>
-    public class HelpSubjectIndexPath : PathIndex, IHelpSubjectIndexPath,
-        IKeyEquality<IHelpSubjectIndexPath>, IKeyEquality<HelpSubjectIndexPath>
-    {
-        /// <inheritdoc cref="PathIndex.PathIndex(IPath[])"/>
-        public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source) 
-        { }
-
-        /// <inheritdoc cref="HelpKeyNameSpace(IHelpKeyNameSpace)"/>
-        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(PathIndex.Parse(source.NameSpace).ToArray())
-        { }
-
-        /// <inheritdoc cref="PathIndex(String?[])"/>
-        public HelpSubjectIndexPath(params String?[] source): base(source)
-        { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(HelpSubjectIndexPath? other)
-        { return other is IPath value && Equals(new PathIndex(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(IHelpSubjectIndexPath? other)
-        { return other is IPath value && Equals(new PathIndex(value)); }
+        /// <param name="source"></param>
+        public static implicit operator DataIndex(HelpSubjectIndex source)
+        { return new DataIndex() { SystemId = source.HelpId ?? Guid.Empty }; }
     }
 }

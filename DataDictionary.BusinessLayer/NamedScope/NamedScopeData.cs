@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks>This is scan of all item.</remarks>
-        IReadOnlyList<NamedScopeIndex> PathKeys(IPath key);
+        IReadOnlyList<NamedScopeIndex> PathKeys(IPathItem key);
 
         /// <summary>
         /// Returns the list of Keys for the Scopes.
@@ -174,7 +174,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(IPath key)
+        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(IPathItem key)
         {
             PathIndex pathKey = new PathIndex(key);
             return data.Where(w => pathKey.Equals(w.Value.Path)).Select(s => s.Key).ToList();

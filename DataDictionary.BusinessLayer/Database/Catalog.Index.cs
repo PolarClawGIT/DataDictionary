@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -23,30 +24,12 @@ namespace DataDictionary.BusinessLayer.Database
         { return other is IDbCatalogKey value && Equals(new DbCatalogKey(value)); }
 
         /// <summary>
-        /// Convert CatalogIndex to a DataLayerIndex
+        /// Convert CatalogIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(CatalogIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.CatalogId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(CatalogIndex source)
+        { return new DataIndex() { SystemId = source.CatalogId ?? Guid.Empty }; }
     }
 
-    /// <inheritdoc/>
-    public interface ICatalogIndexName : IDbCatalogKeyName
-    { }
-
-    /// <inheritdoc/>
-    public class CatalogIndexName : DbCatalogKeyName, ICatalogIndexName,
-        IKeyEquality<ICatalogIndexName>, IKeyEquality<CatalogIndexName>
-    {
-        /// <inheritdoc cref="DbCatalogKeyName(IDbCatalogKeyName)"/>
-        public CatalogIndexName(ICatalogIndexName source) : base(source) { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ICatalogIndexName? other)
-        { return other is IDbCatalogKeyName value && Equals(new DbCatalogKeyName(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(CatalogIndexName? other)
-        { return other is IDbCatalogKeyName value && Equals(new DbCatalogKeyName(value)); }
-    }
+  
 }

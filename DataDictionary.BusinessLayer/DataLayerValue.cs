@@ -22,23 +22,26 @@ namespace DataDictionary.BusinessLayer
         String Title { get { return GetTitle(); } }
 
         /// <summary>
-        /// Return the DataLayer ID.
+        /// Obsolete: Return the DataLayer ID.
         /// </summary>
         /// <returns></returns>
-        DataLayerIndex GetIndex();
+        [Obsolete]
+        DataLayerIndex GetIndex() { throw new NotSupportedException(); }
 
         /// <summary>
-        /// Generic Title/Name for the value
+        /// Obsolete: Generic Title/Name for the value
         /// </summary>
         /// <returns></returns>
-        String GetTitle();
+        [Obsolete]
+        String GetTitle() { throw new NotSupportedException(); }
 
         /// <summary>
-        /// Condition to test if the Title was the property that changed.
+        /// Obsolete: Condition to test if the Title was the property that changed.
         /// </summary>
         /// <param name="eventArgs"></param>
         /// <returns></returns>
-        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs);
+        [Obsolete]
+        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs) { throw new NotSupportedException(); }
     }
 
     /// <summary>

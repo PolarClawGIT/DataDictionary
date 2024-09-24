@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public required Func<PropertyChangedEventArgs, Boolean> IsPathChanged { get; init; }
 
         /// <inheritdoc/>
-        public PathValue(IDataValue source) : base(source)
+        public PathValue(IPathValue source) : base(source)
         { }
 
         /// <inheritdoc/>

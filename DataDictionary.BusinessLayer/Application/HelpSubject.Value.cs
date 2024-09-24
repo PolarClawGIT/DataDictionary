@@ -5,7 +5,7 @@ namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,
-        IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
+        IHelpSubjectIndex, 
         IModificationValue
     { }
 
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Application
             {
                 modificationValue = new ModificationValue(this)
                 {
-                    GetIndex = () => new HelpSubjectIndex(this).AsDataIndex(),
+                    GetIndex = () => new HelpSubjectIndex(this),
                     GetTitle = () => HelpSubject ?? String.Empty,
                     GetScope = () => Scope,
                     IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
@@ -28,8 +28,6 @@ namespace DataDictionary.BusinessLayer.Application
 
             return modificationValue;
         }
-
-        // Backing field so the object is not recreated every time AsModificationValue is executed.
-        IModificationValue? modificationValue;
+        IModificationValue? modificationValue; // Backing field for AsModificationValue
     }
 }

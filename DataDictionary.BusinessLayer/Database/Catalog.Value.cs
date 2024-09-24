@@ -13,25 +13,29 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeSourceValue
+    public class CatalogValue : DbCatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbCatalogItem()"/>
         public CatalogValue() : base() { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new CatalogIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new CatalogIndex(this),
+                    GetPath = () => new PathIndex(DatabaseName),
+                    GetScope = () => Scope,
+                    GetTitle = () => CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public PathIndex GetPath()
-        { return new PathIndex(DatabaseName); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }
