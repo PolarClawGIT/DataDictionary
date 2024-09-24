@@ -20,19 +20,23 @@ namespace DataDictionary.BusinessLayer.Library
         { }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new LibrarySourceIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new LibrarySourceIndex(this),
+                    GetPath = () => new PathIndex(AssemblyName),
+                    GetScope = () => Scope,
+                    GetTitle = () => LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(AssemblyName),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public virtual PathIndex GetPath()
-        { return new PathIndex(AssemblyName); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(LibraryTitle) or nameof(AssemblyName); }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

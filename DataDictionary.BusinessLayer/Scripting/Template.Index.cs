@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ScriptingData;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -24,31 +25,11 @@ namespace DataDictionary.BusinessLayer.Scripting
         { return other is IScriptingTemplateKey key && Equals(new ScriptingTemplateKey(key)); }
 
         /// <summary>
-        /// Convert TemplateIndex to a DataLayerIndex
+        /// Convert TemplateIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(TemplateIndex source)
-        { return new DataLayerIndex() { DataLayerId = source.TemplateId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(TemplateIndex source)
+        { return new DataIndex() { SystemId = source.TemplateId ?? Guid.Empty }; }
     }
 
-    /// <inheritdoc/>
-    public interface ITemplateIndexName : IScriptingTemplateKeyName
-    { }
-
-    /// <inheritdoc/>
-    public class TemplateIndexName : ScriptingTemplateKeyName, ITemplateIndexName,
-        IKeyEquality<ITemplateIndexName>, IKeyEquality<TemplateIndexName>
-    {
-        /// <inheritdoc cref="ScriptingTemplateKeyName(IScriptingTemplateKeyName)"/>
-        public TemplateIndexName(ITemplateIndexName source) : base(source)
-        { }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ITemplateIndexName? other)
-        { return other is IScriptingTemplateKeyName key && Equals(new ScriptingTemplateKeyName(key)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(TemplateIndexName? other)
-        { return other is IScriptingTemplateKeyName key && Equals(new ScriptingTemplateKeyName(key)); }
-    }
 }

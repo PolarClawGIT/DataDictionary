@@ -34,16 +34,24 @@ namespace DataDictionary.BusinessLayer.Scripting
         { PropertyChanged += TemplateValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new TemplateIndex(this); }
+        public IPathValue AsPathValue()
+        {
+            if (pathValue is null)
+            {
+                pathValue = new PathValue(this)
+                {
+                    GetIndex = () => new TemplateIndex(this),
+                    GetPath = () => new PathIndex(TemplateTitle),
+                    GetScope = () => Scope,
+                    GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                    IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
+                    IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
+                };
+            }
 
-        /// <inheritdoc/>
-        public virtual PathIndex GetPath()
-        { return new PathIndex(Scope); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return this.TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name; }
+            return pathValue;
+        }
+        IPathValue? pathValue; // Backing field for AsPathValue
 
         /// <inheritdoc/>
         public XDocument? TransformXml { get; private set; } = null;
