@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
@@ -17,6 +18,8 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpContent : ApplicationData
     {
+        Form? helpForForm; // Form that requested the Help on
+
         public HelpContent() : base()
         {
             InitializeComponent();
@@ -46,6 +49,25 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        public HelpContent(Form targetForm) : this()
+        {
+            HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
+
+            List<Control> values = targetForm.ToControlList()
+                .Where(w => !String.IsNullOrWhiteSpace(w.Name)
+                            && w is not Form
+                            && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
+                .OrderBy(o => o is not Form)
+                .ThenBy(o => o.ToNameSpaceKey())
+                .ToList();
+
+            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
+            {
+                if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
+                { helpBinding.Position = subjects.IndexOf(subject); }
+                helpForForm = targetForm;
+            }
+        }
 
         private void HelpContent_Load(object sender, EventArgs e)
         {
@@ -58,7 +80,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.AddCommand_Click(sender, e);
 
-            
+
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
@@ -66,7 +88,11 @@ namespace DataDictionary.Main.Forms.General
             base.OpenCommand_Click(sender, e);
 
             if (helpBinding.Current is HelpSubjectValue current)
-            { Activate(() => new HelpSubject(current)); }
+            {
+                if (helpForForm is Form targetForm && new HelpSubjectIndexPath(current).Equals(targetForm.ToNameSpaceKey()))
+                { Activate(() => new HelpSubject(current, targetForm)); }
+                else { Activate(() => new HelpSubject(current)); }
+            }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)

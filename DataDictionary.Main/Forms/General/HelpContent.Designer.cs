@@ -133,7 +133,6 @@
         #endregion
 
         private TreeView helpContentNavigation;
-        private TableLayoutPanel helpDetailLayout;
         private Controls.TextBoxData helpSubjectData;
         private RichTextBox helpTextData;
         private BindingSource helpBinding;

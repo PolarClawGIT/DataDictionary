@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.Application
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<IModificationValue> target)
+        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<ITemporalValue> target)
         {
             List<WorkItem> work = new List<WorkItem>();
             HelpSubjectData data = new HelpSubjectData();
@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Application
                 command: (conn) => HistoryCommand(conn)));
 
             work.Add(new WorkItem()
-            { DoWork = () => target.AddRange(data.OfType<IModificationValue>()) });
+            { DoWork = () => target.AddRange(data.OfType<ITemporalValue>()) });
 
             return work;
         }

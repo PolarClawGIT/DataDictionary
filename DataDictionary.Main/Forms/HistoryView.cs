@@ -22,17 +22,17 @@ namespace DataDictionary.Main.Forms
     partial class HistoryView : ApplicationData
     {
         ILoadHistoryData? loader;
-        List<IModificationValue> modificationValues = new List<IModificationValue>();
+        List<ITemporalValue> modificationValues = new List<ITemporalValue>();
 
         // Initial width of the columns, for resizing calculations.
         Dictionary<ColumnHeader, Single> historyValuesWidths;
         Dictionary<ColumnHeader, Single> historyModificationWidths;
 
         // Crosswalk Item in List View back to source.
-        Dictionary<ListViewItem, IModificationValue> historyValues = new Dictionary<ListViewItem, IModificationValue>();
-        Dictionary<ListViewItem, IModificationValue> historyModifications = new Dictionary<ListViewItem, IModificationValue>();
+        Dictionary<ListViewItem, ITemporalValue> historyValues = new Dictionary<ListViewItem, ITemporalValue>();
+        Dictionary<ListViewItem, ITemporalValue> historyModifications = new Dictionary<ListViewItem, ITemporalValue>();
 
-        public IModificationValue? SelectedValue { get; protected set; }
+        public ITemporalValue? SelectedValue { get; protected set; }
 
         public HistoryView() : base()
         {
@@ -83,7 +83,7 @@ namespace DataDictionary.Main.Forms
 
                 foreach (var item in modificationValues.GroupBy(g => g.Index))
                 {
-                    IModificationValue lastValue = item.OrderBy(o => o.ModifiedOn).Last();
+                    ITemporalValue lastValue = item.OrderBy(o => o.ModifiedOn).Last();
                     String modification = DbModificationEnumeration.Cast(lastValue.Modification).DisplayName;
                     ListViewItem newItem = new ListViewItem([lastValue.Title, modification]);
                     historyValuesData.Items.Add(newItem);
@@ -113,14 +113,14 @@ namespace DataDictionary.Main.Forms
                     OfType<ListViewItem>().
                     FirstOrDefault() is ListViewItem selectedItem
                 && historyValues.
-                    TryGetValue(selectedItem, out IModificationValue? selectedValue))
+                    TryGetValue(selectedItem, out ITemporalValue? selectedValue))
             {
                 SetSummary(selectedValue);
 
                 historyModificationData.Items.Clear();
                 historyModifications.Clear();
 
-                foreach (IModificationValue item in modificationValues.Where(w => selectedValue.Index.Equals(w.Index)))
+                foreach (ITemporalValue item in modificationValues.Where(w => selectedValue.Index.Equals(w.Index)))
                 {
                     String itemModification = DbModificationEnumeration.Cast(item.Modification).DisplayName;
                     String itemModifiedOn;
@@ -153,7 +153,7 @@ namespace DataDictionary.Main.Forms
                     OfType<ListViewItem>().
                     FirstOrDefault() is ListViewItem selectedItem
                 && historyModifications.
-                    TryGetValue(selectedItem, out IModificationValue? selectedValue))
+                    TryGetValue(selectedItem, out ITemporalValue? selectedValue))
             { SetSummary(selectedValue); }
         }
 
@@ -168,7 +168,7 @@ namespace DataDictionary.Main.Forms
                     historyModificationWidths[f]));
         }
 
-        void SetSummary(IModificationValue value)
+        void SetSummary(ITemporalValue value)
         {
             SelectedValue = value;
 

@@ -12,13 +12,13 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Item can be cast as a Modification Value
     /// </summary>
-    public interface IModificationValue : IDataValue, ITemporalItem
+    public interface ITemporalValue : IDataValue, ITemporalItem, ITemporalIndex
     { }
 
     /// <summary>
     /// Implementation for an Item can be cast as a Modification Value
     /// </summary>
-    class ModificationValue : DataValue, IModificationValue
+    class TemporalValue : DataValue, ITemporalValue
     {
         /// <inheritdoc/>
         public virtual String ModifiedBy { get { return GetModifiedBy(); } }
@@ -44,11 +44,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         public required Func<DbModificationType> GetModification { get; init; }
 
-        public ModificationValue(IBindingPropertyChanged source) : base(source)
+        public TemporalValue(IBindingPropertyChanged source) : base(source)
         { }
 
         /// <inheritdoc/>
-        public IModificationValue AsModificationValue()
+        public ITemporalValue AsModificationValue()
         { return this; }
     }
 }

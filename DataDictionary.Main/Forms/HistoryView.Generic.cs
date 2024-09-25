@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms
 {
 
     class HistoryView<TValue> : HistoryView
-        where TValue : IModificationValue
+        where TValue : ITemporalValue
     {
         
         public HistoryView(ILoadHistoryData loader) : base(loader) 

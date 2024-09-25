@@ -288,7 +288,7 @@ namespace DataDictionary.Main.Forms
         }
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
-        { Activate(() => new ApplicationWide.HelpSubject(this)); }
+        { Activate(() => new General.HelpContent(this)); }
 
         protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }

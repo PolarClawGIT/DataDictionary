@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Database
                     }
                 }
 
-                dialog.OpenHelp = () => Activate(() => new ApplicationWide.HelpSubject(dialog));
+                dialog.OpenHelp = () => Activate(() => new General.HelpContent(dialog));
 
                 DialogResult result = dialog.ShowDialog();
 

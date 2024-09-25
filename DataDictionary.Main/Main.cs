@@ -157,8 +157,8 @@ namespace DataDictionary.Main
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
-            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
-            else { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
+            { Activate(() => new Forms.General.HelpContent(currentForm)); }
+            else { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
@@ -167,6 +167,7 @@ namespace DataDictionary.Main
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
 
+        [Obsolete("Use Help Content, currently used for testing")]
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)

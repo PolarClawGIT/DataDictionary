@@ -6,13 +6,13 @@ namespace DataDictionary.BusinessLayer.Application
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
-        IModificationValue
+        ITemporalValue
     { }
 
     /// <inheritdoc/>
     public class HelpSubjectValue : HelpItem, IHelpSubjectValue
     {
-        IModificationValue modificationValue; // Backing field for IModificationValue
+        ITemporalValue modificationValue; // Backing field for IModificationValue
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return modificationValue.Index; } }
@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Application
         /// <inheritdoc/>
         public HelpSubjectValue() : base()
         {
-            modificationValue = new ModificationValue(this)
+            modificationValue = new TemporalValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,

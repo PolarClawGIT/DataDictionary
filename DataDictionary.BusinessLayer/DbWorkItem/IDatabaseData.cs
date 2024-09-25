@@ -106,7 +106,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="factory"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<IModificationValue> target);
+        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<ITemporalValue> target);
 
     }
 
@@ -124,6 +124,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="key"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, TKey key, List<IModificationValue> target);
+        IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, TKey key, List<ITemporalValue> target);
     }
 }
