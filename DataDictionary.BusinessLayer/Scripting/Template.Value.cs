@@ -27,31 +27,34 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
-    public class TemplateValue : ScriptingTemplateItem, ITemplateValue, INamedScopeSourceValue
+    public class TemplateValue : ScriptingTemplateItem, ITemplateValue, IPathValue, INamedScopeSourceValue
     {
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
         /// <inheritdoc/>
         public TemplateValue() : base()
-        { PropertyChanged += TemplateValue_PropertyChanged; }
-
-        /// <inheritdoc/>
-        public IPathValue AsPathValue()
         {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new TemplateIndex(this),
-                    GetPath = () => new PathIndex(TemplateTitle),
-                    GetScope = () => Scope,
-                    GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
-                };
-            }
+            PropertyChanged += TemplateValue_PropertyChanged;
 
-            return pathValue;
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new TemplateIndex(this),
+                GetPath = () => new PathIndex(TemplateTitle),
+                GetScope = () => Scope,
+                GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
 
         /// <inheritdoc/>
         public XDocument? TransformXml { get; private set; } = null;

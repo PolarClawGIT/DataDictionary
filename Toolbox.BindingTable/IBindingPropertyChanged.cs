@@ -23,7 +23,7 @@ namespace Toolbox.BindingTable
         /// <example>
         /// INotifyPropertyChanged.OnPropertyChanged(this, PropertyChanged, e.Column.ColumnName);
         /// </example>
-        static void OnPropertyChanged(IBindingPropertyChanged sender, PropertyChangedEventHandler? eventHandler, String? propertyName)
+        static void OnPropertyChanged(Object? sender, PropertyChangedEventHandler? eventHandler, String? propertyName)
         {
             if (eventHandler is PropertyChangedEventHandler handler)
             { handler(sender, new PropertyChangedEventArgs(propertyName)); }

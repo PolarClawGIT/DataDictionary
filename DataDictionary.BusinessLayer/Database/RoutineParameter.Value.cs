@@ -15,28 +15,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbRoutineParameterItem()"/>
-        public RoutineParameterValue() : base()
-        {  }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new RoutineParameterIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName, ParameterName),
-                    GetScope = () => Scope,
-                    GetTitle = () => ParameterName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName) or nameof(ParameterName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(ParameterName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public RoutineParameterValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new RoutineParameterIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName, ParameterName),
+                GetScope = () => Scope,
+                GetTitle = () => ParameterName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName) or nameof(ParameterName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ParameterName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

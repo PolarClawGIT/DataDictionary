@@ -14,34 +14,35 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <inheritdoc/>
     public class EntityValue : DomainEntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainEntityItem()"/>
-        public EntityValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new EntityIndex(this),
-                    GetPath = () =>
-                    {
-                        if (String.IsNullOrWhiteSpace(MemberName))
-                        { return new PathIndex(EntityTitle); }
-                        else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
-                    },
-                    GetScope = () => Scope,
-                    GetTitle = () => EntityTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(EntityTitle) or nameof(MemberName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(EntityTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public EntityValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new EntityIndex(this),
+                GetPath = () =>
+                {
+                    if (String.IsNullOrWhiteSpace(MemberName))
+                    { return new PathIndex(EntityTitle); }
+                    else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                },
+                GetScope = () => Scope,
+                GetTitle = () => EntityTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(EntityTitle) or nameof(MemberName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(EntityTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

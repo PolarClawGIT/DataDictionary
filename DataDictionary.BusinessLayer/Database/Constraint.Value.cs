@@ -16,28 +16,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class ConstraintValue : DbConstraintItem, IConstraintValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbConstraintItem()"/>
-        public ConstraintValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new ConstraintIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName, ConstraintName),
-                    GetScope = () => Scope,
-                    GetTitle = () => ConstraintName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(ConstraintName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ConstraintValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new ConstraintIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, ConstraintName),
+                GetScope = () => Scope,
+                GetTitle = () => ConstraintName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ConstraintName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

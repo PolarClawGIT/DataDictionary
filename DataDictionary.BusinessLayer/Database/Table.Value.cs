@@ -16,28 +16,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class TableValue : DbTableItem, ITableValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbTableItem()"/>
-        public TableValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new TableIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName, TableName),
-                    GetScope = () => Scope,
-                    GetTitle = () => TableName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(TableName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public TableValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new TableIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, TableName),
+                GetScope = () => Scope,
+                GetTitle = () => TableName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(TableName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

@@ -16,28 +16,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class SchemaValue : DbSchemaItem, ISchemaValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbSchemaItem()"/>
-        public SchemaValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new SchemaIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName),
-                    GetScope = () => Scope,
-                    GetTitle = () => SchemaName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(SchemaName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public SchemaValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new SchemaIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName),
+                GetScope = () => Scope,
+                GetTitle = () => SchemaName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

@@ -15,28 +15,29 @@ namespace DataDictionary.BusinessLayer.Library
     /// <inheritdoc/>
     public class LibrarySourceValue : LibrarySourceItem, ILibrarySourceValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="LibrarySourceItem()"/>
-        public LibrarySourceValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new LibrarySourceIndex(this),
-                    GetPath = () => new PathIndex(AssemblyName),
-                    GetScope = () => Scope,
-                    GetTitle = () => LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(AssemblyName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public LibrarySourceValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new LibrarySourceIndex(this),
+                GetPath = () => new PathIndex(AssemblyName),
+                GetScope = () => Scope,
+                GetTitle = () => LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(AssemblyName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

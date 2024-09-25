@@ -15,28 +15,29 @@ namespace DataDictionary.BusinessLayer.Library
     /// <inheritdoc/>
     public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="LibraryMemberItem()"/>
-        public LibraryMemberValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new LibraryMemberIndex(this),
-                    GetPath = () => new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()),
-                    GetScope = () => Scope,
-                    GetTitle = () => MemberName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(MemberName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public LibraryMemberValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new LibraryMemberIndex(this),
+                GetPath = () => new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()),
+                GetScope = () => Scope,
+                GetTitle = () => MemberName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace),
+                IsTitleChanged = (e) => e.PropertyName is nameof(MemberName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

@@ -224,7 +224,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // The existing node may be something other then a NameSpace node.
             // Try putting it in the build of the tree instead of here.
 
-            List<PathIndex> nameSpaces = newValue.Source.AsPathValue().Path.
+            List<PathIndex> nameSpaces = newValue.Source.Path.
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
                 Where(w => 1 == 2). // This is disabling NameSpace handling

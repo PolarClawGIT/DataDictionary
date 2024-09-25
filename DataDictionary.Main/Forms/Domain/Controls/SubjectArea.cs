@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Model;
+using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,7 +34,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             foreach (SubjectAreaValue item in BusinessData.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
             {
                 ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
-                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.AsPathValue().Path.MemberFullPath });
+                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = ((IPathValue)item).Path.MemberFullPath });
                 SubjectAreaIndex key = new SubjectAreaIndex(item);
 
                 if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> subject

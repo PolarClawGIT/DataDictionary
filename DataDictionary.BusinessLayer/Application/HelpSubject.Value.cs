@@ -12,22 +12,29 @@ namespace DataDictionary.BusinessLayer.Application
     /// <inheritdoc/>
     public class HelpSubjectValue : HelpItem, IHelpSubjectValue
     {
-        /// <inheritdoc/>
-        public IModificationValue AsModificationValue()
-        {
-            if (modificationValue is null)
-            {
-                modificationValue = new ModificationValue(this)
-                {
-                    GetIndex = () => new HelpSubjectIndex(this),
-                    GetTitle = () => HelpSubject ?? String.Empty,
-                    GetScope = () => Scope,
-                    IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
-                };
-            }
+        IModificationValue modificationValue; // Backing field for IModificationValue
 
-            return modificationValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return modificationValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return modificationValue.Title; } }
+
+        /// <inheritdoc/>
+        public HelpSubjectValue() : base()
+        {
+            modificationValue = new ModificationValue(this)
+            {
+                GetIndex = () => new HelpSubjectIndex(this),
+                GetTitle = () => HelpSubject ?? String.Empty,
+                GetScope = () => Scope,
+                GetModification = () => Modification,
+                GetModifiedBy = () => ModifiedBy ?? String.Empty,
+                GetModifiedOn = () => ModifiedOn?? DateTime.MaxValue,
+                IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
+            };
         }
-        IModificationValue? modificationValue; // Backing field for AsModificationValue
+
+
     }
 }

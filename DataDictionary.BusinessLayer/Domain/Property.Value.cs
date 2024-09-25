@@ -77,28 +77,29 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        /// <inheritdoc cref="DomainPropertyItem()"/>
-        public PropertyValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new PropertyIndex(this),
-                    GetPath = () => new PathIndex(PropertyTitle),
-                    GetScope = () => Scope,
-                    GetTitle = () => PropertyTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(PropertyTitle),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(PropertyTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public PropertyValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new PropertyIndex(this),
+                GetPath = () => new PathIndex(PropertyTitle),
+                GetScope = () => Scope,
+                GetTitle = () => PropertyTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(PropertyTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(PropertyTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

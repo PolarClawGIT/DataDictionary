@@ -14,34 +14,36 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <inheritdoc/>
     public class AttributeValue : DomainAttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainAttributeItem()"/>
-        public AttributeValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new AttributeIndex(this),
-                    GetPath = () =>
-                    {
-                        if (String.IsNullOrWhiteSpace(MemberName))
-                        { return new PathIndex(AttributeTitle); }
-                        else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
-                    },
-                    GetScope = () => Scope,
-                    GetTitle = () => AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(AttributeTitle) or nameof(MemberName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public AttributeValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new AttributeIndex(this),
+                GetPath = () =>
+                {
+                    if (String.IsNullOrWhiteSpace(MemberName))
+                    { return new PathIndex(AttributeTitle); }
+                    else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                },
+                GetScope = () => Scope,
+                GetTitle = () => AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(AttributeTitle) or nameof(MemberName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
+
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

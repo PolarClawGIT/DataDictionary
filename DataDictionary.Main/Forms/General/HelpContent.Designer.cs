@@ -132,7 +132,6 @@
 
         #endregion
 
-        private SplitContainer helpSplitLayout;
         private TreeView helpContentNavigation;
         private TableLayoutPanel helpDetailLayout;
         private Controls.TextBoxData helpSubjectData;

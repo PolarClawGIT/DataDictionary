@@ -13,28 +13,29 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <inheritdoc/>
     public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainDefinitionItem()"/>
-        public DefinitionValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new DefinitionIndex(this),
-                    GetPath = () => new PathIndex(DefinitionTitle),
-                    GetScope = () => Scope,
-                    GetTitle = () => DefinitionTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DefinitionTitle),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(DefinitionTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public DefinitionValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new DefinitionIndex(this),
+                GetPath = () => new PathIndex(DefinitionTitle),
+                GetScope = () => Scope,
+                GetTitle = () => DefinitionTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DefinitionTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DefinitionTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

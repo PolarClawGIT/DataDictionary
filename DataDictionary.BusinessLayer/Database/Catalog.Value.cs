@@ -15,27 +15,30 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class CatalogValue : DbCatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbCatalogItem()"/>
-        public CatalogValue() : base() { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new CatalogIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName),
-                    GetScope = () => Scope,
-                    GetTitle = () => CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public CatalogValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new CatalogIndex(this),
+                GetPath = () => new PathIndex(DatabaseName),
+                GetScope = () => Scope,
+                GetTitle = () => CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
+
     }
 }

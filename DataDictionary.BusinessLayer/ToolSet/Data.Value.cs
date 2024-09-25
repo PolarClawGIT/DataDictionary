@@ -14,38 +14,17 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Base interface for a DataValue
     /// </summary>
-    public interface IDataItem: IScopeType
+    public interface IDataValue: IScopeType
     {
         /// <summary>
         /// Index of the Source Value.
         /// </summary>
-        DataIndex Index { get; }
+       DataIndex Index { get; }
 
         /// <summary>
         /// Title/Name for the value
         /// </summary>
         String Title { get; }
-    }
-
-    /// <summary>
-    /// Interface for the classes that implement the DataValue
-    /// </summary>
-    public interface IDataValue : IKey, IBindingPropertyChanged, IDataItem
-    {
-        /// <inheritdoc/>
-        DataIndex IDataItem.Index { get { return AsDataValue().Index; } }
-
-        /// <inheritdoc/>
-        String IDataItem.Title { get { return AsDataValue().Title; } }
-
-        /// <inheritdoc/>
-        ScopeType IScopeType.Scope { get { return AsDataValue().Scope; } }
-
-        /// <summary>
-        /// Returns the value as the generic DataValue.
-        /// </summary>
-        /// <returns></returns>
-        IDataValue AsDataValue();
     }
 
     /// <summary>
@@ -57,32 +36,38 @@ namespace DataDictionary.BusinessLayer.ToolSet
         // Unlike Class methods and Properties, Interface Methods and Properties are Implicitly overridden.
         // That is, the interface Methods and Properties are overridden without the key word override.
         //
-        // IDataItem sets up the basic definitions of the properties, without any extra code.
-        // IDataValue overrides the properties and points the calls to the AsDataValue.
-        // The class that implements IDataValue (except DataValue) needs only implements the AsDataValue method.
-        // The class that implements IDataValue creates an instance of DataValue and returns it as IDataValue.
-        // The class DataValue then overrides the Properties to return the values the implementing class specified.
+        // This take two forms.
+        //  * public DataIndex Index { get { return ??; } }
+        //    This overrides all "Index", regardless of interface it comes from.
+        //  * DataIndex IDataValue.Index { get { return ??.Index; } 
+        //    This overrides the "Index" from the interface "IDataValue" only.
+        //    These are not visible/available to the implementing class without casting the class back to the interface.
         //
-        // This gives two ways into the interface properties but returns the same values.
-        // * The code can request the object directly by calling AsDataValue from the implementing class.
-        //   This simply returns the DataValue instance created by the implementing class.
-        // * The code can cast the implementing class into IDataItem or IDataValue and access the properties.
-        //   When the property is referenced, the interface property is called.
-        //   That causes the implementing class to create, if needed, and returns the DataValue.
-        //   The property is then returned from the DataValue class.
-        // The implementing class can also override the property.
-        // In this case, the property can be accessed directly without using DataValue.
+        // DataValue class is a backing class for the interface IDataValue.
+        // Classes that implement IDataValue or one of its child interfaces need to create an instance of the class.
+        // This can be done in the constructor.
         //
-        // Interface properties and methods with default implantation are always hidden unless specifically overridden.
-        // Because DataValue overrides the default implantation, the properties are visible.
+        //   IDataValue dataValue;
+        //   public ImplmentingValue() : base()
+        //   {
+        //       dataValue = new dataValue(this)
+        //       {
+        //           GetIndex = () => new ImplmentingIndex(this),
+        //           GetTitle = () => ImplmentingTitle ?? String.Empty,
+        //           GetScope = () => Scope,
+        //           IsTitleChanged = (e) => e.PropertyName is nameof(ImplmentingTitle)
+        //       };
+        //   }
         //
-        // Child classes can be used to extend DataValue for additional interfaces.
+        // Additionally, any missing (or all) properties need to be overridden to get their values from the instance of DataValue.
         //
-        // What this is trying to solve is a couple of limitations of interfaces.
-        // * Data Binding does not work against interface properties that have default implementations.
-        // * Events cannot be owned by an interface as there is no backing field for the event.
-        // Because the interface is being backed by an instance of a class,
-        // this approach allows data binding and events.
+        //   DataIndex IDataValue.Index { get { return datavalue.Index; } }
+        //
+        // Data-binding: Data-binding does not work on an interface property.
+        // The property that is bound to must be a member of the class or a class that it inherits from.
+        // Interface properties are not available in data-binding.
+        // Even properties that are overridden by an interface property returns the original property.
+        // This class does not solve the binding issue.
 
         /// <inheritdoc/>
         public virtual DataIndex Index { get { return GetIndex(); } }
@@ -113,7 +98,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         public required Func<PropertyChangedEventArgs, Boolean> IsTitleChanged { get; init; }
 
-        public DataValue(IDataValue source)
+        public DataValue(IBindingPropertyChanged source)
         { source.PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
@@ -124,10 +109,6 @@ namespace DataDictionary.BusinessLayer.ToolSet
             if (IsTitleChanged(e))
             { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Title)); }
         }
-
-        public IDataValue AsDataValue()
-        { return this; }
-
         public override String ToString()
         { return  Title; }
 

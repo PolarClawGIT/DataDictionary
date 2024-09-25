@@ -237,8 +237,8 @@ namespace DataDictionary.BusinessLayer.Domain
                             NamedScopeValue newItem = new NamedScopeValue(entity)
                             {
                                 GetPath = () => new PathIndex(
-                                    subjectParent.AsPathValue().Path,
-                                    entity.AsPathValue().Path)
+                                    ((IPathValue)subjectParent).Path,
+                                    ((IPathValue)entity).Path)
                             };
 
                             addNamedScope(subjectParent, newItem);

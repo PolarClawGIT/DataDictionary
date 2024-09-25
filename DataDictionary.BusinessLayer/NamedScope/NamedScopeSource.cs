@@ -83,20 +83,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the NamedScope Source Value.
     /// </summary>
-    /// <remarks>
-    /// Returned to the UI layer.
-    /// </remarks>
-    public interface INamedScopeSourceValue : IPathValue
-    {
-
-        /// <summary>
-        /// Obsolete: Gets the generic NameScope Path from the Value
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete]
-        PathIndex GetPath() { throw new NotSupportedException(); }
-
-    }
+    public interface INamedScopeSourceValue : IPathValue, IBindingPropertyChanged
+    { }
 
     /// <summary>
     /// Represents NameSpace items that does not have a specific Scope for the node.
@@ -108,30 +96,33 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public NameSpaceSource(PathIndex path)
         {
             SystemId = Guid.NewGuid();
             SystemPath = path;
-        }
 
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
+            pathValue = new PathValue(this)
             {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new DataIndex() { SystemId = SystemId },
-                    GetPath = () => SystemPath,
-                    GetScope = () => Scope,
-                    GetTitle = () => SystemPath.MemberFullPath,
-                    IsPathChanged = (e) => false,
-                    IsTitleChanged = (e) => false
-                };
-            }
-
-            return pathValue;
+                GetIndex = () => new DataIndex() { SystemId = SystemId },
+                GetPath = () => SystemPath,
+                GetScope = () => Scope,
+                GetTitle = () => SystemPath.MemberFullPath,
+                IsPathChanged = (e) => false,
+                IsTitleChanged = (e) => false
+            };
         }
-        IPathValue? pathValue;
 
         public override String ToString()
         { return SystemPath.MemberFullPath; }

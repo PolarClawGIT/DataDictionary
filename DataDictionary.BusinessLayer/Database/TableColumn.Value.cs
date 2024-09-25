@@ -16,28 +16,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class TableColumnValue : DbTableColumnItem, ITableColumnValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbTableItem()"/>
-        public TableColumnValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new TableColumnIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName, TableName, ColumnName),
-                    GetScope = () => Scope,
-                    GetTitle = () => ColumnName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName) or nameof(ColumnName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(ColumnName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public TableColumnValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new TableColumnIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, TableName, ColumnName),
+                GetScope = () => Scope,
+                GetTitle = () => ColumnName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName) or nameof(ColumnName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ColumnName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

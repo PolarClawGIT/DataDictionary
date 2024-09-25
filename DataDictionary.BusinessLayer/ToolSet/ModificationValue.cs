@@ -13,25 +13,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// Item can be cast as a Modification Value
     /// </summary>
     public interface IModificationValue : IDataValue, ITemporalItem
-    {
-        /// <inheritdoc/>
-        String? ITemporalItem.ModifiedBy { get { return AsModificationValue().ModifiedBy; } }
-
-        /// <inheritdoc/>
-        DateTime? ITemporalItem.ModifiedOn { get { return AsModificationValue().ModifiedOn; } }
-
-        /// <inheritdoc/>
-        DbModificationType ITemporalItem.Modification { get { return AsModificationValue().Modification; } }
-
-        /// <inheritdoc/>
-        IDataValue IDataValue.AsDataValue() { return AsModificationValue(); }
-
-        /// <summary>
-        /// Returns the value as the general Modification Value.
-        /// </summary>
-        /// <returns></returns>
-        IModificationValue AsModificationValue();
-    }
+    { }
 
     /// <summary>
     /// Implementation for an Item can be cast as a Modification Value
@@ -50,24 +32,20 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <summary>
         /// Function that returns the ModifiedBy of the source.
         /// </summary>
-        public Func<String> GetModifiedBy { get; init; }
+        public required Func<String> GetModifiedBy { get; init; }
 
         /// <summary>
         /// Function that returns the ModifiedOn of the source.
         /// </summary>
-        public Func<DateTime> GetModifiedOn { get; init; }
+        public required Func<DateTime> GetModifiedOn { get; init; }
 
         /// <summary>
         /// Function that returns the Modification of the source.
         /// </summary>
-        public Func<DbModificationType> GetModification { get; init; }
+        public required Func<DbModificationType> GetModification { get; init; }
 
-        public ModificationValue(IModificationValue source) : base(source)
-        {
-            GetModifiedBy = () => source.ModifiedBy ?? String.Empty;
-            GetModifiedOn = () => source.ModifiedOn ?? DateTime.MaxValue;
-            GetModification = () => source.Modification;
-        }
+        public ModificationValue(IBindingPropertyChanged source) : base(source)
+        { }
 
         /// <inheritdoc/>
         public IModificationValue AsModificationValue()

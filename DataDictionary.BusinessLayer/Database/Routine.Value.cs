@@ -16,28 +16,29 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class RoutineValue : DbRoutineItem, IRoutineValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbRoutineItem()"/>
-        public RoutineValue() : base()
-        { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public IPathValue AsPathValue()
-        {
-            if (pathValue is null)
-            {
-                pathValue = new PathValue(this)
-                {
-                    GetIndex = () => new RoutineIndex(this),
-                    GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName),
-                    GetScope = () => Scope,
-                    GetTitle = () => RoutineName ?? ScopeEnumeration.Cast(Scope).Name,
-                    IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName),
-                    IsTitleChanged = (e) => e.PropertyName is nameof(RoutineName)
-                };
-            }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-            return pathValue;
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public RoutineValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new RoutineIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName),
+                GetScope = () => Scope,
+                GetTitle = () => RoutineName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(RoutineName)
+            };
         }
-        IPathValue? pathValue; // Backing field for AsPathValue
     }
 }

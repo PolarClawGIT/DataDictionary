@@ -12,19 +12,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// Item can be cast as a general Path Value
     /// </summary>
     public interface IPathValue : IPathIndex, IDataValue
-    {
-        /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return AsPathValue().Path; } }
-
-        /// <inheritdoc/>
-        IDataValue IDataValue.AsDataValue() { return AsPathValue(); }
-
-        /// <summary>
-        /// Returns the value as the Path Value.
-        /// </summary>
-        /// <returns></returns>
-        IPathValue AsPathValue();
-    }
+    { }
 
     /// <summary>
     /// Implementation for an Item can be cast as a Path Value
@@ -45,7 +33,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public required Func<PropertyChangedEventArgs, Boolean> IsPathChanged { get; init; }
 
         /// <inheritdoc/>
-        public PathValue(IPathValue source) : base(source)
+        public PathValue(IBindingPropertyChanged source) : base(source)
         { }
 
         /// <inheritdoc/>
