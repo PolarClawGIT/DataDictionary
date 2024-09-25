@@ -174,6 +174,7 @@ namespace DataDictionary.Main.Forms
             InitializeComponent();
 
             commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Select, new CommandState(selectCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Add, new CommandState(newCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
@@ -302,6 +303,9 @@ namespace DataDictionary.Main.Forms
         { }
 
         protected virtual void AddCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void SelectCommand_Click(object sender, EventArgs e)
         { }
 
         protected virtual void DeleteCommand_Click(object? sender, EventArgs e)

@@ -11,6 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
+    [Obsolete("Replaced with HelpContent and a detailed version of HelpSubject")]
     partial class HelpSubject : ApplicationData
     {
         class ControlItem

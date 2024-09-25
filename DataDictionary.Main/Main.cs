@@ -162,7 +162,7 @@ namespace DataDictionary.Main
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
+        { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }

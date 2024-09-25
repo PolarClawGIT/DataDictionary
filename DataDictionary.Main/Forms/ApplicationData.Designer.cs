@@ -35,16 +35,17 @@
             deleteFromDatabaseCommand = new ToolStripButton();
             toolStrip = new ToolStrip();
             browseCommand = new ToolStripButton();
+            selectCommand = new ToolStripButton();
             newCommand = new ToolStripButton();
             deleteCommand = new ToolStripButton();
             openCommand = new ToolStripButton();
             saveCommand = new ToolStripButton();
             importCommand = new ToolStripDropDownButton();
             exportCommand = new ToolStripDropDownButton();
+            historyCommand = new ToolStripButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
-            historyCommand = new ToolStripButton();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -88,7 +89,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, historyCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, selectCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, historyCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
@@ -105,6 +106,17 @@
             browseCommand.Size = new Size(23, 22);
             browseCommand.Text = "Browse";
             browseCommand.Click += BrowseCommand_Click;
+            // 
+            // selectCommand
+            // 
+            selectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            selectCommand.Enabled = false;
+            selectCommand.Image = Properties.Resources.SelectDocument;
+            selectCommand.ImageTransparentColor = Color.Magenta;
+            selectCommand.Name = "selectCommand";
+            selectCommand.Size = new Size(23, 22);
+            selectCommand.Text = "Select";
+            selectCommand.Click += SelectCommand_Click;
             // 
             // newCommand
             // 
@@ -174,6 +186,17 @@
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
+            // historyCommand
+            // 
+            historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            historyCommand.Enabled = false;
+            historyCommand.Image = Properties.Resources.HistoryTable;
+            historyCommand.ImageTransparentColor = Color.Magenta;
+            historyCommand.Name = "historyCommand";
+            historyCommand.Size = new Size(23, 22);
+            historyCommand.Text = "Table History";
+            historyCommand.Click += HistoryCommand_Click;
+            // 
             // helpCommand
             // 
             helpCommand.Alignment = ToolStripItemAlignment.Right;
@@ -203,17 +226,6 @@
             helpToolStripButton.Name = "helpToolStripButton";
             helpToolStripButton.Size = new Size(23, 22);
             helpToolStripButton.Text = "He&lp";
-            // 
-            // historyCommand
-            // 
-            historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            historyCommand.Enabled = false;
-            historyCommand.Image = Properties.Resources.HistoryTable;
-            historyCommand.ImageTransparentColor = Color.Magenta;
-            historyCommand.Name = "historyCommand";
-            historyCommand.Size = new Size(23, 22);
-            historyCommand.Text = "Table History";
-            historyCommand.Click += HistoryCommand_Click;
             // 
             // ApplicationData
             // 
@@ -247,5 +259,6 @@
         private ToolStripDropDownButton importCommand;
         private ToolStripDropDownButton exportCommand;
         private ToolStripButton historyCommand;
+        private ToolStripButton selectCommand;
     }
 }

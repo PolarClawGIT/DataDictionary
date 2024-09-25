@@ -1403,6 +1403,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap OpenStatusHelp {
+            get {
+                object obj = ResourceManager.GetObject("OpenStatusHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap OpenTable {
             get {
                 object obj = ResourceManager.GetObject("OpenTable", resourceCulture);
@@ -1726,6 +1736,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap SelectEntity {
             get {
                 object obj = ResourceManager.GetObject("SelectEntity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectStatusHelp {
+            get {
+                object obj = ResourceManager.GetObject("SelectStatusHelp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
