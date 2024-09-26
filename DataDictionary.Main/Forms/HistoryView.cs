@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,9 @@ namespace DataDictionary.Main.Forms
 
             HistoryValuesData_Resize(historyValuesData, EventArgs.Empty);
             HistoryModificationData_Resize(historyModificationData, EventArgs.Empty);
+
+            CommandButtons[CommandImageType.Select].IsEnabled = true;
+            CommandButtons[CommandImageType.Select].IsVisible = true;
         }
 
         public HistoryView(ILoadHistoryData loader) : this()

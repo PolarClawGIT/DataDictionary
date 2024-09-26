@@ -31,15 +31,11 @@
             TableLayoutPanel historyLayout;
             GroupBox historySummaryGroup;
             TableLayoutPanel historyDetailLayout;
-            TableLayoutPanel restoreLayout;
-            Label restoreWarning;
             GroupBox modificationsGroup;
             titleData = new Controls.TextBoxData();
             modificationData = new Controls.TextBoxData();
             modifiedByData = new Controls.TextBoxData();
             modifiedOnDate = new Controls.TextBoxData();
-            viewDetailCommand = new Button();
-            restoreCommand = new Button();
             historyModificationData = new ListView();
             historyModificationColumn = new ColumnHeader();
             historyModifiedOnColumn = new ColumnHeader();
@@ -49,13 +45,10 @@
             historyLayout = new TableLayoutPanel();
             historySummaryGroup = new GroupBox();
             historyDetailLayout = new TableLayoutPanel();
-            restoreLayout = new TableLayoutPanel();
-            restoreWarning = new Label();
             modificationsGroup = new GroupBox();
             historyLayout.SuspendLayout();
             historySummaryGroup.SuspendLayout();
             historyDetailLayout.SuspendLayout();
-            restoreLayout.SuspendLayout();
             modificationsGroup.SuspendLayout();
             SuspendLayout();
             // 
@@ -78,34 +71,36 @@
             // 
             // historySummaryGroup
             // 
+            historySummaryGroup.AutoSize = true;
+            historySummaryGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             historySummaryGroup.Controls.Add(historyDetailLayout);
             historySummaryGroup.Dock = DockStyle.Fill;
-            historySummaryGroup.Location = new Point(314, 201);
+            historySummaryGroup.Location = new Point(314, 290);
             historySummaryGroup.Name = "historySummaryGroup";
-            historySummaryGroup.Size = new Size(306, 311);
+            historySummaryGroup.Size = new Size(306, 222);
             historySummaryGroup.TabIndex = 2;
             historySummaryGroup.TabStop = false;
             historySummaryGroup.Text = "Summary";
             // 
             // historyDetailLayout
             // 
+            historyDetailLayout.AutoSize = true;
+            historyDetailLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             historyDetailLayout.ColumnCount = 1;
             historyDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             historyDetailLayout.Controls.Add(titleData, 0, 0);
             historyDetailLayout.Controls.Add(modificationData, 0, 1);
             historyDetailLayout.Controls.Add(modifiedByData, 0, 2);
             historyDetailLayout.Controls.Add(modifiedOnDate, 0, 3);
-            historyDetailLayout.Controls.Add(restoreLayout, 0, 4);
             historyDetailLayout.Dock = DockStyle.Fill;
             historyDetailLayout.Location = new Point(3, 19);
             historyDetailLayout.Name = "historyDetailLayout";
-            historyDetailLayout.RowCount = 5;
+            historyDetailLayout.RowCount = 4;
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
-            historyDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            historyDetailLayout.Size = new Size(300, 289);
+            historyDetailLayout.Size = new Size(300, 200);
             historyDetailLayout.TabIndex = 0;
             // 
             // titleData
@@ -160,63 +155,13 @@
             modifiedOnDate.TabIndex = 4;
             modifiedOnDate.WordWrap = true;
             // 
-            // restoreLayout
-            // 
-            restoreLayout.ColumnCount = 2;
-            restoreLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            restoreLayout.ColumnStyles.Add(new ColumnStyle());
-            restoreLayout.Controls.Add(viewDetailCommand, 1, 0);
-            restoreLayout.Controls.Add(restoreCommand, 1, 1);
-            restoreLayout.Controls.Add(restoreWarning, 0, 0);
-            restoreLayout.Dock = DockStyle.Fill;
-            restoreLayout.Location = new Point(3, 203);
-            restoreLayout.Name = "restoreLayout";
-            restoreLayout.RowCount = 2;
-            restoreLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            restoreLayout.RowStyles.Add(new RowStyle());
-            restoreLayout.Size = new Size(294, 83);
-            restoreLayout.TabIndex = 7;
-            // 
-            // viewDetailCommand
-            // 
-            viewDetailCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            viewDetailCommand.Location = new Point(216, 28);
-            viewDetailCommand.Name = "viewDetailCommand";
-            viewDetailCommand.Size = new Size(75, 23);
-            viewDetailCommand.TabIndex = 7;
-            viewDetailCommand.Text = "Details";
-            viewDetailCommand.UseVisualStyleBackColor = true;
-            viewDetailCommand.Click += ViewDetailCommand_Click;
-            // 
-            // restoreCommand
-            // 
-            restoreCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            restoreCommand.Location = new Point(216, 57);
-            restoreCommand.Name = "restoreCommand";
-            restoreCommand.Size = new Size(75, 23);
-            restoreCommand.TabIndex = 6;
-            restoreCommand.Text = "Restore";
-            restoreCommand.UseVisualStyleBackColor = true;
-            restoreCommand.Click += RestoreCommand_Click;
-            // 
-            // restoreWarning
-            // 
-            restoreWarning.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            restoreWarning.AutoSize = true;
-            restoreWarning.Location = new Point(3, 53);
-            restoreWarning.Name = "restoreWarning";
-            restoreLayout.SetRowSpan(restoreWarning, 2);
-            restoreWarning.Size = new Size(173, 30);
-            restoreWarning.TabIndex = 5;
-            restoreWarning.Text = "Restoring a record effects child records.";
-            // 
             // modificationsGroup
             // 
             modificationsGroup.Controls.Add(historyModificationData);
             modificationsGroup.Dock = DockStyle.Fill;
             modificationsGroup.Location = new Point(314, 3);
             modificationsGroup.Name = "modificationsGroup";
-            modificationsGroup.Size = new Size(306, 192);
+            modificationsGroup.Size = new Size(306, 281);
             modificationsGroup.TabIndex = 0;
             modificationsGroup.TabStop = false;
             modificationsGroup.Text = "Modifications";
@@ -228,7 +173,7 @@
             historyModificationData.Location = new Point(3, 19);
             historyModificationData.MultiSelect = false;
             historyModificationData.Name = "historyModificationData";
-            historyModificationData.Size = new Size(300, 170);
+            historyModificationData.Size = new Size(300, 259);
             historyModificationData.TabIndex = 0;
             historyModificationData.UseCompatibleStateImageBehavior = false;
             historyModificationData.View = View.Details;
@@ -281,20 +226,17 @@
             Load += HistoryView_Load;
             Controls.SetChildIndex(historyLayout, 0);
             historyLayout.ResumeLayout(false);
+            historyLayout.PerformLayout();
             historySummaryGroup.ResumeLayout(false);
+            historySummaryGroup.PerformLayout();
             historyDetailLayout.ResumeLayout(false);
             historyDetailLayout.PerformLayout();
-            restoreLayout.ResumeLayout(false);
-            restoreLayout.PerformLayout();
             modificationsGroup.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Button restoreCommand;
-        private Button viewDetailCommand;
         protected Controls.TextBoxData titleData;
         protected Controls.TextBoxData modificationData;
         protected Controls.TextBoxData modifiedByData;
