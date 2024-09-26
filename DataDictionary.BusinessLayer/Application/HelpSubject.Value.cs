@@ -23,16 +23,13 @@ namespace DataDictionary.BusinessLayer.Application
         /// <inheritdoc/>
         public HelpSubjectValue() : base()
         {
-            modificationValue = new TemporalValue(this)
+            modificationValue = TemporalValue.Create(new DataValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,
                 GetScope = () => Scope,
-                GetModification = () => Modification,
-                GetModifiedBy = () => ModifiedBy ?? String.Empty,
-                GetModifiedOn = () => ModifiedOn?? DateTime.MaxValue,
                 IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
-            };
+            }, this);
         }
 
 

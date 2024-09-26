@@ -16,17 +16,21 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			A.[NameSpace],
 			A.[ModifiedBy],
 			A.[SysStart] As [ModifiedOn],
-			Convert(NVarChar(10), Case
-				When P.[HelpId] is Null Then 'Inserted'
-				Else 'Updated'
-				End) As [Modification]
+			Convert(Bit, IIF(P.[HelpId] is Null,1,0)) As [IsInserted],
+			Convert(Bit, IIF(P.[HelpId] is not Null,1,0)) As [IsUpdated],
+			Convert(Bit, 0) As [IsDeleted],
+			Convert(Bit, IIF(
+				IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
+				IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd], 1,0))
+				As [IsCurrent]
 	From	[App_General].[ApplicationHelp] For System_Time All A -- All Values
 			Left Join [App_General].[ApplicationHelp] For System_Time All P -- Prior
 			On	A.[HelpId] = P.[HelpId] And
 				A.[SysStart] = P.[SysEnd]
 	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And
 			(@IncludeHistory = 1 Or
-				(IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd]))
+				(IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
+				 IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd]))
 	Union -- Handle Deleted Rows
 	Select	A.[HelpId],
 			A.[HelpSubject],
@@ -35,7 +39,17 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			A.[NameSpace],
 			Null As [ModifiedBy], -- The account deleting the row is not recorded
 			A.[SysEnd] As [ModifiedOn],
-			Convert(NVarChar(10), 'Deleted') As [Modification]
+			Convert(Bit, 0) As [IsInserted],
+			Convert(Bit, 0) As [IsUpdated],
+			Convert(Bit, 1) As [IsDeleted],
+			Convert(Bit, IIF(
+				IsNull(@AsOfUtcDate,sysUtcDateTime()) > A.[SysStart] And
+				IsNull(@AsOfUtcDate,sysUtcDateTime()) <= 
+					IsNull(Min(A.[SysStart]) Over (
+						Partition By A.[HelpId]
+						Order By A.[SysStart]
+						Rows Between 1 Following and 1 Following),
+					sysUtcDateTime()), 1, 0)) As [IsCurent]
 	From	[App_General].[ApplicationHelp] For System_Time All A -- All Values
 			Left Join [App_General].[ApplicationHelp] For System_Time All N -- Next
 			On	A.[HelpId] = N.[HelpId] And
@@ -52,10 +66,14 @@ Select	[HelpId],
 		[NameSpace],
 		[ModifiedBy],
 		[ModifiedOn],
-		[Modification]
+		[IsInserted],
+		[IsUpdated],
+		[IsDeleted],
+		[IsCurrent] -- Is this the Current State of the record
 From	[Data]
 Order By Last_Value ([HelpSubject]) Over (
 				Partition By [HelpId]
 				Order By [ModifiedOn]
 				Rows Between Unbounded Preceding and Unbounded Following),
 		[ModifiedOn]
+GO

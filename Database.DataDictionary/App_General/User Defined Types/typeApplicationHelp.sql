@@ -7,5 +7,9 @@
 	[NameSpace]     NVarChar(1023)   Null,
 	[ModifiedBy]    SysName          Null,
 	[ModifiedOn]    DateTime2 (7)    Null,
-	[Modification]  NVarChar(10)     Null
+	[Modification]  NVarChar(10)     Null,
+	[IsInserted]    Bit              Null,
+	[IsUpdated]     Bit              Null,
+	[IsDeleted]     Bit              Null,
+	[IsCurrent]      Bit              Null
 )

@@ -78,13 +78,29 @@ namespace DataDictionary.DataLayer.ApplicationData
         public DateTime? ModifiedOn { get { return GetValue<DateTime>(nameof(ModifiedOn)); } }
 
         /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
         public DbModificationType Modification
         {
             get
             {
-                String? value = GetValue(nameof(Modification));
-                if (DbModificationEnumeration.TryParse(value, null, out DbModificationEnumeration? result))
-                { return result.Value; }
+                if(IsDeleted == true) { return DbModificationType.Deleted; }
+                else if(IsInserted == true) { return DbModificationType.Inserted; }
+                else if(IsUpdated == true) { return DbModificationType.Updated; }
                 else { return DbModificationType.Null; }
             }
         }
@@ -106,7 +122,10 @@ namespace DataDictionary.DataLayer.ApplicationData
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(Modification), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
