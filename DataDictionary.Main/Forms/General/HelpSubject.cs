@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Forms.General
 
         }
 
-        public HelpSubject(IHelpSubjectValue? helpSubjectItem) : this()
+        public HelpSubject(HelpSubjectValue? helpSubjectItem) : this()
         {
             if (helpSubjectItem is null)
             {
@@ -93,7 +93,7 @@ namespace DataDictionary.Main.Forms.General
             HelpSubject_Binding(helpSubjectItem);
         }
 
-        private void HelpSubject_Binding(IHelpSubjectValue helpSubjectItem)
+        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
         {
             HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
             TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
@@ -106,13 +106,13 @@ namespace DataDictionary.Main.Forms.General
             }
             else
             {
-                BindingList<IHelpSubjectValue> unboundData = new BindingList<IHelpSubjectValue> { helpSubjectItem };
+                BindingList<HelpSubjectValue> unboundData = new BindingList<HelpSubjectValue> { helpSubjectItem };
                 helpBinding.DataSource = unboundData;
                 helpBinding.Position = 0;
             }
         }
 
-        public HelpSubject(IHelpSubjectValue helpSubjectItem, Form targetForm) : this()
+        public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
         {
             HelpSubject_Binding(helpSubjectItem);
 
@@ -142,7 +142,7 @@ namespace DataDictionary.Main.Forms.General
                 ListViewItem newItem = new ListViewItem(itemName);
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
-                
+
                 if (helpBinding.Current is IHelpSubjectValue helpValue
                     && helpValue.NameSpace is not null)
                 {
@@ -162,8 +162,11 @@ namespace DataDictionary.Main.Forms.General
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
             helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
             helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            try // If RTF, bind to the RTF property
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged)); }
+            catch (Exception) // Else it is not RTF, bind to the property 
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Text), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged)); }
         }
 
         private void ControlData_Resize(object sender, EventArgs e)

@@ -582,16 +582,5 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 }
             }
         }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-
-            if (helpBinding.DataSource is ILoadHistoryData history)
-            {
-                Activate(() => new HistoryView<HelpSubjectValue>(history));
-            }
-
-        }
     }
 }

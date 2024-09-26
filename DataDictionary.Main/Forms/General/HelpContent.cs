@@ -93,7 +93,7 @@ namespace DataDictionary.Main.Forms.General
                         Group().
                         Any(w => targetForm.ToNameSpaceKey().Equals(w)))
                 { Activate(() => new HelpSubject(current, targetForm)); }
-                else { Activate(() => new HelpSubject(current)); }
+                else { Activate((data) => new HelpSubject(current), current); }
             }
         }
 
@@ -102,7 +102,10 @@ namespace DataDictionary.Main.Forms.General
             base.HistoryCommand_Click(sender, e);
 
             if (helpBinding.DataSource is ILoadHistoryData history)
-            { Activate(() => new HistoryView<HelpSubjectValue>(history)); }
+            {
+                Activate(() => new HistoryView<HelpSubjectValue, HelpSubject>(history)
+                { SelectedForm = (subject) => new HelpSubject(subject) });
+            }
         }
 
         #region Help Content Tree

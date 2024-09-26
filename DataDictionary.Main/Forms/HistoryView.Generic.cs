@@ -13,21 +13,25 @@ using Toolbox.Threading;
 namespace DataDictionary.Main.Forms
 {
 
-    class HistoryView<TValue> : HistoryView
+    class HistoryView<TValue, TForm> : HistoryView
         where TValue : ITemporalValue
+        where TForm : ApplicationBase
     {
-        
-        public HistoryView(ILoadHistoryData loader) : base(loader) 
+        /// <summary>
+        /// The Constructor for the Detail/Selected Form.
+        /// </summary>
+        public Func<TValue, TForm>? SelectedForm { get; init; }
+
+
+        public HistoryView(ILoadHistoryData loader) : base(loader)
         { }
 
-        protected override void ViewDetailCommand_Click(Object sender, EventArgs e)
+        protected override void SelectCommand_Click(Object sender, EventArgs e)
         {
-            //base.ViewDetailCommand_Click(sender, e);
+            base.SelectCommand_Click(sender, e);
 
-            if(base.SelectedValue is TValue)
-            {
-
-            }
+            if (SelectedValue is TValue value && SelectedForm is not null)
+            { Activate(() => SelectedForm(value)); }
         }
 
         protected override void RestoreCommand_Click(Object sender, EventArgs e)
