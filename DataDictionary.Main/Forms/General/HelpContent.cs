@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
@@ -79,8 +80,6 @@ namespace DataDictionary.Main.Forms.General
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-
-
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
@@ -89,7 +88,10 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.Current is HelpSubjectValue current)
             {
-                if (helpForForm is Form targetForm && new HelpSubjectIndexPath(current).Equals(targetForm.ToNameSpaceKey()))
+                if (helpForForm is Form targetForm
+                    && new HelpSubjectIndexPath(current).
+                        Group().
+                        Any(w => targetForm.ToNameSpaceKey().Equals(w)))
                 { Activate(() => new HelpSubject(current, targetForm)); }
                 else { Activate(() => new HelpSubject(current)); }
             }

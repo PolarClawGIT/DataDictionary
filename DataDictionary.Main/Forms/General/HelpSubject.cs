@@ -68,8 +68,7 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                CommandImageType.DeleteDatabase);
 
             // Store and recompute column sizes for List views
             controlValuesWidths = controlData.Columns.
@@ -128,6 +127,7 @@ namespace DataDictionary.Main.Forms.General
             // Add Group level for form to ListView
             ControlItem baseForm = new ControlItem(targetForm);
             ListViewItem baseItem = new ListViewItem(baseForm.ControlName.Member);
+
             baseForm.ListItem = baseItem;
             controlList.Add(baseForm);
             controlData.Items.Add(baseItem);
@@ -142,6 +142,15 @@ namespace DataDictionary.Main.Forms.General
                 ListViewItem newItem = new ListViewItem(itemName);
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
+                
+                if (helpBinding.Current is IHelpSubjectValue helpValue
+                    && helpValue.NameSpace is not null)
+                {
+                    PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
+
+                    if (helpPath.Equals(newControl.ControlName))
+                    { newItem.Checked = true; }
+                }
 
                 controlList.Add(newControl);
                 controlData.Items.Add(newItem);

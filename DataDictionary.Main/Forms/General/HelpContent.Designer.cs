@@ -101,6 +101,7 @@
             // 
             // helpTextData
             // 
+            helpTextData.BackColor = SystemColors.Window;
             helpTextData.Dock = DockStyle.Fill;
             helpTextData.Location = new Point(3, 53);
             helpTextData.Name = "helpTextData";
@@ -134,7 +135,7 @@
 
         private TreeView helpContentNavigation;
         private Controls.TextBoxData helpSubjectData;
-        private RichTextBox helpTextData;
         private BindingSource helpBinding;
+        private RichTextBox helpTextData;
     }
 }
