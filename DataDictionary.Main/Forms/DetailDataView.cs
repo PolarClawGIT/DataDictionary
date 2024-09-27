@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -13,7 +14,7 @@ namespace DataDictionary.Main.Forms
         public DetailDataView() : base()
         { InitializeComponent(); }
 
-        public DetailDataView(IBindingTable data, Icon? icon = null) : this()
+        public DetailDataView(IBindingTable data) : this()
         {
             bindingSource.DataSource = data;
 
@@ -21,11 +22,13 @@ namespace DataDictionary.Main.Forms
             { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
 
-            if (icon is Icon value) { this.Icon = value; }
-            else { Setup(bindingSource); }
+            Setup(bindingSource);
         }
 
-        public DetailDataView(IBindingData data, Icon? icon = null) : this()
+        public DetailDataView(ScopeType scope, IBindingTable data) : this(data)
+        { Setup(scope); }
+
+        public DetailDataView(IBindingData data) : this()
         {
             bindingSource.DataSource = data;
 
@@ -33,18 +36,22 @@ namespace DataDictionary.Main.Forms
             { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
 
-            if (icon is Icon value) { this.Icon = value; }
-            else { Setup(bindingSource); }
+            Setup(bindingSource);
         }
 
-        public DetailDataView(IBindingList data, Icon? icon = null) : this()
+        public DetailDataView(ScopeType scope, IBindingData data) : this(data)
+        { Setup(scope); }
+
+        public DetailDataView(IBindingList data) : this()
         {
             bindingSource.DataSource = data;
             this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
 
-            if (icon is Icon value) { this.Icon = value; }
-            else { Setup(bindingSource); }
+            Setup(bindingSource);
         }
+
+        public DetailDataView(ScopeType scope, IBindingList data) : this(data)
+        { Setup(scope); }
 
         public Boolean IsOpenItem(Object? item)
         { return ReferenceEquals(bindingSource.DataSource, item); }

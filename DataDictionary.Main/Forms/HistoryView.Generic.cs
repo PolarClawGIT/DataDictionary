@@ -47,8 +47,8 @@ namespace DataDictionary.Main.Forms
                 BindingList<TValue> values = new BindingList<TValue>(GetHistoryDetail(SelectedValue).OfType<TValue>().ToList());
 
                 Form form = Activate((data) => new Forms.DetailDataView(data), values);
-                form.Icon = ImageEnumeration.GetIcon(SelectedValue.Scope);
-                form.Text = SelectedValue.Title;
+                //form.Icon = ImageEnumeration.GetIcon(SelectedValue.Scope);
+                //form.Text = SelectedValue.Title;
             }
 
         }
