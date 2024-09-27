@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.General
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
             Setup(
-                helpBinding,
+                ScopeType.ApplicationHelp,
                 CommandImageType.Add,
                 CommandImageType.Open,
                 CommandImageType.HistoryDatabase);
@@ -104,10 +104,9 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.DataSource is ILoadHistoryData history)
             {
-                Form form = Activate(() => new HistoryView<HelpSubjectValue, HelpSubject>(history)
+                Form form = Activate(() =>
+                new HistoryView<HelpSubjectValue, HelpSubject>(ScopeType.ApplicationHelp, history)
                 { SelectedForm = (subject) => new HelpSubject(subject) });
-
-                form.Icon = this.Icon;
 
                 if (history is IBindingTable table)
                 { form.Text = String.Format("History: {0}", table.BindingName); }

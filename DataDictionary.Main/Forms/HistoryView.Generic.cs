@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,6 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
-
     class HistoryView<TValue, TForm> : HistoryView
         where TValue : class, ITemporalValue
         where TForm : ApplicationBase
@@ -23,18 +23,16 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         public Func<TValue, TForm>? SelectedForm { get; init; }
 
-        public HistoryView(ILoadHistoryData loader) : base(loader)
+        public HistoryView(ScopeType scope, ILoadHistoryData loader) : base(loader)
         {
-            CommandButtons[CommandImageType.Browse].IsEnabled = true;
-            CommandButtons[CommandImageType.Browse].IsVisible = true;
-
-            CommandButtons[CommandImageType.Select].IsEnabled = true;
-            CommandButtons[CommandImageType.Select].IsVisible = true;
+            Setup(scope,
+                CommandImageType.Browse,
+                CommandImageType.Open);
         }
 
-        protected override void SelectCommand_Click(Object sender, EventArgs e)
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
-            base.SelectCommand_Click(sender, e);
+            base.OpenCommand_Click(sender, e);
 
             if (SelectedValue is TValue value && SelectedForm is not null)
             { Activate(() => SelectedForm(value)); }
