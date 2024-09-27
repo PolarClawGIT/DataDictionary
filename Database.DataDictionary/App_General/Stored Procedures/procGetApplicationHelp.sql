@@ -43,13 +43,11 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			Convert(Bit, 0) As [IsUpdated],
 			Convert(Bit, 1) As [IsDeleted],
 			Convert(Bit, IIF(
-				IsNull(@AsOfUtcDate,sysUtcDateTime()) > A.[SysStart] And
-				IsNull(@AsOfUtcDate,sysUtcDateTime()) <= 
-					IsNull(Min(A.[SysStart]) Over (
-						Partition By A.[HelpId]
-						Order By A.[SysStart]
-						Rows Between 1 Following and 1 Following),
-					sysUtcDateTime()), 1, 0)) As [IsCurent]
+				-- Is there an Active record after this record
+				(Select Min([SysStart])
+					From [App_General].[ApplicationHelp]
+					Where [HelpId] = A.[HelpId] And [SysStart] > A.[SysStart])
+				Is Null, 1, 0)) As [IsCurent]
 	From	[App_General].[ApplicationHelp] For System_Time All A -- All Values
 			Left Join [App_General].[ApplicationHelp] For System_Time All N -- Next
 			On	A.[HelpId] = N.[HelpId] And

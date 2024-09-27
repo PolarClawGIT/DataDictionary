@@ -224,22 +224,6 @@ namespace DataDictionary.Main.Forms
                     RowStateChanged(binding, EventArgs.Empty);
                 }
 
-                if (data.Current is ITemporalValue temporal)
-                {
-                    if (temporal.IsDeleted == true)
-                    { rowStateCommand.Image = Resources.RowDeleted; }
-                    else if (temporal.IsCurrent == false)
-                    { rowStateCommand.Image = Resources.RowHistory; }
-
-                    StringBuilder toolTip = new StringBuilder();
-                    toolTip.AppendLine(DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
-                    if (temporal.ModifiedOn is DateTime)
-                    { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedOn), temporal.ModifiedOn)); }
-                    if (temporal.ModifiedBy is String modifiedBy)
-                    { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedBy), temporal.ModifiedBy)); }
-                    rowStateCommand.ToolTipText = toolTip.ToString();
-                }
-
                 if (data.Current is IDataValue dataValue)
                 {
                     Text = dataValue.Title;
@@ -286,10 +270,28 @@ namespace DataDictionary.Main.Forms
             if (sender is IBindingRowState data)
             {
                 RowState = data.RowState();
+
                 if (IsHandleCreated)
                 { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
                 else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
             }
+
+            if (sender is ITemporalValue temporal && RowState is DataRowState.Unchanged)
+            {
+                if (temporal.IsDeleted == true)
+                { rowStateCommand.Image = Resources.RowDeleted; }
+                else if (temporal.IsCurrent == false)
+                { rowStateCommand.Image = Resources.RowHistory; }
+
+                StringBuilder toolTip = new StringBuilder();
+                toolTip.AppendLine(DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
+                if (temporal.ModifiedOn is DateTime)
+                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedOn), temporal.ModifiedOn)); }
+                if (temporal.ModifiedBy is String modifiedBy)
+                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedBy), temporal.ModifiedBy)); }
+                rowStateCommand.ToolTipText = toolTip.ToString();
+            }
+
         }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
