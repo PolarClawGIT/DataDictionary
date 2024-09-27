@@ -1,11 +1,13 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
+using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -204,17 +206,41 @@ namespace DataDictionary.Main.Forms
         /// <remarks>Calls Setup by Scope, if possible.</remarks>
         protected void Setup(BindingSource data, params CommandImageType[] commands)
         {
-            if (data.Current is IBindingRowState binding)
+            data.CurrentChanged += Data_CurrentChanged;
+
+            if(data.Current is not null)
+            { Data_CurrentChanged(data, EventArgs.Empty); }
+
+            void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                RowState = binding.RowState();
-                binding.RowStateChanged += RowStateChanged;
+                if (data.Current is IBindingRowState binding)
+                {
+                    RowState = binding.RowState();
+                    binding.RowStateChanged += RowStateChanged;
+                    RowStateChanged(binding, EventArgs.Empty);
+                }
+
+                if (data.Current is ITemporalValue temporal && temporal.IsCurrent == false)
+                {
+                    StringBuilder toolTip = new StringBuilder();
+                    toolTip.AppendLine(DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
+
+                    if (temporal.ModifiedOn is DateTime)
+                    { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedOn), temporal.ModifiedOn)); }
+
+                    if (temporal.ModifiedBy is String modifiedBy)
+                    { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedBy), temporal.ModifiedBy)); }
+
+                    rowStateCommand.Image = Resources.RowHistory;
+                    rowStateCommand.ToolTipText = toolTip.ToString();
+                }
+
+                if (data.Current is INamedScopeValue titleValue)
+                { Text = titleValue.Title; }
+
+                if (data.Current is IScopeType scopeValue)
+                { Setup(scopeValue.Scope, commands); }
             }
-
-            if (data.Current is INamedScopeValue titleValue)
-            { Text = titleValue.Title; }
-
-            if (data.Current is IScopeType scopeValue)
-            { Setup(scopeValue.Scope, commands); }
         }
 
         /// <summary>
