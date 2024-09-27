@@ -162,16 +162,15 @@ namespace DataDictionary.Main
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
+        { throw new NotImplementedException();  } // Not Used.
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
 
-        [Obsolete("Use Help Content, currently used for testing")]
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
+            { Activate(() => new Forms.General.HelpContent(currentForm)); }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)

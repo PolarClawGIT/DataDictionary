@@ -75,7 +75,21 @@ namespace DataDictionary.DataLayer.ApplicationData
         public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
 
         /// <inheritdoc/>
-        public DateTime? ModifiedOn { get { return GetValue<DateTime>(nameof(ModifiedOn)); } }
+        public DateTime? ModifiedOn
+        {
+            get
+            {
+                //TODO: SQL has a DateTimeOffset that does not appear in the .net time.
+                // As such, this logic assumes the date is UTC without a TimeZone.
+                // This may not be correct. This works for now.
+                // Make a function to handle this?
+                // Look into datetimeoffset. 
+                DateTime? value = GetValue<DateTime>(nameof(ModifiedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
 
         /// <inheritdoc/>
         public Boolean? IsInserted
@@ -98,9 +112,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             get
             {
-                if(IsDeleted == true) { return DbModificationType.Deleted; }
-                else if(IsInserted == true) { return DbModificationType.Inserted; }
-                else if(IsUpdated == true) { return DbModificationType.Updated; }
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
                 else { return DbModificationType.Null; }
             }
         }
@@ -121,6 +135,7 @@ namespace DataDictionary.DataLayer.ApplicationData
             new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
+            //new DataColumn(nameof(ModifiedOn), typeof(DateTimeOffset)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},

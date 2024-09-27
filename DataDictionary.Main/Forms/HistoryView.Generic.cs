@@ -34,10 +34,5 @@ namespace DataDictionary.Main.Forms
             { Activate(() => SelectedForm(value)); }
         }
 
-        protected override void RestoreCommand_Click(Object sender, EventArgs e)
-        {
-            base.RestoreCommand_Click(sender, e);
-        }
-
     }
 }

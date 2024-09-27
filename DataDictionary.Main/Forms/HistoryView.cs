@@ -96,20 +96,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-        /// <summary>
-        /// Button for Viewing the Details is clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <remarks>Implement form Activate with this event.</remarks>
-        protected virtual void ViewDetailCommand_Click(object sender, EventArgs e)
-        { }
-
-        protected virtual void RestoreCommand_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void HistoryValuesData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (historyValuesData.
@@ -177,11 +163,12 @@ namespace DataDictionary.Main.Forms
             SelectedValue = value;
 
             titleData.Text = value.Title;
-            modificationData.Text = DbModificationEnumeration.Cast(value.Modification).DisplayName;
 
-            if (value.ModifiedBy is String modifiedBy)
-            { modifiedByData.Text = modifiedBy; }
-            else { modifiedByData.Text = String.Empty; }
+            isInsertedData.Checked = (value.IsInserted is true);
+            isUpdatedData.Checked = (value.IsUpdated is true);
+            isDeleteData.Checked = (value.IsDeleted is true);
+            isCurrentData.Checked = (value.IsCurrent is true);
+            modifiedByData.Text = value.ModifiedBy ?? String.Empty;
 
             if (value.ModifiedOn is DateTime modifiedOn)
             { modifiedOnDate.Text = modifiedOn.ToString(); }
