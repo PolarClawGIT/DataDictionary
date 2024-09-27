@@ -60,9 +60,6 @@ namespace DataDictionary.Main.Forms
 
             HistoryValuesData_Resize(historyValuesData, EventArgs.Empty);
             HistoryModificationData_Resize(historyModificationData, EventArgs.Empty);
-
-            CommandButtons[CommandImageType.Select].IsEnabled = true;
-            CommandButtons[CommandImageType.Select].IsVisible = true;
         }
 
         public HistoryView(ILoadHistoryData loader) : this()
@@ -110,7 +107,7 @@ namespace DataDictionary.Main.Forms
                 historyModificationData.Items.Clear();
                 historyModifications.Clear();
 
-                foreach (ITemporalValue item in modificationValues.Where(w => selectedValue.Index.Equals(w.Index)))
+                foreach (ITemporalValue item in GetHistoryDetail(selectedValue))
                 {
                     String itemModification = DbModificationEnumeration.Cast(item.Modification).DisplayName;
                     String itemModifiedOn;
@@ -124,6 +121,9 @@ namespace DataDictionary.Main.Forms
                 }
             }
         }
+
+        protected IEnumerable<ITemporalValue> GetHistoryDetail(ITemporalValue selectedValue)
+        { return modificationValues.Where(w => selectedValue.Index.Equals(w.Index)); }
 
         void HistoryValuesData_Resize(object sender, EventArgs e)
         {

@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Base interface for a DataValue
     /// </summary>
-    public interface IDataValue: IScopeType
+    public interface IDataValue: IScopeType, IBindingPropertyChanged
     {
         /// <summary>
         /// Index of the Source Value.

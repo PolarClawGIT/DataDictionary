@@ -11,9 +11,7 @@ namespace DataDictionary.Main.Forms
     partial class DetailDataView : ApplicationData, IApplicationDataBind
     {
         public DetailDataView() : base()
-        {
-            InitializeComponent();
-        }
+        { InitializeComponent(); }
 
         public DetailDataView(IBindingTable data, Icon? icon = null) : this()
         {
@@ -24,7 +22,7 @@ namespace DataDictionary.Main.Forms
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
 
             if (icon is Icon value) { this.Icon = value; }
-            else { this.Icon = Resources.Icon_Application; }
+            else { Setup(bindingSource); }
         }
 
         public DetailDataView(IBindingData data, Icon? icon = null) : this()
@@ -36,7 +34,7 @@ namespace DataDictionary.Main.Forms
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
 
             if (icon is Icon value) { this.Icon = value; }
-            else { this.Icon = Resources.Icon_Application; }
+            else { Setup(bindingSource); }
         }
 
         public DetailDataView(IBindingList data, Icon? icon = null) : this()
@@ -45,7 +43,7 @@ namespace DataDictionary.Main.Forms
             this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
 
             if (icon is Icon value) { this.Icon = value; }
-            else { this.Icon = Resources.Icon_Application; }
+            else { Setup(bindingSource); }
         }
 
         public Boolean IsOpenItem(Object? item)
@@ -65,7 +63,7 @@ namespace DataDictionary.Main.Forms
                 {
                     data.Load(reader.CreateDataReader());
                     dataTableValue.DataSource = data;
-                }   
+                }
             }
             return true;
         }

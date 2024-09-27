@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms
                     rowStateCommand.ToolTipText = toolTip.ToString();
                 }
 
-                if (data.Current is INamedScopeValue titleValue)
+                if (data.Current is IDataValue titleValue)
                 { Text = titleValue.Title; }
 
                 if (data.Current is IScopeType scopeValue)

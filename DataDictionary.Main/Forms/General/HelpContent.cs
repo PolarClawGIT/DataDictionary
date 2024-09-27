@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -103,8 +104,13 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.DataSource is ILoadHistoryData history)
             {
-                Activate(() => new HistoryView<HelpSubjectValue, HelpSubject>(history)
+                Form form = Activate(() => new HistoryView<HelpSubjectValue, HelpSubject>(history)
                 { SelectedForm = (subject) => new HelpSubject(subject) });
+
+                form.Icon = this.Icon;
+
+                if (history is IBindingTable table)
+                { form.Text = String.Format("History: {0}", table.BindingName); }
             }
         }
 
