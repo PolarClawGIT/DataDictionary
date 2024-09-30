@@ -14,7 +14,10 @@
                 <xs:element name="NameSpace" type="xs:string" minOccurs="0" />
                 <xs:element name="ModifiedBy" type="xs:string" minOccurs="0" />
                 <xs:element name="ModifiedOn" type="xs:dateTime" minOccurs="0" />
-                <xs:element name="Modification" type="xs:string" minOccurs="0" />
+                <xs:element name="IsInserted" type="xs:boolean" minOccurs="0" />
+                <xs:element name="IsUpdated" type="xs:boolean" minOccurs="0" />
+                <xs:element name="IsDeleted" type="xs:boolean" minOccurs="0" />
+                <xs:element name="IsCurrent" type="xs:boolean" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -43,6 +46,102 @@
     </xs:element>
   </xs:schema>
   <HelpSubjectValue>
+    <HelpId>00000000-0000-0000-0020-100000000000</HelpId>
+    <HelpSubject>About Application</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\b\f0\fs18 Data Dictionary Manager\b0\f1\par
+\f0\'a9 2023 William Howard, All Rights Reserved\par
+\par
+\i Purpose\i0 : This application is intended as an editor for the Extended Properties within Microsoft SQL Server. The primary property of interest is the \ldblquote MS_Description\rdblquote  property. This is the property Microsoft and other products uses to populate meta data information.\par
+\par
+This is a tool I had wished we had during my professional carrier. Yes, Entity Relationship diagram (ERD) tools have this built in. But they are expensive and required every user to be licensed just to edit the data dictionary. Something my organization was not interested in paying for. We tried to maintain this within Visual Studio Database projects. It requires a lot of attention to detail and was not an interface that business users could deal with.\par
+\par
+This tool is intended to fill the gap. Something easy enough for Business to use to help maintain but technical enough that developers and designers can use to actually apply the descriptions to the extended properties.\par
+\f1\par
+}
+</HelpText>
+    <NameSpace>About</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>4d5765d1-cfd8-46fd-bcc7-2a1841ad2cd4</HelpId>
+    <HelpSubject>Application Forms</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Application Forms\f1\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>30abbe4f-3056-4e7f-87eb-521025f5ec26</HelpId>
+    <HelpSubject>Attribute- Composite</HelpSubject>
+    <HelpToolTip>Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Composite attribute: An attribute that is a combination of other attributes is known as composite attribute. For example, In student entity, the student address is a composite attribute as an address is composed of other attributes such as pin code, state, country.\par
+\par
+\f1 Not a Simple Type.\f0\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isCompositeTypeData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>d09b5d65-5e53-4960-ad14-5a901cff6958</HelpId>
+    <HelpSubject>Attribute- Derived</HelpSubject>
+    <HelpToolTip>Is Attribute a Derived Value (computed value, not Integral)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 A Derived attribute is an attribute that can be derived from other attributes of the entity.\par
+\par
+AKA: Calcualted Value\par
+Not an Integral value\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isDerivedData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>aadd18a8-af8f-4ecb-b7cc-ae8d101cef66</HelpId>
+    <HelpSubject>Attribute- Integral</HelpSubject>
+    <HelpToolTip>Is Attribute an Integral value (distinct or basic value, not Derived)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isIntegralData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>7581bfb8-d99b-4cde-92ab-01cb1b77a3dc</HelpId>
     <HelpSubject>Attribute- Key</HelpSubject>
     <HelpToolTip>Is the Attribute is used as a Key (part of a PK, FK, or AK)</HelpToolTip>
@@ -54,7 +153,152 @@
     <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isKeyData]</NameSpace>
     <ModifiedBy>PRIME\Billy</ModifiedBy>
     <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>b469fbb3-08bc-4500-8549-9cb877ad6fdc</HelpId>
+    <HelpSubject>Attribute- Multivalued</HelpSubject>
+    <HelpToolTip>Is Attribute Multi Valued (has multiple values, not single)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isMultiValuedData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>a6e95ad7-edf4-45cf-b28a-d636374b39f1</HelpId>
+    <HelpSubject>Attribute- NonKey</HelpSubject>
+    <HelpToolTip>Is the Attribute a Non-Key item (not part of a PK, FK or AK)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNonKeyData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>82237476-b610-4695-bccd-d878a68c65ed</HelpId>
+    <HelpSubject>Attribute- Nullable</HelpSubject>
+    <HelpToolTip>Is the Attribute a Null-able value (allows Null value)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNullableData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>2ae83017-c0a5-42ec-acb6-c240d4db23dc</HelpId>
+    <HelpSubject>Attribute- Simple</HelpSubject>
+    <HelpToolTip>Is Attribute a Simple Type (cannot be decomposed, not composite)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSimpleTypeData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>70b892dc-4844-4886-b09d-9dede899fd44</HelpId>
+    <HelpSubject>Attribute- Single</HelpSubject>
+    <HelpToolTip>Is Attribute Single Valued (has only one value, not multi-valued)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSingleValueData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>79abc1c2-7c20-4431-b761-6442f736f8bd</HelpId>
+    <HelpSubject>Attribute- Valued</HelpSubject>
+    <HelpToolTip>Is the Attribute a valued (not null) attribute.</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isValuedData]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>f97525ae-bb77-4724-9397-a7a9293cbcde</HelpId>
+    <HelpSubject>Domain Attribute</HelpSubject>
+    <HelpToolTip>Attribute management</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute]</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>177b29f2-f449-4045-a43b-8f3cf07355ad</HelpId>
+    <HelpSubject>Error: File Not Found on Save to My Documents</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fswiss\fprq2\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}{\f2\fswiss\fprq2\fcharset0 Calibri;}{\f3\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\widctlpar\sa160\sl252\slmult1\f0\fs18 An error screen may appear when saving a Model to My Documents. This is a feature of anti-malware software such as \i\f1 Microsoft Defender\i0\f0 . Such software has a list of protected folders that include My Documents and all sub-folders. The anti-malware is attempting to protect the system against unknown threats, such as ransom ware.\par
+While this software is free of malicious code (as I released it), that does not prove that it is safe. I am looking at have the code verified and signed as trust worthy.\par
+There are work-arounds.\par
+The first it to save the file to an unprotected directory such as Downloads or other drive. The file(s) can then be reviewed and verified as safe. The files are just XML so they can be viewed in most browsers. This has the advantage of keeping the protection in place, just in case something is wrong.\par
+If you truly trust this software, open the anti-malware software and add an exception for the application.\par
+The application can also save data to its own installation folder (AppData.XML). This can throw errors as well as this may be a protected folder. Anti-malware software will normally allow this but in some cases, an error will be generated.\kerning2\f2\fs22\par
+
+\pard\kerning0\f3\fs18\par
+}
+</HelpText>
+    <NameSpace>Errors</NameSpace>
+    <ModifiedBy>PRIME\Billy</ModifiedBy>
+    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>
   <HelpSubjectValue>
     <HelpId>00000000-0000-0000-0010-100000000000</HelpId>
@@ -112,206 +356,26 @@ If the database is empty, this can be addressed by using the application. Under 
     <NameSpace>Setup</NameSpace>
     <ModifiedBy>PRIME\Billy</ModifiedBy>
     <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>
   <HelpSubjectValue>
-    <HelpId>00000000-0000-0000-0020-100000000000</HelpId>
-    <HelpSubject>About Application</HelpSubject>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+    <HelpId>834e8f05-d483-4c94-9b3b-0acbc2748f72</HelpId>
+    <HelpSubject>Unit Test Restored</HelpSubject>
+    <HelpText>{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil Segoe UI;}}
 {\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\b\f0\fs18 Data Dictionary Manager\b0\f1\par
-\f0\'a9 2023 William Howard, All Rights Reserved\par
-\par
-\i Purpose\i0 : This application is intended as an editor for the Extended Properties within Microsoft SQL Server. The primary property of interest is the \ldblquote MS_Description\rdblquote  property. This is the property Microsoft and other products uses to populate meta data information.\par
-\par
-This is a tool I had wished we had during my professional carrier. Yes, Entity Relationship diagram (ERD) tools have this built in. But they are expensive and required every user to be licensed just to edit the data dictionary. Something my organization was not interested in paying for. We tried to maintain this within Visual Studio Database projects. It requires a lot of attention to detail and was not an interface that business users could deal with.\par
-\par
-This tool is intended to fill the gap. Something easy enough for Business to use to help maintain but technical enough that developers and designers can use to actually apply the descriptions to the extended properties.\par
-\f1\par
+\pard\f0\fs18\lang1033 Unit Test Help Text\par
 }
 </HelpText>
-    <NameSpace>About</NameSpace>
+    <NameSpace>Unit Test</NameSpace>
     <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>4d5765d1-cfd8-46fd-bcc7-2a1841ad2cd4</HelpId>
-    <HelpSubject>Application Forms</HelpSubject>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Application Forms\f1\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>30abbe4f-3056-4e7f-87eb-521025f5ec26</HelpId>
-    <HelpSubject>Attribute- Composite</HelpSubject>
-    <HelpToolTip>Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Composite attribute: An attribute that is a combination of other attributes is known as composite attribute. For example, In student entity, the student address is a composite attribute as an address is composed of other attributes such as pin code, state, country.\par
-\par
-\f1 Not a Simple Type.\f0\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isCompositeTypeData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>d09b5d65-5e53-4960-ad14-5a901cff6958</HelpId>
-    <HelpSubject>Attribute- Derived</HelpSubject>
-    <HelpToolTip>Is Attribute a Derived Value (computed value, not Integral)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 A Derived attribute is an attribute that can be derived from other attributes of the entity.\par
-\par
-AKA: Calcualted Value\par
-Not an Integral value\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isDerivedData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>79abc1c2-7c20-4431-b761-6442f736f8bd</HelpId>
-    <HelpSubject>Attribute- Valued</HelpSubject>
-    <HelpToolTip>Is the Attribute a valued (not null) attribute.</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isValuedData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>177b29f2-f449-4045-a43b-8f3cf07355ad</HelpId>
-    <HelpSubject>Error: File Not Found on Save to My Documents</HelpSubject>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fswiss\fprq2\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}{\f2\fswiss\fprq2\fcharset0 Calibri;}{\f3\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\widctlpar\sa160\sl252\slmult1\f0\fs18 An error screen may appear when saving a Model to My Documents. This is a feature of anti-malware software such as \i\f1 Microsoft Defender\i0\f0 . Such software has a list of protected folders that include My Documents and all sub-folders. The anti-malware is attempting to protect the system against unknown threats, such as ransom ware.\par
-While this software is free of malicious code (as I released it), that does not prove that it is safe. I am looking at have the code verified and signed as trust worthy.\par
-There are work-arounds.\par
-The first it to save the file to an unprotected directory such as Downloads or other drive. The file(s) can then be reviewed and verified as safe. The files are just XML so they can be viewed in most browsers. This has the advantage of keeping the protection in place, just in case something is wrong.\par
-If you truly trust this software, open the anti-malware software and add an exception for the application.\par
-The application can also save data to its own installation folder (AppData.XML). This can throw errors as well as this may be a protected folder. Anti-malware software will normally allow this but in some cases, an error will be generated.\kerning2\f2\fs22\par
-
-\pard\kerning0\f3\fs18\par
-}
-</HelpText>
-    <NameSpace>Errors</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>b469fbb3-08bc-4500-8549-9cb877ad6fdc</HelpId>
-    <HelpSubject>Attribute- Multivalued</HelpSubject>
-    <HelpToolTip>Is Attribute Multi Valued (has multiple values, not single)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isMultiValuedData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>70b892dc-4844-4886-b09d-9dede899fd44</HelpId>
-    <HelpSubject>Attribute- Single</HelpSubject>
-    <HelpToolTip>Is Attribute Single Valued (has only one value, not multi-valued)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSingleValueData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>f97525ae-bb77-4724-9397-a7a9293cbcde</HelpId>
-    <HelpSubject>Domain Attribute</HelpSubject>
-    <HelpToolTip>Attribute management</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>aadd18a8-af8f-4ecb-b7cc-ae8d101cef66</HelpId>
-    <HelpSubject>Attribute- Integral</HelpSubject>
-    <HelpToolTip>Is Attribute an Integral value (distinct or basic value, not Derived)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isIntegralData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>2ae83017-c0a5-42ec-acb6-c240d4db23dc</HelpId>
-    <HelpSubject>Attribute- Simple</HelpSubject>
-    <HelpToolTip>Is Attribute a Simple Type (cannot be decomposed, not composite)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSimpleTypeData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>a6e95ad7-edf4-45cf-b28a-d636374b39f1</HelpId>
-    <HelpSubject>Attribute- NonKey</HelpSubject>
-    <HelpToolTip>Is the Attribute a Non-Key item (not part of a PK, FK or AK)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNonKeyData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
-  </HelpSubjectValue>
-  <HelpSubjectValue>
-    <HelpId>82237476-b610-4695-bccd-d878a68c65ed</HelpId>
-    <HelpSubject>Attribute- Nullable</HelpSubject>
-    <HelpToolTip>Is the Attribute a Null-able value (allows Null value)</HelpToolTip>
-    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
-{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
-}
-</HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNullableData]</NameSpace>
-    <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-10T17:09:04.0164646-07:00</ModifiedOn>
-    <Modification>Inserted</Modification>
+    <ModifiedOn>2024-09-27T18:34:20.3941644-07:00</ModifiedOn>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>
   <PropertyValue>
     <PropertyId>00000000-0000-0000-0010-000000000010</PropertyId>
@@ -343,7 +407,7 @@ The application can also save data to its own installation folder (AppData.XML).
   <PropertyValue>
     <PropertyId>00000000-0000-0000-0050-000000000010</PropertyId>
     <PropertyTitle>Length</PropertyTitle>
-    <PropertyDescription>The Maxium Length of the value. Used with varaible length types.</PropertyDescription>
+    <PropertyDescription>The Maximum Length of the value. Used with variable length types.</PropertyDescription>
     <DataType>Integer</DataType>
   </PropertyValue>
   <DefinitionValue>
