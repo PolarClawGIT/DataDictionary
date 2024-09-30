@@ -93,24 +93,21 @@ namespace DataDictionary.Main.Forms.General
         {
             HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
             TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
+
             BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
 
-            if (bindingData.Count > 0)
+            if (bindingData.Count == 0)
             {
-                helpBinding.DataSource = bindingData;
-                helpBinding.Position = 0;
-            }
-            else
-            {
-                BindingList<HelpSubjectValue> unboundData = new BindingList<HelpSubjectValue> { helpSubjectItem };
-
-                helpBinding.DataSource = unboundData;
-                helpBinding.Position = 0;
-
+                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
                 CommandButtons[CommandImageType.Delete].IsEnabled = false;
                 CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
                 CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+
+                
             }
+
+            helpBinding.DataSource = bindingData;
+            helpBinding.Position = 0;
         }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
@@ -289,17 +286,17 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.Current is HelpSubjectValue current)
             {
-                if (helpBinding.DataSource is BindingView<HelpSubjectValue>) { }
-                else if (helpBinding.DataSource is BindingList<HelpSubjectValue>)
-                {
-                    var key = new HelpSubjectIndex(current);
+                HelpSubjectIndex key = new HelpSubjectIndex(current);
+                TemporalIndex temporalKey = new TemporalIndex(current);
 
-                    if (BusinessData.ApplicationData.HelpSubjects.
-                        FirstOrDefault(w => key.Equals(w)) is HelpSubjectValue oldValue)
-                    { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
+                // Remove anything for same subject that is not this subject
+                foreach (HelpSubjectValue oldValue in BusinessData.ApplicationData.HelpSubjects.Where(w => key.Equals(w) && !ReferenceEquals(current, w)))
+                { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
 
-                    BusinessData.ApplicationData.HelpSubjects.Add(current);
-                }
+                // If there is nothing left, add the current subject
+                if (!BusinessData.ApplicationData.HelpSubjects.Any(w => key.Equals(w)))
+                { BusinessData.ApplicationData.HelpSubjects.Add(current); }
+                else { } // If there is something left, it must be this subject and it should not be altered.
 
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
