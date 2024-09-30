@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
@@ -304,7 +305,7 @@ namespace DataDictionary.BusinessLayer.Domain
                                 left.TableName,
                                 left.ColumnName,
                                 right.ConstraintType,
-                                MemberPath = new NamedScopePath(left.SchemaName, left.TableName, left.ColumnName),
+                                MemberPath = new PathIndex(left.SchemaName, left.TableName, left.ColumnName),
                                 Count = source.DbConstraintColumns.Count(w => new ConstraintIndexName(right).Equals(w))
                             }).
                         OrderBy(o => o.Count). //Ideally Count == 1 but it may not.
@@ -327,15 +328,15 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     var y = x.Where(w => columnKey.Equals(w));
 
-                    NamedScopePath MemberPath;
+                    PathIndex MemberPath;
                     if (constraint is null)
-                    { MemberPath = new NamedScopePath(item.SchemaName, item.TableName, item.ColumnName); }
+                    { MemberPath = new PathIndex(item.SchemaName, item.TableName, item.ColumnName); }
                     else { MemberPath = constraint.MemberPath; }
 
                     AttributeValue newItem = new AttributeValue()
                     {
                         AttributeTitle = item.ColumnName,
-                        MemberName = new NamedScopePath(item.SchemaName, item.TableName, item.ColumnName).MemberFullPath,
+                        MemberName = new PathIndex(item.SchemaName, item.TableName, item.ColumnName).MemberFullPath,
                         IsDerived = item.IsComputed ?? false,
                         IsIntegral = !item.IsComputed ?? false,
                         IsNullable = item.IsNullable ?? false,
@@ -409,9 +410,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         {
                             NamedScopeValue newItem = new NamedScopeValue(attribute)
                             {
-                                GetPath = () => new NamedScopePath(
-                                    entityParent.GetPath(),
-                                    attribute.GetPath())
+                                GetPath = () => new PathIndex(
+                                    ((IPathValue)entityParent).Path,
+                                     ((IPathValue)attribute).Path)
                             };
                             addNamedScope(entityParent, newItem);
                             hasParent = true;
@@ -421,9 +422,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         {
                             NamedScopeValue newItem = new NamedScopeValue(attribute)
                             {
-                                GetPath = () => new NamedScopePath(
-                                    subjectParent.GetPath(),
-                                    attribute.GetPath())
+                                GetPath = () => new PathIndex(
+                                    ((IPathValue)subjectParent).Path,
+                                    ((IPathValue)attribute).Path)
                             };
                             addNamedScope(subjectParent, newItem);
                             hasParent = true; 

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.LibraryData;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Library
@@ -24,10 +25,10 @@ namespace DataDictionary.BusinessLayer.Library
         { return other is ILibrarySourceKey key && Equals(new LibrarySourceKey(key)); }
 
         /// <summary>
-        /// Convert LibrarySourceIndex to a DataLayerIndex
+        /// Convert LibrarySourceIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataLayerIndex(LibrarySourceIndex source)
-        { return new DataLayerIndex() { BusinessLayerId = source.LibraryId ?? Guid.Empty }; }
+        public static implicit operator DataIndex(LibrarySourceIndex source)
+        { return new DataIndex() { SystemId = source.LibraryId ?? Guid.Empty }; }
     }
 }

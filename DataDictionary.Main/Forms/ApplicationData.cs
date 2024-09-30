@@ -1,10 +1,13 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
+using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -173,6 +176,7 @@ namespace DataDictionary.Main.Forms
             InitializeComponent();
 
             commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Select, new CommandState(selectCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Add, new CommandState(newCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
@@ -183,6 +187,7 @@ namespace DataDictionary.Main.Forms
             commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
@@ -201,16 +206,29 @@ namespace DataDictionary.Main.Forms
         /// <remarks>Calls Setup by Scope, if possible.</remarks>
         protected void Setup(BindingSource data, params CommandImageType[] commands)
         {
-            if (data.Current is IBindingRowState binding)
-            {
-                RowState = binding.RowState();
-                binding.RowStateChanged += RowStateChanged;
-            }
+            data.CurrentChanged += Data_CurrentChanged;
 
-            if (data.Current is INamedScopeSourceValue namedScope)
+            if (data.Current is not null)
+            { Data_CurrentChanged(data, EventArgs.Empty); }
+
+            void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                Text = namedScope.GetTitle();
-                Setup(namedScope.Scope, commands); 
+                if (data.Current is IScopeType scopeValue)
+                { Setup(scopeValue.Scope, commands); }
+
+                if (data.Current is IBindingRowState binding)
+                {
+                    rowStateCommand.Enabled = true;
+                    RowState = binding.RowState();
+                    binding.RowStateChanged += RowStateChanged;
+                    RowStateChanged(binding, EventArgs.Empty);
+                }
+
+                if (data.Current is IDataValue dataValue)
+                {
+                    Text = dataValue.Title;
+                    Icon = ImageEnumeration.GetIcon(dataValue.Scope);
+                }
             }
         }
 
@@ -222,6 +240,7 @@ namespace DataDictionary.Main.Forms
         protected void Setup(ScopeType scope, params CommandImageType[]? commands)
         {
             Icon = ImageEnumeration.GetIcon(scope);
+            rowStateCommand.Enabled = false;
 
             foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
             {
@@ -251,10 +270,28 @@ namespace DataDictionary.Main.Forms
             if (sender is IBindingRowState data)
             {
                 RowState = data.RowState();
+
                 if (IsHandleCreated)
                 { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
                 else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
             }
+
+            if (sender is ITemporalValue temporal && RowState is DataRowState.Unchanged)
+            {
+                if (temporal.IsDeleted == true)
+                { rowStateCommand.Image = Resources.RowDeleted; }
+                else if (temporal.IsCurrent == false)
+                { rowStateCommand.Image = Resources.RowHistory; }
+
+                StringBuilder toolTip = new StringBuilder();
+                toolTip.AppendLine(DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
+                if (temporal.ModifiedOn is DateTime)
+                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedOn), temporal.ModifiedOn)); }
+                if (temporal.ModifiedBy is String modifiedBy)
+                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedBy), temporal.ModifiedBy)); }
+                rowStateCommand.ToolTipText = toolTip.ToString();
+            }
+
         }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
@@ -285,7 +322,7 @@ namespace DataDictionary.Main.Forms
         }
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
-        { Activate(() => new ApplicationWide.HelpSubject(this)); }
+        { Activate(() => new General.HelpContent(this)); }
 
         protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }
@@ -302,6 +339,9 @@ namespace DataDictionary.Main.Forms
         protected virtual void AddCommand_Click(object? sender, EventArgs e)
         { }
 
+        protected virtual void SelectCommand_Click(object sender, EventArgs e)
+        { }
+
         protected virtual void DeleteCommand_Click(object? sender, EventArgs e)
         { }
 
@@ -315,6 +355,9 @@ namespace DataDictionary.Main.Forms
         { }
 
         protected virtual void SaveCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void HistoryCommand_Click(object sender, EventArgs e)
         { }
 
         protected override void HandleMessage(OnlineStatusChanged message)

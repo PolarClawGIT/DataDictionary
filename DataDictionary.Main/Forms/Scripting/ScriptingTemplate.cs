@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
@@ -24,6 +26,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
+            pathAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
+            pathSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
         public ScriptingTemplate(ITemplateValue? templateItem) : this()
@@ -118,8 +122,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 false, DataSourceUpdateMode.OnPropertyChanged)
             { DataSourceNullValue = TemplateNodeValueAsType.none });
 
-            templatePathData.AutoGenerateColumns = false;
-            templatePathData.DataSource = bindingPath;
 
             PropertyNameList.Load(attributePropertyColumn);
             attributeData.AutoGenerateColumns = false;
@@ -131,6 +133,16 @@ namespace DataDictionary.Main.Forms.Scripting
             documentXMLData.DataBindings.Add(new Binding(nameof(documentXMLData.Text), bindingDocument, nameof(nameOfDocument.SourceAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             documentScriptData.DataBindings.Add(new Binding(nameof(documentScriptData.Text), bindingDocument, nameof(nameOfDocument.ResultsAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+            // Path Handling
+            ScopeNameList.Load(pathScopeColumn);
+            ScopeNameList.Load(pathScopeData);
+
+            pathsData.AutoGenerateColumns = false;
+            pathsData.DataSource = bindingPath;
+
+            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.PathScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(TemplatePathValue.PathName), false, DataSourceUpdateMode.OnPropertyChanged));
 
             ElementSelection_Load();
 
@@ -267,26 +279,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 Sum(s => s.Width) - 3;
         }
 
-        private void NamedScopeData_OnApply(object sender, EventArgs e)
-        {
-            if (bindingTemplate.Current is TemplateValue current) { }
-
-            if (bindingPath.DataSource is IList<ITemplatePathValue> path
-                && path.FirstOrDefault(
-                    w => w.PathScope == templatePathSelect.Scope
-                    && new NamedScopePath(NamedScopePath.Parse(w.PathName).ToArray()) == templatePathSelect.ScopePath)
-                is ITemplatePathValue value)
-            { bindingPath.Position = path.IndexOf(value); }
-            else { bindingPath.AddNew(); }
-        }
 
         private void BindingPath_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
                 TemplatePathValue newItem = new TemplatePathValue(current);
-                newItem.PathName = templatePathSelect.ScopePath.MemberFullPath;
-                newItem.PathScope = templatePathSelect.Scope;
                 e.NewObject = newItem;
             }
         }
@@ -295,9 +293,10 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingPath.Current is TemplatePathValue current)
             {
-                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.PathName).ToArray());
-                templatePathSelect.ScopePath = path;
-                templatePathSelect.Scope = current.PathScope;
+                Boolean inModel = BusinessData.NamedScope.PathKeys(current.Path).Count > 0;
+                isPathInModelData.Checked = inModel;
+                pathNameData.ReadOnly = inModel;
+                pathScopeData.ReadOnly = inModel;
             }
         }
 
@@ -552,6 +551,55 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentData_SelectionChanged(object sender, EventArgs e)
         {
             documentStatus.Text = String.Format("{0} selected", documentData.SelectedRows.Count);
+        }
+
+        private void PathSelectCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingPath.DataSource is IList<TemplatePathValue> alias)
+            {
+                using (var dialog = new SelectionDialog(this))
+                {
+                    dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                    // TODO: Add more when they are supported
+                    // dialog.FilterScopes.Add(ScopeType.ModelEntity);
+
+                    dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.Path)));
+
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
+                        IEnumerable<TemplatePathValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.Path).Count() > 0);
+
+                        foreach (TemplatePathValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.Path)).ToList())
+                        {
+                            if (inModel.Contains(removeItem)) // Only remove items that are in this model
+                            { alias.Remove(removeItem); }
+                        }
+
+                        foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.Path).Contains(w.Path)).ToList())
+                        { // Add
+                            if (bindingPath.AddNew() is TemplatePathValue newValue)
+                            {
+                                newValue.Path = addItem.Path;
+                                newValue.PathScope = addItem.Scope;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void PathAddCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingPath.AddNew() is TemplatePathValue newValue)
+            { }
+        }
+
+        private void pathNameData_Validating(object sender, CancelEventArgs e)
+        {
+            PathIndex path = new PathIndex(PathIndex.Parse(pathNameData.Text).ToArray());
+            pathNameData.Text = path.MemberFullPath;
         }
     }
 }

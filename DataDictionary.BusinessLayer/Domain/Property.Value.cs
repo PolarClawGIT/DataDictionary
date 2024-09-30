@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class PropertyValue : DomainPropertyItem, IPropertyValue, INamedScopeSourceValue
+    public class PropertyValue : DomainPropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
     {
         /// <summary>
         /// Provides the List of Choices for PropertyType is List
@@ -76,25 +77,29 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        /// <inheritdoc cref="DomainPropertyItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public PropertyValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new PropertyIndex(this); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return PropertyTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(PropertyTitle); }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(PropertyTitle); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new PropertyIndex(this),
+                GetPath = () => new PathIndex(PropertyTitle),
+                GetScope = () => Scope,
+                GetTitle = () => PropertyTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(PropertyTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(PropertyTitle)
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,26 +13,36 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, INamedScopeSourceValue
+    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="ModelSubjectAreaItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public SubjectAreaValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new SubjectAreaIndex(this); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return SubjectAreaTitle ?? ScopeEnumeration.Cast(Scope).Name; ; }
-
-        /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(this.SubjectName).ToArray())); }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(SubjectName) or nameof(SubjectAreaTitle); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new SubjectAreaIndex(this),
+                GetPath = () =>
+                {
+                    if (String.IsNullOrWhiteSpace(SubjectName))
+                    { return new PathIndex(SubjectAreaTitle); }
+                    else { return new PathIndex(new PathIndex(PathIndex.Parse(SubjectName).ToArray())); }
+                },
+                GetScope = () => Scope,
+                GetTitle = () => SubjectAreaTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(SubjectAreaTitle) or nameof(SubjectName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SubjectAreaTitle)
+            };
+        }
     }
 }

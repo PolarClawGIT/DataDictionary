@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,26 +13,31 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, INamedScopeSourceValue
+    public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbRoutineParameterItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public RoutineParameterValue() : base()
-        {  }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new RoutineParameterIndex(this); }
-
-        /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName, SchemaName, RoutineName, ParameterName); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return ParameterName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName) or nameof(ParameterName); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new RoutineParameterIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName, ParameterName),
+                GetScope = () => Scope,
+                GetTitle = () => ParameterName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName) or nameof(ParameterName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ParameterName)
+            };
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -27,7 +28,7 @@ namespace DataDictionary.Main.Dialogs
         public String Title { get { return NamedScope.Title; } }
         public ScopeType Scope { get { return NamedScope.Scope; } }
         public String ScopeName { get { return ImageEnumeration.Cast(Scope).DisplayName; } }
-        public NamedScopePath Path { get { return NamedScope.Path; } }
+        public PathIndex Path { get { return NamedScope.Path; } }
         public String PathName { get { return Path.MemberFullPath; } }
 
         public Func<INamedScopeSourceValue, String> GetDescription { get; set; } = (value) => String.Empty;

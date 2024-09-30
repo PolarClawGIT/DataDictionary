@@ -11,6 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
+    [Obsolete("Replaced with HelpContent and a detailed version of HelpSubject")]
     partial class HelpSubject : ApplicationData
     {
         class ControlItem
@@ -70,7 +71,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandImageType.DeleteDatabase,
+                CommandImageType.HistoryDatabase);
             SetImages(helpContentNavigation);
         }
 
@@ -149,7 +151,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, ImageEnumeration>()
+        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems = new Dictionary<helpContentImageIndex, ImageEnumeration>()
         {
             {helpContentImageIndex.HelpPage, ImageEnumeration.Cast(ScopeType.ApplicationHelpPage) },
             {helpContentImageIndex.HelpGroup, ImageEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
@@ -580,6 +582,5 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 }
             }
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,26 +13,31 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, INamedScopeSourceValue
+    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="LibraryMemberItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public LibraryMemberValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new LibraryMemberIndex(this); }
-
-        /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(NamedScopePath.Parse(MemberNameSpace).ToArray()); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return MemberName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(MemberName) or nameof(MemberNameSpace); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new LibraryMemberIndex(this),
+                GetPath = () => new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()),
+                GetScope = () => Scope,
+                GetTitle = () => MemberName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace),
+                IsTitleChanged = (e) => e.PropertyName is nameof(MemberName)
+            };
+        }
     }
 }

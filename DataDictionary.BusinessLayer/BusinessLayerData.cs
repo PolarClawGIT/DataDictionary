@@ -71,7 +71,7 @@ namespace DataDictionary.BusinessLayer
 
             modelValues = new Model.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
-            namedScopeValues = new NamedScopeData();
+            namedScopeValues = new NamedScopeData(LoadNamedScope);
 
             applicationValues = new Application.ApplicationData();
 

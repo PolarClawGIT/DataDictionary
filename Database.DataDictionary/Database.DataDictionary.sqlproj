@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{6812c29c-90cd-4aa7-b362-f3cf9acf9c56}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath />
     <RootNamespace>DataDictionary.Database</RootNamespace>
@@ -69,6 +69,14 @@
     <Folder Include="App_DataDictionary\Views" />
     <Folder Include="App_DataDictionary\Functions\" />
     <Folder Include="Obsolete" />
+    <Folder Include="App_General" />
+    <Folder Include="App_General\Functions" />
+    <Folder Include="App_General\Stored Procedures" />
+    <Folder Include="App_General\Tables" />
+    <Folder Include="App_General\User Defined Types" />
+    <Folder Include="App_General\Views" />
+    <Folder Include="Hs_General" />
+    <Folder Include="Hs_General\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -273,6 +281,13 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseReference.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
     <Build Include="App_DataDictionary\Views\DomainEntityAttribute_AK.sql" />
+    <Build Include="Security\App_General.sql" />
+    <Build Include="Security\Hs_General.sql" />
+    <Build Include="App_General\Tables\ApplicationHelp.sql" />
+    <Build Include="Hs_General\Tables\ApplicationHelp.sql" />
+    <Build Include="App_General\Stored Procedures\procGetApplicationHelp.sql" />
+    <Build Include="App_General\Stored Procedures\procSetApplicationHelp.sql" />
+    <Build Include="App_General\User Defined Types\typeApplicationHelp.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

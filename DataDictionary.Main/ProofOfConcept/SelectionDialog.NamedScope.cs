@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
@@ -94,9 +95,9 @@ namespace DataDictionary.Main.ProofOfConcept
                 Select(s => s.Value.Source.Index));
         }
 
-        public void CheckByIndex(IEnumerable<DataLayerIndex> indexes)
+        public void CheckByIndex(IEnumerable<DataIndex> indexes)
         {
-            foreach (DataLayerIndex item in indexes)
+            foreach (DataIndex item in indexes)
             {
                 IEnumerable<NamedScopeIndex> selectedKeys = dataSource.
                     Where(w => item.Equals(w.Value.Source.Index)).
@@ -131,7 +132,7 @@ namespace DataDictionary.Main.ProofOfConcept
         }
 
 
-        public IEnumerable<DataLayerIndex> IsCheckedByIndex()
+        public IEnumerable<DataIndex> IsCheckedByIndex()
         {
             return listViewItems.
                 Where(w => w.Key.Checked).

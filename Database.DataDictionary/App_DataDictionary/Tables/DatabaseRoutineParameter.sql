@@ -21,7 +21,7 @@
 	[DomainSchema]           SysName Null,
 	[DomainName]             SysName Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
-	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseRoutineParameter_ModfiedBy] DEFAULT (original_login()),
+	[ModifiedBy] SysName Not Null CONSTRAINT [DF_DatabaseRoutineParameter_ModifiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseRoutineParameter_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseRoutineParameter_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

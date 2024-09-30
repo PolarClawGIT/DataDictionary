@@ -1,7 +1,9 @@
 ﻿// Ignore Spelling: indices
 
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Collections;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -53,7 +55,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks>This is scan of all item.</remarks>
-        IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key);
+        IReadOnlyList<NamedScopeIndex> PathKeys(IPathItem key);
 
         /// <summary>
         /// Returns the list of Keys for the Scopes.
@@ -71,6 +73,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc cref="IDictionary{TKey, TValue}.ContainsKey(TKey)"/>
         Boolean ContainsKey(NamedScopeIndex key);
+
+        /// <inheritdoc cref="BusinessLayerData.LoadNamedScope"/>
+        IEnumerable<WorkItem> Load();
     }
 
     /// <summary>
@@ -86,11 +91,27 @@ namespace DataDictionary.BusinessLayer.NamedScope
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
-        SortedDictionary<DataLayerIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataLayerIndex, List<NamedScopeIndex>>();
+        SortedDictionary<DataIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataIndex, List<NamedScopeIndex>>();
 
         // Root Nodes
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="loadNamedScopes">BusinessLayerData.LoadNamedScope</param>
+        public NamedScopeData(Func<IEnumerable<WorkItem>> loadNamedScopes)
+        { LoadNamedScopes = loadNamedScopes; }
+
+        /// <summary>
+        /// Function to be called when the data needs to be reloaded.
+        /// </summary>
+        public Func<IEnumerable<WorkItem>> LoadNamedScopes { get; init; }
+
+        /// <inheritdoc/>
+        public IEnumerable<WorkItem> Load()
+        { return LoadNamedScopes(); }
+        
         /// <inheritdoc/>
         public virtual INamedScopeValue GetValue(NamedScopeIndex index)
         { return data[index]; }
@@ -153,9 +174,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key)
+        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(IPathItem key)
         {
-            NamedScopePath pathKey = new NamedScopePath(key);
+            PathIndex pathKey = new PathIndex(key);
             return data.Where(w => pathKey.Equals(w.Value.Path)).Select(s => s.Key).ToList();
         }
 
@@ -203,15 +224,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
             // The existing node may be something other then a NameSpace node.
             // Try putting it in the build of the tree instead of here.
 
-            List<NamedScopePath> nameSpaces = newValue.Source.
-                GetPath().
+            List<PathIndex> nameSpaces = newValue.Source.Path.
                 Group().
                 Where(w => !newValue.Path.Equals(w)).
-                Where(w => 1==2). // This is disabling NameSpace handling
+                Where(w => 1 == 2). // This is disabling NameSpace handling
                 OrderBy(o => o.MemberFullPath.Length).
                 ToList();
 
-            foreach (NamedScopePath item in nameSpaces)
+            foreach (PathIndex item in nameSpaces)
             {
                 INamedScopeSourceValue? newItem = null;
 

@@ -1,4 +1,5 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
@@ -20,11 +21,9 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             Icon = ImageEnumeration.GetIcon(ScopeType.Application);
+            namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);
-
-            // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
@@ -78,7 +77,7 @@ namespace DataDictionary.Main
                     Settings.Default.IsOnLineMode = false;
                     Settings.Default.Save();
                 }
-
+                bindingModel.DataSource = BusinessData.Models;
                 SendMessage(new OnlineStatusChanged());
                 LoadData(OnLoadComplete);
             }
@@ -132,12 +131,13 @@ namespace DataDictionary.Main
                 }
             }
             work.AddRange(BusinessData.Create());
-            work.AddRange(contextNameNavigation.Load());
-
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { onLoadComplete(args); }
+            {
+                namedScopeData.ReloadCommand();
+                onLoadComplete(args);
+            }
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
@@ -157,12 +157,12 @@ namespace DataDictionary.Main
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
-            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
-            else { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
+            { Activate(() => new Forms.General.HelpContent(currentForm)); }
+            else { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
+        { throw new NotImplementedException();  } // Not Used.
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -170,19 +170,18 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
+            { Activate(() => new Forms.General.HelpContent(currentForm)); }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-            work.AddRange(contextNameNavigation.Load());
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { namedScopeData.ReloadCommand(); }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -317,6 +316,11 @@ namespace DataDictionary.Main
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         { Application.Exit(); }
 
-
+        private void BindingModel_ListChanged(object sender, ListChangedEventArgs e)
+        { 
+            if(bindingModel.Current is IModelItem current)
+            {   namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
+            else { namedScopeData.HeaderText = "(no Model)"; }
+        }
     }
 }

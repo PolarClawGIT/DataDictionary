@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(PathName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(PathName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PathScope), typeof(String)){ AllowDBNull = true},
         };
 

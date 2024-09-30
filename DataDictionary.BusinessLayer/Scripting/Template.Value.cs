@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -26,23 +27,34 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
-    public class TemplateValue : ScriptingTemplateItem, ITemplateValue, INamedScopeSourceValue
+    public class TemplateValue : ScriptingTemplateItem, ITemplateValue, IPathValue, INamedScopeSourceValue
     {
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
         /// <inheritdoc/>
         public TemplateValue() : base()
-        { PropertyChanged += TemplateValue_PropertyChanged; }
+        {
+            PropertyChanged += TemplateValue_PropertyChanged;
 
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new TemplateIndex(this); }
-
-        /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return this.TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name; }
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new TemplateIndex(this),
+                GetPath = () => new PathIndex(TemplateTitle),
+                GetScope = () => Scope,
+                GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
+            };
+        }
 
         /// <inheritdoc/>
         public XDocument? TransformXml { get; private set; } = null;

@@ -35,12 +35,14 @@
             deleteFromDatabaseCommand = new ToolStripButton();
             toolStrip = new ToolStrip();
             browseCommand = new ToolStripButton();
+            selectCommand = new ToolStripButton();
             newCommand = new ToolStripButton();
             deleteCommand = new ToolStripButton();
             openCommand = new ToolStripButton();
             saveCommand = new ToolStripButton();
             importCommand = new ToolStripDropDownButton();
             exportCommand = new ToolStripDropDownButton();
+            historyCommand = new ToolStripButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
@@ -87,7 +89,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, selectCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, historyCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
@@ -98,12 +100,23 @@
             // 
             browseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             browseCommand.Enabled = false;
-            browseCommand.Image = Properties.Resources.Document;
+            browseCommand.Image = Properties.Resources.BrowseDocument;
             browseCommand.ImageTransparentColor = Color.Magenta;
             browseCommand.Name = "browseCommand";
             browseCommand.Size = new Size(23, 22);
             browseCommand.Text = "Browse";
             browseCommand.Click += BrowseCommand_Click;
+            // 
+            // selectCommand
+            // 
+            selectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            selectCommand.Enabled = false;
+            selectCommand.Image = Properties.Resources.SelectDocument;
+            selectCommand.ImageTransparentColor = Color.Magenta;
+            selectCommand.Name = "selectCommand";
+            selectCommand.Size = new Size(23, 22);
+            selectCommand.Text = "Select";
+            selectCommand.Click += SelectCommand_Click;
             // 
             // newCommand
             // 
@@ -173,6 +186,17 @@
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
+            // historyCommand
+            // 
+            historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            historyCommand.Enabled = false;
+            historyCommand.Image = Properties.Resources.HistoryTable;
+            historyCommand.ImageTransparentColor = Color.Magenta;
+            historyCommand.Name = "historyCommand";
+            historyCommand.Size = new Size(23, 22);
+            historyCommand.Text = "Table History";
+            historyCommand.Click += HistoryCommand_Click;
+            // 
             // helpCommand
             // 
             helpCommand.Alignment = ToolStripItemAlignment.Right;
@@ -234,5 +258,7 @@
         private ToolStripSeparator toolStripSeparator;
         private ToolStripDropDownButton importCommand;
         private ToolStripDropDownButton exportCommand;
+        private ToolStripButton historyCommand;
+        private ToolStripButton selectCommand;
     }
 }

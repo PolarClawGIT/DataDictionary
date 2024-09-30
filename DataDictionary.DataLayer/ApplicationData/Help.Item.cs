@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType
+    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType, ITemporalItem
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         String? HelpText { get; }
 
         /// <summary>
-        /// ToolTipe of the Help Document. May appear on individual controls.
+        /// ToolTip of the Help Document. May appear on individual controls.
         /// </summary>
         String? HelpToolTip { get; }
     }
@@ -68,9 +68,56 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
 
-
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ApplicationHelp;
+
+        /// <inheritdoc/>
+        public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? ModifiedOn
+        {
+            get
+            {
+                //TODO: SQL has a DateTimeOffset that does not appear in the .net time.
+                // As such, this logic assumes the date is UTC without a TimeZone.
+                // This may not be correct. This works for now.
+                // Make a function to handle this?
+                // Look into datetimeoffset. 
+                DateTime? value = GetValue<DateTime>(nameof(ModifiedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
+                else { return DbModificationType.Null; }
+            }
+        }
 
         /// <summary>
         /// Creates an Instance of a Help Document Item.
@@ -83,10 +130,17 @@ namespace DataDictionary.DataLayer.ApplicationData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(HelpSubject), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(HelpToolTip), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(HelpText), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(NameSpace), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpSubject), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(HelpToolTip), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
+            //new DataColumn(nameof(ModifiedOn), typeof(DateTimeOffset)){ AllowDBNull = true},
+            new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

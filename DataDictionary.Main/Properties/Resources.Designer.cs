@@ -123,6 +123,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BrowseDocument {
+            get {
+                object obj = ResourceManager.GetObject("BrowseDocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BuildDefinition {
             get {
                 object obj = ResourceManager.GetObject("BuildDefinition", resourceCulture);
@@ -586,6 +596,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap HelpIndexFile {
             get {
                 object obj = ResourceManager.GetObject("HelpIndexFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HistoryTable {
+            get {
+                object obj = ResourceManager.GetObject("HistoryTable", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1393,6 +1413,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap OpenStatusHelp {
+            get {
+                object obj = ResourceManager.GetObject("OpenStatusHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap OpenTable {
             get {
                 object obj = ResourceManager.GetObject("OpenTable", resourceCulture);
@@ -1473,9 +1503,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap RefreshTree {
+            get {
+                object obj = ResourceManager.GetObject("RefreshTree", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Relationship {
             get {
                 object obj = ResourceManager.GetObject("Relationship", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ReloadTree {
+            get {
+                object obj = ResourceManager.GetObject("ReloadTree", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1536,6 +1586,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap RowDetached {
             get {
                 object obj = ResourceManager.GetObject("RowDetached", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RowHistory {
+            get {
+                object obj = ResourceManager.GetObject("RowHistory", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1703,9 +1763,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SelectStatusHelp {
+            get {
+                object obj = ResourceManager.GetObject("SelectStatusHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SelectSynonym {
             get {
                 object obj = ResourceManager.GetObject("SelectSynonym", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectXPath {
+            get {
+                object obj = ResourceManager.GetObject("SelectXPath", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

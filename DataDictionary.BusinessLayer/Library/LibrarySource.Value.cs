@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,26 +13,31 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     /// <inheritdoc/>
-    public class LibrarySourceValue : LibrarySourceItem, ILibrarySourceValue, INamedScopeSourceValue
+    public class LibrarySourceValue : LibrarySourceItem, ILibrarySourceValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="LibrarySourceItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public LibrarySourceValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new LibrarySourceIndex(this); }
-
-        /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(AssemblyName); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(LibraryTitle) or nameof(AssemblyName); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new LibrarySourceIndex(this),
+                GetPath = () => new PathIndex(AssemblyName),
+                GetScope = () => Scope,
+                GetTitle = () => LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(AssemblyName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
+            };
+        }
     }
 }

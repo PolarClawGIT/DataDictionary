@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -13,26 +14,31 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ConstraintValue : DbConstraintItem, IConstraintValue, INamedScopeSourceValue
+    public class ConstraintValue : DbConstraintItem, IConstraintValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbConstraintItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public ConstraintValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new ConstraintIndex(this); }
-
-        /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName, SchemaName, ConstraintName); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return ConstraintName ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new ConstraintIndex(this),
+                GetPath = () => new PathIndex(DatabaseName, SchemaName, ConstraintName),
+                GetScope = () => Scope,
+                GetTitle = () => ConstraintName ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ConstraintName)
+            };
+        }
     }
 }

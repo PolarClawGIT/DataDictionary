@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Definition;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -10,27 +11,31 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, INamedScopeSourceValue
+    public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainDefinitionItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public DefinitionValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new DefinitionIndex(this); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return DefinitionTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(DefinitionTitle); }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(DefinitionTitle); }
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new DefinitionIndex(this),
+                GetPath = () => new PathIndex(DefinitionTitle),
+                GetScope = () => Scope,
+                GetTitle = () => DefinitionTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DefinitionTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(DefinitionTitle)
+            };
+        }
     }
 }

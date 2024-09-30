@@ -12,6 +12,7 @@ using DataDictionary.Main.Dialogs;
 using System.Linq;
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -99,7 +100,6 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
-            //TODO: Need to parse the string into a NameSpacePath for formating.
             aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasName), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
         }
 
@@ -284,7 +284,7 @@ namespace DataDictionary.Main.Forms.Domain
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
-                    dialog.BuildData(attributes.Select(s => (DataLayerIndex)new AttributeIndex(s)), GetDescription);
+                    dialog.BuildData(attributes.Select(s => (DataIndex)new AttributeIndex(s)), GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
@@ -316,9 +316,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void AliasAddCommand_Click(object sender, EventArgs e)
         {
             if (bindingAlias.AddNew() is EntityAliasValue newValue)
-            {
-
-            }
+            { }
         }
 
         private void AliasSelectCommand_Click(object sender, EventArgs e)
@@ -361,7 +359,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void AliasNameData_Validating(object sender, CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(aliasNameData.Text).ToArray());
+            PathIndex path = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
             aliasNameData.Text = path.MemberFullPath;
         }
 

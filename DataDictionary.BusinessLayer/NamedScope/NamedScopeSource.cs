@@ -1,5 +1,7 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -25,6 +27,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="addNamedScope"></param>
         /// <returns></returns>
+        [Obsolete("Think this is the old and should not be used")]
         IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
 
         //TODO: Update all object to use this method.
@@ -44,12 +47,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Each TValue in TData has a simple parent/child relationship.
         /// </remarks>
         static IReadOnlyList<WorkItem> LoadNamedScope<TData, TValue>(
-            TData data, 
+            TData data,
             Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope,
             Func<TValue, INamedScopeSourceValue?>? getParent = null)
             where TValue : INamedScopeSourceValue
             where TData : IList<TValue>, INamedScopeSourceData
-        { 
+        {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
 
@@ -63,7 +66,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                     foreach (TValue item in data)
                     {
                         INamedScopeSourceValue? parent = null;
-                        if(getParent is not null) { parent = getParent(item); }
+                        if (getParent is not null) { parent = getParent(item); }
 
                         NamedScopeValue newItem = new NamedScopeValue(item);
                         addNamedScope(parent, newItem);
@@ -80,83 +83,53 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the NamedScope Source Value.
     /// </summary>
-    /// <remarks>
-    /// Returned to the UI layer.
-    /// </remarks>
-    public interface INamedScopeSourceValue : IScopeType
-    {
-        // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
-
-        /// <summary>
-        /// Index of the Source Value.
-        /// </summary>
-        DataLayerIndex Index { get { return GetIndex(); } }
-
-        /// <summary>
-        /// Title of the Source Value.
-        /// </summary>
-        String Title { get { return GetTitle(); } }
-
-        /// <summary>
-        /// Path of the Source Value.
-        /// </summary>
-        /// <remarks>This may not be a complete path.</remarks>
-        NamedScopePath Path { get { return GetPath(); } }
-
-        /// <summary>
-        /// Gets the generic DataLayer Index from  the Value
-        /// </summary>
-        /// <returns></returns>
-        DataLayerIndex GetIndex();
-
-        /// <summary>
-        /// Gets the generic Title from the Value
-        /// </summary>
-        /// <returns></returns>
-        String GetTitle();
-
-        /// <summary>
-        /// Gets the generic NameScope Path from the Value
-        /// </summary>
-        /// <returns></returns>
-        NamedScopePath GetPath();
-
-        /// <summary>
-        /// Condition to test if the Title or Path changed when the PropertyChanged event occurs.
-        /// </summary>
-        /// <param name="eventArgs"></param>
-        /// <returns></returns>
-        Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs);
-    }
+    public interface INamedScopeSourceValue : IPathValue, IBindingPropertyChanged
+    { }
 
     /// <summary>
     /// Represents NameSpace items that does not have a specific Scope for the node.
     /// </summary>
-    class NameSpaceSource : INamedScopeSourceValue
+    class NameSpaceSource : IPathValue, INamedScopeSourceValue
     {
         protected Guid SystemId;
-        protected NamedScopePath SystemPath;
+        protected PathIndex SystemPath;
+
         public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
-        public DataLayerIndex GetIndex()
-        { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
+        IPathValue pathValue; // Backing field for IPathValue
 
-        public NamedScopePath GetPath()
-        { return SystemPath; }
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
-        public String GetTitle()
-        { return SystemPath.Member; }
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
 
-        public NameSpaceSource(NamedScopePath path)
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public NameSpaceSource(PathIndex path)
         {
             SystemId = Guid.NewGuid();
             SystemPath = path;
+
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new DataIndex() { SystemId = SystemId },
+                GetPath = () => SystemPath,
+                GetScope = () => Scope,
+                GetTitle = () => SystemPath.MemberFullPath,
+                IsPathChanged = (e) => false,
+                IsTitleChanged = (e) => false
+            };
         }
 
         public override String ToString()
         { return SystemPath.MemberFullPath; }
 
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return false; }
+        /// <inheritdoc/>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        void OnPropertyChanged(String propertyName)
+        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
     }
 }

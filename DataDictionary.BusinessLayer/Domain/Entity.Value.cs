@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -11,32 +12,37 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class EntityValue : DomainEntityItem, IEntityValue, INamedScopeSourceValue
+    public class EntityValue : DomainEntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainEntityItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public EntityValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new EntityIndex(this); }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public virtual NamedScopePath GetPath()
         {
-            if (String.IsNullOrWhiteSpace(MemberName))
-            { return new NamedScopePath(EntityTitle); }
-            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new EntityIndex(this),
+                GetPath = () =>
+                {
+                    if (String.IsNullOrWhiteSpace(MemberName))
+                    { return new PathIndex(EntityTitle); }
+                    else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                },
+                GetScope = () => Scope,
+                GetTitle = () => EntityTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(EntityTitle) or nameof(MemberName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(EntityTitle)
+            };
         }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return EntityTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(EntityTitle) or nameof(MemberName); }
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

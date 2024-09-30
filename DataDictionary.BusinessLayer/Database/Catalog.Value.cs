@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,25 +13,32 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeSourceValue
+    public class CatalogValue : DbCatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DbCatalogItem()"/>
-        public CatalogValue() : base() { }
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new CatalogIndex(this); }
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
-        public NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName); }
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
 
         /// <inheritdoc/>
-        public String GetTitle()
-        { return CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name; }
+        String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName); }
+        public CatalogValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new CatalogIndex(this),
+                GetPath = () => new PathIndex(DatabaseName),
+                GetScope = () => Scope,
+                GetTitle = () => CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
+            };
+        }
+
     }
 }

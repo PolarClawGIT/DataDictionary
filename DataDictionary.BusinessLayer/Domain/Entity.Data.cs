@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
@@ -235,9 +236,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         {
                             NamedScopeValue newItem = new NamedScopeValue(entity)
                             {
-                                GetPath = () => new NamedScopePath(
-                                    subjectParent.GetPath(),
-                                    entity.GetPath())
+                                GetPath = () => new PathIndex(
+                                    ((IPathValue)subjectParent).Path,
+                                    ((IPathValue)entity).Path)
                             };
 
                             addNamedScope(subjectParent, newItem);

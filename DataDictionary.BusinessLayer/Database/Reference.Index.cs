@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Reference;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database;
@@ -23,9 +24,9 @@ public class ReferenceIndex: DbReferenceKey, IReferenceIndex,
     { return other is IDbReferenceKey value && Equals(new DbReferenceKey(value)); }
 
     /// <summary>
-    /// Convert ReferenceIndex to a DataLayerIndex
+    /// Convert ReferenceIndex to a DataIndex
     /// </summary>
     /// <param name="source"></param>
-    public static implicit operator DataLayerIndex(ReferenceIndex source)
-    { return new DataLayerIndex() { BusinessLayerId = source.ReferenceId ?? Guid.Empty }; }
+    public static implicit operator DataIndex(ReferenceIndex source)
+    { return new DataIndex() { SystemId = source.ReferenceId ?? Guid.Empty }; }
 }

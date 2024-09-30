@@ -8,7 +8,7 @@
 	[NodeName]				[App_DataDictionary].[typeNameSpaceMember] Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
 	[NodeValueAs]			NVarChar(50) Not Null, -- How is the data to be rendered Attribute/Element Text/CData/XML.
 	-- TODO: Add System Version later once the schema is locked down
-	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ScriptingNode_ModfiedBy] DEFAULT (original_login()),
+	[ModifiedBy] SysName Not Null CONSTRAINT [DF_ScriptingNode_ModifiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ScriptingNode_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ScriptingNode_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

@@ -17,26 +17,36 @@ namespace DataDictionary.DataLayer.ApplicationData
     public abstract class HelpCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
         IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IRemoveItem<IHelpKey>
+        IRemoveItem<IHelpKey>,
+        ITemporalData, ITemporalData<IHelpKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IHelpKey key)
-        { return LoadCommand(connection, (key.HelpId, null, null)); }
+        { return LoadCommand(connection, (key.HelpId, null, false, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null)); }
+        { return LoadCommand(connection, (null, null, false, false)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, string? helpSubject, string? nameSpace) parameters)
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection)
+        { return LoadCommand(connection, (null, null, true, true)); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IHelpKey key)
+        { return LoadCommand(connection, (key.HelpId, null, true, true)); }
+
+        Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
+            command.CommandText = "[App_General].[procGetApplicationHelp]";
 
             command.AddParameter("@HelpId", parameters.helpId);
-            command.AddParameter("@HelpSubject", parameters.helpSubject);
-            command.AddParameter("@NameSpace", parameters.nameSpace);
+            command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
+            command.AddParameter("@IncludeHistory", parameters.includeHistory);
+            command.AddParameter("@IncludeDeleted", parameters.includeDeleted);
             return command;
         }
 
@@ -52,11 +62,11 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
+            command.CommandText = "[App_General].[procSetApplicationHelp]";
             command.AddParameter("@HelpId", parameters.helpId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", data);
+            command.AddParameter("@Data", "[App_General].[typeApplicationHelp]", data);
             return command;
         }
 
@@ -92,10 +102,4 @@ namespace DataDictionary.DataLayer.ApplicationData
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Help Items.
-    /// </summary>
-    public class HelpCollection : HelpCollection<HelpItem>
-    { }
 }

@@ -1,12 +1,12 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.BusinessLayer.NamedScope
+namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Interface for a NamedScope Path (aka NameSpace, Alias)
+    /// Interface for a Path (aka NameSpace, Alias)
     /// </summary>
-    public interface INamedScopePath : IKey
+    public interface IPathItem : IKey
     {
         /// <summary>
         /// Name of the Member
@@ -27,23 +27,23 @@ namespace DataDictionary.BusinessLayer.NamedScope
     }
 
     /// <summary>
-    /// Interface for a class that can Get a NameScopePath
+    /// Interface for a class that has a Path
     /// </summary>
-    public interface IGetNamedScopePath
+    public interface IPathIndex
     {
         /// <summary>
         /// The NamedPath for the Value
         /// </summary>
-        NamedScopePath Path { get; }
+        PathIndex Path { get; }
     }
 
     /// <summary>
-    /// Implementation for a NamedScope Path (aka NameSpace, Alias)
+    /// Implementation for a Path (aka NameSpace, Alias)
     /// </summary>
-    public class NamedScopePath : INamedScopePath, IKeyComparable<INamedScopePath>
+    public class PathIndex : IPathItem, IKeyComparable<IPathItem>
     {
         /// <summary>
-        /// List of Parts of the NameScope Path.
+        /// List of Parts of the Path.
         /// </summary>
         protected List<String> pathParts = new List<String>();
 
@@ -75,13 +75,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Parent NameSpace Key for the current item.
         /// </summary>
-        public NamedScopePath? ParentPath
+        public PathIndex? ParentPath
         {
             get
             {
                 if (pathParts.Count > 1)
                 {
-                    NamedScopePath result = new NamedScopePath();
+                    PathIndex result = new PathIndex();
                     result.pathParts.AddRange(pathParts.SkipLast(1));
                     return result;
                 }
@@ -90,20 +90,20 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <summary>
-        /// Constructor for a NamedScope Path
+        /// Constructor for a Path
         /// </summary>
         /// <remarks>This is blank.</remarks>
-        public NamedScopePath() : base() { }
+        public PathIndex() : base() { }
 
         /// <summary>
-        /// Constructor for a NamedScope Path
+        /// Constructor for a Path
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version takes pre-parsed strings to build the Path.</remarks>
         /// <example>
-        /// var x new NamedScopePath(NamedScopePath.Parse(sourceString).ToArray())
+        /// var x new PathIndex(PathIndex.Parse(sourceString).ToArray())
         /// </example>
-        public NamedScopePath(params String?[] source)
+        public PathIndex(params String?[] source)
         {
             foreach (String? item in source)
             {
@@ -113,14 +113,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <summary>
-        /// Constructor for a NamedScope Path (Combine)
+        /// Constructor for a Path (Combine)
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version allows multiple paths to be combined.</remarks>
-        public NamedScopePath(params INamedScopePath[] source)
+        public PathIndex(params IPathItem[] source)
         {
-            foreach (NamedScopePath item in source)
-            { this.pathParts.AddRange(item.pathParts); }
+            foreach (PathIndex item in source)
+            { pathParts.AddRange(item.pathParts); }
         }
 
         /// <summary>
@@ -128,18 +128,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="basePath"></param>
         /// <param name="member"></param>
-        public NamedScopePath(INamedScopePath basePath, String member) : this(basePath)
+        public PathIndex(IPathItem basePath, String member) : this(basePath)
         { pathParts.AddRange(Parse(member)); }
 
         /// <summary>
-        /// Constructor for a NamedScope Path
+        /// Constructor for a Path
         /// </summary>
         /// <param name="source"></param>
-        internal NamedScopePath(ScopeType source) : this()
+        internal PathIndex(ScopeType source) : this()
         { pathParts.AddRange(Parse(ScopeEnumeration.Cast(source).Name)); }
 
         /// <summary>
-        /// Parses a String into Name Parts per the rules of a NamedScope Key.
+        /// Parses a String into Name Parts per the rules of a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -274,9 +274,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(NamedScopePath? other)
+        public Boolean Equals(PathIndex? other)
         {
-            if (other is NamedScopePath otherKey)
+            if (other is PathIndex otherKey)
             {
                 return pathParts.SequenceEqual(
                     otherKey.pathParts,
@@ -289,9 +289,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(NamedScopePath? other)
+        public Int32 CompareTo(PathIndex? other)
         {
-            if (other is NamedScopePath otherKey)
+            if (other is PathIndex otherKey)
             {
                 int index = 0;
 
@@ -309,11 +309,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(INamedScopePath? other)
+        public virtual Boolean Equals(IPathItem? other)
         {
-            if (other is INamedScopePath)
+            if (other is IPathItem)
             {
-                NamedScopePath otherKey = new NamedScopePath(other);
+                PathIndex otherKey = new PathIndex(other);
                 return Equals(otherKey);
             }
             else { return false; }
@@ -321,15 +321,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is INamedScopePath value && Equals(new NamedScopePath(value)); }
+        { return obj is IPathItem value && Equals(new PathIndex(value)); }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(INamedScopePath? other)
+        public virtual Int32 CompareTo(IPathItem? other)
         {
             if (other is null) { return 1; }
             else
             {
-                NamedScopePath otherKey = new NamedScopePath(other);
+                PathIndex otherKey = new PathIndex(other);
                 return CompareTo(otherKey);
             }
         }
@@ -337,33 +337,33 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
         {
-            if (obj is INamedScopePath value)
-            { return CompareTo(new NamedScopePath(value)); }
+            if (obj is IPathItem value)
+            { return CompareTo(new PathIndex(value)); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator ==(PathIndex left, PathIndex right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator !=(PathIndex left, PathIndex right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <(PathIndex left, PathIndex right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <=(PathIndex left, PathIndex right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >(PathIndex left, PathIndex right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >=(PathIndex left, PathIndex right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
@@ -386,31 +386,31 @@ namespace DataDictionary.BusinessLayer.NamedScope
         { return string.Join(delimiter, pathParts.Select(s => string.Format(pattern, s))); }
 
         /// <summary>
-        /// Groups the NameSpaces based on Hierarchy.
+        /// Groups the Path based on Hierarchy.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<NamedScopePath> Group(IEnumerable<NamedScopePath> source)
+        public static IEnumerable<PathIndex> Group(IEnumerable<PathIndex> source)
         {
-            List<NamedScopePath> result = new List<NamedScopePath>();
+            List<PathIndex> result = new List<PathIndex>();
 
-            List<NamedScopePath> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
+            List<PathIndex> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
 
-            foreach (NamedScopePath item in group)
+            foreach (PathIndex item in group)
             { result.AddRange(item.Group()); }
 
             return result;
         }
 
         /// <summary>
-        /// Groups the NameSpaces based on Hierarchy.
+        /// Groups the Path based on Hierarchy.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<NamedScopePath> Group()
+        public IEnumerable<PathIndex> Group()
         {
-            List<NamedScopePath> result = new List<NamedScopePath>() { this };
+            List<PathIndex> result = new List<PathIndex>() { this };
 
-            NamedScopePath? key = this.ParentPath;
+            PathIndex? key = ParentPath;
 
             while (key is not null)
             {
@@ -423,8 +423,47 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
+        /// <summary>
+        /// Combines this Path with the parent Path provided.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public PathIndex Merge(PathIndex parent)
+        {
+            List<String> parts = new List<String>();
+            Int32 childIndex = 0;
+            Int32 parentIndex = 0;
+
+            while (childIndex < pathParts.Count || parentIndex < parent.pathParts.Count)
+            {
+                if (childIndex < pathParts.Count
+                    && parentIndex < parent.pathParts.Count
+                    && pathParts[childIndex].Equals(parent.pathParts[parentIndex], KeyExtension.CompareString))
+                {
+                    parts.Add(pathParts[childIndex]);
+                    childIndex = childIndex + 1;
+                    parentIndex = parentIndex + 1;
+                }
+                else
+                {
+                    if (parentIndex < parent.pathParts.Count)
+                    {
+                        parts.Add(parent.pathParts[parentIndex]);
+                        parentIndex = parentIndex + 1;
+                    }
+                    else if (childIndex < pathParts.Count)
+                    {
+                        parts.Add(pathParts[childIndex]);
+                        childIndex = childIndex + 1;
+                    }
+                }
+            }
+
+            return new PathIndex(parts.ToArray());
+        }
+
         /// <inheritdoc/>
         public override String ToString()
-        { return this.MemberFullPath; }
+        { return MemberFullPath; }
     }
 }

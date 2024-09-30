@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -11,32 +12,38 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
     {
-        /// <inheritdoc cref="DomainAttributeItem()"/>
+        IPathValue pathValue; // Backing field for IPathValue
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+
+        /// <inheritdoc/>
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
+
+        /// <inheritdoc/>
+        String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
         public AttributeValue() : base()
-        { }
-
-        /// <inheritdoc/>
-        public DataLayerIndex GetIndex()
-        { return new AttributeIndex(this); }
-
-        /// <inheritdoc/>
-        public String GetTitle()
-        { return AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name; }
-
-        /// <inheritdoc/>
-        /// <remarks>Partial Path</remarks>
-        public NamedScopePath GetPath()
         {
-            if (String.IsNullOrWhiteSpace(MemberName))
-            { return new NamedScopePath(AttributeTitle); }
-            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new AttributeIndex(this),
+                GetPath = () =>
+                {
+                    if (String.IsNullOrWhiteSpace(MemberName))
+                    { return new PathIndex(AttributeTitle); }
+                    else { return new PathIndex(new PathIndex(PathIndex.Parse(MemberName).ToArray())); }
+                },
+                GetScope = () => Scope,
+                GetTitle = () => AttributeTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(AttributeTitle) or nameof(MemberName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
+            };
         }
 
-        /// <inheritdoc/>
-        public Boolean IsTitleChanged(PropertyChangedEventArgs eventArgs)
-        { return eventArgs.PropertyName is nameof(AttributeTitle) or nameof(MemberName); }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

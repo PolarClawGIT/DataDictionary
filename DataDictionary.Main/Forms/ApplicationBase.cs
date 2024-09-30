@@ -219,9 +219,6 @@ namespace DataDictionary.Main.Forms
         }
         #endregion
 
-
-
-
         /// <summary>
         /// Used to Load the ToolTips into the Form. 
         /// </summary>

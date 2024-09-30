@@ -11,7 +11,7 @@
 	-- Known: String, Integer, List, XML, MS_Description
 	[PropertyData]           NVarChar(2000) Null, -- Data based on Type. Example is Procedure Name or Choice List. Managed by Application.
 	-- TODO: Add System Version later once the schema is locked down
-	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainPropertyModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
+	[ModifiedBy] SysName Not Null CONSTRAINT [DF_DomainPropertyModifiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_DomainProperty_SysStart] Default (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL Constraint [DF_DomainProperty_SysEnd] Default ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

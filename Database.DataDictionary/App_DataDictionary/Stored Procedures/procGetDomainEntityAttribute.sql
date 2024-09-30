@@ -9,14 +9,17 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[EntityId],
 		D.[AttributeId],
-		D.[AttributeName],
+		IsNull(D.[AttributeName], B.[AttributeTitle]) As [AttributeName],
 		D.[IsNullable],
 		D.[OrdinalPosition]
 From	[App_DataDictionary].[DomainEntityAttribute] D
 		Left Join [App_DataDictionary].[ModelEntity] E
 		On	D.[EntityId] = E.[EntityId]
 		Left Join [App_DataDictionary].[ModelAttribute] A
-		On	D.[AttributeId] = A.[AttributeId]
+		On	D.[AttributeId] = A.[AttributeId] And
+			E.[ModelId] = A.[ModelId]
+		Left Join [App_DataDictionary].[DomainAttribute] B
+		On	D.[AttributeId] = B.[AttributeId]
 Where	(@ModelId is Null or (@ModelId = A.[ModelId] and @ModelId = E.[ModelId])) And
 		(@EntityId is Null or @AttributeId = D.[EntityId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId])
