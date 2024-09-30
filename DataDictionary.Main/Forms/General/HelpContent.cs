@@ -32,9 +32,15 @@ namespace DataDictionary.Main.Forms.General
                 ScopeType.ApplicationHelp,
                 CommandImageType.Add,
                 CommandImageType.Open,
+                CommandImageType.Import,
                 CommandImageType.HistoryDatabase);
 
             SetImages(helpContentNavigation);
+
+            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject (blank)";
+            CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
+            CommandButtons[CommandImageType.Import].IsEnabled = false;
+            CommandButtons[CommandImageType.Import].Text = "Add new Help Subject using Form Data";
         }
 
         public HelpContent(String targetSubject) : this()
@@ -53,6 +59,11 @@ namespace DataDictionary.Main.Forms.General
 
         public HelpContent(Form targetForm) : this()
         {
+            OpenSubject(targetForm);
+        }
+
+        public void OpenSubject(Form targetForm)
+        {
             HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
 
             List<Control> values = targetForm.ToControlList()
@@ -66,8 +77,16 @@ namespace DataDictionary.Main.Forms.General
             if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
                 if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                { helpBinding.Position = subjects.IndexOf(subject); }
+                {
+                    helpBinding.Position = subjects.IndexOf(subject);
+
+
+                    if (helpContentNodes.FirstOrDefault(w => w.Value.Equals(subject)).Key is TreeNode selectedNode)
+                    { selectedNode.TreeView.SelectedNode = selectedNode; }
+                }
                 helpForForm = targetForm;
+
+                CommandButtons[CommandImageType.Import].IsEnabled = true;
             }
         }
 
@@ -78,9 +97,39 @@ namespace DataDictionary.Main.Forms.General
             BuildHelpTree();
         }
 
+
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+
+            if (helpBinding.AddNew() is HelpSubjectValue newValue)
+            { Activate((data) => new HelpSubject(newValue), newValue); }
+        }
+
+        protected override void ImportCommand_Click(Object? sender, EventArgs e)
+        {
+            if (helpBinding.AddNew() is HelpSubjectValue newValue)
+            {
+                if (helpForForm is Form targetForm)
+                {
+                    newValue.HelpSubject = targetForm.ToNameSpaceKey().Member;
+                    newValue.NameSpace = targetForm.ToNameSpaceKey().MemberFullPath;
+
+                    Activate((data) => new HelpSubject(newValue, targetForm), newValue);
+                }
+                else { Activate((data) => new HelpSubject(newValue), newValue); }
+            }
+        }
+
+        private void HelpBinding_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            HelpSubjectValue newItem = new HelpSubjectValue();
+            e.NewObject = newItem;
+        }
+
+        private void HelpBinding_ListChanged(object sender, ListChangedEventArgs e)
+        { // this fires many times.
+            BuildHelpTree();
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
@@ -93,10 +142,11 @@ namespace DataDictionary.Main.Forms.General
                     && new HelpSubjectIndexPath(current).
                         Group().
                         Any(w => targetForm.ToNameSpaceKey().Equals(w)))
-                { Activate(() => new HelpSubject(current, targetForm)); }
+                { Activate((data) => new HelpSubject(current, targetForm), current); }
                 else { Activate((data) => new HelpSubject(current), current); }
             }
         }
+
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
@@ -129,6 +179,16 @@ namespace DataDictionary.Main.Forms.General
 
         void BuildHelpTree()
         {
+            List<HelpSubjectIndex> expanded = new List<HelpSubjectIndex>();
+
+            expanded.AddRange(helpContentNodes.Where(w =>
+            (w.Key.IsExpanded
+            || (w.Key.Nodes.Count == 0
+                && w.Key.Parent is not null
+                && w.Key.Parent.IsExpanded))).
+                Select(s => new HelpSubjectIndex(s.Value)). // Get the HelpSubjectIndex
+                Distinct());
+
             helpContentNavigation.Nodes.Clear();
             helpContentNodes.Clear();
 
@@ -170,13 +230,20 @@ namespace DataDictionary.Main.Forms.General
                     {
                         TreeNode newNode = CreateNode(items[0], helpContentImageIndex.HelpPage, parent);
                         parent = newNode.Nodes;
+
+                        if (expanded.Any(w => w.Equals(items[0])))
+                        { newNode.ExpandParent(); }
                     }
                     else if (items.Count > 1)
                     {
                         TreeNode newNode = CreateNode(group.Key, helpContentImageIndex.HelpGroup, parent);
 
                         foreach (HelpSubjectValue item in items)
-                        { CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes); }
+                        {
+                            TreeNode newChild = CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes);
+                            if (expanded.Any(w => w.Equals(item)))
+                            { newChild.ExpandParent(); }
+                        }
                     }
 
                     String level;
@@ -290,7 +357,13 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        private void HelpContentNavigation_MouseDoubleClick(object sender, MouseEventArgs e)
+        { OpenCommand_Click(sender, EventArgs.Empty); }
+
         #endregion
+
+
+
 
     }
 }

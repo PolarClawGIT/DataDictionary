@@ -170,7 +170,10 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.General.HelpContent(currentForm)); }
+            {
+                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm));
+                helpForm.OpenSubject(currentForm);
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)

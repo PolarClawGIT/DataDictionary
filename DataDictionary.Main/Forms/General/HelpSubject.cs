@@ -84,14 +84,8 @@ namespace DataDictionary.Main.Forms.General
 
         }
 
-        public HelpSubject(HelpSubjectValue? helpSubjectItem) : this()
+        public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
         {
-            if (helpSubjectItem is null)
-            {
-                helpSubjectItem = new HelpSubjectValue();
-                BusinessData.ApplicationData.HelpSubjects.Add(helpSubjectItem);
-            }
-
             HelpSubject_Binding(helpSubjectItem);
         }
 
@@ -166,9 +160,9 @@ namespace DataDictionary.Main.Forms.General
 
         private void HelpTextData_Load(object sender, EventArgs e)
         {
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
+            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
+            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
 
             BindRtfHelpText();
         }
@@ -176,7 +170,7 @@ namespace DataDictionary.Main.Forms.General
         private void BindRtfHelpText()
         {
             try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged)); }
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation)); }
             catch (Exception) // Else it is not RTF, bind to the property 
             {
                 if (helpBinding.Current is HelpSubjectValue subject)
@@ -186,7 +180,7 @@ namespace DataDictionary.Main.Forms.General
                     subject.AcceptChanges();
                 }
 
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
 

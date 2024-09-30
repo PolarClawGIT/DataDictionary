@@ -322,7 +322,11 @@ namespace DataDictionary.Main.Forms
         }
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
-        { Activate(() => new General.HelpContent(this)); }
+        {
+            General.HelpContent helpForm = Activate(() => new General.HelpContent(this));
+            helpForm.OpenSubject(this);
+
+        }
 
         protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }

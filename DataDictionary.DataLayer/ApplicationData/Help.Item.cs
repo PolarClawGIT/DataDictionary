@@ -125,12 +125,15 @@ namespace DataDictionary.DataLayer.ApplicationData
         public HelpItem() : base()
         {
             if (HelpId is null) { HelpId = Guid.NewGuid(); }
+
+            HelpSubject = "(new Help Subject)";
+            NameSpace = String.Format("[NewSubject].[{0}]", HelpId);
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(HelpSubject), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(HelpSubject), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(HelpToolTip), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},

@@ -70,6 +70,7 @@
             helpContentNavigation.Size = new Size(266, 425);
             helpContentNavigation.TabIndex = 1;
             helpContentNavigation.NodeMouseClick += HelpContentNavigation_NodeMouseClick;
+            helpContentNavigation.MouseDoubleClick += HelpContentNavigation_MouseDoubleClick;
             // 
             // helpDetailLayout
             // 
@@ -109,6 +110,11 @@
             helpTextData.Size = new Size(524, 369);
             helpTextData.TabIndex = 2;
             helpTextData.Text = "";
+            // 
+            // helpBinding
+            // 
+            helpBinding.AddingNew += HelpBinding_AddingNew;
+            helpBinding.ListChanged += HelpBinding_ListChanged;
             // 
             // HelpContent
             // 
