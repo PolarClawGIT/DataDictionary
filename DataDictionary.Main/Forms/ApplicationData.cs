@@ -199,11 +199,46 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
+        /// Sets up the RowState
+        /// </summary>
+        /// <param name="data"></param>
+        protected void SetRowState(BindingSource data)
+        {
+            IBindingRowState? priorRow = null;
+
+            Data_DataSourceChanged(data, EventArgs.Empty);
+            data.DataSourceChanged += Data_DataSourceChanged;
+            data.Disposed += Data_Disposed;
+
+            void Data_DataSourceChanged(Object? sender, EventArgs e)
+            {
+                if (priorRow is IBindingRowState oldValue)
+                { oldValue.RowStateChanged -= RowStateChanged; }
+
+                if (data.Current is IBindingRowState currentValue)
+                {
+                    RowStateChanged(currentValue, EventArgs.Empty);
+                    currentValue.RowStateChanged += RowStateChanged;
+                }
+            }
+
+            void Data_Disposed(Object? sender, EventArgs e)
+            {
+                if (priorRow is IBindingRowState oldValue)
+                { oldValue.RowStateChanged -= RowStateChanged; }
+
+                data.DataSourceChanged -= Data_DataSourceChanged;
+                data.Disposed -= Data_Disposed;
+            }
+        }
+
+        /// <summary>
         /// Sets RowState, default Window Text, Icon and Command Buttons based on the BindingSource data.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="commands"></param>
         /// <remarks>Calls Setup by Scope, if possible.</remarks>
+        [Obsolete("Use SetRowState & SetCommand")]
         protected void Setup(BindingSource data, params CommandImageType[] commands)
         {
             data.CurrentChanged += Data_CurrentChanged;
@@ -214,7 +249,7 @@ namespace DataDictionary.Main.Forms
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
                 if (data.Current is IScopeType scopeValue)
-                { Setup(scopeValue.Scope, commands); }
+                { SetCommand(scopeValue.Scope, commands); }
 
                 if (data.Current is IBindingRowState binding)
                 {
@@ -233,11 +268,12 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Sets the Icon and Command Button Images
+        /// Sets the Icon and Command Button Images. 
+        /// Sets the buttons to visible and enabled.
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="commands"></param>
-        protected void Setup(ScopeType scope, params CommandImageType[]? commands)
+        protected void SetCommand(ScopeType scope, params CommandImageType[]? commands)
         {
             Icon = ImageEnumeration.GetIcon(scope);
             rowStateCommand.Enabled = false;
@@ -246,16 +282,13 @@ namespace DataDictionary.Main.Forms
             {
                 if (ImageEnumeration.Members.ContainsKey(scope) && ImageEnumeration.Members[scope].Images.ContainsKey(item.Key))
                 { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
-                // Else leave the image as is
-            }
 
-            if (commands is not null)
-            {
-                foreach (CommandImageType item in commands)
+                if (commands is not null && commands.Any(w => item.Key.Equals(w)))
                 {
-                    CommandButtons[item].IsVisible = true;
-                    CommandButtons[item].IsEnabled = true;
+                    CommandButtons[item.Key].IsVisible = true;
+                    CommandButtons[item.Key].IsEnabled = true;
                 }
+                // Else leave the image as is
             }
         }
 

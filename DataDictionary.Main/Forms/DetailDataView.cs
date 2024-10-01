@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms
         }
 
         public DetailDataView(ScopeType scope, IBindingTable data) : this(data)
-        { Setup(scope); }
+        { SetCommand(scope); }
 
         public DetailDataView(IBindingData data) : this()
         {
@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms
         }
 
         public DetailDataView(ScopeType scope, IBindingData data) : this(data)
-        { Setup(scope); }
+        { SetCommand(scope); }
 
         public DetailDataView(IBindingList data) : this()
         {
@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms
         }
 
         public DetailDataView(ScopeType scope, IBindingList data) : this(data)
-        { Setup(scope); }
+        { SetCommand(scope); }
 
         public Boolean IsOpenItem(Object? item)
         { return ReferenceEquals(bindingSource.DataSource, item); }

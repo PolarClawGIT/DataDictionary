@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms
 
         public HistoryView(ScopeType scope, ILoadHistoryData loader) : base(loader)
         {
-            Setup(scope,
+            SetCommand(scope,
                 CommandImageType.Browse,
                 CommandImageType.Open);
         }

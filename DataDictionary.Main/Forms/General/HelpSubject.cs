@@ -4,15 +4,9 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -65,8 +59,7 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
 
-            Setup(
-                helpBinding,
+            SetCommand(ScopeType.ApplicationHelp,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
@@ -81,34 +74,10 @@ namespace DataDictionary.Main.Forms.General
                     value = (Single)s.Width / (Single)(controlData.Columns.OfType<ColumnHeader>().Sum(v => v.Width))
                 }).
                 ToDictionary(k => k.column, v => v.value);
-
         }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
-        {
-            HelpSubject_Binding(helpSubjectItem);
-        }
-
-        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
-        {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
-            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
-
-            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
-
-            if (bindingData.Count == 0)
-            {
-                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
-                CommandButtons[CommandImageType.Delete].IsEnabled = false;
-                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
-                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
-
-                
-            }
-
-            helpBinding.DataSource = bindingData;
-            helpBinding.Position = 0;
-        }
+        { HelpSubject_Binding(helpSubjectItem); }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
         {
@@ -153,6 +122,28 @@ namespace DataDictionary.Main.Forms.General
                 controlList.Add(newControl);
                 controlData.Items.Add(newItem);
             }
+        }
+
+        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
+        {
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
+            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
+
+            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
+
+            if (bindingData.Count == 0)
+            {
+                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
+                CommandButtons[CommandImageType.Delete].IsEnabled = false;
+                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
+                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+
+
+            }
+
+            helpBinding.DataSource = bindingData;
+            helpBinding.Position = 0;
+            SetRowState(helpBinding);
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)

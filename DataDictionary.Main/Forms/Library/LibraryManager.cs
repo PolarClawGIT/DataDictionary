@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             InitializeComponent();
             
-            Setup(ScopeType.Library,
+            SetCommand(ScopeType.Library,
                 CommandImageType.Add,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
