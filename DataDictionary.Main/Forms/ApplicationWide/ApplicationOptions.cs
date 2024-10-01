@@ -9,13 +9,13 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 
 namespace DataDictionary.Main.ApplicationWide
 {
-    partial class ApplicationOptions : ApplicationBase
+    partial class ApplicationOptions : ApplicationData
     {
         public ApplicationOptions() : base()
         {
             InitializeComponent();
 
-            this.Icon = ImageEnumeration.GetIcon(ScopeType.ApplicationOption);
+            SetIcon(ScopeType.ApplicationOption);;
         }
 
         private void ApplicationOptions_Load(object sender, EventArgs e)

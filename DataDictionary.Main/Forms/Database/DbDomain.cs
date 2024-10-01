@@ -12,7 +12,12 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingDomain.Current is IDomainValue current && ReferenceEquals(current, item); }
 
         protected DbDomain() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingDomain);
+            SetTitle(bindingDomain);
+        }
 
         public DbDomain(IDomainValue domainItem) : this()
         {
@@ -21,8 +26,6 @@ namespace DataDictionary.Main.Forms.Database
 
             bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
-
-            Setup(bindingDomain);
 
             if (bindingDomain.Current is IDomainValue current)
             {

@@ -123,7 +123,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(helpSplitLayout);
             Name = "HelpContent";
-            Text = "HelpContent";
+            Text = "Help Content";
             Load += HelpContent_Load;
             Controls.SetChildIndex(helpSplitLayout, 0);
             helpSplitLayout.Panel1.ResumeLayout(false);

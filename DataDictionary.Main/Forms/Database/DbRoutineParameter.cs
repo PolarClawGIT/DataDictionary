@@ -13,7 +13,12 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingParameter.Current is IRoutineParameterValue current && ReferenceEquals(current, item); }
 
         protected DbRoutineParameter() : base()
-        {   InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingParameter);
+            SetTitle(bindingParameter);
+        }
 
         public DbRoutineParameter(IRoutineParameterValue parameterItem) : this()
         {
@@ -22,8 +27,6 @@ namespace DataDictionary.Main.Forms.Database
 
             bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
-
-            Setup(bindingParameter);
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {

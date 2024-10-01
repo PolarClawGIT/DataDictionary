@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -15,6 +16,11 @@ namespace DataDictionary.Main.Forms.Model
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
+
+            SetRowState(bindingSubject);
+            SetTitle(bindingSubject);
+            SetCommand(ScopeType.ModelSubjectArea,
+                CommandImageType.Delete);
         }
 
         public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
@@ -32,7 +38,7 @@ namespace DataDictionary.Main.Forms.Model
 
             if (bindingSubject.Current is ISubjectAreaValue current)
             {
-                Setup(bindingSubject, CommandImageType.Delete);
+                
                 //List<AttributeIndex> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
                 //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
 

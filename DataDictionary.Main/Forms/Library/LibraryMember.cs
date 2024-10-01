@@ -12,7 +12,11 @@ namespace DataDictionary.Main.Forms.Library
         { return bindingMember.Current is ILibraryMemberValue current && ReferenceEquals(current, item); }
 
         protected LibraryMember() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            SetRowState(bindingMember);
+            SetTitle(bindingMember);
+        }
 
         public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
@@ -22,10 +26,7 @@ namespace DataDictionary.Main.Forms.Library
             bindingMember.Position = 0;
 
             if (bindingMember.Current is ILibraryMemberValue current)
-            {
-                Setup(bindingMember);
-                bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key));
-            }
+            { bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key)); }
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)

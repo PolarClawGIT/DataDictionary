@@ -28,6 +28,7 @@ namespace DataDictionary.Main.Forms.General
             helpToolStripButton.Enabled = false;
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
+            SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
                 ScopeType.ApplicationHelp,
                 CommandImageType.Add,

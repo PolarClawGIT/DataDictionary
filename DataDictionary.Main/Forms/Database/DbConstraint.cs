@@ -12,17 +12,19 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingConstraint.Current is IConstraintValue current && ReferenceEquals(current, item); }
 
         protected DbConstraint() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingConstraint);
+            SetTitle(bindingConstraint);
+        }
 
         public DbConstraint(IConstraintValue constraintItem) : this()
         {
             ConstraintIndex key = new ConstraintIndex(constraintItem);
 
-
             bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
-
-            Setup(bindingConstraint);
 
             if (bindingConstraint.Current is IConstraintValue current)
             {

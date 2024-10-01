@@ -19,6 +19,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.Database);
             SetCommand(ScopeType.Database,
                 CommandImageType.Add,
                 CommandImageType.Delete,

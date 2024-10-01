@@ -12,7 +12,11 @@ namespace DataDictionary.Main.Forms
     partial class DetailDataView : ApplicationData, IApplicationDataBind
     {
         public DetailDataView() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingSource);
+        }
 
         public DetailDataView(IBindingTable data) : this()
         {
@@ -21,12 +25,7 @@ namespace DataDictionary.Main.Forms
             if (data is IBindingName dataName)
             { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
-
-            Setup(bindingSource);
         }
-
-        public DetailDataView(ScopeType scope, IBindingTable data) : this(data)
-        { SetCommand(scope); }
 
         public DetailDataView(IBindingData data) : this()
         {
@@ -35,23 +34,22 @@ namespace DataDictionary.Main.Forms
             if (data is IBindingName dataName)
             { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
             else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
-
-            Setup(bindingSource);
         }
-
-        public DetailDataView(ScopeType scope, IBindingData data) : this(data)
-        { SetCommand(scope); }
 
         public DetailDataView(IBindingList data) : this()
         {
             bindingSource.DataSource = data;
             this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
-
-            Setup(bindingSource);
         }
 
+        public DetailDataView(ScopeType scope, IBindingTable data) : this(data)
+        { SetIcon(scope); }
+
+        public DetailDataView(ScopeType scope, IBindingData data) : this(data)
+        { SetIcon(scope); }
+
         public DetailDataView(ScopeType scope, IBindingList data) : this(data)
-        { SetCommand(scope); }
+        { SetIcon(scope); }
 
         public Boolean IsOpenItem(Object? item)
         { return ReferenceEquals(bindingSource.DataSource, item); }

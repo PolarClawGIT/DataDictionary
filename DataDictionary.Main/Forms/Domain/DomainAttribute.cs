@@ -25,6 +25,10 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
 
+            SetRowState(bindingAttribute);
+            SetTitle(bindingAttribute);
+            SetCommand(ScopeType.ModelAttribute, CommandImageType.Delete);
+
             aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
@@ -45,8 +49,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (bindingAttribute.Current is IAttributeValue current)
             {
-                Setup(bindingAttribute, CommandImageType.Delete);
-
                 bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
                 bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.DomainModel.Attributes.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
@@ -61,8 +63,6 @@ namespace DataDictionary.Main.Forms.Domain
             ScopeNameList.Load(aliaseScopeColumn);
 
             if (isNew) { SendMessage(new RefreshNavigation()); }
-
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
 
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));

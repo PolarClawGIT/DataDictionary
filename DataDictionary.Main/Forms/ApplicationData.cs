@@ -202,23 +202,48 @@ namespace DataDictionary.Main.Forms
         /// Sets up the RowState
         /// </summary>
         /// <param name="data"></param>
+        /// <remarks>
+        /// This sets up the DataSourceChanged, CurrentChanged, RowStateChanged, and Disposed events.
+        /// The method can be called prior to the BindingSource setting the DataSource.
+        /// </remarks>
         protected void SetRowState(BindingSource data)
         {
-            IBindingRowState? priorRow = null;
+            IBindingRowState? priorRow = null; // Allows removal of prior events.
 
             Data_DataSourceChanged(data, EventArgs.Empty);
             data.DataSourceChanged += Data_DataSourceChanged;
+            data.CurrentChanged += Data_CurrentChanged;
             data.Disposed += Data_Disposed;
 
             void Data_DataSourceChanged(Object? sender, EventArgs e)
             {
                 if (priorRow is IBindingRowState oldValue)
-                { oldValue.RowStateChanged -= RowStateChanged; }
+                {
+                    oldValue.RowStateChanged -= RowStateChanged;
+                    priorRow = null;
+                }
 
                 if (data.Current is IBindingRowState currentValue)
                 {
                     RowStateChanged(currentValue, EventArgs.Empty);
                     currentValue.RowStateChanged += RowStateChanged;
+                    priorRow = currentValue;
+                }
+            }
+
+            void Data_CurrentChanged(Object? sender, EventArgs e)
+            {
+                if (priorRow is IBindingRowState oldValue)
+                {
+                    oldValue.RowStateChanged -= RowStateChanged;
+                    priorRow = null;
+                }
+
+                if (data.Current is IBindingRowState currentValue)
+                {
+                    RowStateChanged(currentValue, EventArgs.Empty);
+                    currentValue.RowStateChanged += RowStateChanged;
+                    priorRow = currentValue;
                 }
             }
 
@@ -228,44 +253,53 @@ namespace DataDictionary.Main.Forms
                 { oldValue.RowStateChanged -= RowStateChanged; }
 
                 data.DataSourceChanged -= Data_DataSourceChanged;
+                data.CurrentChanged -= Data_CurrentChanged;
                 data.Disposed -= Data_Disposed;
             }
         }
 
         /// <summary>
-        /// Sets RowState, default Window Text, Icon and Command Buttons based on the BindingSource data.
+        /// Sets the Title text and Icon based on the BindingSource provided.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="commands"></param>
-        /// <remarks>Calls Setup by Scope, if possible.</remarks>
-        [Obsolete("Use SetRowState & SetCommand")]
-        protected void Setup(BindingSource data, params CommandImageType[] commands)
+        /// <remarks>
+        /// This sets up the CurrentChanged and Disposed events.
+        /// Title and Icon are updated based on what record is being viewed.
+        /// Override behavior of SetIcon.
+        /// </remarks>
+        protected void SetTitle(BindingSource data)
         {
+            Data_CurrentChanged(data, EventArgs.Empty);
             data.CurrentChanged += Data_CurrentChanged;
+            data.Disposed += Data_Disposed;
+            data.DataSourceChanged += Data_DataSourceChanged;
 
-            if (data.Current is not null)
+            void Data_DataSourceChanged(Object? sender, EventArgs e)
             { Data_CurrentChanged(data, EventArgs.Empty); }
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                if (data.Current is IScopeType scopeValue)
-                { SetCommand(scopeValue.Scope, commands); }
-
-                if (data.Current is IBindingRowState binding)
-                {
-                    rowStateCommand.Enabled = true;
-                    RowState = binding.RowState();
-                    binding.RowStateChanged += RowStateChanged;
-                    RowStateChanged(binding, EventArgs.Empty);
-                }
-
                 if (data.Current is IDataValue dataValue)
                 {
                     Text = dataValue.Title;
-                    Icon = ImageEnumeration.GetIcon(dataValue.Scope);
+                    SetIcon(dataValue.Scope);
                 }
             }
+
+            void Data_Disposed(Object? sender, EventArgs e)
+            {
+                data.CurrentChanged -= Data_CurrentChanged;
+                data.Disposed -= Data_Disposed;
+            }
         }
+
+        /// <summary>
+        /// Sets the Icon based on Scope Provided
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <remarks>Icon is static unless SetTitle is used.</remarks>
+        protected void SetIcon(ScopeType scope)
+        { Icon = ImageEnumeration.GetIcon(scope); }
 
         /// <summary>
         /// Sets the Icon and Command Button Images. 
@@ -275,7 +309,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="commands"></param>
         protected void SetCommand(ScopeType scope, params CommandImageType[]? commands)
         {
-            Icon = ImageEnumeration.GetIcon(scope);
+
             rowStateCommand.Enabled = false;
 
             foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
@@ -291,6 +325,8 @@ namespace DataDictionary.Main.Forms
                 // Else leave the image as is
             }
         }
+
+
 
         /// <summary>
         /// Delegate for the Event to handle the RowState of the data.

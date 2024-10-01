@@ -27,6 +27,10 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
 
+            SetRowState(bindingEntity);
+            SetTitle(bindingEntity);
+            SetCommand(ScopeType.ModelEntity, CommandImageType.Delete);
+
             attributeSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
             aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
@@ -48,8 +52,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (bindingEntity.Current is IEntityValue current)
             {
-                Setup(bindingEntity, CommandImageType.Delete);
-
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));

@@ -59,7 +59,9 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
 
-            SetCommand(ScopeType.ApplicationHelp,
+            SetRowState(helpBinding);
+            SetTitle(helpBinding);
+            SetCommand(ScopeType.ApplicationHelpPage,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
@@ -143,7 +145,7 @@ namespace DataDictionary.Main.Forms.General
 
             helpBinding.DataSource = bindingData;
             helpBinding.Position = 0;
-            SetRowState(helpBinding);
+            
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)

@@ -14,7 +14,20 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingTable.Current is ITableValue current && ReferenceEquals(current, item); }
 
         protected DbTable() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingTable);
+            SetTitle(bindingTable);
+            SetCommand(ScopeType.DatabaseTable, CommandImageType.Export);
+
+            CommandButtons[CommandImageType.Export].Text = "to Model";
+            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+
+            exportAll.Image = ImageEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
+            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
+            exportEntites.Image = ImageEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
+        }
 
         public DbTable(ITableValue tableItem) : this()
         {
@@ -22,13 +35,6 @@ namespace DataDictionary.Main.Forms.Database
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
-
-            Setup(bindingTable, CommandImageType.Export);
-            CommandButtons[CommandImageType.Export].Text = "to Model";
-            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
-            exportAll.Image = ImageEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
-            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
-            exportEntites.Image = ImageEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
 
             if (bindingTable.Current is ITableValue current)
             {

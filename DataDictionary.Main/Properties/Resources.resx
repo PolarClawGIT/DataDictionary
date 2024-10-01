@@ -328,6 +328,9 @@
   <data name="Icon_Field" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Field.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_HelpIndexFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\HelpIndexFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_HelpTableOfContent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\HelpTableOfContent.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

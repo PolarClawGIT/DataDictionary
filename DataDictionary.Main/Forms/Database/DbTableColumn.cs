@@ -14,7 +14,17 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingColumn.Current is ITableColumnValue current && ReferenceEquals(current, item); }
 
         public DbTableColumn() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingColumn);
+            SetTitle(bindingColumn);
+            SetCommand(ScopeType.DatabaseTableColumn, CommandImageType.Export);
+
+            CommandButtons[CommandImageType.Export].Text = "to Model";
+            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
+        }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()
         {
@@ -24,15 +34,8 @@ namespace DataDictionary.Main.Forms.Database
             bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
-            Setup(bindingColumn, CommandImageType.Export);
-            CommandButtons[CommandImageType.Export].Text = "to Model";
-            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
-            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
-
             if (bindingColumn.Current is ITableColumnValue current)
-            {
-                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
-            }
+            { bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w)); }
         }
 
         private void DbColumn_Load(object sender, EventArgs e)

@@ -18,7 +18,13 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingSource.Current is ICatalogValue current && ReferenceEquals(current, item); }
 
         protected DbCatalog() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingSource);
+            SetTitle(bindingSource);
+            SetCommand(ScopeType.Database, CommandImageType.Export);
+        }
 
         public DbCatalog(ICatalogValue catalogItem) : this()
         {
@@ -27,7 +33,6 @@ namespace DataDictionary.Main.Forms.Database
             bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            Setup(bindingSource, CommandImageType.Export);
             CommandButtons[CommandImageType.Export].Text = "to Model";
             CommandButtons[CommandImageType.Export].DropDown = exportOptions;
             exportAll.Image = ImageEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
@@ -35,7 +40,6 @@ namespace DataDictionary.Main.Forms.Database
             exportEntites.Image = ImageEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
 
             exportProcesses.Visible = false; // Disabled until processes are supported
-            //exportProcesses.Image = ImageEnumeration.GetImage(ScopeType.ModelProcess, CommandImageType.Add);
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)

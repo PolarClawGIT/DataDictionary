@@ -12,7 +12,12 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingSchema.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
         protected DbSchema() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+
+            SetRowState(bindingSchema);
+            SetTitle(bindingSchema);
+        }
 
         public DbSchema(ISchemaValue schemaItem) : this()
         {
@@ -21,8 +26,6 @@ namespace DataDictionary.Main.Forms.Database
 
             bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;
-
-            Setup(bindingSchema);
 
             if (bindingSchema.Current is ISchemaValue current)
             {

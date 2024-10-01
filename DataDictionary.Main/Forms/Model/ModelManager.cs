@@ -18,6 +18,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.Model);
             SetCommand(ScopeType.Model,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,

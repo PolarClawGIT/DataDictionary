@@ -24,6 +24,10 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
+            SetRowState(bindingTemplate);
+            SetTitle(bindingTemplate);
+            SetCommand(ScopeType.ScriptingTemplate, CommandImageType.Delete);
+
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
             pathAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
@@ -46,8 +50,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (bindingTemplate.Current is ITemplateValue current)
             {
-                Setup(bindingTemplate, CommandImageType.Delete);
-
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
                 bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
                 bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));

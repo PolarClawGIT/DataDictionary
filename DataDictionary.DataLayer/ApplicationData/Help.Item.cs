@@ -69,7 +69,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ApplicationHelp;
+        public ScopeType Scope { get; } = ScopeType.ApplicationHelpPage;
 
         /// <inheritdoc/>
         public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }

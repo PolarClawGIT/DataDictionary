@@ -17,7 +17,8 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryManager()
         {
             InitializeComponent();
-            
+
+            SetIcon(ScopeType.Library);
             SetCommand(ScopeType.Library,
                 CommandImageType.Add,
                 CommandImageType.Delete,

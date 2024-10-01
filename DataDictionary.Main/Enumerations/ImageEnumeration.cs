@@ -116,7 +116,10 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewStatusHelp),
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp),
                     new(CommandImageType.Import, Resources.ImportStatusHelp)),
-                new ImageEnumeration(ScopeType.ApplicationHelpPage,        Resources.StatusHelp),
+
+                new ImageEnumeration(ScopeType.ApplicationHelpPage,       Resources.Icon_HelpIndexFile,
+                    new(CommandImageType.Default, Resources.StatusHelp),
+                    new(CommandImageType.Delete, Resources.DeleteStatusHelp)),
                 new ImageEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpIndexFile),
                 new ImageEnumeration(ScopeType.ApplicationOption,          Resources.Icon_Settings, Resources.Settings),
 

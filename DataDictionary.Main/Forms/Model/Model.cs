@@ -13,6 +13,8 @@ namespace DataDictionary.Main.Forms.Model
         public Model() : base()
         {
             InitializeComponent();
+            SetRowState(bindingModel);
+            SetTitle(bindingModel);
         }
 
         public Model(IModelValue? model) : this()
@@ -27,8 +29,6 @@ namespace DataDictionary.Main.Forms.Model
 
             bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Models, w => key.Equals(w));
             bindingModel.Position = 0;
-
-            Setup(bindingModel);
         }
 
         private void Model_Load(object sender, EventArgs e)
