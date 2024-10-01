@@ -79,20 +79,24 @@ namespace DataDictionary.Main.Forms
             dataTableValue.DataSource = null;
         }
 
-        private void bindingTableValue_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        protected dynamic? SelectedItem = null;
+
+        protected virtual void RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //TODO: Add support for more items
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ISchemaValue schemaItem)
-            { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
+            SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem;
 
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableValue tableItem)
-            { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
+            //TODO: Revise to use a Generic and pass the constructor method.
+            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ISchemaValue schemaItem)
+            //{ Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableColumnValue columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
+            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableValue tableItem)
+            //{ Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeValue attributeItem)
-            { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableColumnValue columnItem)
+            //{ Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
+
+            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeValue attributeItem)
+            //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }
 

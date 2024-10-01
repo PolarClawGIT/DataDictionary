@@ -79,7 +79,7 @@
             bindingTableValue.ReadOnly = true;
             bindingTableValue.Size = new Size(594, 295);
             bindingTableValue.TabIndex = 0;
-            bindingTableValue.RowHeaderMouseDoubleClick += bindingTableValue_RowHeaderMouseDoubleClick;
+            bindingTableValue.RowHeaderMouseDoubleClick += RowHeaderMouseDoubleClick;
             // 
             // dataTableLayout
             // 

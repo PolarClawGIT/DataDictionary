@@ -22,9 +22,12 @@ namespace DataDictionary.Main.Forms
         /// The Constructor for the Detail/Selected Form.
         /// </summary>
         public Func<TValue, TForm>? SelectedForm { get; init; }
+        ScopeType formScope;
 
         public HistoryView(ScopeType scope, ILoadHistoryData loader) : base(loader)
         {
+            formScope = scope;
+
             SetCommand(scope,
                 CommandImageType.Browse,
                 CommandImageType.Open);
@@ -46,7 +49,7 @@ namespace DataDictionary.Main.Forms
             {
                 BindingList<TValue> values = new BindingList<TValue>(GetHistoryDetail(SelectedValue).OfType<TValue>().ToList());
 
-                Form form = Activate((data) => new Forms.DetailDataView(data), values);
+                Form form = Activate((data) => new Forms.DetailDataView(formScope, data), values);
                 //form.Icon = ImageEnumeration.GetIcon(SelectedValue.Scope);
                 //form.Text = SelectedValue.Title;
             }

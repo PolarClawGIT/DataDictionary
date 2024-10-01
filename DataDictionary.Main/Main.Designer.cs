@@ -184,7 +184,7 @@
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(222, 22);
             menuAttributes.Text = "browse &Attributes";
-            menuAttributes.Click += menuAttributes_Click;
+            menuAttributes.Click += MenuAttributes_Click;
             // 
             // menuAttributeAlaises
             // 
@@ -318,7 +318,7 @@
             menuCatalogItem.Name = "menuCatalogItem";
             menuCatalogItem.Size = new Size(221, 22);
             menuCatalogItem.Text = "browse Catalogs";
-            menuCatalogItem.Click += menuCatalogItem_Click;
+            menuCatalogItem.Click += MenuCatalogItem_Click;
             // 
             // menuSchemaItem
             // 
