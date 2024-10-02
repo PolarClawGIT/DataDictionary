@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DetailDataView : ApplicationData, IApplicationDataBind
+    partial class DetailDataView : ApplicationData
     {
         public DetailDataView() : base()
         {
@@ -21,25 +21,19 @@ namespace DataDictionary.Main.Forms
         public DetailDataView(IBindingTable data) : this()
         {
             bindingSource.DataSource = data;
-
-            if (data is IBindingName dataName)
-            { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
-            else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
+            Text = GetTitle(data);
         }
 
         public DetailDataView(IBindingData data) : this()
         {
             bindingSource.DataSource = data;
-
-            if (data is IBindingName dataName)
-            { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
-            else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
+            Text = GetTitle(data);
         }
 
         public DetailDataView(IBindingList data) : this()
         {
             bindingSource.DataSource = data;
-            this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
+            Text = GetTitle(data);
         }
 
         public DetailDataView(ScopeType scope, IBindingTable data) : this(data)
@@ -55,10 +49,6 @@ namespace DataDictionary.Main.Forms
         { return ReferenceEquals(bindingSource.DataSource, item); }
 
         private void BindingDataView_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-
-        public bool BindDataCore()
         {
             bindingTableValue.DataSource = bindingSource;
 
@@ -70,35 +60,37 @@ namespace DataDictionary.Main.Forms
                     dataTableValue.DataSource = data;
                 }
             }
-            return true;
         }
 
-        public void UnbindDataCore()
+        /// <summary>
+        /// Creates a Title based on Reflection.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        String GetTitle(Object data)
         {
-            bindingTableValue.DataSource = null;
-            dataTableValue.DataSource = null;
+            var dataType = data.GetType();
+            var dataArgs = dataType.GetGenericArguments();
+
+            if (dataArgs.Length > 0)
+            {
+                String argsString = String.Join(", ", dataArgs.Select(s => s.Name));
+                String typeName = dataType.Name.Substring(0, dataType.Name.IndexOf('`'));
+
+                if (dataArgs.Length == 1)
+                { return String.Format("Data: {0}", argsString); }
+
+                return String.Format("Data: {0}<{1}>", typeName, argsString);
+            }
+            else if (data is IBindingName tableName)
+            { return String.Format("Data: {0}", tableName.BindingName); }
+            else { return String.Format("Data: {0}", dataType.Name); }
         }
 
         protected dynamic? SelectedItem = null;
 
         protected virtual void RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem;
-
-            //TODO: Revise to use a Generic and pass the constructor method.
-            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ISchemaValue schemaItem)
-            //{ Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
-
-            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableValue tableItem)
-            //{ Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
-
-            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableColumnValue columnItem)
-            //{ Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
-
-            //if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeValue attributeItem)
-            //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
-
-        }
+        { SelectedItem = bindingTableValue.Rows[e.RowIndex].DataBoundItem; }
 
     }
 }
