@@ -1,4 +1,4 @@
-﻿CREATE TABLE [Hs_General].[ApplicationHelp] (
+﻿CREATE TABLE [HsGeneral].[HelpSubject] (
     [HelpId]      UNIQUEIDENTIFIER NOT NULL,
     [HelpSubject] NVARCHAR (100)   NOT NULL,
     [HelpToolTip] NVARCHAR (500)   NULL,
@@ -9,9 +9,9 @@
     [SysEnd]      DATETIME2 (7)    NOT NULL
 );
 GO
-CREATE CLUSTERED INDEX [ix_ApplicationHelp]
-    ON [Hs_General].[ApplicationHelp]([SysEnd] ASC, [SysStart] ASC)
+CREATE CLUSTERED INDEX [IX_HelpSubject]
+    ON [HsGeneral].[HelpSubject]([SysEnd] ASC, [SysStart] ASC)
 GO
-CREATE INDEX [fk_ApplicationHelp]
-    ON [Hs_General].[ApplicationHelp]([HelpId] ASC)
+CREATE INDEX [FK_HelpSubject]
+    ON [HsGeneral].[HelpSubject]([HelpId] ASC)
 GO

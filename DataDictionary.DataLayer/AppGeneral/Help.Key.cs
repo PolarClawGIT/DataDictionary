@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
     /// Primary key for the Help Documentation.

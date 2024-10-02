@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_General].[procSetApplicationHelp]
+﻿CREATE PROCEDURE [AppGeneral].[procSetHelpSubject]
 		@HelpId UniqueIdentifier = null,
-		@Data [App_General].[typeApplicationHelp] ReadOnly
+		@Data [AppGeneral].[typeHelpSubject] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ApplicationHelp.
+/* Description: Performs Set on HelpSubject.
 */
 
 -- Transaction Handling
@@ -37,16 +37,16 @@ Begin Try
 	Where	(@HelpId is Null or @HelpId = D.[HelpId])
 
 	-- Apply Changes
-	Delete From [App_General].[ApplicationHelp]
-	From	[App_General].[ApplicationHelp] T
+	Delete From [AppGeneral].[HelpSubject]
+	From	[AppGeneral].[HelpSubject] T
 			Left Join @Values S
 			On	T.[HelpId] = S.[HelpId]
 	Where	S.[HelpId] is Null And
 			T.[HelpId] In (
 				Select	[HelpId]
-				From	[App_General].[ApplicationHelp]
+				From	[AppGeneral].[HelpSubject]
 				Where	(@HelpId is Null Or @HelpId = [HelpId]))
-	Print FormatMessage ('Delete [App_General].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[HelpId],
@@ -61,18 +61,18 @@ Begin Try
 				[HelpToolTip],
 				[HelpText],
 				[NameSpace]
-		From	[App_General].[ApplicationHelp])
-	Update [App_General].[ApplicationHelp]
+		From	[AppGeneral].[HelpSubject])
+	Update [AppGeneral].[HelpSubject]
 	Set		[HelpSubject] = S.[HelpSubject],
 			[HelpToolTip] = S.[HelpToolTip],
 			[HelpText] = S.[HelpText],
 			[NameSpace] = S.[NameSpace]
-	From	[App_General].[ApplicationHelp] T
+	From	[AppGeneral].[HelpSubject] T
 			Inner Join [Delta] S
 			On	T.[HelpId] = S.[HelpId]
-	Print FormatMessage ('Update [App_General].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_General].[ApplicationHelp] (
+	Insert Into [AppGeneral].[HelpSubject] (
 			[HelpId],
 			[HelpSubject],
 			[HelpToolTip],
@@ -84,10 +84,10 @@ Begin Try
 			S.[HelpText],
 			S.[NameSpace]
 	From	@Values S
-			Left Join [App_General].[ApplicationHelp] T
+			Left Join [AppGeneral].[HelpSubject] T
 			On	S.[HelpId] = T.[HelpId]
 	Where	T.[HelpId] is Null
-	Print FormatMessage ('Insert [App_General].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

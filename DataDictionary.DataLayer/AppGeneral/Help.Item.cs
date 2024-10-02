@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.AppGeneral
 {
 
     /// <summary>

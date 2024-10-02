@@ -1,2 +1,0 @@
-﻿namespace DataDictionary.DataLayer.ApplicationData;
-

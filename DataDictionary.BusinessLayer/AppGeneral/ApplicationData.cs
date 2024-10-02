@@ -3,7 +3,7 @@ using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Application
+namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <summary>
     /// Interface representing Application data

@@ -364,16 +364,16 @@ If the database is empty, this can be addressed by using the application. Under 
   <HelpSubjectValue>
     <HelpId>834e8f05-d483-4c94-9b3b-0acbc2748f72</HelpId>
     <HelpSubject>Unit Test Restored</HelpSubject>
-    <HelpText>{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil Segoe UI;}}
+    <HelpText>{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}}
 {\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-\pard\f0\fs18\lang1033 Unit Test Help Text\par
+\pard\f0\fs18\lang1033 Unit Test Hel\f1 p\f0\par
 }
 </HelpText>
     <NameSpace>Unit Test</NameSpace>
     <ModifiedBy>PRIME\Billy</ModifiedBy>
-    <ModifiedOn>2024-09-27T18:34:20.3941644-07:00</ModifiedOn>
-    <IsInserted>false</IsInserted>
-    <IsUpdated>true</IsUpdated>
+    <ModifiedOn>2024-09-30T18:12:03.5679605-07:00</ModifiedOn>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>

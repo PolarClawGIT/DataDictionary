@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.AppGeneral;
 
-namespace DataDictionary.BusinessLayer.Application
+namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
     public interface IHelpSubjectIndexPath : IPathItem

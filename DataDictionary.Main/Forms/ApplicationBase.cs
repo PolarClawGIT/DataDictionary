@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using System.ComponentModel;

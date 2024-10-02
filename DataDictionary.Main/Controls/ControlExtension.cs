@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Application;
+﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer;
 using System;

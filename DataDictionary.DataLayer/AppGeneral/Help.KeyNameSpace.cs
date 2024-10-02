@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
     /// Unique Key for Help Documents, by NameSpace

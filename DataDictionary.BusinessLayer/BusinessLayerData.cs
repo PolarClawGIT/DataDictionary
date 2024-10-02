@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
-            applicationValues = new Application.ApplicationData();
+            applicationValues = new AppGeneral.ApplicationData();
 
             domainValues = new Domain.DomainModel() { Models = modelValues, SubjectAreas = subjectAreaValues };
             databaseValues = new Database.DatabaseModel();

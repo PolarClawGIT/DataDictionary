@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
     /// Generic Base class for Help Items.
@@ -41,7 +41,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_General].[procGetApplicationHelp]";
+            command.CommandText = "[AppGeneral].[procGetHelpSubject]";
 
             command.AddParameter("@HelpId", parameters.helpId);
             command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
@@ -62,11 +62,11 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_General].[procSetApplicationHelp]";
+            command.CommandText = "[AppGeneral].[procSetHelpSubject]";
             command.AddParameter("@HelpId", parameters.helpId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
-            command.AddParameter("@Data", "[App_General].[typeApplicationHelp]", data);
+            command.AddParameter("@Data", "[AppGeneral].[typeHelpSubject]", data);
             return command;
         }
 

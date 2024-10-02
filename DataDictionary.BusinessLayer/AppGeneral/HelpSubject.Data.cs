@@ -1,11 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.AppGeneral;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Application
+namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <summary>
     /// Interface component for the HelpSubject data

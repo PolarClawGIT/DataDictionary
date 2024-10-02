@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.AppGeneral;
 
-namespace DataDictionary.BusinessLayer.Application
+namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpItem,

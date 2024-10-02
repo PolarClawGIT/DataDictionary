@@ -1197,4 +1197,83 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ModifiedBy]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d963ebd8-91ef-4a67-be15-3df25334dbba" ChangeDateTime="10/02/2024 15:13:05">
+    <Property Name="ElementName" Value="[App_General].[ApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_General]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[HelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bf09fc23-aef1-47ca-87d8-53084ec1cbf3" ChangeDateTime="10/02/2024 15:15:07">
+    <Property Name="ElementName" Value="[Hs_General].[ApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[Hs_General]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[HelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="78e9ffe2-4194-462c-9802-af926ddcbf81" ChangeDateTime="10/02/2024 15:15:38">
+    <Property Name="ElementName" Value="[Hs_General].[HelpSubject].[ix_ApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[Hs_General].[HelpSubject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_HelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7b5840b8-47db-4cc0-a333-974e17ac51c7" ChangeDateTime="10/02/2024 15:16:00">
+    <Property Name="ElementName" Value="[Hs_General].[HelpSubject].[fk_ApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[Hs_General].[HelpSubject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_HelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8f5a95dd-5c51-4106-9437-eb1093176c61" ChangeDateTime="10/02/2024 15:16:35">
+    <Property Name="ElementName" Value="[App_General].[typeApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[App_General]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeHelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4cd737a1-bebd-4448-98be-a07c29b8289a" ChangeDateTime="10/02/2024 15:17:00">
+    <Property Name="ElementName" Value="[App_General].[procGetApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_General]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetHelpSubject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c73f8964-3b48-4447-b17b-b7a9629d2c9a" ChangeDateTime="10/02/2024 15:20:45">
+    <Property Name="ElementName" Value="[App_General].[procSetApplicationHelp]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_General]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetHelpSubject]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="a360f0c9-423a-45cc-962a-d42cf1481147" ChangeDateTime="10/02/2024 15:51:02">
+    <Property Name="ElementName" Value="[App_General].[procGetHelpSubject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="f257c21e-7867-4a95-92ff-792402cb93f6" ChangeDateTime="10/02/2024 15:51:37">
+    <Property Name="ElementName" Value="[App_General].[procSetHelpSubject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="1ae865d8-47c6-4861-bd91-ca70129724da" ChangeDateTime="10/02/2024 15:52:10">
+    <Property Name="ElementName" Value="[App_General].[HelpSubject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="58697748-ef38-46b6-8d8e-77c449f69b48" ChangeDateTime="10/02/2024 15:52:30">
+    <Property Name="ElementName" Value="[App_General].[typeHelpSubject]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="3a7c5944-558a-443d-8060-3ff9337e84c3" ChangeDateTime="10/02/2024 15:54:22">
+    <Property Name="ElementName" Value="[Hs_General].[HelpSubject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="HsGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

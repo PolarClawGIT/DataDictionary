@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_General].[procGetApplicationHelp]
+﻿CREATE PROCEDURE [AppGeneral].[procGetHelpSubject]
 		@HelpId UniqueIdentifier = Null, 
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
 		@IncludeHistory Bit = 0, -- History is included, @AsOfUtcDate and @IncludeDeleted is ignored
@@ -6,7 +6,7 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on ApplicationHelp.
+/* Description: Performs Get on HelpSubject.
 */
 ;With [Data] As (
 	Select	A.[HelpId],
@@ -23,8 +23,8 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 				IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
 				IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd], 1,0))
 				As [IsCurrent]
-	From	[App_General].[ApplicationHelp] For System_Time All A -- All Values
-			Left Join [App_General].[ApplicationHelp] For System_Time All P -- Prior
+	From	[AppGeneral].[HelpSubject] For System_Time All A -- All Values
+			Left Join [AppGeneral].[HelpSubject] For System_Time All P -- Prior
 			On	A.[HelpId] = P.[HelpId] And
 				A.[SysStart] = P.[SysEnd]
 	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And
@@ -45,11 +45,11 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			Convert(Bit, IIF(
 				-- Is there an Active record after this record
 				(Select Min([SysStart])
-					From [App_General].[ApplicationHelp]
+					From [AppGeneral].[HelpSubject]
 					Where [HelpId] = A.[HelpId] And [SysStart] > A.[SysStart])
 				Is Null, 1, 0)) As [IsCurent]
-	From	[App_General].[ApplicationHelp] For System_Time All A -- All Values
-			Left Join [App_General].[ApplicationHelp] For System_Time All N -- Next
+	From	[AppGeneral].[HelpSubject] For System_Time All A -- All Values
+			Left Join [AppGeneral].[HelpSubject] For System_Time All N -- Next
 			On	A.[HelpId] = N.[HelpId] And
 				A.[SysEnd] = N.[SysStart]
 	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And

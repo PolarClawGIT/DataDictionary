@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_General].[typeApplicationHelp] AS TABLE
+﻿CREATE TYPE [AppGeneral].[typeHelpSubject] AS TABLE
 (
 	[HelpId]        UniqueIdentifier Null,
 	[HelpSubject]   NVarChar(100)    Null,
