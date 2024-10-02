@@ -28,6 +28,7 @@ namespace DataDictionary.Main.Forms
         {
             formScope = scope;
 
+            SetIcon(scope);
             SetCommand(scope,
                 CommandImageType.Browse,
                 CommandImageType.Open);
@@ -45,13 +46,15 @@ namespace DataDictionary.Main.Forms
         {
             base.BrowseCommand_Click(sender, e);
 
-            if (SelectedValue is not null)
+            if (SelectedValue is not null && SelectedForm is not null)
             {
                 BindingList<TValue> values = new BindingList<TValue>(GetHistoryDetail(SelectedValue).OfType<TValue>().ToList());
 
-                Form form = Activate((data) => new Forms.DetailDataView(formScope, data), values);
-                //form.Icon = ImageEnumeration.GetIcon(SelectedValue.Scope);
-                //form.Text = SelectedValue.Title;
+                Activate((data) =>
+                    new Forms.DetailDataView<TValue, TForm>
+                        (formScope, data)
+                    { SelectedForm = (data) => SelectedForm(data) },
+                    values);
             }
 
         }

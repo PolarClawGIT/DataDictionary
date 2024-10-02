@@ -220,6 +220,7 @@
             historyModificationData.UseCompatibleStateImageBehavior = false;
             historyModificationData.View = View.Details;
             historyModificationData.SelectedIndexChanged += HistoryModificationData_SelectedIndexChanged;
+            historyModificationData.DoubleClick += HistoryModificationData_DoubleClick;
             historyModificationData.Resize += HistoryModificationData_Resize;
             // 
             // historyModificationColumn
@@ -245,6 +246,7 @@
             historyValuesData.UseCompatibleStateImageBehavior = false;
             historyValuesData.View = View.Details;
             historyValuesData.SelectedIndexChanged += HistoryValuesData_SelectedIndexChanged;
+            historyValuesData.DoubleClick += HistoryValuesData_DoubleClick;
             historyValuesData.Resize += HistoryValuesData_Resize;
             // 
             // historyTitleColumn

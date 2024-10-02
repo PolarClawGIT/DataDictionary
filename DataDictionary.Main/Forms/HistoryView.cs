@@ -174,5 +174,11 @@ namespace DataDictionary.Main.Forms
             { modifiedOnDate.Text = modifiedOn.ToString(); }
             else { modifiedOnDate.Text = String.Empty; }
         }
+
+        private void HistoryModificationData_DoubleClick(object sender, EventArgs e)
+        { OpenCommand_Click(sender, e); }
+
+        private void HistoryValuesData_DoubleClick(object sender, EventArgs e)
+        { BrowseCommand_Click(sender, e); }
     }
 }
