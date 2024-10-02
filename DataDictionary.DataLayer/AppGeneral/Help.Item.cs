@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType, ITemporalItem
+    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, ITemporalItem
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -67,9 +67,6 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
-
-        /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ApplicationHelpPage;
 
         /// <inheritdoc/>
         public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
