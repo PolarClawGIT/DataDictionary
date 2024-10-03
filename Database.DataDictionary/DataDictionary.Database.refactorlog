@@ -1276,4 +1276,60 @@
     <Property Name="NewSchema" Value="HsGeneral" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="70d61a6a-5ce6-452e-a3ae-be558832a78a" ChangeDateTime="10/03/2024 17:03:34">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPrinciple].[SecurityPrincipleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityPrinciple]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PrincipleId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0eece502-7fcb-4f64-828b-8103b21147f4" ChangeDateTime="10/03/2024 17:04:23">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityRole].[SecurityRoleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityRole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RoleId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d15975ac-a912-4a53-ba2e-e88a7e4a100e" ChangeDateTime="10/03/2024 17:04:36">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityRole].[SecurityRoleName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityRole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RoleName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="122f51a5-1e8a-4412-b365-d9fb0b4b9d96" ChangeDateTime="10/03/2024 17:05:08">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPrinciple].[SecurityPrinciple]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityPrinciple]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PrincipleLogin]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ccd5e62a-ab23-4831-8928-d11c6b9e0f19" ChangeDateTime="10/03/2024 17:05:54">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityMembership].[SecurityRoleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityMembership]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RoleId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7654977e-010f-4f0f-8391-828feb0a3556" ChangeDateTime="10/03/2024 17:06:05">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityMembership].[SecurityPrincipleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityMembership]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[PrincipleId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e23b46f2-d911-437c-bc5a-cb2e4636c547" ChangeDateTime="10/03/2024 17:06:53">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPermission].[SecurityRoleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityPermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RoleId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="923c78de-ad5c-4b1f-a282-61f98491dbc4" ChangeDateTime="10/03/2024 17:07:43">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPermission].[SecurityObjectId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityPermission]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[SystemId]" />
+  </Operation>
 </Operations>

@@ -77,10 +77,18 @@
     <Folder Include="AppGeneral\Views" />
     <Folder Include="HsGeneral" />
     <Folder Include="HsGeneral\Tables" />
+    <Folder Include="AppSecurity" />
+    <Folder Include="AppSecurity\Tables" />
+    <Folder Include="AppSecurity\Functions" />
+    <Folder Include="AppSecurity\Policy" />
+    <Folder Include="AppSecurity\Views" />
+    <Folder Include="AppSecurity\Stored Procedures" />
+    <Folder Include="AppSecurity\User Defined Types" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
+    <None Include="AppSecurity\SecurityNotes.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
@@ -88,9 +96,6 @@
     <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityPermission.sql" />
     <Build Include="App_DataDictionary\Tables\Model.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
@@ -102,7 +107,6 @@
     <Build Include="App_DataDictionary\Tables\DatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseExtendedProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
@@ -127,9 +131,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationHelp.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationHelp.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationHelp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
@@ -288,6 +289,19 @@
     <Build Include="AppGeneral\Stored Procedures\procSetHelpSubject.sql" />
     <Build Include="AppGeneral\User Defined Types\typeHelpSubject.sql" />
     <Build Include="Security\HsGeneral.sql" />
+    <Build Include="Security\AppSecurity.sql" />
+    <Build Include="Obsolete\ApplicationHelp.sql" />
+    <Build Include="Obsolete\procGetApplicationHelp.sql" />
+    <Build Include="Obsolete\procSetApplicationHelp.sql" />
+    <Build Include="Obsolete\typeApplicationHelp.sql" />
+    <Build Include="AppSecurity\Tables\SecurityRole.sql" />
+    <Build Include="AppSecurity\Tables\SecurityPrinciple.sql" />
+    <Build Include="AppSecurity\Tables\SecurityPermission.sql" />
+    <Build Include="AppSecurity\Tables\SecurityMembership.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurityPrinciple.sql" />
+    <Build Include="AppSecurity\Policy\policySecurityPrinciple.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurityHelpSubject.sql" />
+    <Build Include="AppSecurity\Policy\policySecurityHelpSubject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
