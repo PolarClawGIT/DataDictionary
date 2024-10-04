@@ -4,7 +4,5 @@
     ADD BLOCK PREDICATE [AppSecurity].[funcSecurityPrinciple]()
 		ON [AppSecurity].[SecurityMembership],
     ADD BLOCK PREDICATE [AppSecurity].[funcSecurityPrinciple]()
-		ON [AppSecurity].[SecurityRole],
-    ADD BLOCK PREDICATE [AppSecurity].[funcSecurityPrinciple]()
-		ON [AppSecurity].[SecurityPermission]
+		ON [AppSecurity].[SecurityRole]
 WITH (STATE = ON, SCHEMABINDING = ON)

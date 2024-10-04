@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [AppSecurity].[SecurityMembership]
 (
+	-- Resolves many to many between Security Role and Security Principle.
 	[RoleId] UniqueIdentifier Not Null,
 	[PrincipleId] UniqueIdentifier Not Null,
 	-- TODO: Add System Version later once the schema is locked down

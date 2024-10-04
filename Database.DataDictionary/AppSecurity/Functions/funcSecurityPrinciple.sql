@@ -5,8 +5,7 @@ As Return
 	Where	Is_RoleMember('db_owner') = 1 And
 			Is_RoleMember('DataDictionaryApp') = 0
 	Union
-	Select	Distinct
-			Convert(Bit, 1) As [IsAllowed]
+	Select	Convert(Bit, 1) As [IsAllowed]
 	From	[AppSecurity].[SecurityPrinciple] P
 			Inner Join [AppSecurity].[SecurityMembership] M
 			On	P.[PrincipleId] = M.[PrincipleId]

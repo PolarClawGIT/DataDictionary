@@ -302,6 +302,12 @@
     <Build Include="AppSecurity\Policy\policySecurityPrinciple.sql" />
     <Build Include="AppSecurity\Functions\funcSecurityHelpSubject.sql" />
     <Build Include="AppSecurity\Policy\policySecurityHelpSubject.sql" />
+    <Build Include="AppSecurity\Views\SecurityObject.sql" />
+    <Build Include="AppSecurity\Tables\SecurityOwner.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurityObject.sql" />
+    <Build Include="AppSecurity\Policy\policySecurityObject.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeSecurityObject.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurityPrincipalPermisson.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
