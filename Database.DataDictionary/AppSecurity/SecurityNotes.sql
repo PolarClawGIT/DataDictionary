@@ -22,6 +22,8 @@ Select	IS_SRVROLEMEMBER('sysadmin') As [IsSysAdmin],
 --   * must have SCHEMABINDING 
 --   * best of my knowledge returns one row with a value of "1" for permission allowed (more testing needed)
 --   * best of my knowledge return no rows for permission denied (more testing needed)
+--   * Filter option requires the user to have Select permissions on the function to execute Select
+--   * Block option requires the user to have Select permissions on the function to execute Select/Insert/Update/Delete
 --
 -- The security Policy enforces the Insert/Update/Delete on a specific row.
 -- The statement may be executed directly or threw a stored procedure, the Policy still applies.

@@ -1,9 +1,20 @@
 ﻿CREATE FUNCTION [AppSecurity].[funcSecurityPrincipalPermisson] (@ObjectId UniqueIdentifier = null)
 Returns Table With SchemaBinding
 As Return
--- Used to return the Security Permissions for the current Original_Login.
-Select	P.[PrincipleId],
+-- Master Security Function.
+-- All other Security Functions use this function.
+With [Login] As (
+	-- Database Level security
+	Select	Original_Login() As [PrincipleLogin],
+			Convert(Bit, IIF(
+				Is_RoleMember('DataDictionaryApp') = 0 And -- Cannot be executing using the application
+				Is_RoleMember('db_denydatawriter') = 0 And
+				(Is_RoleMember('db_datawriter') = 1 Or
+				 Is_RoleMember('db_owner') = 1), 1, 0)) As [IsDbWriter])
+Select	L.[PrincipleLogin],
+		P.[PrincipleId],
 		@ObjectId As [ObjectId],
+		Convert(Bit,Min(Convert(Int,L.[IsDbWriter]))) As [IsDbWriter],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsSecurityAdmin],0)))) As [IsSecurityAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpAdmin],0)))) As [IsHelpAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpOwner],0)))) As [IsHelpOwner],
@@ -19,7 +30,10 @@ Select	P.[PrincipleId],
 		Convert(Bit,Max(Convert(Int,IsNull(S.[IsDeny],0)))) As [IsDeny],
 		Convert(Bit,Max(IIF(O.[PrincipleId] = P.[PrincipleId],1,0))) As [IsOwner],
 		Convert(Bit,Max(IIF(O.[ObjectId] is Null, 0, 1))) As [HasOwner]
-From	[AppSecurity].[SecurityPrinciple] P
+From	[Login] L
+		-- Application Level Security
+		Left Join[AppSecurity].[SecurityPrinciple] P
+		On	L.[PrincipleLogin] = P.[PrincipleLogin]
 		Left Join [AppSecurity].[SecurityMembership] M
 		On	P.[PrincipleId] = M.[PrincipleId]
 		Left Join [AppSecurity].[SecurityRole] R
@@ -29,7 +43,6 @@ From	[AppSecurity].[SecurityPrinciple] P
 			S.[ObjectId] = @ObjectId
 		Left Join [AppSecurity].[SecurityOwner] O
 		On	O.[ObjectId] = @ObjectId
-Where	P.[PrincipleLogin] = Original_Login() And
-		Is_RoleMember('DataDictionaryApp') = 1
-Group By P.[PrincipleId]
+Group By L.[PrincipleLogin],
+		P.[PrincipleId]
 GO
