@@ -36,6 +36,19 @@ Begin Try
 	From	@Data D
 	Where	(@HelpId is Null or @HelpId = D.[HelpId])
 
+	-- Deal with Ownership, Sets up Row Level Security
+	Insert Into [AppSecurity].[SecurityOwner] (
+			[PrincipleId],
+			[ObjectId])
+	Select	S.[PrincipleId],
+			V.[HelpId]
+	From	@Values V
+			Cross Apply [AppSecurity].[funcSecurityPrincipalPermisson](V.[HelpId]) S
+	Where	S.[IsHelpOwner] = 1 And
+			S.[HasOwner] = 0 And
+			S.[PrincipleId] is not null
+	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	-- Apply Changes
 	Delete From [AppGeneral].[HelpSubject]
 	From	[AppGeneral].[HelpSubject] T
