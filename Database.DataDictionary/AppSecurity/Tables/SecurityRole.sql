@@ -2,6 +2,7 @@
 (
 	[RoleId] UniqueIdentifier NOT NULL CONSTRAINT [DF_SecurityRoleId] DEFAULT (newid()),
 	[RoleName] SysName Not Null,
+	[RoleAnnotation] [App_DataDictionary].[typeDescription] Null, --Additional Notes
 	-- Permission List
 	-- Admin: 0 = not an administrator (could be an administrator in a different role)
 	--        1 = administrator for type of objects
@@ -13,17 +14,17 @@
 	--    This is an intentional de-normalization.
 	--    Code must be changed in order to implement a new permission or change an existing one.
 	--    The alternative is to use "magic strings" that may be missed or not configured.
-	[IsSecurityAdmin] Bit Null,
-	[IsHelpAdmin] Bit Null,
-	[IsHelpOwner] Bit Null,
-	[IsCatalogAdmin] Bit Null,
-	[IsCatalogOwner] Bit Null,
-	[IsLibraryAdmin] Bit Null,
-	[IsLibraryOwner] Bit Null,
-	[IsModelAdmin] Bit Null,
-	[IsModelOwner] Bit Null,
-	[IsScriptAdmin] Bit Null,
-	[IsScriptOwner] Bit Null,
+	[IsSecurityAdmin] Bit Not Null,
+	[IsHelpAdmin] Bit Not Null,
+	[IsHelpOwner] Bit Not Null,
+	[IsCatalogAdmin] Bit Not Null,
+	[IsCatalogOwner] Bit Not Null,
+	[IsLibraryAdmin] Bit Not Null,
+	[IsLibraryOwner] Bit Not Null,
+	[IsModelAdmin] Bit Not Null,
+	[IsModelOwner] Bit Not Null,
+	[IsScriptAdmin] Bit Not Null,
+	[IsScriptOwner] Bit Not Null,
 	-- TODO: Add System Version later once the schema is locked down
 	[ModifiedBy] SysName Not Null CONSTRAINT [DF_SecurityRole_ModifiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_SecurityRole_SysStart] DEFAULT (sysdatetime()),

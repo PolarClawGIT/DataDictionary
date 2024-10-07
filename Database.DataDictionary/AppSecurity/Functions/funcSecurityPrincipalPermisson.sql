@@ -13,8 +13,9 @@ With [Login] As (
 				 Is_RoleMember('db_owner') = 1), 1, 0)) As [IsDbWriter])
 Select	L.[PrincipleLogin],
 		P.[PrincipleId],
-		@ObjectId As [ObjectId],
+		-- DB Security
 		Convert(Bit,Min(Convert(Int,L.[IsDbWriter]))) As [IsDbWriter],
+		-- Role Security
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsSecurityAdmin],0)))) As [IsSecurityAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpAdmin],0)))) As [IsHelpAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpOwner],0)))) As [IsHelpOwner],
@@ -26,10 +27,12 @@ Select	L.[PrincipleLogin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsModelOwner],0)))) As [IsModelOwner],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsScriptOwner],0)))) As [IsScriptAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsScriptOwner],0)))) As [IsScriptOwner],
-		Convert(Bit,Max(Convert(Int,IsNull(S.[IsGrant],0)))) As [IsGrant],
-		Convert(Bit,Max(Convert(Int,IsNull(S.[IsDeny],0)))) As [IsDeny],
+		-- Object Security
+		@ObjectId As [ObjectId],
 		Convert(Bit,Max(IIF(O.[PrincipleId] = P.[PrincipleId],1,0))) As [IsOwner],
-		Convert(Bit,Max(IIF(O.[ObjectId] is Null, 0, 1))) As [HasOwner]
+		Convert(Bit,Max(IIF(O.[ObjectId] is Null, 0, 1))) As [HasOwner],
+		Convert(Bit,Max(Convert(Int,IsNull(S.[IsGrant],0)))) As [IsGrant],
+		Convert(Bit,Max(Convert(Int,IsNull(S.[IsDeny],0)))) As [IsDeny]
 From	[Login] L
 		-- Application Level Security
 		Left Join[AppSecurity].[SecurityPrinciple] P

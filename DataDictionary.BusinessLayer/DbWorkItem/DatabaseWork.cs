@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -158,8 +159,25 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             {
                 Command execute = command(Connection);
 
+                //TODO: Add Error Trap for known errors, such as 33504 because of Row Level security.
+                //Proof of Concept code below. Make a lookup of some sort.
+
                 try { Connection.ExecuteNonQuery(execute); }
-                catch (Exception ex) { ex.Data.Add("Command", execute.CommandText); throw; }
+                catch (Exception ex)
+                {
+                    ex.Data.Add("Command", execute.CommandText);
+
+                    if (ex is SqlException sqlError)
+                    {
+                        if(sqlError.Number == 33504)
+                        {
+                            Exception newEx = new InvalidOperationException("Database Permission Denied", ex);
+                            throw newEx;
+                        }
+                        else { throw; }
+                    }
+                    else { throw; }
+                }
             }
         }
 
@@ -286,7 +304,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}",target.BindingName),
+                workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: target.LoadCommand);
         }
