@@ -159,24 +159,11 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             {
                 Command execute = command(Connection);
 
-                //TODO: Add Error Trap for known errors, such as 33504 because of Row Level security.
-                //Proof of Concept code below. Make a lookup of some sort.
-
                 try { Connection.ExecuteNonQuery(execute); }
                 catch (Exception ex)
                 {
                     ex.Data.Add("Command", execute.CommandText);
-
-                    if (ex is SqlException sqlError)
-                    {
-                        if(sqlError.Number == 33504)
-                        {
-                            Exception newEx = new InvalidOperationException("Database Permission Denied", ex);
-                            throw newEx;
-                        }
-                        else { throw; }
-                    }
-                    else { throw; }
+                    throw;
                 }
             }
         }
