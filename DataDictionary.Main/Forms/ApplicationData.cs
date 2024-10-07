@@ -184,10 +184,10 @@ namespace DataDictionary.Main.Forms
             commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
             toolStripSeparator.Visible = false;
-            commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
