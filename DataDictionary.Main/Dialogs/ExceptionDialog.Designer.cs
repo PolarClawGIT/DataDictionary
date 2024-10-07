@@ -37,6 +37,8 @@
             exceptionMessageLayout = new Label();
             exceptionMessageData = new TextBox();
             exceptionDetailLayout = new TabControl();
+            exceptionDetailHelpText = new TabPage();
+            helpTextData = new RichTextBox();
             exceptionDetailSummaryLayout = new TabPage();
             tableLayoutPanel1 = new TableLayoutPanel();
             exceptionApplicationLayout = new Label();
@@ -49,8 +51,6 @@
             exceptionUserNameData = new TextBox();
             exceptionApplicationVersionLayout = new Label();
             exceptionApplicationVersionData = new TextBox();
-            exceptionDetailHelpText = new TabPage();
-            helpTextData = new RichTextBox();
             exceptionDetailDataLayout = new TabPage();
             exceptionData = new DataGridView();
             exceptionDataKey = new DataGridViewTextBoxColumn();
@@ -71,9 +71,9 @@
             exceptionDetailStackTraceLaout.SuspendLayout();
             exceptionLayout.SuspendLayout();
             exceptionDetailLayout.SuspendLayout();
+            exceptionDetailHelpText.SuspendLayout();
             exceptionDetailSummaryLayout.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            exceptionDetailHelpText.SuspendLayout();
             exceptionDetailDataLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)exceptionData).BeginInit();
             exceptionDetailSqlErrorLayout.SuspendLayout();
@@ -178,8 +178,8 @@
             // 
             // exceptionDetailLayout
             // 
-            exceptionDetailLayout.Controls.Add(exceptionDetailSummaryLayout);
             exceptionDetailLayout.Controls.Add(exceptionDetailHelpText);
+            exceptionDetailLayout.Controls.Add(exceptionDetailSummaryLayout);
             exceptionDetailLayout.Controls.Add(exceptionDetailStackTraceLaout);
             exceptionDetailLayout.Controls.Add(exceptionDetailDataLayout);
             exceptionDetailLayout.Controls.Add(exceptionDetailSqlErrorLayout);
@@ -190,6 +190,28 @@
             exceptionDetailLayout.SelectedIndex = 0;
             exceptionDetailLayout.Size = new Size(379, 305);
             exceptionDetailLayout.TabIndex = 4;
+            // 
+            // exceptionDetailHelpText
+            // 
+            exceptionDetailHelpText.Controls.Add(helpTextData);
+            exceptionDetailHelpText.Location = new Point(4, 24);
+            exceptionDetailHelpText.Name = "exceptionDetailHelpText";
+            exceptionDetailHelpText.Padding = new Padding(3);
+            exceptionDetailHelpText.Size = new Size(371, 277);
+            exceptionDetailHelpText.TabIndex = 6;
+            exceptionDetailHelpText.Text = "Help Text";
+            exceptionDetailHelpText.UseVisualStyleBackColor = true;
+            // 
+            // helpTextData
+            // 
+            helpTextData.BackColor = SystemColors.Window;
+            helpTextData.Dock = DockStyle.Fill;
+            helpTextData.Location = new Point(3, 3);
+            helpTextData.Name = "helpTextData";
+            helpTextData.ReadOnly = true;
+            helpTextData.Size = new Size(365, 271);
+            helpTextData.TabIndex = 0;
+            helpTextData.Text = "";
             // 
             // exceptionDetailSummaryLayout
             // 
@@ -322,27 +344,6 @@
             exceptionApplicationVersionData.ReadOnly = true;
             exceptionApplicationVersionData.Size = new Size(359, 23);
             exceptionApplicationVersionData.TabIndex = 9;
-            // 
-            // exceptionDetailHelpText
-            // 
-            exceptionDetailHelpText.Controls.Add(helpTextData);
-            exceptionDetailHelpText.Location = new Point(4, 24);
-            exceptionDetailHelpText.Name = "exceptionDetailHelpText";
-            exceptionDetailHelpText.Padding = new Padding(3);
-            exceptionDetailHelpText.Size = new Size(371, 277);
-            exceptionDetailHelpText.TabIndex = 6;
-            exceptionDetailHelpText.Text = "Help Text";
-            exceptionDetailHelpText.UseVisualStyleBackColor = true;
-            // 
-            // helpTextData
-            // 
-            helpTextData.Dock = DockStyle.Fill;
-            helpTextData.Location = new Point(3, 3);
-            helpTextData.Name = "helpTextData";
-            helpTextData.ReadOnly = true;
-            helpTextData.Size = new Size(365, 271);
-            helpTextData.TabIndex = 0;
-            helpTextData.Text = "";
             // 
             // exceptionDetailDataLayout
             // 
@@ -494,10 +495,10 @@
             exceptionLayout.ResumeLayout(false);
             exceptionLayout.PerformLayout();
             exceptionDetailLayout.ResumeLayout(false);
+            exceptionDetailHelpText.ResumeLayout(false);
             exceptionDetailSummaryLayout.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            exceptionDetailHelpText.ResumeLayout(false);
             exceptionDetailDataLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)exceptionData).EndInit();
             exceptionDetailSqlErrorLayout.ResumeLayout(false);
