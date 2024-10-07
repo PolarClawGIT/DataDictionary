@@ -43,7 +43,7 @@ Begin Try
 	Select	S.[PrincipleId],
 			V.[HelpId]
 	From	@Values V
-			Cross Apply [AppSecurity].[funcSecurityPrincipalPermisson](V.[HelpId]) S
+			Cross Apply [AppSecurity].[funcSecurityPermisson](V.[HelpId]) S
 	Where	S.[IsHelpOwner] = 1 And
 			S.[HasOwner] = 0 And
 			S.[PrincipleId] is not null

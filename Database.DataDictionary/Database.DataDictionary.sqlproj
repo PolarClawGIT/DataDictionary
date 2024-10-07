@@ -307,7 +307,7 @@
     <Build Include="AppSecurity\Functions\funcSecurityObject.sql" />
     <Build Include="AppSecurity\Policy\policySecurityObject.sql" />
     <Build Include="AppSecurity\User Defined Types\typeSecurityObject.sql" />
-    <Build Include="AppSecurity\Functions\funcSecurityPrincipalPermisson.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurityPermisson.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

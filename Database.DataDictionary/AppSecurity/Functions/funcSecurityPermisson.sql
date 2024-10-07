@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppSecurity].[funcSecurityPrincipalPermisson] (@ObjectId UniqueIdentifier = null)
+﻿CREATE FUNCTION [AppSecurity].[funcSecurityPermisson] (@ObjectId UniqueIdentifier = null)
 Returns Table With SchemaBinding
 As Return
 -- Master Security Function.

@@ -2,7 +2,7 @@
 Returns Table With SchemaBinding
 As Return 
 	Select	Convert(Bit, 1) As [IsAllowed]
-	From	[AppSecurity].[funcSecurityPrincipalPermisson](@HelpId)
+	From	[AppSecurity].[funcSecurityPermisson](@HelpId)
 	Where	[IsDbWriter] = 1 Or
 			[IsHelpAdmin] = 1 Or
 			([IsHelpOwner] = 1 And [IsOwner] = 1) Or

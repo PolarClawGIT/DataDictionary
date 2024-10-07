@@ -1332,4 +1332,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[SystemId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="1181bde8-f038-4dd5-af6f-429082e9f4ac" ChangeDateTime="10/07/2024 16:50:51">
+    <Property Name="ElementName" Value="[AppSecurity].[funcSecurityPrincipalPermisson]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcSecurityPermisson]" />
+  </Operation>
 </Operations>
