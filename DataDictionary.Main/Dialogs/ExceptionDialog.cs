@@ -1,4 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Forms;
+using DataDictionary.Main.Forms.General;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,6 +78,8 @@ namespace DataDictionary.Main.Dialogs
             public String? Source { get { return baseException.Source; } }
             public String Message { get { return baseException.Message; } }
             public String StackTrace { get { if (baseException.StackTrace is String valueString) { return valueString; } else { return String.Empty; } } }
+
+            public String? HelpText { get; }
 
             public DateTime EventDate { get { return eventDate; } }
             public String OsVersion { get { return System.Environment.OSVersion.ToString(); } }
@@ -225,6 +231,16 @@ namespace DataDictionary.Main.Dialogs
             {
                 baseException = ex;
                 eventDate = DateTime.Now;
+
+                PathIndex? helpPath = null;
+                if (ex is SqlException sqlEx)
+                { // SQL Exception Help Subjects are formated with [Errors].[SqlException].[number]
+                    helpPath = new PathIndex("Errors", ex.GetType().Name, sqlEx.Number.ToString());
+                }
+                else { }
+
+                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => helpPath is not null && helpPath.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
+                { HelpText = subject.HelpText; }
             }
         }
 
@@ -247,6 +263,13 @@ namespace DataDictionary.Main.Dialogs
             exceptionStackTraceData.DataBindings.Add(new Binding(nameof(exceptionStackTraceData.Text), thisData, nameof(thisData.StackTrace)));
             exceptionAsXmlData.DataBindings.Add(new Binding(nameof(exceptionAsXmlData.Text), thisData, nameof(thisData.AsXml)));
             exceptionSourceData.DataBindings.Add(new Binding(nameof(exceptionSourceData.Text), thisData, nameof(thisData.Source)));
+
+            try // If RTF, bind to the RTF property
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), thisData, nameof(thisData.HelpText))); }
+            catch (Exception) // Else it is not RTF, bind to the property 
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Text), thisData, nameof(thisData.HelpText))); }
+
+            if (String.IsNullOrWhiteSpace(helpTextData.Text)) { exceptionDetailHelpText.Hide(); }
 
             exceptionData.AutoGenerateColumns = false;
             exceptionSqlErrors.AutoGenerateColumns = false;
