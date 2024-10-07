@@ -401,7 +401,7 @@ namespace DataDictionary.Main.Forms
         { }
 
         protected virtual void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
-        { }
+        { if (!ValidateChildren()) { return; } }
 
         protected virtual void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }
