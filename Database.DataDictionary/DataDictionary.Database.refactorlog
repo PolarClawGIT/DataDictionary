@@ -1339,4 +1339,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[funcSecurityPermisson]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d72da907-d73c-4a7b-ae06-ef2452639067" ChangeDateTime="10/08/2024 14:39:21">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityRole].[RoleAnnotation]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppSecurity].[SecurityRole]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RoleDescription]" />
+  </Operation>
 </Operations>

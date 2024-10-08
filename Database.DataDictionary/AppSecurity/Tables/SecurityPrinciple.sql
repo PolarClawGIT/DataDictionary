@@ -2,7 +2,7 @@
 (
 	[PrincipleId] UniqueIdentifier Not Null CONSTRAINT [DF_SecurityPrincipleId] DEFAULT (newsequentialid()),
 	[PrincipleLogin] SysName Not Null, -- Account Name as it appears in original_login()
-	[PrincipleName] NVarChar(1000) Not Null, -- Display Name
+	[PrincipleName] [App_DataDictionary].[typeTitle] Not Null, -- Display Name
 	[PrincipleAnnotation] [App_DataDictionary].[typeDescription] Null, --Additional Notes
 	-- TODO: Add System Version later once the schema is locked down
 	[ModifiedBy] SysName Not Null CONSTRAINT [DF_SecurityPrinciple_ModifiedBy] DEFAULT (original_login()),
