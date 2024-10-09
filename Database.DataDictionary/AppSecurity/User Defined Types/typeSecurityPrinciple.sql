@@ -6,5 +6,7 @@
 	[PrincipleAnnotation] [App_DataDictionary].[typeDescription] Null,
 	[PrincipalType]       [App_DataDictionary].[typeObjectType] Null,
 	[IsDbWriter]          Bit Null,
-	[IsApplicationUser]   Bit Null
+	[IsApplicationUser]   Bit Null,
+	[AlterValue]	      Bit Null,
+	[AlterSecurity]	      Bit Null
 )

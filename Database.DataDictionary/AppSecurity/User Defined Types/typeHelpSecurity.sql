@@ -4,5 +4,7 @@
 	[PrincipleId]   UniqueIdentifier Null, -- Owner
 	[RoleId]        UniqueIdentifier Null,
 	[IsGrant]       Bit Null,
-	[IsDeny]        Bit Null
+	[IsDeny]        Bit Null,
+	[AlterValue]	Bit Null,
+	[AlterSecurity]	Bit Null
 )

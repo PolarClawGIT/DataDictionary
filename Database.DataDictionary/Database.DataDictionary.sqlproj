@@ -308,7 +308,8 @@
     <Build Include="AppSecurity\Policy\policySecurityObject.sql" />
     <Build Include="AppSecurity\Functions\funcSecurityPermisson.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetSecurityPrinciple.sql">
-      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+      <SuppressTSqlWarnings>
+      </SuppressTSqlWarnings>
     </Build>
     <Build Include="AppSecurity\User Defined Types\typeSecurityPrinciple.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetSecurityRole.sql" />
@@ -317,6 +318,13 @@
     <Build Include="AppSecurity\User Defined Types\typeSecurityMembership.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetHelpSecurity.sql" />
     <Build Include="AppSecurity\User Defined Types\typeHelpSecurity.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurityPrinciple.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurityRole.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurityMembership.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetPrincipleLogin.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
+    <Build Include="AppSecurity\Stored Procedures\procSetHelpSecurity.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

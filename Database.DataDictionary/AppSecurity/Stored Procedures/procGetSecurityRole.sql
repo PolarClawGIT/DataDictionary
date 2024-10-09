@@ -18,7 +18,10 @@ Select	R.[RoleId],
 		R.[IsModelAdmin],
 		R.[IsModelOwner],
 		R.[IsScriptAdmin],
-		R.[IsScriptOwner]
+		R.[IsScriptOwner],
+		S.[IsSecurityAdmin] As [AlterValue],
+		S.[IsSecurityAdmin] As [AlterSecurity]
 From	[AppSecurity].[SecurityRole] R
+		Cross Apply [AppSecurity].[funcSecurityPermisson](null) S
 Where	(@RoleId is Null or R.[RoleId] = @RoleId)
 GO

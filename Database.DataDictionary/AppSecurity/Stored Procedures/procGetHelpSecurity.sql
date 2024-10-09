@@ -2,13 +2,33 @@
 		@HelpId UniqueIdentifier = Null,
 		@RoleId UniqueIdentifier = Null,
 		@PrincipleId UniqueIdentifier = Null
-AS
+As
+Set NoCount On -- Do not show record counts
+Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
+/* Description: Performs Get on HelpSecurity.
+*/
+;With [Object] As (
+	Select	T.[HelpId],
+			Convert(Bit, IIF(
+				(S.[IsGrant] = 1 And S.[IsDeny] = 0) Or
+				S.[IsHelpAdmin] = 1 Or
+				S.[IsOwner] = 1 ,1,0))
+				As [AlterValue],
+			Convert(Bit, IIF(
+				S.[IsSecurityAdmin] = 1 Or
+				S.[IsHelpAdmin] = 1 Or
+				S.[IsOwner] = 1 ,1,0))
+				As [AlterSecurity]
+	From	[AppGeneral].[HelpSubject] T
+			Cross Apply [AppSecurity].[funcSecurityPermisson](T.[HelpId]) S)
 Select	T.[HelpId],
 		O.[PrincipleId] As [PrincipleId],
 		Convert(UniqueIdentifier, Null) [RoleId],
 		Convert(Bit, 1) As [IsGrant],
-		Convert(Bit, 0) As [IsDeny]
-From	[AppGeneral].[HelpSubject] T
+		Convert(Bit, 0) As [IsDeny],
+		T.[AlterValue],
+		T.[AlterSecurity]
+From	[Object] T
 		Left Join [AppSecurity].[SecurityOwner] O
 		On	T.[HelpId] = O.[ObjectId]
 Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And
@@ -18,8 +38,10 @@ Select	T.[HelpId],
 		Convert(UniqueIdentifier, Null) As [PrincipleId],
 		P.[RoleId],
 		P.[IsGrant],
-		P.[IsDeny]
-From	[AppGeneral].[HelpSubject] T
+		P.[IsDeny],
+		T.[AlterValue],
+		T.[AlterSecurity]
+From	[Object] T
 		Left Join [AppSecurity].[SecurityPermission] P
 		On	T.[HelpId] = P.[ObjectId]
 Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And

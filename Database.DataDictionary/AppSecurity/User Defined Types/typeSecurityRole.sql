@@ -12,5 +12,7 @@
 	[IsModelAdmin]    Bit Null,
 	[IsModelOwner]    Bit Null,
 	[IsScriptAdmin]   Bit Null,
-	[IsScriptOwner]   Bit Null
+	[IsScriptOwner]   Bit Null,
+	[AlterValue]	  Bit Null,
+	[AlterSecurity]	  Bit Null
 )
