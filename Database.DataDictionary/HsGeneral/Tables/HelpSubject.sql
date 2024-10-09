@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [HsGeneral].[HelpSubject] (
     [HelpId]      UNIQUEIDENTIFIER NOT NULL,
-    [HelpSubject] NVARCHAR (100)   NOT NULL,
-    [HelpToolTip] NVARCHAR (500)   NULL,
+    [HelpSubject] [App_DataDictionary].[typeTitle] NOT NULL,
+    [HelpToolTip] [App_DataDictionary].[typeDescription] NULL,
     [HelpText]    NVARCHAR (MAX)   NOT NULL,
     [NameSpace]   NVARCHAR (1023)  NULL,
     [ModifiedBy]  SysName          NOT NULL,
