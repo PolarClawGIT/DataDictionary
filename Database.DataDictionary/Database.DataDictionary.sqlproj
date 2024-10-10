@@ -89,6 +89,7 @@
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
     <None Include="AppSecurity\SecurityNotes.sql" />
+    <None Include="AppSecurity\DefaultSecurityRoles.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
