@@ -4,6 +4,7 @@ using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
+using System.Security.Principal;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -50,16 +51,19 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-
         /// <summary>
         /// Constructor for the Business Layer Data Object
         /// </summary>
+        /// <param name="identity"></param>
         /// <param name="serverName"></param>
         /// <param name="databaseName"></param>
         /// <param name="applicationRole"></param>
         /// <param name="ApplicationRolePassword"></param>
-        public BusinessLayerData(String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
+        public BusinessLayerData(IIdentity identity,  String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
+            UserIdentity = identity;
+            userSecurityValue = new AppSecurity.Security(identity);
+
             DbConnection = new DbConnection()
             {
                 ServerName = serverName,

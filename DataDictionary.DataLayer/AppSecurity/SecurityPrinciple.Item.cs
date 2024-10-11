@@ -77,6 +77,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PrincipleLogin), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipleName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PrincipleAnnotation), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
