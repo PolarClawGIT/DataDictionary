@@ -276,6 +276,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             }
         }
 
+        /// <summary>
+        /// Constructor for SecurityRoleItem.
+        /// </summary>
+        public SecurityRoleItem() : base()
+        { RoleId = Guid.NewGuid(); }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

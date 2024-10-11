@@ -68,7 +68,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for DbCatalogItem.
+        /// Constructor for SecurityPrincipleItem.
         /// </summary>
         public SecurityPrincipleItem() : base()
         { PrincipleId = Guid.NewGuid(); }
