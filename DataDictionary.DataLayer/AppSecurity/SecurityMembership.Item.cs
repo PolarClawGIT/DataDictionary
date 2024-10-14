@@ -47,9 +47,15 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for SecurityMembershipItem.
         /// </summary>
+        public SecurityMembershipItem() : base()
+        { }
+
+        /// <summary>
+        /// Constructor for SecurityMembershipItem.
+        /// </summary>
         /// <param name="principleKey"></param>
         /// <param name="roleKey"></param>
-        public SecurityMembershipItem(ISecurityPrincipleKey principleKey, ISecurityRoleKey roleKey)
+        public SecurityMembershipItem(ISecurityPrincipleKey principleKey, ISecurityRoleKey roleKey) : this ()
         {
             PrincipleId = principleKey.PrincipleId;
             RoleId = roleKey.RoleId;
