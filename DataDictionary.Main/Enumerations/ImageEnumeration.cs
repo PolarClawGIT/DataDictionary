@@ -116,7 +116,6 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewStatusHelp),
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp),
                     new(CommandImageType.Import, Resources.ImportStatusHelp)),
-
                 new ImageEnumeration(ScopeType.ApplicationHelpPage,       Resources.Icon_HelpIndexFile,
                     new(CommandImageType.Default, Resources.StatusHelp),
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp)),
@@ -134,6 +133,7 @@ namespace DataDictionary.Main.Enumerations
                 new ImageEnumeration(ScopeType.LibraryTypeProperty,        Resources.Icon_Property, Resources.Property) {GroupBy = false},
                 new ImageEnumeration(ScopeType.LibraryTypeParameter,       Resources.Icon_Parameter, Resources.Parameter) { GroupBy = false},
                 new ImageEnumeration(ScopeType.LibraryType,                Resources.Icon_Class, Resources.Class) {GroupBy = false},
+
                 new ImageEnumeration(ScopeType.Database,                   Resources.Icon_Database,
                     new(CommandImageType.Default, Resources.Database),
                     new(CommandImageType.Add, Resources.NewDatabase),
@@ -189,6 +189,7 @@ namespace DataDictionary.Main.Enumerations
                 new ImageEnumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
                 new ImageEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
                 new ImageEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+
                 new ImageEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
@@ -199,6 +200,18 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewXPath)),
                 //Resources.XPath) ,
                 new ImageEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
+
+                new ImageEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
+
+                new ImageEnumeration(ScopeType.Security,                   Resources.Icon_User, Resources.User),
+                new ImageEnumeration(ScopeType.SecurityPrinciple,          Resources.Icon_User,   
+                    new(CommandImageType.Default, Resources.User),
+                    new(CommandImageType.Add, Resources.NewUser),
+                    new(CommandImageType.Delete, Resources.DeleteUser)),
+                new ImageEnumeration(ScopeType.SecurityRole,               Resources.Icon_ApplicationRole,
+                    new(CommandImageType.Default, Resources.ApplicationRole),
+                    new(CommandImageType.Add, Resources.NewApplicationRole),
+                    new(CommandImageType.Delete, Resources.DeleteApplicationRole)),
             };
 
             BuildDictionary(data);

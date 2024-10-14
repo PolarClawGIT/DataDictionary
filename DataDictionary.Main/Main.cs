@@ -136,6 +136,8 @@ namespace DataDictionary.Main
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
+                securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+
                 namedScopeData.ReloadCommand();
                 onLoadComplete(args);
             }
@@ -163,7 +165,7 @@ namespace DataDictionary.Main
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { throw new NotImplementedException();  } // Not Used.
+        { throw new NotImplementedException(); } // Not Used.
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -323,10 +325,12 @@ namespace DataDictionary.Main
         { Application.Exit(); }
 
         private void BindingModel_ListChanged(object sender, ListChangedEventArgs e)
-        { 
-            if(bindingModel.Current is IModelItem current)
-            {   namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
+        {
+            if (bindingModel.Current is IModelItem current)
+            { namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
             else { namedScopeData.HeaderText = "(no Model)"; }
         }
+
+
     }
 }

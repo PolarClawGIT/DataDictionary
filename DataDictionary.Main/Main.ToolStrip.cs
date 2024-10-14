@@ -279,5 +279,10 @@ namespace DataDictionary.Main
                 BusinessData.ScriptingEngine.TemplateAttributes);
         }
 
+        private void SecurityPrincipal_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Security.PrincipalManager()); }
+
+        private void SecurityRole_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Security.RoleManager()); }
     }
 }

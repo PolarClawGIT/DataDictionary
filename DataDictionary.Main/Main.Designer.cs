@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             Panel navigationPanel;
             Splitter navigationSpliter;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             ToolStripStatusLabel toolStripStatusBreak;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             namedScopeData = new Controls.NamedScopeTreeView();
             attributeContextMenu = new ContextMenuStrip(components);
             menuAttributes = new ToolStripMenuItem();
@@ -104,6 +104,10 @@
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
             textEditorToolStripMenuItem = new ToolStripMenuItem();
+            securityToolStripMenuItem = new ToolStripMenuItem();
+            securityContextMenu = new ContextMenuStrip(components);
+            securityPrincipal = new ToolStripMenuItem();
+            securityRole = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
@@ -140,6 +144,7 @@
             libraryContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
+            securityContextMenu.SuspendLayout();
             mainToolStrip.SuspendLayout();
             modelContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
@@ -173,6 +178,12 @@
             navigationSpliter.Size = new Size(3, 616);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
+            // 
+            // toolStripStatusBreak
+            // 
+            toolStripStatusBreak.Name = "toolStripStatusBreak";
+            toolStripStatusBreak.Size = new Size(10, 17);
+            toolStripStatusBreak.Text = "|";
             // 
             // attributeContextMenu
             // 
@@ -473,7 +484,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(547, 17);
+            toolStripWhiteSpace.Size = new Size(578, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -489,7 +500,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, securityToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.MdiWindowListItem = windowToolStripMenuItem;
             menuStrip.Name = "menuStrip";
@@ -725,6 +736,35 @@
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
+            // securityToolStripMenuItem
+            // 
+            securityToolStripMenuItem.DropDown = securityContextMenu;
+            securityToolStripMenuItem.Name = "securityToolStripMenuItem";
+            securityToolStripMenuItem.Size = new Size(61, 20);
+            securityToolStripMenuItem.Text = "&Security";
+            // 
+            // securityContextMenu
+            // 
+            securityContextMenu.Items.AddRange(new ToolStripItem[] { securityPrincipal, securityRole });
+            securityContextMenu.Name = "securityContextMenu";
+            securityContextMenu.Size = new Size(181, 70);
+            // 
+            // securityPrincipal
+            // 
+            securityPrincipal.Image = Properties.Resources.User;
+            securityPrincipal.Name = "securityPrincipal";
+            securityPrincipal.Size = new Size(180, 22);
+            securityPrincipal.Text = "Principal";
+            securityPrincipal.Click += SecurityPrincipal_Click;
+            // 
+            // securityRole
+            // 
+            securityRole.Image = Properties.Resources.ApplicationRole;
+            securityRole.Name = "securityRole";
+            securityRole.Size = new Size(180, 22);
+            securityRole.Text = "Role";
+            securityRole.Click += SecurityRole_Click;
+            // 
             // windowToolStripMenuItem
             // 
             windowToolStripMenuItem.Name = "windowToolStripMenuItem";
@@ -904,12 +944,6 @@
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
             // 
-            // toolStripStatusBreak
-            // 
-            toolStripStatusBreak.Name = "toolStripStatusBreak";
-            toolStripStatusBreak.Size = new Size(10, 17);
-            toolStripStatusBreak.Text = "|";
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -940,6 +974,7 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            securityContextMenu.ResumeLayout(false);
             mainToolStrip.ResumeLayout(false);
             mainToolStrip.PerformLayout();
             modelContextMenu.ResumeLayout(false);
@@ -1048,5 +1083,9 @@
         private BindingSource bindingModel;
         private ToolStripStatusLabel toolStripStatusUser;
         private ToolStripStatusLabel toolStripStatusBreak;
+        private ContextMenuStrip securityContextMenu;
+        private ToolStripMenuItem securityPrincipal;
+        private ToolStripMenuItem securityRole;
+        private ToolStripMenuItem securityToolStripMenuItem;
     }
 }

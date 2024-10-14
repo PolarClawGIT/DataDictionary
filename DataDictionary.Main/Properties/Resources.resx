@@ -181,6 +181,9 @@
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteApplicationRole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -213,6 +216,9 @@
   </data>
   <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DeleteXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -472,6 +478,9 @@
   <data name="Namespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Namespace.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewApplicationRole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -519,6 +528,9 @@
   </data>
   <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -273,6 +273,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeleteApplicationRole {
+            get {
+                object obj = ResourceManager.GetObject("DeleteApplicationRole", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeleteAttribute {
             get {
                 object obj = ResourceManager.GetObject("DeleteAttribute", resourceCulture);
@@ -376,6 +386,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap DeleteTable {
             get {
                 object obj = ResourceManager.GetObject("DeleteTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DeleteUser {
+            get {
+                object obj = ResourceManager.GetObject("DeleteUser", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1243,6 +1263,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewApplicationRole {
+            get {
+                object obj = ResourceManager.GetObject("NewApplicationRole", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewAttribute {
             get {
                 object obj = ResourceManager.GetObject("NewAttribute", resourceCulture);
@@ -1396,6 +1426,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap NewTable {
             get {
                 object obj = ResourceManager.GetObject("NewTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NewUser {
+            get {
+                object obj = ResourceManager.GetObject("NewUser", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
