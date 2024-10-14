@@ -1,10 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -16,9 +19,25 @@ namespace DataDictionary.BusinessLayer
         public IIdentity UserIdentity { get; private set; }
 
         /// <summary>
-        /// Security for the current user
+        /// Authorization for the current user
         /// </summary>
-        public IUserSecurity UserSecurity { get { return userSecurityValue; } }
-        private readonly Security userSecurityValue;
+        public IAuthorizationItem Authorization
+        {
+            get
+            {
+                if (authorizationData.FirstOrDefault() is AuthorizationValue value)
+                { return value; }
+                return defaultAuthorization;
+            }
+        }
+        private readonly AuthorizationData authorizationData = new AuthorizationData();
+        IAuthorizationItem defaultAuthorization;
+
+        /// <summary>
+        /// Gets the Authorization data;
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> LoadAuthorization(IDatabaseWork factory)
+        { return authorizationData.Load(factory, UserIdentity); }
     }
 }

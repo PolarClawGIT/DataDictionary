@@ -15,13 +15,8 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface ISecurityPrincipleItem: 
         ISecurityPrincipleKey, ISecurityPrincipleKeyName,
-        IObjectSecurity
+        ISecurityPrincipleName, IObjectSecurity
     {
-        /// <summary>
-        /// Display Name of the Principle. Typically the name of the individual.
-        /// </summary>
-        String? PrincipleName { get; }
-
         /// <summary>
         /// Additional information (notes) about the Principle.
         /// </summary>

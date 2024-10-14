@@ -322,7 +322,7 @@
     <Build Include="AppSecurity\Stored Procedures\procSetSecurityPrinciple.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetSecurityRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetSecurityMembership.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procGetPrincipleLogin.sql">
+    <Build Include="AppSecurity\Stored Procedures\procGetAuthorization.sql">
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
     </Build>
     <Build Include="AppSecurity\Stored Procedures\procSetHelpSecurity.sql" />

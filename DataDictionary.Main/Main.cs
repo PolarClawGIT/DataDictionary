@@ -116,7 +116,7 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.UserSecurity.Load(factory,BusinessData.UserIdentity));
+                work.AddRange(BusinessData.LoadAuthorization(factory));
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
@@ -224,6 +224,8 @@ namespace DataDictionary.Main
 
         protected override void HandleMessage(OnlineStatusChanged message)
         {
+            toolStripStatusUser.Text = BusinessData.Authorization.PrincipleName;
+
             if (Settings.Default.IsOnLineMode)
             { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }

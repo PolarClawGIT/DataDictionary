@@ -35,12 +35,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipleIndex dataKey)
         { return factory.CreateLoad(this, (ISecurityPrincipleKey)dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IIdentity identity)
-        {
-            ISecurityPrincipleKeyName key = new SecurityPrincipleKeyName(identity);
-            return factory.CreateLoad(this, key).ToList(); 
-        }
-
         /// <inheritdoc/>
         /// <remarks>PrincipleData</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)

@@ -5,6 +5,7 @@ using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
 using System.Security.Principal;
+using DataDictionary.DataLayer.AppSecurity;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -62,7 +63,7 @@ namespace DataDictionary.BusinessLayer
         public BusinessLayerData(IIdentity identity,  String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
             UserIdentity = identity;
-            userSecurityValue = new AppSecurity.Security(identity);
+            defaultAuthorization = new AuthorizationItem(identity);
 
             DbConnection = new DbConnection()
             {
