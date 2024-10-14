@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
-    public interface IPrincipleValue: ISecurityPrincipleItem, IScopeType,
+    public interface IPrincipleValue: IPrincipleItem, IScopeType,
         IPrincipleIndex, IPrincipleIndexName
     { }
 
     /// <inheritdoc/>
-    public class PrincipleValue : SecurityPrincipleItem, IPrincipleValue
+    public class PrincipleValue : PrincipleItem, IPrincipleValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.SecurityPrinciple;

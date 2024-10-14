@@ -40,7 +40,7 @@ Begin Try
 	From	@Data D
 			Inner Join [AppGeneral].[HelpSubject] H
 			On	D.[HelpId] = H.[HelpId]
-			Inner Join [AppSecurity].[SecurityRole] R
+			Inner Join [AppSecurity].[Role] R
 			On	D.[RoleId] = R.[RoleId]
 	Where	(@HelpId is Null Or D.[HelpId] = @HelpId) And
 			(@RoleId is Null Or D.[RoleId] = @RoleId)
@@ -49,7 +49,7 @@ Begin Try
 	Select	D.[PrincipleId],
 			D.[HelpId] As [ObjectId]
 	From	@Data D
-			Inner Join [AppSecurity].[SecurityPrinciple] P
+			Inner Join [AppSecurity].[Principle] P
 			On	D.[PrincipleId] = P.[PrincipleId]
 			Inner Join [AppGeneral].[HelpSubject] H
 			On	D.[HelpId] = H.[HelpId]
@@ -57,8 +57,8 @@ Begin Try
 			(@PrincipleId is Null Or D.[PrincipleId] = @PrincipleId)
 
 	-- Apply Changes
-	Delete From [AppSecurity].[SecurityPermission]
-	From	[AppSecurity].[SecurityPermission] T
+	Delete From [AppSecurity].[ObjectPermission]
+	From	[AppSecurity].[ObjectPermission] T
 			Inner Join [AppGeneral].[HelpSubject] H
 			On	T.[ObjectId] = H.[HelpId]
 			Left Join @RoleValue S
@@ -69,8 +69,8 @@ Begin Try
 			(@RoleId is Null Or T.[RoleId] = @RoleId)
 	Print FormatMessage ('Delete [AppSecurity].[SecurityPermission] (HelpSubject): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From	[AppSecurity].[SecurityOwner]
-	From	[AppSecurity].[SecurityOwner] T
+	Delete From	[AppSecurity].[ObjectOwner]
+	From	[AppSecurity].[ObjectOwner] T
 			Inner Join [AppGeneral].[HelpSubject] H
 			On	T.[ObjectId] = H.[HelpId]
 			Left Join @OwnerValue S
@@ -92,17 +92,17 @@ Begin Try
 				[ObjectId],
 				[IsGrant],
 				[IsDeny]
-		From	[AppSecurity].[SecurityPermission])
-	Update [AppSecurity].[SecurityPermission]
+		From	[AppSecurity].[ObjectPermission])
+	Update [AppSecurity].[ObjectPermission]
 	Set		[IsGrant] = S.[IsGrant],
 			[IsDeny] = S.[IsDeny]
-	From	[AppSecurity].[SecurityPermission] T
+	From	[AppSecurity].[ObjectPermission] T
 			Inner Join [Delta] S
 			On	T.[RoleId] = S.[RoleId] And
 				T.[ObjectId] = S.[ObjectId]
 	Print FormatMessage ('Update [AppSecurity].[SecurityPermission] (HelpSubject): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppSecurity].[SecurityPermission] (
+	Insert Into [AppSecurity].[ObjectPermission] (
 			[RoleId],
 			[ObjectId],
 			[IsGrant],
@@ -112,19 +112,19 @@ Begin Try
 			S.[IsGrant],
 			S.[IsDeny]
 	From	@RoleValue S
-			Left Join [AppSecurity].[SecurityPermission] T
+			Left Join [AppSecurity].[ObjectPermission] T
 			On	S.[RoleId] = T.[RoleId] And
 				S.[ObjectId] = T.[ObjectId]
 	Where	T.[RoleId] is Null
 	Print FormatMessage ('Insert [AppSecurity].[SecurityPermission] (HelpSubject): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppSecurity].[SecurityOwner] (
+	Insert Into [AppSecurity].[ObjectOwner] (
 			[PrincipleId],
 			[ObjectId])
 	Select	S.[PrincipleId],
 			S.[ObjectId]
 	From	@OwnerValue S
-			Left Join [AppSecurity].[SecurityOwner] T
+			Left Join [AppSecurity].[ObjectOwner] T
 			On	S.[PrincipleId] = T.[PrincipleId] And
 				S.[ObjectId] = S.[ObjectId]
 	Where	T.[PrincipleId] is Null

@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class AuthorizationCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<ISecurityPrincipleKeyName>
+        IReadData, IReadData<IPrincipleKeyName>
         where TItem : BindingTableRow, IAuthorizationItem, new()
     {
         /// <inheritdoc/>
@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, String.Empty); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ISecurityPrincipleKeyName key)
+        public Command LoadCommand(IConnection connection, IPrincipleKeyName key)
         { return LoadCommand(connection, key.PrincipleLogin); }
 
         Command LoadCommand(IConnection connection, String? principleLogin)

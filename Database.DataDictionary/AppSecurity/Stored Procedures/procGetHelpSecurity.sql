@@ -20,7 +20,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 				S.[IsOwner] = 1 ,1,0))
 				As [AlterSecurity]
 	From	[AppGeneral].[HelpSubject] T
-			Cross Apply [AppSecurity].[funcSecurityPermisson](T.[HelpId]) S)
+			Cross Apply [AppSecurity].[funcAuthorization](T.[HelpId]) S)
 Select	T.[HelpId],
 		O.[PrincipleId] As [PrincipleId],
 		Convert(UniqueIdentifier, Null) [RoleId],
@@ -29,7 +29,7 @@ Select	T.[HelpId],
 		T.[AlterValue],
 		T.[AlterSecurity]
 From	[Object] T
-		Left Join [AppSecurity].[SecurityOwner] O
+		Left Join [AppSecurity].[ObjectOwner] O
 		On	T.[HelpId] = O.[ObjectId]
 Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And
 		(@PrincipleId is Null Or IsNull(O.[PrincipleId], @PrincipleId) = @PrincipleId)
@@ -42,7 +42,7 @@ Select	T.[HelpId],
 		T.[AlterValue],
 		T.[AlterSecurity]
 From	[Object] T
-		Left Join [AppSecurity].[SecurityPermission] P
+		Left Join [AppSecurity].[ObjectPermission] P
 		On	T.[HelpId] = P.[ObjectId]
 Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And
 		(@RoleId is Null Or IsNull(P.[RoleId], @RoleId) = @RoleId)

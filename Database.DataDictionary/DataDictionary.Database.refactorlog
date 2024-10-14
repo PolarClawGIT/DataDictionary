@@ -1346,4 +1346,109 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[RoleDescription]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="054e5ac1-af6d-4351-8bec-06af8bed0485" ChangeDateTime="10/14/2024 16:54:55">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityMembership]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Membership]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="317692b6-1aaf-4743-8ce4-4d8cd58b3156" ChangeDateTime="10/14/2024 16:55:44">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ObjectOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bf04c4a5-d941-4e30-8fa8-3eaa89a4abe3" ChangeDateTime="10/14/2024 16:55:57">
+    <Property Name="ElementName" Value="[AppSecurity].[Membership]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[RoleMembership]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="453d6589-95e9-4d42-a393-1070fd69b341" ChangeDateTime="10/14/2024 16:56:42">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPermission]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ObjectPermission]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7144f0ab-2893-4c0c-83be-d4e1bbad474e" ChangeDateTime="10/14/2024 16:57:09">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityPrinciple]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Principle]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="09ba41b3-d5df-4ba8-ba96-4a237f4fa09b" ChangeDateTime="10/14/2024 16:58:10">
+    <Property Name="ElementName" Value="[AppSecurity].[SecurityRole]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Role]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="699a2f88-3b19-4b03-af89-764605b99cfa" ChangeDateTime="10/14/2024 16:58:55">
+    <Property Name="ElementName" Value="[AppSecurity].[typeSecurityMembership]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeRoleMembership]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e2cd3c79-92a0-4db6-95a1-ebec14794cda" ChangeDateTime="10/14/2024 16:59:22">
+    <Property Name="ElementName" Value="[AppSecurity].[typeSecurityPrinciple]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typePrinciple]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="970a6182-2063-48a3-aefa-0301a5db77a2" ChangeDateTime="10/14/2024 16:59:41">
+    <Property Name="ElementName" Value="[AppSecurity].[typeSecurityRole]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeRole]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d57980ba-2599-49a1-add4-f5e053a43d92" ChangeDateTime="10/14/2024 17:01:02">
+    <Property Name="ElementName" Value="[AppSecurity].[funcSecurityPermisson]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcAuthorization]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4f9c7a79-786d-46ec-aa27-7e974c80e8e6" ChangeDateTime="10/14/2024 17:05:00">
+    <Property Name="ElementName" Value="[AppSecurity].[procGetSecurityMembership]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetRoleMembership]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fe6d2e6f-ad51-4f0d-81ae-a9393e850b4e" ChangeDateTime="10/14/2024 17:11:42">
+    <Property Name="ElementName" Value="[AppSecurity].[funcSecurityHelpSubject]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcHelpSubjectSecurity]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3ae6daa7-88fc-49f3-aa27-346c81ec6c8f" ChangeDateTime="10/14/2024 17:12:05">
+    <Property Name="ElementName" Value="[AppSecurity].[funcHelpSubjectSecurity]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcHelpSubjectAuthorization]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="40c779ae-79db-405e-9db1-aa46164c14e0" ChangeDateTime="10/14/2024 17:12:59">
+    <Property Name="ElementName" Value="[AppSecurity].[funcSecurityObject]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcObjectAuthorization]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6a721ed7-d59a-4057-8ba5-564934fd5a31" ChangeDateTime="10/14/2024 17:13:37">
+    <Property Name="ElementName" Value="[AppSecurity].[funcSecurityPrinciple]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppSecurity]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcPrincipleAuthorization]" />
+  </Operation>
 </Operations>

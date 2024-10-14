@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
-    public interface IRoleValue : ISecurityRoleItem, IScopeType,
+    public interface IRoleValue : IRoleItem, IScopeType,
         IRoleIndex, IRoleIndexName
     { }
 
     /// <inheritdoc/>
-    public class RoleValue : SecurityRoleItem, IRoleValue
+    public class RoleValue : RoleItem, IRoleValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.SecurityRole;

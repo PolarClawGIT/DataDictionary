@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// <summary>
     /// Wrapper Class for Security Role.
     /// </summary>
-    class RoleData : SecurityRoleCollection<RoleValue>, IRoleData,
+    class RoleData : RoleCollection<RoleValue>, IRoleData,
         ILoadData, ILoadData<IRoleIndex>,
         ISaveData, ISaveData<IRoleIndex>
     {
@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
-        { return factory.CreateLoad(this, (ISecurityRoleKey)dataKey).ToList(); }
+        { return factory.CreateLoad(this, (IRoleKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>
@@ -42,7 +42,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IRoleIndex dataKey)
-        { return factory.CreateSave(this, (ISecurityRoleKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IRoleKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>

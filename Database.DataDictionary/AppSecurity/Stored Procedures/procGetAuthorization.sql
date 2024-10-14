@@ -36,10 +36,10 @@ Select	L.[PrincipleLogin], -- Will not be Null, PK
 		S.[IsScriptOwner]
 From	[Logins] L
 		-- Only returns values if the Login is also a Application User
-		Left Join [AppSecurity].[SecurityPrinciple] P
+		Left Join [AppSecurity].[Principle] P
 		On	L.[PrincipleLogin] = P.[PrincipleLogin]
 		-- Only Returns values for the original_login. Everything else gets Null.
-		Left Join [AppSecurity].[funcSecurityPermisson](null) S
+		Left Join [AppSecurity].[funcAuthorization](null) S
 		On	L.[PrincipleLogin] = S.[PrincipleLogin]
 Where	(@PrincipleLogin is Null or L.[PrincipleLogin] = @PrincipleLogin)
 GO

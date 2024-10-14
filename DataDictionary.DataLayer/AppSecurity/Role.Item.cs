@@ -1,47 +1,38 @@
 ﻿// Ignore Spelling: Admin
 
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Logins with Application Principle and Role Permissions.
+    /// Interface for the Security Role Item.
     /// </summary>
-    public interface IAuthorizationItem :
-        IPrincipleKey, IPrincipleKeyName,
-        ISecurityPrincipleName, IRolePermissions
+    public interface IRoleItem :
+        IRoleKey, IRoleKeyName,
+        IObjectSecurity, IRolePermissions
     {
         /// <summary>
-        /// Is the current user an Application User.
+        /// Description of the Role.
         /// </summary>
-        Boolean IsApplicationUser { get; }
+        String? RoleDescription { get; }
     }
 
     /// <summary>
-    /// Implementation of the Logins with Application Principle and Role Permissions.
+    /// Implementation of the Security Role Item.
     /// </summary>
     [Serializable]
-    public class AuthorizationItem : BindingTableRow, IAuthorizationItem, ISerializable
+    public class RoleItem : BindingTableRow, IRoleItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } protected set { SetValue(nameof(RoleId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleLogin { get { return GetValue(nameof(PrincipleLogin)); } protected set { SetValue(nameof(PrincipleLogin), value); } }
+        public String? RoleName { get { return GetValue(nameof(RoleName)); } set { SetValue(nameof(RoleName), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleName { get { return GetValue(nameof(PrincipleName)); } protected set { SetValue(nameof(PrincipleName), value); } }
-
-        /// <inheritdoc/>
-        public Boolean IsApplicationUser { get { return GetValue<Guid>(nameof(PrincipleId)) is Guid value && !value.Equals(Guid.Empty); } }
+        public String? RoleDescription { get { return GetValue(nameof(RoleDescription)); } set { SetValue(nameof(RoleDescription), value); } }
 
         /// <inheritdoc/>
         public Boolean IsSecurityAdmin
@@ -50,6 +41,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             {
                 if (GetValue<Boolean>(nameof(IsSecurityAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>(nameof(IsSecurityAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsSecurityAdmin), !value); }
             }
         }
 
@@ -61,6 +57,11 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsHelpAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsHelpAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsHelpAdmin), !value); }
+            }
         }
 
         /// <inheritdoc/>
@@ -70,6 +71,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             {
                 if (GetValue<Boolean>(nameof(IsHelpOwner), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>(nameof(IsHelpOwner), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsHelpOwner), !value); }
             }
         }
 
@@ -81,6 +87,11 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsCatalogAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsCatalogAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsCatalogAdmin), !value); }
+            }
         }
 
         /// <inheritdoc/>
@@ -90,6 +101,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             {
                 if (GetValue<Boolean>(nameof(IsCatalogOwner), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>(nameof(IsCatalogOwner), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsCatalogOwner), !value); }
             }
         }
 
@@ -101,6 +117,11 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsLibraryAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsLibraryAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsLibraryAdmin), !value); }
+            }
         }
 
         /// <inheritdoc/>
@@ -110,6 +131,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             {
                 if (GetValue<Boolean>(nameof(IsLibraryOwner), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>(nameof(IsLibraryOwner), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsLibraryOwner), !value); }
             }
         }
 
@@ -121,6 +147,11 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsModelAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsModelAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsModelAdmin), !value); }
+            }
         }
 
         /// <inheritdoc/>
@@ -130,6 +161,11 @@ namespace DataDictionary.DataLayer.AppSecurity
             {
                 if (GetValue<Boolean>(nameof(IsModelOwner), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>(nameof(IsModelOwner), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsModelOwner), !value); }
             }
         }
 
@@ -141,6 +177,11 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsScriptAdmin), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsScriptAdmin), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsScriptAdmin), !value); }
+            }
         }
 
         /// <inheritdoc/>
@@ -151,40 +192,45 @@ namespace DataDictionary.DataLayer.AppSecurity
                 if (GetValue<Boolean>(nameof(IsScriptOwner), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
+            set
+            {
+                SetValue<Boolean>(nameof(IsScriptOwner), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsScriptOwner), !value); }
+            }
         }
 
-
-        /// <summary>
-        /// Constructor for Authorization.
-        /// </summary>
-        /// <exception cref="NotImplementedException">Use AuthorizationItem(IIdentity)</exception>
-        public AuthorizationItem() : base()
-        { }
-
-        /// <summary>
-        /// Constructor for Authorization.
-        /// </summary>
-        public AuthorizationItem(IIdentity identity) : base()
+        /// <inheritdoc/>
+        public Boolean AlterValue
         {
-            PrincipleId = Guid.NewGuid();
-
-            if (String.IsNullOrWhiteSpace(identity.Name))
+            get
             {
-                PrincipleLogin = "(unknown)";
-                PrincipleName = "(unknown user)";
-            }
-            else
-            {
-                PrincipleLogin = identity.Name;
-                PrincipleName = identity.Name.Split('\\').Last();
+                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
             }
         }
+
+        /// <inheritdoc/>
+        public Boolean AlterSecurity
+        {
+            get
+            {
+                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+        }
+
+        /// <summary>
+        /// Constructor for SecurityRoleItem.
+        /// </summary>
+        public RoleItem() : base()
+        { RoleId = Guid.NewGuid(); }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipleLogin), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(RoleName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RoleDescription), typeof(String)){ AllowDBNull = true},
+
             new DataColumn(nameof(IsSecurityAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsHelpAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsHelpOwner), typeof(Boolean)){ AllowDBNull = true},
@@ -196,10 +242,27 @@ namespace DataDictionary.DataLayer.AppSecurity
             new DataColumn(nameof(IsModelOwner), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsScriptAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsScriptOwner), typeof(Boolean)){ AllowDBNull = true},
+
+            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for SecurityPrincipleItem.
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected RoleItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
+
+        /// <inheritdoc/>
+        public override string ToString()
+        { return new RoleKeyName(this).ToString(); }
     }
 }

@@ -10,24 +10,24 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
-    public interface IRoleIndex : ISecurityRoleKey
+    public interface IRoleIndex : IRoleKey
     { }
 
     /// <inheritdoc/>
-    public class RoleIndex : SecurityRoleKey, IRoleIndex,
+    public class RoleIndex : RoleKey, IRoleIndex,
         IKeyEquality<IRoleIndex>, IKeyEquality<RoleIndex>
     {
-        /// <inheritdoc cref="SecurityRoleKey.SecurityRoleKey(ISecurityRoleKey)"/>
+        /// <inheritdoc cref="RoleKey.RoleKey(IRoleKey)"/>
         public RoleIndex(IRoleIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(RoleIndex? other)
-        { return other is ISecurityRoleKey value && Equals(new SecurityRoleKey(value)); }
+        { return other is IRoleKey value && Equals(new RoleKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoleIndex? other)
-        { return other is ISecurityRoleKey value && Equals(new SecurityRoleKey(value)); }
+        { return other is IRoleKey value && Equals(new RoleKey(value)); }
 
         /// <summary>
         /// Convert RoleIndex to a DataIndex

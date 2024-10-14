@@ -10,24 +10,24 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
-    public interface IPrincipleIndex : ISecurityPrincipleKey
+    public interface IPrincipleIndex : IPrincipleKey
     { }
 
     /// <inheritdoc/>
-    public class PrincipleIndex : SecurityPrincipleKey, IPrincipleIndex,
+    public class PrincipleIndex : PrincipleKey, IPrincipleIndex,
         IKeyEquality<IPrincipleIndex>, IKeyEquality<PrincipleIndex>
     {
-        /// <inheritdoc cref="SecurityPrincipleKey.SecurityPrincipleKey(ISecurityPrincipleKey)"/>
+        /// <inheritdoc cref="PrincipleKey.PrincipleKey(IPrincipleKey)"/>
         public PrincipleIndex(IPrincipleIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(PrincipleIndex? other)
-        { return other is ISecurityPrincipleKey value && Equals(new SecurityPrincipleKey(value)); }
+        { return other is IPrincipleKey value && Equals(new PrincipleKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IPrincipleIndex? other)
-        { return other is ISecurityPrincipleKey value && Equals(new SecurityPrincipleKey(value)); }
+        { return other is IPrincipleKey value && Equals(new PrincipleKey(value)); }
 
         /// <summary>
         /// Convert PrincipleIndex to a DataIndex

@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
-    public interface IRoleIndexName : ISecurityRoleKeyName
+    public interface IRoleIndexName : IRoleKeyName
     { }
 
     /// <inheritdoc/>
-    public class RoleIndexName : SecurityRoleKeyName, IRoleIndexName,
+    public class RoleIndexName : RoleKeyName, IRoleIndexName,
         IKeyEquality<IRoleIndexName>, IKeyEquality<RoleIndexName>
     {
-        /// <inheritdoc cref="SecurityRoleKey.SecurityRoleKey(ISecurityRoleKey)"/>
+        /// <inheritdoc cref="RoleKey.RoleKey(IRoleKey)"/>
         public RoleIndexName(IRoleIndexName source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(RoleIndexName? other)
-        { return other is ISecurityRoleKey value && Equals(new SecurityRoleKey(value)); }
+        { return other is IRoleKey value && Equals(new RoleKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoleIndexName? other)
-        { return other is ISecurityRoleKey value && Equals(new SecurityRoleKey(value)); }
+        { return other is IRoleKey value && Equals(new RoleKey(value)); }
     }
 }

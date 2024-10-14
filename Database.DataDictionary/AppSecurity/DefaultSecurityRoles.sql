@@ -30,10 +30,10 @@
 		('00000000-0000-0000-0050-200000000000','Application Owner','Application Owner (Can Create new Catalogs, Libraries, Models or Scripts and modify any that they own)',
 			0,0,0,0,1,0,1,0,1,0,1)
 
-	Exec [AppSecurity].[procSetSecurityRole] @Data = @Roles
+	Exec [AppSecurity].[procSetRole] @Data = @Roles
 
 	Select	*
-	From	[AppSecurity].[SecurityRole]
+	From	[AppSecurity].[Role]
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

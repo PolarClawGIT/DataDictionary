@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <returns></returns>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IIdentity identity)
         {
-            ISecurityPrincipleKeyName key = new SecurityPrincipleKeyName(identity);
+            IPrincipleKeyName key = new PrincipleKeyName(identity);
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem() { DoWork = Clear });
             work.Add(factory.CreateLoad(this, key));

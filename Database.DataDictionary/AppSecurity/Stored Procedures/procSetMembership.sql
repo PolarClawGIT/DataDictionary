@@ -1,10 +1,11 @@
-﻿CREATE PROCEDURE [AppGeneral].[procSetHelpSubject]
-		@HelpId UniqueIdentifier = null,
-		@Data [AppGeneral].[typeHelpSubject] ReadOnly
+﻿CREATE PROCEDURE [AppSecurity].[procSetRoleMembership]
+		@RoleId UniqueIdentifier = Null,
+		@PrincipleId UniqueIdentifier = Null,
+		@Data [AppSecurity].[typeRoleMembership] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on HelpSubject.
+/* Description: Performs Set on Security Membership.
 */
 
 -- Transaction Handling
@@ -20,87 +21,43 @@ Begin Try
 
 	-- Clean the Data
 	Declare @Values Table (
-			[HelpId] UniqueIdentifier Not Null,
-			[HelpSubject] [App_DataDictionary].[typeTitle] Not Null,
-			[HelpToolTip] [App_DataDictionary].[typeDescription] Null,
-			[HelpText] NVarChar(Max) Not Null,
-			[NameSpace] NVarChar(1023) Null,
-			Primary Key ([HelpId]))
+		[RoleId]          UniqueIdentifier Not Null,
+		[PrincipleId]     UniqueIdentifier Not Null,
+		Primary Key ([RoleId], [PrincipleId]))
 
 	Insert Into @Values
-	Select	Coalesce(D.[HelpId], @HelpId, NewId()) As [HelpId],
-			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
-			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
-			NullIf(Trim(D.[HelpText]),'') As [HelpText],
-			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
+	Select	D.[RoleId],
+			D.[PrincipleId]
 	From	@Data D
-	Where	(@HelpId is Null or @HelpId = D.[HelpId])
-
-	-- Deal with Ownership, Sets up Row Level Security
-	Insert Into [AppSecurity].[ObjectOwner] (
-			[PrincipleId],
-			[ObjectId])
-	Select	S.[PrincipleId],
-			V.[HelpId]
-	From	@Values V
-			Cross Apply [AppSecurity].[funcAuthorization](V.[HelpId]) S
-	Where	S.[IsHelpOwner] = 1 And
-			S.[HasOwner] = 0 And
-			S.[PrincipleId] is not null
-	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Inner Join [AppSecurity].[Role] R
+			On	D.[RoleId] = R.[RoleId]
+			Inner Join [AppSecurity].[Principle] P
+			On	D.[PrincipleId] = P.[PrincipleId]
+	Where	(@RoleId is Null Or @RoleId = D.[RoleId]) And
+			(@PrincipleId is Null Or @PrincipleId = D.[PrincipleId])
 
 	-- Apply Changes
-	Delete From [AppGeneral].[HelpSubject]
-	From	[AppGeneral].[HelpSubject] T
+	Delete From [AppSecurity].[RoleMembership]
+	From	[AppSecurity].[RoleMembership] T
 			Left Join @Values S
-			On	T.[HelpId] = S.[HelpId]
-	Where	S.[HelpId] is Null And
-			T.[HelpId] In (
-				Select	[HelpId]
-				From	[AppGeneral].[HelpSubject]
-				Where	(@HelpId is Null Or @HelpId = [HelpId]))
-	Print FormatMessage ('Delete [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[RoleId] = S.[RoleId] And
+				T.[PrincipleId] = S.[PrincipleId]
+	Where	S.[RoleId] is Null And
+			(@RoleId is Null Or @RoleId = T.[RoleId]) And
+			(@PrincipleId is Null Or @PrincipleId = T.[PrincipleId])
+	Print FormatMessage ('Delete [AppSecurity].[SecurityMembership]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	[HelpId],
-				[HelpSubject],
-				[HelpToolTip],
-				[HelpText],
-				[NameSpace]
-		From	@Values
-		Except
-		Select	[HelpId],
-				[HelpSubject],
-				[HelpToolTip],
-				[HelpText],
-				[NameSpace]
-		From	[AppGeneral].[HelpSubject])
-	Update [AppGeneral].[HelpSubject]
-	Set		[HelpSubject] = S.[HelpSubject],
-			[HelpToolTip] = S.[HelpToolTip],
-			[HelpText] = S.[HelpText],
-			[NameSpace] = S.[NameSpace]
-	From	[AppGeneral].[HelpSubject] T
-			Inner Join [Delta] S
-			On	T.[HelpId] = S.[HelpId]
-	Print FormatMessage ('Update [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [AppGeneral].[HelpSubject] (
-			[HelpId],
-			[HelpSubject],
-			[HelpToolTip],
-			[HelpText],
-			[NameSpace])
-	Select	S.[HelpId],
-			S.[HelpSubject],
-			S.[HelpToolTip],
-			S.[HelpText],
-			S.[NameSpace]
+	Insert Into [AppSecurity].[RoleMembership] (
+			[RoleId],
+			[PrincipleId])
+	Select	S.[RoleId],
+			S.[PrincipleId]
 	From	@Values S
-			Left Join [AppGeneral].[HelpSubject] T
-			On	S.[HelpId] = T.[HelpId]
-	Where	T.[HelpId] is Null
-	Print FormatMessage ('Insert [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Left Join [AppSecurity].[RoleMembership] T
+			On	S.[RoleId] = T.[RoleId] And
+				S.[PrincipleId] = T.[PrincipleId]
+	Where	T.[RoleId] is Null
+	Print FormatMessage ('Insert [AppSecurity].[SecurityMembership]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

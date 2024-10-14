@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// <summary>
     /// Wrapper Class for Security Principle.
     /// </summary>
-    class PrincipleData : SecurityPrincipleCollection<PrincipleValue>, IPrincipleData,
+    class PrincipleData : PrincipleCollection<PrincipleValue>, IPrincipleData,
         ILoadData, ILoadData<IPrincipleIndex>,
         ISaveData, ISaveData<IPrincipleIndex>
     {
@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>PrincipleData</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateLoad(this, (ISecurityPrincipleKey)dataKey).ToList(); }
+        { return factory.CreateLoad(this, (IPrincipleKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>PrincipleData</remarks>
@@ -43,7 +43,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>PrincipleData</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateSave(this, (ISecurityPrincipleKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IPrincipleKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>PrincipleData</remarks>

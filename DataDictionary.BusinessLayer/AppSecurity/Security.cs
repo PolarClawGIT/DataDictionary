@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <summary>
         /// Security Role Membership
         /// </summary>
-        IMembershipData Memberships { get; }
+        IRoleMembershipData Memberships { get; }
 
         // TODO: Ownership
         // TODO: Permissions
@@ -49,8 +49,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         RoleData roleValues = new RoleData();
 
         /// <inheritdoc/>
-        public IMembershipData Memberships { get { return membershipValues; } }
-        MembershipData membershipValues = new MembershipData();
+        public IRoleMembershipData Memberships { get { return membershipValues; } }
+        RoleMembershipData membershipValues = new RoleMembershipData();
 
 
         /// <inheritdoc/>
