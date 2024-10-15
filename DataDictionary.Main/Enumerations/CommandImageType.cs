@@ -74,6 +74,11 @@ namespace DataDictionary.Main.Enumerations
         /// <summary>
         /// History from Database
         /// </summary>
-        HistoryDatabase
+        HistoryDatabase,
+
+        /// <summary>
+        /// Security from Database
+        /// </summary>
+        SecurityDatabase,
     }
 }

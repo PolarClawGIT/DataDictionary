@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,12 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Security
 {
-    partial class PrincipalManager : ApplicationData
+    partial class ObjectManager : ApplicationData
     {
-        //TODO: Build out screen.
-        // Thinking List of Principals on left.
-        // Details for the selected Principal.
-        // List of Role Membership and Ownership  (view only? Scoped to Model?)
-
-        public PrincipalManager()
+        public ObjectManager() : base()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.SecurityPrinciple);
             SetCommand(ScopeType.SecurityPrinciple,
                 CommandImageType.Add,
                 CommandImageType.Delete,
@@ -31,5 +26,8 @@ namespace DataDictionary.Main.Forms.Security
                 CommandImageType.SaveDatabase,
                 CommandImageType.DeleteDatabase);
         }
+
+        public ObjectManager(IObjectSecurityValue value) : this() 
+        { }
     }
 }

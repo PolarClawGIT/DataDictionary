@@ -1833,6 +1833,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SecurityTable {
+            get {
+                object obj = ResourceManager.GetObject("SecurityTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SelectAttribute {
             get {
                 object obj = ResourceManager.GetObject("SelectAttribute", resourceCulture);

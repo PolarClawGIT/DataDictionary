@@ -14,6 +14,11 @@ namespace DataDictionary.Main.Forms.Security
 {
     partial class RoleManager : ApplicationData
     {
+        //TODO: Build out screen.
+        // Thinking List of Roles on left.
+        // Details for the selected Principal.
+        // List of Member Principals and Object Authorization (view only? Scoped to Model?)
+
         public RoleManager()
         {
             InitializeComponent();

@@ -65,7 +65,8 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandImageType.DeleteDatabase,
+                CommandImageType.SecurityDatabase);
 
             // Store and recompute column sizes for List views
             controlValuesWidths = controlData.Columns.
@@ -230,6 +231,18 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.Current is HelpSubjectValue current)
             { helpBinding.RemoveCurrent(); }
+        }
+
+        protected override void SecurityCommand_Click(Object sender, EventArgs e)
+        {
+            base.SecurityCommand_Click(sender, e);
+
+            if (helpBinding.Current is HelpSubjectValue current)
+            {
+                //TODO: Work out generic way of calling Security.ObjectManager for the specific context.
+                Activate(() => new Security.ObjectManager());
+                //Activate((data) => new Security.ObjectManager<HelpSubjectValue>(current.Scope, current), data);
+            }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)

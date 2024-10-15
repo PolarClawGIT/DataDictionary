@@ -187,6 +187,7 @@ namespace DataDictionary.Main.Forms
             commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.SecurityDatabase, new CommandState(securityCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
         }
 
@@ -431,6 +432,9 @@ namespace DataDictionary.Main.Forms
         { }
 
         protected virtual void HistoryCommand_Click(object sender, EventArgs e)
+        { }
+
+        protected virtual void SecurityCommand_Click(object sender, EventArgs e)
         { }
 
         protected override void HandleMessage(OnlineStatusChanged message)
