@@ -201,5 +201,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return PrincipleName ?? String.Empty; }
     }
 }

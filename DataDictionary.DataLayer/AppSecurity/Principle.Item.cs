@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface IPrincipleItem: 
         IPrincipleKey, IPrincipleKeyName,
-        ISecurityPrincipleName, IObjectSecurity
+        ISecurityPrincipleName, IObjectAuthorization
     {
         /// <summary>
         /// Additional information (notes) about the Principle.

@@ -9,6 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 ;With [Object] As (
 	Select	T.[HelpId],
+			T.[HelpSubject],
 			Convert(Bit, IIF(
 				(S.[IsGrant] = 1 And S.[IsDeny] = 0) Or
 				S.[IsHelpAdmin] = 1 Or
@@ -22,6 +23,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 	From	[AppGeneral].[HelpSubject] T
 			Cross Apply [AppSecurity].[funcAuthorization](T.[HelpId]) S)
 Select	T.[HelpId],
+		T.[HelpSubject],
 		O.[PrincipleId] As [PrincipleId],
 		Convert(UniqueIdentifier, Null) [RoleId],
 		Convert(Bit, 1) As [IsGrant],
@@ -35,6 +37,7 @@ Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And
 		(@PrincipleId is Null Or IsNull(O.[PrincipleId], @PrincipleId) = @PrincipleId)
 Union
 Select	T.[HelpId],
+		T.[HelpSubject],
 		Convert(UniqueIdentifier, Null) As [PrincipleId],
 		P.[RoleId],
 		P.[IsGrant],

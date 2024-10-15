@@ -1,6 +1,7 @@
 ﻿CREATE TYPE [AppSecurity].[typeHelpSecurity] AS TABLE
 (
 	[HelpId]        UniqueIdentifier Not Null,
+	[HelpSubject]   [App_DataDictionary].[typeTitle] Null,
 	[PrincipleId]   UniqueIdentifier Null, -- Owner
 	[RoleId]        UniqueIdentifier Null,
 	[IsGrant]       Bit Null,

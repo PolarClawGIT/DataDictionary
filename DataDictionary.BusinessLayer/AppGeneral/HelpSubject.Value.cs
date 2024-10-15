@@ -35,7 +35,5 @@ namespace DataDictionary.BusinessLayer.AppGeneral
                 IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
             }, this);
         }
-
-
     }
 }

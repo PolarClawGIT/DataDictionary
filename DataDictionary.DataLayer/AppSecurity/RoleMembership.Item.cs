@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface IRoleMembershipItem: 
         IPrincipleKey, IRoleKey,
-        IObjectSecurity
+        IObjectAuthorization
     { }
 
     /// <summary>

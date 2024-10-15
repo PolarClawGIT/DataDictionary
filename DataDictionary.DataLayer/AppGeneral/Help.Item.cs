@@ -13,17 +13,18 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppGeneral
 {
+    /// <summary>
+    /// Interface for a Help Item Key and Name
+    /// </summary>
+    public interface IHelpKeyItem : IHelpKey, IHelpKeyName
+    { }
 
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, ITemporalItem
+    public interface IHelpItem : IHelpKeyItem, IHelpKeyNameSpace,
+        ITemporalItem
     {
-        /// <summary>
-        /// Title/Subject of the Help Document.
-        /// </summary>
-        String? HelpSubject { get; }
-
         /// <summary>
         /// Body of the Help Document
         /// </summary>
@@ -43,9 +44,6 @@ namespace DataDictionary.DataLayer.AppGeneral
     {
         /// <inheritdoc/>
         public Guid? HelpId { get { return GetValue<Guid>(nameof(HelpId)); } protected set { SetValue(nameof(HelpId), value); } }
-
-        // Obsolete, Use NameSpace instead
-        //public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
 
         /// <inheritdoc/>
         public string? HelpSubject { get { return GetValue(nameof(HelpSubject)); } set { SetValue(nameof(HelpSubject), value); } }

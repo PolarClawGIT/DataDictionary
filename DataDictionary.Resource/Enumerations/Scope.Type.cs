@@ -245,6 +245,11 @@
         SecurityMembership,
 
         /// <summary>
+        /// Security for Help Subject objects
+        /// </summary>
+        SecurityHelp,
+
+        /// <summary>
         /// Scripting Engine
         /// </summary>
         Scripting,
