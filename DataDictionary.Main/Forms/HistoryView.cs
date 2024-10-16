@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -25,10 +26,6 @@ namespace DataDictionary.Main.Forms
         ILoadHistoryData? loader;
         List<ITemporalValue> modificationValues = new List<ITemporalValue>();
 
-        // Initial width of the columns, for resizing calculations.
-        Dictionary<ColumnHeader, Single> historyValuesWidths;
-        Dictionary<ColumnHeader, Single> historyModificationWidths;
-
         // Crosswalk Item in List View back to source.
         Dictionary<ListViewItem, ITemporalValue> historyValues = new Dictionary<ListViewItem, ITemporalValue>();
         Dictionary<ListViewItem, ITemporalValue> historyModifications = new Dictionary<ListViewItem, ITemporalValue>();
@@ -38,25 +35,8 @@ namespace DataDictionary.Main.Forms
         public HistoryView() : base()
         {
             InitializeComponent();
-
-            // Store and recompute column sizes for List views
-            historyValuesWidths = historyValuesData.Columns.
-                OfType<ColumnHeader>().
-                Select(s => new
-                {
-                    column = s,
-                    value = (Single)s.Width / (Single)(historyValuesData.Columns.OfType<ColumnHeader>().Sum(v => v.Width))
-                }).
-                ToDictionary(k => k.column, v => v.value);
-
-            historyModificationWidths = historyModificationData.Columns.
-                OfType<ColumnHeader>().
-                Select(s => new
-                {
-                    column = s,
-                    value = (Single)s.Width / (Single)(historyModificationData.Columns.OfType<ColumnHeader>().Sum(v => v.Width))
-                }).
-                ToDictionary(k => k.column, v => v.value);
+            historyValuesData.ResizeColumns();
+            historyModificationData.ResizeColumns();
 
             HistoryValuesData_Resize(historyValuesData, EventArgs.Empty);
             HistoryModificationData_Resize(historyModificationData, EventArgs.Empty);
@@ -126,15 +106,7 @@ namespace DataDictionary.Main.Forms
         { return modificationValues.Where(w => selectedValue.Index.Equals(w.Index)); }
 
         void HistoryValuesData_Resize(object sender, EventArgs e)
-        {
-            historyValuesData.Columns.
-                OfType<ColumnHeader>().
-                ToList().
-                ForEach(f => f.Width = (Int32)(
-                    (historyValuesData.Width -
-                        SystemInformation.VerticalScrollBarWidth) *
-                    historyValuesWidths[f]));
-        }
+        { historyValuesData.ResizeColumns(); }
 
         private void HistoryModificationData_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -148,15 +120,7 @@ namespace DataDictionary.Main.Forms
         }
 
         void HistoryModificationData_Resize(object sender, EventArgs e)
-        {
-            historyModificationData.Columns.
-                OfType<ColumnHeader>().
-                ToList().
-                ForEach(f => f.Width = (Int32)(
-                    (historyModificationData.Width -
-                        SystemInformation.VerticalScrollBarWidth) *
-                    historyModificationWidths[f]));
-        }
+        { historyModificationData.ResizeColumns(); }
 
         void SetSummary(ITemporalValue value)
         {

@@ -50,8 +50,6 @@ namespace DataDictionary.Main.Forms.General
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
 
-        Dictionary<ColumnHeader, Single> controlValuesWidths;
-
         public Boolean IsOpenItem(object? item)
         { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
 
@@ -69,14 +67,7 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.SecurityDatabase);
 
             // Store and recompute column sizes for List views
-            controlValuesWidths = controlData.Columns.
-                OfType<ColumnHeader>().
-                Select(s => new
-                {
-                    column = s,
-                    value = (Single)s.Width / (Single)(controlData.Columns.OfType<ColumnHeader>().Sum(v => v.Width))
-                }).
-                ToDictionary(k => k.column, v => v.value);
+            controlData.ResizeColumns();
         }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
@@ -146,7 +137,7 @@ namespace DataDictionary.Main.Forms.General
 
             helpBinding.DataSource = bindingData;
             helpBinding.Position = 0;
-            
+
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)
@@ -176,15 +167,7 @@ namespace DataDictionary.Main.Forms.General
         }
 
         private void ControlData_Resize(object sender, EventArgs e)
-        {
-            controlData.Columns.
-                OfType<ColumnHeader>().
-                ToList().
-                ForEach(f => f.Width = (Int32)(
-                    (controlData.Width -
-                        SystemInformation.VerticalScrollBarWidth) *
-                    controlValuesWidths[f]));
-        }
+        { controlData.ResizeColumns(); }
 
         ListViewItem? currentItem = null; // To prevent recursive calls
         private void ControlData_ItemChecked(object? sender, ItemCheckedEventArgs e)

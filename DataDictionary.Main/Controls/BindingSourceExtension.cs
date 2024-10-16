@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Controls
 {
-    static class BindingSourceExtesnsion
+    static class BindingSourceExtension
     {
         public static void BindComplete(this BindingSource binding,  object sender, BindingCompleteEventArgs e)
         { // This is to help detecting binding errors and provide something meaningful.

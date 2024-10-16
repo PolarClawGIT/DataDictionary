@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public SubjectArea()
         {
             InitializeComponent();
-            subjectAreaData_Resize(subjectAreaData, EventArgs.Empty);
+            subjectAreaData.ResizeColumns();
         }
 
         /// <summary>
@@ -48,11 +49,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         }
 
         private void subjectAreaData_Resize(object sender, EventArgs e)
-        {
-            Int32 widthModifier = SystemInformation.VerticalScrollBarWidth / 2;
-            subjectAreaColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.4) - widthModifier);
-            subjectNameSpaceColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.6) - widthModifier);
-        }
+        { subjectAreaData.ResizeColumns(); }
 
         /// <summary>
         /// Triggered when on Checked when the SubjectArea is not in the list.
