@@ -15,8 +15,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IAuthorizationData :
-        IBindingData<AuthorizationValue>
-    { }
+        IBindingData<AuthorizationValue>, ILoadData
+    {
+        /// <summary>
+        /// Creates an instance of the Authorization and returns the interface.
+        /// </summary>
+        /// <returns></returns>
+        static public IAuthorizationData Create()
+        { return new AuthorizationData(); }
+    }
 
 
     /// <summary>
@@ -39,5 +46,14 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.Add(factory.CreateLoad(this, key));
             return work;
         }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove Authorization", DoWork = () => { this.Clear(); } }.ToList(); }
+
     }
 }

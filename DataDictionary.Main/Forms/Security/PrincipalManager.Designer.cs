@@ -34,12 +34,15 @@
             principleNameData = new Controls.TextBoxData();
             principleAnnotationData = new Controls.TextBoxData();
             roleMembershipData = new DataGridView();
-            roleIdColumn = new DataGridViewComboBoxColumn();
-            isApplicationUserData = new CheckBox();
             principalSplit = new SplitContainer();
             principleList = new ListView();
+            principalColumn = new ColumnHeader();
             bindingPrinciple = new BindingSource(components);
-            bindingRole = new BindingSource(components);
+            bindingMembers = new BindingSource(components);
+            principalOwnershipData = new DataGridView();
+            bindingOwnership = new BindingSource(components);
+            ownershipObjectColumn = new DataGridViewTextBoxColumn();
+            roleIdColumn = new DataGridViewComboBoxColumn();
             principalLayout = new TableLayoutPanel();
             principalLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)roleMembershipData).BeginInit();
@@ -48,28 +51,30 @@
             principalSplit.Panel2.SuspendLayout();
             principalSplit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingPrinciple).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingRole).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingMembers).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)principalOwnershipData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOwnership).BeginInit();
             SuspendLayout();
             // 
             // principalLayout
             // 
-            principalLayout.ColumnCount = 2;
+            principalLayout.ColumnCount = 1;
             principalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            principalLayout.ColumnStyles.Add(new ColumnStyle());
             principalLayout.Controls.Add(principleLoginData, 0, 0);
             principalLayout.Controls.Add(principleNameData, 0, 1);
             principalLayout.Controls.Add(principleAnnotationData, 0, 2);
             principalLayout.Controls.Add(roleMembershipData, 0, 3);
-            principalLayout.Controls.Add(isApplicationUserData, 1, 0);
+            principalLayout.Controls.Add(principalOwnershipData, 0, 4);
             principalLayout.Dock = DockStyle.Fill;
             principalLayout.Location = new Point(0, 0);
             principalLayout.Name = "principalLayout";
-            principalLayout.RowCount = 4;
+            principalLayout.RowCount = 5;
             principalLayout.RowStyles.Add(new RowStyle());
             principalLayout.RowStyles.Add(new RowStyle());
+            principalLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             principalLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            principalLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            principalLayout.Size = new Size(321, 391);
+            principalLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            principalLayout.Size = new Size(381, 494);
             principalLayout.TabIndex = 0;
             // 
             // principleLoginData
@@ -81,35 +86,33 @@
             principleLoginData.Multiline = false;
             principleLoginData.Name = "principleLoginData";
             principleLoginData.ReadOnly = false;
-            principleLoginData.Size = new Size(196, 44);
+            principleLoginData.Size = new Size(375, 44);
             principleLoginData.TabIndex = 0;
             principleLoginData.WordWrap = true;
             // 
             // principleNameData
             // 
             principleNameData.AutoSize = true;
-            principalLayout.SetColumnSpan(principleNameData, 2);
             principleNameData.Dock = DockStyle.Fill;
             principleNameData.HeaderText = "Principle Name";
             principleNameData.Location = new Point(3, 53);
             principleNameData.Multiline = false;
             principleNameData.Name = "principleNameData";
             principleNameData.ReadOnly = false;
-            principleNameData.Size = new Size(315, 44);
+            principleNameData.Size = new Size(375, 44);
             principleNameData.TabIndex = 1;
             principleNameData.WordWrap = true;
             // 
             // principleAnnotationData
             // 
             principleAnnotationData.AutoSize = true;
-            principalLayout.SetColumnSpan(principleAnnotationData, 2);
             principleAnnotationData.Dock = DockStyle.Fill;
             principleAnnotationData.HeaderText = "Principle Annotation";
             principleAnnotationData.Location = new Point(3, 103);
             principleAnnotationData.Multiline = true;
             principleAnnotationData.Name = "principleAnnotationData";
             principleAnnotationData.ReadOnly = false;
-            principleAnnotationData.Size = new Size(315, 110);
+            principleAnnotationData.Size = new Size(375, 72);
             principleAnnotationData.TabIndex = 2;
             principleAnnotationData.WordWrap = true;
             // 
@@ -117,29 +120,12 @@
             // 
             roleMembershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             roleMembershipData.Columns.AddRange(new DataGridViewColumn[] { roleIdColumn });
-            principalLayout.SetColumnSpan(roleMembershipData, 2);
             roleMembershipData.Dock = DockStyle.Fill;
-            roleMembershipData.Location = new Point(3, 219);
+            roleMembershipData.Location = new Point(3, 181);
             roleMembershipData.Name = "roleMembershipData";
-            roleMembershipData.Size = new Size(315, 169);
+            roleMembershipData.ReadOnly = true;
+            roleMembershipData.Size = new Size(375, 151);
             roleMembershipData.TabIndex = 3;
-            // 
-            // roleIdColumn
-            // 
-            roleIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            roleIdColumn.HeaderText = "Role Name";
-            roleIdColumn.Name = "roleIdColumn";
-            // 
-            // isApplicationUserData
-            // 
-            isApplicationUserData.AutoSize = true;
-            isApplicationUserData.Enabled = false;
-            isApplicationUserData.Location = new Point(205, 3);
-            isApplicationUserData.Name = "isApplicationUserData";
-            isApplicationUserData.Size = new Size(113, 19);
-            isApplicationUserData.TabIndex = 4;
-            isApplicationUserData.Text = "Application User";
-            isApplicationUserData.UseVisualStyleBackColor = true;
             // 
             // principalSplit
             // 
@@ -154,28 +140,71 @@
             // principalSplit.Panel2
             // 
             principalSplit.Panel2.Controls.Add(principalLayout);
-            principalSplit.Size = new Size(487, 391);
-            principalSplit.SplitterDistance = 162;
+            principalSplit.Size = new Size(576, 494);
+            principalSplit.SplitterDistance = 191;
             principalSplit.TabIndex = 4;
             // 
             // principleList
             // 
+            principleList.Columns.AddRange(new ColumnHeader[] { principalColumn });
             principleList.Dock = DockStyle.Fill;
             principleList.Location = new Point(0, 0);
             principleList.Name = "principleList";
-            principleList.Size = new Size(162, 391);
+            principleList.Size = new Size(191, 494);
             principleList.TabIndex = 0;
             principleList.UseCompatibleStateImageBehavior = false;
             principleList.View = View.Details;
+            principleList.SelectedIndexChanged += PrincipleList_SelectedIndexChanged;
+            principleList.Resize += PrincipleList_Resize;
+            // 
+            // principalColumn
+            // 
+            principalColumn.Text = "Principal";
+            // 
+            // bindingPrinciple
+            // 
+            bindingPrinciple.CurrentChanged += BindingPrinciple_CurrentChanged;
+            // 
+            // bindingMembers
+            // 
+            bindingMembers.AddingNew += BindingMembers_AddingNew;
+            // 
+            // principalOwnershipData
+            // 
+            principalOwnershipData.AllowUserToAddRows = false;
+            principalOwnershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            principalOwnershipData.Columns.AddRange(new DataGridViewColumn[] { ownershipObjectColumn });
+            principalOwnershipData.Dock = DockStyle.Fill;
+            principalOwnershipData.Location = new Point(3, 338);
+            principalOwnershipData.Name = "principalOwnershipData";
+            principalOwnershipData.ReadOnly = true;
+            principalOwnershipData.Size = new Size(375, 153);
+            principalOwnershipData.TabIndex = 4;
+            // 
+            // ownershipObjectColumn
+            // 
+            ownershipObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ownershipObjectColumn.HeaderText = "Object Name (owned by Princpal)";
+            ownershipObjectColumn.Name = "ownershipObjectColumn";
+            ownershipObjectColumn.ReadOnly = true;
+            // 
+            // roleIdColumn
+            // 
+            roleIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            roleIdColumn.DataPropertyName = "RoleId";
+            roleIdColumn.HeaderText = "Role Name (member of)";
+            roleIdColumn.Name = "roleIdColumn";
+            roleIdColumn.ReadOnly = true;
             // 
             // PrincipalManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(487, 416);
+            ClientSize = new Size(576, 519);
             Controls.Add(principalSplit);
             Name = "PrincipalManager";
             Text = "Principal";
+            Load += PrincipalManager_Load;
             Controls.SetChildIndex(principalSplit, 0);
             principalLayout.ResumeLayout(false);
             principalLayout.PerformLayout();
@@ -185,7 +214,9 @@
             ((System.ComponentModel.ISupportInitialize)principalSplit).EndInit();
             principalSplit.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingPrinciple).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingRole).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingMembers).EndInit();
+            ((System.ComponentModel.ISupportInitialize)principalOwnershipData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOwnership).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -199,9 +230,12 @@
         private Controls.TextBoxData principleNameData;
         private Controls.TextBoxData principleAnnotationData;
         private DataGridView roleMembershipData;
-        private DataGridViewComboBoxColumn roleIdColumn;
         private BindingSource bindingPrinciple;
-        private BindingSource bindingRole;
-        private CheckBox isApplicationUserData;
+        private BindingSource bindingMembers;
+        private ColumnHeader principalColumn;
+        private DataGridView principalOwnershipData;
+        private BindingSource bindingOwnership;
+        private DataGridViewComboBoxColumn roleIdColumn;
+        private DataGridViewTextBoxColumn ownershipObjectColumn;
     }
 }

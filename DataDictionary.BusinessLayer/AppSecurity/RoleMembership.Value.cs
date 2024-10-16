@@ -18,8 +18,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         public RoleMembershipValue() : base () { }
 
-        /// <inheritdoc cref="RoleMembershipItem.RoleMembershipItem(IPrincipleKey, IRoleKey)"/>
-        public RoleMembershipValue(IPrincipleIndex principleKey, IRoleIndex roleKey) : base(principleKey, roleKey)
+        /// <inheritdoc cref="RoleMembershipItem.RoleMembershipItem(IPrincipleKey)"/>
+        public RoleMembershipValue(IPrincipleIndex principleKey) : base(principleKey)
+        { }
+
+        /// <inheritdoc cref="RoleMembershipItem.RoleMembershipItem(IRoleKey)"/>
+        public RoleMembershipValue(IRoleIndex roleKey) : base(roleKey)
         { }
     }
 }

@@ -44,11 +44,15 @@
             isScriptAdminData = new CheckBox();
             isScriptOwnerData = new CheckBox();
             principalMemeberData = new DataGridView();
-            principalIdColumn = new DataGridViewComboBoxColumn();
             roleSplit = new SplitContainer();
             roleList = new ListView();
             bindingRoles = new BindingSource(components);
             bindingPrincipals = new BindingSource(components);
+            principalIdColumn = new DataGridViewComboBoxColumn();
+            dataGridView1 = new DataGridView();
+            permissionObjectColumn = new DataGridViewTextBoxColumn();
+            isGrantColumn = new DataGridViewCheckBoxColumn();
+            isDenyColumn = new DataGridViewCheckBoxColumn();
             roleLayout = new TableLayoutPanel();
             roleLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)principalMemeberData).BeginInit();
@@ -58,6 +62,7 @@
             roleSplit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingRoles).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingPrincipals).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // roleLayout
@@ -81,20 +86,22 @@
             roleLayout.Controls.Add(isScriptAdminData, 0, 7);
             roleLayout.Controls.Add(isScriptOwnerData, 1, 7);
             roleLayout.Controls.Add(principalMemeberData, 0, 8);
+            roleLayout.Controls.Add(dataGridView1, 0, 9);
             roleLayout.Dock = DockStyle.Fill;
             roleLayout.Location = new Point(0, 0);
             roleLayout.Name = "roleLayout";
-            roleLayout.RowCount = 9;
+            roleLayout.RowCount = 10;
+            roleLayout.RowStyles.Add(new RowStyle());
+            roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            roleLayout.RowStyles.Add(new RowStyle());
+            roleLayout.RowStyles.Add(new RowStyle());
+            roleLayout.RowStyles.Add(new RowStyle());
+            roleLayout.RowStyles.Add(new RowStyle());
+            roleLayout.RowStyles.Add(new RowStyle());
             roleLayout.RowStyles.Add(new RowStyle());
             roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle());
-            roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            roleLayout.Size = new Size(332, 447);
+            roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            roleLayout.Size = new Size(374, 576);
             roleLayout.TabIndex = 0;
             // 
             // roleNameData
@@ -108,7 +115,7 @@
             roleNameData.Multiline = false;
             roleNameData.Name = "roleNameData";
             roleNameData.ReadOnly = false;
-            roleNameData.Size = new Size(326, 44);
+            roleNameData.Size = new Size(368, 44);
             roleNameData.TabIndex = 0;
             roleNameData.WordWrap = true;
             // 
@@ -123,14 +130,14 @@
             roleDescriptionData.Multiline = true;
             roleDescriptionData.Name = "roleDescriptionData";
             roleDescriptionData.ReadOnly = false;
-            roleDescriptionData.Size = new Size(326, 92);
+            roleDescriptionData.Size = new Size(368, 69);
             roleDescriptionData.TabIndex = 1;
             roleDescriptionData.WordWrap = true;
             // 
             // isSecurityAdminData
             // 
             isSecurityAdminData.AutoSize = true;
-            isSecurityAdminData.Location = new Point(3, 151);
+            isSecurityAdminData.Location = new Point(3, 128);
             isSecurityAdminData.Name = "isSecurityAdminData";
             isSecurityAdminData.Size = new Size(107, 19);
             isSecurityAdminData.TabIndex = 2;
@@ -140,7 +147,7 @@
             // isHelpAdminData
             // 
             isHelpAdminData.AutoSize = true;
-            isHelpAdminData.Location = new Point(3, 176);
+            isHelpAdminData.Location = new Point(3, 153);
             isHelpAdminData.Name = "isHelpAdminData";
             isHelpAdminData.Size = new Size(90, 19);
             isHelpAdminData.TabIndex = 3;
@@ -150,7 +157,7 @@
             // isHelpOwnerData
             // 
             isHelpOwnerData.AutoSize = true;
-            isHelpOwnerData.Location = new Point(116, 176);
+            isHelpOwnerData.Location = new Point(116, 153);
             isHelpOwnerData.Name = "isHelpOwnerData";
             isHelpOwnerData.Size = new Size(89, 19);
             isHelpOwnerData.TabIndex = 4;
@@ -160,7 +167,7 @@
             // isCatalogAdminData
             // 
             isCatalogAdminData.AutoSize = true;
-            isCatalogAdminData.Location = new Point(3, 201);
+            isCatalogAdminData.Location = new Point(3, 178);
             isCatalogAdminData.Name = "isCatalogAdminData";
             isCatalogAdminData.Size = new Size(106, 19);
             isCatalogAdminData.TabIndex = 5;
@@ -170,7 +177,7 @@
             // isCatalogOwnerData
             // 
             isCatalogOwnerData.AutoSize = true;
-            isCatalogOwnerData.Location = new Point(116, 201);
+            isCatalogOwnerData.Location = new Point(116, 178);
             isCatalogOwnerData.Name = "isCatalogOwnerData";
             isCatalogOwnerData.Size = new Size(105, 19);
             isCatalogOwnerData.TabIndex = 6;
@@ -180,7 +187,7 @@
             // isLibraryAdminData
             // 
             isLibraryAdminData.AutoSize = true;
-            isLibraryAdminData.Location = new Point(3, 226);
+            isLibraryAdminData.Location = new Point(3, 203);
             isLibraryAdminData.Name = "isLibraryAdminData";
             isLibraryAdminData.Size = new Size(101, 19);
             isLibraryAdminData.TabIndex = 7;
@@ -190,7 +197,7 @@
             // isLibraryOwnerData
             // 
             isLibraryOwnerData.AutoSize = true;
-            isLibraryOwnerData.Location = new Point(116, 226);
+            isLibraryOwnerData.Location = new Point(116, 203);
             isLibraryOwnerData.Name = "isLibraryOwnerData";
             isLibraryOwnerData.Size = new Size(100, 19);
             isLibraryOwnerData.TabIndex = 8;
@@ -200,7 +207,7 @@
             // isModelAdminData
             // 
             isModelAdminData.AutoSize = true;
-            isModelAdminData.Location = new Point(3, 251);
+            isModelAdminData.Location = new Point(3, 228);
             isModelAdminData.Name = "isModelAdminData";
             isModelAdminData.Size = new Size(99, 19);
             isModelAdminData.TabIndex = 9;
@@ -210,7 +217,7 @@
             // isModelOwnerData
             // 
             isModelOwnerData.AutoSize = true;
-            isModelOwnerData.Location = new Point(116, 251);
+            isModelOwnerData.Location = new Point(116, 228);
             isModelOwnerData.Name = "isModelOwnerData";
             isModelOwnerData.Size = new Size(98, 19);
             isModelOwnerData.TabIndex = 10;
@@ -220,7 +227,7 @@
             // isScriptAdminData
             // 
             isScriptAdminData.AutoSize = true;
-            isScriptAdminData.Location = new Point(3, 276);
+            isScriptAdminData.Location = new Point(3, 253);
             isScriptAdminData.Name = "isScriptAdminData";
             isScriptAdminData.Size = new Size(95, 19);
             isScriptAdminData.TabIndex = 11;
@@ -230,7 +237,7 @@
             // isScriptOwnerData
             // 
             isScriptOwnerData.AutoSize = true;
-            isScriptOwnerData.Location = new Point(116, 276);
+            isScriptOwnerData.Location = new Point(116, 253);
             isScriptOwnerData.Name = "isScriptOwnerData";
             isScriptOwnerData.Size = new Size(94, 19);
             isScriptOwnerData.TabIndex = 12;
@@ -243,16 +250,11 @@
             principalMemeberData.Columns.AddRange(new DataGridViewColumn[] { principalIdColumn });
             roleLayout.SetColumnSpan(principalMemeberData, 2);
             principalMemeberData.Dock = DockStyle.Fill;
-            principalMemeberData.Location = new Point(3, 301);
+            principalMemeberData.Location = new Point(3, 278);
             principalMemeberData.Name = "principalMemeberData";
-            principalMemeberData.Size = new Size(326, 143);
+            principalMemeberData.ReadOnly = true;
+            principalMemeberData.Size = new Size(368, 144);
             principalMemeberData.TabIndex = 13;
-            // 
-            // principalIdColumn
-            // 
-            principalIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            principalIdColumn.HeaderText = "Principal Name";
-            principalIdColumn.Name = "principalIdColumn";
             // 
             // roleSplit
             // 
@@ -267,8 +269,8 @@
             // roleSplit.Panel2
             // 
             roleSplit.Panel2.Controls.Add(roleLayout);
-            roleSplit.Size = new Size(503, 447);
-            roleSplit.SplitterDistance = 167;
+            roleSplit.Size = new Size(565, 576);
+            roleSplit.SplitterDistance = 187;
             roleSplit.TabIndex = 4;
             // 
             // roleList
@@ -276,15 +278,54 @@
             roleList.Dock = DockStyle.Fill;
             roleList.Location = new Point(0, 0);
             roleList.Name = "roleList";
-            roleList.Size = new Size(167, 447);
+            roleList.Size = new Size(187, 576);
             roleList.TabIndex = 0;
             roleList.UseCompatibleStateImageBehavior = false;
+            // 
+            // principalIdColumn
+            // 
+            principalIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            principalIdColumn.HeaderText = "Principal Name (member)";
+            principalIdColumn.Name = "principalIdColumn";
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { permissionObjectColumn, isGrantColumn, isDenyColumn });
+            roleLayout.SetColumnSpan(dataGridView1, 2);
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.Location = new Point(3, 428);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(368, 145);
+            dataGridView1.TabIndex = 14;
+            // 
+            // permissionObjectColumn
+            // 
+            permissionObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            permissionObjectColumn.HeaderText = "Object Name (permission)";
+            permissionObjectColumn.Name = "permissionObjectColumn";
+            permissionObjectColumn.ReadOnly = true;
+            // 
+            // isGrantColumn
+            // 
+            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            isGrantColumn.HeaderText = "is Grant";
+            isGrantColumn.Name = "isGrantColumn";
+            isGrantColumn.Width = 53;
+            // 
+            // isDenyColumn
+            // 
+            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            isDenyColumn.HeaderText = "is Deny";
+            isDenyColumn.Name = "isDenyColumn";
+            isDenyColumn.Width = 51;
             // 
             // RoleManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(503, 472);
+            ClientSize = new Size(565, 601);
             Controls.Add(roleSplit);
             Name = "RoleManager";
             Text = "RoleManager";
@@ -299,6 +340,7 @@
             roleSplit.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingRoles).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingPrincipals).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -321,8 +363,12 @@
         private CheckBox isScriptAdminData;
         private CheckBox isScriptOwnerData;
         private DataGridView principalMemeberData;
-        private DataGridViewComboBoxColumn principalIdColumn;
         private BindingSource bindingRoles;
         private BindingSource bindingPrincipals;
+        private DataGridViewComboBoxColumn principalIdColumn;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn permissionObjectColumn;
+        private DataGridViewCheckBoxColumn isGrantColumn;
+        private DataGridViewCheckBoxColumn isDenyColumn;
     }
 }

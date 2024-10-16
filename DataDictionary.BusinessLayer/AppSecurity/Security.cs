@@ -32,6 +32,13 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// </summary>
         IRoleMembershipData Memberships { get; }
 
+        /// <summary>
+        /// Creates an instance of the Security Objects and returns the interface.
+        /// </summary>
+        /// <returns></returns>
+        static public ISecurity Create()
+        { return new Security(); }
+
         // TODO: Ownership
         // TODO: Permissions
     }
@@ -51,7 +58,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         public IRoleMembershipData Memberships { get { return membershipValues; } }
         RoleMembershipData membershipValues = new RoleMembershipData();
-
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -98,7 +104,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(principleValues.Save(factory, dataKey));
-            work.AddRange(roleValues.Save(factory));
             work.AddRange(membershipValues.Save(factory, dataKey));
             return work;
         }
@@ -107,7 +112,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IRoleIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Save(factory));
             work.AddRange(roleValues.Save(factory, dataKey));
             work.AddRange(membershipValues.Save(factory, dataKey));
             return work;

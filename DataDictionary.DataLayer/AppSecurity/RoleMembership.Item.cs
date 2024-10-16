@@ -7,7 +7,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// <summary>
     /// Interface for the Security Membership Item.
     /// </summary>
-    public interface IRoleMembershipItem: 
+    public interface IRoleMembershipItem :
         IPrincipleKey, IRoleKey,
         IObjectAuthorization
     { }
@@ -19,10 +19,10 @@ namespace DataDictionary.DataLayer.AppSecurity
     public class RoleMembershipItem : BindingTableRow, IRoleMembershipItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } set { SetValue(nameof(PrincipleId), value); } }
 
         /// <inheritdoc/>
-        public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } protected set { SetValue(nameof(RoleId), value); } }
+        public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } set { SetValue(nameof(RoleId), value); } }
 
         /// <inheritdoc/>
         public Boolean AlterValue
@@ -55,11 +55,25 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// </summary>
         /// <param name="principleKey"></param>
         /// <param name="roleKey"></param>
-        public RoleMembershipItem(IPrincipleKey principleKey, IRoleKey roleKey) : this ()
+        public RoleMembershipItem(IPrincipleKey principleKey, IRoleKey roleKey) : this()
         {
             PrincipleId = principleKey.PrincipleId;
             RoleId = roleKey.RoleId;
         }
+
+        /// <summary>
+        /// Constructor for SecurityMembershipItem.
+        /// </summary>
+        /// <param name="principleKey"></param>
+        public RoleMembershipItem(IPrincipleKey principleKey) : this()
+        { PrincipleId = principleKey.PrincipleId; }
+
+        /// <summary>
+        /// Constructor for SecurityMembershipItem.
+        /// </summary>
+        /// <param name="roleKey"></param>
+        public RoleMembershipItem(IRoleKey roleKey) : this()
+        { RoleId = roleKey.RoleId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
