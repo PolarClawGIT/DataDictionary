@@ -1,12 +1,11 @@
-﻿CREATE PROCEDURE [AppSecurity].[procSetHelpSecurity]
-		@HelpId UniqueIdentifier = Null,
-		@RoleId UniqueIdentifier = Null,
+﻿CREATE PROCEDURE [AppSecurity].[procSetObjectOwner]
 		@PrincipleId UniqueIdentifier = Null,
-		@Data [AppSecurity].[typeHelpSecurity] ReadOnly
+		@ObjectId UniqueIdentifier = Null,
+		@Data [AppSecurity].[typeObjectOwner] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on HelpSecurity.
+/* Description: Performs Set on ObjectOwner.
 */
 
 -- Transaction Handling
@@ -20,68 +19,43 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	Declare @RoleValue [AppSecurity].[typeObjectPermission]
-	Declare @OwnerValue [AppSecurity].[typeObjectOwner]
+	-- Clean the Data
+	Declare @Values Table (
+			[PrincipleId] UniqueIdentifier Not Null,
+			[ObjectId] UniqueIdentifier Not Null,
+			Primary Key ([PrincipleId], [ObjectId]))
 
-	Insert Into @RoleValue (
-			[RoleId],
-			[ObjectId],
-			[IsGrant],
-			[IsDeny])
-	Select	D.[RoleId],
-			D.[HelpId] As [ObjectId],
-			D.[IsGrant],
-			D.[IsDeny]
-	From	@Data D
-			Inner Join [AppGeneral].[HelpSubject] T
-			On	D.[HelpId] = T.[HelpId]
-			Inner Join [AppSecurity].[Role] R
-			On	D.[RoleId] = R.[RoleId]
-	Where	(@HelpId is Null Or T.[HelpId] = @HelpId) Or
-			(@RoleId is Null Or R.[RoleId] = @RoleId)
-	Union	-- Everything that is not Help Subjects (or it will be deleted)
-	Select	O.[RoleId],
-			O.[ObjectId],
-			O.[IsGrant],
-			O.[IsDeny]
-	From	[AppSecurity].[ObjectPermission] O
-			Left Join [AppGeneral].[HelpSubject] T
-			On	O.[ObjectId] = T.[HelpId]
-	Where	T.[HelpId] is Null And
-			(@HelpId is Null Or O.[ObjectId] = @HelpId) Or
-			(@RoleId is Null Or O.[RoleId] = @RoleId)
-
-	Insert Into @OwnerValue (
-			[PrincipleId],
-			[ObjectId])
+	Insert Into @Values
 	Select	D.[PrincipleId],
-			D.[HelpId] As [ObjectId]
+			D.[ObjectId]
 	From	@Data D
-			Inner Join [AppGeneral].[HelpSubject] T
-			On	D.[HelpId] = T.[HelpId]
 			Inner Join [AppSecurity].[Principle] P
 			On	D.[PrincipleId] = P.[PrincipleId]
-	Where	(@HelpId is Null Or T.[HelpId] = @HelpId) Or
-			(@PrincipleId is Null Or P.[PrincipleId] = @PrincipleId)
-	Union	-- Everything that is not a Help Subject (or it will be deleted)
-	Select	O.[PrincipleId],
-			O.[ObjectId]
-	From	[AppSecurity].[ObjectOwner] O
-			Left Join [AppGeneral].[HelpSubject] T
-			On	O.[ObjectId] = T.[HelpId]
-	Where	T.[HelpId] is Null And
-			(@HelpId is Null Or O.[ObjectId] = @HelpId) Or
-			(@PrincipleId is Null Or O.[PrincipleId] = @PrincipleId)
+	Where	(@PrincipleId is Null or @PrincipleId = D.[PrincipleId]) And
+			(@ObjectId is Null or @ObjectId = D.[ObjectId])
 
-	Exec [AppSecurity].[procSetObjectOwner]
-			@PrincipleId = @PrincipleId,
-			@ObjectId = @HelpId,
-			@Data = @OwnerValue
+	-- Apply Changes
+	Delete From	[AppSecurity].[ObjectOwner]
+	From	[AppSecurity].[ObjectOwner] T
+			Left Join @Values S
+			On	T.[PrincipleId] = S.[PrincipleId] And
+				T.[ObjectId] = S.[ObjectId]
+	Where	S.[ObjectId] is Null And
+			(@PrincipleId is Null or @PrincipleId = S.[PrincipleId]) And
+			(@ObjectId is Null or @ObjectId = S.[ObjectId])
+	Print FormatMessage ('Delete [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Exec [AppSecurity].[procSetObjectPermission]
-			@RoleId = @RoleId,
-			@ObjectId = @HelpId,
-			@Data = @RoleValue
+	Insert Into [AppSecurity].[ObjectOwner] (
+			[PrincipleId],
+			[ObjectId])
+	Select	S.[PrincipleId],
+			S.[ObjectId]
+	From	@Values S
+			Left Join [AppSecurity].[ObjectOwner] T
+			On	S.[PrincipleId] = T.[PrincipleId] And
+				S.[ObjectId] = S.[ObjectId]
+	Where	T.[PrincipleId] is Null
+	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

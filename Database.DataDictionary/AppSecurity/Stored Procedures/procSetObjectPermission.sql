@@ -1,12 +1,11 @@
-﻿CREATE PROCEDURE [AppSecurity].[procSetHelpSecurity]
-		@HelpId UniqueIdentifier = Null,
+﻿CREATE PROCEDURE [AppSecurity].[procSetObjectPermission]
 		@RoleId UniqueIdentifier = Null,
-		@PrincipleId UniqueIdentifier = Null,
-		@Data [AppSecurity].[typeHelpSecurity] ReadOnly
+		@ObjectId UniqueIdentifier = Null,
+		@Data [AppSecurity].[typeObjectPermission] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on HelpSecurity.
+/* Description: Performs Set on ObjectPermission.
 */
 
 -- Transaction Handling
@@ -20,68 +19,72 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	Declare @RoleValue [AppSecurity].[typeObjectPermission]
-	Declare @OwnerValue [AppSecurity].[typeObjectOwner]
+	-- Clean the Data
+	Declare @Value Table (
+		[RoleId] UniqueIdentifier Not Null,
+		[ObjectId] UniqueIdentifier Not Null,
+		[IsGrant] Bit Not Null,
+		[IsDeny] Bit Not Null,
+		Primary Key ([RoleId], [ObjectId]))
 
-	Insert Into @RoleValue (
+	Insert Into @Value
+	Select	D.[RoleId],
+			D.[ObjectId],
+			D.[IsGrant],
+			D.[IsDeny]
+	From	@Data D
+			Inner Join [AppSecurity].[Role] R
+			On	D.[RoleId] = R.[RoleId]
+	Where	(@ObjectId is Null Or D.[ObjectId] = @ObjectId) And
+			(@RoleId is Null Or D.[RoleId] = @RoleId)
+
+	-- Apply Changes
+	Delete From [AppSecurity].[ObjectPermission]
+	From	[AppSecurity].[ObjectPermission] T
+			Left Join @Value S
+			On	T.[RoleId] = S.[RoleId] And
+				T.[ObjectId] = S.[ObjectId]
+	Where	S.[ObjectId] is Null And
+			(@ObjectId is Null Or T.[ObjectId] = @ObjectId) And
+			(@RoleId is Null Or T.[RoleId] = @RoleId)
+	Print FormatMessage ('Delete [AppSecurity].[ObjectPermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[RoleId],
+				[ObjectId],
+				[IsGrant],
+				[IsDeny]
+		From	@Value
+		Except
+		Select	[RoleId],
+				[ObjectId],
+				[IsGrant],
+				[IsDeny]
+		From	[AppSecurity].[ObjectPermission])
+	Update [AppSecurity].[ObjectPermission]
+	Set		[IsGrant] = S.[IsGrant],
+			[IsDeny] = S.[IsDeny]
+	From	[AppSecurity].[ObjectPermission] T
+			Inner Join [Delta] S
+			On	T.[RoleId] = S.[RoleId] And
+				T.[ObjectId] = S.[ObjectId]
+	Print FormatMessage ('Update [AppSecurity].[ObjectPermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [AppSecurity].[ObjectPermission] (
 			[RoleId],
 			[ObjectId],
 			[IsGrant],
 			[IsDeny])
-	Select	D.[RoleId],
-			D.[HelpId] As [ObjectId],
-			D.[IsGrant],
-			D.[IsDeny]
-	From	@Data D
-			Inner Join [AppGeneral].[HelpSubject] T
-			On	D.[HelpId] = T.[HelpId]
-			Inner Join [AppSecurity].[Role] R
-			On	D.[RoleId] = R.[RoleId]
-	Where	(@HelpId is Null Or T.[HelpId] = @HelpId) Or
-			(@RoleId is Null Or R.[RoleId] = @RoleId)
-	Union	-- Everything that is not Help Subjects (or it will be deleted)
-	Select	O.[RoleId],
-			O.[ObjectId],
-			O.[IsGrant],
-			O.[IsDeny]
-	From	[AppSecurity].[ObjectPermission] O
-			Left Join [AppGeneral].[HelpSubject] T
-			On	O.[ObjectId] = T.[HelpId]
-	Where	T.[HelpId] is Null And
-			(@HelpId is Null Or O.[ObjectId] = @HelpId) Or
-			(@RoleId is Null Or O.[RoleId] = @RoleId)
-
-	Insert Into @OwnerValue (
-			[PrincipleId],
-			[ObjectId])
-	Select	D.[PrincipleId],
-			D.[HelpId] As [ObjectId]
-	From	@Data D
-			Inner Join [AppGeneral].[HelpSubject] T
-			On	D.[HelpId] = T.[HelpId]
-			Inner Join [AppSecurity].[Principle] P
-			On	D.[PrincipleId] = P.[PrincipleId]
-	Where	(@HelpId is Null Or T.[HelpId] = @HelpId) Or
-			(@PrincipleId is Null Or P.[PrincipleId] = @PrincipleId)
-	Union	-- Everything that is not a Help Subject (or it will be deleted)
-	Select	O.[PrincipleId],
-			O.[ObjectId]
-	From	[AppSecurity].[ObjectOwner] O
-			Left Join [AppGeneral].[HelpSubject] T
-			On	O.[ObjectId] = T.[HelpId]
-	Where	T.[HelpId] is Null And
-			(@HelpId is Null Or O.[ObjectId] = @HelpId) Or
-			(@PrincipleId is Null Or O.[PrincipleId] = @PrincipleId)
-
-	Exec [AppSecurity].[procSetObjectOwner]
-			@PrincipleId = @PrincipleId,
-			@ObjectId = @HelpId,
-			@Data = @OwnerValue
-
-	Exec [AppSecurity].[procSetObjectPermission]
-			@RoleId = @RoleId,
-			@ObjectId = @HelpId,
-			@Data = @RoleValue
+	Select	S.[RoleId],
+			S.[ObjectId],
+			S.[IsGrant],
+			S.[IsDeny]
+	From	@Value S
+			Left Join [AppSecurity].[ObjectPermission] T
+			On	S.[RoleId] = T.[RoleId] And
+				S.[ObjectId] = T.[ObjectId]
+	Where	T.[RoleId] is Null
+	Print FormatMessage ('Insert [AppSecurity].[ObjectPermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -108,6 +111,7 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
+
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

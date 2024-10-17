@@ -303,7 +303,6 @@
     <Build Include="AppSecurity\Policy\policySecurityPrinciple.sql" />
     <Build Include="AppSecurity\Functions\funcHelpSubjectAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyHelpSubject.sql" />
-    <Build Include="AppSecurity\Views\SecurityObject.sql" />
     <Build Include="AppSecurity\Tables\ObjectOwner.sql" />
     <Build Include="AppSecurity\Functions\funcObjectAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policySecurityObject.sql" />
@@ -326,6 +325,12 @@
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
     </Build>
     <Build Include="AppSecurity\Stored Procedures\procSetHelpSecurity.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetObjectOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetObjectPermission.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeObjectOwner.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeObjectPermission.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetObjectOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetObjectPermission.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
