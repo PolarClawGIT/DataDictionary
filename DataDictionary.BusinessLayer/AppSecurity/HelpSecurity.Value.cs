@@ -14,18 +14,18 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// <inheritdoc/>
     public interface IHelpSecurityValue : IHelpSecurityItem,
         IHelpSubjectIndex, IPrincipleIndex, IRoleIndex, IScopeType,
-        IObjectSecurityValue
+        IObjectValue
     { }
 
     /// <inheritdoc/>
     public class HelpSecurityValue: HelpSecurityItem, IHelpSecurityValue
     {
-        IObjectSecurityValue securityValue; // Backing field for IObjectSecurityValue
+        IObjectValue securityValue; // Backing field for IObjectSecurityValue
 
         /// <inheritdoc cref="HelpSecurityItem.HelpSecurityItem()"/>
         public HelpSecurityValue() : base() 
         {
-            securityValue = ObjectSecurityValue.Create(new DataValue(this)
+            securityValue = ObjectValue.Create(new DataValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,
@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="HelpSecurityItem.HelpSecurityItem(IHelpKeyItem, IPrincipleKey)"/>
         public HelpSecurityValue(IHelpKeyItem helpItem, IPrincipleIndex principleIndex) : base (helpItem, principleIndex)
         {
-            securityValue = ObjectSecurityValue.Create(new DataValue(this)
+            securityValue = ObjectValue.Create(new DataValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="HelpSecurityItem.HelpSecurityItem(IHelpKeyItem, IRoleKey)"/>
         public HelpSecurityValue(IHelpKeyItem helpItem, IRoleIndex roleIndex) : base(helpItem, roleIndex)
         {
-            securityValue = ObjectSecurityValue.Create(new DataValue(this)
+            securityValue = ObjectValue.Create(new DataValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,

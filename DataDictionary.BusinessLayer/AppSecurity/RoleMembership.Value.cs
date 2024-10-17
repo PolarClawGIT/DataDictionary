@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppSecurity;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface IRoleMembershipValue : IRoleMembershipItem,
-        IPrincipleIndex, IRoleIndex
+        IPrincipleIndex, IRoleIndex, IScopeType
     { }
 
     /// <inheritdoc/>
@@ -25,5 +26,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="RoleMembershipItem.RoleMembershipItem(IRoleKey)"/>
         public RoleMembershipValue(IRoleIndex roleKey) : base(roleKey)
         { }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.SecurityMembership; } }
     }
 }

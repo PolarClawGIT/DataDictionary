@@ -64,9 +64,5 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>MembershipData</remarks>
         public IReadOnlyList<WorkItem> Delete(IRoleIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Membership", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
-
-
-
-
     }
 }

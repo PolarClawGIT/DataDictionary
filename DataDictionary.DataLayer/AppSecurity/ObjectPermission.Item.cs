@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.AppGeneral;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,31 +10,25 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Help Subject Security (Permission and Authorization)
+    /// Interface for the Security Object Permission Item defined for a Role.
     /// </summary>
-    public interface IHelpSecurityItem :
-        IHelpKey, IHelpKeyName,
-        IPrincipleKey, IRoleKey,
-        IObjectAccess, IObjectAuthorization
+    public interface IObjectPermissionItem : IRoleKey, IObjectKey, IObjectKeyName, IObjectAccess, IObjectAuthorization
     { }
 
     /// <summary>
-    /// Help Subject Security (Permission and Authorization)
+    /// Implementation of the Security Object Permission Item defined for a Role.
     /// </summary>
     [Serializable]
-    public class HelpSecurityItem : BindingTableRow, IHelpSecurityItem, ISerializable
+    public class ObjectPermissionItem : BindingTableRow, IObjectPermissionItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? HelpId { get { return GetValue<Guid>(nameof(HelpId)); } protected set { SetValue(nameof(HelpId), value); } }
-
-        /// <inheritdoc/>
-        public String? HelpSubject { get { return GetValue(nameof(HelpSubject)); } protected set { SetValue(nameof(HelpSubject), value); } }
-
-        /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
-
-        /// <inheritdoc/>
         public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } protected set { SetValue(nameof(RoleId), value); } }
+
+        /// <inheritdoc/>
+        public Guid? ObjectId { get { return GetValue<Guid>(nameof(ObjectId)); } set { SetValue(nameof(ObjectId), value); } }
+
+        /// <inheritdoc/>
+        public String? ObjectTitle { get { return GetValue(nameof(ObjectTitle)); } set { SetValue(nameof(ObjectTitle), value); } }
 
         /// <inheritdoc/>
         public Boolean IsGrant
@@ -88,41 +81,31 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for HelpSecurityItem
+        /// Constructor for ObjectPermissionItem.
         /// </summary>
-        public HelpSecurityItem() : base()
+        protected ObjectPermissionItem() : base()
         { }
 
         /// <summary>
-        /// Constructor for HelpSecurityItem
+        /// Constructor for ObjectPermissionItem.
         /// </summary>
-        /// <param name="helpItem"></param>
-        /// <param name="principleKey"></param>
-        public HelpSecurityItem(IHelpKeyItem helpItem, IPrincipleKey principleKey) : this()
-        {
-            HelpId = helpItem.HelpId;
-            HelpSubject = helpItem.HelpSubject;
-            PrincipleId = principleKey.PrincipleId;
-        }
+        /// <param name="roleKey"></param>
+        public ObjectPermissionItem(IRoleKey roleKey) : this()
+        { RoleId = roleKey.RoleId; }
 
         /// <summary>
-        /// Constructor for HelpSecurityItem
+        /// Constructor for ObjectPermissionItem.
         /// </summary>
-        /// <param name="helpItem"></param>
         /// <param name="roleKey"></param>
-        public HelpSecurityItem(IHelpKeyItem helpItem, IRoleKey roleKey) : this()
-        {
-            HelpId = helpItem.HelpId;
-            HelpSubject = helpItem.HelpSubject;
-            RoleId = roleKey.RoleId;
-        }
+        /// <param name="objectKey"></param>
+        public ObjectPermissionItem(IRoleKey roleKey, IObjectKey objectKey) : this(roleKey)
+        { ObjectId = objectKey.ObjectId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
-
+            new DataColumn(nameof(ObjectId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectTitle), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsGrant), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeny), typeof(Boolean)){ AllowDBNull = true},
 
@@ -136,12 +119,16 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for SecurityPrincipleItem.
+        /// Serialization Constructor for ObjectPermissionItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected HelpSecurityItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected ObjectPermissionItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return new ObjectKeyName(this).ToString(); }
     }
 }

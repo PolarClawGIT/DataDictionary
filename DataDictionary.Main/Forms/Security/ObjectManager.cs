@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.Security
                 CommandImageType.DeleteDatabase);
         }
 
-        public ObjectManager(IObjectSecurityValue value) : this() 
+        public ObjectManager(IObjectValue value) : this() 
         { }
     }
 }

@@ -47,7 +47,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for SecurityMembershipItem.
         /// </summary>
-        public RoleMembershipItem() : base()
+        protected RoleMembershipItem() : base()
         { }
 
         /// <summary>

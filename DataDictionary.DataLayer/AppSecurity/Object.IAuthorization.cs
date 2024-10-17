@@ -21,20 +21,4 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// </summary>
         Boolean AlterSecurity { get; }
     }
-
-    /// <summary>
-    /// Interface for common Security Object Permission
-    /// </summary>
-    public interface IObjectPermission
-    {
-        /// <summary>
-        /// Grant permission for the object
-        /// </summary>
-        Boolean IsGrant { get; set; }
-
-        /// <summary>
-        /// Deny all permission for the object
-        /// </summary>
-        Boolean IsDeny { get; set; }
-    }
 }

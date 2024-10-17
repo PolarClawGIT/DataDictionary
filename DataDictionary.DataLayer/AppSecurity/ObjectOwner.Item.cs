@@ -1,5 +1,4 @@
-﻿using DataDictionary.Resource.Enumerations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,36 +10,25 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Security Principle Item.
+    /// Interface for the Security Object Owner Item defined for a Principle.
     /// </summary>
-    public interface IPrincipleItem: 
-        IPrincipleKey, IPrincipleKeyName,
-        ISecurityPrincipleName, IObjectAuthorization
-    {
-        /// <summary>
-        /// Additional information (notes) about the Principle.
-        /// </summary>
-        String? PrincipleAnnotation { get; }
-
-    }
+    public interface IObjectOwnerItem : IPrincipleKey, IObjectKey, IObjectKeyName, IObjectAuthorization
+    { }
 
     /// <summary>
-    /// Implementation of the Security Principle Item.
+    /// Implementation of the Security Object Owner Item defined for a Principle.
     /// </summary>
     [Serializable]
-    public class PrincipleItem : BindingTableRow, IPrincipleItem, ISerializable
+    public class ObjectOwnerItem : BindingTableRow, IObjectOwnerItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleLogin { get { return GetValue(nameof(PrincipleLogin)); } set { SetValue(nameof(PrincipleLogin), value); } }
+        public Guid? ObjectId { get { return GetValue<Guid>(nameof(ObjectId)); } protected set { SetValue(nameof(ObjectId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleName { get { return GetValue(nameof(PrincipleName)); } set { SetValue(nameof(PrincipleName), value); } }
-
-        /// <inheritdoc/>
-        public String? PrincipleAnnotation { get { return GetValue(nameof(PrincipleAnnotation)); } set { SetValue(nameof(PrincipleAnnotation), value); } }
+        public String? ObjectTitle { get { return GetValue(nameof(ObjectTitle)); } set { SetValue(nameof(ObjectTitle), value); } }
 
         /// <inheritdoc/>
         public Boolean AlterValue
@@ -63,17 +51,32 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for SecurityPrincipleItem.
+        /// Constructor for ObjectOwnerItem.
         /// </summary>
-        public PrincipleItem() : base()
-        { PrincipleId = Guid.NewGuid(); }
+        protected ObjectOwnerItem() : base()
+        { }
+
+        /// <summary>
+        /// Constructor for ObjectOwnerItem.
+        /// </summary>
+        /// <param name="principleKey"></param>
+        public ObjectOwnerItem(IPrincipleKey principleKey) : this()
+        { PrincipleId = principleKey.PrincipleId; }
+
+        /// <summary>
+        /// Constructor for ObjectOwnerItem.
+        /// </summary>
+        /// <param name="principleKey"></param>
+        /// <param name="objectKey"></param>
+        public ObjectOwnerItem(IPrincipleKey principleKey, IObjectKey objectKey) : this(principleKey)
+        { ObjectId = objectKey.ObjectId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleLogin), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleAnnotation), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectTitle), typeof(String)){ AllowDBNull = true},
+
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
@@ -84,17 +87,16 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for SecurityPrincipleItem.
+        /// Serialization Constructor for ObjectOwnerItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected PrincipleItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected ObjectOwnerItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
-        { return new PrincipleKeyName(this).ToString(); }
-
+        { return new ObjectKeyName(this).ToString(); }
     }
 }

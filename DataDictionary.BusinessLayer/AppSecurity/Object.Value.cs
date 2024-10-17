@@ -12,13 +12,13 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// <summary>
     /// Item can be cast as a general Object Security Value
     /// </summary>
-    public interface IObjectSecurityValue : IDataValue, IObjectAuthorization, IObjectPermission
+    public interface IObjectValue : IDataValue, IObjectAuthorization, IObjectAccess
     { }
 
     /// <summary>
     /// Implementation for an Item can be cast as a Object Security Value
     /// </summary>
-    class ObjectSecurityValue : DataValue, IObjectSecurityValue
+    class ObjectValue : DataValue, IObjectValue
     {
         /// <inheritdoc/>
         public Boolean IsGrant { get { return GetIsGrant(); } set { SetIsGrant(value); } }
@@ -62,13 +62,13 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// </summary>
         public required Action<Boolean> SetIsDeny { get; init; }
 
-        public ObjectSecurityValue(IBindingPropertyChanged source) : base(source)
+        public ObjectValue(IBindingPropertyChanged source) : base(source)
         { }
 
-        public static ObjectSecurityValue Create<TSource>(DataValue baseValue, TSource source)
-            where TSource : IBindingPropertyChanged, IObjectSecurityValue
+        public static ObjectValue Create<TSource>(DataValue baseValue, TSource source)
+            where TSource : IBindingPropertyChanged, IObjectValue
         {
-            return new ObjectSecurityValue(source)
+            return new ObjectValue(source)
             {
                 GetIndex = baseValue.GetIndex,
                 GetScope = baseValue.GetScope,

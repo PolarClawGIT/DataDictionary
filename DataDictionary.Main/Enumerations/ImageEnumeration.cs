@@ -214,6 +214,9 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Delete, Resources.DeleteApplicationRole)),
                 new ImageEnumeration(ScopeType.SecurityMembership,         Resources.Icon_User, Resources.User),
                 new ImageEnumeration(ScopeType.SecurityHelp,               Resources.Icon_User, Resources.User),
+
+                new ImageEnumeration(ScopeType.SecurityOwner,              Resources.Icon_User, Resources.User),
+                new ImageEnumeration(ScopeType.SecurityPermission,         Resources.Icon_User, Resources.User),
             };
 
             BuildDictionary(data);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.Main.Forms.Security
 {
     class ObjectManager<TValue> : ObjectManager
-        where TValue : class, IObjectSecurityValue
+        where TValue : class, IObjectValue
     {
         ScopeType formScope;
 

@@ -82,6 +82,8 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.SecurityRole,               ScopeType.Security,         "Security.Role"),
             new ScopeEnumeration(ScopeType.SecurityMembership,         ScopeType.Security,         "Security.Membership"),
             new ScopeEnumeration(ScopeType.SecurityHelp,               ScopeType.Security,         "Security.Help"),
+            new ScopeEnumeration(ScopeType.SecurityOwner,              ScopeType.SecurityPrinciple,"Security.Owner"),
+            new ScopeEnumeration(ScopeType.SecurityPermission,         ScopeType.SecurityRole,     "Security.Permission"),
 
             new ScopeEnumeration(ScopeType.Scripting,                  "Scripting"),
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),

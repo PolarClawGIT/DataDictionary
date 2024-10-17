@@ -245,6 +245,16 @@
         SecurityMembership,
 
         /// <summary>
+        /// Security Object Owner (Principle)
+        /// </summary>
+        SecurityOwner,
+
+        /// <summary>
+        /// Security Object Permission (Role)
+        /// </summary>
+        SecurityPermission,
+
+        /// <summary>
         /// Security for Help Subject objects
         /// </summary>
         SecurityHelp,
