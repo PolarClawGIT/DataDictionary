@@ -253,7 +253,7 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for SecurityPrincipleItem.
+        /// Serialization Constructor for RoleItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>

@@ -13,11 +13,11 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Logins with Application Principle and Role Permissions.
+    /// Interface for the Logins with Application Principal and Role Permissions.
     /// </summary>
     public interface IAuthorizationItem :
-        IPrincipleKey, IPrincipleKeyName,
-        ISecurityPrincipleName, IRolePermissions
+        IPrincipalKey, IPrincipalKeyName,
+        IPrincipalName, IRolePermissions
     {
         /// <summary>
         /// Is the current user an Application User.
@@ -26,22 +26,22 @@ namespace DataDictionary.DataLayer.AppSecurity
     }
 
     /// <summary>
-    /// Implementation of the Logins with Application Principle and Role Permissions.
+    /// Implementation of the Logins with Application Principal and Role Permissions.
     /// </summary>
     [Serializable]
     public class AuthorizationItem : BindingTableRow, IAuthorizationItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleLogin { get { return GetValue(nameof(PrincipleLogin)); } protected set { SetValue(nameof(PrincipleLogin), value); } }
+        public String? PrincipalLogin { get { return GetValue(nameof(PrincipalLogin)); } protected set { SetValue(nameof(PrincipalLogin), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleName { get { return GetValue(nameof(PrincipleName)); } protected set { SetValue(nameof(PrincipleName), value); } }
+        public String? PrincipalName { get { return GetValue(nameof(PrincipalName)); } protected set { SetValue(nameof(PrincipalName), value); } }
 
         /// <inheritdoc/>
-        public Boolean IsApplicationUser { get { return GetValue<Guid>(nameof(PrincipleId)) is Guid value && !value.Equals(Guid.Empty); } }
+        public Boolean IsApplicationUser { get { return GetValue<Guid>(nameof(PrincipalId)) is Guid value && !value.Equals(Guid.Empty); } }
 
         /// <inheritdoc/>
         public Boolean IsSecurityAdmin
@@ -166,25 +166,25 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// </summary>
         public AuthorizationItem(IIdentity identity) : base()
         {
-            PrincipleId = Guid.NewGuid();
+            PrincipalId = Guid.NewGuid();
 
             if (String.IsNullOrWhiteSpace(identity.Name))
             {
-                PrincipleLogin = "(unknown)";
-                PrincipleName = "(unknown user)";
+                PrincipalLogin = "(unknown)";
+                PrincipalName = "(unknown user)";
             }
             else
             {
-                PrincipleLogin = identity.Name;
-                PrincipleName = identity.Name.Split('\\').Last();
+                PrincipalLogin = identity.Name;
+                PrincipalName = identity.Name.Split('\\').Last();
             }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipleLogin), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalLogin), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsSecurityAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsHelpAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsHelpOwner), typeof(Boolean)){ AllowDBNull = true},
@@ -204,6 +204,6 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         /// <inheritdoc/>
         public override String ToString()
-        { return PrincipleName ?? String.Empty; }
+        { return PrincipalName ?? String.Empty; }
     }
 }

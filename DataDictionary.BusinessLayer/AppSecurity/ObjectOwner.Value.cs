@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface IObjectOwnerValue : IObjectOwnerItem,
-        IPrincipleIndex, IObjectIndex, IScopeType
+        IPrincipalIndex, IObjectIndex, IScopeType
     { }
 
     /// <inheritdoc/>
@@ -19,12 +19,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         public ObjectOwnerValue() : base() { }
 
-        /// <inheritdoc cref="ObjectOwnerItem.ObjectOwnerItem(IPrincipleKey)"/>
-        public ObjectOwnerValue(IPrincipleIndex principleIndex) : base(principleIndex)
+        /// <inheritdoc cref="ObjectOwnerItem.ObjectOwnerItem(IPrincipalKey)"/>
+        public ObjectOwnerValue(IPrincipalIndex principalIndex) : base(principalIndex)
         { }
 
-        /// <inheritdoc cref="ObjectOwnerItem.ObjectOwnerItem(IPrincipleKey, IObjectKey)"/>
-        public ObjectOwnerValue(IPrincipleIndex principleIndex, IObjectIndex objectIndex) : base(principleIndex, objectIndex)
+        /// <inheritdoc cref="ObjectOwnerItem.ObjectOwnerItem(IPrincipalKey, IObjectKey)"/>
+        public ObjectOwnerValue(IPrincipalIndex principalIndex, IObjectIndex objectIndex) : base(principalIndex, objectIndex)
         { }
 
         /// <inheritdoc/>

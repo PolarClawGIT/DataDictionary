@@ -17,8 +17,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     { }
 
     class RoleMembershipData : RoleMembershipCollection<RoleMembershipValue>, IRoleMembershipData,
-        ILoadData, ILoadData<IPrincipleIndex>, ILoadData<IRoleIndex>,
-        ISaveData, ISaveData<IPrincipleIndex>, ISaveData<IRoleIndex>
+        ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>,
+        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>
     {
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
@@ -27,8 +27,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateLoad(this, (IPrincipleKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey)
+        { return factory.CreateLoad(this, (IPrincipalKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
@@ -42,8 +42,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateSave(this, (IPrincipleKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipalIndex dataKey)
+        { return factory.CreateSave(this, (IPrincipalKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
@@ -57,7 +57,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
-        public IReadOnlyList<WorkItem> Delete(IPrincipleIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IPrincipalIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Membership", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>

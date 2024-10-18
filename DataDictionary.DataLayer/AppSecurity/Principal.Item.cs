@@ -11,36 +11,36 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Security Principle Item.
+    /// Interface for the Security Principal Item.
     /// </summary>
-    public interface IPrincipleItem: 
-        IPrincipleKey, IPrincipleKeyName,
-        ISecurityPrincipleName, IObjectAuthorization
+    public interface IPrincipalItem: 
+        IPrincipalKey, IPrincipalKeyName,
+        IPrincipalName, IObjectAuthorization
     {
         /// <summary>
-        /// Additional information (notes) about the Principle.
+        /// Additional information (notes) about the Principal.
         /// </summary>
-        String? PrincipleAnnotation { get; }
+        String? PrincipalAnnotation { get; }
 
     }
 
     /// <summary>
-    /// Implementation of the Security Principle Item.
+    /// Implementation of the Security Principal Item.
     /// </summary>
     [Serializable]
-    public class PrincipleItem : BindingTableRow, IPrincipleItem, ISerializable
+    public class PrincipalItem : BindingTableRow, IPrincipalItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleLogin { get { return GetValue(nameof(PrincipleLogin)); } set { SetValue(nameof(PrincipleLogin), value); } }
+        public String? PrincipalLogin { get { return GetValue(nameof(PrincipalLogin)); } set { SetValue(nameof(PrincipalLogin), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleName { get { return GetValue(nameof(PrincipleName)); } set { SetValue(nameof(PrincipleName), value); } }
+        public String? PrincipalName { get { return GetValue(nameof(PrincipalName)); } set { SetValue(nameof(PrincipalName), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipleAnnotation { get { return GetValue(nameof(PrincipleAnnotation)); } set { SetValue(nameof(PrincipleAnnotation), value); } }
+        public String? PrincipalAnnotation { get { return GetValue(nameof(PrincipalAnnotation)); } set { SetValue(nameof(PrincipalAnnotation), value); } }
 
         /// <inheritdoc/>
         public Boolean AlterValue
@@ -63,17 +63,17 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for SecurityPrincipleItem.
+        /// Constructor for PrincipalItem.
         /// </summary>
-        public PrincipleItem() : base()
-        { PrincipleId = Guid.NewGuid(); }
+        public PrincipalItem() : base()
+        { PrincipalId = Guid.NewGuid(); }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleLogin), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleAnnotation), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalLogin), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalAnnotation), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
@@ -84,17 +84,17 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for SecurityPrincipleItem.
+        /// Serialization Constructor for PrincipalItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected PrincipleItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected PrincipalItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
-        { return new PrincipleKeyName(this).ToString(); }
+        { return new PrincipalKeyName(this).ToString(); }
 
     }
 }

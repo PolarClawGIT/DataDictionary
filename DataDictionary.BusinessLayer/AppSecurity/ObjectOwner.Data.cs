@@ -17,8 +17,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     { }
 
     class ObjectOwnerData : ObjectOwnerCollection<ObjectOwnerValue>, IObjectOwnerData,
-        ILoadData, ILoadData<IObjectIndex>, ILoadData<IPrincipleIndex>,
-        ISaveData, ISaveData<IObjectIndex>, ISaveData<IPrincipleIndex>
+        ILoadData, ILoadData<IObjectIndex>, ILoadData<IPrincipalIndex>,
+        ISaveData, ISaveData<IObjectIndex>, ISaveData<IPrincipalIndex>
     {
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
@@ -32,8 +32,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateLoad(this, (IPrincipleKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey)
+        { return factory.CreateLoad(this, (IPrincipalKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
@@ -47,8 +47,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipleIndex dataKey)
-        { return factory.CreateSave(this, (IPrincipleKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipalIndex dataKey)
+        { return factory.CreateSave(this, (IPrincipalKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>OwnerData</remarks>
-        public IReadOnlyList<WorkItem> Delete(IPrincipleIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IPrincipalIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Owner", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
     }
 }

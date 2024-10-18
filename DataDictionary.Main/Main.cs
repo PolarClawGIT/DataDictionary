@@ -226,7 +226,7 @@ namespace DataDictionary.Main
 
         protected override void HandleMessage(OnlineStatusChanged message)
         {
-            toolStripStatusUser.Text = BusinessData.Authorization.PrincipleName;
+            toolStripStatusUser.Text = BusinessData.Authorization.PrincipalName;
 
             if (Settings.Default.IsOnLineMode)
             { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }

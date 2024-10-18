@@ -10,19 +10,19 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Security Object Owner Item defined for a Principle.
+    /// Interface for the Security Object Owner Item defined for a Principal.
     /// </summary>
-    public interface IObjectOwnerItem : IPrincipleKey, IObjectKey, IObjectKeyName, IObjectAuthorization
+    public interface IObjectOwnerItem : IPrincipalKey, IObjectKey, IObjectKeyName, IObjectAuthorization
     { }
 
     /// <summary>
-    /// Implementation of the Security Object Owner Item defined for a Principle.
+    /// Implementation of the Security Object Owner Item defined for a Principal.
     /// </summary>
     [Serializable]
     public class ObjectOwnerItem : BindingTableRow, IObjectOwnerItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
         public Guid? ObjectId { get { return GetValue<Guid>(nameof(ObjectId)); } protected set { SetValue(nameof(ObjectId), value); } }
@@ -59,21 +59,21 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for ObjectOwnerItem.
         /// </summary>
-        /// <param name="principleKey"></param>
-        public ObjectOwnerItem(IPrincipleKey principleKey) : this()
-        { PrincipleId = principleKey.PrincipleId; }
+        /// <param name="principalKey"></param>
+        public ObjectOwnerItem(IPrincipalKey principalKey) : this()
+        { PrincipalId = principalKey.PrincipalId; }
 
         /// <summary>
         /// Constructor for ObjectOwnerItem.
         /// </summary>
-        /// <param name="principleKey"></param>
+        /// <param name="principalKey"></param>
         /// <param name="objectKey"></param>
-        public ObjectOwnerItem(IPrincipleKey principleKey, IObjectKey objectKey) : this(principleKey)
+        public ObjectOwnerItem(IPrincipalKey principalKey, IObjectKey objectKey) : this(principalKey)
         { ObjectId = objectKey.ObjectId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectTitle), typeof(String)){ AllowDBNull = true},
 

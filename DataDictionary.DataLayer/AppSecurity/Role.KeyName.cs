@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     public interface IRoleKeyName : IKey
     {
         /// <summary>
-        /// Role Name of the Security Principle
+        /// Role Name of the Role
         /// </summary>
         String? RoleName { get; }
     }
@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         public String RoleName { get; init; } = String.Empty;
 
         /// <summary>
-        /// Constructor for the Security Principle Name Key.
+        /// Constructor for the Role Name Key.
         /// </summary>
         /// <param name="source"></param>
         public RoleKeyName(IRoleKeyName source) : base()

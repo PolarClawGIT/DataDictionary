@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// Interface for the Security Membership Item.
     /// </summary>
     public interface IRoleMembershipItem :
-        IPrincipleKey, IRoleKey,
+        IPrincipalKey, IRoleKey,
         IObjectAuthorization
     { }
 
@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     public class RoleMembershipItem : BindingTableRow, IRoleMembershipItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
         public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } set { SetValue(nameof(RoleId), value); } }
@@ -45,31 +45,31 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for SecurityMembershipItem.
+        /// Constructor for RoleMembershipItem.
         /// </summary>
         protected RoleMembershipItem() : base()
         { }
 
         /// <summary>
-        /// Constructor for SecurityMembershipItem.
+        /// Constructor for RoleMembershipItem.
         /// </summary>
-        /// <param name="principleKey"></param>
+        /// <param name="principalKey"></param>
         /// <param name="roleKey"></param>
-        public RoleMembershipItem(IPrincipleKey principleKey, IRoleKey roleKey) : this()
+        public RoleMembershipItem(IPrincipalKey principalKey, IRoleKey roleKey) : this()
         {
-            PrincipleId = principleKey.PrincipleId;
+            PrincipalId = principalKey.PrincipalId;
             RoleId = roleKey.RoleId;
         }
 
         /// <summary>
-        /// Constructor for SecurityMembershipItem.
+        /// Constructor for RoleMembershipItem.
         /// </summary>
-        /// <param name="principleKey"></param>
-        public RoleMembershipItem(IPrincipleKey principleKey) : this()
-        { PrincipleId = principleKey.PrincipleId; }
+        /// <param name="principalKey"></param>
+        public RoleMembershipItem(IPrincipalKey principalKey) : this()
+        { PrincipalId = principalKey.PrincipalId; }
 
         /// <summary>
-        /// Constructor for SecurityMembershipItem.
+        /// Constructor for RoleMembershipItem.
         /// </summary>
         /// <param name="roleKey"></param>
         public RoleMembershipItem(IRoleKey roleKey) : this()
@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},

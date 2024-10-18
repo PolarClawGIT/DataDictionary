@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface IHelpSecurityItem :
         IHelpKey, IHelpKeyName,
-        IPrincipleKey, IRoleKey,
+        IPrincipalKey, IRoleKey,
         IObjectAccess, IObjectAuthorization
     { }
 
@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         public String? HelpSubject { get { return GetValue(nameof(HelpSubject)); } protected set { SetValue(nameof(HelpSubject), value); } }
 
         /// <inheritdoc/>
-        public Guid? PrincipleId { get { return GetValue<Guid>(nameof(PrincipleId)); } protected set { SetValue(nameof(PrincipleId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
         public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } protected set { SetValue(nameof(RoleId), value); } }
@@ -97,12 +97,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// Constructor for HelpSecurityItem
         /// </summary>
         /// <param name="helpItem"></param>
-        /// <param name="principleKey"></param>
-        public HelpSecurityItem(IHelpKeyItem helpItem, IPrincipleKey principleKey) : this()
+        /// <param name="principalKey"></param>
+        public HelpSecurityItem(IHelpKeyItem helpItem, IPrincipalKey principalKey) : this()
         {
             HelpId = helpItem.HelpId;
             HelpSubject = helpItem.HelpSubject;
-            PrincipleId = principleKey.PrincipleId;
+            PrincipalId = principalKey.PrincipalId;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipleId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
 
             new DataColumn(nameof(IsGrant), typeof(Boolean)){ AllowDBNull = true},
@@ -136,7 +136,7 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for SecurityPrincipleItem.
+        /// Serialization Constructor for HelpSecurityItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>

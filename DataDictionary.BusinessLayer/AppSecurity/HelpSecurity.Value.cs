@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface IHelpSecurityValue : IHelpSecurityItem,
-        IHelpSubjectIndex, IPrincipleIndex, IRoleIndex, IScopeType,
+        IHelpSubjectIndex, IPrincipalIndex, IRoleIndex, IScopeType,
         IObjectValue
     { }
 
@@ -34,8 +34,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             }, this);
         }
 
-        /// <inheritdoc cref="HelpSecurityItem.HelpSecurityItem(IHelpKeyItem, IPrincipleKey)"/>
-        public HelpSecurityValue(IHelpKeyItem helpItem, IPrincipleIndex principleIndex) : base (helpItem, principleIndex)
+        /// <inheritdoc cref="HelpSecurityItem.HelpSecurityItem(IHelpKeyItem, IPrincipalKey)"/>
+        public HelpSecurityValue(IHelpKeyItem helpItem, IPrincipalIndex principalIndex) : base (helpItem, principalIndex)
         {
             securityValue = ObjectValue.Create(new DataValue(this)
             {

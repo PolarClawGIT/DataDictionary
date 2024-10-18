@@ -29,14 +29,14 @@ namespace DataDictionary.DataLayer.AppSecurity
         public Command LoadCommand(IConnection connection, IHelpKey key)
         { return LoadCommand(connection, (key.HelpId, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, Guid? roleId, Guid? principleId) parameters)
+        Command LoadCommand(IConnection connection, (Guid? helpId, Guid? roleId, Guid? principalId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[AppSecurity].[procGetHelpSecurity]";
             command.AddParameter("@HelpId", parameters.helpId);
             command.AddParameter("@RoleId", parameters.roleId);
-            command.AddParameter("@PrincipleId", parameters.principleId);
+            command.AddParameter("@PrincipalId", parameters.principalId);
             return command;
         }
 
@@ -48,14 +48,14 @@ namespace DataDictionary.DataLayer.AppSecurity
         public Command SaveCommand(IConnection connection, IHelpKey key)
         { return SaveCommand(connection, (key.HelpId, null, null)); }
 
-        Command SaveCommand(IConnection connection, (Guid? helpId, Guid? roleId, Guid? principleId) parameters)
+        Command SaveCommand(IConnection connection, (Guid? helpId, Guid? roleId, Guid? principalId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[AppSecurity].[procSetHelpSecurity]";
             command.AddParameter("@HelpId", parameters.helpId);
             command.AddParameter("@RoleId", parameters.roleId);
-            command.AddParameter("@PrincipleId", parameters.principleId);
+            command.AddParameter("@PrincipalId", parameters.principalId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.roleId is null || w.RoleId == parameters.roleId);
             command.AddParameter("@Data", "[AppSecurity].[typeHelpSecurity]", data);

@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Security
         {
             InitializeComponent();
 
-            SetCommand(ScopeType.SecurityPrinciple,
+            SetCommand(ScopeType.SecurityPrincipal,
                 CommandImageType.Add,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,

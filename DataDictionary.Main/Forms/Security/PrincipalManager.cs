@@ -29,18 +29,18 @@ namespace DataDictionary.Main.Forms.Security
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.SecurityPrinciple);
-            SetCommand(ScopeType.SecurityPrinciple,
+            SetIcon(ScopeType.SecurityPrincipal);
+            SetCommand(ScopeType.SecurityPrincipal,
                 CommandImageType.Add,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
                 CommandImageType.DeleteDatabase);
 
-            bindingPrinciple.DataSource = securityData.Principles;
+            bindingPrincipal.DataSource = securityData.Principals;
             //bindingRole.DataSource = securityData.Roles;
             bindingMembers.DataSource = securityData.Memberships;
-            principleList.ResizeColumns();
+
         }
 
         private void PrincipalManager_Load(object sender, EventArgs e)
@@ -54,51 +54,36 @@ namespace DataDictionary.Main.Forms.Security
 
             void onComplete(RunWorkerCompletedEventArgs args)
             {
-                foreach (PrincipleValue item in securityData.Principles)
-                {
-                    ListViewItem listItem = new ListViewItem(item.PrincipleLogin);
-                    principleList.Items.Add(listItem);
-                    listPrinciples.Add(listItem, item);
-                }
-                if (principleList.Items.Count > 0)
-                { principleList.Items[0].Selected = true; }
-
-                principleLoginData.DataBindings.Add(new Binding(nameof(principleLoginData.Text), bindingPrinciple, nameof(IPrincipleValue.PrincipleLogin), false, DataSourceUpdateMode.OnPropertyChanged));
-                principleNameData.DataBindings.Add(new Binding(nameof(principleNameData.Text), bindingPrinciple, nameof(IPrincipleValue.PrincipleName), false, DataSourceUpdateMode.OnPropertyChanged));
-                principleAnnotationData.DataBindings.Add(new Binding(nameof(principleAnnotationData.Text), bindingPrinciple, nameof(IPrincipleValue.PrincipleAnnotation), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalLoginData.DataBindings.Add(new Binding(nameof(principalLoginData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalNameData.DataBindings.Add(new Binding(nameof(principalNameData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalAnnotationData.DataBindings.Add(new Binding(nameof(principalAnnotationData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalAnnotation), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 RoleNameList.Load(roleIdColumn, securityData.Roles);
                 roleMembershipData.AutoGenerateColumns = false;
-                roleMembershipData.DataSource = bindingMembers;
+                //roleMembershipData.DataSource = bindingMembers;
+
+                principalOwnershipData.AutoGenerateColumns = false;
+                //principalOwnershipData.DataSource = bindingOwnership;
             }
         }
 
 
-        private void BindingPrinciple_CurrentChanged(object sender, EventArgs e)
+        private void BindingPrincipal_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingPrinciple.Current is PrincipleValue current)
+            if (bindingPrincipal.Current is PrincipalValue current)
             {
-                PrincipleIndex key = new PrincipleIndex(current);
+                PrincipalIndex key = new PrincipalIndex(current);
                 bindingMembers.DataSource = null;
                 bindingMembers.DataSource = new BindingView<RoleMembershipValue>(securityData.Memberships, w => key.Equals(w));
+
+                principalOwnershipData.DataSource = null;
+                principalOwnershipData.DataSource = new BindingView<ObjectOwnerValue>(securityData.Owners, w => key.Equals(w));
             }
         }
-
-        Dictionary<ListViewItem, PrincipleValue> listPrinciples = new Dictionary<ListViewItem, PrincipleValue>();
-        private void PrincipleList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (bindingPrinciple.DataSource is IList<PrincipleValue> values
-                && principleList.SelectedItems.OfType<ListViewItem>().FirstOrDefault() is ListViewItem item
-                && listPrinciples.ContainsKey(item))
-            { bindingPrinciple.Position = values.IndexOf(listPrinciples[item]); }
-        }
-
-        private void PrincipleList_Resize(object sender, EventArgs e)
-        { principleList.ResizeColumns(); }
 
         private void BindingMembers_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingPrinciple.Current is PrincipleValue current)
+            if (bindingPrincipal.Current is PrincipalValue current)
             { e.NewObject = new RoleMembershipValue(current); }
         }
     }

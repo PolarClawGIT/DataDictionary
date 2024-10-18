@@ -204,7 +204,7 @@ namespace DataDictionary.Main.Enumerations
                 new ImageEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
 
                 new ImageEnumeration(ScopeType.Security,                   Resources.Icon_User, Resources.User),
-                new ImageEnumeration(ScopeType.SecurityPrinciple,          Resources.Icon_User,   
+                new ImageEnumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User,   
                     new(CommandImageType.Default, Resources.User),
                     new(CommandImageType.Add, Resources.NewUser),
                     new(CommandImageType.Delete, Resources.DeleteUser)),

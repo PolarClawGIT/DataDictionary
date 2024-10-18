@@ -18,9 +18,9 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         ISaveData
     {
         /// <summary>
-        /// Security Principles (user/logins)
+        /// Security Principals (user/logins)
         /// </summary>
-        IPrincipleData Principles { get; }
+        IPrincipalData Principals { get; }
 
         /// <summary>
         /// Security Roles (groups and permissions)
@@ -31,6 +31,16 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// Security Role Membership
         /// </summary>
         IRoleMembershipData Memberships { get; }
+
+        /// <summary>
+        /// Object Ownership
+        /// </summary>
+        IObjectOwnerData Owners { get; }
+
+        /// <summary>
+        /// Object Permission
+        /// </summary>
+        IObjectPermissionData Permissions { get; }
 
         /// <summary>
         /// Creates an instance of the Security Objects and returns the interface.
@@ -44,12 +54,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     }
 
     class Security : ISecurity,
-        ILoadData<IPrincipleIndex>, ILoadData<IRoleIndex>,
-        ISaveData<IPrincipleIndex>, ISaveData<IRoleIndex>
+        ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>,
+        ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>
     {
         /// <inheritdoc/>
-        public IPrincipleData Principles { get { return principleValues; } }
-        PrincipleData principleValues = new PrincipleData();
+        public IPrincipalData Principals { get { return principalValues; } }
+        PrincipalData principalValues = new PrincipalData();
 
         /// <inheritdoc/>
         public IRoleData Roles { get { return roleValues; } }
@@ -60,22 +70,34 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         RoleMembershipData membershipValues = new RoleMembershipData();
 
         /// <inheritdoc/>
+        public IObjectOwnerData Owners { get { return ownerValues; } }
+        ObjectOwnerData ownerValues = new ObjectOwnerData();
+
+        /// <inheritdoc/>
+        public IObjectPermissionData Permissions { get { return permissionValues; } }
+        ObjectPermissionData permissionValues = new ObjectPermissionData();
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Load(factory));
+            work.AddRange(principalValues.Load(factory));
             work.AddRange(roleValues.Load(factory));
             work.AddRange(membershipValues.Load(factory));
+            work.AddRange(ownerValues.Load(factory));
+            work.AddRange(permissionValues.Load(factory));
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipleIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Load(factory, dataKey));
+            work.AddRange(principalValues.Load(factory, dataKey));
             work.AddRange(roleValues.Load(factory));
             work.AddRange(membershipValues.Load(factory, dataKey));
+            work.AddRange(ownerValues.Load(factory, dataKey));
+            //work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
         }
 
@@ -83,9 +105,11 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Load(factory));
+            work.AddRange(principalValues.Load(factory));
             work.AddRange(roleValues.Load(factory, dataKey));
             work.AddRange(membershipValues.Load(factory, dataKey));
+            //work.AddRange(ownerValues.Load(factory, dataKey));
+            work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
         }
 
@@ -93,18 +117,21 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Save(factory));
+            work.AddRange(principalValues.Save(factory));
             work.AddRange(roleValues.Save(factory));
             work.AddRange(membershipValues.Save(factory));
+            work.AddRange(ownerValues.Save(factory));
+            work.AddRange(permissionValues.Save(factory));
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipleIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPrincipalIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Save(factory, dataKey));
+            work.AddRange(principalValues.Save(factory, dataKey));
             work.AddRange(membershipValues.Save(factory, dataKey));
+            work.AddRange(ownerValues.Load(factory, dataKey));
             return work;
         }
 
@@ -114,6 +141,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(roleValues.Save(factory, dataKey));
             work.AddRange(membershipValues.Save(factory, dataKey));
+            work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
         }
 
@@ -121,17 +149,17 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Delete());
+            work.AddRange(principalValues.Delete());
             work.AddRange(roleValues.Delete());
             work.AddRange(membershipValues.Delete());
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete(IPrincipleIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IPrincipalIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(principleValues.Delete(dataKey));
+            work.AddRange(principalValues.Delete(dataKey));
             work.AddRange(membershipValues.Delete(dataKey));
             return work;
         }

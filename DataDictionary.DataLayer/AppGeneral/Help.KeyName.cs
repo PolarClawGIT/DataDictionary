@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         public String HelpSubject { get; init; } = String.Empty;
 
         /// <summary>
-        /// Constructor for the Security Principle Name Key.
+        /// Constructor for the Help Subject name key.
         /// </summary>
         /// <param name="source"></param>
         public HelpKeyName(IHelpKeyName source) : base()

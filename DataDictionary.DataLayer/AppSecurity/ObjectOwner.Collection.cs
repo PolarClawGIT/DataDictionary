@@ -15,9 +15,9 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class ObjectOwnerCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IPrincipleKey>, IReadData<IObjectKey>,
-        IWriteData, IWriteData<IPrincipleKey>, IWriteData<IObjectKey>,
-        IRemoveItem<IPrincipleKey>, IRemoveItem<IObjectKey>
+        IReadData, IReadData<IPrincipalKey>, IReadData<IObjectKey>,
+        IWriteData, IWriteData<IPrincipalKey>, IWriteData<IObjectKey>,
+        IRemoveItem<IPrincipalKey>, IRemoveItem<IObjectKey>
         where TItem : BindingTableRow, IObjectOwnerItem, new()
     {
         /// <inheritdoc/>
@@ -25,19 +25,19 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IPrincipleKey key)
-        { return LoadCommand(connection, (key.PrincipleId, null)); }
+        public Command LoadCommand(IConnection connection, IPrincipalKey key)
+        { return LoadCommand(connection, (key.PrincipalId, null)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IObjectKey key)
         { return LoadCommand(connection, (null, key.ObjectId)); }
 
-        Command LoadCommand(IConnection connection, (Guid? PrincipleId, Guid? objectId) parameters)
+        Command LoadCommand(IConnection connection, (Guid? PrincipalId, Guid? objectId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[AppSecurity].[procGetObjectOwner]";
-            command.AddParameter("@PrincipleId", parameters.PrincipleId);
+            command.AddParameter("@PrincipalId", parameters.PrincipalId);
             command.AddParameter("@ObjectId", parameters.objectId);
             return command;
         }
@@ -47,31 +47,31 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IPrincipleKey key)
-        { return SaveCommand(connection, (key.PrincipleId, null)); }
+        public Command SaveCommand(IConnection connection, IPrincipalKey key)
+        { return SaveCommand(connection, (key.PrincipalId, null)); }
 
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IObjectKey key)
         { return SaveCommand(connection, (null, key.ObjectId)); }
 
-        Command SaveCommand(IConnection connection, (Guid? PrincipleId, Guid? objectId) parameters)
+        Command SaveCommand(IConnection connection, (Guid? PrincipalId, Guid? objectId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[AppSecurity].[procSetObjectOwner]";
-            command.AddParameter("@PrincipleId", parameters.PrincipleId);
+            command.AddParameter("@PrincipalId", parameters.PrincipalId);
             command.AddParameter("@ObjectId", parameters.objectId);
 
-            IEnumerable<TItem> data = this.Where(w => (parameters.PrincipleId is null || w.PrincipleId == parameters.PrincipleId) && (parameters.objectId is null || w.ObjectId == parameters.objectId));
+            IEnumerable<TItem> data = this.Where(w => (parameters.PrincipalId is null || w.PrincipalId == parameters.PrincipalId) && (parameters.objectId is null || w.ObjectId == parameters.objectId));
             command.AddParameter("@Data", "[AppSecurity].[typeObjectOwner]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IPrincipleKey PrincipleKey)
+        public void Remove(IPrincipalKey PrincipalKey)
         {
-            PrincipleKey key = new PrincipleKey(PrincipleKey);
+            PrincipalKey key = new PrincipalKey(PrincipalKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

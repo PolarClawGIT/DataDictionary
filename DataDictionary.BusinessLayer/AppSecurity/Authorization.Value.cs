@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
     /// <inheritdoc/>
     public interface IAuthorizationValue : IAuthorizationItem,
-        IPrincipleIndex, IPrincipleIndexName
+        IPrincipalIndex, IPrincipalIndexName
     { }
 
     /// <inheritdoc/>

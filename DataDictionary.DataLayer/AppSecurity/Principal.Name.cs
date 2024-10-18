@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// 
+    /// Interface for the Principal Name
     /// </summary>
-    public interface ISecurityPrincipleName
+    public interface IPrincipalName
     {
         /// <summary>
-        /// Display Name of the Principle. Typically the name of the individual.
+        /// Display Name of the Principal. Typically the name of the individual.
         /// </summary>
-        String? PrincipleName { get; }
+        String? PrincipalName { get; }
     }
 }

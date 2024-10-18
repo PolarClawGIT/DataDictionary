@@ -78,11 +78,11 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
 
             new ScopeEnumeration(ScopeType.Security,                  "Security"),
-            new ScopeEnumeration(ScopeType.SecurityPrinciple,          ScopeType.Security,         "Security.Principle"),
+            new ScopeEnumeration(ScopeType.SecurityPrincipal,          ScopeType.Security,         "Security.Principal"),
             new ScopeEnumeration(ScopeType.SecurityRole,               ScopeType.Security,         "Security.Role"),
             new ScopeEnumeration(ScopeType.SecurityMembership,         ScopeType.Security,         "Security.Membership"),
             new ScopeEnumeration(ScopeType.SecurityHelp,               ScopeType.Security,         "Security.Help"),
-            new ScopeEnumeration(ScopeType.SecurityOwner,              ScopeType.SecurityPrinciple,"Security.Owner"),
+            new ScopeEnumeration(ScopeType.SecurityOwner,              ScopeType.SecurityPrincipal,"Security.Owner"),
             new ScopeEnumeration(ScopeType.SecurityPermission,         ScopeType.SecurityRole,     "Security.Permission"),
 
             new ScopeEnumeration(ScopeType.Scripting,                  "Scripting"),

@@ -230,9 +230,9 @@
         Security,
 
         /// <summary>
-        /// Security Principle
+        /// Security Principal
         /// </summary>
-        SecurityPrinciple,
+        SecurityPrincipal,
 
         /// <summary>
         /// Security Role
@@ -245,7 +245,7 @@
         SecurityMembership,
 
         /// <summary>
-        /// Security Object Owner (Principle)
+        /// Security Object Owner (Principal)
         /// </summary>
         SecurityOwner,
 
