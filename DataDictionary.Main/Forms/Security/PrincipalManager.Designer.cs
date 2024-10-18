@@ -33,28 +33,28 @@
             principalLoginData = new Controls.TextBoxData();
             principalNameData = new Controls.TextBoxData();
             principalAnnotationData = new Controls.TextBoxData();
-            roleMembershipData = new DataGridView();
+            membershipData = new DataGridView();
             roleIdColumn = new DataGridViewComboBoxColumn();
-            principalOwnershipData = new DataGridView();
+            ownershipData = new DataGridView();
             ownershipObjectColumn = new DataGridViewTextBoxColumn();
             principalSplit = new SplitContainer();
+            principalData = new DataGridView();
+            principalNameColumn = new DataGridViewTextBoxColumn();
             bindingPrincipal = new BindingSource(components);
             bindingMembers = new BindingSource(components);
             bindingOwnership = new BindingSource(components);
-            dataGridView1 = new DataGridView();
-            principalNameColumn = new DataGridViewTextBoxColumn();
             principalLayout = new TableLayoutPanel();
             principalLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)roleMembershipData).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)principalOwnershipData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)membershipData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ownershipData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)principalSplit).BeginInit();
             principalSplit.Panel1.SuspendLayout();
             principalSplit.Panel2.SuspendLayout();
             principalSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)principalData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingPrincipal).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingMembers).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingOwnership).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // principalLayout
@@ -64,8 +64,8 @@
             principalLayout.Controls.Add(principalLoginData, 0, 0);
             principalLayout.Controls.Add(principalNameData, 0, 1);
             principalLayout.Controls.Add(principalAnnotationData, 0, 2);
-            principalLayout.Controls.Add(roleMembershipData, 0, 3);
-            principalLayout.Controls.Add(principalOwnershipData, 0, 4);
+            principalLayout.Controls.Add(membershipData, 0, 3);
+            principalLayout.Controls.Add(ownershipData, 0, 4);
             principalLayout.Dock = DockStyle.Fill;
             principalLayout.Location = new Point(0, 0);
             principalLayout.Name = "principalLayout";
@@ -117,16 +117,15 @@
             principalAnnotationData.TabIndex = 2;
             principalAnnotationData.WordWrap = true;
             // 
-            // roleMembershipData
+            // membershipData
             // 
-            roleMembershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            roleMembershipData.Columns.AddRange(new DataGridViewColumn[] { roleIdColumn });
-            roleMembershipData.Dock = DockStyle.Fill;
-            roleMembershipData.Location = new Point(3, 181);
-            roleMembershipData.Name = "roleMembershipData";
-            roleMembershipData.ReadOnly = true;
-            roleMembershipData.Size = new Size(375, 151);
-            roleMembershipData.TabIndex = 3;
+            membershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            membershipData.Columns.AddRange(new DataGridViewColumn[] { roleIdColumn });
+            membershipData.Dock = DockStyle.Fill;
+            membershipData.Location = new Point(3, 181);
+            membershipData.Name = "membershipData";
+            membershipData.Size = new Size(375, 151);
+            membershipData.TabIndex = 3;
             // 
             // roleIdColumn
             // 
@@ -134,19 +133,18 @@
             roleIdColumn.DataPropertyName = "RoleId";
             roleIdColumn.HeaderText = "Role Name (member of)";
             roleIdColumn.Name = "roleIdColumn";
-            roleIdColumn.ReadOnly = true;
             // 
-            // principalOwnershipData
+            // ownershipData
             // 
-            principalOwnershipData.AllowUserToAddRows = false;
-            principalOwnershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            principalOwnershipData.Columns.AddRange(new DataGridViewColumn[] { ownershipObjectColumn });
-            principalOwnershipData.Dock = DockStyle.Fill;
-            principalOwnershipData.Location = new Point(3, 338);
-            principalOwnershipData.Name = "principalOwnershipData";
-            principalOwnershipData.ReadOnly = true;
-            principalOwnershipData.Size = new Size(375, 153);
-            principalOwnershipData.TabIndex = 4;
+            ownershipData.AllowUserToAddRows = false;
+            ownershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            ownershipData.Columns.AddRange(new DataGridViewColumn[] { ownershipObjectColumn });
+            ownershipData.Dock = DockStyle.Fill;
+            ownershipData.Location = new Point(3, 338);
+            ownershipData.Name = "ownershipData";
+            ownershipData.ReadOnly = true;
+            ownershipData.Size = new Size(375, 153);
+            ownershipData.TabIndex = 4;
             // 
             // ownershipObjectColumn
             // 
@@ -163,7 +161,7 @@
             // 
             // principalSplit.Panel1
             // 
-            principalSplit.Panel1.Controls.Add(dataGridView1);
+            principalSplit.Panel1.Controls.Add(principalData);
             // 
             // principalSplit.Panel2
             // 
@@ -172,25 +170,19 @@
             principalSplit.SplitterDistance = 191;
             principalSplit.TabIndex = 4;
             // 
-            // bindingPrincipal
+            // principalData
             // 
-            bindingPrincipal.CurrentChanged += BindingPrincipal_CurrentChanged;
-            // 
-            // bindingMembers
-            // 
-            bindingMembers.AddingNew += BindingMembers_AddingNew;
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { principalNameColumn });
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(191, 494);
-            dataGridView1.TabIndex = 0;
+            principalData.AllowUserToAddRows = false;
+            principalData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            principalData.Columns.AddRange(new DataGridViewColumn[] { principalNameColumn });
+            principalData.Dock = DockStyle.Fill;
+            principalData.Location = new Point(0, 0);
+            principalData.Name = "principalData";
+            principalData.ReadOnly = true;
+            principalData.RowHeadersVisible = false;
+            principalData.Size = new Size(191, 494);
+            principalData.TabIndex = 0;
+            principalData.DataError += principalData_DataError;
             // 
             // principalNameColumn
             // 
@@ -199,6 +191,16 @@
             principalNameColumn.HeaderText = "Principal";
             principalNameColumn.Name = "principalNameColumn";
             principalNameColumn.ReadOnly = true;
+            // 
+            // bindingPrincipal
+            // 
+            bindingPrincipal.AddingNew += BindingPrincipal_AddingNew;
+            bindingPrincipal.DataError += bindingPrincipal_DataError;
+            bindingPrincipal.CurrentChanged += BindingPrincipal_CurrentChanged;
+            // 
+            // bindingMembers
+            // 
+            bindingMembers.AddingNew += BindingMembers_AddingNew;
             // 
             // PrincipalManager
             // 
@@ -212,16 +214,16 @@
             Controls.SetChildIndex(principalSplit, 0);
             principalLayout.ResumeLayout(false);
             principalLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)roleMembershipData).EndInit();
-            ((System.ComponentModel.ISupportInitialize)principalOwnershipData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)membershipData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ownershipData).EndInit();
             principalSplit.Panel1.ResumeLayout(false);
             principalSplit.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)principalSplit).EndInit();
             principalSplit.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)principalData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingPrincipal).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingMembers).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingOwnership).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -233,14 +235,14 @@
         private Controls.TextBoxData principalLoginData;
         private Controls.TextBoxData principalNameData;
         private Controls.TextBoxData principalAnnotationData;
-        private DataGridView roleMembershipData;
+        private DataGridView membershipData;
         private BindingSource bindingPrincipal;
         private BindingSource bindingMembers;
-        private DataGridView principalOwnershipData;
+        private DataGridView ownershipData;
         private BindingSource bindingOwnership;
         private DataGridViewComboBoxColumn roleIdColumn;
         private DataGridViewTextBoxColumn ownershipObjectColumn;
-        private DataGridView dataGridView1;
+        private DataGridView principalData;
         private DataGridViewTextBoxColumn principalNameColumn;
     }
 }

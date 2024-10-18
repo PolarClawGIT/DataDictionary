@@ -14,8 +14,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// Interface representing Security data
     /// </summary>
     public interface ISecurity :
-        ILoadData,
-        ISaveData
+        ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>,
+        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>
     {
         /// <summary>
         /// Security Principals (user/logins)
@@ -48,14 +48,9 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <returns></returns>
         static public ISecurity Create()
         { return new Security(); }
-
-        // TODO: Ownership
-        // TODO: Permissions
     }
 
-    class Security : ISecurity,
-        ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>,
-        ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>
+    class Security : ISecurity
     {
         /// <inheritdoc/>
         public IPrincipalData Principals { get { return principalValues; } }
@@ -161,6 +156,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(principalValues.Delete(dataKey));
             work.AddRange(membershipValues.Delete(dataKey));
+            work.AddRange(ownerValues.Delete(dataKey));
             return work;
         }
 
@@ -170,6 +166,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(roleValues.Delete(dataKey));
             work.AddRange(membershipValues.Delete(dataKey));
+            work.AddRange(permissionValues.Delete(dataKey));
             return work;
         }
     }
