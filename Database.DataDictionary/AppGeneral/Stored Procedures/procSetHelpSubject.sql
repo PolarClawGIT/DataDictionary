@@ -38,15 +38,15 @@ Begin Try
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[ObjectOwner] (
-			[PrincipleId],
+			[PrincipalId],
 			[ObjectId])
-	Select	S.[PrincipleId],
+	Select	S.[PrincipalId],
 			V.[HelpId]
 	From	@Values V
 			Cross Apply [AppSecurity].[funcAuthorization](V.[HelpId]) S
 	Where	S.[IsHelpOwner] = 1 And
 			S.[HasOwner] = 0 And
-			S.[PrincipleId] is not null
+			S.[PrincipalId] is not null
 	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes

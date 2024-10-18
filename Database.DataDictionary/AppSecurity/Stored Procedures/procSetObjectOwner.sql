@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procSetObjectOwner]
-		@PrincipleId UniqueIdentifier = Null,
+		@PrincipalId UniqueIdentifier = Null,
 		@ObjectId UniqueIdentifier = Null,
 		@Data [AppSecurity].[typeObjectOwner] ReadOnly
 As
@@ -21,40 +21,40 @@ Begin Try
 
 	-- Clean the Data
 	Declare @Values Table (
-			[PrincipleId] UniqueIdentifier Not Null,
+			[PrincipalId] UniqueIdentifier Not Null,
 			[ObjectId] UniqueIdentifier Not Null,
-			Primary Key ([PrincipleId], [ObjectId]))
+			Primary Key ([PrincipalId], [ObjectId]))
 
 	Insert Into @Values
-	Select	D.[PrincipleId],
+	Select	D.[PrincipalId],
 			D.[ObjectId]
 	From	@Data D
-			Inner Join [AppSecurity].[Principle] P
-			On	D.[PrincipleId] = P.[PrincipleId]
-	Where	(@PrincipleId is Null or @PrincipleId = D.[PrincipleId]) And
+			Inner Join [AppSecurity].[Principal] P
+			On	D.[PrincipalId] = P.[PrincipalId]
+	Where	(@PrincipalId is Null or @PrincipalId = D.[PrincipalId]) And
 			(@ObjectId is Null or @ObjectId = D.[ObjectId])
 
 	-- Apply Changes
 	Delete From	[AppSecurity].[ObjectOwner]
 	From	[AppSecurity].[ObjectOwner] T
 			Left Join @Values S
-			On	T.[PrincipleId] = S.[PrincipleId] And
+			On	T.[PrincipalId] = S.[PrincipalId] And
 				T.[ObjectId] = S.[ObjectId]
 	Where	S.[ObjectId] is Null And
-			(@PrincipleId is Null or @PrincipleId = S.[PrincipleId]) And
+			(@PrincipalId is Null or @PrincipalId = S.[PrincipalId]) And
 			(@ObjectId is Null or @ObjectId = S.[ObjectId])
 	Print FormatMessage ('Delete [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppSecurity].[ObjectOwner] (
-			[PrincipleId],
+			[PrincipalId],
 			[ObjectId])
-	Select	S.[PrincipleId],
+	Select	S.[PrincipalId],
 			S.[ObjectId]
 	From	@Values S
 			Left Join [AppSecurity].[ObjectOwner] T
-			On	S.[PrincipleId] = T.[PrincipleId] And
+			On	S.[PrincipalId] = T.[PrincipalId] And
 				S.[ObjectId] = S.[ObjectId]
-	Where	T.[PrincipleId] is Null
+	Where	T.[PrincipalId] is Null
 	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procSetHelpSecurity]
 		@HelpId UniqueIdentifier = Null,
 		@RoleId UniqueIdentifier = Null,
-		@PrincipleId UniqueIdentifier = Null,
+		@PrincipalId UniqueIdentifier = Null,
 		@Data [AppSecurity].[typeHelpSecurity] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -52,29 +52,29 @@ Begin Try
 			(@RoleId is Null Or O.[RoleId] = @RoleId)
 
 	Insert Into @OwnerValue (
-			[PrincipleId],
+			[PrincipalId],
 			[ObjectId])
-	Select	D.[PrincipleId],
+	Select	D.[PrincipalId],
 			D.[HelpId] As [ObjectId]
 	From	@Data D
 			Inner Join [AppGeneral].[HelpSubject] T
 			On	D.[HelpId] = T.[HelpId]
-			Inner Join [AppSecurity].[Principle] P
-			On	D.[PrincipleId] = P.[PrincipleId]
+			Inner Join [AppSecurity].[Principal] P
+			On	D.[PrincipalId] = P.[PrincipalId]
 	Where	(@HelpId is Null Or T.[HelpId] = @HelpId) Or
-			(@PrincipleId is Null Or P.[PrincipleId] = @PrincipleId)
+			(@PrincipalId is Null Or P.[PrincipalId] = @PrincipalId)
 	Union	-- Everything that is not a Help Subject (or it will be deleted)
-	Select	O.[PrincipleId],
+	Select	O.[PrincipalId],
 			O.[ObjectId]
 	From	[AppSecurity].[ObjectOwner] O
 			Left Join [AppGeneral].[HelpSubject] T
 			On	O.[ObjectId] = T.[HelpId]
 	Where	T.[HelpId] is Null And
 			(@HelpId is Null Or O.[ObjectId] = @HelpId) Or
-			(@PrincipleId is Null Or O.[PrincipleId] = @PrincipleId)
+			(@PrincipalId is Null Or O.[PrincipalId] = @PrincipalId)
 
 	Exec [AppSecurity].[procSetObjectOwner]
-			@PrincipleId = @PrincipleId,
+			@PrincipalId = @PrincipalId,
 			@ObjectId = @HelpId,
 			@Data = @OwnerValue
 

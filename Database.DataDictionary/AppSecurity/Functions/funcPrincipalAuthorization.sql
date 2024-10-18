@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppSecurity].[funcPrincipleAuthorization] ()
+﻿CREATE FUNCTION [AppSecurity].[funcPrincipalAuthorization] ()
 Returns Table With SchemaBinding
 As Return 
 	Select	Convert(Bit, 1) As [IsAllowed]

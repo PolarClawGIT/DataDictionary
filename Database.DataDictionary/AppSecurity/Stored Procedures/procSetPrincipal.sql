@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [AppSecurity].[procSetPrinciple]
-		@PrincipleId UniqueIdentifier = Null,
-		@Data [AppSecurity].[typePrinciple] ReadOnly
+﻿CREATE PROCEDURE [AppSecurity].[procSetPrincipal]
+		@PrincipalId UniqueIdentifier = Null,
+		@Data [AppSecurity].[typePrincipal] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on Security Principle.
+/* Description: Performs Set on Security Principal.
 */
 
 -- Transaction Handling
@@ -20,82 +20,82 @@ Begin Try
 
 	-- Clean the Data
 	Declare @Values Table (
-			[PrincipleId] UniqueIdentifier Not Null,
-			[PrincipleLogin] SysName Not Null,
-			[PrincipleName] [App_DataDictionary].[typeTitle] Not Null,
-			[PrincipleAnnotation] [App_DataDictionary].[typeDescription] Null,
-			Primary Key ([PrincipleId]))
+			[PrincipalId] UniqueIdentifier Not Null,
+			[PrincipalLogin] SysName Not Null,
+			[PrincipalName] [App_DataDictionary].[typeTitle] Not Null,
+			[PrincipalAnnotation] [App_DataDictionary].[typeDescription] Null,
+			Primary Key ([PrincipalId]))
 
 	Insert Into @Values
-	Select	Coalesce(P.[PrincipleId], D.[PrincipleId], @PrincipleId, NewId()) As [PrincipleId],
-			NullIf(Trim(D.[PrincipleLogin]),'') As [PrincipleLogin],
-			NullIf(Coalesce(Trim(D.[PrincipleName]),Trim(D.[PrincipleLogin])),'') As [PrincipleName],
-			NullIf(Trim(D.[PrincipleAnnotation]),'') As [PrincipleAnnotation]
+	Select	Coalesce(P.[PrincipalId], D.[PrincipalId], @PrincipalId, NewId()) As [PrincipalId],
+			NullIf(Trim(D.[PrincipalLogin]),'') As [PrincipalLogin],
+			NullIf(Coalesce(Trim(D.[PrincipalName]),Trim(D.[PrincipalLogin])),'') As [PrincipalName],
+			NullIf(Trim(D.[PrincipalAnnotation]),'') As [PrincipalAnnotation]
 	From	@Data D
-			Left Join [AppSecurity].[Principle] P
-			On	D.[PrincipleLogin] = P.[PrincipleLogin]
-	Where	(@PrincipleId is Null or @PrincipleId = D.[PrincipleId])
+			Left Join [AppSecurity].[Principal] P
+			On	D.[PrincipalLogin] = P.[PrincipalLogin]
+	Where	(@PrincipalId is Null or @PrincipalId = D.[PrincipalId])
 
 	-- Apply Changes
 	Delete From [AppSecurity].[ObjectOwner]
 	From	[AppSecurity].[ObjectOwner] T
 			Left Join @Values S
-			On	T.[PrincipleId] = S.[PrincipleId]
-	Where	S.[PrincipleId] is Null And
-			(@PrincipleId is Null or @PrincipleId = T.[PrincipleId])
-	Print FormatMessage ('Delete [AppSecurity].[SecurityOwner] (Principle): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[PrincipalId] = S.[PrincipalId]
+	Where	S.[PrincipalId] is Null And
+			(@PrincipalId is Null or @PrincipalId = T.[PrincipalId])
+	Print FormatMessage ('Delete [AppSecurity].[ObjectOwner] (Principal): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppSecurity].[RoleMembership]
 	From	[AppSecurity].[RoleMembership] T
 			Left Join @Values S
-			On	T.[PrincipleId] = S.[PrincipleId]
-	Where	S.[PrincipleId] is Null And
-			(@PrincipleId is Null or @PrincipleId = T.[PrincipleId])
-	Print FormatMessage ('Delete [AppSecurity].[SecurityMembership] (Principle): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[PrincipalId] = S.[PrincipalId]
+	Where	S.[PrincipalId] is Null And
+			(@PrincipalId is Null or @PrincipalId = T.[PrincipalId])
+	Print FormatMessage ('Delete [AppSecurity].[RoleMembership] (Principal): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppSecurity].[Principle]
-	From	[AppSecurity].[Principle] T
+	Delete From [AppSecurity].[Principal]
+	From	[AppSecurity].[Principal] T
 			Left Join @Values S
-			On	T.[PrincipleId] = S.[PrincipleId]
-	Where	S.[PrincipleId] is Null And
-			(@PrincipleId is Null or @PrincipleId = T.[PrincipleId])
-	Print FormatMessage ('Delete [AppSecurity].[SecurityPrinciple]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[PrincipalId] = S.[PrincipalId]
+	Where	S.[PrincipalId] is Null And
+			(@PrincipalId is Null or @PrincipalId = T.[PrincipalId])
+	Print FormatMessage ('Delete [AppSecurity].[Principal]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[PrincipleId],
-				[PrincipleLogin],
-				[PrincipleName],
-				[PrincipleAnnotation]
+		Select	[PrincipalId],
+				[PrincipalLogin],
+				[PrincipalName],
+				[PrincipalAnnotation]
 		From	@Values
 		Except
-		Select	[PrincipleId],
-				[PrincipleLogin],
-				[PrincipleName],
-				[PrincipleAnnotation]
-		From	[AppSecurity].[Principle])
-	Update [AppSecurity].[Principle]
-	Set		[PrincipleLogin] = S.[PrincipleLogin],
-			[PrincipleName] = S.[PrincipleName],
-			[PrincipleAnnotation] = S.[PrincipleAnnotation]
-	From	[AppSecurity].[Principle] T
+		Select	[PrincipalId],
+				[PrincipalLogin],
+				[PrincipalName],
+				[PrincipalAnnotation]
+		From	[AppSecurity].[Principal])
+	Update [AppSecurity].[Principal]
+	Set		[PrincipalLogin] = S.[PrincipalLogin],
+			[PrincipalName] = S.[PrincipalName],
+			[PrincipalAnnotation] = S.[PrincipalAnnotation]
+	From	[AppSecurity].[Principal] T
 			Inner Join [Delta] S
-			On	T.[PrincipleId] = S.[PrincipleId]
-	Print FormatMessage ('Update [AppSecurity].[SecurityPrinciple]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[PrincipalId] = S.[PrincipalId]
+	Print FormatMessage ('Update [AppSecurity].[Principal]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppSecurity].[Principle] (
-			[PrincipleId],
-			[PrincipleLogin],
-			[PrincipleName],
-			[PrincipleAnnotation])
-	Select	S.[PrincipleId],
-			S.[PrincipleLogin],
-			S.[PrincipleName],
-			S.[PrincipleAnnotation]
+	Insert Into [AppSecurity].[Principal] (
+			[PrincipalId],
+			[PrincipalLogin],
+			[PrincipalName],
+			[PrincipalAnnotation])
+	Select	S.[PrincipalId],
+			S.[PrincipalLogin],
+			S.[PrincipalName],
+			S.[PrincipalAnnotation]
 	From	@Values S
-			Left Join [AppSecurity].[Principle] T
-			On	S.[PrincipleId] = T.[PrincipleId]
-	Where	T.[PrincipleId] is Null
-	Print FormatMessage ('Insert [AppSecurity].[SecurityPrinciple]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Left Join [AppSecurity].[Principal] T
+			On	S.[PrincipalId] = T.[PrincipalId]
+	Where	T.[PrincipalId] is Null
+	Print FormatMessage ('Insert [AppSecurity].[Principal]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -2,7 +2,7 @@
 (
 	[HelpId]        UniqueIdentifier Not Null,
 	[HelpSubject]   [App_DataDictionary].[typeTitle] Null,
-	[PrincipleId]   UniqueIdentifier Null, -- Owner
+	[PrincipalId]   UniqueIdentifier Null, -- Owner
 	[RoleId]        UniqueIdentifier Null,
 	[IsGrant]       Bit Null,
 	[IsDeny]        Bit Null,

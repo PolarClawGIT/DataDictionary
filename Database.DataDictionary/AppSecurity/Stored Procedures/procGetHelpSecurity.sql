@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procGetHelpSecurity]
 		@HelpId UniqueIdentifier = Null,
 		@RoleId UniqueIdentifier = Null,
-		@PrincipleId UniqueIdentifier = Null
+		@PrincipalId UniqueIdentifier = Null
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -24,7 +24,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			Cross Apply [AppSecurity].[funcAuthorization](T.[HelpId]) S)
 Select	T.[HelpId],
 		T.[HelpSubject],
-		O.[PrincipleId] As [PrincipleId],
+		O.[PrincipalId] As [PrincipalId],
 		Convert(UniqueIdentifier, Null) [RoleId],
 		Convert(Bit, 1) As [IsGrant],
 		Convert(Bit, 0) As [IsDeny],
@@ -34,11 +34,11 @@ From	[Object] T
 		Left Join [AppSecurity].[ObjectOwner] O
 		On	T.[HelpId] = O.[ObjectId]
 Where	(@HelpId is Null Or T.[HelpId] = @HelpId) And
-		(@PrincipleId is Null Or IsNull(O.[PrincipleId], @PrincipleId) = @PrincipleId)
+		(@PrincipalId is Null Or IsNull(O.[PrincipalId], @PrincipalId) = @PrincipalId)
 Union
 Select	T.[HelpId],
 		T.[HelpSubject],
-		Convert(UniqueIdentifier, Null) As [PrincipleId],
+		Convert(UniqueIdentifier, Null) As [PrincipalId],
 		P.[RoleId],
 		P.[IsGrant],
 		P.[IsDeny],

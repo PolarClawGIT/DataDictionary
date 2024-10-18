@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procSetRoleMembership]
 		@RoleId UniqueIdentifier = Null,
-		@PrincipleId UniqueIdentifier = Null,
+		@PrincipalId UniqueIdentifier = Null,
 		@Data [AppSecurity].[typeRoleMembership] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -22,40 +22,40 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[RoleId]          UniqueIdentifier Not Null,
-		[PrincipleId]     UniqueIdentifier Not Null,
-		Primary Key ([RoleId], [PrincipleId]))
+		[PrincipalId]     UniqueIdentifier Not Null,
+		Primary Key ([RoleId], [PrincipalId]))
 
 	Insert Into @Values
 	Select	D.[RoleId],
-			D.[PrincipleId]
+			D.[PrincipalId]
 	From	@Data D
 			Inner Join [AppSecurity].[Role] R
 			On	D.[RoleId] = R.[RoleId]
-			Inner Join [AppSecurity].[Principle] P
-			On	D.[PrincipleId] = P.[PrincipleId]
+			Inner Join [AppSecurity].[Principal] P
+			On	D.[PrincipalId] = P.[PrincipalId]
 	Where	(@RoleId is Null Or @RoleId = D.[RoleId]) And
-			(@PrincipleId is Null Or @PrincipleId = D.[PrincipleId])
+			(@PrincipalId is Null Or @PrincipalId = D.[PrincipalId])
 
 	-- Apply Changes
 	Delete From [AppSecurity].[RoleMembership]
 	From	[AppSecurity].[RoleMembership] T
 			Left Join @Values S
 			On	T.[RoleId] = S.[RoleId] And
-				T.[PrincipleId] = S.[PrincipleId]
+				T.[PrincipalId] = S.[PrincipalId]
 	Where	S.[RoleId] is Null And
 			(@RoleId is Null Or @RoleId = T.[RoleId]) And
-			(@PrincipleId is Null Or @PrincipleId = T.[PrincipleId])
+			(@PrincipalId is Null Or @PrincipalId = T.[PrincipalId])
 	Print FormatMessage ('Delete [AppSecurity].[SecurityMembership]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppSecurity].[RoleMembership] (
 			[RoleId],
-			[PrincipleId])
+			[PrincipalId])
 	Select	S.[RoleId],
-			S.[PrincipleId]
+			S.[PrincipalId]
 	From	@Values S
 			Left Join [AppSecurity].[RoleMembership] T
 			On	S.[RoleId] = T.[RoleId] And
-				S.[PrincipleId] = T.[PrincipleId]
+				S.[PrincipalId] = T.[PrincipalId]
 	Where	T.[RoleId] is Null
 	Print FormatMessage ('Insert [AppSecurity].[SecurityMembership]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

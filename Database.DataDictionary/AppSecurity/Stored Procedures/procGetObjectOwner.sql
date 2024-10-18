@@ -1,10 +1,10 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procGetObjectOwner]
 		@Object UniqueIdentifier = Null,
-		@PrincipleId UniqueIdentifier = Null
+		@PrincipalId UniqueIdentifier = Null
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on Object Owner (Principle).
+/* Description: Performs Get on Object Owner (Principal).
 */
 ;With [Titles] As (
 	Select	[HelpId] As [ObjectId],
@@ -54,7 +54,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			[DefinitionTitle] As [ObjectTitle]
 	From	[App_DataDictionary].[DomainDefinition]
 	*/)
-Select	O.[PrincipleId],
+Select	O.[PrincipalId],
 		O.[ObjectId],
 		T.[ObjectTitle],
 		Convert(Bit, IIF(
@@ -70,5 +70,5 @@ From	[AppSecurity].[ObjectOwner] O
 		On	O.[ObjectId] = T.[ObjectId]
 		Cross Apply [AppSecurity].[funcAuthorization](O.[ObjectId]) S
 Where	(@Object is Null Or O.[ObjectId] = @Object) And
-		(@PrincipleId is Null Or O.[PrincipleId] = @PrincipleId)
+		(@PrincipalId is Null Or O.[PrincipalId] = @PrincipalId)
 GO

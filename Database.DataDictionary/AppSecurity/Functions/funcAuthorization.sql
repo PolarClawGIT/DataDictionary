@@ -5,14 +5,14 @@ As Return
 -- All other Security Functions use this function.
 With [Login] As (
 	-- Database Level security
-	Select	Original_Login() As [PrincipleLogin],
+	Select	Original_Login() As [PrincipalLogin],
 			Convert(Bit, IIF(
 				Is_RoleMember('DataDictionaryApp') = 0 And -- Cannot be executing using the application
 				Is_RoleMember('db_denydatawriter') = 0 And
 				(Is_RoleMember('db_datawriter') = 1 Or
 				 Is_RoleMember('db_owner') = 1), 1, 0)) As [IsDbWriter])
-Select	L.[PrincipleLogin],
-		P.[PrincipleId],
+Select	L.[PrincipalLogin],
+		P.[PrincipalId],
 		-- DB Security
 		Convert(Bit,Min(Convert(Int,L.[IsDbWriter]))) As [IsDbWriter],
 		-- Role Security
@@ -29,16 +29,16 @@ Select	L.[PrincipleLogin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsScriptOwner],0)))) As [IsScriptOwner],
 		-- Object Security
 		@ObjectId As [ObjectId],
-		Convert(Bit,Max(IIF(O.[PrincipleId] = P.[PrincipleId],1,0))) As [IsOwner],
+		Convert(Bit,Max(IIF(O.[PrincipalId] = P.[PrincipalId],1,0))) As [IsOwner],
 		Convert(Bit,Max(IIF(O.[ObjectId] is Null, 0, 1))) As [HasOwner],
 		Convert(Bit,Max(Convert(Int,IsNull(S.[IsGrant],0)))) As [IsGrant],
 		Convert(Bit,Max(Convert(Int,IsNull(S.[IsDeny],0)))) As [IsDeny]
 From	[Login] L
 		-- Application Level Security
-		Left Join[AppSecurity].[Principle] P
-		On	L.[PrincipleLogin] = P.[PrincipleLogin]
+		Left Join[AppSecurity].[Principal] P
+		On	L.[PrincipalLogin] = P.[PrincipalLogin]
 		Left Join [AppSecurity].[RoleMembership] M
-		On	P.[PrincipleId] = M.[PrincipleId]
+		On	P.[PrincipalId] = M.[PrincipalId]
 		Left Join [AppSecurity].[Role] R
 		On	M.[RoleId] = R.[RoleId]
 		Left Join [AppSecurity].[ObjectPermission] S
@@ -46,6 +46,6 @@ From	[Login] L
 			S.[ObjectId] = @ObjectId
 		Left Join [AppSecurity].[ObjectOwner] O
 		On	O.[ObjectId] = @ObjectId
-Group By L.[PrincipleLogin],
-		P.[PrincipleId]
+Group By L.[PrincipalLogin],
+		P.[PrincipalId]
 GO
