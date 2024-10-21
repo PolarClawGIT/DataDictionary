@@ -324,7 +324,45 @@ namespace DataDictionary.Main.Forms
             return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
+        /// <summary>
+        /// SuspendBinding the binding on the specific BindingSource
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <!--
+        /// The SuspendBinding on the binding source does not affect
+        /// controls that are depending on that binding source.
+        /// DataGridViews likewise do not honor the SuspendBinding.
+        /// 
+        /// This can result in:
+        /// * DataBinding cannot find a row in the list that is suitable for all bindings.
+        /// * Cross thread operation not valid
+        /// This work-around turns off RaiseListChangedEvents.
+        /// ResumeBinding undoes this and resets the Bindings.
+        /// 
+        /// Use this method when background activity (such as using DoWork)
+        /// would modify the data of a BindingSource.
+        /// 
+        /// This is not always necessary.
+        /// The BindingSource will handle many scenarios.
+        /// 
+        /// The MS documentation suggests otherwise.
+        /// -->
+        public void SuspendBinding(BindingSource binding)
+        {
+            binding.RaiseListChangedEvents = false;
+            binding.SuspendBinding(); // Just in case this will actually do something useful.
+        }
 
+        /// <summary>
+        /// ResumeBinding and ResetBindings on a DataSource.
+        /// </summary>
+        /// <param name="binding"></param>
+        public void ResumeBinding(BindingSource binding)
+        {
+            binding.RaiseListChangedEvents = true;
+            binding.ResumeBinding(); // Just in case this will actually do something useful.
+            binding.ResetBindings(false);
+        }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;

@@ -98,6 +98,11 @@ namespace DataDictionary.Main.Forms.Security
                 bindingOwnership.DataSource = null;
                 bindingOwnership.DataSource = new BindingView<ObjectOwnerValue>(securityData.Owners, w => key.Equals(w));
             }
+            else
+            {
+                bindingMembers.DataSource = null;
+                bindingOwnership.DataSource = null;
+            }
         }
 
         private void BindingPrincipal_AddingNew(object sender, AddingNewEventArgs e)
@@ -126,19 +131,11 @@ namespace DataDictionary.Main.Forms.Security
             {
                 PrincipalIndex key = new PrincipalIndex(current);
 
-                SuspendBinding();
+                SuspendBinding(bindingPrincipal);
                 DoWork(securityData.Delete(key), onCompleting);
 
-                //foreach (RoleMembershipValue item in securityData.Memberships.Where(w => key.Equals(w)))
-                //{ securityData.Memberships.Remove(item); }
-
-                //foreach (ObjectOwnerValue item in securityData.Owners.Where(w => key.Equals(w)))
-                //{ securityData.Owners.Remove(item); }
-
-                //securityData.Principals.Remove(current);
-
                 void onCompleting(RunWorkerCompletedEventArgs args)
-                { ResumeBinding(key); }
+                { ResumeBinding(bindingPrincipal); }
             }
         }
 
@@ -158,63 +155,12 @@ namespace DataDictionary.Main.Forms.Security
             base.DeleteFromDatabaseCommand_Click(sender, e);
         }
 
-        void ResumeBinding(PrincipalIndex? current = null)
-        {
-
-
-            bindingPrincipal.DataSource = securityData.Principals;
-
-            if (current is PrincipalIndex key
-                && bindingPrincipal.DataSource is IList<PrincipalValue> values
-                && values.FirstOrDefault(w => key.Equals(w)) is PrincipalValue value)
-            { bindingPrincipal.Position = values.IndexOf(value); }
-            else
-            { bindingPrincipal.Position = 0; }
-
-            principalData.DataSource = bindingPrincipal;
-            membershipData.DataSource = bindingMembers;
-            ownershipData.DataSource = bindingOwnership;
-
-            principalLoginData.DataBindings.Add(new Binding(nameof(principalLoginData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
-            principalNameData.DataBindings.Add(new Binding(nameof(principalNameData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
-            principalAnnotationData.DataBindings.Add(new Binding(nameof(principalAnnotationData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalAnnotation), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            //bindingPrincipal.ResumeBinding();
-            //bindingMembers.ResumeBinding();
-            //bindingOwnership.ResumeBinding();
-        }
-
-        void SuspendBinding()
-        {
-            // BindingSource.SuspendBinding() & ResumeBinding()
-            // are not working as expected.
-            // This is brute force.
-
-            principalData.DataSource = null;
-            membershipData.DataSource = null;
-            ownershipData.DataSource = null;
-
-            principalLoginData.DataBindings.Clear();
-            principalNameData.DataBindings.Clear();
-            principalAnnotationData.DataBindings.Clear();
-
-            bindingPrincipal.DataSource = null ;
-            bindingMembers.DataSource = null;
-            bindingOwnership.DataSource = null;
-
-            //bindingPrincipal.SuspendBinding();
-            //bindingMembers.SuspendBinding();
-            //bindingOwnership.SuspendBinding();
-        }
-
         private void principalData_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-
+        { // Debugging o Data Binding
         }
 
         private void bindingPrincipal_DataError(object sender, BindingManagerDataErrorEventArgs e)
-        {
-
+        {// Debugging o Data Binding
         }
     }
 }
