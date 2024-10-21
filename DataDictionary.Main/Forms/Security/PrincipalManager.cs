@@ -46,6 +46,7 @@ namespace DataDictionary.Main.Forms.Security
         private void PrincipalManager_Load(object sender, EventArgs e)
         {
             IsLocked(true);
+            IsWaitCursor(true);
             IDatabaseWork factory = BusinessData.GetDbFactory();
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.OpenConnection());
@@ -55,10 +56,13 @@ namespace DataDictionary.Main.Forms.Security
             void onComplete(RunWorkerCompletedEventArgs args)
             {
                 bindingPrincipal.DataSource = securityData.Principals;
+                SetTitle(bindingPrincipal);
 
                 principalData.DataSource = bindingPrincipal;
                 membershipData.DataSource = bindingMembers;
                 ownershipData.DataSource = bindingOwnership;
+                principalData.Sort(principalNameColumn, ListSortDirection.Descending);
+                principalData.ClearSelection();
 
                 principalLoginData.DataBindings.Add(new Binding(nameof(principalLoginData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
                 principalNameData.DataBindings.Add(new Binding(nameof(principalNameData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -84,6 +88,7 @@ namespace DataDictionary.Main.Forms.Security
                 }
 
                 IsLocked(false);
+                IsWaitCursor(false);
             }
         }
 
@@ -143,16 +148,111 @@ namespace DataDictionary.Main.Forms.Security
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            IDatabaseWork factory = BusinessData.GetDbFactory();
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.OpenConnection());
+
+            if (principalData.SelectedRows.Count == 0)
+            {
+                work.AddRange(securityData.Delete());
+                work.AddRange(securityData.Load(factory));
+            }
+            else
+            {
+                foreach (DataGridViewRow item in principalData.SelectedRows)
+                {
+                    if (item.DataBoundItem is PrincipalValue value)
+                    {
+                        PrincipalIndex key = new PrincipalIndex(value);
+                        work.AddRange(securityData.Delete(key));
+                        work.AddRange(securityData.Load(factory, key));
+                    }
+                }
+            }
+
+            IsLocked(true);
+            IsWaitCursor(true);
+            SuspendBinding(bindingPrincipal);
+            DoWork(work, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(false);
+                IsWaitCursor(false);
+                ResumeBinding(bindingPrincipal);
+                principalData.Sort(principalNameColumn, ListSortDirection.Descending);
+                principalData.ClearSelection();
+            }
         }
+
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            IDatabaseWork factory = BusinessData.GetDbFactory();
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.OpenConnection());
+
+            if (principalData.SelectedRows.Count == 0)
+            {   work.AddRange(securityData.Save(factory)); }
+            else
+            {
+                foreach (DataGridViewRow item in principalData.SelectedRows)
+                {
+                    if (item.DataBoundItem is PrincipalValue value)
+                    {
+                        PrincipalIndex key = new PrincipalIndex(value);
+                        work.AddRange(securityData.Save(factory, key));
+                    }
+                }
+            }
+
+            IsLocked(true);
+            IsWaitCursor(true);
+            SuspendBinding(bindingPrincipal);
+            DoWork(work, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(false);
+                IsWaitCursor(false);
+                ResumeBinding(bindingPrincipal);
+                principalData.ClearSelection();
+            }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
+            IDatabaseWork factory = BusinessData.GetDbFactory();
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.OpenConnection());
+
+            var x = principalData.SelectedRows;
+
+            foreach (DataGridViewRow item in principalData.SelectedRows)
+            {
+                if (item.DataBoundItem is PrincipalValue value)
+                {
+                    PrincipalIndex key = new PrincipalIndex(value);
+                    work.AddRange(securityData.Delete(key));
+                    work.AddRange(securityData.Save(factory, key));
+                }
+            }
+
+            IsLocked(true);
+            IsWaitCursor(true);
+            SuspendBinding(bindingPrincipal);
+            DoWork(work, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(false);
+                IsWaitCursor(false);
+                ResumeBinding(bindingPrincipal);
+                principalData.ClearSelection();
+            }
         }
 
         private void principalData_DataError(object sender, DataGridViewDataErrorEventArgs e)

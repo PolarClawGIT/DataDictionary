@@ -77,8 +77,8 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };

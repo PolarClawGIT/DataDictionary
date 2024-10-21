@@ -54,7 +54,7 @@ namespace DataDictionary.Main.Forms
         public ApplicationBase() : base()
         {
             InitializeComponent();
-            
+
         }
 
         /// <summary>
@@ -328,6 +328,7 @@ namespace DataDictionary.Main.Forms
         /// SuspendBinding the binding on the specific BindingSource
         /// </summary>
         /// <param name="binding"></param>
+        /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
         /// <!--
         /// The SuspendBinding on the binding source does not affect
         /// controls that are depending on that binding source.
@@ -357,6 +358,7 @@ namespace DataDictionary.Main.Forms
         /// ResumeBinding and ResetBindings on a DataSource.
         /// </summary>
         /// <param name="binding"></param>
+        /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
         public void ResumeBinding(BindingSource binding)
         {
             binding.RaiseListChangedEvents = true;

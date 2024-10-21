@@ -180,6 +180,7 @@
             principalData.Name = "principalData";
             principalData.ReadOnly = true;
             principalData.RowHeadersVisible = false;
+            principalData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             principalData.Size = new Size(191, 494);
             principalData.TabIndex = 0;
             principalData.DataError += principalData_DataError;
