@@ -140,15 +140,27 @@ namespace DataDictionary.Main.Forms.Security
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (bindingPrincipal.Current is PrincipalValue current)
+            List<WorkItem> work = new List<WorkItem>();
+
+            foreach (DataGridViewRow item in principalData.SelectedRows)
             {
-                PrincipalIndex key = new PrincipalIndex(current);
+                if (item.DataBoundItem is PrincipalValue value)
+                {
+                    PrincipalIndex key = new PrincipalIndex(value);
+                    work.AddRange(securityData.Delete(key));
+                }
+            }
 
-                SuspendBinding(bindingPrincipal);
-                DoWork(securityData.Delete(key), onCompleting);
+            IsLocked(true);
+            IsWaitCursor(true);
+            SuspendBinding(bindingPrincipal);
+            DoWork(work, onComplete);
 
-                void onCompleting(RunWorkerCompletedEventArgs args)
-                { ResumeBinding(bindingPrincipal); }
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(false);
+                IsWaitCursor(false);
+                ResumeBinding(bindingPrincipal);
             }
         }
 
@@ -188,8 +200,6 @@ namespace DataDictionary.Main.Forms.Security
                 IsLocked(false);
                 IsWaitCursor(false);
                 ResumeBinding(bindingPrincipal);
-                principalData.Sort(principalNameColumn, ListSortDirection.Descending);
-                principalData.ClearSelection();
             }
         }
 
@@ -225,7 +235,6 @@ namespace DataDictionary.Main.Forms.Security
                 IsLocked(false);
                 IsWaitCursor(false);
                 ResumeBinding(bindingPrincipal);
-                principalData.ClearSelection();
             }
         }
 
@@ -255,8 +264,23 @@ namespace DataDictionary.Main.Forms.Security
                 IsLocked(false);
                 IsWaitCursor(false);
                 ResumeBinding(bindingPrincipal);
-                principalData.ClearSelection();
             }
+        }
+
+        public override void SuspendBinding(BindingSource binding)
+        {
+            base.SuspendBinding(binding);
+
+            principalData.DataSource = null;
+        }
+
+        public override void ResumeBinding(BindingSource binding)
+        {
+            base.ResumeBinding(binding);
+
+            principalData.DataSource = bindingPrincipal;
+            principalData.ClearSelection();
+            principalData.Sort(principalNameColumn, ListSortDirection.Descending);
         }
 
         private void principalData_DataError(object sender, DataGridViewDataErrorEventArgs e)

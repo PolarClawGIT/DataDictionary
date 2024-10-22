@@ -348,7 +348,7 @@ namespace DataDictionary.Main.Forms
         /// 
         /// The MS documentation suggests otherwise.
         /// -->
-        public void SuspendBinding(BindingSource binding)
+        public virtual void SuspendBinding(BindingSource binding)
         {
             binding.RaiseListChangedEvents = false;
             binding.SuspendBinding(); // Just in case this will actually do something useful.
@@ -359,7 +359,7 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="binding"></param>
         /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
-        public void ResumeBinding(BindingSource binding)
+        public virtual void ResumeBinding(BindingSource binding)
         {
             binding.RaiseListChangedEvents = true;
             binding.ResumeBinding(); // Just in case this will actually do something useful.

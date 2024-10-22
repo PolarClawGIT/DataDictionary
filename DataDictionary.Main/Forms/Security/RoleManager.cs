@@ -150,16 +150,28 @@ namespace DataDictionary.Main.Forms.Security
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (bindingRole.Current is RoleValue current)
-            {
-                RoleIndex key = new RoleIndex(current);
-                SuspendBinding(bindingRole);                
-                DoWork(securityData.Delete(key), onCompleting);
+            List<WorkItem> work = new List<WorkItem>();
 
-                void onCompleting(RunWorkerCompletedEventArgs args)
+            foreach (DataGridViewRow item in roleData.SelectedRows)
+            {
+                if (item.DataBoundItem is RoleValue value)
                 {
-                    ResumeBinding(bindingRole);
+                    RoleIndex key = new RoleIndex(value);
+                    work.AddRange(securityData.Delete(key));
                 }
+            }
+
+            IsLocked(true);
+            IsWaitCursor(true);
+            SuspendBinding(bindingRole);
+            DoWork(work, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(false);
+                IsWaitCursor(false);
+                ResumeBinding(bindingRole);
+                roleData.DataSource = bindingRole;
             }
         }
 
@@ -199,8 +211,6 @@ namespace DataDictionary.Main.Forms.Security
                 IsLocked(false);
                 IsWaitCursor(false);
                 ResumeBinding(bindingRole);
-                roleData.Sort(roleNameColumn, ListSortDirection.Descending);
-                roleData.ClearSelection();
             }
         }
 
@@ -258,8 +268,6 @@ namespace DataDictionary.Main.Forms.Security
                 }
             }
 
-            IsLocked(true);
-            IsWaitCursor(true);
             SuspendBinding(bindingRole);
             DoWork(work, onComplete);
 
@@ -271,6 +279,23 @@ namespace DataDictionary.Main.Forms.Security
                 roleData.ClearSelection();
             }
         }
+
+        public override void SuspendBinding(BindingSource binding)
+        {
+            base.SuspendBinding(binding);
+
+            roleData.DataSource = null;
+        }
+
+        public override void ResumeBinding(BindingSource binding)
+        {
+            base.ResumeBinding(binding);
+
+            roleData.DataSource = bindingRole;
+            roleData.Sort(roleNameColumn, ListSortDirection.Descending);
+            roleData.ClearSelection();
+        }
+
 
         private void roleData_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
