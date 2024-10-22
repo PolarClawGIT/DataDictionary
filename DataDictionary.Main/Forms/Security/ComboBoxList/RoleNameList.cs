@@ -14,6 +14,7 @@ namespace DataDictionary.Main.Forms.Security.ComboBoxList
         /// <inheritdoc/>
         public Guid? RoleId { get; private set; } = Guid.Empty;
 
+        /// <inheritdoc/>
         public String? RoleName { get; private set; } = String.Empty;
 
         public static void Load<TRole>(DataGridViewComboBoxColumn control, IEnumerable<TRole> roles)

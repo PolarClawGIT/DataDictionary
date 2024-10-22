@@ -20,9 +20,6 @@ namespace DataDictionary.Main.Forms.Security
 {
     partial class PrincipalManager : ApplicationData
     {
-        //TODO: Build out screen.
-        // List of Ownership  (view only? Scoped to Model?)
-
         ISecurity securityData = ISecurity.Create();
 
         public PrincipalManager()
@@ -74,8 +71,6 @@ namespace DataDictionary.Main.Forms.Security
                 {
                     CommandButtons[CommandImageType.Add].IsEnabled = true;
                     CommandButtons[CommandImageType.Delete].IsEnabled = true;
-                    CommandButtons[CommandImageType.OpenDatabase].IsEnabled = true;
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
                     CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;
                 }
                 else
@@ -102,11 +97,24 @@ namespace DataDictionary.Main.Forms.Security
 
                 bindingOwnership.DataSource = null;
                 bindingOwnership.DataSource = new BindingView<ObjectOwnerValue>(securityData.Owners, w => key.Equals(w));
+
+                if (current.AlterSecurity || BusinessData.Authorization.IsSecurityAdmin)
+                {
+                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
+                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;
+                }
+                else
+                {
+                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
+                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+                }
             }
             else
             {
                 bindingMembers.DataSource = null;
                 bindingOwnership.DataSource = null;
+                CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
+                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
             }
         }
 
@@ -143,7 +151,6 @@ namespace DataDictionary.Main.Forms.Security
                 { ResumeBinding(bindingPrincipal); }
             }
         }
-
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
@@ -186,7 +193,6 @@ namespace DataDictionary.Main.Forms.Security
             }
         }
 
-
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
@@ -228,8 +234,6 @@ namespace DataDictionary.Main.Forms.Security
             IDatabaseWork factory = BusinessData.GetDbFactory();
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.OpenConnection());
-
-            var x = principalData.SelectedRows;
 
             foreach (DataGridViewRow item in principalData.SelectedRows)
             {

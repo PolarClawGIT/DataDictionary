@@ -43,26 +43,30 @@
             isModelOwnerData = new CheckBox();
             isScriptAdminData = new CheckBox();
             isScriptOwnerData = new CheckBox();
-            principalMemeberData = new DataGridView();
-            roleSplit = new SplitContainer();
-            roleList = new ListView();
-            bindingRoles = new BindingSource(components);
-            bindingPrincipals = new BindingSource(components);
+            membershipData = new DataGridView();
             principalIdColumn = new DataGridViewComboBoxColumn();
-            dataGridView1 = new DataGridView();
+            objectPermissionData = new DataGridView();
             permissionObjectColumn = new DataGridViewTextBoxColumn();
             isGrantColumn = new DataGridViewCheckBoxColumn();
             isDenyColumn = new DataGridViewCheckBoxColumn();
+            roleSplit = new SplitContainer();
+            roleData = new DataGridView();
+            roleNameColumn = new DataGridViewTextBoxColumn();
+            bindingRole = new BindingSource(components);
+            bindingMembers = new BindingSource(components);
+            bindingPermission = new BindingSource(components);
             roleLayout = new TableLayoutPanel();
             roleLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)principalMemeberData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)membershipData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)objectPermissionData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)roleSplit).BeginInit();
             roleSplit.Panel1.SuspendLayout();
             roleSplit.Panel2.SuspendLayout();
             roleSplit.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingRoles).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingPrincipals).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)roleData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingRole).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingMembers).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingPermission).BeginInit();
             SuspendLayout();
             // 
             // roleLayout
@@ -85,8 +89,8 @@
             roleLayout.Controls.Add(isModelOwnerData, 1, 6);
             roleLayout.Controls.Add(isScriptAdminData, 0, 7);
             roleLayout.Controls.Add(isScriptOwnerData, 1, 7);
-            roleLayout.Controls.Add(principalMemeberData, 0, 8);
-            roleLayout.Controls.Add(dataGridView1, 0, 9);
+            roleLayout.Controls.Add(membershipData, 0, 8);
+            roleLayout.Controls.Add(objectPermissionData, 0, 9);
             roleLayout.Dock = DockStyle.Fill;
             roleLayout.Location = new Point(0, 0);
             roleLayout.Name = "roleLayout";
@@ -101,7 +105,7 @@
             roleLayout.RowStyles.Add(new RowStyle());
             roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             roleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            roleLayout.Size = new Size(374, 576);
+            roleLayout.Size = new Size(387, 576);
             roleLayout.TabIndex = 0;
             // 
             // roleNameData
@@ -115,7 +119,7 @@
             roleNameData.Multiline = false;
             roleNameData.Name = "roleNameData";
             roleNameData.ReadOnly = false;
-            roleNameData.Size = new Size(368, 44);
+            roleNameData.Size = new Size(381, 44);
             roleNameData.TabIndex = 0;
             roleNameData.WordWrap = true;
             // 
@@ -130,7 +134,7 @@
             roleDescriptionData.Multiline = true;
             roleDescriptionData.Name = "roleDescriptionData";
             roleDescriptionData.ReadOnly = false;
-            roleDescriptionData.Size = new Size(368, 69);
+            roleDescriptionData.Size = new Size(381, 69);
             roleDescriptionData.TabIndex = 1;
             roleDescriptionData.WordWrap = true;
             // 
@@ -244,17 +248,55 @@
             isScriptOwnerData.Text = "Script Owner";
             isScriptOwnerData.UseVisualStyleBackColor = true;
             // 
-            // principalMemeberData
+            // membershipData
             // 
-            principalMemeberData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            principalMemeberData.Columns.AddRange(new DataGridViewColumn[] { principalIdColumn });
-            roleLayout.SetColumnSpan(principalMemeberData, 2);
-            principalMemeberData.Dock = DockStyle.Fill;
-            principalMemeberData.Location = new Point(3, 278);
-            principalMemeberData.Name = "principalMemeberData";
-            principalMemeberData.ReadOnly = true;
-            principalMemeberData.Size = new Size(368, 144);
-            principalMemeberData.TabIndex = 13;
+            membershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            membershipData.Columns.AddRange(new DataGridViewColumn[] { principalIdColumn });
+            roleLayout.SetColumnSpan(membershipData, 2);
+            membershipData.Dock = DockStyle.Fill;
+            membershipData.Location = new Point(3, 278);
+            membershipData.Name = "membershipData";
+            membershipData.Size = new Size(381, 144);
+            membershipData.TabIndex = 13;
+            // 
+            // principalIdColumn
+            // 
+            principalIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            principalIdColumn.DataPropertyName = "PrincipalId";
+            principalIdColumn.HeaderText = "Principal Name (member)";
+            principalIdColumn.Name = "principalIdColumn";
+            // 
+            // objectPermissionData
+            // 
+            objectPermissionData.AllowUserToAddRows = false;
+            objectPermissionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            objectPermissionData.Columns.AddRange(new DataGridViewColumn[] { permissionObjectColumn, isGrantColumn, isDenyColumn });
+            roleLayout.SetColumnSpan(objectPermissionData, 2);
+            objectPermissionData.Dock = DockStyle.Fill;
+            objectPermissionData.Location = new Point(3, 428);
+            objectPermissionData.Name = "objectPermissionData";
+            objectPermissionData.Size = new Size(381, 145);
+            objectPermissionData.TabIndex = 14;
+            // 
+            // permissionObjectColumn
+            // 
+            permissionObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            permissionObjectColumn.HeaderText = "Object Name (permission)";
+            permissionObjectColumn.Name = "permissionObjectColumn";
+            // 
+            // isGrantColumn
+            // 
+            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isGrantColumn.FillWeight = 30F;
+            isGrantColumn.HeaderText = "is Grant";
+            isGrantColumn.Name = "isGrantColumn";
+            // 
+            // isDenyColumn
+            // 
+            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isDenyColumn.FillWeight = 30F;
+            isDenyColumn.HeaderText = "is Deny";
+            isDenyColumn.Name = "isDenyColumn";
             // 
             // roleSplit
             // 
@@ -264,83 +306,71 @@
             // 
             // roleSplit.Panel1
             // 
-            roleSplit.Panel1.Controls.Add(roleList);
+            roleSplit.Panel1.Controls.Add(roleData);
             // 
             // roleSplit.Panel2
             // 
             roleSplit.Panel2.Controls.Add(roleLayout);
-            roleSplit.Size = new Size(565, 576);
-            roleSplit.SplitterDistance = 187;
+            roleSplit.Size = new Size(583, 576);
+            roleSplit.SplitterDistance = 192;
             roleSplit.TabIndex = 4;
             // 
-            // roleList
+            // roleData
             // 
-            roleList.Dock = DockStyle.Fill;
-            roleList.Location = new Point(0, 0);
-            roleList.Name = "roleList";
-            roleList.Size = new Size(187, 576);
-            roleList.TabIndex = 0;
-            roleList.UseCompatibleStateImageBehavior = false;
+            roleData.AllowUserToAddRows = false;
+            roleData.AllowUserToDeleteRows = false;
+            roleData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            roleData.Columns.AddRange(new DataGridViewColumn[] { roleNameColumn });
+            roleData.Dock = DockStyle.Fill;
+            roleData.Location = new Point(0, 0);
+            roleData.Name = "roleData";
+            roleData.ReadOnly = true;
+            roleData.RowHeadersVisible = false;
+            roleData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            roleData.Size = new Size(192, 576);
+            roleData.TabIndex = 0;
+            roleData.DataError += roleData_DataError;
             // 
-            // principalIdColumn
+            // roleNameColumn
             // 
-            principalIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            principalIdColumn.HeaderText = "Principal Name (member)";
-            principalIdColumn.Name = "principalIdColumn";
+            roleNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            roleNameColumn.DataPropertyName = "RoleName";
+            roleNameColumn.HeaderText = "Role Name";
+            roleNameColumn.Name = "roleNameColumn";
+            roleNameColumn.ReadOnly = true;
             // 
-            // dataGridView1
+            // bindingRole
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { permissionObjectColumn, isGrantColumn, isDenyColumn });
-            roleLayout.SetColumnSpan(dataGridView1, 2);
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(3, 428);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(368, 145);
-            dataGridView1.TabIndex = 14;
+            bindingRole.AddingNew += BindingRoles_AddingNew;
+            bindingRole.CurrentChanged += BindingRoles_CurrentChanged;
             // 
-            // permissionObjectColumn
+            // bindingMembers
             // 
-            permissionObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            permissionObjectColumn.HeaderText = "Object Name (permission)";
-            permissionObjectColumn.Name = "permissionObjectColumn";
-            permissionObjectColumn.ReadOnly = true;
-            // 
-            // isGrantColumn
-            // 
-            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            isGrantColumn.HeaderText = "is Grant";
-            isGrantColumn.Name = "isGrantColumn";
-            isGrantColumn.Width = 53;
-            // 
-            // isDenyColumn
-            // 
-            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            isDenyColumn.HeaderText = "is Deny";
-            isDenyColumn.Name = "isDenyColumn";
-            isDenyColumn.Width = 51;
+            bindingMembers.AddingNew += BindingMembers_AddingNew;
             // 
             // RoleManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(565, 601);
+            ClientSize = new Size(583, 601);
             Controls.Add(roleSplit);
             Name = "RoleManager";
             Text = "RoleManager";
+            Load += RoleManager_Load;
             Controls.SetChildIndex(roleSplit, 0);
             roleLayout.ResumeLayout(false);
             roleLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)principalMemeberData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)membershipData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)objectPermissionData).EndInit();
             roleSplit.Panel1.ResumeLayout(false);
             roleSplit.Panel2.ResumeLayout(false);
             roleSplit.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)roleSplit).EndInit();
             roleSplit.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)bindingRoles).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingPrincipals).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)roleData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingRole).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingMembers).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingPermission).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -348,7 +378,6 @@
         #endregion
 
         private SplitContainer roleSplit;
-        private ListView roleList;
         private Controls.TextBoxData roleNameData;
         private Controls.TextBoxData roleDescriptionData;
         private CheckBox isSecurityAdminData;
@@ -362,13 +391,16 @@
         private CheckBox isModelOwnerData;
         private CheckBox isScriptAdminData;
         private CheckBox isScriptOwnerData;
-        private DataGridView principalMemeberData;
-        private BindingSource bindingRoles;
-        private BindingSource bindingPrincipals;
-        private DataGridViewComboBoxColumn principalIdColumn;
-        private DataGridView dataGridView1;
+        private DataGridView membershipData;
+        private BindingSource bindingRole;
+        private BindingSource bindingMembers;
+        private DataGridView objectPermissionData;
+        private DataGridView roleData;
         private DataGridViewTextBoxColumn permissionObjectColumn;
         private DataGridViewCheckBoxColumn isGrantColumn;
         private DataGridViewCheckBoxColumn isDenyColumn;
+        private DataGridViewTextBoxColumn roleNameColumn;
+        private BindingSource bindingPermission;
+        private DataGridViewComboBoxColumn principalIdColumn;
     }
 }

@@ -45,7 +45,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsSecurityAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsSecurityAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsSecurityAdmin), value); }
             }
         }
 
@@ -60,7 +60,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsHelpAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsHelpAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsHelpAdmin), value); }
             }
         }
 
@@ -75,7 +75,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsHelpOwner), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsHelpOwner), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsHelpOwner), value); }
             }
         }
 
@@ -90,7 +90,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsCatalogAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsCatalogAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsCatalogAdmin), value); }
             }
         }
 
@@ -105,7 +105,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsCatalogOwner), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsCatalogOwner), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsCatalogOwner), value); }
             }
         }
 
@@ -120,7 +120,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsLibraryAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsLibraryAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsLibraryAdmin), value); }
             }
         }
 
@@ -135,7 +135,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsLibraryOwner), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsLibraryOwner), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsLibraryOwner), value); }
             }
         }
 
@@ -150,7 +150,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsModelAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsModelAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsModelAdmin), value); }
             }
         }
 
@@ -165,7 +165,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsModelOwner), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsModelOwner), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsModelOwner), value); }
             }
         }
 
@@ -180,7 +180,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsScriptAdmin), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsScriptAdmin), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsScriptAdmin), value); }
             }
         }
 
@@ -195,7 +195,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             set
             {
                 SetValue<Boolean>(nameof(IsScriptOwner), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsScriptOwner), !value); }
+                if (value == true) { SetValue<Boolean>(nameof(IsScriptOwner), value); }
             }
         }
 

@@ -173,6 +173,7 @@
             // principalData
             // 
             principalData.AllowUserToAddRows = false;
+            principalData.AllowUserToDeleteRows = false;
             principalData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             principalData.Columns.AddRange(new DataGridViewColumn[] { principalNameColumn });
             principalData.Dock = DockStyle.Fill;
