@@ -58,18 +58,10 @@ namespace DataDictionary.Main
             splashScreen.Show();
 
             SendMessage(new DoUnbindData());
-            if (Settings.Default.IsOnLineMode)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                this.DoWork(factory.OpenConnection(), OnComplete);
-            }
-            else
-            {
-                LoadData(OnLoadComplete);
-                SendMessage(new OnlineStatusChanged());
-            }
+            IsLocked(true);
+            Program.SetupApplicationData(DataLoadComplete);
 
-            void OnComplete(RunWorkerCompletedEventArgs args)
+            void DataLoadComplete(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is not null && Settings.Default.IsOnLineMode)
                 { // Could not load the data from the database for whatever reason.
@@ -77,9 +69,22 @@ namespace DataDictionary.Main
                     Settings.Default.IsOnLineMode = false;
                     Settings.Default.Save();
                 }
+
                 bindingModel.DataSource = BusinessData.Models;
                 SendMessage(new OnlineStatusChanged());
-                LoadData(OnLoadComplete);
+
+                DoWork(BusinessData.Create());
+
+                IsLocked(false);
+                dataLoaded = true;
+
+                securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+                namedScopeData.ReloadCommand();
+
+                if (splashDone)
+                { this.Invoke(() => { splashScreen.Close(); }); }
+
+                SendMessage(new DoBindData());
             }
 
             // Handle Splash timer timed out.
@@ -90,56 +95,6 @@ namespace DataDictionary.Main
 
                 splashTimer.Elapsed -= MinTime_Elapsed;
                 splashDone = true;
-            }
-
-            // Handle DataLoaded
-            void OnLoadComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (splashDone)
-                { this.Invoke(() => { splashScreen.Close(); }); }
-
-                IsLocked(false);
-                dataLoaded = true;
-                SendMessage(new DoBindData());
-            }
-        }
-
-
-        private void LoadData(Action<RunWorkerCompletedEventArgs> onLoadComplete)
-        {
-            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Settings.Default.IsOnLineMode)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.LoadAuthorization(factory));
-
-                if (!appDataFile.Exists)
-                { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
-            }
-            else
-            {
-                if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(BusinessData.ImportApplication(appDataFile)); }
-                else if (appInstallFile.Exists)
-                { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(BusinessData.ImportApplication(appInstallFile));
-                    work.AddRange(BusinessData.ExportApplication(appDataFile));
-                }
-            }
-            work.AddRange(BusinessData.Create());
-            this.DoWork(work, OnComplete);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
-
-                namedScopeData.ReloadCommand();
-                onLoadComplete(args);
             }
         }
 

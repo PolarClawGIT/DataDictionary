@@ -15,7 +15,7 @@ namespace DataDictionary.Main.ApplicationWide
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ApplicationOption);;
+            SetIcon(ScopeType.ApplicationOption); ;
         }
 
         private void ApplicationOptions_Load(object sender, EventArgs e)
@@ -60,10 +60,10 @@ namespace DataDictionary.Main.ApplicationWide
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.ExportApplication(appDataFile));
+            work.AddRange(BusinessData.ApplicationData.Save(appDataFile));
 
 #if DEBUG
-            if(!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition")))
+            if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition")))
             { // Running in Visual Studio & the build is a DEBUG, save to the executable & project folder as well.
                 DirectoryInfo path = new DirectoryInfo(Application.StartupPath);
 
@@ -71,10 +71,10 @@ namespace DataDictionary.Main.ApplicationWide
                 {
                     foreach (var item in path.GetFiles(Settings.Default.AppDataFile))
                     {
-                        if(item.DirectoryName is String directory)
+                        if (item.DirectoryName is String directory)
                         {
                             FileInfo otherFile = new FileInfo(Path.Combine(directory, Settings.Default.AppDataFile));
-                            work.AddRange(BusinessData.ExportApplication(otherFile));
+                            work.AddRange(BusinessData.ApplicationData.Save(otherFile));
                         }
                     }
 
@@ -89,22 +89,36 @@ namespace DataDictionary.Main.ApplicationWide
             { } // Nothing to do at this point
         }
 
-        private void commandLoadFromFile_Click(object sender, EventArgs e)
+        private void CommandLoadFromFile_Click(object sender, EventArgs e)
         {
             SendMessage(new DbApplicationBatchStarting());
 
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(BusinessData.ImportApplication(appDataFile), OnComplete);
+            this.DoWork(BusinessData.ApplicationData.Load(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { SendMessage(new DbApplicationBatchCompleted()); }
         }
 
-        private void defaultModeOnLine_CheckedChanged(object sender, EventArgs e)
+        private void DefaultModeOnLine_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.Default.IsOnLineMode = defaultModeOnLine.Checked;
-            Settings.Default.Save();
-            SendMessage(new OnlineStatusChanged());
+            if (defaultModeOnLine.Checked)
+            { Program.SetupApplicationData(OnComplete); }
+            else
+            {
+                Settings.Default.IsOnLineMode = defaultModeOnLine.Checked;
+                Settings.Default.Save();
+                SendMessage(new OnlineStatusChanged());
+            }
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is not null && Settings.Default.IsOnLineMode)
+                { Settings.Default.IsOnLineMode = false; }
+                else { Settings.Default.IsOnLineMode = true; }
+                Settings.Default.Save();
+                SendMessage(new OnlineStatusChanged());
+            }
         }
     }
 }

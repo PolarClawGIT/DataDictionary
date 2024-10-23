@@ -224,56 +224,5 @@ namespace DataDictionary.BusinessLayer
                 ModelFile = file;
             }
         }
-
-
-        /// <summary>
-        /// Imports the Application Data from a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
-        {
-            List<WorkItem> work = new List<WorkItem>
-            {
-                new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
-            };
-
-            return work.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
-                    applicationValues.Import(workSet);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Exports the Application Data to a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
-
-            return work.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.Tables.AddRange(applicationValues.Export().ToArray());
-
-                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
-                }
-            }
-        }
-
-
     }
 }

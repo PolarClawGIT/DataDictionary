@@ -19,19 +19,33 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <summary>
         /// Wrapper for Application (Common) Properties.
         /// </summary>
-        Domain.IPropertyData Properties  { get;}
+        Domain.IPropertyData Properties { get; }
 
         /// <summary>
         /// Wrapper for Application (Common) Definitions.
         /// </summary>
-        Domain.IDefinitionData Definitions { get; } 
+        Domain.IDefinitionData Definitions { get; }
+
+        /// <summary>
+        /// Loads/Import the Application Data from file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Load(FileInfo file);
+
+        /// <summary>
+        /// Saves/Export the Application Data to file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Save(FileInfo file);
     }
 
     /// <summary>
     /// Implementation for Application data
     /// </summary>
     public class ApplicationData : IApplicationData,
-        ILoadData, ISaveData, IDataTableFile
+        ILoadData, ISaveData//, IDataTableFile
     {
         /// <inheritdoc/>
         public IHelpSubjectData HelpSubjects { get { return helpSubjectValues; } }
@@ -56,6 +70,26 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         }
 
         /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(FileInfo file)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Delete());
+            work.Add(new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork });
+            return work;
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
+                    helpSubjectValues.Load(workSet);
+                    propertyValues.Load(workSet);
+                    definitionValues.Load(workSet);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -64,21 +98,24 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<DataTable> Export()
+        public IReadOnlyList<WorkItem> Save(FileInfo file)
         {
-            List<System.Data.DataTable> work = new List<System.Data.DataTable>();
-            work.Add(helpSubjectValues.ToDataTable());
-            work.Add(propertyValues.ToDataTable());
-            work.Add(definitionValues.ToDataTable());
-            return work;
-        }
+            List<WorkItem> work = new List<WorkItem>();
 
-        /// <inheritdoc/>
-        public void Import(DataSet source)
-        {
-            helpSubjectValues.Load(source);
-            propertyValues.Load(source);
-            definitionValues.Load(source);
+            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+
+            return work;
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.Tables.Add(helpSubjectValues.ToDataTable());
+                    workSet.Tables.Add(propertyValues.ToDataTable());
+                    workSet.Tables.Add(definitionValues.ToDataTable());
+                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
+                }
+            }
         }
 
         /// <inheritdoc/>

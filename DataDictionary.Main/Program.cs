@@ -1,5 +1,7 @@
 using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Properties;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Toolbox.DbContext;
 using Toolbox.Mediator;
@@ -51,5 +53,58 @@ namespace DataDictionary.Main
             using (Dialogs.ExceptionDialog dialog = new Dialogs.ExceptionDialog(ex))
             { dialog.ShowDialog(); }
         }
+
+        public static void SetupApplicationData(Action<RunWorkerCompletedEventArgs> onComplete)
+        {
+            if (Settings.Default.IsOnLineMode)
+            { Worker.Enqueue(BusinessData.GetDbFactory().OpenConnection(), TestConnection); }
+            else { LoadbyFile(); }
+
+            void TestConnection(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is Exception ex)
+                { LoadbyFile(); }
+                else { LoadByDatabase(); }
+            }
+
+            void LoadbyFile()
+            {
+                FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+                FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
+                List<WorkItem> work = new List<WorkItem>();
+
+                if (appDataFile.Exists) // AppData already contains the Application Data File
+                { work.AddRange(BusinessData.ApplicationData.Load(appDataFile)); }
+                else if (appInstallFile.Exists)
+                { // AppData does not contain file but the install folder does (Copy it)
+
+                    work.AddRange(BusinessData.ApplicationData.Load(appInstallFile));
+                    work.AddRange(BusinessData.ApplicationData.Save(appDataFile));
+                }
+
+                Worker.Enqueue(work, FileComplete);
+
+                void FileComplete(RunWorkerCompletedEventArgs args)
+                { onComplete(args); }
+            }
+
+            void LoadByDatabase()
+            {
+                FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(BusinessData.ApplicationData.Load(factory));
+                work.AddRange(BusinessData.ApplicationData.Save(appDataFile));
+                work.AddRange(BusinessData.LoadAuthorization(factory));
+
+                Worker.Enqueue(work, DatabaseComplete);
+
+                void DatabaseComplete(RunWorkerCompletedEventArgs args)
+                { onComplete(args); }
+            }
+        }
+
     }
 }
