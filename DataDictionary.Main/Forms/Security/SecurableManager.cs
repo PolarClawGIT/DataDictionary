@@ -38,7 +38,8 @@ namespace DataDictionary.Main.Forms.Security
 
         public SecurableManager(IDataValue value) : this()
         {
-            bindingSecurable.DataSource = new BindingList<IDataValue>() { value };
+            //bindingSecurable.DataSource = new BindingList<IDataValue>() { value };
+            var x =  value.Index
         }
 
         private void ObjectManager_Load(object sender, EventArgs e)

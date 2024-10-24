@@ -16,19 +16,19 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     { }
 
     /// <inheritdoc/>
-    public class ObjectIndex : SecurableKey, ISecurableIndex,
-        IKeyEquality<ISecurableIndex>, IKeyEquality<ObjectIndex>
+    public class SecurableIndex : SecurableKey, ISecurableIndex,
+        IKeyEquality<ISecurableIndex>, IKeyEquality<SecurableIndex>
     {
 
         /// <inheritdoc/>
-        protected ObjectIndex(): base() { }
+        protected SecurableIndex(): base() { }
 
         /// <inheritdoc cref="SecurableKey.SecurableKey(ISecurableKey)"/>
-        public ObjectIndex(ISecurableIndex source) : base(source)
+        public SecurableIndex(ISecurableIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
-        public Boolean Equals(ObjectIndex? other)
+        public Boolean Equals(SecurableIndex? other)
         { return other is ISecurableKey value && Equals(new SecurableKey(value)); }
 
         /// <inheritdoc/>
@@ -36,17 +36,17 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         { return other is ISecurableKey value && Equals(new SecurableKey(value)); }
 
         /// <summary>
-        /// Convert ObjectIndex to a DataIndex
+        /// Convert SecurableIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataIndex(ObjectIndex source)
+        public static implicit operator DataIndex(SecurableIndex source)
         { return new DataIndex() { SystemId = source.SecurableId ?? Guid.Empty }; }
 
         /// <summary>
-        /// Convert DataIndex to a ObjectIndex
+        /// Convert DataIndex to a SecurableIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ObjectIndex(DataIndex source)
-        { return new ObjectIndex() { SecurableId = source.SystemId }; }
+        public static implicit operator SecurableIndex(DataIndex source)
+        { return new SecurableIndex() { SecurableId = source.SystemId }; }
     }
 }

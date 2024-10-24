@@ -15,15 +15,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     { }
 
     /// <inheritdoc/>
-    public class ObjectIndexName : SecurableKeyName, ISecurableIndexName,
-        IKeyEquality<ISecurableIndexName>, IKeyEquality<ObjectIndexName>
+    public class SecurableIndexName : SecurableKeyName, ISecurableIndexName,
+        IKeyEquality<ISecurableIndexName>, IKeyEquality<SecurableIndexName>
     {
         /// <inheritdoc cref="SecurableKey.SecurableKey(ISecurableKey)"/>
-        public ObjectIndexName(ISecurableIndexName source) : base(source)
+        public SecurableIndexName(ISecurableIndexName source) : base(source)
         { }
 
         /// <inheritdoc/>
-        public Boolean Equals(ObjectIndexName? other)
+        public Boolean Equals(SecurableIndexName? other)
         { return other is ISecurableKey value && Equals(new SecurableKey(value)); }
 
         /// <inheritdoc/>
