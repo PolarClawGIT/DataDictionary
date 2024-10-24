@@ -1,10 +1,11 @@
-﻿CREATE PROCEDURE [AppGeneral].[procSetHelpSubject]
-		@HelpId UniqueIdentifier = null,
-		@Data [AppGeneral].[typeHelpSubject] ReadOnly
+﻿CREATE PROCEDURE [AppSecurity].[procSetSecurablePermission]
+		@RoleId UniqueIdentifier = Null,
+		@SecurableId UniqueIdentifier = Null,
+		@Data [AppSecurity].[typeSecurablePermission] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on HelpSubject.
+/* Description: Performs Set on SecurablePermission.
 */
 
 -- Transaction Handling
@@ -19,88 +20,71 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values Table (
-			[HelpId] UniqueIdentifier Not Null,
-			[HelpSubject] [App_DataDictionary].[typeTitle] Not Null,
-			[HelpToolTip] [App_DataDictionary].[typeDescription] Null,
-			[HelpText] NVarChar(Max) Not Null,
-			[NameSpace] NVarChar(1023) Null,
-			Primary Key ([HelpId]))
+	Declare @Value Table (
+		[RoleId] UniqueIdentifier Not Null,
+		[SecurableId] UniqueIdentifier Not Null,
+		[IsGrant] Bit Not Null,
+		[IsDeny] Bit Not Null,
+		Primary Key ([RoleId], [SecurableId]))
 
-	Insert Into @Values
-	Select	Coalesce(D.[HelpId], @HelpId, NewId()) As [HelpId],
-			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
-			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
-			NullIf(Trim(D.[HelpText]),'') As [HelpText],
-			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
+	Insert Into @Value
+	Select	D.[RoleId],
+			D.[SecurableId],
+			D.[IsGrant],
+			D.[IsDeny]
 	From	@Data D
-	Where	(@HelpId is Null or @HelpId = D.[HelpId])
-
-	-- Deal with Ownership, Sets up Row Level Security
-	Insert Into [AppSecurity].[SecurableOwner] (
-			[PrincipalId],
-			[SecurableId])
-	Select	S.[PrincipalId],
-			V.[HelpId]
-	From	@Values V
-			Cross Apply [AppSecurity].[funcAuthorization](V.[HelpId]) S
-	Where	S.[IsHelpOwner] = 1 And
-			S.[HasOwner] = 0 And
-			S.[PrincipalId] is not null
-	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Inner Join [AppSecurity].[Role] R
+			On	D.[RoleId] = R.[RoleId]
+	Where	(@SecurableId is Null Or D.[SecurableId] = @SecurableId) And
+			(@RoleId is Null Or D.[RoleId] = @RoleId)
 
 	-- Apply Changes
-	Delete From [AppGeneral].[HelpSubject]
-	From	[AppGeneral].[HelpSubject] T
-			Left Join @Values S
-			On	T.[HelpId] = S.[HelpId]
-	Where	S.[HelpId] is Null And
-			T.[HelpId] In (
-				Select	[HelpId]
-				From	[AppGeneral].[HelpSubject]
-				Where	(@HelpId is Null Or @HelpId = [HelpId]))
-	Print FormatMessage ('Delete [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Delete From [AppSecurity].[SecurablePermission]
+	From	[AppSecurity].[SecurablePermission] T
+			Left Join @Value S
+			On	T.[RoleId] = S.[RoleId] And
+				T.[SecurableId] = S.[SecurableId]
+	Where	S.[SecurableId] is Null And
+			(@SecurableId is Null Or T.[SecurableId] = @SecurableId) And
+			(@RoleId is Null Or T.[RoleId] = @RoleId)
+	Print FormatMessage ('Delete [AppSecurity].[SecurablePermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[HelpId],
-				[HelpSubject],
-				[HelpToolTip],
-				[HelpText],
-				[NameSpace]
-		From	@Values
+		Select	[RoleId],
+				[SecurableId],
+				[IsGrant],
+				[IsDeny]
+		From	@Value
 		Except
-		Select	[HelpId],
-				[HelpSubject],
-				[HelpToolTip],
-				[HelpText],
-				[NameSpace]
-		From	[AppGeneral].[HelpSubject])
-	Update [AppGeneral].[HelpSubject]
-	Set		[HelpSubject] = S.[HelpSubject],
-			[HelpToolTip] = S.[HelpToolTip],
-			[HelpText] = S.[HelpText],
-			[NameSpace] = S.[NameSpace]
-	From	[AppGeneral].[HelpSubject] T
+		Select	[RoleId],
+				[SecurableId],
+				[IsGrant],
+				[IsDeny]
+		From	[AppSecurity].[SecurablePermission])
+	Update [AppSecurity].[SecurablePermission]
+	Set		[IsGrant] = S.[IsGrant],
+			[IsDeny] = S.[IsDeny]
+	From	[AppSecurity].[SecurablePermission] T
 			Inner Join [Delta] S
-			On	T.[HelpId] = S.[HelpId]
-	Print FormatMessage ('Update [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[RoleId] = S.[RoleId] And
+				T.[SecurableId] = S.[SecurableId]
+	Print FormatMessage ('Update [AppSecurity].[SecurablePermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppGeneral].[HelpSubject] (
-			[HelpId],
-			[HelpSubject],
-			[HelpToolTip],
-			[HelpText],
-			[NameSpace])
-	Select	S.[HelpId],
-			S.[HelpSubject],
-			S.[HelpToolTip],
-			S.[HelpText],
-			S.[NameSpace]
-	From	@Values S
-			Left Join [AppGeneral].[HelpSubject] T
-			On	S.[HelpId] = T.[HelpId]
-	Where	T.[HelpId] is Null
-	Print FormatMessage ('Insert [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Insert Into [AppSecurity].[SecurablePermission] (
+			[RoleId],
+			[SecurableId],
+			[IsGrant],
+			[IsDeny])
+	Select	S.[RoleId],
+			S.[SecurableId],
+			S.[IsGrant],
+			S.[IsDeny]
+	From	@Value S
+			Left Join [AppSecurity].[SecurablePermission] T
+			On	S.[RoleId] = T.[RoleId] And
+				S.[SecurableId] = T.[SecurableId]
+	Where	T.[RoleId] is Null
+	Print FormatMessage ('Insert [AppSecurity].[SecurablePermission]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -127,6 +111,7 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
+
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

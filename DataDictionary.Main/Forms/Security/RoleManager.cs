@@ -106,7 +106,7 @@ namespace DataDictionary.Main.Forms.Security
                 bindingMembers.DataSource = new BindingView<RoleMembershipValue>(securityData.Memberships, w => key.Equals(w));
 
                 bindingPermission.DataSource = null;
-                bindingPermission.DataSource = new BindingView<ObjectPermissionValue>(securityData.Permissions, w => key.Equals(w));
+                bindingPermission.DataSource = new BindingView<SecurablePermissionValue>(securityData.Permissions, w => key.Equals(w));
 
                 if (current.AlterSecurity || BusinessData.Authorization.IsSecurityAdmin)
                 {

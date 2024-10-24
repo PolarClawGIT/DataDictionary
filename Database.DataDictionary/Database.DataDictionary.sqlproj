@@ -297,15 +297,15 @@
     <Build Include="Obsolete\typeApplicationHelp.sql" />
     <Build Include="AppSecurity\Tables\Role.sql" />
     <Build Include="AppSecurity\Tables\Principal.sql" />
-    <Build Include="AppSecurity\Tables\ObjectPermission.sql" />
+    <Build Include="AppSecurity\Tables\SecurablePermission.sql" />
     <Build Include="AppSecurity\Tables\RoleMembership.sql" />
     <Build Include="AppSecurity\Functions\funcPrincipalAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyPrincipal.sql" />
     <Build Include="AppSecurity\Functions\funcHelpSubjectAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyHelpSubject.sql" />
-    <Build Include="AppSecurity\Tables\ObjectOwner.sql" />
-    <Build Include="AppSecurity\Functions\funcObjectAuthorization.sql" />
-    <Build Include="AppSecurity\Policy\policyObject.sql" />
+    <Build Include="AppSecurity\Tables\SecurableOwner.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurableAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policySecurable.sql" />
     <Build Include="AppSecurity\Functions\funcAuthorization.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetPrincipal.sql">
       <SuppressTSqlWarnings>
@@ -316,7 +316,6 @@
     <Build Include="AppSecurity\User Defined Types\typeRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetRoleMembership.sql" />
     <Build Include="AppSecurity\User Defined Types\typeRoleMembership.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procGetHelpSecurity.sql" />
     <Build Include="AppSecurity\User Defined Types\typeHelpSecurity.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetPrincipal.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetRole.sql" />
@@ -324,13 +323,14 @@
     <Build Include="AppSecurity\Stored Procedures\procGetAuthorization.sql">
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
     </Build>
-    <Build Include="AppSecurity\Stored Procedures\procSetHelpSecurity.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procGetObjectOwner.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procGetObjectPermission.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeObjectOwner.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeObjectPermission.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procSetObjectOwner.sql" />
-    <Build Include="AppSecurity\Stored Procedures\procSetObjectPermission.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurableOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurablePermission.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeSecurableOwner.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeSecurablePermission.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurableOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurablePermission.sql" />
+    <Build Include="AppSecurity\Views\Securable.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurable.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

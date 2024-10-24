@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface IRoleItem :
         IRoleKey, IRoleKeyName,
-        IObjectAuthorization, IRolePermissions
+        ISecurableAuthorization, IRolePermissions
     {
         /// <summary>
         /// Description of the Role.

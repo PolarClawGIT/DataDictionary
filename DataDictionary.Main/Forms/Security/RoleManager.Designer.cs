@@ -46,15 +46,15 @@
             membershipData = new DataGridView();
             principalIdColumn = new DataGridViewComboBoxColumn();
             objectPermissionData = new DataGridView();
-            permissionObjectColumn = new DataGridViewTextBoxColumn();
-            isGrantColumn = new DataGridViewCheckBoxColumn();
-            isDenyColumn = new DataGridViewCheckBoxColumn();
             roleSplit = new SplitContainer();
             roleData = new DataGridView();
             roleNameColumn = new DataGridViewTextBoxColumn();
             bindingRole = new BindingSource(components);
             bindingMembers = new BindingSource(components);
             bindingPermission = new BindingSource(components);
+            permissionSecurableColumn = new DataGridViewTextBoxColumn();
+            isGrantColumn = new DataGridViewCheckBoxColumn();
+            isDenyColumn = new DataGridViewCheckBoxColumn();
             roleLayout = new TableLayoutPanel();
             roleLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)membershipData).BeginInit();
@@ -270,33 +270,13 @@
             // 
             objectPermissionData.AllowUserToAddRows = false;
             objectPermissionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            objectPermissionData.Columns.AddRange(new DataGridViewColumn[] { permissionObjectColumn, isGrantColumn, isDenyColumn });
+            objectPermissionData.Columns.AddRange(new DataGridViewColumn[] { permissionSecurableColumn, isGrantColumn, isDenyColumn });
             roleLayout.SetColumnSpan(objectPermissionData, 2);
             objectPermissionData.Dock = DockStyle.Fill;
             objectPermissionData.Location = new Point(3, 428);
             objectPermissionData.Name = "objectPermissionData";
             objectPermissionData.Size = new Size(381, 145);
             objectPermissionData.TabIndex = 14;
-            // 
-            // permissionObjectColumn
-            // 
-            permissionObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            permissionObjectColumn.HeaderText = "Object Name (permission)";
-            permissionObjectColumn.Name = "permissionObjectColumn";
-            // 
-            // isGrantColumn
-            // 
-            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            isGrantColumn.FillWeight = 30F;
-            isGrantColumn.HeaderText = "is Grant";
-            isGrantColumn.Name = "isGrantColumn";
-            // 
-            // isDenyColumn
-            // 
-            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            isDenyColumn.FillWeight = 30F;
-            isDenyColumn.HeaderText = "is Deny";
-            isDenyColumn.Name = "isDenyColumn";
             // 
             // roleSplit
             // 
@@ -348,6 +328,26 @@
             // 
             bindingMembers.AddingNew += BindingMembers_AddingNew;
             // 
+            // permissionSecurableColumn
+            // 
+            permissionSecurableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            permissionSecurableColumn.HeaderText = "Securable Title (permission)";
+            permissionSecurableColumn.Name = "permissionSecurableColumn";
+            // 
+            // isGrantColumn
+            // 
+            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isGrantColumn.FillWeight = 30F;
+            isGrantColumn.HeaderText = "is Grant";
+            isGrantColumn.Name = "isGrantColumn";
+            // 
+            // isDenyColumn
+            // 
+            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isDenyColumn.FillWeight = 30F;
+            isDenyColumn.HeaderText = "is Deny";
+            isDenyColumn.Name = "isDenyColumn";
+            // 
             // RoleManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -396,11 +396,11 @@
         private BindingSource bindingMembers;
         private DataGridView objectPermissionData;
         private DataGridView roleData;
-        private DataGridViewTextBoxColumn permissionObjectColumn;
-        private DataGridViewCheckBoxColumn isGrantColumn;
-        private DataGridViewCheckBoxColumn isDenyColumn;
         private DataGridViewTextBoxColumn roleNameColumn;
         private BindingSource bindingPermission;
         private DataGridViewComboBoxColumn principalIdColumn;
+        private DataGridViewTextBoxColumn permissionSecurableColumn;
+        private DataGridViewCheckBoxColumn isGrantColumn;
+        private DataGridViewCheckBoxColumn isDenyColumn;
     }
 }

@@ -30,7 +30,7 @@ Select	L.[PrincipalLogin],
 		-- Object Security
 		@ObjectId As [ObjectId],
 		Convert(Bit,Max(IIF(O.[PrincipalId] = P.[PrincipalId],1,0))) As [IsOwner],
-		Convert(Bit,Max(IIF(O.[ObjectId] is Null, 0, 1))) As [HasOwner],
+		Convert(Bit,Max(IIF(O.[SecurableId] is Null, 0, 1))) As [HasOwner],
 		Convert(Bit,Max(Convert(Int,IsNull(S.[IsGrant],0)))) As [IsGrant],
 		Convert(Bit,Max(Convert(Int,IsNull(S.[IsDeny],0)))) As [IsDeny]
 From	[Login] L
@@ -41,11 +41,11 @@ From	[Login] L
 		On	P.[PrincipalId] = M.[PrincipalId]
 		Left Join [AppSecurity].[Role] R
 		On	M.[RoleId] = R.[RoleId]
-		Left Join [AppSecurity].[ObjectPermission] S
+		Left Join [AppSecurity].[SecurablePermission] S
 		On	M.[RoleId] = S.[RoleId] And
-			S.[ObjectId] = @ObjectId
-		Left Join [AppSecurity].[ObjectOwner] O
-		On	O.[ObjectId] = @ObjectId
+			S.[SecurableId] = @ObjectId
+		Left Join [AppSecurity].[SecurableOwner] O
+		On	O.[SecurableId] = @ObjectId
 Group By L.[PrincipalLogin],
 		P.[PrincipalId]
 GO

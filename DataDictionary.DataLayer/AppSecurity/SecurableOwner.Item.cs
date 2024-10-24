@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿// Ignore Spelling: Securable
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,36 +12,25 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Security Principal Item.
+    /// Interface for the Securable (Security Object) Owner Item defined for a Principal.
     /// </summary>
-    public interface IPrincipalItem: 
-        IPrincipalKey, IPrincipalKeyName,
-        IPrincipalName, ISecurableAuthorization
-    {
-        /// <summary>
-        /// Additional information (notes) about the Principal.
-        /// </summary>
-        String? PrincipalAnnotation { get; }
-
-    }
+    public interface ISecurableOwnerItem : IPrincipalKey, ISecurableKey, ISecurableKeyName, ISecurableAuthorization
+    { }
 
     /// <summary>
-    /// Implementation of the Security Principal Item.
+    /// Implementation of the Securable (Security Object) Owner Item defined for a Principal.
     /// </summary>
     [Serializable]
-    public class PrincipalItem : BindingTableRow, IPrincipalItem, ISerializable
+    public class SecurableOwnerItem : BindingTableRow, ISecurableOwnerItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipalLogin { get { return GetValue(nameof(PrincipalLogin)); } set { SetValue(nameof(PrincipalLogin), value); } }
+        public Guid? SecurableId { get { return GetValue<Guid>(nameof(SecurableId)); } protected set { SetValue(nameof(SecurableId), value); } }
 
         /// <inheritdoc/>
-        public String? PrincipalName { get { return GetValue(nameof(PrincipalName)); } set { SetValue(nameof(PrincipalName), value); } }
-
-        /// <inheritdoc/>
-        public String? PrincipalAnnotation { get { return GetValue(nameof(PrincipalAnnotation)); } set { SetValue(nameof(PrincipalAnnotation), value); } }
+        public String? SecurableTitle { get { return GetValue(nameof(SecurableTitle)); } set { SetValue(nameof(SecurableTitle), value); } }
 
         /// <inheritdoc/>
         public Boolean AlterValue
@@ -63,17 +53,32 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for PrincipalItem.
+        /// Constructor for SecurableOwnerItem.
         /// </summary>
-        public PrincipalItem() : base()
-        { PrincipalId = Guid.NewGuid(); }
+        protected SecurableOwnerItem() : base()
+        { }
+
+        /// <summary>
+        /// Constructor for SecurableOwnerItem.
+        /// </summary>
+        /// <param name="principalKey"></param>
+        public SecurableOwnerItem(IPrincipalKey principalKey) : this()
+        { PrincipalId = principalKey.PrincipalId; }
+
+        /// <summary>
+        /// Constructor for SecurableOwnerItem.
+        /// </summary>
+        /// <param name="principalKey"></param>
+        /// <param name="objectKey"></param>
+        public SecurableOwnerItem(IPrincipalKey principalKey, ISecurableKey objectKey) : this(principalKey)
+        { SecurableId = objectKey.SecurableId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipalLogin), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipalName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PrincipalAnnotation), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(SecurableId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SecurableTitle), typeof(String)){ AllowDBNull = true},
+
             new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
@@ -84,17 +89,16 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for PrincipalItem.
+        /// Serialization Constructor for SecurableOwnerItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected PrincipalItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected SecurableOwnerItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
-        { return new PrincipalKeyName(this).ToString(); }
-
+        { return new SecurableKeyName(this).ToString(); }
     }
 }

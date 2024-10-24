@@ -36,13 +36,13 @@
             membershipData = new DataGridView();
             roleIdColumn = new DataGridViewComboBoxColumn();
             ownershipData = new DataGridView();
-            ownershipObjectColumn = new DataGridViewTextBoxColumn();
             principalSplit = new SplitContainer();
             principalData = new DataGridView();
             principalNameColumn = new DataGridViewTextBoxColumn();
             bindingPrincipal = new BindingSource(components);
             bindingMembers = new BindingSource(components);
             bindingOwnership = new BindingSource(components);
+            ownershipSecurableColumn = new DataGridViewTextBoxColumn();
             principalLayout = new TableLayoutPanel();
             principalLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)membershipData).BeginInit();
@@ -138,20 +138,13 @@
             // 
             ownershipData.AllowUserToAddRows = false;
             ownershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ownershipData.Columns.AddRange(new DataGridViewColumn[] { ownershipObjectColumn });
+            ownershipData.Columns.AddRange(new DataGridViewColumn[] { ownershipSecurableColumn });
             ownershipData.Dock = DockStyle.Fill;
             ownershipData.Location = new Point(3, 338);
             ownershipData.Name = "ownershipData";
             ownershipData.ReadOnly = true;
             ownershipData.Size = new Size(375, 153);
             ownershipData.TabIndex = 4;
-            // 
-            // ownershipObjectColumn
-            // 
-            ownershipObjectColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ownershipObjectColumn.HeaderText = "Object Name (owned by Principal)";
-            ownershipObjectColumn.Name = "ownershipObjectColumn";
-            ownershipObjectColumn.ReadOnly = true;
             // 
             // principalSplit
             // 
@@ -204,6 +197,13 @@
             // 
             bindingMembers.AddingNew += BindingMembers_AddingNew;
             // 
+            // ownershipSecurableColumn
+            // 
+            ownershipSecurableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ownershipSecurableColumn.HeaderText = "Securable Title (owned by Principal)";
+            ownershipSecurableColumn.Name = "ownershipSecurableColumn";
+            ownershipSecurableColumn.ReadOnly = true;
+            // 
             // PrincipalManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -243,8 +243,8 @@
         private DataGridView ownershipData;
         private BindingSource bindingOwnership;
         private DataGridViewComboBoxColumn roleIdColumn;
-        private DataGridViewTextBoxColumn ownershipObjectColumn;
         private DataGridView principalData;
         private DataGridViewTextBoxColumn principalNameColumn;
+        private DataGridViewTextBoxColumn ownershipSecurableColumn;
     }
 }

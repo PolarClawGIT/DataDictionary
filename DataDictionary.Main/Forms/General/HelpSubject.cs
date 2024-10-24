@@ -223,7 +223,7 @@ namespace DataDictionary.Main.Forms.General
             if (helpBinding.Current is HelpSubjectValue current)
             {
                 //TODO: Work out generic way of calling Security.ObjectManager for the specific context.
-                Activate(() => new Security.ObjectManager());
+                Activate(() => new Security.SecurableManager());
                 //Activate((data) => new Security.ObjectManager<HelpSubjectValue>(current.Scope, current), data);
             }
         }

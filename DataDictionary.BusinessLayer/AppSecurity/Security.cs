@@ -14,8 +14,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// Interface representing Security data
     /// </summary>
     public interface ISecurity :
-        ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>, ILoadData<IObjectIndex>,
-        ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<IObjectIndex>
+        ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>, ILoadData<ISecurableIndex>,
+        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>
     {
         /// <summary>
         /// Security Principals (user/logins)
@@ -35,12 +35,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <summary>
         /// Object Ownership
         /// </summary>
-        IObjectOwnerData Owners { get; }
+        ISecurableOwnerData Owners { get; }
 
         /// <summary>
         /// Object Permission
         /// </summary>
-        IObjectPermissionData Permissions { get; }
+        ISecurablePermissionData Permissions { get; }
 
         /// <summary>
         /// Creates an instance of the Security Objects and returns the interface.
@@ -65,12 +65,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         RoleMembershipData membershipValues = new RoleMembershipData();
 
         /// <inheritdoc/>
-        public IObjectOwnerData Owners { get { return ownerValues; } }
-        ObjectOwnerData ownerValues = new ObjectOwnerData();
+        public ISecurableOwnerData Owners { get { return ownerValues; } }
+        SecurableOwnerData ownerValues = new SecurableOwnerData();
 
         /// <inheritdoc/>
-        public IObjectPermissionData Permissions { get { return permissionValues; } }
-        ObjectPermissionData permissionValues = new ObjectPermissionData();
+        public ISecurablePermissionData Permissions { get { return permissionValues; } }
+        SecurablePermissionData permissionValues = new SecurablePermissionData();
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -109,7 +109,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IObjectIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(principalValues.Load(factory));
@@ -117,6 +117,17 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(membershipValues.Load(factory));
             work.AddRange(ownerValues.Load(factory, dataKey));
             work.AddRange(permissionValues.Load(factory, dataKey));
+            return work;
+        }
+
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(principalValues.Save(factory));
+            work.AddRange(roleValues.Save(factory));
+            work.AddRange(membershipValues.Save(factory));
+            work.AddRange(ownerValues.Save(factory));
+            work.AddRange(permissionValues.Save(factory));
             return work;
         }
 
@@ -141,7 +152,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IObjectIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ISecurableIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(ownerValues.Save(factory, dataKey));
@@ -181,12 +192,14 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete(IObjectIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(ISecurableIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(permissionValues.Delete(dataKey));
             work.AddRange(permissionValues.Delete(dataKey));
             return work;
         }
+
+
     }
 }

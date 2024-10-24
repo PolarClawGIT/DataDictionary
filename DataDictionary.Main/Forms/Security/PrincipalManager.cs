@@ -96,7 +96,7 @@ namespace DataDictionary.Main.Forms.Security
                 bindingMembers.DataSource = new BindingView<RoleMembershipValue>(securityData.Memberships, w => key.Equals(w));
 
                 bindingOwnership.DataSource = null;
-                bindingOwnership.DataSource = new BindingView<ObjectOwnerValue>(securityData.Owners, w => key.Equals(w));
+                bindingOwnership.DataSource = new BindingView<SecurableOwnerValue>(securityData.Owners, w => key.Equals(w));
 
                 if (current.AlterSecurity || BusinessData.Authorization.IsSecurityAdmin)
                 {
@@ -212,7 +212,7 @@ namespace DataDictionary.Main.Forms.Security
             work.Add(factory.OpenConnection());
 
             if (principalData.SelectedRows.Count == 0)
-            {   work.AddRange(securityData.Save(factory)); }
+            { work.AddRange(securityData.Save(factory)); }
             else
             {
                 foreach (DataGridViewRow item in principalData.SelectedRows)
