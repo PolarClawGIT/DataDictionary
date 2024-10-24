@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -15,6 +16,9 @@ namespace DataDictionary.Main.Forms.Security
 {
     partial class ObjectManager : ApplicationData
     {
+
+        ISecurity securityData = ISecurity.Create();
+
         public ObjectManager() : base()
         {
             InitializeComponent();
@@ -25,9 +29,19 @@ namespace DataDictionary.Main.Forms.Security
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
                 CommandImageType.DeleteDatabase);
+
+            objectOwnerData.AutoGenerateColumns = false;
+            objectPermissionData.AutoGenerateColumns = false;
         }
 
-        public ObjectManager(IObjectValue value) : this() 
-        { }
+        public ObjectManager(IDataValue value) : this()
+        {
+            bindingObject.DataSource = new BindingList<IDataValue>() { value };
+        }
+
+        private void ObjectManager_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

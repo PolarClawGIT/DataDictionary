@@ -17,6 +17,10 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     public class ObjectIndex : ObjectKey, IObjectIndex,
         IKeyEquality<IObjectIndex>, IKeyEquality<ObjectIndex>
     {
+
+        /// <inheritdoc/>
+        protected ObjectIndex(): base() { }
+
         /// <inheritdoc cref="ObjectKey.ObjectKey(IObjectKey)"/>
         public ObjectIndex(IObjectIndex source) : base(source)
         { }
@@ -35,5 +39,12 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <param name="source"></param>
         public static implicit operator DataIndex(ObjectIndex source)
         { return new DataIndex() { SystemId = source.ObjectId ?? Guid.Empty }; }
+
+        /// <summary>
+        /// Convert DataIndex to a ObjectIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator ObjectIndex(DataIndex source)
+        { return new ObjectIndex() { ObjectId = source.SystemId }; }
     }
 }

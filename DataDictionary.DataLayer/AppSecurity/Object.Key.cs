@@ -30,6 +30,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for the Security Object Key.
         /// </summary>
+        protected ObjectKey()
+        { ObjectId = Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the Security Object Key.
+        /// </summary>
         /// <param name="source"></param>
         public ObjectKey(IObjectKey source) : base()
         {

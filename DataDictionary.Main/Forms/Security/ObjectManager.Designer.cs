@@ -30,33 +30,88 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel objectSecurityLayout;
-            objectNameData = new Controls.TextBoxData();
-            objectSecurityData = new DataGridView();
+            objectPermissionData = new DataGridView();
             roleIdColumn = new DataGridViewComboBoxColumn();
-            principalIdColum = new DataGridViewComboBoxColumn();
             isGrantColumn = new DataGridViewCheckBoxColumn();
             isDenyColumn = new DataGridViewCheckBoxColumn();
+            objectOwnerData = new DataGridView();
+            principalIdColumn = new DataGridViewComboBoxColumn();
+            objectNameData = new Controls.TextBoxData();
             bindingPermissions = new BindingSource(components);
+            bindingObject = new BindingSource(components);
+            bindingOwner = new BindingSource(components);
             objectSecurityLayout = new TableLayoutPanel();
             objectSecurityLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)objectSecurityData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)objectPermissionData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)objectOwnerData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingPermissions).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingObject).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOwner).BeginInit();
             SuspendLayout();
             // 
             // objectSecurityLayout
             // 
             objectSecurityLayout.ColumnCount = 1;
             objectSecurityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            objectSecurityLayout.Controls.Add(objectPermissionData, 0, 2);
+            objectSecurityLayout.Controls.Add(objectOwnerData, 0, 1);
             objectSecurityLayout.Controls.Add(objectNameData, 0, 0);
-            objectSecurityLayout.Controls.Add(objectSecurityData, 0, 1);
             objectSecurityLayout.Dock = DockStyle.Fill;
             objectSecurityLayout.Location = new Point(0, 25);
             objectSecurityLayout.Name = "objectSecurityLayout";
-            objectSecurityLayout.RowCount = 2;
+            objectSecurityLayout.RowCount = 3;
             objectSecurityLayout.RowStyles.Add(new RowStyle());
-            objectSecurityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            objectSecurityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            objectSecurityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             objectSecurityLayout.Size = new Size(508, 325);
             objectSecurityLayout.TabIndex = 4;
+            // 
+            // objectPermissionData
+            // 
+            objectPermissionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            objectPermissionData.Columns.AddRange(new DataGridViewColumn[] { roleIdColumn, isGrantColumn, isDenyColumn });
+            objectPermissionData.Dock = DockStyle.Fill;
+            objectPermissionData.Location = new Point(3, 190);
+            objectPermissionData.Name = "objectPermissionData";
+            objectPermissionData.Size = new Size(502, 132);
+            objectPermissionData.TabIndex = 15;
+            // 
+            // roleIdColumn
+            // 
+            roleIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            roleIdColumn.HeaderText = "Role Name (permission)";
+            roleIdColumn.Name = "roleIdColumn";
+            // 
+            // isGrantColumn
+            // 
+            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isGrantColumn.FillWeight = 30F;
+            isGrantColumn.HeaderText = "is Grant";
+            isGrantColumn.Name = "isGrantColumn";
+            // 
+            // isDenyColumn
+            // 
+            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isDenyColumn.FillWeight = 30F;
+            isDenyColumn.HeaderText = "is Deny";
+            isDenyColumn.Name = "isDenyColumn";
+            // 
+            // objectOwnerData
+            // 
+            objectOwnerData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            objectOwnerData.Columns.AddRange(new DataGridViewColumn[] { principalIdColumn });
+            objectOwnerData.Dock = DockStyle.Fill;
+            objectOwnerData.Location = new Point(3, 53);
+            objectOwnerData.Name = "objectOwnerData";
+            objectOwnerData.Size = new Size(502, 131);
+            objectOwnerData.TabIndex = 14;
+            // 
+            // principalIdColumn
+            // 
+            principalIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            principalIdColumn.DataPropertyName = "PrincipalId";
+            principalIdColumn.HeaderText = "Principal Name (owner)";
+            principalIdColumn.Name = "principalIdColumn";
             // 
             // objectNameData
             // 
@@ -71,42 +126,6 @@
             objectNameData.TabIndex = 0;
             objectNameData.WordWrap = true;
             // 
-            // objectSecurityData
-            // 
-            objectSecurityData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            objectSecurityData.Columns.AddRange(new DataGridViewColumn[] { roleIdColumn, principalIdColum, isGrantColumn, isDenyColumn });
-            objectSecurityData.Dock = DockStyle.Fill;
-            objectSecurityData.Location = new Point(3, 53);
-            objectSecurityData.Name = "objectSecurityData";
-            objectSecurityData.Size = new Size(502, 269);
-            objectSecurityData.TabIndex = 1;
-            // 
-            // roleIdColumn
-            // 
-            roleIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            roleIdColumn.HeaderText = "Role Name";
-            roleIdColumn.Name = "roleIdColumn";
-            // 
-            // principalIdColum
-            // 
-            principalIdColum.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            principalIdColum.HeaderText = "Owner";
-            principalIdColum.Name = "principalIdColum";
-            // 
-            // isGrantColumn
-            // 
-            isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            isGrantColumn.HeaderText = "Grant";
-            isGrantColumn.Name = "isGrantColumn";
-            isGrantColumn.Width = 42;
-            // 
-            // isDenyColumn
-            // 
-            isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            isDenyColumn.HeaderText = "Deny";
-            isDenyColumn.Name = "isDenyColumn";
-            isDenyColumn.Width = 40;
-            // 
             // ObjectManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -115,11 +134,15 @@
             Controls.Add(objectSecurityLayout);
             Name = "ObjectManager";
             Text = "ObjectManager";
+            Load += ObjectManager_Load;
             Controls.SetChildIndex(objectSecurityLayout, 0);
             objectSecurityLayout.ResumeLayout(false);
             objectSecurityLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)objectSecurityData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)objectPermissionData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)objectOwnerData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingPermissions).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingObject).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingOwner).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -128,11 +151,14 @@
 
         private TableLayoutPanel objectSecurityLayout;
         private Controls.TextBoxData objectNameData;
-        private DataGridView objectSecurityData;
+        private BindingSource bindingPermissions;
+        private DataGridView objectOwnerData;
+        private DataGridViewComboBoxColumn principalIdColumn;
+        private DataGridView objectPermissionData;
         private DataGridViewComboBoxColumn roleIdColumn;
-        private DataGridViewComboBoxColumn principalIdColum;
         private DataGridViewCheckBoxColumn isGrantColumn;
         private DataGridViewCheckBoxColumn isDenyColumn;
-        private BindingSource bindingPermissions;
+        private BindingSource bindingObject;
+        private BindingSource bindingOwner;
     }
 }
