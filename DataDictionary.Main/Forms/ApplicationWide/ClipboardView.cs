@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class ClipboardView : ApplicationBase
     {

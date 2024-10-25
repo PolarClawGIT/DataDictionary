@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     class HistoryView<TValue, TForm> : HistoryView
         where TValue : class, ITemporalValue
@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms
                 BindingList<TValue> values = new BindingList<TValue>(GetHistoryDetail(SelectedValue).OfType<TValue>().ToList());
 
                 Activate((data) =>
-                    new Forms.DetailDataView<TValue, TForm>
+                    new DetailDataView<TValue, TForm>
                         (formScope, data)
                     { SelectedForm = (data) => SelectedForm(data) },
                     values);

@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms
+﻿namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class HistoryView
     {

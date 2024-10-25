@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class DetailDataView : ApplicationData
     {

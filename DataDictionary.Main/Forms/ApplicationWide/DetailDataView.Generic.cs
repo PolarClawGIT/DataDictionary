@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     class DetailDataView<TValue, TForm> : DetailDataView
         where TValue : class
@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms
         public Func<TValue, TForm>? SelectedForm { get; init; }
 
 
-        public DetailDataView(ScopeType scope, IBindingData data) : base (scope, data)
+        public DetailDataView(ScopeType scope, IBindingData data) : base(scope, data)
         { }
 
         public DetailDataView(ScopeType scope, IBindingList data) : base(scope, data)

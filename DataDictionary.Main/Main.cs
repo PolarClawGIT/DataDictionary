@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms;
+using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
@@ -197,7 +198,7 @@ namespace DataDictionary.Main
         { new Forms.UnitTestGridView().Show(); }
 
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ClipboardView()); }
+        { Activate(() => new ClipboardView()); }
 
         private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
