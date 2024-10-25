@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// <summary>
     /// Interface for the Securable (Security Object) Owner Item defined for a Principal.
     /// </summary>
-    public interface ISecurableOwnerItem : IPrincipalKey, ISecurableKey, ISecurableKeyName, ISecurableAuthorization
+    public interface ISecurableOwnerItem : IPrincipalKey, ISecurableKey, ISecurableKeyName
     { }
 
     /// <summary>
@@ -31,26 +31,6 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         /// <inheritdoc/>
         public String? SecurableTitle { get { return GetValue(nameof(SecurableTitle)); } set { SetValue(nameof(SecurableTitle), value); } }
-
-        /// <inheritdoc/>
-        public Boolean AlterValue
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean AlterSecurity
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
 
         /// <summary>
         /// Constructor for SecurableOwnerItem.
@@ -78,9 +58,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SecurableId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SecurableTitle), typeof(String)){ AllowDBNull = true},
-
-            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

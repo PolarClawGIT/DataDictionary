@@ -18,8 +18,10 @@ namespace DataDictionary.Main.Forms.Security
 {
     partial class SecurableManager : ApplicationData
     {
+        //TODO: all the coding
 
         ISecurity securityData = ISecurity.Create();
+        SecurableIndex? securableKey;
 
         public SecurableManager() : base()
         {
@@ -38,8 +40,7 @@ namespace DataDictionary.Main.Forms.Security
 
         public SecurableManager(IDataValue value) : this()
         {
-            //bindingSecurable.DataSource = new BindingList<IDataValue>() { value };
-            var x =  value.Index
+            securableKey = value.Index;
         }
 
         private void ObjectManager_Load(object sender, EventArgs e)

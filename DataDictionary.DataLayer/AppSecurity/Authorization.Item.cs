@@ -13,7 +13,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppSecurity
 {
     /// <summary>
-    /// Interface for the Logins with Application Principal and Role Permissions.
+    /// Interface for the Login Authorization.
     /// </summary>
     public interface IAuthorizationItem :
         IPrincipalKey, IPrincipalKeyName,
@@ -26,7 +26,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     }
 
     /// <summary>
-    /// Implementation of the Logins with Application Principal and Role Permissions.
+    /// Implementation of the Login Authorization.
     /// </summary>
     [Serializable]
     public class AuthorizationItem : BindingTableRow, IAuthorizationItem, ISerializable
@@ -201,6 +201,16 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for AuthorizationItem.
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected AuthorizationItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         /// <inheritdoc/>
         public override String ToString()

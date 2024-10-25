@@ -10,8 +10,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// Interface for the Security Role Item.
     /// </summary>
     public interface IRoleItem :
-        IRoleKey, IRoleKeyName,
-        ISecurableAuthorization, IRolePermissions
+        IRoleKey, IRoleKeyName, IRolePermissions
     {
         /// <summary>
         /// Description of the Role.
@@ -199,26 +198,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             }
         }
 
-        /// <inheritdoc/>
-        public Boolean AlterValue
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean AlterSecurity
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
         /// <summary>
         /// Constructor for SecurityRoleItem.
         /// </summary>
@@ -242,9 +221,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             new DataColumn(nameof(IsModelOwner), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsScriptAdmin), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsScriptOwner), typeof(Boolean)){ AllowDBNull = true},
-
-            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

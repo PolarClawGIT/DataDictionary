@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
 using DataDictionary.Resource;
 
@@ -30,5 +31,12 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <param name="source"></param>
         public static implicit operator DataIndex(HelpSubjectIndex source)
         { return new DataIndex() { SystemId = source.HelpId ?? Guid.Empty }; }
+
+        /// <summary>
+        /// Convert HelpSubjectIndex to a SecurableIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator SecurableIndex(HelpSubjectIndex source)
+        { return new SecurableIndex() { SecurableId = source.HelpId ?? Guid.Empty }; }
     }
 }

@@ -233,7 +233,6 @@
         #endregion
 
         private SplitContainer principalSplit;
-        private TableLayoutPanel principalLayout;
         private Controls.TextBoxData principalLoginData;
         private Controls.TextBoxData principalNameData;
         private Controls.TextBoxData principalAnnotationData;

@@ -149,7 +149,6 @@
 
         #endregion
 
-        private TableLayoutPanel objectSecurityLayout;
         private Controls.TextBoxData securableTitleData;
         private BindingSource bindingPermissions;
         private DataGridView securableOwnerData;

@@ -14,8 +14,19 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// <summary>
     /// Interface for the Securable (Security Object) Permission Item defined for a Role.
     /// </summary>
-    public interface ISecurablePermissionItem : IRoleKey, ISecurableKey, ISecurableKeyName, IObjectAccess, ISecurableAuthorization
-    { }
+    public interface ISecurablePermissionItem : IRoleKey, ISecurableKey,
+        ISecurableKeyName
+    {
+        /// <summary>
+        /// Grant permission for the object
+        /// </summary>
+        Boolean IsGrant { get; }
+
+        /// <summary>
+        /// Deny all permission for the object
+        /// </summary>
+        Boolean IsDeny { get; }
+    }
 
     /// <summary>
     /// Implementation of the Securable (Security Object) Permission Item defined for a Role.
@@ -62,26 +73,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             }
         }
 
-        /// <inheritdoc/>
-        public Boolean AlterValue
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean AlterSecurity
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
         /// <summary>
         /// Constructor for SecurablePermissionItem.
         /// </summary>
@@ -110,9 +101,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             new DataColumn(nameof(SecurableTitle), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsGrant), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeny), typeof(Boolean)){ AllowDBNull = true},
-
-            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -70,6 +70,9 @@ namespace DataDictionary.Main
                     Settings.Default.Save();
                 }
 
+                if (args.Error is not null)
+                { Program.ShowException(args.Error); }
+
                 bindingModel.DataSource = BusinessData.Models;
                 SendMessage(new OnlineStatusChanged());
 
@@ -182,6 +185,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             toolStripStatusUser.Text = BusinessData.Authorization.PrincipalName;
+            securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
 
             if (Settings.Default.IsOnLineMode)
             { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }

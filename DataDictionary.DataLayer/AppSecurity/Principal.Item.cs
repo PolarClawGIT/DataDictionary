@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>
     public interface IPrincipalItem: 
         IPrincipalKey, IPrincipalKeyName,
-        IPrincipalName, ISecurableAuthorization
+        IPrincipalName
     {
         /// <summary>
         /// Additional information (notes) about the Principal.
@@ -42,26 +42,6 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public String? PrincipalAnnotation { get { return GetValue(nameof(PrincipalAnnotation)); } set { SetValue(nameof(PrincipalAnnotation), value); } }
 
-        /// <inheritdoc/>
-        public Boolean AlterValue
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean AlterSecurity
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
         /// <summary>
         /// Constructor for PrincipalItem.
         /// </summary>
@@ -74,8 +54,6 @@ namespace DataDictionary.DataLayer.AppSecurity
             new DataColumn(nameof(PrincipalLogin), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PrincipalName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PrincipalAnnotation), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

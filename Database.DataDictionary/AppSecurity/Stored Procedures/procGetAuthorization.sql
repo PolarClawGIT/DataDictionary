@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procGetAuthorization]
-		@PrincipalLogin SysName = Null
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -9,7 +8,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 ** Users that get permission to the database using a Windows group (or other authentication group)
 ** also do not appear in this list.
 **
-** The current Login is always returned.
+** Only returns rows for the Current User
 */
 ;With [Logins] As (
 	Select	[name] As [PrincipalLogin]
@@ -39,7 +38,5 @@ From	[Logins] L
 		Left Join [AppSecurity].[Principal] P
 		On	L.[PrincipalLogin] = P.[PrincipalLogin]
 		-- Only Returns values for the original_login. Everything else gets Null.
-		Left Join [AppSecurity].[funcAuthorization](null) S
-		On	L.[PrincipalLogin] = S.[PrincipalLogin]
-Where	(@PrincipalLogin is Null or L.[PrincipalLogin] = @PrincipalLogin)
+		Cross Apply  [AppSecurity].[funcAuthorization](null) S
 GO

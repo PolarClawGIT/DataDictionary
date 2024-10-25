@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Securables securable
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <returns></returns>
         static public IAuthorizationData Create()
         { return new AuthorizationData(); }
+
+        /// <inheritdoc cref="AuthorizationSecurableItem.IsOwner"/>
+        Boolean IsOwner(ISecurableIndex securable);
+
+        /// <inheritdoc cref="AuthorizationSecurableItem.IsGrant"/>
+        Boolean IsGrant(ISecurableIndex securable);
+
+        /// <inheritdoc cref="AuthorizationSecurableItem.IsDeny"/>
+        Boolean IsDeny(ISecurableIndex securable);
     }
 
 
@@ -32,28 +43,59 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     class AuthorizationData : AuthorizationCollection<AuthorizationValue>,
         IAuthorizationData
     {
+        class SecurableData : AuthorizationSecurableCollection<AuthorizationSecurableItem>
+        { }
+
+        SecurableData Securables = new SecurableData();
+
         /// <summary>
         /// Load the Authorization.
         /// </summary>
         /// <param name="factory"></param>
-        /// <param name="identity"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IIdentity identity)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
-            IPrincipalKeyName key = new PrincipalKeyName(identity);
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { DoWork = Clear });
-            work.Add(factory.CreateLoad(this, key));
+            work.AddRange(Delete());
+            work.Add(factory.CreateLoad(this));
+            work.Add(factory.CreateLoad(Securables));
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        { return factory.CreateLoad(this).ToList(); }
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork = Clear });
+            work.Add(new WorkItem() { DoWork = Securables.Clear });            
+            return work;
+        }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Authorization", DoWork = () => { this.Clear(); } }.ToList(); }
+        public Boolean IsOwner(ISecurableIndex securable)
+        {
+            SecurableIndex key = new SecurableIndex(securable);
+            if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
+            { return value.IsOwner; }
+            else { return false; }
+        }
 
+        /// <inheritdoc/>
+        public Boolean IsGrant(ISecurableIndex securable)
+        {
+            SecurableIndex key = new SecurableIndex(securable);
+            if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
+            { return value.IsGrant; }
+            else { return false; }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsDeny(ISecurableIndex securable)
+        {
+            SecurableIndex key = new SecurableIndex(securable);
+            if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
+            { return value.IsDeny; }
+            else { return false; }
+        }
     }
 }

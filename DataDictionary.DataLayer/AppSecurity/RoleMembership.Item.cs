@@ -8,8 +8,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// Interface for the Security Membership Item.
     /// </summary>
     public interface IRoleMembershipItem :
-        IPrincipalKey, IRoleKey,
-        ISecurableAuthorization
+        IPrincipalKey, IRoleKey
     { }
 
     /// <summary>
@@ -23,26 +22,6 @@ namespace DataDictionary.DataLayer.AppSecurity
 
         /// <inheritdoc/>
         public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } set { SetValue(nameof(RoleId), value); } }
-
-        /// <inheritdoc/>
-        public Boolean AlterValue
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean AlterSecurity
-        {
-            get
-            {
-                if (GetValue<bool>(nameof(AlterSecurity), BindingItemParsers.BooleanTryParse) == true) { return true; }
-                else { return false; }
-            }
-        }
 
         /// <summary>
         /// Constructor for RoleMembershipItem.
@@ -79,8 +58,6 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             new DataColumn(nameof(RoleId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PrincipalId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterValue), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(AlterSecurity), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -316,7 +316,6 @@
     <Build Include="AppSecurity\User Defined Types\typeRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetRoleMembership.sql" />
     <Build Include="AppSecurity\User Defined Types\typeRoleMembership.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeHelpSecurity.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetPrincipal.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetMembership.sql" />
@@ -331,6 +330,7 @@
     <Build Include="AppSecurity\Stored Procedures\procSetSecurablePermission.sql" />
     <Build Include="AppSecurity\Views\Securable.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetSecurable.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetAuthorizationSecurable.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

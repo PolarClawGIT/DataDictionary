@@ -117,6 +117,10 @@ namespace DataDictionary.Main.ApplicationWide
                 { Settings.Default.IsOnLineMode = false; }
                 else { Settings.Default.IsOnLineMode = true; }
                 Settings.Default.Save();
+
+                if (args.Error is not null)
+                { Program.ShowException(args.Error); }
+
                 SendMessage(new OnlineStatusChanged());
             }
         }

@@ -59,7 +59,6 @@ namespace DataDictionary.Main.Forms.Security
                 membershipData.DataSource = bindingMembers;
                 ownershipData.DataSource = bindingOwnership;
                 principalData.Sort(principalNameColumn, ListSortDirection.Descending);
-                principalData.ClearSelection();
 
                 principalLoginData.DataBindings.Add(new Binding(nameof(principalLoginData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
                 principalNameData.DataBindings.Add(new Binding(nameof(principalNameData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -98,7 +97,7 @@ namespace DataDictionary.Main.Forms.Security
                 bindingOwnership.DataSource = null;
                 bindingOwnership.DataSource = new BindingView<SecurableOwnerValue>(securityData.Owners, w => key.Equals(w));
 
-                if (current.AlterSecurity || BusinessData.Authorization.IsSecurityAdmin)
+                if (BusinessData.Authorization.IsSecurityAdmin)
                 {
                     CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
                     CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;

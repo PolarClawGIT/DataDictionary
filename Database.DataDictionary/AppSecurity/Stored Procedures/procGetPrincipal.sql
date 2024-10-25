@@ -9,11 +9,8 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	P.[PrincipalId],
 		P.[PrincipalLogin],
 		P.[PrincipalName],
-		P.[PrincipalAnnotation],
-		S.[IsSecurityAdmin] As [AlterValue],
-		S.[IsSecurityAdmin] As [AlterSecurity]
+		P.[PrincipalAnnotation]
 From	[AppSecurity].[Principal] P
-		Cross Apply [AppSecurity].[funcAuthorization](null) S
 Where	(@PrincipalId is Null or P.[PrincipalId] = @PrincipalId) And
 		(@PrincipalLogin is Null or P.[PrincipalLogin] = @PrincipalLogin)
 GO

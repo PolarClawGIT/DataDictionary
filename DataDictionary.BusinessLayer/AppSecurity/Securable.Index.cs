@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     {
 
         /// <inheritdoc/>
-        protected SecurableIndex(): base() { }
+        internal SecurableIndex(): base() { }
 
         /// <inheritdoc cref="SecurableKey.SecurableKey(ISecurableKey)"/>
         public SecurableIndex(ISecurableIndex source) : base(source)

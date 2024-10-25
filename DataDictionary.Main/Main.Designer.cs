@@ -1082,7 +1082,6 @@
         private Controls.NamedScopeTreeView namedScopeData;
         private BindingSource bindingModel;
         private ToolStripStatusLabel toolStripStatusUser;
-        private ToolStripStatusLabel toolStripStatusBreak;
         private ContextMenuStrip securityContextMenu;
         private ToolStripMenuItem securityPrincipal;
         private ToolStripMenuItem securityRole;

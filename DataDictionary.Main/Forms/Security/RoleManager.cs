@@ -58,7 +58,6 @@ namespace DataDictionary.Main.Forms.Security
                 objectPermissionData.DataSource = bindingPermission;
 
                 roleData.Sort(roleNameColumn, ListSortDirection.Descending);
-                roleData.ClearSelection();
 
                 roleNameData.DataBindings.Add(new Binding(nameof(roleNameData.Text), bindingRole, nameof(IRoleValue.RoleName), false, DataSourceUpdateMode.OnPropertyChanged));
                 roleDescriptionData.DataBindings.Add(new Binding(nameof(roleDescriptionData.Text), bindingRole, nameof(IRoleValue.RoleDescription), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -108,7 +107,7 @@ namespace DataDictionary.Main.Forms.Security
                 bindingPermission.DataSource = null;
                 bindingPermission.DataSource = new BindingView<SecurablePermissionValue>(securityData.Permissions, w => key.Equals(w));
 
-                if (current.AlterSecurity || BusinessData.Authorization.IsSecurityAdmin)
+                if (BusinessData.Authorization.IsSecurityAdmin)
                 {
                     CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
                     CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;

@@ -38,6 +38,6 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <returns></returns>
         public IReadOnlyList<WorkItem> LoadAuthorization(IDatabaseWork factory)
-        { return authorizationData.Load(factory, UserIdentity); }
+        { return authorizationData.Load(factory); }
     }
 }
