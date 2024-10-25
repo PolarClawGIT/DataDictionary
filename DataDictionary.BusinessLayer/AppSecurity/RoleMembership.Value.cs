@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface IRoleMembershipValue : IRoleMembershipItem,
-        IPrincipalIndex, IRoleIndex, IScopeType
+        IPrincipalIndex, IRoleIndex
     { }
 
     /// <inheritdoc/>
@@ -26,8 +26,5 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="RoleMembershipItem.RoleMembershipItem(IRoleKey)"/>
         public RoleMembershipValue(IRoleIndex roleKey) : base(roleKey)
         { }
-
-        /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.SecurityMembership; } }
     }
 }

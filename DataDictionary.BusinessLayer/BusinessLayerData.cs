@@ -63,7 +63,6 @@ namespace DataDictionary.BusinessLayer
         public BusinessLayerData(IIdentity identity,  String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
             UserIdentity = identity;
-            defaultAuthorization = new AuthorizationItem(identity);
 
             DbConnection = new DbConnection()
             {

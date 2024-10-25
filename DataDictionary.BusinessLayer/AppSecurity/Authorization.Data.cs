@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Securables securable
+﻿// Ignore Spelling: Securables securable Admin
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IAuthorizationData :
-        IBindingData<AuthorizationValue>, ILoadData
+        IBindingData<AuthorizationValue>, ILoadData, IAuthorizationItem
     {
         /// <summary>
         /// Creates an instance of the Authorization and returns the interface.
@@ -27,13 +27,13 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         { return new AuthorizationData(); }
 
         /// <inheritdoc cref="AuthorizationSecurableItem.IsOwner"/>
-        Boolean IsOwner(ISecurableIndex securable);
+        Boolean IsOwner(ISecurableIndex? securable);
 
         /// <inheritdoc cref="AuthorizationSecurableItem.IsGrant"/>
-        Boolean IsGrant(ISecurableIndex securable);
+        Boolean IsGrant(ISecurableIndex? securable);
 
         /// <inheritdoc cref="AuthorizationSecurableItem.IsDeny"/>
-        Boolean IsDeny(ISecurableIndex securable);
+        Boolean IsDeny(ISecurableIndex? securable);
     }
 
 
@@ -47,6 +47,159 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         { }
 
         SecurableData Securables = new SecurableData();
+
+        AuthorizationValue? Authorization
+        { get { return this.FirstOrDefault(); } }
+
+        /// <inheritdoc/>
+        public Guid? PrincipalId
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.PrincipalId; }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? PrincipalLogin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.PrincipalLogin; }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? PrincipalName
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.PrincipalLogin; }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsApplicationUser
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsApplicationUser; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsSecurityAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsSecurityAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsHelpAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsHelpAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsHelpOwner
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsHelpOwner; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsCatalogAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsCatalogAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsCatalogOwner
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsCatalogOwner; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsLibraryAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsLibraryAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsLibraryOwner
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsLibraryOwner; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsModelAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsModelAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsModelOwner
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsModelOwner; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsScriptAdmin
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsScriptAdmin; }
+                else { return false; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsScriptOwner
+        {
+            get
+            {
+                if (Authorization is not null) { return Authorization.IsScriptOwner; }
+                else { return false; }
+            }
+        }
 
         /// <summary>
         /// Load the Authorization.
@@ -67,13 +220,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem() { DoWork = Clear });
-            work.Add(new WorkItem() { DoWork = Securables.Clear });            
+            work.Add(new WorkItem() { DoWork = Securables.Clear });
             return work;
         }
 
         /// <inheritdoc/>
-        public Boolean IsOwner(ISecurableIndex securable)
+        public Boolean IsOwner(ISecurableIndex? securable)
         {
+            if(securable is null) { return false; }
+
             SecurableIndex key = new SecurableIndex(securable);
             if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
             { return value.IsOwner; }
@@ -81,8 +236,10 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public Boolean IsGrant(ISecurableIndex securable)
+        public Boolean IsGrant(ISecurableIndex? securable)
         {
+            if (securable is null) { return false; }
+
             SecurableIndex key = new SecurableIndex(securable);
             if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
             { return value.IsGrant; }
@@ -90,8 +247,10 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public Boolean IsDeny(ISecurableIndex securable)
+        public Boolean IsDeny(ISecurableIndex? securable)
         {
+            if (securable is null) { return false; }
+
             SecurableIndex key = new SecurableIndex(securable);
             if (Securables.FirstOrDefault(w => key.Equals(w)) is AuthorizationSecurableItem value)
             { return value.IsDeny; }

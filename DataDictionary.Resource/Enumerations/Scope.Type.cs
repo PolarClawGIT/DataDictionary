@@ -240,24 +240,9 @@
         SecurityRole,
 
         /// <summary>
-        /// Security Membership
+        /// Security Securable (Security Object)
         /// </summary>
-        SecurityMembership,
-
-        /// <summary>
-        /// Security Object Owner (Principal)
-        /// </summary>
-        SecurityOwner,
-
-        /// <summary>
-        /// Security Object Permission (Role)
-        /// </summary>
-        SecurityPermission,
-
-        /// <summary>
-        /// Security for Help Subject objects
-        /// </summary>
-        SecurityHelp,
+        SecuritySecurable,
 
         /// <summary>
         /// Scripting Engine

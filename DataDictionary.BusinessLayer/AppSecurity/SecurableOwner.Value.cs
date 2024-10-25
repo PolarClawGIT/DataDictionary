@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface ISecurableOwnerValue : ISecurableOwnerItem,
-        IPrincipalIndex, ISecurableIndex, IScopeType
+        IPrincipalIndex, ISecurableIndex
     { }
 
     /// <inheritdoc/>
@@ -28,8 +28,5 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="SecurableOwnerItem.SecurableOwnerItem(IPrincipalKey, ISecurableKey)"/>
         public SecurableOwnerValue(IPrincipalIndex principalIndex, ISecurableIndex objectIndex) : base(principalIndex, objectIndex)
         { }
-
-        /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.SecurityOwner; } }
     }
 }

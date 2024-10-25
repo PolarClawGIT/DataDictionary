@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 {
     /// <inheritdoc/>
     public interface ISecurablePermissionValue : ISecurablePermissionItem,
-        IRoleIndex, ISecurableIndex, IScopeType
+        IRoleIndex, ISecurableIndex
     { }
 
     /// <inheritdoc/>
@@ -28,8 +28,5 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc cref="SecurablePermissionItem.SecurablePermissionItem(IRoleKey, ISecurableKey)"/>
         public SecurablePermissionValue(IRoleIndex roleIndex, ISecurableIndex objectIndex): base(roleIndex, objectIndex) 
         { }
-
-        /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.SecurityPermission; } }
     }
 }

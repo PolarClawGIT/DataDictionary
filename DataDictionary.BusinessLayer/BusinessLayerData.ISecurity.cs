@@ -21,17 +21,9 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Authorization for the current user
         /// </summary>
-        public IAuthorizationItem Authorization
-        {
-            get
-            {
-                if (authorizationData.FirstOrDefault() is AuthorizationValue value)
-                { return value; }
-                return defaultAuthorization;
-            }
-        }
+        public IAuthorizationData Authorization
+        { get { return authorizationData; } }
         private readonly AuthorizationData authorizationData = new AuthorizationData();
-        IAuthorizationItem defaultAuthorization;
 
         /// <summary>
         /// Gets the Authorization data;

@@ -883,6 +883,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Permission {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Permission", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Procedure {
             get {
                 object obj = ResourceManager.GetObject("Icon_Procedure", resourceCulture);
@@ -1536,6 +1546,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Parameter {
             get {
                 object obj = ResourceManager.GetObject("Parameter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Permission {
+            get {
+                object obj = ResourceManager.GetObject("Permission", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
