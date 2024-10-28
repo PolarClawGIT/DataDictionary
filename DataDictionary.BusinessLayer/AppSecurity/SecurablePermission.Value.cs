@@ -26,7 +26,11 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         { }
 
         /// <inheritdoc cref="SecurablePermissionItem.SecurablePermissionItem(IRoleKey, ISecurableKey)"/>
-        public SecurablePermissionValue(IRoleIndex roleIndex, ISecurableIndex objectIndex): base(roleIndex, objectIndex) 
+        public SecurablePermissionValue(IRoleIndex roleIndex, ISecurableIndex securableIndex) : base(roleIndex, securableIndex) 
+        { }
+
+        /// <inheritdoc cref="SecurablePermissionItem.SecurablePermissionItem(ISecurableKey)"/>
+        public SecurablePermissionValue(ISecurableIndex securableIndex) : base(securableIndex)
         { }
     }
 }

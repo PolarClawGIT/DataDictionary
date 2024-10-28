@@ -30,8 +30,8 @@ Begin Try
 	Insert Into @Value
 	Select	D.[RoleId],
 			D.[SecurableId],
-			D.[IsGrant],
-			D.[IsDeny]
+			IsNull(D.[IsGrant],0) As [IsGrant],
+			IsNull(D.[IsDeny],0) As [IsDeny]
 	From	@Data D
 			Inner Join [AppSecurity].[Role] R
 			On	D.[RoleId] = R.[RoleId]

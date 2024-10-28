@@ -45,7 +45,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         }
 
         /// <summary>
-        /// Constructor for PrincipalItem.
+        /// Constructor for SecurableItem.
         /// </summary>
         public SecurableItem() : base()
         { SecurableId = Guid.NewGuid(); }

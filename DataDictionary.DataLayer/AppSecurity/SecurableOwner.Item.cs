@@ -24,10 +24,10 @@ namespace DataDictionary.DataLayer.AppSecurity
     public class SecurableOwnerItem : BindingTableRow, ISecurableOwnerItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } protected set { SetValue(nameof(PrincipalId), value); } }
+        public Guid? PrincipalId { get { return GetValue<Guid>(nameof(PrincipalId)); } set { SetValue(nameof(PrincipalId), value); } }
 
         /// <inheritdoc/>
-        public Guid? SecurableId { get { return GetValue<Guid>(nameof(SecurableId)); } protected set { SetValue(nameof(SecurableId), value); } }
+        public Guid? SecurableId { get { return GetValue<Guid>(nameof(SecurableId)); } set { SetValue(nameof(SecurableId), value); } }
 
         /// <inheritdoc/>
         public String? SecurableTitle { get { return GetValue(nameof(SecurableTitle)); } set { SetValue(nameof(SecurableTitle), value); } }
@@ -48,10 +48,17 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for SecurableOwnerItem.
         /// </summary>
+        /// <param name="securableKey"></param>
+        public SecurableOwnerItem(ISecurableKey securableKey) : this()
+        { SecurableId = securableKey.SecurableId; }
+
+        /// <summary>
+        /// Constructor for SecurableOwnerItem.
+        /// </summary>
         /// <param name="principalKey"></param>
-        /// <param name="objectKey"></param>
-        public SecurableOwnerItem(IPrincipalKey principalKey, ISecurableKey objectKey) : this(principalKey)
-        { SecurableId = objectKey.SecurableId; }
+        /// <param name="securableKey"></param>
+        public SecurableOwnerItem(IPrincipalKey principalKey, ISecurableKey securableKey) : this(principalKey)
+        { SecurableId = securableKey.SecurableId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

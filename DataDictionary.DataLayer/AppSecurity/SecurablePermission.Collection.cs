@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetObjectPermission]";
+            command.CommandText = "[AppSecurity].[procSetSecurablePermission]";
             command.AddParameter("@RoleId", parameters.RoleId);
             command.AddParameter("@SecurableId", parameters.SecurableId);
 

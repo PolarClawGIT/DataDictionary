@@ -35,7 +35,7 @@ namespace DataDictionary.DataLayer.AppSecurity
     public class SecurablePermissionItem : BindingTableRow, ISecurablePermissionItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } protected set { SetValue(nameof(RoleId), value); } }
+        public Guid? RoleId { get { return GetValue<Guid>(nameof(RoleId)); } set { SetValue(nameof(RoleId), value); } }
 
         /// <inheritdoc/>
         public Guid? SecurableId { get { return GetValue<Guid>(nameof(SecurableId)); } set { SetValue(nameof(SecurableId), value); } }
@@ -48,14 +48,11 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             get
             {
-                if (GetValue<bool>(nameof(IsGrant), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<Boolean>(nameof(IsGrant), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
-            {
-                SetValue<Boolean>(nameof(IsGrant), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsGrant), !value); }
-            }
+            { SetValue<Boolean>(nameof(IsGrant), value); }
         }
 
         /// <inheritdoc/>
@@ -63,14 +60,11 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             get
             {
-                if (GetValue<bool>(nameof(IsDeny), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<Boolean>(nameof(IsDeny), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
-            {
-                SetValue<Boolean>(nameof(IsDeny), value);
-                if (value == true) { SetValue<Boolean>(nameof(IsDeny), !value); }
-            }
+            { SetValue<Boolean>(nameof(IsDeny), value); }
         }
 
         /// <summary>
@@ -89,10 +83,17 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <summary>
         /// Constructor for SecurablePermissionItem.
         /// </summary>
+        /// <param name="securableKey"></param>
+        public SecurablePermissionItem(ISecurableKey securableKey) : this()
+        { SecurableId = securableKey.SecurableId; }
+
+        /// <summary>
+        /// Constructor for SecurablePermissionItem.
+        /// </summary>
         /// <param name="roleKey"></param>
-        /// <param name="objectKey"></param>
-        public SecurablePermissionItem(IRoleKey roleKey, ISecurableKey objectKey) : this(roleKey)
-        { SecurableId = objectKey.SecurableId; }
+        /// <param name="securableKey"></param>
+        public SecurablePermissionItem(IRoleKey roleKey, ISecurableKey securableKey) : this(roleKey)
+        { SecurableId = securableKey.SecurableId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

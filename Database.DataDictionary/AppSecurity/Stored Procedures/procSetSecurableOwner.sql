@@ -41,8 +41,8 @@ Begin Try
 			On	T.[PrincipalId] = S.[PrincipalId] And
 				T.[SecurableId] = S.[SecurableId]
 	Where	S.[SecurableId] is Null And
-			(@PrincipalId is Null or @PrincipalId = S.[PrincipalId]) And
-			(@SecurableId is Null or @SecurableId = S.[SecurableId])
+			(@PrincipalId is Null or @PrincipalId = T.[PrincipalId]) And
+			(@SecurableId is Null or @SecurableId = T.[SecurableId])
 	Print FormatMessage ('Delete [AppSecurity].[SecurableOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppSecurity].[SecurableOwner] (

@@ -33,14 +33,19 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         IRoleMembershipData Memberships { get; }
 
         /// <summary>
-        /// Object Ownership
+        /// Securable Ownership
         /// </summary>
         ISecurableOwnerData Owners { get; }
 
         /// <summary>
-        /// Object Permission
+        /// Securable Permission
         /// </summary>
         ISecurablePermissionData Permissions { get; }
+
+        /// <summary>
+        /// Securables (Security Objects)
+        /// </summary>
+        ISecurableData Securables { get; }
 
         /// <summary>
         /// Creates an instance of the Security Objects and returns the interface.
@@ -73,6 +78,10 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         SecurablePermissionData permissionValues = new SecurablePermissionData();
 
         /// <inheritdoc/>
+        public ISecurableData Securables { get { return securableValues; } }
+        SecurableData securableValues = new SecurableData();
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -92,7 +101,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(roleValues.Load(factory));
             work.AddRange(membershipValues.Load(factory, dataKey));
             work.AddRange(ownerValues.Load(factory, dataKey));
-            //work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
         }
 
@@ -103,7 +111,6 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(principalValues.Load(factory));
             work.AddRange(roleValues.Load(factory, dataKey));
             work.AddRange(membershipValues.Load(factory, dataKey));
-            //work.AddRange(ownerValues.Load(factory, dataKey));
             work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
         }
@@ -117,6 +124,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(membershipValues.Load(factory));
             work.AddRange(ownerValues.Load(factory, dataKey));
             work.AddRange(permissionValues.Load(factory, dataKey));
+            work.AddRange(securableValues.Load(factory, dataKey));
             return work;
         }
 
@@ -160,13 +168,13 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             return work;
         }
 
-
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(principalValues.Delete());
             work.AddRange(roleValues.Delete());
+            work.AddRange(ownerValues.Delete());
             work.AddRange(membershipValues.Delete());
             return work;
         }
@@ -195,11 +203,9 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Delete(ISecurableIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(permissionValues.Delete(dataKey));
+            work.AddRange(ownerValues.Delete(dataKey));
             work.AddRange(permissionValues.Delete(dataKey));
             return work;
         }
-
-
     }
 }

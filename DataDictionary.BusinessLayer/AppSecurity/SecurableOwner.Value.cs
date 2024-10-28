@@ -26,7 +26,11 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         { }
 
         /// <inheritdoc cref="SecurableOwnerItem.SecurableOwnerItem(IPrincipalKey, ISecurableKey)"/>
-        public SecurableOwnerValue(IPrincipalIndex principalIndex, ISecurableIndex objectIndex) : base(principalIndex, objectIndex)
+        public SecurableOwnerValue(IPrincipalIndex principalIndex, ISecurableIndex securableIndex) : base(principalIndex, securableIndex)
+        { }
+
+        /// <inheritdoc cref="SecurableOwnerItem.SecurableOwnerItem(ISecurableKey)"/>
+        public SecurableOwnerValue(ISecurableIndex securableIndex) : base(securableIndex)
         { }
     }
 }
