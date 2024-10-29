@@ -80,6 +80,7 @@ namespace DataDictionary.Main.Dialogs
             public String StackTrace { get { if (baseException.StackTrace is String valueString) { return valueString; } else { return String.Empty; } } }
 
             public String? HelpText { get; }
+            public Boolean HasHelp { get; protected set; } = false;
 
             public DateTime EventDate { get { return eventDate; } }
             public String OsVersion { get { return System.Environment.OSVersion.ToString(); } }
@@ -240,7 +241,7 @@ namespace DataDictionary.Main.Dialogs
                 else { }
 
                 if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => helpPath is not null && helpPath.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                { HelpText = subject.HelpText; }
+                { HelpText = subject.HelpText; HasHelp = true; }
             }
         }
 
@@ -269,7 +270,8 @@ namespace DataDictionary.Main.Dialogs
             catch (Exception) // Else it is not RTF, bind to the property 
             { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Text), thisData, nameof(thisData.HelpText))); }
 
-            if (String.IsNullOrWhiteSpace(helpTextData.Text)) { exceptionDetailHelpText.Hide(); }
+            if (!thisData.HasHelp) 
+            { exceptionDetailLayout.TabPages.Remove(exceptionDetailHelpText); }
 
             exceptionData.AutoGenerateColumns = false;
             exceptionSqlErrors.AutoGenerateColumns = false;
