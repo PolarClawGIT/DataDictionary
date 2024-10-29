@@ -61,7 +61,7 @@
             helpTabs.Location = new Point(3, 53);
             helpTabs.Name = "helpTabs";
             helpTabs.SelectedIndex = 0;
-            helpTabs.Size = new Size(506, 369);
+            helpTabs.Size = new Size(506, 416);
             helpTabs.TabIndex = 6;
             // 
             // helpDescriptionLayout
@@ -71,7 +71,7 @@
             helpDescriptionLayout.Location = new Point(4, 24);
             helpDescriptionLayout.Name = "helpDescriptionLayout";
             helpDescriptionLayout.Padding = new Padding(3);
-            helpDescriptionLayout.Size = new Size(498, 341);
+            helpDescriptionLayout.Size = new Size(498, 388);
             helpDescriptionLayout.TabIndex = 0;
             helpDescriptionLayout.Text = "Description";
             // 
@@ -85,7 +85,7 @@
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
             helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            helpTextData.Size = new Size(492, 335);
+            helpTextData.Size = new Size(492, 382);
             helpTextData.TabIndex = 2;
             helpTextData.Load += HelpTextData_Load;
             // 
@@ -96,7 +96,7 @@
             helpNameSpaceLayout.Location = new Point(4, 24);
             helpNameSpaceLayout.Name = "helpNameSpaceLayout";
             helpNameSpaceLayout.Padding = new Padding(3);
-            helpNameSpaceLayout.Size = new Size(498, 341);
+            helpNameSpaceLayout.Size = new Size(498, 388);
             helpNameSpaceLayout.TabIndex = 1;
             helpNameSpaceLayout.Text = "Programmability";
             // 
@@ -112,10 +112,9 @@
             nameSpaceGroupLayout.Name = "nameSpaceGroupLayout";
             nameSpaceGroupLayout.RowCount = 3;
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle());
-            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            nameSpaceGroupLayout.Size = new Size(492, 335);
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            nameSpaceGroupLayout.Size = new Size(492, 382);
             nameSpaceGroupLayout.TabIndex = 1;
             // 
             // helpNameSpaceData
@@ -140,7 +139,7 @@
             helpToolTipData.Multiline = true;
             helpToolTipData.Name = "helpToolTipData";
             helpToolTipData.ReadOnly = false;
-            helpToolTipData.Size = new Size(486, 51);
+            helpToolTipData.Size = new Size(486, 93);
             helpToolTipData.TabIndex = 4;
             helpToolTipData.WordWrap = true;
             // 
@@ -148,9 +147,9 @@
             // 
             controlsGroup.Controls.Add(controlData);
             controlsGroup.Dock = DockStyle.Fill;
-            controlsGroup.Location = new Point(3, 110);
+            controlsGroup.Location = new Point(3, 152);
             controlsGroup.Name = "controlsGroup";
-            controlsGroup.Size = new Size(486, 222);
+            controlsGroup.Size = new Size(486, 227);
             controlsGroup.TabIndex = 6;
             controlsGroup.TabStop = false;
             controlsGroup.Text = "Controls for: ";
@@ -162,7 +161,7 @@
             controlData.Dock = DockStyle.Fill;
             controlData.Location = new Point(3, 19);
             controlData.Name = "controlData";
-            controlData.Size = new Size(480, 200);
+            controlData.Size = new Size(480, 205);
             controlData.TabIndex = 5;
             controlData.UseCompatibleStateImageBehavior = false;
             controlData.View = View.Details;
@@ -191,7 +190,7 @@
             helpDetailLayout.RowCount = 2;
             helpDetailLayout.RowStyles.Add(new RowStyle());
             helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            helpDetailLayout.Size = new Size(512, 425);
+            helpDetailLayout.Size = new Size(512, 472);
             helpDetailLayout.TabIndex = 4;
             // 
             // helpSubjectData
@@ -211,7 +210,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(512, 450);
+            ClientSize = new Size(512, 497);
             Controls.Add(helpDetailLayout);
             Name = "HelpSubject";
             Text = "HelpSubject";
