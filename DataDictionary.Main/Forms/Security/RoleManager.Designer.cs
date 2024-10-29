@@ -331,12 +331,14 @@
             // permissionSecurableColumn
             // 
             permissionSecurableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            permissionSecurableColumn.DataPropertyName = "SecurableTitle";
             permissionSecurableColumn.HeaderText = "Securable Title (permission)";
             permissionSecurableColumn.Name = "permissionSecurableColumn";
             // 
             // isGrantColumn
             // 
             isGrantColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isGrantColumn.DataPropertyName = "IsGrant";
             isGrantColumn.FillWeight = 30F;
             isGrantColumn.HeaderText = "is Grant";
             isGrantColumn.Name = "isGrantColumn";
@@ -344,6 +346,7 @@
             // isDenyColumn
             // 
             isDenyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            isDenyColumn.DataPropertyName = "IsDeny";
             isDenyColumn.FillWeight = 30F;
             isDenyColumn.HeaderText = "is Deny";
             isDenyColumn.Name = "isDenyColumn";

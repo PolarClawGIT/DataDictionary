@@ -200,6 +200,7 @@
             // ownershipSecurableColumn
             // 
             ownershipSecurableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ownershipSecurableColumn.DataPropertyName = "SecurableTitle";
             ownershipSecurableColumn.HeaderText = "Securable Title (owned by Principal)";
             ownershipSecurableColumn.Name = "ownershipSecurableColumn";
             ownershipSecurableColumn.ReadOnly = true;
