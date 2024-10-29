@@ -31,9 +31,9 @@ namespace DataDictionary.Main.Forms.Domain
             SetTitle(bindingEntity);
             SetCommand(ScopeType.ModelEntity, CommandImageType.Delete);
 
-            attributeSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
-            aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+            attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
+            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
 
         public DomainEntity(IEntityValue? entityItem) : this()

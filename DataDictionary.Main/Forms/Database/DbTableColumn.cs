@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Database
 
             CommandButtons[CommandImageType.Export].Text = "to Model";
             CommandButtons[CommandImageType.Export].DropDown = exportOptions;
-            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
+            exportAttributes.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
         }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()

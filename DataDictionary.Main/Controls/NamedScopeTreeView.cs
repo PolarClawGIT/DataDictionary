@@ -41,7 +41,7 @@ namespace DataDictionary.Main.Controls
             InitializeComponent();
 
             data = new NamedScopeTreeViewData(treeViewData);
-            treeViewData.ImageList = ImageEnumeration.AsImageList();
+            treeViewData.ImageList = NavigationEnumeration.AsImageList();
         }
 
         /// <summary>

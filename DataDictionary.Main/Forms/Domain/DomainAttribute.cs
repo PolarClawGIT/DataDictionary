@@ -29,8 +29,8 @@ namespace DataDictionary.Main.Forms.Domain
             SetTitle(bindingAttribute);
             SetCommand(ScopeType.ModelAttribute, CommandImageType.Delete);
 
-            aliasAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
 
         public DomainAttribute(IAttributeValue? attributeItem) : this()

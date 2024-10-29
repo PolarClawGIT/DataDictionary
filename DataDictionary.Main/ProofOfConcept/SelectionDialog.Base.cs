@@ -96,14 +96,14 @@ namespace DataDictionary.Main.ProofOfConcept
             {
                 ListViewGroup? newGroup = null;
                 if (groups.Count() > 1)
-                { newGroup = new ListViewGroup(ImageEnumeration.Cast(scopeGroup.Key).Name); }
+                { newGroup = new ListViewGroup(NavigationEnumeration.Cast(scopeGroup.Key).Name); }
 
                 foreach (TValue scopeValue in scopeGroup.Distinct())
                 {
                     ListViewItem newItem = new ListViewItem(GetTitle(scopeValue));
 
                     if (newGroup is not null) { newItem.Group = newGroup; }
-                    newItem.ImageKey = ImageEnumeration.Cast(scopeValue.Scope).Name;
+                    newItem.ImageKey = NavigationEnumeration.Cast(scopeValue.Scope).Name;
 
                     if (Selected.Any(c => c.Equals(GetResult(scopeValue))))
                     { newItem.Checked = true; }

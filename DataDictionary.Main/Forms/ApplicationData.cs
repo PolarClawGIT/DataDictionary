@@ -300,7 +300,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>Icon is static unless SetTitle is used.</remarks>
         protected void SetIcon(ScopeType scope)
-        { Icon = ImageEnumeration.GetIcon(scope); }
+        { Icon = NavigationEnumeration.GetIcon(scope); }
 
         /// <summary>
         /// Sets the Icon and Command Button Images. 
@@ -315,8 +315,8 @@ namespace DataDictionary.Main.Forms
 
             foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
             {
-                if (ImageEnumeration.Members.ContainsKey(scope) && ImageEnumeration.Members[scope].Images.ContainsKey(item.Key))
-                { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
+                if (NavigationEnumeration.Members.ContainsKey(scope) && NavigationEnumeration.Members[scope].Images.ContainsKey(item.Key))
+                { item.Value.Image = NavigationEnumeration.GetImage(scope, item.Key); }
 
                 if (commands is not null && commands.Any(w => item.Key.Equals(w)))
                 {

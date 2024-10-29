@@ -30,8 +30,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
-            pathAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
-            pathSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
+            pathAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
+            pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
         public ScriptingTemplate(ITemplateValue? templateItem) : this()
@@ -313,7 +313,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
             {
-                ListViewGroup newGroup = new ListViewGroup(ImageEnumeration.Cast(groups.Key).Name);
+                ListViewGroup newGroup = new ListViewGroup(NavigationEnumeration.Cast(groups.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
                 foreach (NodePropertyValue item in groups)
@@ -381,7 +381,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
                         ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
-                        ex.Data.Add(nameof(element.PropertyScope), ImageEnumeration.Cast(element.PropertyScope).Name);
+                        ex.Data.Add(nameof(element.PropertyScope), NavigationEnumeration.Cast(element.PropertyScope).Name);
                         throw ex;
                     }
 

@@ -173,10 +173,10 @@ namespace DataDictionary.Main.Forms.General
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems = new Dictionary<helpContentImageIndex, ImageEnumeration>()
+        static Dictionary<helpContentImageIndex, NavigationEnumeration> helpContentImageItems = new Dictionary<helpContentImageIndex, NavigationEnumeration>()
         {
-            {helpContentImageIndex.HelpPage, ImageEnumeration.Cast(ScopeType.ApplicationHelpPage) },
-            {helpContentImageIndex.HelpGroup, ImageEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
+            {helpContentImageIndex.HelpPage, NavigationEnumeration.Cast(ScopeType.ApplicationHelpPage) },
+            {helpContentImageIndex.HelpGroup, NavigationEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
         };
 
         void BuildHelpTree()
