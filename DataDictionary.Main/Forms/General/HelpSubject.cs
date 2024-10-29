@@ -304,7 +304,6 @@ namespace DataDictionary.Main.Forms.General
                     if (args.Error is null)
                     {
                         current.AcceptChanges();
-                        RowState = current.RowState();
                         IsLocked(false);
                     }
                 }

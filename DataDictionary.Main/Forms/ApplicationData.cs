@@ -14,15 +14,6 @@ namespace DataDictionary.Main.Forms
 {
     partial class ApplicationData : ApplicationBase
     {
-        Dictionary<DataRowState, (Image icon, String tooltip)> rowStateSettings = new Dictionary<DataRowState, (Image icon, string tooltip)>()
-        {
-            { DataRowState.Added, new (Resources.RowAdded, "Added")},
-            { DataRowState.Deleted, new (Resources.RowDeleted, "Deleted")},
-            { DataRowState.Detached, new (Resources.RowDetached, "Detached")},
-            { DataRowState.Modified, new (Resources.RowModified, "Modified")},
-            { DataRowState.Unchanged, new (Resources.Row, "Unchanged")},
-        };
-
         protected class CommandState
         {
             readonly ToolStripItem Control;
@@ -138,29 +129,6 @@ namespace DataDictionary.Main.Forms
         protected IReadOnlyDictionary<CommandImageType, CommandState> CommandButtons { get { return commandButtons; } }
         Dictionary<CommandImageType, CommandState> commandButtons = new Dictionary<CommandImageType, CommandState>();
 
-        private DataRowState? rowState;
-        public DataRowState? RowState
-        {
-            get { return rowState; }
-            set
-            {
-                if (value is DataRowState state)
-                {
-                    rowStateCommand.Enabled = true;
-                    rowStateCommand.Visible = true;
-                    rowStateCommand.Image = rowStateSettings[state].icon;
-                    rowStateCommand.ToolTipText = rowStateSettings[state].tooltip;
-                }
-                else
-                {
-                    rowStateCommand.Enabled = false;
-                    rowStateCommand.Visible = false;
-                }
-
-                rowState = value;
-            }
-        }
-
         /// <summary>
         /// Constructor called when in Form Design mode
         /// </summary>
@@ -200,62 +168,60 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Sets up the RowState
+        /// Returns the DataRowState of the first BindingSource of SetRowState.
         /// </summary>
-        /// <param name="data"></param>
-        /// <remarks>
-        /// This sets up the DataSourceChanged, CurrentChanged, RowStateChanged, and Disposed events.
-        /// The method can be called prior to the BindingSource setting the DataSource.
-        /// </remarks>
-        protected void SetRowState(BindingSource data)
+        public DataRowState RowState { get; private set; } = DataRowState.Unchanged;
+
+        /// <summary>
+        /// Sets/Binds the RowState.
+        /// </summary>
+        /// <param name="bindings"></param>
+        /// <remarks>The first BindingSource is considered the parent and RowState reflects that value</remarks>
+        protected void SetRowState(params BindingSource[] bindings)
         {
-            IBindingRowState? priorRow = null; // Allows removal of prior events.
+            rowStateCommand.Enabled = true;
+            IBindingRowState? priorRowState = null;
 
-            Data_DataSourceChanged(data, EventArgs.Empty);
-            data.DataSourceChanged += Data_DataSourceChanged;
-            data.CurrentChanged += Data_CurrentChanged;
-            data.Disposed += Data_Disposed;
-
-            void Data_DataSourceChanged(Object? sender, EventArgs e)
+            if (bindings.FirstOrDefault() is BindingSource binding)
             {
-                if (priorRow is IBindingRowState oldValue)
-                {
-                    oldValue.RowStateChanged -= RowStateChanged;
-                    priorRow = null;
-                }
+                binding.CurrentChanged += Binding_CurrentChanged;
+                binding.Disposed += Binding_Disposed;
+            }
+            
+            void Binding_CurrentChanged(Object? sender, EventArgs e)
+            {
+                if (priorRowState is IBindingRowState oldValue)
+                { priorRowState.RowStateChanged -= State_RowStateChanged; }
 
-                if (data.Current is IBindingRowState currentValue)
+                if (sender is BindingSource binding
+                    && binding.Current is IBindingRowState state)
                 {
-                    RowStateChanged(currentValue, EventArgs.Empty);
-                    currentValue.RowStateChanged += RowStateChanged;
-                    priorRow = currentValue;
+                    RowState = state.RowState();
+                    rowStateCommand.Image = RowStateEnumeration.GetImage(bindings);
+                    rowStateCommand.ToolTipText = RowStateEnumeration.GetToolTip(bindings);
+
+                    priorRowState = state;
+                    state.RowStateChanged += State_RowStateChanged;
                 }
             }
 
-            void Data_CurrentChanged(Object? sender, EventArgs e)
+            void Binding_Disposed(Object? sender, EventArgs e)
             {
-                if (priorRow is IBindingRowState oldValue)
+                if(sender is BindingSource value)
                 {
-                    oldValue.RowStateChanged -= RowStateChanged;
-                    priorRow = null;
-                }
-
-                if (data.Current is IBindingRowState currentValue)
-                {
-                    RowStateChanged(currentValue, EventArgs.Empty);
-                    currentValue.RowStateChanged += RowStateChanged;
-                    priorRow = currentValue;
+                    value.CurrentChanged -= Binding_CurrentChanged;
+                    value.Disposed -= Binding_Disposed;
                 }
             }
 
-            void Data_Disposed(Object? sender, EventArgs e)
-            {
-                if (priorRow is IBindingRowState oldValue)
-                { oldValue.RowStateChanged -= RowStateChanged; }
-
-                data.DataSourceChanged -= Data_DataSourceChanged;
-                data.CurrentChanged -= Data_CurrentChanged;
-                data.Disposed -= Data_Disposed;
+            void State_RowStateChanged(Object? sender, RowStateEventArgs e)
+            { 
+                RowState = e.RowState;
+                rowStateCommand.Image = RowStateEnumeration.GetImage(bindings);
+                rowStateCommand.ToolTipText = RowStateEnumeration.GetToolTip(bindings);
+                
+                if (e.RowState is DataRowState.Detached or DataRowState.Deleted)
+                { IsLocked(true); }
             }
         }
 
@@ -310,9 +276,6 @@ namespace DataDictionary.Main.Forms
         /// <param name="commands"></param>
         protected void SetCommand(ScopeType scope, params CommandImageType[]? commands)
         {
-
-            rowStateCommand.Enabled = false;
-
             foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
             {
                 if (NavigationEnumeration.Members.ContainsKey(scope) && NavigationEnumeration.Members[scope].Images.ContainsKey(item.Key))
@@ -327,42 +290,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-
-
-        /// <summary>
-        /// Delegate for the Event to handle the RowState of the data.
-        /// </summary>
-        /// <param name="sender">IBindingRowState</param>
-        /// <param name="e"></param>
-        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
-        protected virtual void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-
-            if (sender is ITemporalValue temporal && RowState is DataRowState.Unchanged)
-            {
-                if (temporal.IsDeleted == true)
-                { rowStateCommand.Image = Resources.RowDeleted; }
-                else if (temporal.IsCurrent == false)
-                { rowStateCommand.Image = Resources.RowHistory; }
-
-                StringBuilder toolTip = new StringBuilder();
-                toolTip.AppendLine(DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
-                if (temporal.ModifiedOn is DateTime)
-                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedOn), temporal.ModifiedOn)); }
-                if (temporal.ModifiedBy is String modifiedBy)
-                { toolTip.AppendLine(String.Format("{0}: {1}", nameof(temporal.ModifiedBy), temporal.ModifiedBy)); }
-                rowStateCommand.ToolTipText = toolTip.ToString();
-            }
-
-        }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
         {

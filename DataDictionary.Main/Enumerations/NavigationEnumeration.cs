@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="scope"></param>
         NavigationEnumeration(ScopeType scope) : base()
         {
-            Resource.Enumerations.ScopeEnumeration source = Resource.Enumerations.ScopeEnumeration.Cast(scope);
+            ScopeEnumeration source = ScopeEnumeration.Cast(scope);
             DisplayName = source.DisplayName;
             Name = source.Name;
             Value = source.Value;

@@ -75,8 +75,6 @@ namespace DataDictionary.Main.Forms.Model
                 current.Remove();
                 bindingAttribute.Clear();
                 bindingEntity.Clear();
-
-                RowState = current.RowState();
             }
         }
 

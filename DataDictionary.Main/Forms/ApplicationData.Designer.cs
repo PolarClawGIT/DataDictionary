@@ -42,11 +42,11 @@
             saveCommand = new ToolStripButton();
             importCommand = new ToolStripDropDownButton();
             exportCommand = new ToolStripDropDownButton();
+            securityCommand = new ToolStripButton();
             historyCommand = new ToolStripButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
-            securityCommand = new ToolStripButton();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -187,6 +187,17 @@
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
+            // securityCommand
+            // 
+            securityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            securityCommand.Enabled = false;
+            securityCommand.Image = Properties.Resources.SecurityTable;
+            securityCommand.ImageTransparentColor = Color.Magenta;
+            securityCommand.Name = "securityCommand";
+            securityCommand.Size = new Size(23, 22);
+            securityCommand.Text = "Row Level Security";
+            securityCommand.Click += SecurityCommand_Click;
+            // 
             // historyCommand
             // 
             historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -213,6 +224,7 @@
             // 
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            rowStateCommand.Enabled = false;
             rowStateCommand.Image = Properties.Resources.Row;
             rowStateCommand.Name = "rowStateCommand";
             rowStateCommand.Size = new Size(16, 22);
@@ -227,17 +239,6 @@
             helpToolStripButton.Name = "helpToolStripButton";
             helpToolStripButton.Size = new Size(23, 22);
             helpToolStripButton.Text = "He&lp";
-            // 
-            // securityCommand
-            // 
-            securityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            securityCommand.Enabled = false;
-            securityCommand.Image = Properties.Resources.SecurityTable;
-            securityCommand.ImageTransparentColor = Color.Magenta;
-            securityCommand.Name = "securityCommand";
-            securityCommand.Size = new Size(23, 22);
-            securityCommand.Text = "Row Level Security";
-            securityCommand.Click += SecurityCommand_Click;
             // 
             // ApplicationData
             // 
