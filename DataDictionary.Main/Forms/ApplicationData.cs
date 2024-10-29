@@ -180,49 +180,12 @@ namespace DataDictionary.Main.Forms
         protected void SetRowState(params BindingSource[] bindings)
         {
             rowStateCommand.Enabled = true;
-            IBindingRowState? priorRowState = null;
 
-            if (bindings.FirstOrDefault() is BindingSource binding)
-            {
-                binding.CurrentChanged += Binding_CurrentChanged;
-                binding.Disposed += Binding_Disposed;
-            }
-            
-            void Binding_CurrentChanged(Object? sender, EventArgs e)
-            {
-                if (priorRowState is IBindingRowState oldValue)
-                { priorRowState.RowStateChanged -= State_RowStateChanged; }
-
-                if (sender is BindingSource binding
-                    && binding.Current is IBindingRowState state)
-                {
-                    RowState = state.RowState();
-                    rowStateCommand.Image = RowStateEnumeration.GetImage(bindings);
-                    rowStateCommand.ToolTipText = RowStateEnumeration.GetToolTip(bindings);
-
-                    priorRowState = state;
-                    state.RowStateChanged += State_RowStateChanged;
-                }
-            }
-
-            void Binding_Disposed(Object? sender, EventArgs e)
-            {
-                if(sender is BindingSource value)
-                {
-                    value.CurrentChanged -= Binding_CurrentChanged;
-                    value.Disposed -= Binding_Disposed;
-                }
-            }
-
-            void State_RowStateChanged(Object? sender, RowStateEventArgs e)
-            { 
-                RowState = e.RowState;
-                rowStateCommand.Image = RowStateEnumeration.GetImage(bindings);
-                rowStateCommand.ToolTipText = RowStateEnumeration.GetToolTip(bindings);
-                
-                if (e.RowState is DataRowState.Detached or DataRowState.Deleted)
-                { IsLocked(true); }
-            }
+            RowStateEnumeration.SetBinding(
+                (image) => rowStateCommand.Image = image,
+                (toolTip) => rowStateCommand.ToolTipText = toolTip,
+                (rowState) => RowState = rowState,
+                bindings);
         }
 
         /// <summary>
