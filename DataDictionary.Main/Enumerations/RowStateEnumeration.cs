@@ -95,6 +95,9 @@ namespace DataDictionary.Main.Enumerations
                 {
                     temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
 
+                    if (temporal.IsCurrent == false)
+                    { temporalValue = String.Format("{0}/Historic", temporalValue); }
+
                     if (temporal.ModifiedOn is DateTime modifiedOn)
                     { temporalValue = String.Format("{0} on {1}", temporalValue, modifiedOn); }
 
