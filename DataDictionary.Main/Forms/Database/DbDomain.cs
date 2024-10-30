@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            SetRowState(bindingDomain);
+            SetRowState(bindingDomain, bindingProperties);
             SetTitle(bindingDomain);
         }
 

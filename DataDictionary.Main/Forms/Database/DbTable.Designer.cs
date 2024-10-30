@@ -416,12 +416,12 @@
             // 
             // ConstraintTypeValue
             // 
-            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             ConstraintTypeValue.DataPropertyName = "ConstraintType";
+            ConstraintTypeValue.FillWeight = 50F;
             ConstraintTypeValue.HeaderText = "Type";
             ConstraintTypeValue.Name = "ConstraintTypeValue";
             ConstraintTypeValue.ReadOnly = true;
-            ConstraintTypeValue.Width = 56;
             // 
             // DbTable
             // 

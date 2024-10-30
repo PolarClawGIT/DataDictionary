@@ -17,7 +17,12 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            SetRowState(bindingTable);
+            SetRowState(
+                bindingTable, 
+                bindingColumns, 
+                bindingConstraints, 
+                bindingProperties, 
+                bindingDependencies);
             SetTitle(bindingTable);
             SetCommand(ScopeType.DatabaseTable, CommandImageType.Export);
 
