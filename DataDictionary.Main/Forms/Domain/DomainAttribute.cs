@@ -25,7 +25,12 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
 
-            SetRowState(bindingAttribute);
+            SetRowState(
+                bindingAttribute, 
+                bindingProperty, 
+                bindingDefinition, 
+                bindingAlias, 
+                bindingSubjectArea);
             SetTitle(bindingAttribute);
             SetCommand(ScopeType.ModelAttribute, CommandImageType.Delete);
 

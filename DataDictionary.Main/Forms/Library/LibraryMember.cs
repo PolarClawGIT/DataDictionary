@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms.Library
         protected LibraryMember() : base()
         {
             InitializeComponent();
-            SetRowState(bindingMember);
+            SetRowState(bindingMember, bindingChild);
             SetTitle(bindingMember);
         }
 

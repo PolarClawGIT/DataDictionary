@@ -24,7 +24,12 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetRowState(bindingTemplate);
+            SetRowState(
+                bindingTemplate, 
+                bindingPath,
+                bindingNode,
+                bindingDocument,
+                bindingAttribute);
             SetTitle(bindingTemplate);
             SetCommand(ScopeType.ScriptingTemplate, CommandImageType.Delete);
 

@@ -14,7 +14,6 @@ namespace DataDictionary.Main.Forms.Library
         {
             InitializeComponent();
             SetRowState(bindingSource);
-            SetRowState(bindingSource);
         }
 
         public LibrarySource(ILibrarySourceValue librarySource) : this()
