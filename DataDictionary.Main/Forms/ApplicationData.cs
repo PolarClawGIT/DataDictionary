@@ -184,8 +184,15 @@ namespace DataDictionary.Main.Forms
             RowStateEnumeration.SetBinding(
                 (image) => rowStateCommand.Image = image,
                 (toolTip) => rowStateCommand.ToolTipText = toolTip,
-                (rowState) => RowState = rowState,
+                rowStateChanged,
                 bindings);
+
+            void rowStateChanged(DataRowState state)
+            {
+                RowState = state;
+                if(state is DataRowState.Detached or DataRowState.Deleted)
+                { IsLocked(true); }
+            }
         }
 
         /// <summary>

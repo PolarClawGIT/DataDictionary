@@ -298,6 +298,7 @@ namespace DataDictionary.Main.Forms
                 foreach (Control item in this.Controls)
                 {
                     if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else if (item.IsHandleCreated) { item.Invoke(() => item.Enabled = !value); }
                     else { item.Enabled = !value; }
                 }
             }
@@ -317,7 +318,8 @@ namespace DataDictionary.Main.Forms
                 foreach (Control item in this.Controls)
                 {
                     if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
-                    else { item.UseWaitCursor = value; }
+                    else if (item.IsHandleCreated) { item.Invoke(() => item.UseWaitCursor = !value); }
+                    else { item.UseWaitCursor = !value; }
                 }
             }
 
