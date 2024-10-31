@@ -52,22 +52,22 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public required Func<DateTime> GetModifiedOn { get; init; }
 
         /// <summary>
-        /// Function that returns the ModifiedOn of the source.
+        /// Function that returns the IsInserted of the source.
         /// </summary>
         public required Func<Boolean> GetIsInserted { get; init; }
 
         /// <summary>
-        /// Function that returns the ModifiedOn of the source.
+        /// Function that returns the IsUpdated of the source.
         /// </summary>
         public required Func<Boolean> GetIsUpdated { get; init; }
 
         /// <summary>
-        /// Function that returns the ModifiedOn of the source.
+        /// Function that returns the IsDeleted of the source.
         /// </summary>
         public required Func<Boolean> GetIsDeleted { get; init; }
 
         /// <summary>
-        /// Function that returns the ModifiedOn of the source.
+        /// Function that returns the IsCurrent of the source.
         /// </summary>
         public required Func<Boolean> GetIsCurrent { get; init; }
 

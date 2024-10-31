@@ -22,13 +22,19 @@ namespace Toolbox.BindingTable
     public class BindingView<TRow> : BindingList<TRow>
         where TRow : class, IBindingPropertyChanged
     {
-        IBindingList<TRow> baseData;
+        Func<Int32> BaseCount { get; set; }
+        Action<Int32,TRow> BaseInsert { get; set; }
+        Func<TRow, Int32> BaseIndexOf { get; set; }
+        Func<TRow, Boolean> BaseRemove { get; set; }
+        Action<Int32> BaseRemoveAt { get; set; }
 
-        //public Action<TRow>? OnInsert { get; init; }
-
-        public BindingView(IBindingList<TRow> baseData, Func<TRow, Boolean> filter) : base()
+        public BindingView(IList<TRow> baseData, Func<TRow, Boolean> filter) : base()
         {
-            this.baseData = baseData;
+            BaseCount = () => baseData.Count;
+            BaseInsert = baseData.Insert;
+            BaseIndexOf = baseData.IndexOf;
+            BaseRemove = baseData.Remove;
+            BaseRemoveAt = baseData.RemoveAt;
 
             foreach (TRow item in baseData.Where(filter).ToList())
             { base.InsertItem(base.Count, item); }
@@ -37,7 +43,6 @@ namespace Toolbox.BindingTable
             this.AllowNew = true;
             this.AllowRemove = true;
         }
-
 
         TRow? addNewCoreItem = null; // Track the extra row created by DataGridView.
         Boolean isAddNewCore = false; // Tracks if AddNewCore is being executed. We are dealing with a fake DataGridView Row.
@@ -98,7 +103,7 @@ namespace Toolbox.BindingTable
         {
             if (itemIndex >= 0 && this[itemIndex] == addNewCoreItem && !isAddNewCore)
             {
-                baseData.Insert(baseData.Count(), addNewCoreItem);
+                BaseInsert(BaseCount(), addNewCoreItem);
                 addNewCoreItem = null;
             }
 
@@ -108,7 +113,7 @@ namespace Toolbox.BindingTable
         protected override void ClearItems()
         {
             foreach (TRow item in this.ToList())
-            { baseData.Remove(item); }
+            { BaseRemove(item); }
 
             base.ClearItems();
         }
@@ -116,15 +121,15 @@ namespace Toolbox.BindingTable
         protected override void InsertItem(int index, TRow item)
         {
             if (!isAddNewCore)
-            { baseData.Insert(baseData.Count(), item); }
+            { BaseInsert(BaseCount(), item); }
 
             base.InsertItem(index, item);
         }
 
         protected override void RemoveItem(int index)
         {
-            Int32 baseIndex = baseData.IndexOf(this[index]);
-            if (baseIndex >= 0) { baseData.RemoveAt(baseIndex); }
+            Int32 baseIndex = BaseIndexOf(this[index]);
+            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); }
             base.RemoveItem(index);
         }
     }

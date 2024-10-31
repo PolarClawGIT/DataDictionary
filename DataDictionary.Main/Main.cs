@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms;
+using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
@@ -20,7 +21,7 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            Icon = ImageEnumeration.GetIcon(ScopeType.Application);
+            Icon = NavigationEnumeration.GetIcon(ScopeType.Application);
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);
@@ -58,18 +59,10 @@ namespace DataDictionary.Main
             splashScreen.Show();
 
             SendMessage(new DoUnbindData());
-            if (Settings.Default.IsOnLineMode)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                this.DoWork(factory.OpenConnection(), OnComplete);
-            }
-            else
-            {
-                LoadData(OnLoadComplete);
-                SendMessage(new OnlineStatusChanged());
-            }
+            IsLocked(true);
+            Program.SetupApplicationData(DataLoadComplete);
 
-            void OnComplete(RunWorkerCompletedEventArgs args)
+            void DataLoadComplete(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is not null && Settings.Default.IsOnLineMode)
                 { // Could not load the data from the database for whatever reason.
@@ -77,9 +70,25 @@ namespace DataDictionary.Main
                     Settings.Default.IsOnLineMode = false;
                     Settings.Default.Save();
                 }
+
+                if (args.Error is not null)
+                { Program.ShowException(args.Error); }
+
                 bindingModel.DataSource = BusinessData.Models;
                 SendMessage(new OnlineStatusChanged());
-                LoadData(OnLoadComplete);
+
+                DoWork(BusinessData.Create());
+
+                IsLocked(false);
+                dataLoaded = true;
+
+                securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+                namedScopeData.ReloadCommand();
+
+                if (splashDone)
+                { this.Invoke(() => { splashScreen.Close(); }); }
+
+                SendMessage(new DoBindData());
             }
 
             // Handle Splash timer timed out.
@@ -90,53 +99,6 @@ namespace DataDictionary.Main
 
                 splashTimer.Elapsed -= MinTime_Elapsed;
                 splashDone = true;
-            }
-
-            // Handle DataLoaded
-            void OnLoadComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (splashDone)
-                { this.Invoke(() => { splashScreen.Close(); }); }
-
-                IsLocked(false);
-                dataLoaded = true;
-                SendMessage(new DoBindData());
-            }
-        }
-
-
-        private void LoadData(Action<RunWorkerCompletedEventArgs> onLoadComplete)
-        {
-            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Settings.Default.IsOnLineMode)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.ApplicationData.Load(factory));
-
-                if (!appDataFile.Exists)
-                { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
-            }
-            else
-            {
-                if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(BusinessData.ImportApplication(appDataFile)); }
-                else if (appInstallFile.Exists)
-                { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(BusinessData.ImportApplication(appInstallFile));
-                    work.AddRange(BusinessData.ExportApplication(appDataFile));
-                }
-            }
-            work.AddRange(BusinessData.Create());
-            this.DoWork(work, OnComplete);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                namedScopeData.ReloadCommand();
-                onLoadComplete(args);
             }
         }
 
@@ -162,7 +124,7 @@ namespace DataDictionary.Main
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { throw new NotImplementedException();  } // Not Used.
+        { throw new NotImplementedException(); } // Not Used.
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -170,7 +132,10 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.General.HelpContent(currentForm)); }
+            {
+                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm));
+                helpForm.OpenSubject(currentForm);
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,6 +185,9 @@ namespace DataDictionary.Main
 
         protected override void HandleMessage(OnlineStatusChanged message)
         {
+            toolStripStatusUser.Text = BusinessData.Authorization.PrincipalName;
+            securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+
             if (Settings.Default.IsOnLineMode)
             { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
@@ -230,7 +198,7 @@ namespace DataDictionary.Main
         { new Forms.UnitTestGridView().Show(); }
 
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ClipboardView()); }
+        { Activate(() => new ClipboardView()); }
 
         private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
@@ -317,10 +285,12 @@ namespace DataDictionary.Main
         { Application.Exit(); }
 
         private void BindingModel_ListChanged(object sender, ListChangedEventArgs e)
-        { 
-            if(bindingModel.Current is IModelItem current)
-            {   namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
+        {
+            if (bindingModel.Current is IModelItem current)
+            { namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
             else { namedScopeData.HeaderText = "(no Model)"; }
         }
+
+
     }
 }

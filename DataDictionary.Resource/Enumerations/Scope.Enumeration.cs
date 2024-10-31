@@ -76,6 +76,12 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ModelEntityAttribute,       ScopeType.ModelEntity,    "Model.Entity.Attribute"),
             new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
+
+            new ScopeEnumeration(ScopeType.Security,                  "Security"),
+            new ScopeEnumeration(ScopeType.SecurityPrincipal,          ScopeType.Security,         "Security.Principal"),
+            new ScopeEnumeration(ScopeType.SecurityRole,               ScopeType.Security,         "Security.Role"),
+            new ScopeEnumeration(ScopeType.SecuritySecurable,          ScopeType.Security,         "Security.Securable"),
+
             new ScopeEnumeration(ScopeType.Scripting,                  "Scripting"),
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
             new ScopeEnumeration(ScopeType.ScriptingTemplatePath,      ScopeType.ScriptingTemplate, "Scripting.Template.Path"),

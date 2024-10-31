@@ -70,6 +70,7 @@
             helpContentNavigation.Size = new Size(266, 425);
             helpContentNavigation.TabIndex = 1;
             helpContentNavigation.NodeMouseClick += HelpContentNavigation_NodeMouseClick;
+            helpContentNavigation.MouseDoubleClick += HelpContentNavigation_MouseDoubleClick;
             // 
             // helpDetailLayout
             // 
@@ -110,6 +111,11 @@
             helpTextData.TabIndex = 2;
             helpTextData.Text = "";
             // 
+            // helpBinding
+            // 
+            helpBinding.AddingNew += HelpBinding_AddingNew;
+            helpBinding.ListChanged += HelpBinding_ListChanged;
+            // 
             // HelpContent
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -117,7 +123,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(helpSplitLayout);
             Name = "HelpContent";
-            Text = "HelpContent";
+            Text = "Help Content";
             Load += HelpContent_Load;
             Controls.SetChildIndex(helpSplitLayout, 0);
             helpSplitLayout.Panel1.ResumeLayout(false);

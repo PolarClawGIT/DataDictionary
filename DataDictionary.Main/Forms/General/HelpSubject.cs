@@ -1,18 +1,13 @@
-﻿using DataDictionary.BusinessLayer.Application;
+﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -56,8 +51,6 @@ namespace DataDictionary.Main.Forms.General
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
 
-        Dictionary<ColumnHeader, Single> controlValuesWidths;
-
         public Boolean IsOpenItem(object? item)
         { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
 
@@ -65,59 +58,21 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
 
-            Setup(
-                helpBinding,
+            SetRowState(helpBinding);
+            SetTitle(helpBinding);
+            SetCommand(ScopeType.ApplicationHelpPage,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandImageType.DeleteDatabase,
+                CommandImageType.SecurityDatabase);
 
             // Store and recompute column sizes for List views
-            controlValuesWidths = controlData.Columns.
-                OfType<ColumnHeader>().
-                Select(s => new
-                {
-                    column = s,
-                    value = (Single)s.Width / (Single)(controlData.Columns.OfType<ColumnHeader>().Sum(v => v.Width))
-                }).
-                ToDictionary(k => k.column, v => v.value);
-
+            controlData.ResizeColumns();
         }
 
-        public HelpSubject(HelpSubjectValue? helpSubjectItem) : this()
-        {
-            if (helpSubjectItem is null)
-            {
-                helpSubjectItem = new HelpSubjectValue();
-                BusinessData.ApplicationData.HelpSubjects.Add(helpSubjectItem);
-            }
-
-            HelpSubject_Binding(helpSubjectItem);
-        }
-
-        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
-        {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
-            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
-            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
-
-            if (bindingData.Count > 0)
-            {
-                helpBinding.DataSource = bindingData;
-                helpBinding.Position = 0;
-            }
-            else
-            {
-                BindingList<HelpSubjectValue> unboundData = new BindingList<HelpSubjectValue> { helpSubjectItem };
-
-                helpBinding.DataSource = unboundData;
-                helpBinding.Position = 0;
-
-                CommandButtons[CommandImageType.Delete].IsEnabled = false;
-                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
-                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
-            }
-        }
+        public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
+        { HelpSubject_Binding(helpSubjectItem); }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
         {
@@ -164,11 +119,33 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
+        {
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
+            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
+
+            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
+
+            if (bindingData.Count == 0)
+            {
+                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
+                CommandButtons[CommandImageType.Delete].IsEnabled = false;
+                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
+                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+
+
+            }
+
+            helpBinding.DataSource = bindingData;
+            helpBinding.Position = 0;
+
+        }
+
         private void HelpTextData_Load(object sender, EventArgs e)
         {
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
+            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
+            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
 
             BindRtfHelpText();
         }
@@ -176,7 +153,7 @@ namespace DataDictionary.Main.Forms.General
         private void BindRtfHelpText()
         {
             try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged)); }
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation)); }
             catch (Exception) // Else it is not RTF, bind to the property 
             {
                 if (helpBinding.Current is HelpSubjectValue subject)
@@ -186,20 +163,12 @@ namespace DataDictionary.Main.Forms.General
                     subject.AcceptChanges();
                 }
 
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
 
         private void ControlData_Resize(object sender, EventArgs e)
-        {
-            controlData.Columns.
-                OfType<ColumnHeader>().
-                ToList().
-                ForEach(f => f.Width = (Int32)(
-                    (controlData.Width -
-                        SystemInformation.VerticalScrollBarWidth) *
-                    controlValuesWidths[f]));
-        }
+        { controlData.ResizeColumns(); }
 
         ListViewItem? currentItem = null; // To prevent recursive calls
         private void ControlData_ItemChecked(object? sender, ItemCheckedEventArgs e)
@@ -246,6 +215,17 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.Current is HelpSubjectValue current)
             { helpBinding.RemoveCurrent(); }
+        }
+
+        protected override void SecurityCommand_Click(Object sender, EventArgs e)
+        {
+            base.SecurityCommand_Click(sender, e);
+
+            if (helpBinding.Current is HelpSubjectValue current)
+            {
+                SecurableIndex key = new HelpSubjectIndex(current);
+                Activate(() => new Security.SecurableManager(key,() => BusinessData.Authorization.IsHelpAdmin));
+            }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -295,17 +275,17 @@ namespace DataDictionary.Main.Forms.General
 
             if (helpBinding.Current is HelpSubjectValue current)
             {
-                if (helpBinding.DataSource is BindingView<HelpSubjectValue>) { }
-                else if (helpBinding.DataSource is BindingList<HelpSubjectValue>)
-                {
-                    var key = new HelpSubjectIndex(current);
+                HelpSubjectIndex key = new HelpSubjectIndex(current);
+                TemporalIndex temporalKey = new TemporalIndex(current);
 
-                    if (BusinessData.ApplicationData.HelpSubjects.
-                        FirstOrDefault(w => key.Equals(w)) is HelpSubjectValue oldValue)
-                    { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
+                // Remove anything for same subject that is not this subject
+                foreach (HelpSubjectValue oldValue in BusinessData.ApplicationData.HelpSubjects.Where(w => key.Equals(w) && !ReferenceEquals(current, w)))
+                { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
 
-                    BusinessData.ApplicationData.HelpSubjects.Add(current);
-                }
+                // If there is nothing left, add the current subject
+                if (!BusinessData.ApplicationData.HelpSubjects.Any(w => key.Equals(w)))
+                { BusinessData.ApplicationData.HelpSubjects.Add(current); }
+                else { } // If there is something left, it must be this subject and it should not be altered.
 
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -324,7 +304,6 @@ namespace DataDictionary.Main.Forms.General
                     if (args.Error is null)
                     {
                         current.AcceptChanges();
-                        RowState = current.RowState();
                         IsLocked(false);
                     }
                 }

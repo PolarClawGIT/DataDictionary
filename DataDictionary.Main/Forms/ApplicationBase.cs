@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using System.ComponentModel;
@@ -54,7 +54,7 @@ namespace DataDictionary.Main.Forms
         public ApplicationBase() : base()
         {
             InitializeComponent();
-            
+
         }
 
         /// <summary>
@@ -298,6 +298,7 @@ namespace DataDictionary.Main.Forms
                 foreach (Control item in this.Controls)
                 {
                     if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else if (item.IsHandleCreated) { item.Invoke(() => item.Enabled = !value); }
                     else { item.Enabled = !value; }
                 }
             }
@@ -317,14 +318,55 @@ namespace DataDictionary.Main.Forms
                 foreach (Control item in this.Controls)
                 {
                     if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
-                    else { item.UseWaitCursor = value; }
+                    else if (item.IsHandleCreated) { item.Invoke(() => item.UseWaitCursor = !value); }
+                    else { item.UseWaitCursor = !value; }
                 }
             }
 
             return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
+        /// <summary>
+        /// SuspendBinding the binding on the specific BindingSource
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
+        /// <!--
+        /// The SuspendBinding on the binding source does not affect
+        /// controls that are depending on that binding source.
+        /// DataGridViews likewise do not honor the SuspendBinding.
+        /// 
+        /// This can result in:
+        /// * DataBinding cannot find a row in the list that is suitable for all bindings.
+        /// * Cross thread operation not valid
+        /// This work-around turns off RaiseListChangedEvents.
+        /// ResumeBinding undoes this and resets the Bindings.
+        /// 
+        /// Use this method when background activity (such as using DoWork)
+        /// would modify the data of a BindingSource.
+        /// 
+        /// This is not always necessary.
+        /// The BindingSource will handle many scenarios.
+        /// 
+        /// The MS documentation suggests otherwise.
+        /// -->
+        public virtual void SuspendBinding(BindingSource binding)
+        {
+            binding.RaiseListChangedEvents = false;
+            binding.SuspendBinding(); // Just in case this will actually do something useful.
+        }
 
+        /// <summary>
+        /// ResumeBinding and ResetBindings on a DataSource.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
+        public virtual void ResumeBinding(BindingSource binding)
+        {
+            binding.RaiseListChangedEvents = true;
+            binding.ResumeBinding(); // Just in case this will actually do something useful.
+            binding.ResetBindings(false);
+        }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;

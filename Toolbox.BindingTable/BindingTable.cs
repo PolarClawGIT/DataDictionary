@@ -286,7 +286,7 @@ namespace Toolbox.BindingTable
         /// </remarks>
         public override void EndNew(Int32 itemIndex)
         {
-            if (itemIndex >= 0 && this[itemIndex] == addNewCoreItem && !isAddNewCore)
+            if (this.Count > 0 && itemIndex >= (this.Count-1) && this[itemIndex] == addNewCoreItem && !isAddNewCore)
             { // Item is not being canceled or executing AddNewCore, finish adding the item.
                 try
                 {

@@ -24,9 +24,9 @@ namespace Toolbox.BindingTable
             set { ((IList<TRow>)this)[index] = value; }
         }
 
-        /// <inheritdoc cref="ICollection{T}.Count"/>
+        /// <inheritdoc cref="IList{T}.Count"/>
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
-        new Int32 Count { get { return ((ICollection<TRow>)this).Count; } }
+        new Int32 Count { get { return ((IList<TRow>)this).Count; } }
 
         /// <inheritdoc cref="IList{T}.RemoveAt"/>
         /// <remarks>Resolves ambiguity between IList and generic list</remarks>

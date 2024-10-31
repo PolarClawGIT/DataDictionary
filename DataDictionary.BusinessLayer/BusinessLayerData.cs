@@ -4,6 +4,8 @@ using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
+using System.Security.Principal;
+using DataDictionary.DataLayer.AppSecurity;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -50,16 +52,18 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-
         /// <summary>
         /// Constructor for the Business Layer Data Object
         /// </summary>
+        /// <param name="identity"></param>
         /// <param name="serverName"></param>
         /// <param name="databaseName"></param>
         /// <param name="applicationRole"></param>
         /// <param name="ApplicationRolePassword"></param>
-        public BusinessLayerData(String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
+        public BusinessLayerData(IIdentity identity,  String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
+            UserIdentity = identity;
+
             DbConnection = new DbConnection()
             {
                 ServerName = serverName,
@@ -73,7 +77,7 @@ namespace DataDictionary.BusinessLayer
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
-            applicationValues = new Application.ApplicationData();
+            applicationValues = new AppGeneral.ApplicationData();
 
             domainValues = new Domain.DomainModel() { Models = modelValues, SubjectAreas = subjectAreaValues };
             databaseValues = new Database.DatabaseModel();
@@ -219,56 +223,5 @@ namespace DataDictionary.BusinessLayer
                 ModelFile = file;
             }
         }
-
-
-        /// <summary>
-        /// Imports the Application Data from a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
-        {
-            List<WorkItem> work = new List<WorkItem>
-            {
-                new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
-            };
-
-            return work.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
-                    applicationValues.Import(workSet);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Exports the Application Data to a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
-
-            return work.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.Tables.AddRange(applicationValues.Export().ToArray());
-
-                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
-                }
-            }
-        }
-
-
     }
 }

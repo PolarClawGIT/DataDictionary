@@ -24,10 +24,19 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
+            SetRowState(
+                bindingTemplate, 
+                bindingPath,
+                bindingNode,
+                bindingDocument,
+                bindingAttribute);
+            SetTitle(bindingTemplate);
+            SetCommand(ScopeType.ScriptingTemplate, CommandImageType.Delete);
+
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
-            pathAddCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
-            pathSelectCommand.Image = ImageEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
+            pathAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
+            pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
         public ScriptingTemplate(ITemplateValue? templateItem) : this()
@@ -46,8 +55,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (bindingTemplate.Current is ITemplateValue current)
             {
-                Setup(bindingTemplate, CommandImageType.Delete);
-
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
                 bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
                 bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
@@ -311,7 +318,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
             {
-                ListViewGroup newGroup = new ListViewGroup(ImageEnumeration.Cast(groups.Key).Name);
+                ListViewGroup newGroup = new ListViewGroup(NavigationEnumeration.Cast(groups.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
                 foreach (NodePropertyValue item in groups)
@@ -379,7 +386,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
                         ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
-                        ex.Data.Add(nameof(element.PropertyScope), ImageEnumeration.Cast(element.PropertyScope).Name);
+                        ex.Data.Add(nameof(element.PropertyScope), NavigationEnumeration.Cast(element.PropertyScope).Name);
                         throw ex;
                     }
 

@@ -69,18 +69,27 @@
     <Folder Include="App_DataDictionary\Views" />
     <Folder Include="App_DataDictionary\Functions\" />
     <Folder Include="Obsolete" />
-    <Folder Include="App_General" />
-    <Folder Include="App_General\Functions" />
-    <Folder Include="App_General\Stored Procedures" />
-    <Folder Include="App_General\Tables" />
-    <Folder Include="App_General\User Defined Types" />
-    <Folder Include="App_General\Views" />
-    <Folder Include="Hs_General" />
-    <Folder Include="Hs_General\Tables" />
+    <Folder Include="AppGeneral" />
+    <Folder Include="AppGeneral\Functions" />
+    <Folder Include="AppGeneral\Stored Procedures" />
+    <Folder Include="AppGeneral\Tables" />
+    <Folder Include="AppGeneral\User Defined Types" />
+    <Folder Include="AppGeneral\Views" />
+    <Folder Include="HsGeneral" />
+    <Folder Include="HsGeneral\Tables" />
+    <Folder Include="AppSecurity" />
+    <Folder Include="AppSecurity\Tables" />
+    <Folder Include="AppSecurity\Functions" />
+    <Folder Include="AppSecurity\Policy" />
+    <Folder Include="AppSecurity\Views" />
+    <Folder Include="AppSecurity\Stored Procedures" />
+    <Folder Include="AppSecurity\User Defined Types" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
+    <None Include="AppSecurity\SecurityNotes.sql" />
+    <None Include="AppSecurity\DefaultSecurityRoles.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
@@ -88,9 +97,6 @@
     <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
-    <Build Include="App_DataDictionary\Tables\SecurityPermission.sql" />
     <Build Include="App_DataDictionary\Tables\Model.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
@@ -102,7 +108,6 @@
     <Build Include="App_DataDictionary\Tables\DatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseExtendedProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
@@ -127,9 +132,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationHelp.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationHelp.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationHelp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
@@ -281,13 +283,54 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseReference.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
     <Build Include="App_DataDictionary\Views\DomainEntityAttribute_AK.sql" />
-    <Build Include="Security\App_General.sql" />
-    <Build Include="Security\Hs_General.sql" />
-    <Build Include="App_General\Tables\ApplicationHelp.sql" />
-    <Build Include="Hs_General\Tables\ApplicationHelp.sql" />
-    <Build Include="App_General\Stored Procedures\procGetApplicationHelp.sql" />
-    <Build Include="App_General\Stored Procedures\procSetApplicationHelp.sql" />
-    <Build Include="App_General\User Defined Types\typeApplicationHelp.sql" />
+    <Build Include="Security\AppGeneral.sql" />
+    <Build Include="AppGeneral\Tables\HelpSubject.sql" />
+    <Build Include="HsGeneral\Tables\HelpSubject.sql" />
+    <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
+    <Build Include="AppGeneral\Stored Procedures\procSetHelpSubject.sql" />
+    <Build Include="AppGeneral\User Defined Types\typeHelpSubject.sql" />
+    <Build Include="Security\HsGeneral.sql" />
+    <Build Include="Security\AppSecurity.sql" />
+    <Build Include="Obsolete\ApplicationHelp.sql" />
+    <Build Include="Obsolete\procGetApplicationHelp.sql" />
+    <Build Include="Obsolete\procSetApplicationHelp.sql" />
+    <Build Include="Obsolete\typeApplicationHelp.sql" />
+    <Build Include="AppSecurity\Tables\Role.sql" />
+    <Build Include="AppSecurity\Tables\Principal.sql" />
+    <Build Include="AppSecurity\Tables\SecurablePermission.sql" />
+    <Build Include="AppSecurity\Tables\RoleMembership.sql" />
+    <Build Include="AppSecurity\Functions\funcPrincipalAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyPrincipal.sql" />
+    <Build Include="AppSecurity\Functions\funcHelpSubjectAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyHelpSubject.sql" />
+    <Build Include="AppSecurity\Tables\SecurableOwner.sql" />
+    <Build Include="AppSecurity\Functions\funcSecurableAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policySecurable.sql" />
+    <Build Include="AppSecurity\Functions\funcAuthorization.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetPrincipal.sql">
+      <SuppressTSqlWarnings>
+      </SuppressTSqlWarnings>
+    </Build>
+    <Build Include="AppSecurity\User Defined Types\typePrincipal.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetRole.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeRole.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetRoleMembership.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeRoleMembership.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetPrincipal.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetRole.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetMembership.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetAuthorization.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurableOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurablePermission.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeSecurableOwner.sql" />
+    <Build Include="AppSecurity\User Defined Types\typeSecurablePermission.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurableOwner.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procSetSecurablePermission.sql" />
+    <Build Include="AppSecurity\Views\Securable.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetSecurable.sql" />
+    <Build Include="AppSecurity\Stored Procedures\procGetAuthorizationSecurable.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

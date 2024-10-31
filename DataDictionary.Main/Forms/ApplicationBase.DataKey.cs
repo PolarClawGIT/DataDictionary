@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// The RowState of the related data.
         /// </summary>
-        public DataRowState? RowState { get; set; }
+        public DataRowState RowState { get; }
 
     }
 

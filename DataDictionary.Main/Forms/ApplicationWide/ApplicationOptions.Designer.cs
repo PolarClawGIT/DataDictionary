@@ -268,7 +268,7 @@
             commandLoadFromFile.TabIndex = 2;
             commandLoadFromFile.Text = "Load";
             commandLoadFromFile.UseVisualStyleBackColor = true;
-            commandLoadFromFile.Click += commandLoadFromFile_Click;
+            commandLoadFromFile.Click += CommandLoadFromFile_Click;
             // 
             // optionsDefaultModeGroup
             // 
@@ -311,7 +311,7 @@
             defaultModeOnLine.TabStop = true;
             defaultModeOnLine.Text = "On-line (use shared Database)";
             defaultModeOnLine.UseVisualStyleBackColor = true;
-            defaultModeOnLine.CheckedChanged += defaultModeOnLine_CheckedChanged;
+            defaultModeOnLine.CheckedChanged += DefaultModeOnLine_CheckedChanged;
             // 
             // defaultModeOffLine
             // 

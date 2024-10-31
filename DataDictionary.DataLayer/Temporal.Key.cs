@@ -46,10 +46,13 @@ namespace DataDictionary.DataLayer
         public Boolean Equals(ITemporalKey? other)
         {
             return
-                other is TemporalKey &&
-                ModifiedOn is DateTime thisValue &&
-                other.ModifiedOn is DateTime otherValue &&
-                DateTime.Equals(thisValue, otherValue);
+                (other is TemporalKey 
+                    && ModifiedOn is null 
+                    && other.ModifiedOn is null ) ||
+                ( other is TemporalKey
+                    && ModifiedOn is DateTime thisValue
+                    && other.ModifiedOn is DateTime otherValue
+                    && DateTime.Equals(thisValue, otherValue));
         }
 
         /// <inheritdoc/>

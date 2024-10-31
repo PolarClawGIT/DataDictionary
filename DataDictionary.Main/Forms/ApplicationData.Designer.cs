@@ -42,6 +42,7 @@
             saveCommand = new ToolStripButton();
             importCommand = new ToolStripDropDownButton();
             exportCommand = new ToolStripDropDownButton();
+            securityCommand = new ToolStripButton();
             historyCommand = new ToolStripButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
@@ -89,7 +90,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, selectCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, historyCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, selectCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, securityCommand, historyCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
@@ -186,6 +187,17 @@
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
+            // securityCommand
+            // 
+            securityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            securityCommand.Enabled = false;
+            securityCommand.Image = Properties.Resources.SecurityTable;
+            securityCommand.ImageTransparentColor = Color.Magenta;
+            securityCommand.Name = "securityCommand";
+            securityCommand.Size = new Size(23, 22);
+            securityCommand.Text = "Row Level Security";
+            securityCommand.Click += SecurityCommand_Click;
+            // 
             // historyCommand
             // 
             historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -212,6 +224,7 @@
             // 
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            rowStateCommand.Enabled = false;
             rowStateCommand.Image = Properties.Resources.Row;
             rowStateCommand.Name = "rowStateCommand";
             rowStateCommand.Size = new Size(16, 22);
@@ -260,5 +273,6 @@
         private ToolStripDropDownButton exportCommand;
         private ToolStripButton historyCommand;
         private ToolStripButton selectCommand;
+        private ToolStripButton securityCommand;
     }
 }

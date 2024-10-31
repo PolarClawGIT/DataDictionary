@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Dialogs
 
         public String Title { get { return NamedScope.Title; } }
         public ScopeType Scope { get { return NamedScope.Scope; } }
-        public String ScopeName { get { return ImageEnumeration.Cast(Scope).DisplayName; } }
+        public String ScopeName { get { return NavigationEnumeration.Cast(Scope).DisplayName; } }
         public PathIndex Path { get { return NamedScope.Path; } }
         public String PathName { get { return Path.MemberFullPath; } }
 
@@ -41,7 +41,7 @@ namespace DataDictionary.Main.Dialogs
             this.Source = BusinessData.NamedScope.GetData(key);
             this.GetDescription = (value) => String.Empty;
 
-            ImageEnumeration scopeItem = ImageEnumeration.Cast(NamedScope.Scope);
+            NavigationEnumeration scopeItem = NavigationEnumeration.Cast(NamedScope.Scope);
             this.ListView = new ListViewItem(Title);
             this.ListView.ImageKey = scopeItem.Name;
 

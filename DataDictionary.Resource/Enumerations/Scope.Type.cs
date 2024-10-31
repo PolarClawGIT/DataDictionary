@@ -225,6 +225,26 @@
         DatabaseExtendedProperties,
 
         /// <summary>
+        /// Security Objects
+        /// </summary>
+        Security,
+
+        /// <summary>
+        /// Security Principal
+        /// </summary>
+        SecurityPrincipal,
+
+        /// <summary>
+        /// Security Role
+        /// </summary>
+        SecurityRole,
+
+        /// <summary>
+        /// Security Securable (Security Object)
+        /// </summary>
+        SecuritySecurable,
+
+        /// <summary>
         /// Scripting Engine
         /// </summary>
         Scripting,

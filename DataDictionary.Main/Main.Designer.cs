@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             Panel navigationPanel;
             Splitter navigationSpliter;
+            ToolStripStatusLabel toolStripStatusBreak;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             namedScopeData = new Controls.NamedScopeTreeView();
             attributeContextMenu = new ContextMenuStrip(components);
@@ -67,6 +68,7 @@
             viewLibraryMemberCommand = new ToolStripMenuItem();
             manageLibrariesCommand = new ToolStripSplitButton();
             statusStrip = new StatusStrip();
+            toolStripStatusUser = new ToolStripStatusLabel();
             toolStripOnlineStatus = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
             toolStripWorkerTask = new ToolStripStatusLabel();
@@ -102,6 +104,10 @@
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
             textEditorToolStripMenuItem = new ToolStripMenuItem();
+            securityToolStripMenuItem = new ToolStripMenuItem();
+            securityContextMenu = new ContextMenuStrip(components);
+            securityPrincipal = new ToolStripMenuItem();
+            securityRole = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
@@ -129,6 +135,7 @@
             bindingModel = new BindingSource(components);
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
+            toolStripStatusBreak = new ToolStripStatusLabel();
             navigationPanel.SuspendLayout();
             attributeContextMenu.SuspendLayout();
             entityContextMenu.SuspendLayout();
@@ -137,6 +144,7 @@
             libraryContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
+            securityContextMenu.SuspendLayout();
             mainToolStrip.SuspendLayout();
             modelContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
@@ -171,6 +179,12 @@
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
             // 
+            // toolStripStatusBreak
+            // 
+            toolStripStatusBreak.Name = "toolStripStatusBreak";
+            toolStripStatusBreak.Size = new Size(10, 17);
+            toolStripStatusBreak.Text = "|";
+            // 
             // attributeContextMenu
             // 
             attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeAlaises, menuAttributeProperties, menuAttributeDefinitions });
@@ -184,7 +198,7 @@
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(222, 22);
             menuAttributes.Text = "browse &Attributes";
-            menuAttributes.Click += menuAttributes_Click;
+            menuAttributes.Click += MenuAttributes_Click;
             // 
             // menuAttributeAlaises
             // 
@@ -318,7 +332,7 @@
             menuCatalogItem.Name = "menuCatalogItem";
             menuCatalogItem.Size = new Size(221, 22);
             menuCatalogItem.Text = "browse Catalogs";
-            menuCatalogItem.Click += menuCatalogItem_Click;
+            menuCatalogItem.Click += MenuCatalogItem_Click;
             // 
             // menuSchemaItem
             // 
@@ -447,12 +461,18 @@
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripOnlineStatus, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusUser, toolStripStatusBreak, toolStripOnlineStatus, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
             statusStrip.Location = new Point(0, 640);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(917, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusUser
+            // 
+            toolStripStatusUser.Name = "toolStripStatusUser";
+            toolStripStatusUser.Size = new Size(83, 17);
+            toolStripStatusUser.Text = "(uknown user)";
             // 
             // toolStripOnlineStatus
             // 
@@ -464,7 +484,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(671, 17);
+            toolStripWhiteSpace.Size = new Size(578, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -480,7 +500,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, securityToolStripMenuItem, windowToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.MdiWindowListItem = windowToolStripMenuItem;
             menuStrip.Name = "menuStrip";
@@ -716,6 +736,35 @@
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
+            // securityToolStripMenuItem
+            // 
+            securityToolStripMenuItem.DropDown = securityContextMenu;
+            securityToolStripMenuItem.Name = "securityToolStripMenuItem";
+            securityToolStripMenuItem.Size = new Size(61, 20);
+            securityToolStripMenuItem.Text = "&Security";
+            // 
+            // securityContextMenu
+            // 
+            securityContextMenu.Items.AddRange(new ToolStripItem[] { securityPrincipal, securityRole });
+            securityContextMenu.Name = "securityContextMenu";
+            securityContextMenu.Size = new Size(181, 70);
+            // 
+            // securityPrincipal
+            // 
+            securityPrincipal.Image = Properties.Resources.User;
+            securityPrincipal.Name = "securityPrincipal";
+            securityPrincipal.Size = new Size(180, 22);
+            securityPrincipal.Text = "Principal";
+            securityPrincipal.Click += SecurityPrincipal_Click;
+            // 
+            // securityRole
+            // 
+            securityRole.Image = Properties.Resources.ApplicationRole;
+            securityRole.Name = "securityRole";
+            securityRole.Size = new Size(180, 22);
+            securityRole.Text = "Role";
+            securityRole.Click += SecurityRole_Click;
+            // 
             // windowToolStripMenuItem
             // 
             windowToolStripMenuItem.Name = "windowToolStripMenuItem";
@@ -732,7 +781,7 @@
             // helpContentsMenuItem
             // 
             helpContentsMenuItem.Name = "helpContentsMenuItem";
-            helpContentsMenuItem.Size = new Size(180, 22);
+            helpContentsMenuItem.Size = new Size(122, 22);
             helpContentsMenuItem.Text = "&Contents";
             helpContentsMenuItem.Click += HelpContentsMenuItem_Click;
             // 
@@ -740,7 +789,7 @@
             // 
             helpIndexMenuItem.Enabled = false;
             helpIndexMenuItem.Name = "helpIndexMenuItem";
-            helpIndexMenuItem.Size = new Size(180, 22);
+            helpIndexMenuItem.Size = new Size(122, 22);
             helpIndexMenuItem.Text = "&Index";
             helpIndexMenuItem.Click += HelpIndexMenuItem_Click;
             // 
@@ -748,18 +797,18 @@
             // 
             searchToolStripMenuItem.Enabled = false;
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            searchToolStripMenuItem.Size = new Size(180, 22);
+            searchToolStripMenuItem.Size = new Size(122, 22);
             searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(177, 6);
+            toolStripSeparator5.Size = new Size(119, 6);
             // 
             // helpAboutMenuItem
             // 
             helpAboutMenuItem.Name = "helpAboutMenuItem";
-            helpAboutMenuItem.Size = new Size(180, 22);
+            helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
@@ -925,6 +974,7 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            securityContextMenu.ResumeLayout(false);
             mainToolStrip.ResumeLayout(false);
             mainToolStrip.PerformLayout();
             modelContextMenu.ResumeLayout(false);
@@ -1031,5 +1081,10 @@
         private ToolStripMenuItem menuEntityAttributes;
         private Controls.NamedScopeTreeView namedScopeData;
         private BindingSource bindingModel;
+        private ToolStripStatusLabel toolStripStatusUser;
+        private ContextMenuStrip securityContextMenu;
+        private ToolStripMenuItem securityPrincipal;
+        private ToolStripMenuItem securityRole;
+        private ToolStripMenuItem securityToolStripMenuItem;
     }
 }

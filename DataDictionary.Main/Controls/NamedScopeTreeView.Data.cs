@@ -267,7 +267,7 @@ namespace DataDictionary.Main.Controls
 
                 foreach (var scopeGroup in scopeGroups)
                 {
-                    ImageEnumeration scopeValue = ImageEnumeration.Cast(scopeGroup.Key);
+                    NavigationEnumeration scopeValue = NavigationEnumeration.Cast(scopeGroup.Key);
                     TreeNode scopeNode = newNode;
 
                     if (scopeValue.GroupBy && scopeGroup.Count() > 1)
@@ -306,7 +306,7 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(NamedScopeNode value)
         {
-            ImageEnumeration scopeImage = ImageEnumeration.Cast(value.Scope);
+            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(value.Scope);
             TreeNode result = new TreeNode(value.Title);
 
             result.ImageKey = scopeImage.Name;
@@ -327,7 +327,7 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(PathIndex path)
         {
-            ImageEnumeration scopeImage = ImageEnumeration.Cast(ScopeType.ModelNameSpace);
+            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(ScopeType.ModelNameSpace);
             TreeNode result = new TreeNode(path.Member);
 
             result.ImageKey = scopeImage.Name;
@@ -340,7 +340,7 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(ScopeType scope)
         {
-            ImageEnumeration scopeImage = ImageEnumeration.Cast(scope);
+            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(scope);
             TreeNode result = new TreeNode(scopeImage.Name.Split(".").Last());
 
             result.ImageKey = scopeImage.Name;

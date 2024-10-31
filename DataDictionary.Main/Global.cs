@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Properties;
+using System.Security.Principal;
 using Toolbox.Mediator;
 using Toolbox.Threading;
 
@@ -30,6 +31,7 @@ namespace DataDictionary.Main
         /// </summary>
         public static BusinessLayerData BusinessData { get; } =
             new BusinessLayerData(
+                identity: WindowsIdentity.GetCurrent(),
                 serverName: Settings.Default.AppServer,
                 databaseName: Settings.Default.AppDatabase,
                 applicationRole: Settings.Default.AppDbRole,

@@ -127,6 +127,9 @@
   <data name="Aggregate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Aggregate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ApplicationRole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Attribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Attribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -178,6 +181,9 @@
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteApplicationRole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -210,6 +216,9 @@
   </data>
   <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DeleteXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -286,6 +295,9 @@
   <data name="Icon_Application" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\DataDictionaryApplication.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_ApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\ApplicationRole.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_Assembly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Assembly.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -328,6 +340,9 @@
   <data name="Icon_Field" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Field.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_HelpIndexFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\HelpIndexFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_HelpTableOfContent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\HelpTableOfContent.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -348,6 +363,9 @@
   </data>
   <data name="Icon_Parameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Parameter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Permission" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Permission.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Procedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Procedure.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -400,6 +418,9 @@
   <data name="Icon_UnknownMember" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\UnknownMember.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_User" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\User.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\View.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -430,6 +451,9 @@
   <data name="ImportDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ImportDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ImportStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ImportStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Italic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -445,6 +469,9 @@
   <data name="Link" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Link.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Member" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Member.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Method" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Method.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -453,6 +480,9 @@
   </data>
   <data name="Namespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Namespace.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewApplicationRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewApplicationRole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -502,6 +532,9 @@
   <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -531,6 +564,9 @@
   </data>
   <data name="Parameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Parameter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Permission" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Permission.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Procedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Procedure.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -619,6 +655,9 @@
   <data name="Script" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Script.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SecurityTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SecurityTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SelectAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -702,6 +741,9 @@
   </data>
   <data name="UnknownMember" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UnknownMember.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="User" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\User.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\View.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

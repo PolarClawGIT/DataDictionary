@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -159,7 +160,11 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 Command execute = command(Connection);
 
                 try { Connection.ExecuteNonQuery(execute); }
-                catch (Exception ex) { ex.Data.Add("Command", execute.CommandText); throw; }
+                catch (Exception ex)
+                {
+                    ex.Data.Add("Command", execute.CommandText);
+                    throw;
+                }
             }
         }
 
@@ -286,7 +291,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}",target.BindingName),
+                workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: target.LoadCommand);
         }

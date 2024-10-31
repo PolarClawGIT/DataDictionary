@@ -11,7 +11,10 @@ namespace DataDictionary.Main.Forms.Library
         { return bindingSource.Current is ILibrarySourceValue current && ReferenceEquals(current, item); }
 
         protected LibrarySource() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            SetRowState(bindingSource);
+        }
 
         public LibrarySource(ILibrarySourceValue librarySource) : this()
         {
@@ -19,8 +22,6 @@ namespace DataDictionary.Main.Forms.Library
 
             bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;
-
-            Setup(bindingSource);
         }
 
         private void LibrarySource_Load(object sender, EventArgs e)
