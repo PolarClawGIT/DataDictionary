@@ -240,7 +240,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectArea.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseRoutineDependency_AK.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
@@ -301,10 +300,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseReference.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseReference.sql" />
-    <Build Include="Obsolete\typeDatabaseRoutineDependency.sql" />
-    <Build Include="Obsolete\DatabaseRoutineDependency.sql" />
-    <Build Include="Obsolete\procSetDatabaseRoutineDependency.sql" />
-    <Build Include="Obsolete\procGetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseReference.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseReference.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
@@ -314,10 +309,6 @@
     <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procSetHelpSubject.sql" />
     <Build Include="AppGeneral\User Defined Types\typeHelpSubject.sql" />
-    <Build Include="Obsolete\ApplicationHelp.sql" />
-    <Build Include="Obsolete\procGetApplicationHelp.sql" />
-    <Build Include="Obsolete\procSetApplicationHelp.sql" />
-    <Build Include="Obsolete\typeApplicationHelp.sql" />
     <Build Include="AppSecurity\Tables\Role.sql" />
     <Build Include="AppSecurity\Tables\Principal.sql" />
     <Build Include="AppSecurity\Tables\SecurablePermission.sql" />
@@ -365,7 +356,6 @@
     <Build Include="Security\Schema\HsLibrary.sql" />
     <Build Include="Security\Schema\HsModel.sql" />
     <Build Include="Security\Schema\HsScript.sql" />
-    <None Include="Obsolete\ApplicationScope Data.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

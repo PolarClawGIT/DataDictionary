@@ -59,22 +59,6 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
-	From	[App_DataDictionary].[DatabaseRoutineDependency] T
-			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
-			On	T.[RoutineId] = P.[RoutineId]
-			Left Join @Values S
-			On	T.[RoutineId] = S.[RoutineId]
-	Where	S.[RoutineId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineDependency] (Routine): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
 	From	[App_DataDictionary].[DatabaseRoutineParameter] T
 			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
