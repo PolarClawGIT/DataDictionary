@@ -84,6 +84,35 @@
     <Folder Include="AppSecurity\Views" />
     <Folder Include="AppSecurity\Stored Procedures" />
     <Folder Include="AppSecurity\User Defined Types" />
+    <Folder Include="AppCatalog" />
+    <Folder Include="HsCatalog" />
+    <Folder Include="AppCatalog\Stored Procedures" />
+    <Folder Include="AppCatalog\Tables" />
+    <Folder Include="AppCatalog\User Defined Types" />
+    <Folder Include="AppCatalog\Views" />
+    <Folder Include="HsCatalog\Tables" />
+    <Folder Include="AppModel" />
+    <Folder Include="AppModel\Views" />
+    <Folder Include="AppModel\User Defined Types" />
+    <Folder Include="AppModel\Tables" />
+    <Folder Include="AppModel\Stored Procedures" />
+    <Folder Include="AppLibrary" />
+    <Folder Include="AppLibrary\Stored Procedures" />
+    <Folder Include="AppLibrary\Tables" />
+    <Folder Include="AppLibrary\User Defined Types" />
+    <Folder Include="AppLibrary\Views" />
+    <Folder Include="AppScript" />
+    <Folder Include="AppScript\Stored Procedures" />
+    <Folder Include="AppScript\Tables" />
+    <Folder Include="AppScript\User Defined Types" />
+    <Folder Include="AppScript\Views" />
+    <Folder Include="HsModel" />
+    <Folder Include="HsModel\Tables" />
+    <Folder Include="HsLibrary" />
+    <Folder Include="HsLibrary\Tables" />
+    <Folder Include="HsScript" />
+    <Folder Include="HsScript\Tables" />
+    <Folder Include="Security\Schema" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -93,8 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
-    <Build Include="Security\Permissions.sql" />
-    <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Tables\Model.sql" />
@@ -200,7 +227,6 @@
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
-    <None Include="App_DataDictionary\ApplicationScope Data.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessAlias.sql" />
@@ -283,14 +309,11 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseReference.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
     <Build Include="App_DataDictionary\Views\DomainEntityAttribute_AK.sql" />
-    <Build Include="Security\AppGeneral.sql" />
     <Build Include="AppGeneral\Tables\HelpSubject.sql" />
     <Build Include="HsGeneral\Tables\HelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procSetHelpSubject.sql" />
     <Build Include="AppGeneral\User Defined Types\typeHelpSubject.sql" />
-    <Build Include="Security\HsGeneral.sql" />
-    <Build Include="Security\AppSecurity.sql" />
     <Build Include="Obsolete\ApplicationHelp.sql" />
     <Build Include="Obsolete\procGetApplicationHelp.sql" />
     <Build Include="Obsolete\procSetApplicationHelp.sql" />
@@ -331,6 +354,18 @@
     <Build Include="AppSecurity\Views\Securable.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetSecurable.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetAuthorizationSecurable.sql" />
+    <Build Include="Security\Schema\AppCatalog.sql" />
+    <Build Include="Security\Schema\AppGeneral.sql" />
+    <Build Include="Security\Schema\AppLibrary.sql" />
+    <Build Include="Security\Schema\AppModel.sql" />
+    <Build Include="Security\Schema\AppScript.sql" />
+    <Build Include="Security\Schema\AppSecurity.sql" />
+    <Build Include="Security\Schema\HsCatalog.sql" />
+    <Build Include="Security\Schema\HsGeneral.sql" />
+    <Build Include="Security\Schema\HsLibrary.sql" />
+    <Build Include="Security\Schema\HsModel.sql" />
+    <Build Include="Security\Schema\HsScript.sql" />
+    <None Include="Obsolete\ApplicationScope Data.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

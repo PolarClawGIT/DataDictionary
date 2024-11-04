@@ -1,0 +1,5 @@
+﻿CREATE SCHEMA [AppModel]
+    AUTHORIZATION [dbo];
+GO
+GRANT EXECUTE ON SCHEMA::[AppModel] TO [DataDictionaryApp]
+GO
