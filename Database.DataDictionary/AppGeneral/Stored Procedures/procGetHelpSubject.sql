@@ -16,47 +16,28 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			A.[NameSpace],
 			A.[ModifiedBy],
 			A.[SysStart] As [ModifiedOn],
-			Convert(Bit, IIF(P.[HelpId] is Null,1,0)) As [IsInserted],
-			Convert(Bit, IIF(P.[HelpId] is not Null,1,0)) As [IsUpdated],
-			Convert(Bit, 0) As [IsDeleted],
-			Convert(Bit, IIF(
-				IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
-				IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd], 1,0))
-				As [IsCurrent]
-	From	[AppGeneral].[HelpSubject] For System_Time All A -- All Values
-			Left Join [AppGeneral].[HelpSubject] For System_Time All P -- Prior
-			On	A.[HelpId] = P.[HelpId] And
-				A.[SysStart] = P.[SysEnd]
-	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And
-			(@IncludeHistory = 1 Or
-				(IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
-				 IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd]))
-	Union -- Handle Deleted Rows
-	Select	A.[HelpId],
-			A.[HelpSubject],
-			A.[HelpToolTip],
-			A.[HelpText],
-			A.[NameSpace],
-			Null As [ModifiedBy], -- The account deleting the row is not recorded
-			A.[SysEnd] As [ModifiedOn],
-			Convert(Bit, 0) As [IsInserted],
-			Convert(Bit, 0) As [IsUpdated],
-			Convert(Bit, 1) As [IsDeleted],
-			Convert(Bit, IIF(
-				-- Is there an Active record after this record
-				(Select Min([SysStart])
-					From [AppGeneral].[HelpSubject]
-					Where [HelpId] = A.[HelpId] And [SysStart] > A.[SysStart])
-				Is Null, 1, 0)) As [IsCurent]
-	From	[AppGeneral].[HelpSubject] For System_Time All A -- All Values
-			Left Join [AppGeneral].[HelpSubject] For System_Time All N -- Next
-			On	A.[HelpId] = N.[HelpId] And
-				A.[SysEnd] = N.[SysStart]
-	Where	(@HelpId is Null or @HelpId = A.[HelpId]) And
-			@IncludeDeleted = 1 And
-			N.[HelpId] is Null And
-			IsNull(@AsOfUtcDate,sysUtcDateTime()) > A.[SysStart] And
-			A.[SysEnd] <= sysUtcDateTime())
+			P.[PriorDate],
+			N.[NextDate],
+			Convert(Bit, IIF(P.[PriorDate] is Null Or P.[PriorDate] <> A.[SysStart],1,0)) As [IsInserted],
+			Convert(Bit, IIF(P.[PriorDate] = A.[SysStart],1,0)) As [IsUpdated],
+			Convert(Bit, IIF(N.[NextDate] <> A.[SysEnd],1,0)) As [IsDeleted],
+				Convert(Bit, IIF(
+					IsNull(@AsOfUtcDate,sysUtcDateTime()) >= A.[SysStart] And
+					IsNull(@AsOfUtcDate,sysUtcDateTime()) < A.[SysEnd], 1,0))
+					As [IsCurrent]
+	From	[AppGeneral].[HelpSubject] For System_Time All A 
+			Outer Apply (
+				-- Prior Row
+				Select	Max([SysEnd]) As [PriorDate]
+				From	[AppGeneral].[HelpSubject] For System_Time All
+				Where	[HelpId] = A.[HelpId] And
+						[SysEnd] <= A.[SysStart]) P
+			Outer Apply (
+				-- Next Row
+				Select	Min([SysStart]) As [NextDate]
+				From	[AppGeneral].[HelpSubject] For System_Time All
+				Where	[HelpId] = A.[HelpId] And
+						[SysStart] >= A.[SysEnd]) N)
 Select	[HelpId],
 		[HelpSubject],
 		[HelpToolTip],
@@ -67,8 +48,12 @@ Select	[HelpId],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
-		[IsCurrent] -- Is this the Current State of the record
+		[IsCurrent]
 From	[Data]
+Where	(@HelpId is Null or @HelpId = [HelpId]) And
+		(@AsOfUtcDate is Null Or [IsCurrent] = 1) And
+		(@IncludeHistory = 1 Or (@IncludeHistory = 0 And [IsCurrent] = 1)) And
+		(@IncludeHistory = 1 Or @IncludeDeleted = 1 Or (@IncludeDeleted = 0 And [IsDeleted] = 0))
 Order By Last_Value ([HelpSubject]) Over (
 				Partition By [HelpId]
 				Order By [ModifiedOn]
