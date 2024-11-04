@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface ICatalogIndex : IDbCatalogKey
+    public interface ICatalogIndex : ICatalogKey
     { }
 
     /// <inheritdoc/>
-    public class CatalogIndex : DbCatalogKey, ICatalogIndex,
+    public class CatalogIndex : CatalogKey, ICatalogIndex,
         IKeyEquality<ICatalogIndex>, IKeyEquality<CatalogIndex>
     {
-        /// <inheritdoc cref="DbCatalogKey(IDbCatalogKey)"/>
+        /// <inheritdoc cref="CatalogKey(ICatalogKey)"/>
         public CatalogIndex(ICatalogIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ICatalogIndex? other)
-        { return other is IDbCatalogKey value && Equals(new DbCatalogKey(value)); }
+        { return other is ICatalogKey value && Equals(new CatalogKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(CatalogIndex? other)
-        { return other is IDbCatalogKey value && Equals(new DbCatalogKey(value)); }
+        { return other is ICatalogKey value && Equals(new CatalogKey(value)); }
 
         /// <summary>
         /// Convert CatalogIndex to a DataIndex
@@ -31,5 +31,5 @@ namespace DataDictionary.BusinessLayer.Database
         { return new DataIndex() { SystemId = source.CatalogId ?? Guid.Empty }; }
     }
 
-  
+
 }

@@ -1,11 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
+using DataDictionary.DataLayer.AppCatalog;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     class TableData: DbTableCollection<TableValue>,
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, ITableData, INamedScopeSourceData
     {
@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -65,7 +65,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
     }

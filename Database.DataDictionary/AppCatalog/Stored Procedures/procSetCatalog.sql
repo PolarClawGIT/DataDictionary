@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseCatalog]
+﻿CREATE PROCEDURE [AppCatalog].[procSetCatalog]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDatabaseCatalog] ReadOnly
+		@Data [AppCatalog].[typeCatalog] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -39,7 +39,7 @@ Begin Try
 			NullIf(Trim(D.[SourceDatabaseName]), '') As [SourceDatabaseName],
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog_AK] A
+			Left Join [AppCatalog].[Catalog_AK] A
 			On	D.[SourceDatabaseName] = A.[DatabaseName]
 			Cross apply (
 				Select	Coalesce(A.[CatalogId], D.[CatalogId], @CatalogId, NewId()) As [CatalogId]) X
@@ -47,7 +47,7 @@ Begin Try
 			X.[CatalogId] = @CatalogId or
 			X.[CatalogId] In (
 			Select	A.[CatalogId]
-			From	[App_DataDictionary].[DatabaseCatalog] A
+			From	[AppCatalog].[Catalog] A
 					Left Join [App_DataDictionary].[ModelCatalog] C
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -63,7 +63,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -79,7 +79,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -95,7 +95,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -111,7 +111,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -127,7 +127,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -143,7 +143,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -159,7 +159,7 @@ Begin Try
 	Where	S.[CatalogId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -168,14 +168,14 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	From	[App_DataDictionary].[DatabaseSchema] T
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			Inner Join [AppCatalog].[Catalog_AK] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
 			T.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -184,14 +184,14 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
 	From	[App_DataDictionary].[DatabaseExtendedProperty] T
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			Inner Join [AppCatalog].[Catalog_AK] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
 			T.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -200,28 +200,28 @@ Begin Try
 
 	Delete From [App_DataDictionary].[ModelCatalog]
 	From	[App_DataDictionary].[ModelCatalog] T
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			Inner Join [AppCatalog].[Catalog_AK] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
 			T.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseCatalog]
-	From	[App_DataDictionary].[DatabaseCatalog] T
+	Delete From [AppCatalog].[Catalog]
+	From	[AppCatalog].[Catalog] T
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
 			T.[CatalogId] In (
 			Select	A.[CatalogId]
-			From	[App_DataDictionary].[DatabaseCatalog] A
+			From	[AppCatalog].[Catalog] A
 					Left Join [App_DataDictionary].[ModelCatalog] C
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -243,19 +243,19 @@ Begin Try
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate]
-		From	[App_DataDictionary].[DatabaseCatalog])
-	Update [App_DataDictionary].[DatabaseCatalog]
+		From	[AppCatalog].[Catalog])
+	Update [AppCatalog].[Catalog]
 	Set		[CatalogTitle] = S.[CatalogTitle],
 			[CatalogDescription] = S.[CatalogDescription],
 			[SourceServerName] = S.[SourceServerName],
 			[SourceDatabaseName] = S.[SourceDatabaseName],
 			[SourceDate] = S.[SourceDate]
-	From	[App_DataDictionary].[DatabaseCatalog] T
+	From	[AppCatalog].[Catalog] T
 			Inner Join [Delta] S
 			On	T.[CatalogId] = S.[CatalogId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseCatalog] (
+	Insert Into [AppCatalog].[Catalog] (
 			[CatalogId],
 			[CatalogTitle],
 			[CatalogDescription],
@@ -269,7 +269,7 @@ Begin Try
 			S.[SourceDatabaseName],
 			S.[SourceDate]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseCatalog] T
+			Left Join [AppCatalog].[Catalog] T
 			On	S.[CatalogId] = T.[CatalogId]
 	Where	T.[CatalogId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

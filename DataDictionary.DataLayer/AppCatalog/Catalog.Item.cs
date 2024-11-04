@@ -1,14 +1,15 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.DatabaseData.Catalog
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyName, IDbCatalogKey, IDbIsSystem, IScopeType
+    public interface ICatalogItem : ICatalogKeyName, ICatalogKey, IDbIsSystem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.
@@ -40,13 +41,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// Implementation for Database Catalog Item.
     /// </summary>
     [Serializable]
-    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, ISerializable
+    public class CatalogItem : BindingTableRow, ICatalogItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } protected set { SetValue(nameof(CatalogId), value); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(SourceDatabaseName)); }  }
+        public string? DatabaseName { get { return GetValue(nameof(SourceDatabaseName)); } }
 
         /// <inheritdoc/>
         public string? CatalogTitle { get { return GetValue(nameof(CatalogTitle)); } set { SetValue(nameof(CatalogTitle), value); } }
@@ -66,13 +67,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         /// <inheritdoc/>
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
 
-        /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.Database;
-
         /// <summary>
-        /// Constructor for DbCatalogItem.
+        /// Constructor for CatalogItem.
         /// </summary>
-        public DbCatalogItem() : base()
+        public CatalogItem() : base()
         { CatalogId = Guid.NewGuid(); }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -91,17 +89,17 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
 
         #region ISerializable
         /// <summary>
-        /// Serialization Constructor for DbCatalogItem.
+        /// Serialization Constructor for CatalogItem.
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbCatalogItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected CatalogItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbCatalogKeyName(this).ToString(); }
+        { return new CatalogKeyName(this).ToString(); }
     }
 
 }

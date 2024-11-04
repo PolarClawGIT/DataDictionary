@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbTableType, IScopeType
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, ICatalogKey, IDbIsSystem, IDbTableType, IScopeType
     { }
 
     /// <summary>

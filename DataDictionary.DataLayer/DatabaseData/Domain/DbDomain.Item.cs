@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IScopeType
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, ICatalogKey, IDbDomain, IScopeType
     {
         /// <summary>
         /// The Default value for the Domain

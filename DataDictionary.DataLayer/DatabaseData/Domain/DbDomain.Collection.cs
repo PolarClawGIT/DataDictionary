@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
@@ -19,13 +19,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DbDomainCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
-        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbDomainKeyName>
-        where TItem : BindingTableRow, IDbDomainItem, IDbCatalogKey, IDbDomainKeyName, new()
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
+        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<IDbDomainKeyName>
+        where TItem : BindingTableRow, IDbDomainItem, ICatalogKey, IDbDomainKeyName, new()
     {
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         { return LoadCommand(connection, (modelId.ModelId, null, null, null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName, string? schemaName, string? domainName) parameters)
@@ -60,7 +60,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         { return SaveCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
         { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
 
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
@@ -77,9 +77,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(ICatalogKey catalogItem)
         {
-            DbCatalogKey key = new DbCatalogKey(catalogItem);
+            CatalogKey key = new CatalogKey(catalogItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.AppGeneral;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.Library;

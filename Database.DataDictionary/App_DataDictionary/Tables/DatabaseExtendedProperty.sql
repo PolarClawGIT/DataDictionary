@@ -21,7 +21,7 @@
    		PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 		-- Keys
 		CONSTRAINT [PK_DatabaseExtendedProperty] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [ExtendedPropertyId] ASC),
-		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [AppCatalog].[Catalog] ([CatalogId]),
 )
 GO
 -- There is no key structure returned by the function [fn_listextendedproperty]

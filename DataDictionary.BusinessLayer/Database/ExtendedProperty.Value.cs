@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database

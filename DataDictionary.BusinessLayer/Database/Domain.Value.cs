@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.Resource.Enumerations;

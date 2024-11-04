@@ -35,7 +35,7 @@ Begin Try
 			X.[CatalogId],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
 	From	@Data D
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			Inner Join [AppCatalog].[Catalog_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName]
 			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
@@ -47,7 +47,7 @@ Begin Try
 			X.[CatalogId] = @CatalogId or
 			X.[CatalogId] In (
 			Select	A.[CatalogId]
-			From	[App_DataDictionary].[DatabaseCatalog] A
+			From	[AppCatalog].[Catalog] A
 					Left Join [App_DataDictionary].[ModelCatalog] C
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -63,7 +63,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -79,7 +79,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -95,7 +95,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -111,7 +111,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -127,7 +127,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -143,7 +143,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -159,7 +159,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -174,7 +174,7 @@ Begin Try
 	Where	S.[SchemaId] is Null And
 			T.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And

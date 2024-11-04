@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;

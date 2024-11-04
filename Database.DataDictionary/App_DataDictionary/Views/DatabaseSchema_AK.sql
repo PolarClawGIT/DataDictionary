@@ -6,7 +6,7 @@ Select	C.[CatalogId],
 		S.[SchemaId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName]
-From	[App_DataDictionary].[DatabaseCatalog] C
+From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[DatabaseSchema] S
 		On	C.[CatalogId] = S.[CatalogId]
 GO

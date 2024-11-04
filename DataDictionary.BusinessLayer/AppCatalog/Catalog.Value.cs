@@ -1,19 +1,18 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface ICatalogValue : IDbCatalogItem, ICatalogIndex, ICatalogIndexName,
-        IBindingTableRow, IBindingRowState, IBindingPropertyChanged
+    public interface ICatalogValue : ICatalogItem, ICatalogIndex, ICatalogIndexName,
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged, IScopeType
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : DbCatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
+    public class CatalogValue : CatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -25,6 +24,9 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.Database;
 
         /// <inheritdoc/>
         public CatalogValue() : base()

@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     class ConstraintData: DbConstraintCollection<ConstraintValue>, IConstraintData,
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData
     {
@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Constraint", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
     }
 }

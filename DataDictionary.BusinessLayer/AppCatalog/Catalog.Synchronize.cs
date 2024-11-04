@@ -1,11 +1,12 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
 
     /// <summary>
@@ -13,14 +14,14 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>
     {
-        /// <inheritdoc cref="DbCatalogItem.CatalogTitle"/>
+        /// <inheritdoc cref="CatalogItem.CatalogTitle"/>
         public String CatalogTitle
         {
             get { return Source.CatalogTitle ?? String.Empty; }
             set { Source.CatalogTitle = value; }
         }
 
-        /// <inheritdoc cref="DbCatalogItem.DatabaseName"/>
+        /// <inheritdoc cref="CatalogItem.DatabaseName"/>
         public String DatabaseName
         { get { return Source.DatabaseName ?? String.Empty; } }
 
@@ -31,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         protected override void Source_OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName))
+            if (e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName))
             { OnPropertyChanged(e.PropertyName); }
         }
     }
@@ -42,10 +43,10 @@ namespace DataDictionary.BusinessLayer.Database
     public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogIndex>
     {
         /// <summary>
-        /// Concrete class for the Abstract DbCatalogCollection
+        /// Concrete class for the Abstract CatalogCollection
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
-        class SourceCollection<TValue> : DbCatalogCollection<TValue>
+        class SourceCollection<TValue> : CatalogCollection<TValue>
             where TValue : CatalogValue, ICatalogValue, new()
         { }
 
@@ -140,7 +141,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            IDbCatalogKey dbKey = new DbCatalogKey(key);
+            ICatalogKey dbKey = new CatalogKey(key);
 
             work.Add(new WorkItem()
             {

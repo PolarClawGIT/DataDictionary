@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using Microsoft.Data.SqlClient;
 using System;
@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         Command PropertyCommand(IConnection connection);
     }
 
-    internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter, IDbCatalogKey
+    internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter, ICatalogKey
     {
         /// <inheritdoc/>
         public required Guid? CatalogId { get; init; }

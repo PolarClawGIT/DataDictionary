@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
@@ -7,7 +7,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Object Reference Key
     /// </summary>
-    public interface IDbConstraintKeyReferenced : IKey, IDbCatalogKeyName
+    public interface IDbConstraintKeyReferenced : IKey, ICatalogKeyName
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Implementation of the Database Object Reference Key
     /// </summary>
-    public class DbConstraintKeyReferenced : DbCatalogKeyName, IDbConstraintKeyReferenced,
+    public class DbConstraintKeyReferenced : CatalogKeyName, IDbConstraintKeyReferenced,
         IKeyComparable<IDbConstraintKeyReferenced>, IKeyEquality<IDbTableKeyName>
     {
         /// <inheritdoc/>
@@ -65,7 +65,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             return
                 other is IDbConstraintKeyReferenced &&
-                new DbCatalogKeyName(this).Equals(other) &&
+                new CatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(ReferencedTableName) &&
@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             return
                 other is IDbTableKeyName &&
-                new DbCatalogKeyName(this).Equals(other) &&
+                new CatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(other.SchemaName) &&
                 !string.IsNullOrEmpty(ReferencedTableName) &&
@@ -99,7 +99,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public Int32 CompareTo(IDbConstraintKeyReferenced? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0)
+            else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0)
             { return value; }
             else
             {

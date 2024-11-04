@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
@@ -17,17 +17,17 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IDbCatalogKey>,
-        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveItem<IDbCatalogKey>
-        where TItem : BindingTableRow, IDbExtendedPropertyItem, IDbCatalogKey, new()
+        IReadData<IModelKey>, IReadData<ICatalogKey>,
+        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
+        IRemoveItem<ICatalogKey>
+        where TItem : BindingTableRow, IDbExtendedPropertyItem, ICatalogKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, (modelKey.ModelId, null, null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? propertyId, string? catalogName) parameters)
@@ -47,7 +47,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         { return SaveCommand(connection, (modelKey.ModelId, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
         { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
 
         /// <inheritdoc/>
@@ -63,9 +63,9 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(ICatalogKey catalogItem)
         {
-            DbCatalogKey key = new DbCatalogKey(catalogItem);
+            CatalogKey key = new CatalogKey(catalogItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System.Data;
 using System.Runtime.Serialization;
@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbConstraintColumnKeyReferenced
+    public interface IDbConstraintColumnItem : IDbConstraintKeyName, ICatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbConstraintColumnKeyReferenced
     { }
 
     /// <summary>

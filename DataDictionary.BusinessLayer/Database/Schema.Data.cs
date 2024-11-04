@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
+using DataDictionary.DataLayer.AppCatalog;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -15,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     class SchemaData : DbSchemaCollection<SchemaValue>,
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, ISchemaData,
         INamedScopeSourceData
@@ -25,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -35,7 +36,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -50,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Database
             return INamedScopeSourceData.LoadNamedScope<SchemaData,SchemaValue>
                 (this, addNamedScope, 
                 (value) => Database.DbCatalogs.
-                    FirstOrDefault(w => new DbCatalogKeyName(value).Equals(w)));
+                    FirstOrDefault(w => new CatalogKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>
@@ -65,7 +66,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
     }

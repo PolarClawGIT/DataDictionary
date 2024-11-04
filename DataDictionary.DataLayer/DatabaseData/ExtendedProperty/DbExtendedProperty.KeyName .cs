@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for the Database Extended Property Name Key
     /// </summary>
-    public interface IDbExtendedPropertyKeyName : IKey, IDbCatalogKeyName
+    public interface IDbExtendedPropertyKeyName : IKey, ICatalogKeyName
     {
         /// <summary>
         /// Level 0 (Catalog) Name parameter
@@ -38,7 +38,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Implementation for the Database Extended Property Name Key
     /// </summary>
-    public class DbExtendedPropertyKeyName : DbCatalogKeyName, IDbExtendedPropertyKeyName, IKeyComparable<IDbExtendedPropertyKeyName>
+    public class DbExtendedPropertyKeyName : CatalogKeyName, IDbExtendedPropertyKeyName, IKeyComparable<IDbExtendedPropertyKeyName>
     {
         /// <inheritdoc/>
         public String Level0Name { get; init; } = string.Empty;
@@ -137,7 +137,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         {
             return
                 other is IDbExtendedPropertyKeyName &&
-                new DbCatalogKeyName(this).Equals(other) &&
+                new CatalogKeyName(this).Equals(other) &&
                 ((String.IsNullOrWhiteSpace(Level0Name) &&
                   String.IsNullOrWhiteSpace(other.Level0Name)) ||
                   Level0Name.Equals(other.Level0Name, KeyExtension.CompareString)) &&
@@ -157,7 +157,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public int CompareTo(IDbExtendedPropertyKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+            else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
             else if (string.Compare(Level0Name, other.Level0Name, true) is int level0 && level0 != 0) { return level0; }
             else if (string.Compare(Level1Name, other.Level1Name, true) is int level1 && level0 != 0) { return level1; }
             { return string.Compare(Level2Name, other.Level2Name, true); }

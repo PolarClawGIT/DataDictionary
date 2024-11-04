@@ -25,7 +25,7 @@ Select	C.[CatalogId],
 From	[App_DataDictionary].[DatabaseExtendedProperty] D
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
-		Inner Join [App_DataDictionary].[DatabaseCatalog] C
+		Inner Join [AppCatalog].[Catalog] C
 		On	D.[CatalogId] = C.[CatalogId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And

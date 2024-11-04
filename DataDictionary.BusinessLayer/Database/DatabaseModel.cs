@@ -1,11 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppCatalog;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -13,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog data
     /// </summary>
     public interface IDatabaseModel :
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IDeleteData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>, IDeleteData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -218,7 +219,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey));
@@ -241,7 +242,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
@@ -311,7 +312,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DbCatalogKey key = new DbCatalogKey(new DbCatalogItem());
+            CatalogKey key = new CatalogKey(new CatalogItem());
 
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
@@ -427,7 +428,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey key)
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Delete(key));

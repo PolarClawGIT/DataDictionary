@@ -58,7 +58,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppCatalog\" />
     <Folder Include="AppLibrary\" />
     <Folder Include="AppModel\" />
     <Folder Include="AppScript\" />

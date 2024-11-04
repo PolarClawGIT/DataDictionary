@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseCatalog]
+﻿CREATE PROCEDURE [AppCatalog].[procGetCatalog]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@DatabaseName SysName = Null
@@ -13,7 +13,7 @@ Select	D.[CatalogId],
 		D.[SourceServerName],
 		D.[SourceDatabaseName],
 		D.[SourceDate]
-From	[App_DataDictionary].[DatabaseCatalog] D
+From	[AppCatalog].[Catalog] D
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And

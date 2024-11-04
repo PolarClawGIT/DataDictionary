@@ -1,5 +1,5 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDatabaseCatalog] AS TABLE (
-	-- TIP: This matches the C# DataTable structure
+﻿CREATE TYPE [AppCatalog].[typeCatalog] AS TABLE (
+	-- TIP: This matches the C# DataTable structure and results of the Get method.
 	[CatalogId]            UniqueIdentifier Null,
 	[CatalogTitle]         [App_DataDictionary].[typeTitle] Null,
 	[CatalogDescription]   [App_DataDictionary].[typeDescription] Null,

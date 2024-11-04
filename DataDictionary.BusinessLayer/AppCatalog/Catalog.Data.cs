@@ -1,11 +1,11 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
-using System.ComponentModel;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Wrapper of Catalog Data (The Database)
@@ -13,9 +13,9 @@ namespace DataDictionary.BusinessLayer.Database
     public interface ICatalogData : IBindingData<CatalogValue>
     { }
 
-    class CatalogData : DbCatalogCollection<CatalogValue>,
+    class CatalogData : CatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         IDatabaseModelItem, ICatalogData,
         INamedScopeSourceData
     {
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -58,12 +58,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
+        { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
 
     }

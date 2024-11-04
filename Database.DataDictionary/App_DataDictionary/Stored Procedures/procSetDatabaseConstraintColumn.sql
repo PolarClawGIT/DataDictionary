@@ -67,7 +67,7 @@ Begin Try
 			X.[CatalogId] = @CatalogId or
 			X.[CatalogId] In (
 			Select	A.[CatalogId]
-			From	[App_DataDictionary].[DatabaseCatalog] A
+			From	[AppCatalog].[Catalog] A
 					Left Join [App_DataDictionary].[ModelCatalog] C
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
@@ -83,7 +83,7 @@ Begin Try
 	Where	S.[ConstraintColumnId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
+				From	[AppCatalog].[Catalog] A
 						Left Join [App_DataDictionary].[ModelCatalog] C
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And

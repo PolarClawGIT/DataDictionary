@@ -8,7 +8,7 @@ With [Securable] As (
 	Union
 	Select	[CatalogId] As [SecurableId],
 			[CatalogTitle] As [SecurableTitle]
-	From	[App_DataDictionary].[DatabaseCatalog]
+	From	[AppCatalog].[Catalog]
 	Union
 	Select	[LibraryId] As [SecurableId],
 			[LibraryTitle] As [SecurableTitle]

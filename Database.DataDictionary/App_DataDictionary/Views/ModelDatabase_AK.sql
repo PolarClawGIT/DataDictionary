@@ -5,7 +5,7 @@ WITH SCHEMABINDING AS
 Select	M.[ModelId],
 		C.[CatalogId],
 		C.[SourceDatabaseName] As [DatabaseName]
-From	[App_DataDictionary].[DatabaseCatalog] C
+From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[ModelCatalog] M
 		On	C.[CatalogId] = M.[CatalogId]
 GO

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
