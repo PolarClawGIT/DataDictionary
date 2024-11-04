@@ -20,29 +20,40 @@ namespace DataDictionary.DataLayer.AppCatalog
     public abstract class CatalogCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>
+        IRemoveItem<ICatalogKey>,
+        ITemporalData, ITemporalData<ICatalogKey>
         where TItem : BindingTableRow, ICatalogItem, ICatalogKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null)); }
+        { return LoadCommand(connection, (null, null, null, false, false)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey key)
+        { return LoadCommand(connection, (key.ModelId, null, null, false, false)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, (null, catalogKey.CatalogId, null)); }
+        public Command LoadCommand(IConnection connection, ICatalogKey key)
+        { return LoadCommand(connection, (null, key.CatalogId, null, false, false)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName) parameters)
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection)
+        { return LoadCommand(connection, (null, null, null, true, true)); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, ICatalogKey key)
+        { return LoadCommand(connection, (null, key.CatalogId, null, true, true)); }
+
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[AppCatalog].[procGetCatalog]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
+            command.AddParameter("@IncludeHistory", parameters.includeHistory);
+            command.AddParameter("@IncludeDeleted", parameters.includeDeleted);
             return command;
         }
 
@@ -78,6 +89,9 @@ namespace DataDictionary.DataLayer.AppCatalog
             return command;
         }
 
+
+
+
         /// <inheritdoc/>
         public virtual void Remove(ICatalogKey catalogItem)
         {
@@ -86,6 +100,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
     }
 
     /// <summary>

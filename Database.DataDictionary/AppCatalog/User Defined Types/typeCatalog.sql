@@ -5,5 +5,11 @@
 	[CatalogDescription]   [App_DataDictionary].[typeDescription] Null,
 	[SourceServerName]     SysName          Null,
 	[SourceDatabaseName]   SysName          Null,
-	[SourceDate]           DateTime         Null
+	[SourceDate]           DateTime         Null,
+	[ModifiedBy]           SysName Null,
+	[ModifiedOn]           DateTime2 (7) Null,
+	[IsInserted]           Bit Null,
+	[IsUpdated]            Bit Null,
+	[IsDeleted]            Bit Null,
+	[IsCurrent]            Bit Null
 );

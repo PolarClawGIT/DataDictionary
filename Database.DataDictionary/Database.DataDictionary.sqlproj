@@ -355,7 +355,6 @@
     <Build Include="AppCatalog\Stored Procedures\procGetCatalog.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetCatalog.sql" />
     <Build Include="AppCatalog\User Defined Types\typeCatalog.sql" />
-    <Build Include="AppCatalog\Views\Catalog_AK.sql" />
     <Build Include="HsCatalog\Tables\Catalog.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalog.sql" />

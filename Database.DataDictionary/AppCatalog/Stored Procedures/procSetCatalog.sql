@@ -39,10 +39,8 @@ Begin Try
 			NullIf(Trim(D.[SourceDatabaseName]), '') As [SourceDatabaseName],
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate]
 	From	@Data D
-			Left Join [AppCatalog].[Catalog_AK] A
-			On	D.[SourceDatabaseName] = A.[DatabaseName]
 			Cross apply (
-				Select	Coalesce(A.[CatalogId], D.[CatalogId], @CatalogId, NewId()) As [CatalogId]) X
+				Select	Coalesce(D.[CatalogId], @CatalogId, NewId()) As [CatalogId]) X
 	Where	@CatalogId is Null or
 			X.[CatalogId] = @CatalogId or
 			X.[CatalogId] In (
@@ -52,6 +50,20 @@ Begin Try
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
+
+	-- Deal with Ownership, Sets up Row Level Security
+	Insert Into [AppSecurity].[SecurableOwner] (
+			[PrincipalId],
+			[SecurableId])
+	Select	S.[PrincipalId],
+			V.[CatalogId]
+	From	@Values V
+			Cross Apply [AppSecurity].[funcAuthorization](V.[CatalogId]) S
+	Where	S.[IsCatalogOwner] = 1 And
+			S.[HasOwner] = 0 And
+			S.[PrincipalId] is not null
+	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
@@ -168,7 +180,7 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	From	[App_DataDictionary].[DatabaseSchema] T
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [AppCatalog].[Catalog] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
@@ -184,7 +196,7 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
 	From	[App_DataDictionary].[DatabaseExtendedProperty] T
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [AppCatalog].[Catalog] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
@@ -200,7 +212,7 @@ Begin Try
 
 	Delete From [App_DataDictionary].[ModelCatalog]
 	From	[App_DataDictionary].[ModelCatalog] T
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [AppCatalog].[Catalog] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]

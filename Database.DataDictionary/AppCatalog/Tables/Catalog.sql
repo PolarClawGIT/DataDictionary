@@ -23,6 +23,3 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_CatalogTitle]
     ON [AppCatalog].[Catalog]([CatalogTitle]);
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_CatalogDatabase]
-    ON [AppCatalog].[Catalog]([SourceDatabaseName]);
-GO

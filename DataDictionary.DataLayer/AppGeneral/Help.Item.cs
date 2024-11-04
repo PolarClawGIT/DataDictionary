@@ -16,14 +16,14 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// <summary>
     /// Interface for a Help Item Key and Name
     /// </summary>
-    public interface IHelpKeyItem : IHelpKey, IHelpKeyName
+    public interface IHelpKeyItem : IHelpKey, IHelpKeyName,
+        ITemporalItem
     { }
 
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKeyItem, IHelpKeyNameSpace,
-        ITemporalItem
+    public interface IHelpItem : IHelpKeyItem, IHelpKeyNameSpace
     {
         /// <summary>
         /// Body of the Help Document
@@ -133,7 +133,6 @@ namespace DataDictionary.DataLayer.AppGeneral
             new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
-            //new DataColumn(nameof(ModifiedOn), typeof(DateTimeOffset)){ AllowDBNull = true},
             new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
