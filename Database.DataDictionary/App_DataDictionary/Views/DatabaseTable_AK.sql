@@ -16,9 +16,12 @@ From	[AppCatalog].[Catalog] C
 		On	S.[SchemaId] = T.[SchemaId]
 
 GO
+/*
+-- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseTable]
     ON [App_DataDictionary].[DatabaseTable_AK]([TableId])
 GO
 CREATE UNIQUE INDEX [AK_DatabaseTable]
     ON [App_DataDictionary].[DatabaseTable_AK]([DatabaseName] ASC, [SchemaName] ASC, [TableName] ASC, [CatalogId] ASC)
 GO
+*/

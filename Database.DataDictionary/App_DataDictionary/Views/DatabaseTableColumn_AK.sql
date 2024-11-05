@@ -19,9 +19,12 @@ From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[DatabaseTableColumn] O
 		On	T.[TableId] = O.[TableId]
 GO
+/*
+-- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseTableColumn]
     ON [App_DataDictionary].[DatabaseTableColumn_AK]([ColumnId])
 GO
 CREATE UNIQUE INDEX [AK_DatabaseTableColumn]
     ON [App_DataDictionary].[DatabaseTableColumn_AK]([DatabaseName] ASC, [TableName] ASC, [SchemaName] ASC, [ColumnName] ASC, [CatalogId] ASC)
 GO
+*/

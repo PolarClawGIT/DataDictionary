@@ -1656,4 +1656,17 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[Catalog_AK]" />
   </Operation>
+  <Operation Name="Move Schema" Key="d0df01d0-4d97-4640-89bf-3e16e86e78fb" ChangeDateTime="11/05/2024 16:25:23">
+    <Property Name="ElementName" Value="[AppCatalog].[Catalog_AK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="App_DataDictionary" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c7ec1041-2152-4546-815a-43f8300a1fca" ChangeDateTime="11/05/2024 16:25:38">
+    <Property Name="ElementName" Value="[App_DataDictionary].[Catalog_AK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DatabaseCatalog_AK]" />
+  </Operation>
 </Operations>

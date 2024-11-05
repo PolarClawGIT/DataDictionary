@@ -35,7 +35,7 @@ Begin Try
 			X.[CatalogId],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
 	From	@Data D
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName]
 			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
 			On	D.[DatabaseName] = A.[DatabaseName] And

@@ -62,7 +62,7 @@ Begin Try
 			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
 			NullIf(D.[PropertyValue],'') As [PropertyValue]
 	From	@Data D
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName]
 			Left Join [App_DataDictionary].[DatabaseExtendedProperty] A
 			On	P.[CatalogId] = A.[CatalogId] And
@@ -86,7 +86,7 @@ Begin Try
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
 	From	[App_DataDictionary].[DatabaseExtendedProperty] T
-			Inner Join [AppCatalog].[Catalog_AK] P
+			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId] And

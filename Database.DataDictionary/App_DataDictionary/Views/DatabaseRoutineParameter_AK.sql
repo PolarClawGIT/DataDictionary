@@ -18,9 +18,12 @@ From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[DatabaseRoutineParameter] P
 		On	T.[RoutineId] = P.[RoutineId]
 GO
+/*
+-- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseRoutineParameter]
     ON [App_DataDictionary].[DatabaseRoutineParameter_AK]([ParameterId])
 GO
 CREATE UNIQUE INDEX [AK_DatabaseRoutineParameter]
     ON [App_DataDictionary].[DatabaseRoutineParameter_AK]([DatabaseName] ASC, [SchemaName] ASC, [RoutineName] ASC, [ParameterName] ASC, [CatalogId] ASC)
 GO
+*/

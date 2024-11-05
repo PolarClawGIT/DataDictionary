@@ -9,6 +9,9 @@ From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[ModelCatalog] M
 		On	C.[CatalogId] = M.[CatalogId]
 GO
+/*
+-- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_ModelDatabase]
     ON [App_DataDictionary].[ModelDatabase_AK]([ModelId] ASC, [DatabaseName] ASC)
 GO
+*/
