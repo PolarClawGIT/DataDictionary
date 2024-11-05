@@ -21,12 +21,24 @@ namespace Toolbox.DbContext
     /// Class containing the data needed to create a Database Connection.
     /// </summary>
     /// <remarks>This wrappers a Connection String.</remarks>
-    public class Context: IContext
+    public class Context : IContext
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
+        { ApplicationName = GetApplicationName(), };
+
+        /// <summary>
+        /// Used to set the Application Name of the Connection String.
+        /// </summary>
+        /// <returns></returns>
+        private static String GetApplicationName()
         {
-            ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assembly?
-        };
+            System.Diagnostics.FileVersionInfo value =
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(
+                    (System.Reflection.Assembly.GetEntryAssembly() ??
+                    System.Reflection.Assembly.GetExecutingAssembly()).
+                    Location);
+            return String.Format("{0}: {1}", value.ProductName, value.FileVersion);
+        }
 
         /// <summary>
         /// Name of the Database Server of the Connection
@@ -46,7 +58,7 @@ namespace Toolbox.DbContext
                 else { ConnectionBuilder.InitialCatalog = value; }
             }
         }
-        
+
         public Boolean IntegratedSecurity { get { return ConnectionBuilder.IntegratedSecurity; } set { ConnectionBuilder.IntegratedSecurity = value; } }
 
         public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
