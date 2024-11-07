@@ -26,7 +26,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseDomain] PRIMARY KEY CLUSTERED ([DomainId]),
-	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppCatalog].[Schema] ([SchemaId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseDomain]

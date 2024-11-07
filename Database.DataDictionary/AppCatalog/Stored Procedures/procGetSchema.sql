@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseSchema]
+﻿CREATE PROCEDURE [AppCatalog].[procGetSchema]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@DatabaseName SysName = Null,
@@ -12,7 +12,7 @@ Select	S.[CatalogId],
 		D.[SchemaId],
 		S.[DatabaseName],
 		D.[SchemaName]
-From	[App_DataDictionary].[DatabaseSchema] D
+From	[AppCatalog].[Schema] D
 		Inner Join [App_DataDictionary].[DatabaseSchema_AK] S
 		On	D.[SchemaId] = S.[SchemaId]
 		Left Join [App_DataDictionary].[ModelCatalog] A

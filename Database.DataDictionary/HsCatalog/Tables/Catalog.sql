@@ -7,8 +7,8 @@
 	[SourceDatabaseName] SysName Not Null,
 	[SourceDate]         DateTime Not Null,
 	[ModifiedBy]         SysName Not Null,
-	[SysStart]           DATETIME2 (7) Not Null,
-	[SysEnd]             DATETIME2 (7)  Not Null,
+	[SysStart]           DateTime2 (7) Not Null,
+	[SysEnd]             DateTime2 (7)  Not Null,
 )
 GO
 CREATE CLUSTERED INDEX [IX_Catalog]

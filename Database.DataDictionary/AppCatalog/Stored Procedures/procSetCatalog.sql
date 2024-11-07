@@ -178,8 +178,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseSchema]
-	From	[App_DataDictionary].[DatabaseSchema] T
+	Delete From [AppCatalog].[Schema]
+	From	[AppCatalog].[Schema] T
 			Inner Join [AppCatalog].[Catalog] P
 			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S

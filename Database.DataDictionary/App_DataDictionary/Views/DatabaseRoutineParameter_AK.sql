@@ -11,7 +11,7 @@ Select	C.[CatalogId],
 		T.[RoutineName],
 		P.[ParameterName]
 From	[AppCatalog].[Catalog] C
-		Inner Join [App_DataDictionary].[DatabaseSchema] S
+		Inner Join [AppCatalog].[Schema] S
 		On	C.[CatalogId] = S.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseRoutine] T
 		On	S.[SchemaId] = T.[SchemaId]

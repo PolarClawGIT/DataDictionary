@@ -14,7 +14,7 @@ Select	C.[CatalogId],
 		N.[TableName],
 		M.[ColumnName]
 From	[AppCatalog].[Catalog] C
-		Inner Join [App_DataDictionary].[DatabaseSchema] S
+		Inner Join [AppCatalog].[Schema] S
 		On	C.[CatalogId] = S.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseConstraint] T
 		On	S.[SchemaId] = T.[SchemaId]

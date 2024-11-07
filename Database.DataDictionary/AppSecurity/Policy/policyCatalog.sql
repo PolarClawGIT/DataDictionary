@@ -5,7 +5,6 @@
 		ON [AppCatalog].[Catalog] BEFORE UPDATE,
     ADD BLOCK PREDICATE [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1)
 		ON [AppCatalog].[Catalog] BEFORE DELETE
-		-- TODO Add all other Catalog tables
 	WITH (STATE = ON, SCHEMABINDING = ON)
 GO
 

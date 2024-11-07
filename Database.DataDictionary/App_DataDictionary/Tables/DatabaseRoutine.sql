@@ -11,7 +11,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseRoutine] PRIMARY KEY CLUSTERED ([RoutineId] ASC),
-	CONSTRAINT [FK_DatabaseRoutineSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [FK_DatabaseRoutineSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppCatalog].[Schema] ([SchemaId]),
     CONSTRAINT [CK_DatabaseRoutineType] CHECK ([RoutineType]='Procedure' OR [RoutineType]='Function' OR [RoutineType] IS NULL),
 )
 GO

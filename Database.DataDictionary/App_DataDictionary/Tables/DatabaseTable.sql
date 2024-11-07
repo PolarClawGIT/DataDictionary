@@ -16,7 +16,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseTable] PRIMARY KEY CLUSTERED ([TableId] ASC),
-	CONSTRAINT [FK_DatabaseTableSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [FK_DatabaseTableSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppCatalog].[Schema] ([SchemaId]),
 	CONSTRAINT [CK_DatabaseTableType] CHECK ([TableType]='View' OR [TableType]='History Table' OR [TableType]='Temporal Table' OR [TableType]='Table' OR [TableType] IS NULL),
 )
 GO

@@ -167,8 +167,8 @@ Begin Try
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 
-	Delete From [App_DataDictionary].[DatabaseSchema]
-	From	[App_DataDictionary].[DatabaseSchema] T
+	Delete From [AppCatalog].[Schema]
+	From	[AppCatalog].[Schema] T
 			Left Join @Values S
 			On	T.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
@@ -190,16 +190,16 @@ Begin Try
 		Select	[SchemaId],
 				[CatalogId],
 				[SchemaName]
-		From	[App_DataDictionary].[DatabaseSchema])
-	Update [App_DataDictionary].[DatabaseSchema]
+		From	[AppCatalog].[Schema])
+	Update [AppCatalog].[Schema]
 	Set		[CatalogId] = S.[CatalogId],
 			[SchemaName] = S.[SchemaName]
 	From	[Delta] S
-			Inner Join [App_DataDictionary].[DatabaseSchema] T
+			Inner Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseSchema] (
+	Insert Into [AppCatalog].[Schema] (
 			[SchemaId],
 			[CatalogId],
 			[SchemaName])
@@ -207,7 +207,7 @@ Begin Try
 			S.[CatalogId],
 			S.[SchemaName]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseSchema] T
+			Left Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
 	Where	T.[SchemaId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

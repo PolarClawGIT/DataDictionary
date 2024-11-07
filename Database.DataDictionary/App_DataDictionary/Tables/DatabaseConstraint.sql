@@ -15,7 +15,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseConstraint] PRIMARY KEY CLUSTERED ([ConstraintId] ASC),
-	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppCatalog].[Schema] ([SchemaId]),
 	CONSTRAINT [FK_DatabaseConstraintTable] FOREIGN KEY ([TableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
 )
 GO
