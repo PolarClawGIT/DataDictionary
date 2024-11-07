@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to get and temporary store the Information Schema of a Catalog
     /// </summary>
+    [Obsolete("Not actually used. For reference.", true)]
     public class CatalogInformationSchema : BindingTableRow,
         IReadSchema
     {
@@ -28,15 +29,26 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
 
         /// <summary>
-        /// The Date the information was pulled per the Server
+        /// The Date the database was created
         /// </summary>
-        public DateTime SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)) ?? DateTime.Now; } }
+        public DateTime CreateDate { get { return GetValue<DateTime>(nameof(CreateDate)) ?? DateTime.Now; } }
+
+        /// <summary>
+        /// Owner of the Database
+        /// </summary>
+        public String Owner { get { return GetValue(nameof(Owner)) ?? String.Empty; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CatalogInformationSchema() : base() { }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(ServerName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
-            new DataColumn(nameof(SourceDate), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(CreateDate), typeof(DateTime)){ AllowDBNull = false},
+            new DataColumn(nameof(Owner), typeof(String)){ AllowDBNull = false},
         };
 
         /// <inheritdoc/>
@@ -55,8 +67,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            //command.CommandText = DbScript.DbCatalogItem;
-            command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
+            command.CommandText = SqlScript.Catalog.InformationSchema;
             return command;
 
         }

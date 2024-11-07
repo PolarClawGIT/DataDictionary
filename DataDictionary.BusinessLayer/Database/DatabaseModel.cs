@@ -317,10 +317,8 @@ namespace DataDictionary.BusinessLayer.Database
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
-            work.Add(factory.CreateWork(
-                            workName: "Load DbCatalogs",
-                            target: catalogs,
-                            command: (conn) => catalogs.SchemaCommand(conn, key)));
+            work.Add(new WorkItem()
+            { DoWork = () => catalogs.Add(factory.Connection) });
 
             work.Add(factory.CreateWork(
                 workName: "Load DbSchemta",

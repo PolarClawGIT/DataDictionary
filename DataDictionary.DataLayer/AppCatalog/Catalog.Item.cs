@@ -3,6 +3,7 @@ using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
@@ -116,6 +117,18 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         public CatalogItem() : base()
         { CatalogId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Constructor for CatalogItem.
+        /// </summary>
+        /// <param name="connection"></param>
+        protected CatalogItem (IConnection connection) : this()
+        {
+            CatalogTitle = connection.DatabaseName;
+            SourceDatabaseName = connection.DatabaseName;
+            SourceServerName = connection.ServerName;
+            SourceDate = DateTime.Now;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

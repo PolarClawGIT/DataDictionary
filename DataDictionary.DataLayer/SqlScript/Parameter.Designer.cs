@@ -22,14 +22,14 @@ namespace DataDictionary.DataLayer.SqlScript {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Catalog {
+    internal class Parameter {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Catalog() {
+        internal Parameter() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.SqlScript {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.AppCatalog.Catalog", typeof(Catalog).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.SqlScript.Parameter", typeof(Parameter).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,44 +61,56 @@ namespace DataDictionary.DataLayer.SqlScript {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[procGetCatalog].
+        ///   Looks up a localized string similar to @AsOfUtcDate.
         /// </summary>
-        internal static string GetMethod {
+        internal static string AsOfUtcDate {
             get {
-                return ResourceManager.GetString("GetMethod", resourceCulture);
+                return ResourceManager.GetString("AsOfUtcDate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	@@ServerName As [ServerName],
-        ///	D.[name] As [DatabaseName],
-        ///	D.[create_date] As [CreateDate],
-        ///	P.[name] As [Owner]
-        ///From	[sys].[databases] D
-        ///	Left Join [sys].[server_principals] P
-        ///	On D.[owner_sid] = P.[sid].
+        ///   Looks up a localized string similar to @CatalogId.
         /// </summary>
-        internal static string InformationSchema {
+        internal static string CatalogId {
             get {
-                return ResourceManager.GetString("InformationSchema", resourceCulture);
+                return ResourceManager.GetString("CatalogId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[procSetCatalog].
+        ///   Looks up a localized string similar to @Data.
         /// </summary>
-        internal static string SetMethod {
+        internal static string Data {
             get {
-                return ResourceManager.GetString("SetMethod", resourceCulture);
+                return ResourceManager.GetString("Data", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[typeCatalog].
+        ///   Looks up a localized string similar to @IncludeDeleted.
         /// </summary>
-        internal static string TableType {
+        internal static string IncludeDeleted {
             get {
-                return ResourceManager.GetString("TableType", resourceCulture);
+                return ResourceManager.GetString("IncludeDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @IncludeHistory.
+        /// </summary>
+        internal static string IncludeHistory {
+            get {
+                return ResourceManager.GetString("IncludeHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @ModelId.
+        /// </summary>
+        internal static string ModelId {
+            get {
+                return ResourceManager.GetString("ModelId", resourceCulture);
             }
         }
     }

@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
+using Toolbox.DbContext;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
@@ -65,6 +66,9 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
-
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public void Add(IConnection connection)
+        { base.Add(new CatalogValue(connection)); }
     }
 }

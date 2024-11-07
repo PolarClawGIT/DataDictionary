@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class CatalogCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
+        IReadData, IReadData<IModelKey>, IReadData<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>,
         ITemporalData, ITemporalData<ICatalogKey>
@@ -48,23 +48,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppCatalog].[procGetCatalog]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
-            command.AddParameter("@IncludeHistory", parameters.includeHistory);
-            command.AddParameter("@IncludeDeleted", parameters.includeDeleted);
-            return command;
-        }
-
-        /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbCatalogItem;
-            command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
-            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
+            command.CommandText = SqlScript.Catalog.GetMethod;
+            command.AddParameter(SqlScript.Parameter.ModelId, parameters.modelId);
+            command.AddParameter(SqlScript.Parameter.CatalogId, parameters.catalogId);
+            command.AddParameter(SqlScript.Parameter.AsOfUtcDate, parameters.asOfUtcDate);
+            command.AddParameter(SqlScript.Parameter.IncludeHistory, parameters.includeHistory);
+            command.AddParameter(SqlScript.Parameter.IncludeDeleted, parameters.includeDeleted);
             return command;
         }
 
@@ -80,17 +69,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppCatalog].[procSetCatalog]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
+            command.CommandText = SqlScript.Catalog.SetMethod;
+            command.AddParameter(SqlScript.Parameter.ModelId, parameters.modelId);
+            command.AddParameter(SqlScript.Parameter.CatalogId, parameters.catalogId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter("@Data", "[AppCatalog].[typeCatalog]", data);
+            command.AddParameter(SqlScript.Parameter.Data, SqlScript.Catalog.TableType, data);
             return command;
         }
-
-
-
 
         /// <inheritdoc/>
         public virtual void Remove(ICatalogKey catalogItem)
@@ -102,10 +88,4 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
     }
-
-    /// <summary>
-    /// Default List/Collection of Database Catalogs Items
-    /// </summary>
-    public class DbCatalogCollection : CatalogCollection<CatalogItem>
-    { }
 }
