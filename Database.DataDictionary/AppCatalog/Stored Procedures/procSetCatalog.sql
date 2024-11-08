@@ -252,15 +252,15 @@ Begin Try
 		Select	[CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[SourceServerName],
-				[SourceDatabaseName],
+				[ServerName],
+				[DatabaseName],
 				[SourceDate]
 		From	[AppCatalog].[Catalog])
 	Update [AppCatalog].[Catalog]
 	Set		[CatalogTitle] = S.[CatalogTitle],
 			[CatalogDescription] = S.[CatalogDescription],
-			[SourceServerName] = S.[SourceServerName],
-			[SourceDatabaseName] = S.[SourceDatabaseName],
+			[ServerName] = S.[SourceServerName],
+			[DatabaseName] = S.[SourceDatabaseName],
 			[SourceDate] = S.[SourceDate]
 	From	[AppCatalog].[Catalog] T
 			Inner Join [Delta] S
@@ -271,8 +271,8 @@ Begin Try
 			[CatalogId],
 			[CatalogTitle],
 			[CatalogDescription],
-			[SourceServerName],
-			[SourceDatabaseName],
+			[ServerName],
+			[DatabaseName],
 			[SourceDate])
 	Select	S.[CatalogId],
 			S.[CatalogTitle],

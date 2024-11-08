@@ -6,7 +6,7 @@ Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[RoutineId],
 		P.[ParameterId],
-		C.[SourceDatabaseName] As [DatabaseName],
+		C.[DatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[RoutineName],
 		P.[ParameterName]

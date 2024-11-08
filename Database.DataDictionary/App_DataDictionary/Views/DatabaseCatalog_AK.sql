@@ -4,7 +4,7 @@ WITH SCHEMABINDING AS
 -- Enforces Natural Key for the Database
 -- Not required. Exists for consistency.
 Select	C.[CatalogId],
-		C.[SourceDatabaseName] As [DatabaseName]
+		C.[DatabaseName] As [DatabaseName]
 From	[AppCatalog].[Catalog] C
 
 

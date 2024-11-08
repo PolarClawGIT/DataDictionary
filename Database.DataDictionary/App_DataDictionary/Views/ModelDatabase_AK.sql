@@ -4,7 +4,7 @@ WITH SCHEMABINDING AS
 -- Allows methods to determine the correct CatalogId given the ModelId and DatabaseName.
 Select	M.[ModelId],
 		C.[CatalogId],
-		C.[SourceDatabaseName] As [DatabaseName]
+		C.[DatabaseName] As [DatabaseName]
 From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[ModelCatalog] M
 		On	C.[CatalogId] = M.[CatalogId]

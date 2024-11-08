@@ -7,8 +7,8 @@
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_CatalogId] DEFAULT (newid()),
 	[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
 	[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
-	[SourceServerName] SysName Not Null,
-	[SourceDatabaseName] SysName Not Null,
+	[ServerName] SysName Not Null,
+	[DatabaseName] SysName Not Null,
 	[SourceDate] DateTime Not Null,
 	-- Temporal History Support
 	[ModifiedBy] SysName Not Null CONSTRAINT [DF_Catalog_ModifiedBy] DEFAULT (original_login()),

@@ -6,7 +6,7 @@ Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[ConstraintId],
 		T.[TableId],
-		C.[SourceDatabaseName] As [DatabaseName],
+		C.[DatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[ConstraintName],
 		N.[TableName]

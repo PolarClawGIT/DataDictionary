@@ -4,7 +4,7 @@ WITH SCHEMABINDING AS
 -- Key components exist over multiple tables. Keys on the tables only partially enforce unique names.
 Select	C.[CatalogId],
 		S.[SchemaId],
-		C.[SourceDatabaseName] As [DatabaseName],
+		C.[DatabaseName] As [DatabaseName],
 		S.[SchemaName]
 From	[AppCatalog].[Catalog] C
 		Inner Join [AppCatalog].[Schema] S

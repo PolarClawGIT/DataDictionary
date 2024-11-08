@@ -5,7 +5,7 @@ WITH SCHEMABINDING AS
 Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[DomainId],
-		C.[SourceDatabaseName] As [DatabaseName],
+		C.[DatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[DomainName]
 From	[AppCatalog].[Catalog] C
