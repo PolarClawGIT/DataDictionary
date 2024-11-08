@@ -148,7 +148,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseTable.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTable.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
@@ -363,6 +362,10 @@
     <Build Include="HsCatalog\Tables\Schema.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogSchema.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogSchemaAuthorization.sql" />
+    <Build Include="AppCatalog\Views\CatalogAK.sql" />
+    <Build Include="AppCatalog\Views\SchemaAK.sql" />
+    <Build Include="AppGeneral\Views\HelpSubjectAK.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
