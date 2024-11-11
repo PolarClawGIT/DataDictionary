@@ -23,30 +23,29 @@ namespace DataDictionary.DataLayer.AppGeneral
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IHelpKey key)
-        { return LoadCommand(connection, (key.HelpId, null, false, false)); }
+        { return LoadCommand(connection, (key.HelpId, null, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, false, false)); }
+        { return LoadCommand(connection, (null, null, false)); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, true, true)); }
+        { return LoadCommand(connection, (null, null, true)); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IHelpKey key)
-        { return LoadCommand(connection, (key.HelpId, null, true, true)); }
+        { return LoadCommand(connection, (key.HelpId, null, true)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
+        Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppGeneral].[procGetHelpSubject]";
+            command.CommandText = SqlScript.HelpSubject.GetMethod;
+            command.AddParameter(SqlScript.HelpSubject.HelpId, parameters.helpId);
+            command.AddParameter(SqlScript.Common.AsOfUtcDate, parameters.asOfUtcDate);
+            command.AddParameter(SqlScript.Common.IncludeHistory, parameters.includeHistory);
 
-            command.AddParameter("@HelpId", parameters.helpId);
-            command.AddParameter("@AsOfUtcDate", parameters.asOfUtcDate);
-            command.AddParameter("@IncludeHistory", parameters.includeHistory);
-            command.AddParameter("@IncludeDeleted", parameters.includeDeleted);
             return command;
         }
 
@@ -62,11 +61,11 @@ namespace DataDictionary.DataLayer.AppGeneral
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppGeneral].[procSetHelpSubject]";
-            command.AddParameter("@HelpId", parameters.helpId);
+            command.CommandText = SqlScript.HelpSubject.SetMethod;
+            command.AddParameter(SqlScript.HelpSubject.HelpId, parameters.helpId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
-            command.AddParameter("@Data", "[AppGeneral].[typeHelpSubject]", data);
+            command.AddParameter(SqlScript.Common.Data, SqlScript.HelpSubject.TableType, data);
             return command;
         }
 
