@@ -1749,4 +1749,69 @@
     <Property Name="NewSchema" Value="AppCatalog" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="922f2b65-2fc0-48c1-ac44-444b93fdfaed" ChangeDateTime="11/11/2024 18:13:35">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="76f94a45-0a3e-4db3-9fad-97053cef1480" ChangeDateTime="11/11/2024 18:13:48">
+    <Property Name="ElementName" Value="[AppCatalog].[DatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Domain]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="90a9f22c-9f5b-4662-8609-fb47cc70639e" ChangeDateTime="11/11/2024 18:22:34">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain_AK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4f27665d-c230-4b03-b73e-1322d6087a8f" ChangeDateTime="11/11/2024 18:22:49">
+    <Property Name="ElementName" Value="[AppCatalog].[DatabaseDomain_AK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DomainAK]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="515090ab-df88-404f-83bd-4c9fd8e1e432" ChangeDateTime="11/11/2024 18:36:03">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procGetDatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="84c9e686-c5d2-438b-8b69-17b65336b0d3" ChangeDateTime="11/11/2024 18:36:23">
+    <Property Name="ElementName" Value="[AppCatalog].[procGetDatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetDomain]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="cc576e74-4655-4822-b36c-7a86e72998be" ChangeDateTime="11/11/2024 18:37:14">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetDatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c7557e60-2fd9-4f50-b94f-d75b2f9e2a6f" ChangeDateTime="11/11/2024 18:37:29">
+    <Property Name="ElementName" Value="[AppCatalog].[procSetDatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetDomain]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f8b4c508-c4e9-4a1f-94a5-b3cb925224db" ChangeDateTime="11/11/2024 18:38:17">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeDatabaseDomain]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeDomain]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8826e5ba-bf12-48ba-ab3f-46127f40e559" ChangeDateTime="11/11/2024 18:38:30">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeDomain]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

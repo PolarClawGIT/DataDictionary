@@ -1,6 +1,7 @@
 ﻿CREATE VIEW [AppCatalog].[CatalogAK] As
 -- Temporal View
 -- View for Catalog is not really needed. It is here for consistency.
+-- View does not enforce Alternate Keys, just returns them.
 Select	D.[CatalogId], -- AK, PK
 		D.[CatalogTitle],
 		D.[CatalogDescription],

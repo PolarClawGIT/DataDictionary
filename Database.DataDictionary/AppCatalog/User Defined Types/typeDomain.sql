@@ -1,6 +1,7 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDatabaseDomain] AS TABLE
-(
+﻿CREATE TYPE [AppCatalog].[typeDomain] AS TABLE (
+	-- TIP: This matches the C# DataTable structure and results of the Get Procedure.
 	[CatalogId]              UniqueIdentifier Null,
+	[SchemaId]               UniqueIdentifier Null,
 	[DomainId]               UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
@@ -18,5 +19,11 @@
 	[CharacterSetName]       SysName Null,
 	[CollationCatalog]       SysName Null,
 	[CollationSchema]        SysName Null,
-	[CollationName]          SysName Null
+	[CollationName]          SysName Null,
+	[ModifiedBy]             SysName Null,
+	[ModifiedOn]             DateTime2 (7) Null,
+	[IsInserted]             Bit Null,
+	[IsUpdated]              Bit Null,
+	[IsDeleted]              Bit Null,
+	[IsCurrent]              Bit Null
 )

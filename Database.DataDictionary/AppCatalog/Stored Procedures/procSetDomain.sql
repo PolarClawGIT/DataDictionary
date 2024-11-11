@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseDomain]
+﻿CREATE PROCEDURE [AppCatalog].[procSetDomain]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDatabaseDomain] ReadOnly
+		@DomainId UniqueIdentifier = Null,
+		@Data [AppCatalog].[typeDomain] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -22,6 +23,9 @@ Begin Try
 	-- Validation
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+
+--TODO: Rework matching routine. @CatalogId no longer uniquely identifies a database.
+
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -66,7 +70,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName] And
 				D.[SchemaName] = P.[SchemaName]
-			Left Join [App_DataDictionary].[DatabaseDomain_AK] A
+			Left Join [AppCatalog].[DomainAK] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[DomainName] = A.[DomainName]
@@ -85,8 +89,8 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseDomain]
-	From	[App_DataDictionary].[DatabaseDomain] T
+	Delete From [AppCatalog].[Domain]
+	From	[AppCatalog].[Domain] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S
@@ -138,8 +142,8 @@ Begin Try
 				[CollationCatalog],
 				[CollationSchema],
 				[CollationName]
-		From	[App_DataDictionary].[DatabaseDomain])
-	Update [App_DataDictionary].[DatabaseDomain]
+		From	[AppCatalog].[Domain])
+	Update [AppCatalog].[Domain]
 	Set		[SchemaId] = S.[SchemaId],
 			[DomainName] = S.[DomainName],
 			[DataType] = S.[DataType],
@@ -156,12 +160,12 @@ Begin Try
 			[CollationCatalog] = S.[CollationCatalog],
 			[CollationSchema] = S.[CollationSchema],
 			[CollationName] = S.[CollationName]
-	From	[App_DataDictionary].[DatabaseDomain] T
+	From	[AppCatalog].[Domain] T
 			Inner Join [Delta] S
 			On	T.[DomainId] = S.[DomainId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseDomain] (
+	Insert Into [AppCatalog].[Domain] (
 			[DomainId],
 			[SchemaId],
 			[DomainName],
@@ -197,7 +201,7 @@ Begin Try
 			S.[CollationSchema],
 			S.[CollationName]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseDomain] T
+			Left Join [AppCatalog].[Domain] T
 			On	S.[DomainId] = T.[DomainId]
 	Where	T.[DomainId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

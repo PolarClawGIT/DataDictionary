@@ -161,14 +161,10 @@
     <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutine.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineParameter.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutine.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutineParameter.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseDomain.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraintColumn.sql" />
@@ -215,7 +211,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
@@ -366,6 +361,14 @@
     <Build Include="AppCatalog\Views\SchemaAK.sql" />
     <Build Include="AppGeneral\Views\HelpSubjectAK.sql" />
     <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
+    <Build Include="AppCatalog\Tables\Domain.sql" />
+    <Build Include="HsCatalog\Tables\Domain.sql" />
+    <Build Include="AppCatalog\Views\DomainAK.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetDomain.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetDomain.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
+    <Build Include="AppSecurity\Functions\funcCatalogDomainAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogDomain.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -1,5 +1,5 @@
 ﻿CREATE TYPE [AppCatalog].[typeSchema] AS TABLE (
-	-- TIP: This matches the C# DataTable structure and results of the Get method.
+	-- TIP: This matches the C# DataTable structure and results of the Get Procedure.
 	[CatalogId]     UniqueIdentifier Null,
 	[SchemaId]      UniqueIdentifier Null,
 	[DatabaseName]  SysName Null,

@@ -87,8 +87,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraint] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseDomain]
-	From	[App_DataDictionary].[DatabaseDomain] T
+	Delete From [AppCatalog].[Domain]
+	From	[AppCatalog].[Domain] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S
