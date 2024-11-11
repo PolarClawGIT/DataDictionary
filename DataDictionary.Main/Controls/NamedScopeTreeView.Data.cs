@@ -122,6 +122,11 @@ namespace DataDictionary.Main.Controls
             return work;
         }
 
+        //TODO: Having performance issues building Nodes for a Database such as AdventureWorks
+        // To Replicate, import the database from Information Schema.
+        // Does not seem to have an impact when the database is loaded.
+        // The Information Schema is being worked on so this has been put on hold.
+
         public IEnumerable<WorkItem> BuildNodes(INamedScopeData treeData)
         {
             List<WorkItem> work = new List<WorkItem>();
