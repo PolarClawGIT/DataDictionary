@@ -1,11 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -39,7 +33,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String Owner { get { return GetValue(nameof(Owner)) ?? String.Empty; } }
 
         /// <summary>
-        /// 
+        /// Constructor for Catalog Information Schema
         /// </summary>
         public CatalogInformationSchema() : base() { }
 

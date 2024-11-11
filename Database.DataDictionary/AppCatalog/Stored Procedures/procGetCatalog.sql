@@ -13,7 +13,11 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysDatetime())
 
 Select	[CatalogId],
+		[CatalogTitle],
+		[CatalogDescription],
+		[ServerName],
 		[DatabaseName],
+		[SourceDate],
 		[ModifiedBy],
 		[SysStart] As [ModifiedOn],
 		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> [SysStart],1,0)) As [IsInserted],

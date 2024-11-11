@@ -26,34 +26,33 @@ namespace DataDictionary.DataLayer.AppCatalog
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null, false, false)); }
+        { return LoadCommand(connection, (null, null, null, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey key)
-        { return LoadCommand(connection, (key.ModelId, null, null, false, false)); }
+        { return LoadCommand(connection, (key.ModelId, null, null, false)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey key)
-        { return LoadCommand(connection, (null, key.CatalogId, null, false, false)); }
+        { return LoadCommand(connection, (null, key.CatalogId, null, false)); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null, true, true)); }
+        { return LoadCommand(connection, (null, null, null, true)); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey key)
-        { return LoadCommand(connection, (null, key.CatalogId, null, true, true)); }
+        { return LoadCommand(connection, (null, key.CatalogId, null, true)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, DateTime? asOfUtcDate, Boolean includeHistory, Boolean includeDeleted) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = SqlScript.Catalog.GetMethod;
-            command.AddParameter(SqlScript.Parameter.ModelId, parameters.modelId);
-            command.AddParameter(SqlScript.Parameter.CatalogId, parameters.catalogId);
-            command.AddParameter(SqlScript.Parameter.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(SqlScript.Parameter.IncludeHistory, parameters.includeHistory);
-            command.AddParameter(SqlScript.Parameter.IncludeDeleted, parameters.includeDeleted);
+            command.AddParameter(SqlScript.Model.ModelId, parameters.modelId);
+            command.AddParameter(SqlScript.Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(SqlScript.Common.AsOfUtcDate, parameters.asOfUtcDate);
+            command.AddParameter(SqlScript.Common.IncludeHistory, parameters.includeHistory);
             return command;
         }
 
@@ -70,11 +69,11 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = SqlScript.Catalog.SetMethod;
-            command.AddParameter(SqlScript.Parameter.ModelId, parameters.modelId);
-            command.AddParameter(SqlScript.Parameter.CatalogId, parameters.catalogId);
+            command.AddParameter(SqlScript.Model.ModelId, parameters.modelId);
+            command.AddParameter(SqlScript.Catalog.CatalogId, parameters.catalogId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter(SqlScript.Parameter.Data, SqlScript.Catalog.TableType, data);
+            command.AddParameter(SqlScript.Common.Data, SqlScript.Catalog.TableType, data);
             return command;
         }
 

@@ -1,7 +1,12 @@
 ﻿CREATE VIEW [AppCatalog].[CatalogAK] As
 -- Temporal View
+-- View for Catalog is not really needed. It is here for consistency.
 Select	D.[CatalogId], -- AK, PK
+		D.[CatalogTitle],
+		D.[CatalogDescription],
+		D.[ServerName],
 		D.[DatabaseName], -- AK
+		D.[SourceDate],
 		D.[ModifiedBy],
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
