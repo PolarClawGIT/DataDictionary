@@ -1,13 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
-using System.ComponentModel;
 using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Interface representing Catalog Schema data
@@ -15,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface ISchemaData : IBindingData<SchemaValue>
     { }
 
-    class SchemaData : DbSchemaCollection<SchemaValue>,
+    class SchemaData : SchemaCollection<SchemaValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, ISchemaData,
@@ -48,8 +46,8 @@ namespace DataDictionary.BusinessLayer.Database
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSourceData.LoadNamedScope<SchemaData,SchemaValue>
-                (this, addNamedScope, 
+            return INamedScopeSourceData.LoadNamedScope<SchemaData, SchemaValue>
+                (this, addNamedScope,
                 (value) => Database.DbCatalogs.
                     FirstOrDefault(w => new CatalogKeyName(value).Equals(w)));
         }
@@ -62,12 +60,17 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        internal void Load(ICatalogKey catalogKey, IEnumerable<SchemaInformationSchema> data)
+        {
+            foreach (var item in data)
+            { Add(new SchemaValue(catalogKey, item)); }
+        }
     }
 }

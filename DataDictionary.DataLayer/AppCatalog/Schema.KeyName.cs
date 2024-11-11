@@ -1,15 +1,15 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Schema;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
-/// Interface for the Database Schema Key
+/// Interface for the Catalog Schema Key
 /// </summary>
-public interface IDbSchemaKeyName : IKey, ICatalogKeyName
+public interface ISchemaKeyName : IKey, ICatalogKeyName
 {
     /// <summary>
-    /// Name of the Database Schema
+    /// Name of the Catalog Schema
     /// </summary>
     String? SchemaName { get; }
 }
@@ -17,22 +17,22 @@ public interface IDbSchemaKeyName : IKey, ICatalogKeyName
 /// <summary>
 /// Implementation of the Database Schema Key
 /// </summary>
-public class DbSchemaKeyName : CatalogKeyName, IDbSchemaKeyName,
-    IKeyComparable<IDbSchemaKeyName>, IKeyComparable<DbSchemaKeyName>
+public class SchemaKeyName : CatalogKeyName, ISchemaKeyName,
+    IKeyComparable<ISchemaKeyName>, IKeyComparable<SchemaKeyName>
 {
     /// <inheritdoc/>
     public string SchemaName { get; init; } = string.Empty;
 
     /// <summary>
-    /// Constructor for a blank Database Scheme Key
+    /// Constructor for a blank Catalog Scheme Key
     /// </summary>
-    protected internal DbSchemaKeyName() : base() { }
+    protected internal SchemaKeyName() : base() { }
 
     /// <summary>
-    /// Constructor for the Database Scheme Key
+    /// Constructor for the Catalog Scheme Key
     /// </summary>
     /// <param name="source"></param>
-    public DbSchemaKeyName(IDbSchemaKeyName source) : base(source)
+    public SchemaKeyName(ISchemaKeyName source) : base(source)
     {
         if (source.SchemaName is string) { SchemaName = source.SchemaName; }
         else { SchemaName = string.Empty; }
@@ -40,10 +40,10 @@ public class DbSchemaKeyName : CatalogKeyName, IDbSchemaKeyName,
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbSchemaKeyName? other)
+    public Boolean Equals(SchemaKeyName? other)
     {
         return
-            other is DbSchemaKeyName &&
+            other is SchemaKeyName &&
             new CatalogKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(SchemaName) &&
             !string.IsNullOrEmpty(other.SchemaName) &&
@@ -51,15 +51,15 @@ public class DbSchemaKeyName : CatalogKeyName, IDbSchemaKeyName,
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbSchemaKeyName? other)
-    { return other is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
+    public Boolean Equals(ISchemaKeyName? other)
+    { return other is ISchemaKeyName value && Equals(new SchemaKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
+    { return obj is ISchemaKeyName value && Equals(new SchemaKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbSchemaKeyName? other)
+    public Int32 CompareTo(SchemaKeyName? other)
     {
         if (other is null) { return 1; }
         else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
@@ -67,35 +67,35 @@ public class DbSchemaKeyName : CatalogKeyName, IDbSchemaKeyName,
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbSchemaKeyName? other)
-    { if (other is IDbSchemaKeyName value) { return CompareTo(new DbSchemaKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(ISchemaKeyName? other)
+    { if (other is ISchemaKeyName value) { return CompareTo(new SchemaKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbSchemaKeyName value) { return CompareTo(new DbSchemaKeyName(value)); } else { return 1; } }
+    { if (obj is ISchemaKeyName value) { return CompareTo(new SchemaKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static Boolean operator ==(SchemaKeyName left, SchemaKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static Boolean operator !=(SchemaKeyName left, SchemaKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static Boolean operator <(SchemaKeyName left, SchemaKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static bool operator <=(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static bool operator <=(SchemaKeyName left, SchemaKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static Boolean operator >(SchemaKeyName left, SchemaKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbSchemaKeyName left, DbSchemaKeyName right)
+    public static Boolean operator >=(SchemaKeyName left, SchemaKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine;
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine;
 /// <summary>
 /// Interface for the Database Routine Key
 /// </summary>
-public interface IDbRoutineKeyName : IKey, IDbSchemaKeyName
+public interface IDbRoutineKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Routine (Procedure or Function)
@@ -17,7 +17,7 @@ public interface IDbRoutineKeyName : IKey, IDbSchemaKeyName
 /// <summary>
 /// Implementation of the Database Routine Key
 /// </summary>
-public class DbRoutineKeyName : DbSchemaKeyName, IDbRoutineKeyName,
+public class DbRoutineKeyName : SchemaKeyName, IDbRoutineKeyName,
     IKeyComparable<IDbRoutineKeyName>, IKeyComparable<DbRoutineKeyName>
 {
     /// <inheritdoc/>
@@ -43,8 +43,8 @@ public class DbRoutineKeyName : DbSchemaKeyName, IDbRoutineKeyName,
     public Boolean Equals(DbRoutineKeyName? other)
     {
         return
-            other is IDbSchemaKeyName &&
-            new DbSchemaKeyName(this).Equals(other) &&
+            other is ISchemaKeyName &&
+            new SchemaKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(RoutineName) &&
             !string.IsNullOrEmpty(other.RoutineName) &&
             RoutineName.Equals(other.RoutineName, KeyExtension.CompareString);
@@ -62,7 +62,7 @@ public class DbRoutineKeyName : DbSchemaKeyName, IDbRoutineKeyName,
     public Int32 CompareTo(DbRoutineKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbSchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(RoutineName, other.RoutineName, true); }
     }
 

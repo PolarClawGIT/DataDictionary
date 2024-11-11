@@ -320,10 +320,20 @@ namespace DataDictionary.BusinessLayer.Database
             work.Add(new WorkItem()
             { DoWork = () => catalogs.Add(factory.Connection) });
 
+            var schemaInfo = SchemaInformationSchema.Create();
             work.Add(factory.CreateWork(
-                workName: "Load DbSchemta",
-                target: schemta,
-                command: (conn) => schemta.SchemaCommand(conn, key)));
+               workName: "Load DbSchemta",
+               target: schemaInfo,
+               command: (conn) => SchemaInformationSchema.SchemaCommand(conn, key)));
+
+            work.Add(new WorkItem()
+            { DoWork = () => schemta.Load(key, schemaInfo) });
+
+
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbSchemta",
+            //    target: schemta,
+            //    command: (conn) => schemta.SchemaCommand(conn, key)));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbDomains",

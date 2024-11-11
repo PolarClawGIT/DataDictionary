@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.Threading;
@@ -50,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Database
             return INamedScopeSourceData.LoadNamedScope<RoutineData, RoutineValue>
                 (this, addNamedScope,
                 (value) => Database.DbSchemta.
-                    FirstOrDefault(w => new DbSchemaKeyName(value).Equals(w)));
+                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

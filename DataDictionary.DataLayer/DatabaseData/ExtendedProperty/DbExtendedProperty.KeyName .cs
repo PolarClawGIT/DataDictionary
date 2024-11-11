@@ -2,7 +2,6 @@
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 using System;
@@ -116,7 +115,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbSchemaKeyName source) : base(source)
+        public DbExtendedPropertyKeyName(ISchemaKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
         }

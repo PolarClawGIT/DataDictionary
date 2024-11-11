@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Table;
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table;
 /// <summary>
 /// Interface for the Database Table Key
 /// </summary>
-public interface IDbTableKeyName : IKey, IDbSchemaKeyName
+public interface IDbTableKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Table (or View)
@@ -17,7 +17,7 @@ public interface IDbTableKeyName : IKey, IDbSchemaKeyName
 /// <summary>
 /// Implementation for the Database Table Key
 /// </summary>
-public class DbTableKeyName : DbSchemaKeyName, IDbTableKeyName,
+public class DbTableKeyName : SchemaKeyName, IDbTableKeyName,
     IKeyComparable<IDbTableKeyName>, IKeyComparable<DbTableKeyName>
 {
     /// <inheritdoc/>
@@ -40,8 +40,8 @@ public class DbTableKeyName : DbSchemaKeyName, IDbTableKeyName,
     public Boolean Equals(DbTableKeyName? other)
     {
         return
-            other is IDbSchemaKeyName &&
-            new DbSchemaKeyName(this).Equals(other) &&
+            other is ISchemaKeyName &&
+            new SchemaKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(TableName) &&
             !string.IsNullOrEmpty(other.TableName) &&
             TableName.Equals(other.TableName, KeyExtension.CompareString);
@@ -59,7 +59,7 @@ public class DbTableKeyName : DbSchemaKeyName, IDbTableKeyName,
     public Int32 CompareTo(DbTableKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbSchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(TableName, other.TableName, true); }
     }
 

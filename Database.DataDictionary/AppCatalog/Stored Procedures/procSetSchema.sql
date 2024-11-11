@@ -1,6 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseSchema]
+﻿CREATE PROCEDURE [AppCatalog].[procSetSchema]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
+		@SchemaId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeSchema] ReadOnly
 As
 Set NoCount On -- Do not show record counts

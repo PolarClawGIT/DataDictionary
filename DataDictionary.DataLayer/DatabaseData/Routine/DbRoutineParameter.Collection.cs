@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -21,8 +20,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
-        where TItem : BindingTableRow, IDbRoutineParameterItem, ICatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
+        where TItem : BindingTableRow, IDbRoutineParameterItem, ICatalogKey, ISchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
@@ -105,9 +104,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(ISchemaKeyName schemaItem)
         {
-            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
+            SchemaKeyName key = new SchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

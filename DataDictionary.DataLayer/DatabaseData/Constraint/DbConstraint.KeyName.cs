@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint;
 /// <summary>
 /// Interface for the Database Constraint Key.
 /// </summary>
-public interface IDbConstraintKeyName : IKey, IDbSchemaKeyName
+public interface IDbConstraintKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Constraint
@@ -17,7 +17,7 @@ public interface IDbConstraintKeyName : IKey, IDbSchemaKeyName
 /// <summary>
 /// Implementation for the Database Constraint Key.
 /// </summary>
-public class DbConstraintKeyName : DbSchemaKeyName, IDbConstraintKeyName,
+public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
     IKeyComparable<IDbConstraintKeyName>, IKeyComparable<DbConstraintKeyName>
 {
     /// <inheritdoc/>
@@ -43,8 +43,8 @@ public class DbConstraintKeyName : DbSchemaKeyName, IDbConstraintKeyName,
     public Boolean Equals(DbConstraintKeyName? other)
     {
         return
-            other is DbSchemaKeyName &&
-            new DbSchemaKeyName(this).Equals(other) &&
+            other is SchemaKeyName &&
+            new SchemaKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(ConstraintName) &&
             !string.IsNullOrEmpty(other.ConstraintName) &&
             ConstraintName.Equals(other.ConstraintName, KeyExtension.CompareString);
@@ -62,7 +62,7 @@ public class DbConstraintKeyName : DbSchemaKeyName, IDbConstraintKeyName,
     public Int32 CompareTo(DbConstraintKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbSchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(ConstraintName, other.ConstraintName, true); }
     }
 

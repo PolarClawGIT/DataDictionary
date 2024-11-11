@@ -1,21 +1,19 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : IDbSchemaItem,
-        ISchemaIndex, ISchemaIndexName, ICatalogIndex,
+    public interface ISchemaValue : ISchemaItem,
+        ISchemaIndex, ISchemaIndexName, ICatalogIndex, IScopeType,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : DbSchemaItem, ISchemaValue, IPathValue, INamedScopeSourceValue
+    public class SchemaValue : SchemaItem, ISchemaValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -29,9 +27,18 @@ namespace DataDictionary.BusinessLayer.Database
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.DatabaseSchema;
+
+        /// <inheritdoc/>
         public SchemaValue() : base()
+        { pathValue = CreatePath(); }
+
+        internal SchemaValue(ICatalogKey catalogKey, SchemaInformationSchema schema) : base(catalogKey, schema)
+        { pathValue = CreatePath(); }
+
+        PathValue CreatePath()
         {
-            pathValue = new PathValue(this)
+            return new PathValue(this)
             {
                 GetIndex = () => new SchemaIndex(this),
                 GetPath = () => new PathIndex(DatabaseName, SchemaName),
@@ -41,5 +48,6 @@ namespace DataDictionary.BusinessLayer.Database
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaName)
             };
         }
+
     }
 }

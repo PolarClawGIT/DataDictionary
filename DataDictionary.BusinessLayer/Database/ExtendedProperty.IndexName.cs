@@ -1,8 +1,9 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
@@ -40,7 +41,7 @@ namespace DataDictionary.BusinessLayer.Database
         public ExtendedPropertyIndexName(IConstraintIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbSchemaKeyName)"/>
+        /// <inheritdoc cref="DbExtendedPropertyKeyName(ISchemaKeyName)"/>
         public ExtendedPropertyIndexName(ISchemaIndexName source) : base(source)
         { }
 

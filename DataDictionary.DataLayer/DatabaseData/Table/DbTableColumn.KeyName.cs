@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Table;
@@ -41,7 +41,7 @@ public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
     public Boolean Equals(DbTableColumnKeyName? other)
     {
         return
-            other is IDbSchemaKeyName &&
+            other is ISchemaKeyName &&
             new DbTableKeyName(this).Equals(other) &&
             !String.IsNullOrEmpty(ColumnName) &&
             !String.IsNullOrEmpty(other.ColumnName) &&

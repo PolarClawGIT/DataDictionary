@@ -37,10 +37,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DbScript.resx</DependentUpon>
     </Compile>
-    <Compile Update="SqlScript\Parameter.Designer.cs">
+    <Compile Update="SqlScript\HelpSubject.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Parameter.resx</DependentUpon>
+      <DependentUpon>HelpSubject.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SqlScript\Model.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Model.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SqlScript\Common.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Common.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SqlScript\Schema.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Schema.resx</DependentUpon>
     </Compile>
     <Compile Update="VersionNumber.cs">
       <DesignTime>True</DesignTime>
@@ -59,10 +74,22 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DbScript.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\Parameter.resx">
+    <EmbeddedResource Update="SqlScript\HelpSubject.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Parameter.Designer.cs</LastGenOutput>
+      <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SqlScript\Model.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Model.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SqlScript\Common.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Common.Designer.cs</LastGenOutput>
       <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SqlScript\Schema.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Schema.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -81,6 +108,7 @@
     <Folder Include="AppLibrary\" />
     <Folder Include="AppModel\" />
     <Folder Include="AppScript\" />
+    <Folder Include="DatabaseData\Schema\" />
   </ItemGroup>
 
 </Project>

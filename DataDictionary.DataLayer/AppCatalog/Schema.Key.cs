@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Schema
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Interface for the Database Schema Key.
+    /// Interface for the Catalog Schema Key.
     /// </summary>
-    public interface IDbSchemaKey : IKey
+    public interface ISchemaKey : IKey
     {
         /// <summary>
         /// Application ID for the Schema.
@@ -19,10 +14,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     }
 
     /// <summary>
-    /// Implementation for the Database Schema Key.
+    /// Implementation for the Catalog Schema Key.
     /// </summary>
-    public class DbSchemaKey : IDbSchemaKey,
-        IKeyEquality<IDbSchemaKey>, IKeyEquality<DbSchemaKey>
+    public class SchemaKey : ISchemaKey,
+        IKeyEquality<ISchemaKey>, IKeyEquality<SchemaKey>
     {
         /// <inheritdoc/>
         public Guid? SchemaId { get; init; } = Guid.Empty;
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         /// Constructor for the Schema Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbSchemaKey(IDbSchemaKey source) : base()
+        public SchemaKey(ISchemaKey source) : base()
         {
             if (source.SchemaId is Guid value) { SchemaId = value; }
             else { SchemaId = Guid.Empty; }
@@ -39,23 +34,23 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(DbSchemaKey? other)
-        { return other is DbSchemaKey && EqualityComparer<Guid?>.Default.Equals(SchemaId, other.SchemaId); }
+        public Boolean Equals(SchemaKey? other)
+        { return other is SchemaKey && EqualityComparer<Guid?>.Default.Equals(SchemaId, other.SchemaId); }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbSchemaKey? other)
-        { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
+        public virtual Boolean Equals(ISchemaKey? other)
+        { return other is ISchemaKey value && Equals(new SchemaKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? other)
-        { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
+        { return other is ISchemaKey value && Equals(new SchemaKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbSchemaKey left, DbSchemaKey right)
+        public static Boolean operator ==(SchemaKey left, SchemaKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbSchemaKey left, DbSchemaKey right)
+        public static Boolean operator !=(SchemaKey left, SchemaKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

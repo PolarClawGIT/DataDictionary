@@ -1,33 +1,27 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface ISchemaIndexName : IDbSchemaKeyName, ICatalogIndexName
+    public interface ISchemaIndexName : ISchemaKeyName, ICatalogIndexName
     { }
 
     /// <inheritdoc/>
-    public class SchemaIndexName : DbSchemaKeyName, ISchemaIndexName,
+    public class SchemaIndexName : SchemaKeyName, ISchemaIndexName,
         IKeyEquality<ISchemaIndexName>, IKeyEquality<SchemaIndexName>
     {
-        /// <inheritdoc cref="DbSchemaKeyName(IDbSchemaKeyName)"/>
+        /// <inheritdoc cref="SchemaKeyName(ISchemaKeyName)"/>
         public SchemaIndexName(ISchemaIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ISchemaIndexName? other)
-        { return other is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
+        { return other is ISchemaKeyName value && Equals(new SchemaKeyName(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(SchemaIndexName? other)
-        { return other is IDbSchemaKeyName value && Equals(new DbSchemaKeyName(value)); }
+        { return other is ISchemaKeyName value && Equals(new SchemaKeyName(value)); }
 
         /// <summary>
         /// Convert SchemaIndexName to a DataIndexName

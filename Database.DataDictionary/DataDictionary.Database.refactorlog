@@ -1736,4 +1736,17 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[typeSchema]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="383a2bb0-db4e-48ab-a822-7623ae465a2a" ChangeDateTime="11/11/2024 15:02:36">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetDatabaseSchema]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetSchema]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="846fa6c5-3cb1-4314-8826-ff51ee549ce2" ChangeDateTime="11/11/2024 15:02:58">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetSchema]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

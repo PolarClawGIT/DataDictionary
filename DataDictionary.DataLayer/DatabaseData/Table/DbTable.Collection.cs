@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -21,8 +20,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public abstract class DbTableCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbTableKeyName>
-        where TItem : BindingTableRow, IDbTableItem, ICatalogKey, IDbSchemaKeyName, IDbTableKeyName, new()
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IDbTableKeyName>
+        where TItem : BindingTableRow, IDbTableItem, ICatalogKey, ISchemaKeyName, IDbTableKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
@@ -86,9 +85,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(ISchemaKeyName schemaItem)
         {
-            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
+            SchemaKeyName key = new SchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

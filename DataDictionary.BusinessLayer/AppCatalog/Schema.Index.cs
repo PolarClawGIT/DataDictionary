@@ -1,28 +1,28 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface ISchemaIndex : IDbSchemaKey
+    public interface ISchemaIndex : ISchemaKey
     { }
 
     /// <inheritdoc/>
-    public class SchemaIndex : DbSchemaKey, ISchemaIndex,
+    public class SchemaIndex : SchemaKey, ISchemaIndex,
         IKeyEquality<ISchemaIndex>, IKeyEquality<SchemaIndex>
     {
-        /// <inheritdoc cref="DbSchemaKey(IDbSchemaKey)"/>
-        public SchemaIndex(IDbSchemaKey source) : base(source)
+        /// <inheritdoc cref="SchemaKey(ISchemaKey)"/>
+        public SchemaIndex(ISchemaKey source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(ISchemaIndex? other)
-        { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
+        { return other is ISchemaKey value && Equals(new SchemaKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(SchemaIndex? other)
-        { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
+        { return other is ISchemaKey value && Equals(new SchemaKey(value)); }
 
         /// <summary>
         /// Convert SchemaIndex to a DataIndex

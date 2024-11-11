@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Domain;
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain;
 /// <summary>
 /// Interface for the Database Domain (Type) Key
 /// </summary>
-public interface IDbDomainKeyName : IKey, IDbSchemaKeyName
+public interface IDbDomainKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Domain (Type)
@@ -17,7 +17,7 @@ public interface IDbDomainKeyName : IKey, IDbSchemaKeyName
 /// <summary>
 /// Implementation of the Database DomainKey
 /// </summary>
-public class DbDomainKeyName : DbSchemaKeyName, IDbDomainKeyName,
+public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
     IKeyComparable<IDbDomainKeyName>, IKeyComparable<DbDomainKeyName>
 {
     /// <inheritdoc/>
@@ -43,8 +43,8 @@ public class DbDomainKeyName : DbSchemaKeyName, IDbDomainKeyName,
     public Boolean Equals(DbDomainKeyName? other)
     {
         return
-            other is DbSchemaKeyName &&
-            new DbSchemaKeyName(this).Equals(other) &&
+            other is SchemaKeyName &&
+            new SchemaKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(DomainName) &&
             !string.IsNullOrEmpty(other.DomainName) &&
             DomainName.Equals(other.DomainName, KeyExtension.CompareString);
@@ -62,7 +62,7 @@ public class DbDomainKeyName : DbSchemaKeyName, IDbDomainKeyName,
     public Int32 CompareTo(DbDomainKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbSchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(DomainName, other.DomainName, true); }
     }
 
