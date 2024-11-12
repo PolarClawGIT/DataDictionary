@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer
         /// <summary>
         /// Date (UTC converted to Local) that the record was Modified
         /// </summary>
-        DateTime? ModifiedOn { get; }
+        DateTime? CreatedOn { get; }
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer
     public class TemporalKey : ITemporalKey, IKeyComparable<ITemporalKey>
     {
         /// <inheritdoc/>
-        public DateTime? ModifiedOn { get; } = DateTime.MaxValue;
+        public DateTime? CreatedOn { get; } = DateTime.MaxValue;
 
         /// <summary>
         /// Constructor for a blank Temporal Key
@@ -37,8 +37,8 @@ namespace DataDictionary.DataLayer
         /// <param name="source"></param>
         public TemporalKey(ITemporalKey source) : base()
         {
-            if (source.ModifiedOn is DateTime value)
-            { ModifiedOn = value; }
+            if (source.CreatedOn is DateTime value)
+            { CreatedOn = value; }
         }
 
         #region IEquatable, IComparable
@@ -47,11 +47,11 @@ namespace DataDictionary.DataLayer
         {
             return
                 (other is TemporalKey 
-                    && ModifiedOn is null 
-                    && other.ModifiedOn is null ) ||
+                    && CreatedOn is null 
+                    && other.CreatedOn is null ) ||
                 ( other is TemporalKey
-                    && ModifiedOn is DateTime thisValue
-                    && other.ModifiedOn is DateTime otherValue
+                    && CreatedOn is DateTime thisValue
+                    && other.CreatedOn is DateTime otherValue
                     && DateTime.Equals(thisValue, otherValue));
         }
 
@@ -63,8 +63,8 @@ namespace DataDictionary.DataLayer
         public Int32 CompareTo(ITemporalKey? other)
         {
             if (other is ITemporalKey value &&
-                ModifiedOn is DateTime thisValue &&
-                other.ModifiedOn is DateTime otherValue)
+                CreatedOn is DateTime thisValue &&
+                other.CreatedOn is DateTime otherValue)
             { return DateTime.Compare(thisValue, otherValue); }
             else { return 1; }
         }
@@ -99,13 +99,13 @@ namespace DataDictionary.DataLayer
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return ModifiedOn.GetHashCode(); }
+        { return CreatedOn.GetHashCode(); }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
         {
-            if (ModifiedOn is DateTime thisValue)
+            if (CreatedOn is DateTime thisValue)
             { return thisValue.ToString(); }
             else { return String.Empty; }
         }

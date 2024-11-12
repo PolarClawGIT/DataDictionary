@@ -62,14 +62,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
 
         /// <inheritdoc/>
-        public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
 
         /// <inheritdoc/>
-        public DateTime? ModifiedOn
+        public DateTime? CreatedOn
         {
             get
             {
-                DateTime? value = GetValue<DateTime>(nameof(ModifiedOn));
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
                 if (value is DateTime baseDate)
                 { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
                 else { return null; }
@@ -132,8 +132,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(ServerName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(SourceDate), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},

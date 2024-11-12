@@ -1814,4 +1814,18 @@
     <Property Name="NewSchema" Value="AppCatalog" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="8259dade-90b9-4716-ae5c-989752c173da" ChangeDateTime="11/12/2024 17:52:39">
+    <Property Name="ElementName" Value="[AppGeneral].[HelpSubject].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppGeneral].[HelpSubject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3d2dbc33-06bb-450b-8341-a75f0a10a84a" ChangeDateTime="11/12/2024 17:56:06">
+    <Property Name="ElementName" Value="[HsGeneral].[HelpSubject].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsGeneral].[HelpSubject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
 </Operations>

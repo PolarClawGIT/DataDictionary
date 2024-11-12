@@ -67,10 +67,10 @@ namespace DataDictionary.DataLayer.AppGeneral
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
 
         /// <inheritdoc/>
-        public String? ModifiedBy { get { return GetValue(nameof(ModifiedBy)); } }
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
 
         /// <inheritdoc/>
-        public DateTime? ModifiedOn
+        public DateTime? CreatedOn
         {
             get
             {
@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.AppGeneral
                 // This may not be correct. This works for now.
                 // Make a function to handle this?
                 // Look into datetimeoffset. 
-                DateTime? value = GetValue<DateTime>(nameof(ModifiedOn));
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
                 if (value is DateTime baseDate)
                 { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
                 else { return null; }
@@ -132,8 +132,8 @@ namespace DataDictionary.DataLayer.AppGeneral
             new DataColumn(nameof(HelpToolTip), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ModifiedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ModifiedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},

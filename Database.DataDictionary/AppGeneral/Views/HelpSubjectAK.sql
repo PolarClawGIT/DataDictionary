@@ -5,17 +5,24 @@ Select	D.[HelpId], -- IE, PK
 		D.[HelpToolTip],
 		D.[HelpText],
 		D.[NameSpace], --IE
-		D.[ModifiedBy], --IE
+		D.[CreatedBy],
 		D.[SysStart], -- IE, PK
 		D.[SysEnd],
-		-- Has values only if For System_Time All. Used to determine Inserted/Updated/Deleted.
-		Max(D.[SysEnd]) Over (
-			Partition By D.[HelpId]
-			Order By D.[SysEnd]
-			Rows Between 1 Preceding and 1 Preceding) As [PriorDate],
-		Min(D.[SysStart]) Over (
-			Partition by D.[HelpId]
-			Order By D.[SysStart]
-			Rows Between 1 Following and 1 Following) As [NextDate]
+		-- Temporal Status
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
+		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted]
 From	[AppGeneral].[HelpSubject] D
+		Outer Apply (
+			Select	Max([SysEnd]) As [PriorDate]
+			From	[HsGeneral].[HelpSubject]
+			Where	[SysStart] <> [SysEnd] And
+					[HelpId] = D.[HelpId] And
+					[SysStart] < D.[SysStart]) P
+		Outer Apply (
+			Select	Min([SysStart]) As [NextDate]
+			From	[HsGeneral].[HelpSubject]
+			Where	[SysStart] <> [SysEnd] And
+					[HelpId] = D.[HelpId] And
+					[SysStart] >= D.[SysEnd]) N
 GO

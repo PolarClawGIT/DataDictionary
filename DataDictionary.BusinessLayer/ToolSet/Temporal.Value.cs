@@ -21,10 +21,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     class TemporalValue : DataValue, ITemporalValue
     {
         /// <inheritdoc/>
-        public virtual String ModifiedBy { get { return GetModifiedBy(); } }
+        public virtual String CreatedBy { get { return GetModifiedBy(); } }
 
         /// <inheritdoc/>
-        public virtual DateTime? ModifiedOn { get { return GetModifiedOn(); } }
+        public virtual DateTime? CreatedOn { get { return GetModifiedOn(); } }
 
         /// <inheritdoc/>
         public Boolean? IsInserted { get { return GetIsInserted(); } }
@@ -42,12 +42,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         public virtual DbModificationType Modification { get { return GetModification(); } }
 
         /// <summary>
-        /// Function that returns the ModifiedBy of the source.
+        /// Function that returns the CreatedBy of the source.
         /// </summary>
         public required Func<String> GetModifiedBy { get; init; }
 
         /// <summary>
-        /// Function that returns the ModifiedOn of the source.
+        /// Function that returns the CreatedOn of the source.
         /// </summary>
         public required Func<DateTime> GetModifiedOn { get; init; }
 
@@ -104,8 +104,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 GetIsInserted = () => source.IsInserted ?? false,
                 GetIsUpdated = () => source.IsUpdated ?? false,
                 GetModification = () => source.Modification,
-                GetModifiedBy = () => source.ModifiedBy ?? String.Empty,
-                GetModifiedOn = () => source.ModifiedOn ?? DateTime.MaxValue,
+                GetModifiedBy = () => source.CreatedBy ?? String.Empty,
+                GetModifiedOn = () => source.CreatedOn ?? DateTime.MaxValue,
             };
         }
 

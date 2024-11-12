@@ -37,11 +37,11 @@
             isDeleteData = new CheckBox();
             isUpdatedData = new CheckBox();
             isCurrentData = new CheckBox();
-            modifiedByData = new Controls.TextBoxData();
-            modifiedOnDate = new Controls.TextBoxData();
+            createdByData = new Controls.TextBoxData();
+            createdOnDate = new Controls.TextBoxData();
             historyModificationData = new ListView();
             historyModificationColumn = new ColumnHeader();
-            historyModifiedOnColumn = new ColumnHeader();
+            historyCreatedOnColumn = new ColumnHeader();
             historyValuesData = new ListView();
             historyTitleColumn = new ColumnHeader();
             historyLastModificationColumn = new ColumnHeader();
@@ -97,8 +97,8 @@
             historyDetailLayout.Controls.Add(isDeleteData, 1, 1);
             historyDetailLayout.Controls.Add(isUpdatedData, 0, 2);
             historyDetailLayout.Controls.Add(isCurrentData, 1, 2);
-            historyDetailLayout.Controls.Add(modifiedByData, 0, 3);
-            historyDetailLayout.Controls.Add(modifiedOnDate, 0, 4);
+            historyDetailLayout.Controls.Add(createdByData, 0, 3);
+            historyDetailLayout.Controls.Add(createdOnDate, 0, 4);
             historyDetailLayout.Dock = DockStyle.Fill;
             historyDetailLayout.Location = new Point(3, 19);
             historyDetailLayout.Name = "historyDetailLayout";
@@ -169,33 +169,33 @@
             isCurrentData.Text = "Is Current";
             isCurrentData.UseVisualStyleBackColor = true;
             // 
-            // modifiedByData
+            // createdByData
             // 
-            modifiedByData.AutoSize = true;
-            historyDetailLayout.SetColumnSpan(modifiedByData, 2);
-            modifiedByData.Dock = DockStyle.Fill;
-            modifiedByData.HeaderText = "Modified By";
-            modifiedByData.Location = new Point(3, 103);
-            modifiedByData.Multiline = false;
-            modifiedByData.Name = "modifiedByData";
-            modifiedByData.ReadOnly = true;
-            modifiedByData.Size = new Size(294, 44);
-            modifiedByData.TabIndex = 3;
-            modifiedByData.WordWrap = true;
+            createdByData.AutoSize = true;
+            historyDetailLayout.SetColumnSpan(createdByData, 2);
+            createdByData.Dock = DockStyle.Fill;
+            createdByData.HeaderText = "Created By";
+            createdByData.Location = new Point(3, 103);
+            createdByData.Multiline = false;
+            createdByData.Name = "createdByData";
+            createdByData.ReadOnly = true;
+            createdByData.Size = new Size(294, 44);
+            createdByData.TabIndex = 3;
+            createdByData.WordWrap = true;
             // 
-            // modifiedOnDate
+            // createdOnDate
             // 
-            modifiedOnDate.AutoSize = true;
-            historyDetailLayout.SetColumnSpan(modifiedOnDate, 2);
-            modifiedOnDate.Dock = DockStyle.Fill;
-            modifiedOnDate.HeaderText = "Modified On";
-            modifiedOnDate.Location = new Point(3, 153);
-            modifiedOnDate.Multiline = false;
-            modifiedOnDate.Name = "modifiedOnDate";
-            modifiedOnDate.ReadOnly = true;
-            modifiedOnDate.Size = new Size(294, 44);
-            modifiedOnDate.TabIndex = 4;
-            modifiedOnDate.WordWrap = true;
+            createdOnDate.AutoSize = true;
+            historyDetailLayout.SetColumnSpan(createdOnDate, 2);
+            createdOnDate.Dock = DockStyle.Fill;
+            createdOnDate.HeaderText = "Created On";
+            createdOnDate.Location = new Point(3, 153);
+            createdOnDate.Multiline = false;
+            createdOnDate.Name = "createdOnDate";
+            createdOnDate.ReadOnly = true;
+            createdOnDate.Size = new Size(294, 44);
+            createdOnDate.TabIndex = 4;
+            createdOnDate.WordWrap = true;
             // 
             // modificationsGroup
             // 
@@ -210,7 +210,7 @@
             // 
             // historyModificationData
             // 
-            historyModificationData.Columns.AddRange(new ColumnHeader[] { historyModificationColumn, historyModifiedOnColumn });
+            historyModificationData.Columns.AddRange(new ColumnHeader[] { historyModificationColumn, historyCreatedOnColumn });
             historyModificationData.Dock = DockStyle.Fill;
             historyModificationData.Location = new Point(3, 19);
             historyModificationData.MultiSelect = false;
@@ -228,10 +228,10 @@
             historyModificationColumn.Text = "Modification";
             historyModificationColumn.Width = 125;
             // 
-            // historyModifiedOnColumn
+            // historyCreatedOnColumn
             // 
-            historyModifiedOnColumn.Text = "Modified On";
-            historyModifiedOnColumn.Width = 150;
+            historyCreatedOnColumn.Text = "Created On";
+            historyCreatedOnColumn.Width = 150;
             // 
             // historyValuesData
             // 
@@ -286,13 +286,13 @@
         private ColumnHeader historyTitleColumn;
         private ColumnHeader historyLastModificationColumn;
         private ColumnHeader historyModificationColumn;
-        private ColumnHeader historyModifiedOnColumn;
+        private ColumnHeader historyCreatedOnColumn;
         private CheckBox isInsertedData;
         private CheckBox isUpdatedData;
         private CheckBox isDeleteData;
         private CheckBox isCurrentData;
         private Controls.TextBoxData titleData;
-        private Controls.TextBoxData modifiedByData;
-        private Controls.TextBoxData modifiedOnDate;
+        private Controls.TextBoxData createdByData;
+        private Controls.TextBoxData createdOnDate;
     }
 }

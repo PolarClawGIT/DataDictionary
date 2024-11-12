@@ -8,9 +8,9 @@ namespace DataDictionary.DataLayer;
 public interface ITemporalItem: ITemporalKey
 {
     /// <summary>
-    /// Account Name that Modified this record
+    /// Account Name that Created (Insert/Update) this record
     /// </summary>
-    String? ModifiedBy { get; }
+    String? CreatedBy { get; }
 
     /// <summary>
     /// The value was modified by an Insert action

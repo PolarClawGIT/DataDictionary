@@ -4,7 +4,7 @@
     [HelpToolTip] [App_DataDictionary].[typeDescription] NULL,
     [HelpText]    NVARCHAR (MAX)   NOT NULL,
     [NameSpace]   NVARCHAR (1023)  NULL,
-    [ModifiedBy]  SysName          NOT NULL,
+    [CreatedBy]   SysName          NOT NULL,
     [SysStart]    DATETIME2 (7)    NOT NULL,
     [SysEnd]      DATETIME2 (7)    NOT NULL
 );
@@ -14,4 +14,5 @@ CREATE CLUSTERED INDEX [IX_HelpSubject]
 GO
 CREATE INDEX [FK_HelpSubject]
     ON [HsGeneral].[HelpSubject]([HelpId] ASC)
+    Include ([SysStart], [SysEnd])
 GO

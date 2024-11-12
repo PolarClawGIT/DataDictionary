@@ -369,6 +369,7 @@
     <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogDomainAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogDomain.sql" />
+    <Build Include="AppModel\Views\ModelCatalogAK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

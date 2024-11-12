@@ -5,7 +5,7 @@
 	[HelpToolTip]   [App_DataDictionary].[typeDescription] Null,
 	[HelpText]      NVarChar(Max) Null,
 	[NameSpace]     NVarChar(1023) Null,
-	[ModifiedBy]    SysName Null,
+	[CreatedBy]    SysName Null,
 	[ModifiedOn]    DateTime2 (7) Null,
 	[IsInserted]    Bit Null,
 	[IsUpdated]     Bit Null,
