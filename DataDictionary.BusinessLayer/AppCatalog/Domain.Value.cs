@@ -1,12 +1,11 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Domain;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface IDomainValue : IDbDomainItem,
@@ -27,6 +26,9 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.DatabaseDomain;
 
         /// <inheritdoc/>
         public DomainValue() : base()

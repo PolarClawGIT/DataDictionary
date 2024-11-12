@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;

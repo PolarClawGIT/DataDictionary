@@ -54,7 +54,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         public static BindingTable<CatalogInformationSchema> Create()
         { return new BindingTable<CatalogInformationSchema>(); }
 
-        /// <inheritdoc/>
         public static Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();

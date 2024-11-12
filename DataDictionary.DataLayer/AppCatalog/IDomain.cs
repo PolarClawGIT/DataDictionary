@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.DatabaseData.Domain
+﻿namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Common Properties of a Database Domain (data Type).
     /// Used by Domain, Table Column, and Routine Parameter
     /// </summary>
-    public interface IDbDomain
+    public interface IDomain
     {
         /// <summary>
         /// SQL Data Type
@@ -20,32 +14,32 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// <summary>
         /// If Character Field, Maximum Length allowed
         /// </summary>
-        Nullable<Int32> CharacterMaximumLength { get; }
+        Int32? CharacterMaximumLength { get; }
 
         /// <summary>
         /// If Character Field, Maximum Octet Length allowed
         /// </summary>
-        Nullable<Int32> CharacterOctetLength { get; }
+        Int32? CharacterOctetLength { get; }
 
         /// <summary>
         /// If Numeric, the Precision
         /// </summary>
-        Nullable<Byte> NumericPrecision { get; }
+        Byte? NumericPrecision { get; }
 
         /// <summary>
         /// If Numeric, the Radix Precision
         /// </summary>
-        Nullable<Int16> NumericPrecisionRadix { get; }
+        Int16? NumericPrecisionRadix { get; }
 
         /// <summary>
         /// If Numeric, the Scale
         /// </summary>
-        Nullable<Int32> NumericScale { get; }
+        Int32? NumericScale { get; }
 
         /// <summary>
         /// If DateTime, the Precision
         /// </summary>
-        Nullable<Int16> DateTimePrecision { get; }
+        Int16? DateTimePrecision { get; }
 
         /// <summary>
         /// If Character, the Catalog Name of the Character Set.
@@ -61,7 +55,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// If Character, the Name of the Character Set
         /// </summary>
         String? CharacterSetName { get; }
-        
+
         /// <summary>
         /// If Character, the Catalog Name of the Collation (sort) set.
         /// </summary>

@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Domain;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IDomainIndex : IDbDomainKey { }
+    public interface IDomainIndex : IDomainKey { }
 
     /// <inheritdoc/>
-    public class DomainIndex : DbDomainKey, IDomainIndex,
+    public class DomainIndex : DomainKey, IDomainIndex,
         IKeyEquality<IDomainIndex>, IKeyEquality<DomainIndex>
     {
-        /// <inheritdoc cref="DbDomainKey(IDbDomainKey)"/>
+        /// <inheritdoc cref="DomainKey(IDomainKey)"/>
         public DomainIndex(IDomainIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(IDomainIndex? other)
-        { return other is IDbDomainKey key && Equals(new DbDomainKey(key)); }
+        { return other is IDomainKey key && Equals(new DomainKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(DomainIndex? other)
-        { return other is IDbDomainKey key && Equals(new DbDomainKey(key)); }
+        { return other is IDomainKey key && Equals(new DomainKey(key)); }
 
         /// <summary>
         /// Convert DomainIndex to a DataIndex

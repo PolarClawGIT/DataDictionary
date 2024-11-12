@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Domain
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Domain Key.
     /// </summary>
-    public interface IDbDomainKey : IKey
+    public interface IDomainKey : IKey
     {
         /// <summary>
         /// Application ID for the Domain.
@@ -21,8 +16,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Implementation for the Database Domain Key.
     /// </summary>
-    public class DbDomainKey : IDbDomainKey,
-        IKeyEquality<IDbDomainKey>, IKeyEquality<DbDomainKey>
+    public class DomainKey : IDomainKey,
+        IKeyEquality<IDomainKey>, IKeyEquality<DomainKey>
     {
         /// <inheritdoc/>
         public Guid? DomainId { get; init; } = Guid.Empty;
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// Constructor for the Domain Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbDomainKey(IDbDomainKey source) : base()
+        public DomainKey(IDomainKey source) : base()
         {
             if (source.DomainId is Guid value) { DomainId = value; }
             else { DomainId = Guid.Empty; }
@@ -39,23 +34,23 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(DbDomainKey? other)
-        { return other is DbDomainKey && EqualityComparer<Guid?>.Default.Equals(DomainId, other.DomainId); }
+        public virtual Boolean Equals(DomainKey? other)
+        { return other is DomainKey && EqualityComparer<Guid?>.Default.Equals(DomainId, other.DomainId); }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbDomainKey? other)
-        { return other is IDbDomainKey value && Equals(new DbDomainKey(value)); }
+        public virtual Boolean Equals(IDomainKey? other)
+        { return other is IDomainKey value && Equals(new DomainKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? other)
-        { return other is IDbDomainKey value && Equals(new DbDomainKey(value)); }
+        { return other is IDomainKey value && Equals(new DomainKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbDomainKey left, DbDomainKey right)
+        public static Boolean operator ==(DomainKey left, DomainKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbDomainKey left, DbDomainKey right)
+        public static Boolean operator !=(DomainKey left, DomainKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

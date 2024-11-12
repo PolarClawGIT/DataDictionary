@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Domain;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// Common Properties of a Database Column and Parameters.
     /// Used by Table Column and Routine Parameter.
     /// </summary>
-    public interface IDbColumn : IDbDomain, IDbColumnPosition
+    public interface IDbColumn : IDomain, IDbColumnPosition
     {
 
     }

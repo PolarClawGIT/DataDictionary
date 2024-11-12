@@ -1,12 +1,12 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Domain;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Database Domain (Type) Key
 /// </summary>
-public interface IDbDomainKeyName : IKey, ISchemaKeyName
+public interface IDomainKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Domain (Type)
@@ -17,8 +17,8 @@ public interface IDbDomainKeyName : IKey, ISchemaKeyName
 /// <summary>
 /// Implementation of the Database DomainKey
 /// </summary>
-public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
-    IKeyComparable<IDbDomainKeyName>, IKeyComparable<DbDomainKeyName>
+public class DomainKeyName : SchemaKeyName, IDomainKeyName,
+    IKeyComparable<IDomainKeyName>, IKeyComparable<DomainKeyName>
 {
     /// <inheritdoc/>
     public String DomainName { get; init; } = string.Empty;
@@ -26,13 +26,13 @@ public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
     /// <summary>
     /// Constructor for a blank Database Domain Key
     /// </summary>
-    protected internal DbDomainKeyName() : base() { }
+    protected internal DomainKeyName() : base() { }
 
     /// <summary>
     /// Constructor for the Database Domain Key
     /// </summary>
     /// <param name="source"></param>
-    public DbDomainKeyName(IDbDomainKeyName source) : base(source)
+    public DomainKeyName(IDomainKeyName source) : base(source)
     {
         if (source.DomainName is string) { DomainName = source.DomainName; }
         else { DomainName = string.Empty; }
@@ -40,7 +40,7 @@ public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbDomainKeyName? other)
+    public Boolean Equals(DomainKeyName? other)
     {
         return
             other is SchemaKeyName &&
@@ -51,15 +51,15 @@ public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbDomainKeyName? other)
-    { return other is IDbDomainKeyName value && Equals(new DbDomainKeyName(value)); }
+    public Boolean Equals(IDomainKeyName? other)
+    { return other is IDomainKeyName value && Equals(new DomainKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbDomainKeyName value && Equals(new DbDomainKeyName(value)); }
+    { return obj is IDomainKeyName value && Equals(new DomainKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbDomainKeyName? other)
+    public Int32 CompareTo(DomainKeyName? other)
     {
         if (other is null) { return 1; }
         else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
@@ -67,35 +67,35 @@ public class DbDomainKeyName : SchemaKeyName, IDbDomainKeyName,
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbDomainKeyName? other)
-    { if (other is IDbDomainKeyName value) { return CompareTo(new DbDomainKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(IDomainKeyName? other)
+    { if (other is IDomainKeyName value) { return CompareTo(new DomainKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbDomainKeyName value) { return CompareTo(new DbDomainKeyName(value)); } else { return 1; } }
+    { if (obj is IDomainKeyName value) { return CompareTo(new DomainKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator ==(DomainKeyName left, DomainKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator !=(DomainKeyName left, DomainKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator <(DomainKeyName left, DomainKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator <=(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator <=(DomainKeyName left, DomainKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator >(DomainKeyName left, DomainKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbDomainKeyName left, DbDomainKeyName right)
+    public static Boolean operator >=(DomainKeyName left, DomainKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
 

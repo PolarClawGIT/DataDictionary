@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Domains (types) within the Model.
         /// </summary>
-        IDomainData DbDomains { get; }
+        AppCatalog.IDomainData DbDomains { get; }
 
         /// <summary>
         /// List of Database Extended Properties within the Model.
@@ -117,8 +117,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly SchemaData schemta;
 
         /// <inheritdoc/>
-        public IDomainData DbDomains { get { return domains; } }
-        private readonly DomainData domains;
+        public AppCatalog.IDomainData DbDomains { get { return domains; } }
+        private readonly AppCatalog.DomainData domains;
 
         /// <inheritdoc/>
         public IConstraintData DbConstraints { get { return constraints; } }

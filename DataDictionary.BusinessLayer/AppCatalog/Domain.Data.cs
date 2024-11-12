@@ -1,12 +1,12 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Interface representing Catalog Domain data
@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface IDomainData : IBindingData<DomainValue>
     { }
 
-    class DomainData : DbDomainCollection<DomainValue>, IDomainData,
+    class DomainData : DomainCollection<DomainValue>, IDomainData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Database
                 (value) => Database.DbSchemta.
                     FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
         }
-  
+
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
@@ -60,12 +60,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Domain", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Domain", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove Domain", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Domain", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
     }
 }

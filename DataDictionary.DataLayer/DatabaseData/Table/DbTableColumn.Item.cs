@@ -1,7 +1,6 @@
 ﻿// Ignore Spelling: Nullable
 
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -15,7 +14,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, ICatalogKey, IDbDomainKeyReference, IDbColumn, IDbTableType, IScopeType
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, ICatalogKey, IDomainKeyReference, IDbColumn, IDbTableType, IScopeType
     {
         /// <summary>
         /// Is the Column Nullable

@@ -1,7 +1,6 @@
 ﻿CREATE TYPE [AppCatalog].[typeDomain] AS TABLE (
 	-- TIP: This matches the C# DataTable structure and results of the Get Procedure.
 	[CatalogId]              UniqueIdentifier Null,
-	[SchemaId]               UniqueIdentifier Null,
 	[DomainId]               UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,

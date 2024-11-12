@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
@@ -13,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
     { }
 
     /// <summary>

@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Domain
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Domain Reference Key
     /// </summary>
-    public interface IDbDomainKeyReference : IKey
+    public interface IDomainKeyReference : IKey
     {
         /// <summary>
         /// Database Catalog Name for the Domain.
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Implementation of the Database Domain Reference Key
     /// </summary>
-    public class DbDomainKeyReference : IDbDomainKeyReference, IEquatable<IDbDomainKeyReference>
+    public class DomainKeyReference : IDomainKeyReference, IEquatable<IDomainKeyReference>
     {
         /// <inheritdoc/>
         public String DomainCatalog { get; init; }
@@ -46,7 +41,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// Constructor for the Database Domain Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbDomainKeyReference(IDbDomainKeyReference source) : base()
+        public DomainKeyReference(IDomainKeyReference source) : base()
         {
             if (source.DomainCatalog is string) { DomainCatalog = source.DomainCatalog; }
             else { DomainCatalog = string.Empty; }
@@ -60,10 +55,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(IDbDomainKeyReference? other)
+        public bool Equals(IDomainKeyReference? other)
         {
-            return 
-                other is IDbDomainKeyReference &&
+            return
+                other is IDomainKeyReference &&
                 !string.IsNullOrEmpty(DomainCatalog) &&
                 !string.IsNullOrEmpty(other.DomainCatalog) &&
                 !string.IsNullOrEmpty(DomainSchema) &&
@@ -77,10 +72,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDbDomainKeyReference value && Equals(new DbDomainKeyReference(value)); }
+        { return obj is IDomainKeyReference value && Equals(new DomainKeyReference(value)); }
 
         /// <inheritdoc/>
-        public int CompareTo(IDbDomainKeyReference? other)
+        public int CompareTo(IDomainKeyReference? other)
         {
             if (other is null) { return 1; }
             else
@@ -99,30 +94,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDbDomainKeyReference value) { return CompareTo(new DbDomainKeyReference(value)); } else { return 1; } }
+        { if (obj is IDomainKeyReference value) { return CompareTo(new DomainKeyReference(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator ==(DomainKeyReference left, DomainKeyReference right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator !=(DomainKeyReference left, DomainKeyReference right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator <(DomainKeyReference left, DomainKeyReference right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator <=(DomainKeyReference left, DomainKeyReference right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator >(DomainKeyReference left, DomainKeyReference right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DbDomainKeyReference left, DbDomainKeyReference right)
+        public static bool operator >=(DomainKeyReference left, DomainKeyReference right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
