@@ -8,17 +8,23 @@ Select	D.[CatalogId], -- AK, PK
 		D.[ServerName],
 		D.[DatabaseName], -- AK
 		D.[SourceDate],
-		D.[ModifiedBy],
+		D.[CreatedBy],
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		-- Has values only if For System_Time All. Used to determine Inserted/Updated/Deleted.
-		Max(D.[SysEnd]) Over (
-			Partition By D.[CatalogId]
-			Order By D.[SysEnd]
-			Rows Between 1 Preceding and 1 Preceding) As [PriorDate],
-		Min(D.[SysStart]) Over (
-			Partition by D.[CatalogId]
-			Order By D.[SysStart]
-			Rows Between 1 Following and 1 Following) As [NextDate]
+		-- Temporal Status
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
+		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppCatalog].[Catalog] D
+		Outer Apply (
+			Select	Max([SysEnd]) As [PriorDate]
+			From	[HsCatalog].[Catalog]
+			Where	[CatalogId] = D.[CatalogId] And
+					[SysStart] < D.[SysStart]) P
+		Outer Apply (
+			Select	Min([SysStart]) As [NextDate]
+			From	[HsCatalog].[Catalog]
+			Where	[CatalogId] = D.[CatalogId] And
+					[SysStart] >= D.[SysEnd]) N
 GO

@@ -17,9 +17,9 @@
 	[CollationCatalog]      SysName Null,
 	[CollationSchema]       SysName Null,
 	[CollationName]         SysName Null,
-	[ModifiedBy] SysName Not Null,
-	[SysStart] DATETIME2 (7) NOT NULL,
-	[SysEnd] DATETIME2 (7) NOT NULL,
+	[CreatedBy]             SysName Not Null,
+	[SysStart]              DATETIME2 (7) NOT NULL,
+	[SysEnd]                DATETIME2 (7) NOT NULL,
 )
 GO
 CREATE CLUSTERED INDEX [IX_Domain]

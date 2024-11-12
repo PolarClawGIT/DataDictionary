@@ -3,7 +3,7 @@
 	[SchemaId]           UniqueIdentifier Not Null,
 	[CatalogId]          UniqueIdentifier Not Null,
 	[SchemaName]         SysName Not Null,
-	[ModifiedBy]         SysName Not Null,
+	[CreatedBy]          SysName Not Null,
 	[SysStart]           DateTime2 (7) Not Null,
 	[SysEnd]             DateTime2 (7)  Not Null,
 )

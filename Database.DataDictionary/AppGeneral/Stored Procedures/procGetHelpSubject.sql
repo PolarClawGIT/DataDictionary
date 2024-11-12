@@ -20,7 +20,7 @@ Select	[HelpId],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
-		Convert(Bit, IIF(@AsOfUtcDate >= [SysStart] And @AsOfUtcDate < [SysEnd],1,0)) As [IsCurrent]
+		[IsCurrent]
 From	[AppGeneral].[HelpSubjectAK] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@HelpId is Null Or @HelpId = [HelpId])

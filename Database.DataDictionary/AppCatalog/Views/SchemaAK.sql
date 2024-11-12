@@ -1,23 +1,29 @@
 ﻿CREATE VIEW [AppCatalog].[SchemaAK] As
 -- Temporal View
 -- View does not enforce Alternate Keys, just returns them.
-Select	P.[CatalogId], -- AK
+Select	F.[CatalogId], -- AK
 		D.[SchemaId], -- PK
-		P.[DatabaseName], -- AK
+		F.[DatabaseName], -- AK
 		D.[SchemaName], -- AK
-		D.[ModifiedBy],
+		D.[CreatedBy],
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		-- Has values only if For System_Time All. Used to determine Inserted/Updated/Deleted.
-		Max(D.[SysEnd]) Over (
-			Partition By D.[SchemaId]
-			Order By D.[SysEnd]
-			Rows Between 1 Preceding and 1 Preceding) As [PriorDate],
-		Min(D.[SysStart]) Over (
-			Partition by D.[SchemaId]
-			Order By D.[SysStart]
-			Rows Between 1 Following and 1 Following) As [NextDate]
+		-- Temporal Status
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
+		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppCatalog].[Schema] D
+		Outer Apply (
+			Select	Max([SysEnd]) As [PriorDate]
+			From	[HsCatalog].[Schema]
+			Where	[SchemaId] = D.[SchemaId] And
+					[SysStart] < D.[SysStart]) P
+		Outer Apply (
+			Select	Min([SysStart]) As [NextDate]
+			From	[HsCatalog].[Schema]
+			Where	[SchemaId] = D.[SchemaId] And
+					[SysStart] >= D.[SysEnd]) N
 		Outer Apply (
 			-- Not specifying a For System_Time returns the current value
 			-- For System_Time <some date> returns the value for that date
@@ -28,5 +34,5 @@ From	[AppCatalog].[Schema] D
 			From	[AppCatalog].[CatalogAK]
 			Where	[CatalogId] = D.[CatalogId] And
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) P
+			Order By [SysStart] Desc) F
 GO

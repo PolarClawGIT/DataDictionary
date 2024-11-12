@@ -1828,4 +1828,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[CreatedBy]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="1ebcbf89-7f6e-4476-91e8-9de90a2858e1" ChangeDateTime="11/12/2024 18:28:31">
+    <Property Name="ElementName" Value="[AppCatalog].[Catalog].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppCatalog].[Catalog]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a2e43abe-a355-4742-8c1b-e5c40c8cdc75" ChangeDateTime="11/12/2024 18:28:51">
+    <Property Name="ElementName" Value="[AppCatalog].[Domain].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppCatalog].[Domain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="82a16e71-73cb-40a5-983e-b01ae3ac2e5c" ChangeDateTime="11/12/2024 18:29:30">
+    <Property Name="ElementName" Value="[AppCatalog].[Schema].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppCatalog].[Schema]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="45e267b7-f1d9-4b90-be3d-139f6e4424fc" ChangeDateTime="11/12/2024 18:29:54">
+    <Property Name="ElementName" Value="[HsCatalog].[Catalog].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsCatalog].[Catalog]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3cea98a9-15eb-44c0-8361-30ffbe94f8dd" ChangeDateTime="11/12/2024 18:30:14">
+    <Property Name="ElementName" Value="[HsCatalog].[Domain].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsCatalog].[Domain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="585ead68-f186-4d8e-a939-9a181317e6f6" ChangeDateTime="11/12/2024 18:30:32">
+    <Property Name="ElementName" Value="[HsCatalog].[Schema].[ModifiedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsCatalog].[Schema]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CreatedBy]" />
+  </Operation>
 </Operations>

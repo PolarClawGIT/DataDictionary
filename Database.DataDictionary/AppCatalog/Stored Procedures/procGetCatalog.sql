@@ -18,12 +18,12 @@ Select	[CatalogId],
 		[ServerName],
 		[DatabaseName],
 		[SourceDate],
-		[ModifiedBy],
-		[SysStart] As [ModifiedOn],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> [SysStart],1,0)) As [IsInserted],
-		Convert(Bit, IIF([PriorDate] = [SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> [SysEnd], 1, 0)) As [IsDeleted],
-		Convert(Bit, IIF(@AsOfUtcDate >= [SysStart] And @AsOfUtcDate < [SysEnd],1,0)) As [IsCurrent]
+		[CreatedBy],
+		[SysStart] As [CreatedOn],
+		[IsInserted],
+		[IsUpdated],
+		[IsDeleted],
+		[IsCurrent]
 From	[AppCatalog].[CatalogAK] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And

@@ -11,7 +11,7 @@
 	[DatabaseName] SysName Not Null,
 	[SourceDate] DateTime Not Null,
 	-- Temporal History Support
-	[ModifiedBy] SysName Not Null CONSTRAINT [DF_Catalog_ModifiedBy] DEFAULT (original_login()),
+	[CreatedBy] SysName Not Null CONSTRAINT [DF_Catalog_CreatedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Catalog_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Catalog_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
