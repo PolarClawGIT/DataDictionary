@@ -8,9 +8,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to get and temporary store the Information Schema of a Catalog
     /// </summary>
-    [Obsolete("Not actually used. For reference.", true)]
-    public class CatalogInformationSchema : BindingTableRow,
-        IReadSchema
+    public class CatalogInformationSchema : BindingTableRow
     {
         /// <summary>
         /// Server Name as the Server identifies itself.
@@ -57,7 +55,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return new BindingTable<CatalogInformationSchema>(); }
 
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection)
+        public static Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;

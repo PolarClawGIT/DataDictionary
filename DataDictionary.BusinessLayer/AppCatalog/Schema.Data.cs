@@ -67,10 +67,26 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Schema", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
-        internal void Load(ICatalogKey catalogKey, IEnumerable<SchemaInformationSchema> data)
+        [Obsolete("Needs rework")]
+        public IReadOnlyList<WorkItem> Import(DatabaseWork factory, ICatalogKey catalogKey)
         {
-            foreach (var item in data)
-            { Add(new SchemaValue(catalogKey, item)); }
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    var schemaInfo = SchemaInformationSchema.Create();
+                    schemaInfo.Load(
+                        factory.Connection.ExecuteReader(
+                            SchemaInformationSchema.SchemaCommand(factory.Connection)));
+
+                    foreach (var item in schemaInfo)
+                    { this.Add(new SchemaValue(catalogKey, item)); }
+                }
+            });
+
+            return work;
         }
     }
 }

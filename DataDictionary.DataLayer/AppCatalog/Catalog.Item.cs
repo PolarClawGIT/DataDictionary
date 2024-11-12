@@ -113,14 +113,16 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for CatalogItem.
         /// </summary>
-        /// <param name="connection"></param>
-        protected CatalogItem (IConnection connection) : this()
+        /// <param name="schema"></param>
+        protected CatalogItem (CatalogInformationSchema schema) : this()
         {
-            CatalogTitle = connection.DatabaseName;
-            DatabaseName = connection.DatabaseName;
-            ServerName = connection.ServerName;
+            CatalogTitle = schema.DatabaseName;
+            DatabaseName = schema.DatabaseName;
+            ServerName = schema.ServerName;
             SourceDate = DateTime.Now;
         }
+
+
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

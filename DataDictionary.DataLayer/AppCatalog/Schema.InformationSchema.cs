@@ -25,7 +25,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         public SchemaInformationSchema() : base() { }
 
-
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
@@ -47,17 +46,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Command Used to get the Information Schema
         /// </summary>
         /// <param name="connection"></param>
-        /// <param name="key"></param>
         /// <returns></returns>
-        public static Command SchemaCommand(IConnection connection, ICatalogKey key)
+        public static Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = SqlScript.Schema.InformationSchema;
             return command;
         }
-
-
 
     }
 }

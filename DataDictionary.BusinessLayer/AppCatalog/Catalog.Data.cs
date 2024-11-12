@@ -66,9 +66,29 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public void Add(IConnection connection)
-        { base.Add(new CatalogValue(connection)); }
+        [Obsolete("Needs rework")]
+        public IReadOnlyList<WorkItem> Import(DatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    var schemaInfo = CatalogInformationSchema.Create();
+                    schemaInfo.Load(
+                        factory.Connection.ExecuteReader(
+                            CatalogInformationSchema.SchemaCommand(factory.Connection)));
+
+                    foreach (var item in schemaInfo)
+                    {
+                        var value = new CatalogValue(item);
+                        this.Add(new CatalogValue(item));
+                    }
+                }
+            });
+
+            return work;
+        }
     }
 }

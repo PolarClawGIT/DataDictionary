@@ -166,7 +166,6 @@ namespace DataDictionary.DataLayer.AppCatalog
             }.GetCommand();
         }
 
-
         #region ISerializable
         /// <summary>
         /// Serialization Constructor for the Database Schema Item

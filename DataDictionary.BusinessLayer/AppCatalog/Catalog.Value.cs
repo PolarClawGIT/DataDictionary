@@ -31,22 +31,16 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         public CatalogValue() : base()
-        {
-            pathValue = new PathValue(this)
-            {
-                GetIndex = () => new CatalogIndex(this),
-                GetPath = () => new PathIndex(DatabaseName),
-                GetScope = () => Scope,
-                GetTitle = () => CatalogTitle ?? ScopeEnumeration.Cast(Scope).Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName),
-                IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
-            };
-        }
+        { pathValue = CreatePath(); }
 
         /// <inheritdoc/>
-        internal CatalogValue(IConnection connection) : base (connection)
+        [Obsolete("Needs rework")]
+        internal CatalogValue(CatalogInformationSchema schema) : base(schema)
+        { pathValue = CreatePath(); }
+
+        PathValue CreatePath()
         {
-            pathValue = new PathValue(this)
+            return new PathValue(this)
             {
                 GetIndex = () => new CatalogIndex(this),
                 GetPath = () => new PathIndex(DatabaseName),

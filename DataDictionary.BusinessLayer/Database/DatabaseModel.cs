@@ -309,31 +309,22 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
+        [Obsolete("Needs rework")]
         public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
             CatalogKey key = new CatalogKey(new CatalogItem());
 
+            //TODO: Need to re-work loading of the Db Schema
+            //The ID's are not yet assigned so they need to be looked up.
+            // Old methods assumed that the SQL Script assigned everything.
+            // That does not work with temporal data.
+
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
-            work.Add(new WorkItem()
-            { DoWork = () => catalogs.Add(factory.Connection) });
-
-            var schemaInfo = SchemaInformationSchema.Create();
-            work.Add(factory.CreateWork(
-               workName: "Load DbSchemta",
-               target: schemaInfo,
-               command: (conn) => SchemaInformationSchema.SchemaCommand(conn, key)));
-
-            work.Add(new WorkItem()
-            { DoWork = () => schemta.Load(key, schemaInfo) });
-
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbSchemta",
-            //    target: schemta,
-            //    command: (conn) => schemta.SchemaCommand(conn, key)));
+            work.AddRange(catalogs.Import(factory));
+            work.AddRange(schemta.Import(factory, key));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbDomains",
