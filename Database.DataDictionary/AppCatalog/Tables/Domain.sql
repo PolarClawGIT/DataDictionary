@@ -27,7 +27,7 @@
 	-- Keys
 	CONSTRAINT [PK_Domain] PRIMARY KEY CLUSTERED ([DomainId]),
 	CONSTRAINT [FK_DomainSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppCatalog].[Schema] ([SchemaId]),
-)WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsCatalog].[Domain]))
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsCatalog].[Domain]))
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_Domain]
     ON [AppCatalog].[Domain]([DomainName], [SchemaId]);

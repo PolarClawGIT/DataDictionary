@@ -12,5 +12,5 @@ CREATE CLUSTERED INDEX [IX_Schema]
     ON [HsCatalog].[Schema]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_Schema]
-    ON [HsCatalog].[Schema]([CatalogId] ASC)
+    ON [HsCatalog].[Schema]([SchemaId] ASC)
 GO

@@ -25,6 +25,6 @@ GO
 CREATE CLUSTERED INDEX [IX_Domain]
     ON [HsCatalog].[Domain]([SysEnd] ASC, [SysStart] ASC)
 GO
-CREATE INDEX [FK_Catalog]
+CREATE INDEX [FK_Domain]
     ON [HsCatalog].[Domain]([SchemaId] ASC)
 GO

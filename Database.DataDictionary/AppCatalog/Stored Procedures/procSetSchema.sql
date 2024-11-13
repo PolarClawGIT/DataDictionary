@@ -53,7 +53,7 @@ Begin Try
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-
+; Throw 50000, 'TODO: Fix delete see procSetDomain', 1;
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
 	From	[App_DataDictionary].[DatabaseConstraintColumn] T

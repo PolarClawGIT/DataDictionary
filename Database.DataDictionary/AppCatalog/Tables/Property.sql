@@ -1,7 +1,7 @@
-﻿CREATE TABLE [App_DataDictionary].[DatabaseExtendedProperty]
+﻿CREATE TABLE [AppCatalog].[Property]
 (
+		[PropertyId]     UniqueIdentifier Not Null CONSTRAINT [DF_PropertyId] DEFAULT (newid()),
 		[CatalogId]      UniqueIdentifier Not Null,
-		[ExtendedPropertyId] Int Not Null, -- Surrogate Key because the natural key can have Nulls
 		-- Parameters for [fn_listextendedproperty]
 		[Level0Type]     SysName Null,
 		[Level0Name]     SysName Null,
@@ -13,21 +13,21 @@
 		[ObjType]        SysName Not Null,
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
-		[PropertyValue]  NVarChar(Max) Null,
+		[PropertyValue]  NVarChar(Max) Null, -- Actual Limit is 7500 characters
 		-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
-		[ModifiedBy] SysName Not Null CONSTRAINT [DF_DatabaseExtendedProperty_ModifiedBy] DEFAULT (original_login()),
-		[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseExtendedProperty_SysStart] DEFAULT (sysdatetime()),
-		[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseExtendedProperty_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+		[CreatedBy] SysName Not Null CONSTRAINT [DF_Property_CreatedBy] DEFAULT (original_login()),
+		[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Property_SysStart] DEFAULT (sysdatetime()),
+		[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Property_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    		PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 		-- Keys
-		CONSTRAINT [PK_DatabaseExtendedProperty] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [ExtendedPropertyId] ASC),
-		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [AppCatalog].[Catalog] ([CatalogId]),
-)
+		CONSTRAINT [PK_Property] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [PropertyId] ASC),
+		CONSTRAINT [FK_PropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [AppCatalog].[Catalog] ([CatalogId]),
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsCatalog].[Property]))
 GO
 -- There is no key structure returned by the function [fn_listextendedproperty]
 -- This may not work as it may be possible to have multiple elements with the same name but different types.
-CREATE UNIQUE INDEX [UX_DatabaseExtendedProperty]
-    ON [App_DataDictionary].[DatabaseExtendedProperty]([CatalogId] ASC, [Level0Name], [Level1Name], [Level2Name], [PropertyName]);
+CREATE UNIQUE INDEX [UX_Property]
+    ON [AppCatalog].[Property]([CatalogId] ASC, [Level0Name], [Level1Name], [Level2Name], [PropertyName]);
 GO
 /*
 -- Each item must be queried by itself. No way to get all. 

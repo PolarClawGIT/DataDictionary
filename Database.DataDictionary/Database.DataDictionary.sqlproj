@@ -133,7 +133,6 @@
     <Build Include="App_DataDictionary\Tables\ModelEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelCatalog.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseExtendedProperty.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
@@ -152,9 +151,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseExtendedProperty.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeModel.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
@@ -370,6 +366,14 @@
     <Build Include="AppSecurity\Functions\funcCatalogDomainAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogDomain.sql" />
     <Build Include="AppModel\Views\ModelCatalogAK.sql" />
+    <Build Include="AppCatalog\Tables\Property.sql" />
+    <Build Include="HsCatalog\Tables\Property.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetProperty.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetProperty.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeProperty.sql" />
+    <Build Include="AppCatalog\Views\PropertyAK.sql" />
+    <Build Include="AppSecurity\Functions\funcCatalogPropertyAuthroization.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

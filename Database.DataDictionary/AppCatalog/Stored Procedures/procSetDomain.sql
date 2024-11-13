@@ -96,13 +96,9 @@ Begin Try
 			Left Join @Values S
 			On	T.[DomainId] = S.[DomainId]
 	Where	S.[DomainId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Not(@CatalogId is Null And @DomainId is Null) And
+			(@DomainId is Null Or @DomainId = T.[DomainId]) And
+			(@CatalogId is Null Or @CatalogId = T.[CatalogId]) 
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (

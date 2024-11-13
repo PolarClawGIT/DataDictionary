@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseExtendedProperty]
-		@ModelId UniqueIdentifier = Null,
-		@CatalogId UniqueIdentifier = Null,
-		@Data    [App_DataDictionary].[typeDatabaseExtendedProperty] ReadOnly
+﻿CREATE PROCEDURE [AppCatalog].[procSetProperty]
+		@ModelId       UniqueIdentifier = Null,
+		@CatalogId     UniqueIdentifier = Null,
+		@PropertyId    UniqueIdentifier = Null,
+		@Data          [AppCatalog].[typeProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -20,13 +21,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If @ModelId is Null and @CatalogId is Null
-	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	-- Clean the Data
 	Declare @Values Table (
 		[CatalogId]      UniqueIdentifier Not Null,
-		[ExtendedPropertyId] Int Not Null,
+		[PropertyId]     UniqueIdentifier Not Null,
 		-- Parameters for [fn_listextendedproperty]
 		[Level0Type]     SysName Null,
 		[Level0Name]     SysName Null,
@@ -39,71 +38,54 @@ Begin Try
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null,
-		Primary Key ([CatalogId], [ExtendedPropertyId]))
+		Primary Key ([PropertyId]))
 
 	Insert Into @Values
-	Select	X.[CatalogId],
-			IsNull(A.[ExtendedPropertyId],
-				Row_Number() Over (
-					Partition By X.[CatalogId]
-					Order By D.[ObjName], D.[PropertyName]) +
-				(Select	IsNull(Max([ExtendedPropertyId]),0)
-				  From	[App_DataDictionary].[DatabaseExtendedProperty]
-				  Where	[CatalogId] = X.[CatalogId]))
-				As [ExtendedPropertyId],
-			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
-			NullIf(Trim(D.[Level0Name]),'') As [Level0Name],
-			NullIf(Trim(D.[Level1Type]),'') As [Level1Type],
-			NullIf(Trim(D.[Level1Name]),'') As [Level1Name],
-			NullIf(Trim(D.[Level2Type]),'') As [Level2Type],
-			NullIf(Trim(D.[Level2Name]),'') As [Level2Name],
-			NullIf(Trim(D.[ObjType]),'') As [ObjType],
-			NullIf(Trim(D.[ObjName]),'') As [ObjName],
-			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
-			NullIf(D.[PropertyValue],'') As [PropertyValue]
+	Select	Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId) As [CatalogId],
+			Coalesce(T.[PropertyId], D.[PropertyId], NewId()) As [PropertyId],
+			-- Parameters for [fn_listextendedproperty]
+			D.[Level0Type],
+			D.[Level0Name],
+			D.[Level1Type],
+			D.[Level1Name],
+			D.[Level2Type],
+			D.[Level2Name],
+			-- Results from [fn_listextendedproperty]
+			D.[ObjType],
+			D.[ObjName],
+			D.[PropertyName],
+			D.[PropertyValue]
 	From	@Data D
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
-			On	D.[DatabaseName] = P.[DatabaseName]
-			Left Join [App_DataDictionary].[DatabaseExtendedProperty] A
-			On	P.[CatalogId] = A.[CatalogId] And
-				IsNull(D.[Level0Name],'') = IsNull(A.[Level0Name],'') And
-				IsNull(D.[Level1Name],'') = IsNull(A.[Level1Name],'') And
-				IsNull(D.[Level2Name],'') = IsNull(A.[Level2Name],'') And
-				D.[ObjName] = A.[ObjName] And
-				D.[PropertyName] = A.[PropertyName]
-			Cross Apply (
-				Select	Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
-	Where	@CatalogId is Null or
-			X.[CatalogId] = @CatalogId or
-			X.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[AppCatalog].[Catalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] C
-					On	A.[CatalogId] = C.[CatalogId]
-			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Left Join [AppCatalog].[PropertyAK] T
+			On	IsNull(@CatalogId, D.[CatalogId]) = T.[CatalogId] And
+				IsNull(D.[Level0Name],'') = IsNull(T.[Level0Name],'') And
+				IsNull(D.[Level1Name],'') = IsNull(T.[Level1Name],'') And
+				IsNull(D.[Level2Name],'') = IsNull(T.[Level2Name],'') And
+				IsNull(D.[PropertyName],'') = IsNull(T.[PropertyName],'')
+	Where	(@PropertyId is Null Or @PropertyId = Coalesce(T.[PropertyId], D.[PropertyId]) ) And
+			(@CatalogId is Null Or @CatalogId = Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId) ) And
+			(@ModelId is Null Or Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId)  In (
+				Select	[CatalogId]
+				From	[AppModel].[ModelCatalogAK]
+				Where	@ModelId = [ModelId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
-	From	[App_DataDictionary].[DatabaseExtendedProperty] T
-			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
-			On	T.[CatalogId] = P.[CatalogId]
+	Delete From [AppCatalog].[Property]
+	From	[AppCatalog].[Property] T
+			Inner Join [AppCatalog].[PropertyAK] K
+			On	T.[PropertyId] = K.[PropertyId]
 			Left Join @Values S
-			On	T.[CatalogId] = S.[CatalogId] And
-				T.[ExtendedPropertyId] = S.[ExtendedPropertyId]
-	Where	S.[CatalogId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
+			On	T.[PropertyId] = S.[PropertyId]
+	Where	S.[PropertyId] is Null And
+			Not(@CatalogId is Null And @PropertyId is Null) And
+			(@PropertyId is Null Or @PropertyId = T.[PropertyId]) And
+			(@CatalogId is Null Or @CatalogId = T.[CatalogId]) 
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 ;	With [Delta] As (
 		Select	[CatalogId],
-				[ExtendedPropertyId],
+				[PropertyId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -117,7 +99,7 @@ Begin Try
 		From	@Values
 		Except
 		Select	[CatalogId],
-				[ExtendedPropertyId],
+				[PropertyId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -128,10 +110,10 @@ Begin Try
 				[ObjName],
 				[PropertyName],
 				[PropertyValue]
-		From	[App_DataDictionary].[DatabaseExtendedProperty])
-	Update	[App_DataDictionary].[DatabaseExtendedProperty]
+		From	[AppCatalog].[Property])
+	Update	[AppCatalog].[Property]
 	Set		[CatalogId] = S.[CatalogId],
-			[ExtendedPropertyId] = S.[ExtendedPropertyId],
+			[PropertyId] = S.[PropertyId],
 			[Level0Type] = S.[Level0Type],
 			[Level0Name] = S.[Level0Name],
 			[Level1Type] = S.[Level1Type],
@@ -142,15 +124,15 @@ Begin Try
 			[ObjName] = S.[ObjName],
 			[PropertyName] = S.[PropertyName],
 			[PropertyValue] = S.[PropertyValue]
-	From	[App_DataDictionary].[DatabaseExtendedProperty] T
+	From	[AppCatalog].[Property] T
 			Inner Join [Delta] S
 			On	T.[CatalogId] = S.[CatalogId] And
-				T.[ExtendedPropertyId] = S.[ExtendedPropertyId]
+				T.[PropertyId] = S.[PropertyId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseExtendedProperty] (
+	Insert Into [AppCatalog].[Property] (
 			[CatalogId],
-			[ExtendedPropertyId],
+			[PropertyId],
 			[Level0Type],
 			[Level0Name],
 			[Level1Type],
@@ -162,7 +144,7 @@ Begin Try
 			[PropertyName],
 			[PropertyValue])
 	Select	S.[CatalogId],
-			S.[ExtendedPropertyId],
+			S.[PropertyId],
 			S.[Level0Type],
 			S.[Level0Name],
 			S.[Level1Type],
@@ -174,9 +156,9 @@ Begin Try
 			S.[PropertyName],
 			S.[PropertyValue]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseExtendedProperty] T
+			Left Join [AppCatalog].[Property] T
 			On	S.[CatalogId] = T.[CatalogId] And
-				S.[ExtendedPropertyId] = T.[ExtendedPropertyId]
+				S.[PropertyId] = T.[PropertyId]
 	Where	T.[CatalogId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -205,7 +187,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

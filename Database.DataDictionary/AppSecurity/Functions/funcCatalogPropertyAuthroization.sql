@@ -1,14 +1,12 @@
-﻿CREATE FUNCTION [AppSecurity].[funcCatalogDomainAuthorization] (@DomainId UniqueIdentifier, @OwnerOnly Bit)
+﻿CREATE FUNCTION [AppSecurity].[funcCatalogPropertyAuthroization] (@PropertyId UniqueIdentifier, @OwnerOnly Bit)
 Returns Table With SchemaBinding
-As Return 
+As Return
 Select	Convert(Bit, 1) As [IsAllowed]
 From	[AppCatalog].[Catalog] O
-		Inner Join [AppCatalog].[Schema] S
-		On	O.[CatalogId] = S.[CatalogId]
-		Inner Join [AppCatalog].[Domain] D
-		On	S.[SchemaId] = D.[SchemaId]
+		Inner Join [AppCatalog].[Property] D
+		On	O.[CatalogId] = D.[CatalogId]
 		Cross Apply [AppSecurity].[funcAuthorization](O.[CatalogId]) F
-Where	D.[DomainId] = @DomainId And
+Where	D.[PropertyId] = @PropertyId And
 		([IsDbWriter] = 1 Or
 		 [IsCatalogAdmin] = 1 Or
 		 ([IsCatalogOwner] = 1 And [IsOwner] = 1) Or
