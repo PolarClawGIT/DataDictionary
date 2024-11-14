@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppGeneral].[TransactionLog]
 (	/*
 	** The TransactionLog is used to identify the Login/User that
-	** perform an action by to a logged table. This allows the system
-	** to identify who perform an action.
+	** perform an action by to a logged table (has the trigger).
+	** This allows the system to identify who perform an action.
 	** [SysStart] is the UTC Date of the Transaction.
 	** [SysStart] will match the [SysStart] of the logged table.
 	** [SysStart] is not guaranteed to be unique with unlikely/rare duplicates.
@@ -22,7 +22,7 @@
 	-- Keys
 	CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED ([TransactionId] ASC),
 	-- Check Constraint
-	-- This Effectively prevent Updates after the record is added.
+	-- Just highlights the fact that [SysEnd] has no meaning.
 	CONSTRAINT [CK_TransactionLog_SysEnd] CHECK ([SysEnd] = '9999-12-31 23:59:59.9999999')
 )
 GO
