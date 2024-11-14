@@ -8,13 +8,13 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IDomainValue : IDbDomainItem,
+    public interface IDomainValue : IDomainItem,
         IDomainIndex, IDomainIndexName, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class DomainValue : DbDomainItem, IDomainValue, IPathValue, INamedScopeSourceValue
+    public class DomainValue : DomainItem, IDomainValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

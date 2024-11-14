@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>
-        where TItem : BindingTableRow, IDbDomainItem, ICatalogKey, IDomainKeyName, new()
+        where TItem : BindingTableRow, IDomainItem, ICatalogKey, IDomainKeyName, new()
     {
         /// <inheritdoc/>
         [Obsolete("Needs work")]

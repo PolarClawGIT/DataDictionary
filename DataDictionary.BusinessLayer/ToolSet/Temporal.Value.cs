@@ -21,10 +21,16 @@ namespace DataDictionary.BusinessLayer.ToolSet
     class TemporalValue : DataValue, ITemporalValue
     {
         /// <inheritdoc/>
-        public virtual String CreatedBy { get { return GetModifiedBy(); } }
+        public virtual String CreatedBy { get { return GetCreatedBy(); } }
 
         /// <inheritdoc/>
-        public virtual DateTime? CreatedOn { get { return GetModifiedOn(); } }
+        public virtual DateTime? CreatedOn { get { return GetCreatedOn(); } }
+
+        /// <inheritdoc/>
+        public virtual String RemovedBy { get { return GetRemovedBy(); } }
+
+        /// <inheritdoc/>
+        public virtual DateTime? RemovedOn { get { return GetRemovedOn(); } }
 
         /// <inheritdoc/>
         public Boolean? IsInserted { get { return GetIsInserted(); } }
@@ -44,12 +50,22 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <summary>
         /// Function that returns the CreatedBy of the source.
         /// </summary>
-        public required Func<String> GetModifiedBy { get; init; }
+        public required Func<String> GetCreatedBy { get; init; }
 
         /// <summary>
         /// Function that returns the CreatedOn of the source.
         /// </summary>
-        public required Func<DateTime> GetModifiedOn { get; init; }
+        public required Func<DateTime> GetCreatedOn { get; init; }
+
+        /// <summary>
+        /// Function that returns the RemovedBy of the source.
+        /// </summary>
+        public required Func<String> GetRemovedBy { get; init; }
+
+        /// <summary>
+        /// Function that returns the RemovedOn of the source.
+        /// </summary>
+        public required Func<DateTime> GetRemovedOn { get; init; }
 
         /// <summary>
         /// Function that returns the IsInserted of the source.
@@ -104,8 +120,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 GetIsInserted = () => source.IsInserted ?? false,
                 GetIsUpdated = () => source.IsUpdated ?? false,
                 GetModification = () => source.Modification,
-                GetModifiedBy = () => source.CreatedBy ?? String.Empty,
-                GetModifiedOn = () => source.CreatedOn ?? DateTime.MaxValue,
+                GetCreatedBy = () => source.CreatedBy ?? String.Empty,
+                GetCreatedOn = () => source.CreatedOn ?? DateTime.MaxValue,
+                GetRemovedBy = () => source.RemovedBy ?? String.Empty,
+                GetRemovedOn = () => source.RemovedOn ?? DateTime.MaxValue,
             };
         }
 

@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDomainKeyName, IDomainKey, ICatalogKey,
+    public interface IDomainItem : IDomainKeyName, IDomainKey, ICatalogKey,
         IDomain, ITemporalItem
     {
         /// <summary>
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Database Domain Item.
     /// </summary>
     [Serializable]
-    public class DbDomainItem : BindingTableRow, IDbDomainItem, IDbExtendedProperty, ISerializable
+    public class DomainItem : BindingTableRow, IDomainItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -98,6 +98,21 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
         public Boolean? IsInserted
         { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
 
@@ -148,6 +163,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(CollationName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
@@ -158,7 +175,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for the Database Domain Item
         /// </summary>
-        public DbDomainItem() : base() { }
+        public DomainItem() : base() { }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -191,7 +208,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbDomainItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected DomainItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 

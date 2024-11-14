@@ -74,12 +74,22 @@ namespace DataDictionary.DataLayer.AppGeneral
         {
             get
             {
-                //TODO: SQL has a DateTimeOffset that does not appear in the .net time.
-                // As such, this logic assumes the date is UTC without a TimeZone.
-                // This may not be correct. This works for now.
-                // Make a function to handle this?
-                // Look into datetimeoffset. 
                 DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
                 if (value is DateTime baseDate)
                 { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
                 else { return null; }
@@ -134,6 +144,8 @@ namespace DataDictionary.DataLayer.AppGeneral
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},

@@ -15,7 +15,6 @@ Select	[CatalogId],
 		[SchemaId],
 		[DatabaseName],
 		[SchemaName],
-		[CreatedBy],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

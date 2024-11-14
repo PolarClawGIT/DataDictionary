@@ -123,10 +123,15 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             isDeleteData.Checked = (value.IsDeleted is true);
             isCurrentData.Checked = (value.IsCurrent is true);
             createdByData.Text = value.CreatedBy ?? String.Empty;
+            removedByData.Text = value.RemovedBy ?? String.Empty;
 
-            if (value.CreatedOn is DateTime modifiedOn)
-            { createdOnDate.Text = modifiedOn.ToString(); }
+            if (value.CreatedOn is DateTime createdOn)
+            { createdOnDate.Text = createdOn.ToString(); }
             else { createdOnDate.Text = String.Empty; }
+
+            if (value.RemovedOn is DateTime removedOn)
+            { removedOnData.Text = removedOn.ToString(); }
+            else { removedOnData.Text = String.Empty; }
         }
 
         private void HistoryModificationData_DoubleClick(object sender, EventArgs e)

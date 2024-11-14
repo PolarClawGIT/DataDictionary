@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer
     public interface ITemporalKey : IKey
     {
         /// <summary>
-        /// Date (UTC converted to Local) that the record was Modified
+        /// Date on which the record was removed (Update/Delete)
         /// </summary>
         DateTime? CreatedOn { get; }
     }

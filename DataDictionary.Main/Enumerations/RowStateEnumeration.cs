@@ -101,8 +101,14 @@ namespace DataDictionary.Main.Enumerations
                     if (temporal.CreatedOn is DateTime createdOn && temporal.IsDeleted == false)
                     { temporalValue = String.Format("{0} on {1}", temporalValue, createdOn); }
 
+                    if (temporal.CreatedOn is DateTime removedOn && temporal.IsDeleted == true)
+                    { temporalValue = String.Format("{0} on {1}", temporalValue, removedOn); }
+
                     if (temporal.CreatedBy is String createdBy && temporal.IsDeleted == false)
                     { temporalValue = String.Format("{0} by {1}", temporalValue, createdBy); }
+
+                    if (temporal.CreatedBy is String removedBy && temporal.IsDeleted == true)
+                    { temporalValue = String.Format("{0} by {1}", temporalValue, removedBy); }
                 }
                 else
                 { temporalValue = String.Empty; }

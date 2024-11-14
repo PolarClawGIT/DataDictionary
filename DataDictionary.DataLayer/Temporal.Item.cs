@@ -13,6 +13,16 @@ public interface ITemporalItem: ITemporalKey
     String? CreatedBy { get; }
 
     /// <summary>
+    /// Date on which the record was removed (Update/Delete)
+    /// </summary>
+    DateTime? RemovedOn { get; }
+
+    /// <summary>
+    /// Account Name that removed (Update/Delete) this record
+    /// </summary>
+    String? RemovedBy { get; }
+
+    /// <summary>
     /// The value was modified by an Insert action
     /// </summary>
     Boolean? IsInserted { get; }
