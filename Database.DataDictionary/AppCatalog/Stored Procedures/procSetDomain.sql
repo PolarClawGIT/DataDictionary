@@ -8,7 +8,7 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseDomain.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -96,9 +96,13 @@ Begin Try
 			Left Join @Values S
 			On	T.[DomainId] = S.[DomainId]
 	Where	S.[DomainId] is Null And
-			Not(@CatalogId is Null And @DomainId is Null) And
-			(@DomainId is Null Or @DomainId = T.[DomainId]) And
-			(@CatalogId is Null Or @CatalogId = T.[CatalogId]) 
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[AppCatalog].[Catalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (

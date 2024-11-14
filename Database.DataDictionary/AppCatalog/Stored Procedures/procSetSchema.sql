@@ -8,7 +8,7 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseSchema.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -53,7 +53,7 @@ Begin Try
 					On	A.[CatalogId] = C.[CatalogId]
 			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-; Throw 50000, 'TODO: Fix delete see procSetDomain', 1;
+
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
 	From	[App_DataDictionary].[DatabaseConstraintColumn] T

@@ -114,6 +114,8 @@
     <Folder Include="HsScript\Tables" />
     <Folder Include="Security\Schema" />
     <Folder Include="AppCatalog\Functions" />
+    <Folder Include="AppGeneral\Triggers" />
+    <Folder Include="AppCatalog\Triggers" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -355,7 +357,7 @@
     <Build Include="AppSecurity\Functions\funcCatalogSchemaAuthorization.sql" />
     <Build Include="AppCatalog\Views\CatalogAK.sql" />
     <Build Include="AppCatalog\Views\SchemaAK.sql" />
-    <Build Include="AppGeneral\Views\HelpSubjectAK.sql" />
+    <Build Include="AppGeneral\Views\HelpSubjectHs.sql" />
     <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
     <Build Include="AppCatalog\Tables\Domain.sql" />
     <Build Include="HsCatalog\Tables\Domain.sql" />
@@ -374,6 +376,12 @@
     <Build Include="AppCatalog\Views\PropertyAK.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogPropertyAuthroization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogProperty.sql" />
+    <Build Include="AppGeneral\Tables\TransactionLog.sql" />
+    <Build Include="AppGeneral\Stored Procedures\procRecordTransactionLog.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
+    <Build Include="AppGeneral\Triggers\trigHelpSubject.sql" />
+    <Build Include="AppGeneral\Views\TransactionSummary.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -1957,4 +1957,25 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[typeProperty]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="ea8e2c38-d470-4ed3-b0e6-0d355bff9f3f" ChangeDateTime="11/14/2024 16:28:42">
+    <Property Name="ElementName" Value="[AppGeneral].[TransactionLog].[SysStart]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppGeneral].[TransactionLog]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[TransactionDate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bfc8ab71-9eb2-4003-976b-3d61a1a3d6e1" ChangeDateTime="11/14/2024 16:58:55">
+    <Property Name="ElementName" Value="[AppGeneral].[HelpSubjectAK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[HelpSubjectHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3266baee-a635-416f-b46a-db994158eed6" ChangeDateTime="11/14/2024 17:00:43">
+    <Property Name="ElementName" Value="[AppGeneral].[TransactionLogSummary]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TransactionSummary]" />
+  </Operation>
 </Operations>

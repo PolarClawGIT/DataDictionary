@@ -15,13 +15,19 @@ Select	[HelpId],
 		[HelpToolTip],
 		[HelpText],
 		[NameSpace],
-		[CreatedBy],
-		[SysStart] As [CreatedOn],
+		C.[ModifiedOn] As [CreatedOn],
+		C.[ModifiedBy] As [CreatedBy],
+		R.[ModifiedOn] As [RemovedOn],
+		R.[ModifiedBy] As [RemovedBy],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppGeneral].[HelpSubjectAK] For System_Time All
+From	[AppGeneral].[HelpSubjectHs] For System_Time All D
+		Left Join [AppGeneral].[TransactionSummary] C
+		On	D.[SysStart] = C.[ModifiedOn]
+		Left Join [AppGeneral].[TransactionSummary] R
+		On	D.[SysEnd] = C.[ModifiedOn]
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@HelpId is Null Or @HelpId = [HelpId])
 GO

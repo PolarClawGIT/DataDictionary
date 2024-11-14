@@ -4,7 +4,6 @@
     [HelpToolTip] [App_DataDictionary].[typeDescription] NULL,
     [HelpText]    NVARCHAR (MAX)   NOT NULL,
     [NameSpace]   NVARCHAR (1023)  NULL,
-    [CreatedBy]   SysName          NOT NULL,
     [SysStart]    DATETIME2 (7)    NOT NULL,
     [SysEnd]      DATETIME2 (7)    NOT NULL
 );
