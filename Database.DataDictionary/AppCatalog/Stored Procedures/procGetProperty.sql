@@ -26,12 +26,16 @@ Select	[CatalogId],
 		[PropertyName],
 		[PropertyValue],
 		[CreatedBy],
-		[SysStart] As [CreatedOn],
+		-- Temporal Data
+		[CreatedOn],
+		[CreatedBy],
+		[RemovedOn],
+		[RemovedBy],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppCatalog].[PropertyAK] D
+From	[AppCatalog].[PropertyHs] D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@PropertyId is Null Or @PropertyId = [PropertyId]) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And

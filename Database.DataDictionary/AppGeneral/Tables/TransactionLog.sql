@@ -6,6 +6,8 @@
 	** [SysStart] is the UTC Date of the Transaction.
 	** [SysStart] will match the [SysStart] of the logged table.
 	** [SysStart] is not guaranteed to be unique with unlikely/rare duplicates.
+	**
+	** [SysEnd] has no meaning outside of the requirement PERIOD FOR SYSTEM_TIME
 	*/
 	[TransactionId] UniqueIdentifier Not Null CONSTRAINT [DF_TransactionId] DEFAULT (newid()),
 	[login_time] DateTime Not Null,  -- [sys].[dm_exec_sessions].[login_time]
@@ -19,6 +21,9 @@
    	PERIOD FOR SYSTEM_TIME ([TransactionDate], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED ([TransactionId] ASC),
+	-- Check Constraint
+	-- This Effectively prevent Updates after the record is added.
+	CONSTRAINT [CK_TransactionLog_SysEnd] CHECK ([SysEnd] = '9999-12-31 23:59:59.9999999')
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_TransactionLog]

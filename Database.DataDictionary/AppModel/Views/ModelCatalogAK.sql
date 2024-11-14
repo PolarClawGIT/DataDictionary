@@ -14,7 +14,7 @@ From	[App_DataDictionary].[ModelCatalog] D
 			Select	Top 1
 					[CatalogId],
 					[DatabaseName]
-			From	[AppCatalog].[CatalogAK]
+			From	[AppCatalog].[CatalogHs]
 			Where	[CatalogId] = D.[CatalogId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) P

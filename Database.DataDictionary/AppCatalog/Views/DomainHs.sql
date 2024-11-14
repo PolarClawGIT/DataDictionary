@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppCatalog].[DomainAK] As
+﻿CREATE VIEW [AppCatalog].[DomainHs] As
 -- Temporal View
 -- View does not enforce Alternate Keys, just returns them.
 Select	F.[CatalogId], -- AK
@@ -21,10 +21,13 @@ Select	F.[CatalogId], -- AK
 		D.[CollationCatalog],
 		D.[CollationSchema],
 		D.[CollationName],
-		D.[CreatedBy],
-		D.[SysStart], --PK, AK
-		D.[SysEnd],
 		-- Temporal Status
+		D.[SysStart], -- AK, PK
+		D.[SysEnd],
+		C.[ModifiedOn] As [CreatedOn],
+		C.[ModifiedBy] As [CreatedBy],
+		R.[ModifiedOn] As [RemovedOn],
+		R.[ModifiedBy] As [RemovedBy],
 		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
@@ -40,6 +43,10 @@ From	[AppCatalog].[Domain] D
 			From	[HsCatalog].[Domain]
 			Where	[DomainId] = D.[DomainId] And
 					[SysStart] >= D.[SysEnd]) N
+		Left Join [AppGeneral].[TransactionSummary] C
+		On	D.[SysStart] = C.[ModifiedOn]
+		Left Join [AppGeneral].[TransactionSummary] R
+		On	D.[SysEnd] = R.[ModifiedOn]
 		Outer Apply (
 			-- Not specifying a For System_Time returns the current value
 			-- For System_Time <some date> returns the value for that date
@@ -49,7 +56,7 @@ From	[AppCatalog].[Domain] D
 					[SchemaId],
 					[DatabaseName],
 					[SchemaName]
-			From	[AppCatalog].[SchemaAK]
+			From	[AppCatalog].[SchemaHs]
 			Where	[SchemaId] = D.[SchemaId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) F

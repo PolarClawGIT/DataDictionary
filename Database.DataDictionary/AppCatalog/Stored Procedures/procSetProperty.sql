@@ -56,7 +56,7 @@ Begin Try
 			D.[PropertyName],
 			D.[PropertyValue]
 	From	@Data D
-			Left Join [AppCatalog].[PropertyAK] T
+			Left Join [AppCatalog].[PropertyHs] T
 			On	IsNull(@CatalogId, D.[CatalogId]) = T.[CatalogId] And
 				IsNull(D.[Level0Name],'') = IsNull(T.[Level0Name],'') And
 				IsNull(D.[Level1Name],'') = IsNull(T.[Level1Name],'') And
@@ -73,7 +73,7 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppCatalog].[Property]
 	From	[AppCatalog].[Property] T
-			Inner Join [AppCatalog].[PropertyAK] K
+			Inner Join [AppCatalog].[PropertyHs] K
 			On	T.[PropertyId] = K.[PropertyId]
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]

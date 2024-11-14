@@ -5,10 +5,12 @@ Select	D.[HelpId], -- IE, PK
 		D.[HelpToolTip],
 		D.[HelpText],
 		D.[NameSpace], --IE
-		D.[SysStart], -- IE, PK
-		D.[SysEnd],
 		-- Temporal Status
+		D.[SysStart], -- PK
+		D.[SysEnd],
+		C.[ModifiedOn] As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
+		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
 		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
@@ -28,5 +30,5 @@ From	[AppGeneral].[HelpSubject] D
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
-		On	D.[SysEnd] = C.[ModifiedOn]
+		On	D.[SysEnd] = R.[ModifiedOn]
 GO

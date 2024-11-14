@@ -1978,4 +1978,32 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[TransactionSummary]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="72a48a78-4fb8-4814-acb3-92c09d966016" ChangeDateTime="11/14/2024 17:07:50">
+    <Property Name="ElementName" Value="[AppCatalog].[CatalogAK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[CatalogHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="23e6e934-955b-43c3-a198-9d0e0db22d4d" ChangeDateTime="11/14/2024 17:34:47">
+    <Property Name="ElementName" Value="[AppCatalog].[DomainAK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DomainHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fe8e510e-2c39-4f3d-97b3-d4d64bc307e9" ChangeDateTime="11/14/2024 17:35:01">
+    <Property Name="ElementName" Value="[AppCatalog].[PropertyAK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[PropertyHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="57843942-1a4c-4da1-b5fb-f787f71aa64d" ChangeDateTime="11/14/2024 17:35:17">
+    <Property Name="ElementName" Value="[AppCatalog].[SchemaAK]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[SchemaHs]" />
+  </Operation>
 </Operations>

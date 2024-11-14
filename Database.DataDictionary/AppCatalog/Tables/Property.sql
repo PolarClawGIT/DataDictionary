@@ -14,8 +14,7 @@
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null, -- Actual Limit is 7500 characters
-		-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
-		[CreatedBy] SysName Not Null CONSTRAINT [DF_Property_CreatedBy] DEFAULT (original_login()),
+		-- Temporal History Support
 		[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Property_SysStart] DEFAULT (sysdatetime()),
 		[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Property_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    		PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

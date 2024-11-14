@@ -18,13 +18,16 @@ Select	[CatalogId],
 		[ServerName],
 		[DatabaseName],
 		[SourceDate],
+		-- Temporal Data
+		[CreatedOn],
 		[CreatedBy],
-		[SysStart] As [CreatedOn],
+		[RemovedOn],
+		[RemovedBy],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppCatalog].[CatalogAK] For System_Time All
+From	[AppCatalog].[CatalogHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And
 		(@ModelId is Null Or [CatalogId] In (

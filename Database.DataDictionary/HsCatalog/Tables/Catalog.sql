@@ -6,7 +6,6 @@
 	[ServerName]         SysName Not Null,
 	[DatabaseName]       SysName Not Null,
 	[SourceDate]         DateTime Not Null,
-	[CreatedBy]          SysName Not Null,
 	[SysStart]           DateTime2 (7) Not Null,
 	[SysEnd]             DateTime2 (7)  Not Null,
 )

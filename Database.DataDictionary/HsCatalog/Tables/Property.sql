@@ -14,7 +14,6 @@
 	[ObjName]        SysName Not Null,
 	[PropertyName]   SysName Not Null,
 	[PropertyValue]  NVarChar(Max) Null,
-	[CreatedBy]      SysName Not Null,
 	[SysStart]       DATETIME2 (7) NOT NULL,
 	[SysEnd]         DATETIME2 (7) NOT NULL,
 )

@@ -16,7 +16,7 @@ With [Object] As (
 			[SchemaName],
 			[DomainName] As [ObjectName],
 			[DomainId] As [ObjectId]
-	From	[AppCatalog].[DomainAK]
+	From	[AppCatalog].[DomainHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],

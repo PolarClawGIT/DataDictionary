@@ -355,13 +355,13 @@
     <Build Include="HsCatalog\Tables\Schema.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogSchema.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogSchemaAuthorization.sql" />
-    <Build Include="AppCatalog\Views\CatalogAK.sql" />
-    <Build Include="AppCatalog\Views\SchemaAK.sql" />
+    <Build Include="AppCatalog\Views\CatalogHs.sql" />
+    <Build Include="AppCatalog\Views\SchemaHs.sql" />
     <Build Include="AppGeneral\Views\HelpSubjectHs.sql" />
     <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
     <Build Include="AppCatalog\Tables\Domain.sql" />
     <Build Include="HsCatalog\Tables\Domain.sql" />
-    <Build Include="AppCatalog\Views\DomainAK.sql" />
+    <Build Include="AppCatalog\Views\DomainHs.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetDomain.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetDomain.sql" />
     <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
@@ -373,7 +373,7 @@
     <Build Include="AppCatalog\Stored Procedures\procGetProperty.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetProperty.sql" />
     <Build Include="AppCatalog\User Defined Types\typeProperty.sql" />
-    <Build Include="AppCatalog\Views\PropertyAK.sql" />
+    <Build Include="AppCatalog\Views\PropertyHs.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogPropertyAuthroization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogProperty.sql" />
     <Build Include="AppGeneral\Tables\TransactionLog.sql" />
@@ -382,6 +382,10 @@
     </Build>
     <Build Include="AppGeneral\Triggers\trigHelpSubject.sql" />
     <Build Include="AppGeneral\Views\TransactionSummary.sql" />
+    <Build Include="AppCatalog\Triggers\trigCatalog.sql" />
+    <Build Include="AppCatalog\Triggers\trigSchema.sql" />
+    <Build Include="AppCatalog\Triggers\trigProperty.sql" />
+    <Build Include="AppCatalog\Triggers\trigDomain.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

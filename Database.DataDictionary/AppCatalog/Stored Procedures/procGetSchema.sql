@@ -16,12 +16,16 @@ Select	[CatalogId],
 		[DatabaseName],
 		[SchemaName],
 		[CreatedBy],
-		[SysStart] As [CreatedOn],
+		-- Temporal Data
+		[CreatedOn],
+		[CreatedBy],
+		[RemovedOn],
+		[RemovedBy],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppCatalog].[SchemaAK] For System_Time All
+From	[AppCatalog].[SchemaHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@SchemaId is Null Or @SchemaId = [SchemaId]) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And

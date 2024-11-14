@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppCatalog].[CatalogAK] As
+﻿CREATE VIEW [AppCatalog].[CatalogHs] As
 -- Temporal View
 -- View for Catalog is not really needed. It is here for consistency.
 -- View does not enforce Alternate Keys, just returns them.
@@ -8,10 +8,13 @@ Select	D.[CatalogId], -- AK, PK
 		D.[ServerName],
 		D.[DatabaseName], -- AK
 		D.[SourceDate],
-		D.[CreatedBy],
+		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		-- Temporal Status
+		C.[ModifiedOn] As [CreatedOn],
+		C.[ModifiedBy] As [CreatedBy],
+		R.[ModifiedOn] As [RemovedOn],
+		R.[ModifiedBy] As [RemovedBy],
 		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
@@ -27,4 +30,8 @@ From	[AppCatalog].[Catalog] D
 			From	[HsCatalog].[Catalog]
 			Where	[CatalogId] = D.[CatalogId] And
 					[SysStart] >= D.[SysEnd]) N
+		Left Join [AppGeneral].[TransactionSummary] C
+		On	D.[SysStart] = C.[ModifiedOn]
+		Left Join [AppGeneral].[TransactionSummary] R
+		On	D.[SysEnd] = R.[ModifiedOn]
 GO

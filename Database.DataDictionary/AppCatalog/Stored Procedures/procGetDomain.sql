@@ -31,13 +31,16 @@ Select	[CatalogId],
 		[CollationCatalog],
 		[CollationSchema],
 		[CollationName],
+		-- Temporal Data
+		[CreatedOn],
 		[CreatedBy],
-		[SysStart] As [CreatedOn],
+		[RemovedOn],
+		[RemovedBy],
 		[IsInserted],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppCatalog].[DomainAK]
+From	[AppCatalog].[DomainHs]
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@DomainId is Null Or @DomainId = [DomainId]) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And

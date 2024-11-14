@@ -70,7 +70,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName] And
 				D.[SchemaName] = P.[SchemaName]
-			Left Join [AppCatalog].[DomainAK] A
+			Left Join [AppCatalog].[DomainHs] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[DomainName] = A.[DomainName]

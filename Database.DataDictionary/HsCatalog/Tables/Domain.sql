@@ -17,7 +17,6 @@
 	[CollationCatalog]      SysName Null,
 	[CollationSchema]       SysName Null,
 	[CollationName]         SysName Null,
-	[CreatedBy]             SysName Not Null,
 	[SysStart]              DATETIME2 (7) NOT NULL,
 	[SysEnd]                DATETIME2 (7) NOT NULL,
 )
