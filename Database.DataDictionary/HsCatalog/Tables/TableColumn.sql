@@ -1,0 +1,39 @@
+﻿CREATE TABLE [HsCatalog].[TableColumn]
+(
+	[ColumnId]              UniqueIdentifier Not Null,
+	[TableId]               UniqueIdentifier Not Null,
+	[ColumnName]            SysName Not Null,
+    [OrdinalPosition]       Int Not Null,
+	[IsNullable]            Bit Null,
+	[DataType]              SysName Null,
+	[ColumnDefault]         NVarChar(Max) Null,
+	[CharacterMaximumLength] Int Null,
+	[CharacterOctetLength]  Int Null,
+	[NumericPrecision]      TinyInt Null,
+	[NumericPrecisionRadix] SmallInt Null,
+	[NumericScale]          Int Null,
+	[DateTimePrecision]     SmallInt Null,
+	[CharacterSetCatalog]   SysName Null,
+	[CharacterSetSchema]    SysName Null,
+	[CharacterSetName]      SysName Null,
+	[CollationCatalog]      SysName Null,
+	[CollationSchema]       SysName Null,
+	[CollationName]         SysName Null,
+	[DomainCatalog]         SysName Null,
+	[DomainSchema]          SysName Null,
+	[DomainName]            SysName Null,
+	[IsIdentity]            Bit Null,
+	[IsHidden]              Bit Null,
+	[IsComputed]            Bit Null,
+	[ComputedDefinition]    NVarChar(Max) Null,
+	[GeneratedAlwayType]    NVarChar(60) Null,
+	[SysStart]              DATETIME2 (7) NOT NULL,
+	[SysEnd]                DATETIME2 (7) NOT NULL,
+)
+GO
+CREATE CLUSTERED INDEX [IX_TableColumn]
+    ON [HsCatalog].[TableColumn]([SysEnd] ASC, [SysStart] ASC)
+GO
+CREATE INDEX [FK_TableColumn]
+    ON [HsCatalog].[TableColumn]([ColumnId])
+GO

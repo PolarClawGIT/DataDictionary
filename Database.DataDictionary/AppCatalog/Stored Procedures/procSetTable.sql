@@ -1,13 +1,13 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
+﻿CREATE PROCEDURE [AppCatalog].[procSetTable]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
+		@Data [AppCatalog].[typeTable] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseTable.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -40,7 +40,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName] And
 				D.[SchemaName] = P.[SchemaName]
-			Left Join [App_DataDictionary].[DatabaseTable_AK] A
+			Left Join [AppCatalog].[TableHs] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[TableName] = A.[TableName]
@@ -91,9 +91,9 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraint] (table): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	From	[App_DataDictionary].[DatabaseTableColumn] T
-			Inner Join [App_DataDictionary].[DatabaseTable_AK] P
+	Delete From [AppCatalog].[TableColumn]
+	From	[AppCatalog].[TableColumn] T
+			Inner Join [AppCatalog].[TableHs] P
 			On	T.[TableId] = P.[TableId]
 			Left Join @Values S
 			On	P.[TableId] = S.[TableId]
@@ -107,8 +107,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTableColumn] (table): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseTable]
-	From	[App_DataDictionary].[DatabaseTable] T
+	Delete From [AppCatalog].[Table]
+	From	[AppCatalog].[Table] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S
@@ -134,17 +134,17 @@ Begin Try
 				[SchemaId],
 				[TableName],
 				[TableType]
-		From	[App_DataDictionary].[DatabaseTable])
-	Update [App_DataDictionary].[DatabaseTable]
+		From	[AppCatalog].[Table])
+	Update [AppCatalog].[Table]
 	Set		[SchemaId] = S.[SchemaId],
 			[TableName] = S.[TableName],
 			[TableType] = S.[TableType]
-	From	[App_DataDictionary].[DatabaseTable] T
+	From	[AppCatalog].[Table] T
 			Inner Join [Delta] S
 			On	T.[TableId] = S.[TableId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseTable] (
+	Insert Into [AppCatalog].[Table] (
 		[TableId],
 		[SchemaId],
 		[TableName],
@@ -154,7 +154,7 @@ Begin Try
 			S.[TableName],
 			S.[TableType]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseTable] T
+			Left Join [AppCatalog].[Table] T
 			On	S.[TableId] = T.[TableId]
 	Where	T.[TableId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

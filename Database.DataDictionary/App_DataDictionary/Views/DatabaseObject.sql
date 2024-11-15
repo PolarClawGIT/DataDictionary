@@ -30,7 +30,7 @@ With [Object] As (
 			[SchemaName],
 			[TableName] As [ObjectName],
 			[TableId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseTable_AK])
+	From	[AppCatalog].[TableHs])
 Select	[CatalogId],
 		[DatabaseName],
 		[SchemaName],

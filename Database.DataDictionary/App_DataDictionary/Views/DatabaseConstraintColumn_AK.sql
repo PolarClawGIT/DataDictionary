@@ -20,9 +20,9 @@ From	[AppCatalog].[Catalog] C
 		On	S.[SchemaId] = T.[SchemaId]
 		Inner Join [App_DataDictionary].[DatabaseConstraintColumn] L
 		On	T.[ConstraintId] = L.[ConstraintId]
-		Inner Join [App_DataDictionary].[DatabaseTable] N
+		Inner Join [AppCatalog].[Table] N
 		On	T.[TableId] = N.[TableId]
-		Inner Join [App_DataDictionary].[DatabaseTableColumn] M
+		Inner Join [AppCatalog].[TableColumn] M
 		On	L.[ColumnId] = M.[ColumnId]
 GO
 /*

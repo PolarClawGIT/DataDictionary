@@ -46,7 +46,7 @@ Begin Try
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[ConstraintName] = A.[ConstraintName]
-			Inner Join [App_DataDictionary].[DatabaseTable_AK] R
+			Inner Join [AppCatalog].[TableHs] R
 			On	D.[DatabaseName] = R.[DatabaseName] And
 				D.[SchemaName] = R.[SchemaName] And
 				D.[TableName] = R.[TableName]

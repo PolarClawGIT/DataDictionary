@@ -7,7 +7,7 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseCatalog.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -146,9 +146,9 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutine] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	From	[App_DataDictionary].[DatabaseTableColumn] T
-			Inner Join [App_DataDictionary].[DatabaseTable_AK] P
+	Delete From [AppCatalog].[TableColumn]
+	From	[AppCatalog].[TableColumn] T
+			Inner Join [AppCatalog].[TableHs] P
 			On	T.[TableId] = P.[TableId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
@@ -162,8 +162,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTableColumn] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseTable]
-	From	[App_DataDictionary].[DatabaseTable] T
+	Delete From [AppCatalog].[Table]
+	From	[AppCatalog].[Table] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S

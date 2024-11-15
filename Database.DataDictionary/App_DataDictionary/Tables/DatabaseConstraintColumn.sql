@@ -15,7 +15,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseConstraintColumn] PRIMARY KEY CLUSTERED ([ConstraintColumnId]),
 	CONSTRAINT [FK_DatabaseConstraint] FOREIGN KEY ([ConstraintId]) REFERENCES [App_DataDictionary].[DatabaseConstraint] ([ConstraintId]),
-	CONSTRAINT [FK_DatabaseConstraintTableColumn] FOREIGN KEY ([ColumnId]) REFERENCES [App_DataDictionary].[DatabaseTableColumn] ([ColumnId]),
+	CONSTRAINT [FK_DatabaseConstraintTableColumn] FOREIGN KEY ([ColumnId]) REFERENCES [AppCatalog].[TableColumn] ([ColumnId]),
 	CONSTRAINT [CK_DatabaseConstraintReferenced] CHECK (([ReferencedSchemaName] IS NULL AND [ReferencedTableName] IS NULL AND [ReferencedColumnName] IS NULL) OR ([ReferencedSchemaName] IS NOT NULL AND [ReferencedTableName] IS NOT NULL AND [ReferencedColumnName] IS NOT NULL)),
 )
 GO

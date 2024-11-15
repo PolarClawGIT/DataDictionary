@@ -1,14 +1,18 @@
-﻿CREATE VIEW [AppCatalog].[DomainHs] As
+﻿CREATE VIEW [AppCatalog].[TableColumnHs] AS
 -- Temporal View
--- View does not enforce Alternate Keys, just returns them.
-Select	F.[CatalogId], -- AK
-		F.[SchemaId],
-		D.[DomainId], -- PK
-		F.[DatabaseName], -- AK
-		F.[SchemaName], -- AK
-		D.[DomainName], -- AK
+Select	FC.[CatalogId], -- AK
+		FS.[SchemaId],
+		FT.[TableId],
+		D.[ColumnId], -- PK
+		FC.[DatabaseName], -- AK
+		FS.[SchemaName], -- AK
+		FT.[TableName], -- AK
+		FT.[TableType],
+		D.[ColumnName], -- AK
+		D.[OrdinalPosition],
+		D.[IsNullable],
 		D.[DataType],
-		D.[DomainDefault],
+		D.[ColumnDefault],
 		D.[CharacterMaximumLength],
 		D.[CharacterOctetLength],
 		D.[NumericPrecision],
@@ -21,6 +25,14 @@ Select	F.[CatalogId], -- AK
 		D.[CollationCatalog],
 		D.[CollationSchema],
 		D.[CollationName],
+		D.[DomainCatalog],
+		D.[DomainSchema],
+		D.[DomainName],
+		D.[IsIdentity],
+		D.[IsHidden],
+		D.[IsComputed],
+		D.[ComputedDefinition],
+		D.[GeneratedAlwayType],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -32,33 +44,49 @@ Select	F.[CatalogId], -- AK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppCatalog].[Domain] D
+From	[AppCatalog].[TableColumn] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[HsCatalog].[Domain]
-			Where	[DomainId] = D.[DomainId] And
+			Where	[TableId] = D.[TableId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[HsCatalog].[Domain]
-			Where	[DomainId] = D.[DomainId] And
+			Where	[TableId] = D.[TableId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
 		Outer Apply (
-			-- Not specifying a For System_Time returns the current value
-			-- For System_Time <some date> returns the value for that date
-			-- Otherwise the last value is returned
+			Select	Top 1
+					[TableId],
+					[SchemaId],
+					[TableName],
+					[TableType]
+			From	[AppCatalog].[Table]
+			Where	[TableId] = D.[TableId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FT
+		Outer Apply (
 			Select	Top 1
 					[CatalogId],
 					[SchemaId],
-					[DatabaseName],
 					[SchemaName]
-			From	[AppCatalog].[SchemaHs]
-			Where	[SchemaId] = D.[SchemaId] And
+			From	[AppCatalog].[Schema]
+			Where	[SchemaId] = FT.[SchemaId] And
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) F
-
+			Order By [SysStart] Desc) FS
+		Outer Apply (
+			Select	Top 1
+					[CatalogId],
+					[DatabaseName]
+			From	[AppCatalog].[Catalog]
+			Where	[CatalogId] = FS.[CatalogId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FC
 GO

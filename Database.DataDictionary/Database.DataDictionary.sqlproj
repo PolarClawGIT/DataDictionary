@@ -130,11 +130,9 @@
     <Build Include="App_DataDictionary\Tables\Model.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseTable.sql" />
     <Build Include="App_DataDictionary\Tables\ModelAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\ModelEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelCatalog.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
@@ -147,12 +145,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeProperty.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseTable.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTable.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTableColumn.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeModel.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
@@ -203,11 +195,9 @@
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
     <Build Include="App_DataDictionary\Functions\funcSplitNameSpace.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseTable_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutine_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
@@ -355,13 +345,13 @@
     <Build Include="HsCatalog\Tables\Schema.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogSchema.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogSchemaAuthorization.sql" />
-    <Build Include="AppCatalog\Views\CatalogHs.sql" />
-    <Build Include="AppCatalog\Views\SchemaHs.sql" />
+    <Build Include="AppCatalog\Views\Catalog_Hs.sql" />
+    <Build Include="AppCatalog\Views\Schema_Hs.sql" />
     <Build Include="AppGeneral\Views\HelpSubjectHs.sql" />
     <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
     <Build Include="AppCatalog\Tables\Domain.sql" />
     <Build Include="HsCatalog\Tables\Domain.sql" />
-    <Build Include="AppCatalog\Views\DomainHs.sql" />
+    <Build Include="AppCatalog\Views\Domain_Hs.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetDomain.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetDomain.sql" />
     <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
@@ -373,7 +363,7 @@
     <Build Include="AppCatalog\Stored Procedures\procGetProperty.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetProperty.sql" />
     <Build Include="AppCatalog\User Defined Types\typeProperty.sql" />
-    <Build Include="AppCatalog\Views\PropertyHs.sql" />
+    <Build Include="AppCatalog\Views\Property_Hs.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogPropertyAuthroization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalogProperty.sql" />
     <Build Include="AppGeneral\Tables\TransactionLog.sql" />
@@ -386,6 +376,23 @@
     <Build Include="AppCatalog\Triggers\trigSchema.sql" />
     <Build Include="AppCatalog\Triggers\trigProperty.sql" />
     <Build Include="AppCatalog\Triggers\trigDomain.sql" />
+    <Build Include="AppCatalog\Tables\Table.sql" />
+    <Build Include="AppCatalog\Tables\TableColumn.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetTable.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetTableColumn.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetTable.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetTableColumn.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeTable.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeTableColumn.sql" />
+    <Build Include="HsCatalog\Tables\Table.sql" />
+    <Build Include="HsCatalog\Tables\TableColumn.sql" />
+    <Build Include="AppCatalog\Views\Table_Hs.sql" />
+    <Build Include="AppCatalog\Views\TableColumn_Hs.sql" />
+    <Build Include="AppSecurity\Functions\funcCatalogTableAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogTable.sql" />
+    <Build Include="AppCatalog\Triggers\trigTable.sql" />
+    <Build Include="AppCatalog\Triggers\trigTableColumn.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogTableColumn.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

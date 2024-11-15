@@ -1,24 +1,27 @@
-﻿CREATE PROCEDURE [AppCatalog].[procGetDomain]
+﻿CREATE PROCEDURE [AppCatalog].[procGetTableColumn]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
-		@DomainId UniqueIdentifier = Null,
+		@TableId UniqueIdentifier = Null,
+		@ColumnId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
 		@IncludeHistory Bit = 0, -- History is included, @AsOfUtcDate and @IncludeDeleted is ignored
 		@IncludeDeleted Bit = 0  -- Include Deleted rows. @AsOfUtcDate is ignored
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on DatabaseDomain.
+/* Description: Performs Get on DatabaseColumn.
 */
-Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
-
 Select	[CatalogId],
-		[DomainId],
+		[ColumnId],
 		[DatabaseName],
 		[SchemaName],
-		[DomainName],
+		[TableName],
+		[TableType],
+		[ColumnName],
+		[OrdinalPosition],
+		[ColumnDefault],
+		[IsNullable],
 		[DataType],
-		[DomainDefault],
 		[CharacterMaximumLength],
 		[CharacterOctetLength],
 		[NumericPrecision],
@@ -31,6 +34,14 @@ Select	[CatalogId],
 		[CollationCatalog],
 		[CollationSchema],
 		[CollationName],
+		[DomainCatalog],
+		[DomainSchema],
+		[DomainName],
+		[IsIdentity],
+		[IsHidden],
+		[IsComputed],
+		[ComputedDefinition],
+		[GeneratedAlwayType],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -40,13 +51,13 @@ Select	[CatalogId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppCatalog].[DomainHs] For System_Time All
+From	[AppCatalog].[TableColumnHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		(@DomainId is Null Or @DomainId = [DomainId]) And
+		(@TableId is Null Or @TableId = [TableId]) And
+		(@ColumnId is Null Or @ColumnId = [ColumnId]) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And
 		(@ModelId is Null Or [CatalogId] In (
 			Select	[CatalogId]
 			From	[AppModel].[ModelCatalogAK]
 			Where	@ModelId = [ModelId]))
-
 GO

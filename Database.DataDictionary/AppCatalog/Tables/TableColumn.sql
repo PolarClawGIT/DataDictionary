@@ -1,9 +1,7 @@
-﻿CREATE TABLE [App_DataDictionary].[DatabaseTableColumn]
+﻿CREATE TABLE [AppCatalog].[TableColumn]
 (
-	-- Note: GetSchema returns the columns for both View and Tables.
-	-- [INFORMATION_SCHEMA] has one view that represents columns from View and Tables.
-	-- This structure matches the implementation for both.
-	-- Computed and Generated Columns are also identified.
+	-- See notes for [Table].
+	-- Column behavior is modified by [Table].[TableType]
 	[ColumnId]              UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableColumId] DEFAULT (newid()),
 	[TableId]               UniqueIdentifier Not Null,
 	[ColumnName]            SysName Not Null,
@@ -32,16 +30,15 @@
 	[ComputedDefinition]    NVarChar(Max) Null,
 	[GeneratedAlwayType]    NVarChar(60) Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
-	[ModifiedBy] SysName Not Null CONSTRAINT [DF_DatabaseTableColumn_ModifiedBy] DEFAULT (original_login()),
-	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTableColumn_SysStart] DEFAULT (sysdatetime()),
-	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTableColumn_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TableColumn_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TableColumn_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_DatabaseTableColumn] PRIMARY KEY CLUSTERED ([ColumnId] ASC),
-	CONSTRAINT [FK_DatabaseTableColumnTable] FOREIGN KEY ([TableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
-)
+	CONSTRAINT [PK_TableColumn] PRIMARY KEY CLUSTERED ([ColumnId] ASC),
+	CONSTRAINT [FK_TableColumnTable] FOREIGN KEY ([TableId]) REFERENCES [AppCatalog].[Table] ([TableId]),
+)  WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsCatalog].[TableColumn]))
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseTableColumn]
-    ON [App_DataDictionary].[DatabaseTableColumn]([ColumnName], [TableId]);
+CREATE UNIQUE NONCLUSTERED INDEX [UX_TableColumn]
+    ON [AppCatalog].[TableColumn]([ColumnName], [TableId]);
 GO
 

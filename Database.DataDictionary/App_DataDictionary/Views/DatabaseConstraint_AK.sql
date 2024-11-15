@@ -15,7 +15,7 @@ From	[AppCatalog].[Catalog] C
 		On	C.[CatalogId] = S.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseConstraint] T
 		On	S.[SchemaId] = T.[SchemaId]
-		Inner Join [App_DataDictionary].[DatabaseTable] N
+		Inner Join [AppCatalog].[Table] N
 		On	T.[TableId] = N.[TableId]
 GO
 /*

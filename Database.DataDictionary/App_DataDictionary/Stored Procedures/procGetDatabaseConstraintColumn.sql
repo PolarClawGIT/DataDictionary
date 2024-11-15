@@ -21,7 +21,7 @@ Select	T.[CatalogId],
 		D.[ReferencedTableName],
 		D.[ReferencedColumnName]
 From	[App_DataDictionary].[DatabaseConstraintColumn] D
-		Inner Join [App_DataDictionary].[DatabaseTableColumn] C
+		Inner Join [AppCatalog].[TableColumn] C
 		On	D.[ColumnId] = C.[ColumnId]
 		Inner Join [App_DataDictionary].[DatabaseConstraintColumn_AK] T
 		On	D.[ConstraintColumnId] = T.[ConstraintColumnId]

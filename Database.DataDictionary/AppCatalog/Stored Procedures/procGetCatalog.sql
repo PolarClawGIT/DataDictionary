@@ -32,6 +32,6 @@ Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUt
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And
 		(@ModelId is Null Or [CatalogId] In (
 			Select	[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog]
+			From	[AppModel].[ModelCatalogAK]
 			Where	@ModelId = [ModelId]))
 GO

@@ -1,10 +1,12 @@
-﻿CREATE VIEW [AppCatalog].[SchemaHs] As
+﻿CREATE VIEW [AppCatalog].[TableHs] AS
 -- Temporal View
--- View does not enforce Alternate Keys, just returns them.
-Select	F.[CatalogId], -- AK
-		D.[SchemaId], -- PK
-		F.[DatabaseName], -- AK
-		D.[SchemaName], -- AK
+Select	FC.[CatalogId],  -- AK
+		FS.[SchemaId],
+		D.[TableId], -- PK
+		FC.[DatabaseName], -- AK
+		FS.[SchemaName], -- AK
+		D.[TableName], -- AK
+		D.[TableType],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -16,30 +18,39 @@ Select	F.[CatalogId], -- AK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppCatalog].[Schema] D
+From	[AppCatalog].[Table] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[Schema]
-			Where	[SchemaId] = D.[SchemaId] And
+			From	[HsCatalog].[Domain]
+			Where	[TableId] = D.[TableId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[Schema]
-			Where	[SchemaId] = D.[SchemaId] And
+			From	[HsCatalog].[Domain]
+			Where	[TableId] = D.[TableId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
 		Outer Apply (
-			-- Not specifying a For System_Time returns the current value
-			-- For System_Time <some date> returns the value for that date
-			-- Otherwise the last value is returned
+			Select	Top 1
+					[CatalogId],
+					[SchemaId],
+					[SchemaName]
+			From	[AppCatalog].[Schema]
+			Where	[SchemaId] = D.[SchemaId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FS
+		Outer Apply (
 			Select	Top 1
 					[CatalogId],
 					[DatabaseName]
-			From	[AppCatalog].[CatalogHs]
-			Where	[CatalogId] = D.[CatalogId] And
+			From	[AppCatalog].[Catalog]
+			Where	[CatalogId] = FS.[CatalogId] And
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) F
+			Order By [SysStart] Desc) FC
 GO
