@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseRoutineParameter]
+﻿CREATE PROCEDURE [AppCatalog].[procSetRoutineParameter]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseRoutineParameter] ReadOnly
@@ -7,7 +7,7 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseRoutineParameter.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -69,11 +69,11 @@ Begin Try
 			NullIf(Trim(D.[DomainSchema]),'') As [DomainSchema],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName]
 	From	@Data D
-			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			Inner Join [AppCatalog].[RoutineHs] P
 			On	D.[DatabaseName] = P.[DatabaseName] And
 				D.[SchemaName] = P.[SchemaName] And
 				D.[RoutineName] = P.[RoutineName]
-			Left Join [App_DataDictionary].[DatabaseRoutineParameter_AK] A
+			Left Join [AppCatalog].[RoutineParameterHs] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[RoutineName] = A.[RoutineName] And
@@ -94,9 +94,9 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
-	From	[App_DataDictionary].[DatabaseRoutineParameter] T
-			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+	Delete From [AppCatalog].[RoutineParameter]
+	From	[AppCatalog].[RoutineParameter] T
+			Inner Join [AppCatalog].[RoutineHs] P
 			On	T.[RoutineId] = P.[RoutineId]
 			Left Join @Values S
 			On	T.[ParameterId] = S.[ParameterId]
@@ -153,8 +153,8 @@ Begin Try
 				[DomainCatalog],
 				[DomainSchema],
 				[DomainName]
-		From	[App_DataDictionary].[DatabaseRoutineParameter])
-	Update [App_DataDictionary].[DatabaseRoutineParameter]
+		From	[AppCatalog].[RoutineParameter])
+	Update [AppCatalog].[RoutineParameter]
 	Set		[RoutineId] = S.[RoutineId],
 			[ParameterName] = S.[ParameterName],
 			[OrdinalPosition] = S.[OrdinalPosition],
@@ -174,12 +174,12 @@ Begin Try
 			[DomainCatalog] = S.[DomainCatalog],
 			[DomainSchema] = S.[DomainSchema],
 			[DomainName] = S.[DomainName]
-	From	[App_DataDictionary].[DatabaseRoutineParameter] T
+	From	[AppCatalog].[RoutineParameter] T
 			Inner Join [Delta] S
 			On	T.[ParameterId] = S.[ParameterId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutineParameter]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseRoutineParameter] (
+	Insert Into [AppCatalog].[RoutineParameter] (
 			[ParameterId],
 			[RoutineId],
 			[ParameterName],
@@ -221,7 +221,7 @@ Begin Try
 			S.[DomainSchema],
 			S.[DomainName]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseRoutineParameter] T
+			Left Join [AppCatalog].[RoutineParameter] T
 			On	S.[ParameterId] = T.[ParameterId]
 	Where	T.[ParameterId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutineParameter]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

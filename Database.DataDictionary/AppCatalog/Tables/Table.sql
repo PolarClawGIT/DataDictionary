@@ -9,7 +9,7 @@
 	[SchemaId]            UniqueIdentifier Not Null,
 	[TableName]           SysName Not Null,
 	[TableType]           [App_DataDictionary].[typeObjectType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
-	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
+	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Table_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Table_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

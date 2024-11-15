@@ -114,9 +114,9 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseDomain] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
-	From	[App_DataDictionary].[DatabaseRoutineParameter] T
-			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+	Delete From [AppCatalog].[RoutineParameter]
+	From	[AppCatalog].[RoutineParameter] T
+			Inner Join [AppCatalog].[RoutineHs] P
 			On	T.[RoutineId] = P.[RoutineId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
@@ -130,8 +130,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineParameter] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseRoutine]
-	From	[App_DataDictionary].[DatabaseRoutine] T
+	Delete From [AppCatalog].[Routine]
+	From	[AppCatalog].[Routine] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S

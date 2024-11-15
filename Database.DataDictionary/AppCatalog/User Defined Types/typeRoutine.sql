@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDatabaseRoutine] AS TABLE
+﻿CREATE TYPE [AppCatalog].[typeRoutine] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
 	[RoutineId]              UniqueIdentifier Null,

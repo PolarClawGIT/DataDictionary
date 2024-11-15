@@ -4,6 +4,7 @@
 	-- Column behavior is modified by [Table].[TableType]
 	[ColumnId]              UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableColumId] DEFAULT (newid()),
 	[TableId]               UniqueIdentifier Not Null,
+	-- Note: TableColumn, RoutineColumn and ConstraintColumn all use the same base definitions.
 	[ColumnName]            SysName Not Null,
     [OrdinalPosition]       Int Not Null,
 	[IsNullable]            Bit Null,
@@ -29,7 +30,7 @@
 	[IsComputed]            Bit Null,
 	[ComputedDefinition]    NVarChar(Max) Null,
 	[GeneratedAlwayType]    NVarChar(60) Null,
-	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
+	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TableColumn_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TableColumn_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),

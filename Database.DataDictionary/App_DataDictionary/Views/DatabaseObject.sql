@@ -23,7 +23,7 @@ With [Object] As (
 			[SchemaName],
 			[RoutineName] As [ObjectName],
 			[RoutineId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseRoutine_AK]
+	From	[AppCatalog].[RoutineHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],

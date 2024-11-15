@@ -21,12 +21,12 @@ Select	FC.[CatalogId],  -- AK
 From	[AppCatalog].[Table] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[Domain]
+			From	[HsCatalog].[Table]
 			Where	[TableId] = D.[TableId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[Domain]
+			From	[HsCatalog].[Table]
 			Where	[TableId] = D.[TableId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C

@@ -1,13 +1,13 @@
-﻿CREATE VIEW [AppCatalog].[TableColumnHs] AS
+﻿CREATE VIEW [AppCatalog].[RoutineColumnHs] AS
 -- Temporal View
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
-		FT.[TableId],
+		FR.[RoutineId],
 		D.[ColumnId], -- PK
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
-		FT.[TableName], -- AK
-		FT.[TableType],
+		FR.[RoutineName], -- AK
+		FR.[RoutineType],
 		D.[ColumnName], -- AK
 		D.[OrdinalPosition],
 		D.[IsNullable],
@@ -44,16 +44,16 @@ Select	FC.[CatalogId], -- AK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppCatalog].[TableColumn] D
+From	[AppCatalog].[RoutineColumn] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[HsCatalog].[RoutineColumn]
+			Where	[ColumnId] = D.[ColumnId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[HsCatalog].[RoutineColumn]
+			Where	[ColumnId] = D.[ColumnId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -64,21 +64,21 @@ From	[AppCatalog].[TableColumn] D
 		-- Otherwise the last value is returned
 		Outer Apply (
 			Select	Top 1
-					[TableId],
+					[RoutineId],
 					[SchemaId],
-					[TableName],
-					[TableType]
-			From	[AppCatalog].[Table]
-			Where	[TableId] = D.[TableId] And
+					[RoutineName],
+					[RoutineType]
+			From	[AppCatalog].[Routine]
+			Where	[RoutineId] = D.[RoutineId] And
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) FT
+			Order By [SysStart] Desc) FR
 		Outer Apply (
 			Select	Top 1
 					[CatalogId],
 					[SchemaId],
 					[SchemaName]
 			From	[AppCatalog].[Schema]
-			Where	[SchemaId] = FT.[SchemaId] And
+			Where	[SchemaId] = FR.[SchemaId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FS
 		Outer Apply (

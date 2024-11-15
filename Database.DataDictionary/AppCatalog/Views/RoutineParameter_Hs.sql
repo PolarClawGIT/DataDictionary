@@ -1,18 +1,16 @@
-﻿CREATE VIEW [AppCatalog].[TableColumnHs] AS
+﻿CREATE VIEW [AppCatalog].[RoutineParameterHs] AS
 -- Temporal View
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
-		FT.[TableId],
-		D.[ColumnId], -- PK
+		FR.[RoutineId],
+		D.[ParameterId], -- PK
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
-		FT.[TableName], -- AK
-		FT.[TableType],
-		D.[ColumnName], -- AK
+		FR.[RoutineName], -- AK
+		FR.[RoutineType],
+		D.[ParameterName], -- AK
 		D.[OrdinalPosition],
-		D.[IsNullable],
 		D.[DataType],
-		D.[ColumnDefault],
 		D.[CharacterMaximumLength],
 		D.[CharacterOctetLength],
 		D.[NumericPrecision],
@@ -28,11 +26,6 @@ Select	FC.[CatalogId], -- AK
 		D.[DomainCatalog],
 		D.[DomainSchema],
 		D.[DomainName],
-		D.[IsIdentity],
-		D.[IsHidden],
-		D.[IsComputed],
-		D.[ComputedDefinition],
-		D.[GeneratedAlwayType],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -44,16 +37,16 @@ Select	FC.[CatalogId], -- AK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppCatalog].[TableColumn] D
+From	[AppCatalog].[RoutineParameter] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[HsCatalog].[RoutineParameter]
+			Where	[RoutineId] = D.[RoutineId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[HsCatalog].[RoutineParameter]
+			Where	[RoutineId] = D.[RoutineId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -64,21 +57,21 @@ From	[AppCatalog].[TableColumn] D
 		-- Otherwise the last value is returned
 		Outer Apply (
 			Select	Top 1
-					[TableId],
+					[RoutineId],
 					[SchemaId],
-					[TableName],
-					[TableType]
-			From	[AppCatalog].[Table]
-			Where	[TableId] = D.[TableId] And
+					[RoutineName],
+					[RoutineType]
+			From	[AppCatalog].[Routine]
+			Where	[RoutineId] = D.[RoutineId] And
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) FT
+			Order By [SysStart] Desc) FR
 		Outer Apply (
 			Select	Top 1
 					[CatalogId],
 					[SchemaId],
 					[SchemaName]
 			From	[AppCatalog].[Schema]
-			Where	[SchemaId] = FT.[SchemaId] And
+			Where	[SchemaId] = FR.[SchemaId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FS
 		Outer Apply (
@@ -89,4 +82,5 @@ From	[AppCatalog].[TableColumn] D
 			Where	[CatalogId] = FS.[CatalogId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FC
+GO
 GO
