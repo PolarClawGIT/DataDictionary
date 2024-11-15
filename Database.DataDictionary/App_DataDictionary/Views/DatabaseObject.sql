@@ -9,7 +9,7 @@ With [Object] As (
 			[SchemaName],
 			[ConstraintName] As [ObjectName],
 			[ConstraintId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseConstraint_AK]
+	From	[AppCatalog].[ConstraintHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],

@@ -66,9 +66,9 @@ Begin Try
 
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
-	From	[App_DataDictionary].[DatabaseConstraintColumn] T
-			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
+	Delete From [AppCatalog].[ConstraintColumn]
+	From	[AppCatalog].[ConstraintColumn] T
+			Inner Join [AppCatalog].[ConstraintHs] P
 			On	T.[ConstraintId] = P.[ConstraintId]
 			Left Join @Values S
 			On	P.[CatalogId] = S.[CatalogId]
@@ -82,8 +82,8 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn] (Catalog): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DatabaseConstraint]
-	From	[App_DataDictionary].[DatabaseConstraint] T
+	Delete From [AppCatalog].[Constraint]
+	From	[AppCatalog].[Constraint] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
 			On	T.[SchemaId] = P.[SchemaId]
 			Left Join @Values S

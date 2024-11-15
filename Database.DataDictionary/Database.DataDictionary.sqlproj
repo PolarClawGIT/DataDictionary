@@ -147,14 +147,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeModel.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
-    <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraint.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseConstraint.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraintColumn.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
@@ -189,8 +181,6 @@
     <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
@@ -408,6 +398,21 @@
     <Build Include="AppCatalog\Stored Procedures\procGetRoutineColumn.sql" />
     <Build Include="AppCatalog\User Defined Types\typeRoutineColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetRoutineColumn.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetConstraint.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procGetConstraintColumn.sql" />
+    <Build Include="AppCatalog\Views\Constraint_Hs.sql" />
+    <Build Include="AppCatalog\Views\ConstraintColumn_Hs.sql" />
+    <Build Include="AppCatalog\Tables\Constraint.sql" />
+    <Build Include="AppCatalog\Tables\ConstraintColumn.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeConstraint.sql" />
+    <Build Include="AppCatalog\User Defined Types\typeConstraintColumn.sql" />
+    <Build Include="HsCatalog\Tables\Constraint.sql" />
+    <Build Include="HsCatalog\Tables\ConstraintColumn.sql" />
+    <Build Include="AppSecurity\Functions\funcCatalogConstraintAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogConstraintColumn.sql" />
+    <Build Include="AppSecurity\Policy\policyCatalogConstraint.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetConstraint.sql" />
+    <Build Include="AppCatalog\Stored Procedures\procSetConstraintColumn.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

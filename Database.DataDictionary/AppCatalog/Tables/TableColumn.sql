@@ -4,7 +4,7 @@
 	-- Column behavior is modified by [Table].[TableType]
 	[ColumnId]              UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableColumId] DEFAULT (newid()),
 	[TableId]               UniqueIdentifier Not Null,
-	-- Note: TableColumn, RoutineColumn and ConstraintColumn all use the same base definitions.
+	-- Note: TableColumn and RoutineColumn use the same base definitions.
 	[ColumnName]            SysName Not Null,
     [OrdinalPosition]       Int Not Null,
 	[IsNullable]            Bit Null,
