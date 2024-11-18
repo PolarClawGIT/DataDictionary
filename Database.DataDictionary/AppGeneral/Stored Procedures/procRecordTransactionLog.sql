@@ -6,7 +6,8 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 -- Transaction Handling
-Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
+Declare	@TRN_IsNewTran Bit = 0, -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
+		@RowCount Int = 0 -- @@RowCount is reset just by reading @@RowCount. This is used to presist the value.
 
 Begin Try
 	-- Begin Transaction
@@ -32,9 +33,8 @@ Begin Try
 	Group By S.[session_id],
 			S.[login_time],
 			T.[transaction_id]
-
-	-- Tracking statement, example
-	Print FormatMessage ('Record [AppCatalog].[TransactionLog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Set @RowCount = @@RowCount
+	If @RowCount > 0 Print FormatMessage ('Insert [AppGeneral].[TransactionLog]: %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -44,7 +44,7 @@ Begin Try
 		Print FormatMessage ('Commit Transaction Issued ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 	  End -- Commit Transaction
 	  -- This is a nested transaction, must be committed by outer transaction
-	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
+	--Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
 	-- Debug Data
