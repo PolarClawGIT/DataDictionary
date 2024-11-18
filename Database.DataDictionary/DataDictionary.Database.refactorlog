@@ -2390,4 +2390,63 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procSetConstraintColumn]" />
   </Operation>
+  <Operation Name="Move Schema" Key="88fa9589-e562-4f5b-a577-4a1e0ac578fc" ChangeDateTime="11/18/2024 15:08:43">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseReference]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1cf6ae01-f0a0-4159-b79c-7d62279cd9b2" ChangeDateTime="11/18/2024 15:08:56">
+    <Property Name="ElementName" Value="[AppCatalog].[DatabaseReference]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Reference]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="ad26d0df-fe78-4910-9767-bc28111176ed" ChangeDateTime="11/18/2024 15:10:16">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procGetDatabaseReference]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c8f2d780-0294-47e6-b19e-023ecd9afb6c" ChangeDateTime="11/18/2024 15:10:28">
+    <Property Name="ElementName" Value="[AppCatalog].[procGetDatabaseReference]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetReference]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f5dfb781-a061-465c-978d-cad80a9ff1d7" ChangeDateTime="11/18/2024 15:11:14">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetDatabaseReference]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetReference]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="73547d69-baf6-4e98-b322-70c81ec8fd15" ChangeDateTime="11/18/2024 15:11:28">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetReference]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="55610c44-4cc5-4d56-bdcb-516f2d1d67c7" ChangeDateTime="11/18/2024 15:12:38">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeDatabaseReference]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="AppCatalog" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c7132c03-d2e9-4dc4-ae80-e2af5bd8f1f7" ChangeDateTime="11/18/2024 15:12:49">
+    <Property Name="ElementName" Value="[AppCatalog].[typeDatabaseReference]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppCatalog]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeReference]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="86285d4f-561c-4b32-8aa0-e6d3f4b99298" ChangeDateTime="11/18/2024 15:35:05">
+    <Property Name="ElementName" Value="[AppCatalog].[Reference].[IsUpdated]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppCatalog].[Reference]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IsModified]" />
+  </Operation>
 </Operations>

@@ -1,13 +1,13 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseReference]
+﻿CREATE PROCEDURE [AppCatalog].[procSetReference]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDatabaseReference] ReadOnly
+		@Data [AppCatalog].[typeReference] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseReference.
 */
-
+; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -18,7 +18,7 @@ Begin Try
 		Begin Transaction
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
-
+/*
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ReferenceId]				uniqueidentifier NOT NULL,
@@ -62,7 +62,7 @@ Begin Try
 				D.[DatabaseName] = O.[DatabaseName] And
 				D.[SchemaName] = O.[SchemaName] And
 				D.[ObjectName] = O.[ObjectName]
-			Left Join [App_DataDictionary].[DatabaseReference] R
+			Left Join [AppCatalog].[Reference] R
 			On	O.[ObjectId] = R.[ObjectId] And
 				IsNull(D.[ReferencedDatabaseName],'') = IsNull(R.[ReferencedDatabaseName],'') And
 				IsNull(D.[ReferencedSchemaName],'') = IsNull(R.[ReferencedSchemaName],'') And
@@ -82,8 +82,8 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 				
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DatabaseReference]
-	From	[App_DataDictionary].[DatabaseReference] T
+	Delete From [AppCatalog].[Reference]
+	From	[AppCatalog].[Reference] T
 			Inner Join [App_DataDictionary].[DatabaseObject] P
 			On	T.[ObjectId] = P.[ObjectId]
 			Left Join @Values S
@@ -128,13 +128,13 @@ Begin Try
 				[IsCallerDependent],
 				[IsAmbiguous],
 				[IsSelected],
-				[IsUpdated],
+				[IsModified],
 				[IsSelectAll],
 				[IsAllColumnsFound],
 				[IsInsertAll],
 				[IsIncomplete]
-		From	[App_DataDictionary].[DatabaseReference])
-	Update [App_DataDictionary].[DatabaseReference]
+		From	[AppCatalog].[Reference])
+	Update [AppCatalog].[Reference]
 	Set		[ObjectId] = S.[ObjectId],
 			[ObjectType] = S.[ObjectType],
 			[ReferencedDatabaseName] = S.[ReferencedDatabaseName],
@@ -145,17 +145,17 @@ Begin Try
 			[IsCallerDependent] = S.[IsCallerDependent],
 			[IsAmbiguous] = S.[IsAmbiguous],
 			[IsSelected] = S.[IsSelected],
-			[IsUpdated] = S.[IsUpdated],
+			[IsModified] = S.[IsUpdated],
 			[IsSelectAll] = S.[IsSelectAll],
 			[IsAllColumnsFound] = S.[IsAllColumnsFound],
 			[IsInsertAll] = S.[IsInsertAll],
 			[IsIncomplete] = S.[IsIncomplete]
-	From	[App_DataDictionary].[DatabaseReference] T
+	From	[AppCatalog].[Reference] T
 			Inner Join [Delta] S
 			On	T.[ReferenceId] = S.[ReferenceId]
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseReference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DatabaseReference] (
+	Insert Into [AppCatalog].[Reference] (
 			[ReferenceId],
 			[ObjectId],
 			[ObjectType],
@@ -167,7 +167,7 @@ Begin Try
 			[IsCallerDependent],
 			[IsAmbiguous],
 			[IsSelected],
-			[IsUpdated],
+			[IsModified],
 			[IsSelectAll],
 			[IsAllColumnsFound],
 			[IsInsertAll],
@@ -189,11 +189,11 @@ Begin Try
 			S.[IsInsertAll],
 			S.[IsIncomplete]
 	From	@Values S
-			Left Join [App_DataDictionary].[DatabaseReference] T
+			Left Join [AppCatalog].[Reference] T
 			On	S.[ReferenceId] = T.[ReferenceId]
 	Where	T.[ReferenceId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseReference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
+*/
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

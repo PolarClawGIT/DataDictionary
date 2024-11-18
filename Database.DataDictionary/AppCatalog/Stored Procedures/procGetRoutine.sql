@@ -15,7 +15,16 @@ Select	[CatalogId],
 		[DatabaseName],
 		[SchemaName],
 		[RoutineName],
-		[RoutineType]
+		[RoutineType],
+		-- Temporal Data
+		[CreatedOn],
+		[CreatedBy],
+		[RemovedOn],
+		[RemovedBy],
+		[IsInserted],
+		[IsUpdated],
+		[IsDeleted],
+		[IsCurrent]
 From	[AppCatalog].[RoutineHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@RoutineId is Null Or @RoutineId = [RoutineId]) And
