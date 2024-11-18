@@ -3,8 +3,8 @@
 	[CatalogId]            UniqueIdentifier Null,
 	[CatalogTitle]         [App_DataDictionary].[typeTitle] Null,
 	[CatalogDescription]   [App_DataDictionary].[typeDescription] Null,
-	[SourceServerName]     SysName          Null,
-	[SourceDatabaseName]   SysName          Null,
+	[ServerName]           SysName          Null,
+	[DatabaseName]         SysName          Null,
 	[SourceDate]           DateTime         Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
