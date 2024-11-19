@@ -21,6 +21,26 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 50000, 'CatalogId in @Data contains Catalogs that do not match @CatalogId', 1;
+
+	If Exists (
+		Select	1
+		From	@Data
+		Group By IsNull([CatalogId], @CatalogId)
+		Having Count(*) > 1)
+	Throw 50000, 'Duplicate CatalogId in @Data are not allowed', 11;
+
+	If @ModelId is not null And Exists (
+		Select	1
+		From	@Data
+		Group By [DatabaseName]
+		Having Count(*) > 1)
+	Throw 50000, 'Duplicate Database Name are not allowed for a Model', 12;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table ( -- Needs to match the target data structure
@@ -31,7 +51,7 @@ Begin Try
 		[DatabaseName] SysName Not Null,
 		[SourceDate] DateTime Not Null,
 		Primary Key ([CatalogId]))
-	
+
 	Insert Into @Values
 	Select	Coalesce(D.[CatalogId], @CatalogId, NewId()),
 			NullIf(Trim(IsNull(D.[CatalogTitle], D.[DatabaseName])),'') As [CatalogTitle],
@@ -40,8 +60,11 @@ Begin Try
 			NullIf(Trim(D.[DatabaseName]), '') As [SourceDatabaseName],
 			IsNull(D.[SourceDate], GetDate()) As [SourceDate]
 	From	@Data D
-	Where	(@CatalogId is Null Or @CatalogId = D.[CatalogId])
+	Where	(@CatalogId is Null Or @CatalogId = Coalesce(D.[CatalogId], @CatalogId))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
@@ -61,14 +84,11 @@ Begin Try
 	-- Apply Changes (To Delete, the @CatalogId must be specified)
 	Delete From [App_DataDictionary].[ModelCatalog]
 	From	[App_DataDictionary].[ModelCatalog] T
-			Inner Join [AppCatalog].[Catalog] P
-			On	T.[CatalogId] = P.[CatalogId]
 			Left Join @Values S
-			On	P.[CatalogId] = S.[CatalogId]
+			On	T.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
 			T.[ModelId] = @ModelId -- @ModelId must be specfied
-	Set @RowCount = @@RowCount
-	IF @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Catalog): %i, %s', @RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Catalog): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppCatalog].[Reference]
 	From	[AppCatalog].[Reference] T
