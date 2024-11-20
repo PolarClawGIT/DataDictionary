@@ -179,6 +179,10 @@ namespace DataDictionary.DataLayer.AppGeneral
         protected HelpItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return HelpSubject ?? String.Empty; }
     }
 
     /// <summary>

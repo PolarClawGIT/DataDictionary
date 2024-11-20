@@ -8,7 +8,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on HelpSubject.
 */
 
-Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysDatetime())
+Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
 Select	[HelpId],
 		[HelpSubject],

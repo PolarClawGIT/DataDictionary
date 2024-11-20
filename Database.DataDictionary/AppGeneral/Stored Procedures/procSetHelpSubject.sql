@@ -31,10 +31,22 @@ Begin Try
 	Select	Coalesce(D.[HelpId], @HelpId, NewId()) As [HelpId],
 			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
 			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
-			NullIf(Trim(D.[HelpText]),'') As [HelpText],
-			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
+			Case
+				When D.[HelpText] Like '{\rtf1\ansi%'
+					Then D.[HelpText]
+				When D.[HelpText] is not null And
+					D.[HelpText] Not Like '{\rtf1\ansi%'
+					Then FormatMessage('{\rtf1\ansi %s}', D.[HelpText])
+				When NullIf(Trim(D.[HelpText]),'') is Null And 
+					NullIf(Trim(D.[HelpToolTip]),'') is not null
+					Then FormatMessage('{\rtf1\ansi %s}', Trim(D.[HelpToolTip]))
+				Else Null
+				End As [HelpText],
+			NullIf(Trim(S.[NameSpace]),'') As [NameSpace]
 	From	@Data D
-	Where	(@HelpId is Null or @HelpId = D.[HelpId])
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace] (D.[NameSpace]) S
+	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
+			S.[IsBase] = 1
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
