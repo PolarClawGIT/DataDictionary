@@ -27,7 +27,7 @@ Begin Try
 			Select	1
 			From	@Data
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
-	Throw 50000, 'CatalogId in @Data contains Catalogs that do not match @CatalogId', 1;
+	Throw 601010, 'Catalog not correct', 1;
 
 	If @ModelId is Not Null And
 		Exists (
@@ -37,7 +37,7 @@ Begin Try
 					On	(@CatalogId = M.[CatalogId] Or D.[CatalogId] = M.[CatalogId]) And
 						M.[ModelId] = @ModelId
 			Where	M.[ModelId] is Null)
-	Throw 50000, 'CatalogId or @CatalogId is not contained in the Model specfied', 2;
+	Throw 601020, 'Catalog not in Model', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -216,23 +216,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -242,6 +225,6 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_SEVERITY() Not In (0, 11) Exec [AppGeneral].[procThrowHelpSubject]
 End Catch
 GO

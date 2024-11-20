@@ -26,21 +26,21 @@ Begin Try
 			Select	1
 			From	@Data
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
-	Throw 50000, 'CatalogId in @Data contains Catalogs that do not match @CatalogId', 1;
+	Throw 601010, 'Catalog not correct', 1;
 
 	If Exists (
 		Select	1
 		From	@Data
 		Group By IsNull([CatalogId], @CatalogId)
 		Having Count(*) > 1)
-	Throw 50000, 'Duplicate CatalogId in @Data are not allowed', 11;
+	Throw 602010, 'Catalog Duplicate', 2;
 
 	If @ModelId is not null And Exists (
 		Select	1
 		From	@Data
 		Group By [DatabaseName]
 		Having Count(*) > 1)
-	Throw 50000, 'Duplicate Database Name are not allowed for a Model', 12;
+	Throw 602020, 'Duplicate Database within Model', 12;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table ( -- Needs to match the target data structure
@@ -87,7 +87,7 @@ Begin Try
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
-			T.[ModelId] = @ModelId -- @ModelId must be specfied
+			T.[ModelId] = @ModelId -- @ModelId must be specified
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Catalog): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppCatalog].[Reference]
@@ -287,23 +287,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -313,6 +296,6 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_SEVERITY() Not In (0, 11) Exec [AppGeneral].[procThrowHelpSubject]
 End Catch
 GO
