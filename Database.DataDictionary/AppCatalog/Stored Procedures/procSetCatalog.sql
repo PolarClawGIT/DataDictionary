@@ -50,7 +50,8 @@ Begin Try
 		[ServerName] SysName Not Null,
 		[DatabaseName] SysName Not Null,
 		[SourceDate] DateTime Not Null,
-		Primary Key ([CatalogId]))
+		Primary Key ([CatalogId]),
+		Unique ([CatalogTitle]))
 
 	Insert Into @Values
 	Select	Coalesce(D.[CatalogId], @CatalogId, NewId()),
@@ -296,6 +297,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Exec [AppGeneral].[procThrowHelpSubject]
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO
