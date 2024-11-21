@@ -1,5 +1,4 @@
-﻿Create PROCEDURE [AppCatalog].[procSetSchema]
-		@ModelId UniqueIdentifier = Null,
+﻿CREATE PROCEDURE [AppCatalog].[procSetSchema]
 		@CatalogId UniqueIdentifier = Null,
 		@SchemaId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeSchema] ReadOnly
@@ -27,17 +26,7 @@ Begin Try
 			Select	1
 			From	@Data
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
-	Throw 601010, 'Catalog not correct', 1;
-
-	If @ModelId is Not Null And
-		Exists (
-			Select	1
-			From	@Data D
-					Left Join [AppModel].[ModelCatalogAK] M
-					On	(@CatalogId = M.[CatalogId] Or D.[CatalogId] = M.[CatalogId]) And
-						M.[ModelId] = @ModelId
-			Where	M.[ModelId] is Null)
-	Throw 601020, 'Catalog not in Model', 2;
+	Throw 601010, '@Data contains other Catalogs', 1;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -51,15 +40,12 @@ Begin Try
 			Coalesce(D.[CatalogId], H.[CatalogId], @CatalogId) As [CatalogId],
 			NullIf(Trim(D.[SchemaName]), '') As [SchemaName]
 	From	@Data D
-			Left Join [AppModel].[ModelCatalogAK] M
-			On	Coalesce(D.[CatalogId], @CatalogId) = M.[CatalogId] And
-				@ModelId = M.[ModelId]
 			Left Join [AppCatalog].[SchemaHs] H
 			On	Coalesce(D.[CatalogId], @CatalogId) = H.[CatalogId] And
 				(D.[SchemaId] = H.[SchemaId] Or 
 				 D.[SchemaName] = H.[SchemaName])
 	Where	(@CatalogId is Null Or @CatalogId = Coalesce(D.[CatalogId], H.[CatalogId])) And
-			(@ModelId is Null Or @ModelId = M.[ModelId])
+			(@SchemaId is Null Or @SchemaId = Coalesce(D.[SchemaId], H.[SchemaId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
@@ -73,8 +59,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[ConstraintColumn] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -85,8 +72,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Constraint] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -97,8 +85,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[RoutineParameter] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -109,8 +98,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[RoutineColumn] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -121,8 +111,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Routine] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -133,8 +124,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[TableColumn] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -145,8 +137,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Table] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -157,8 +150,9 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Domain] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
@@ -169,10 +163,10 @@ Begin Try
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
-			H.[CatalogId] = @CatalogId And
-			H.[SchemaId] = IsNull(@SchemaId, H.[SchemaId])
-	Set @RowCount = @@RowCount
-	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Schema] (Schema): %i, %s', @RowCount, Convert(VarChar,GetDate()));
+			(@SchemaId is Not Null Or @CatalogId is Not Null) And
+			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[Schema]: %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[SchemaId],
@@ -190,7 +184,7 @@ Begin Try
 	From	[Delta] S
 			Inner Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
-	Print FormatMessage ('Update [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppCatalog].[Schema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Schema] (
 			[SchemaId],
@@ -203,7 +197,7 @@ Begin Try
 			Left Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
 	Where	T.[SchemaId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppCatalog].[Schema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

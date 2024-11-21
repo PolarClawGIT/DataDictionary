@@ -17,14 +17,16 @@ Declare	@ObjectId Int = Object_Id(ERROR_PROCEDURE()),
 		@Message NVarChar(2048) = null
 
 Declare @NameSpace Table (
-		[RankIndex] TinyInt Not Null,
-		[NameSpace] NVarChar(1023) Not Null )
+		[RankIndex] TinyInt Not Null, -- Priority
+		[NameSpace] NVarChar(1023) Not Null,
+		Primary Key ([RankIndex]))
 
 Insert Into @NameSpace
 Values	-- Patterns to match to
 		(1, FormatMessage('[Errors].[SqlException].[%s].[%s].[%i]', Object_Schema_Name(@ObjectId), Object_Name(@ObjectId), ERROR_NUMBER())), 
 		(2, FormatMessage('[Errors].[SqlException].[%s].[%i]', ERROR_PROCEDURE(), ERROR_NUMBER())), 
-		(3, FormatMessage('[Errors].[SqlException].[%i]', ERROR_NUMBER()))
+		(3, FormatMessage('[Errors].[SqlException].[%s].[%i]', Object_Schema_Name(@ObjectId), ERROR_NUMBER())), 
+		(4, FormatMessage('[Errors].[SqlException].[%i]', ERROR_NUMBER()))
 
 Select	Top 1
 		@Message = Coalesce([HelpToolTip], [HelpSubject])

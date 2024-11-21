@@ -26,14 +26,14 @@ Begin Try
 			Select	1
 			From	@Data
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
-	Throw 601010, 'Catalog not correct', 1;
+	Throw 601010, '@Data contains other catalogs then @CatalogId', 1;
 
 	If Exists (
 		Select	1
 		From	@Data
 		Group By IsNull([CatalogId], @CatalogId)
 		Having Count(*) > 1)
-	Throw 602010, 'Catalog Duplicate', 2;
+	Throw 602010, 'Catalog Duplicate', 11;
 
 	If @ModelId is not null And Exists (
 		Select	1
@@ -81,7 +81,7 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
-	-- Apply Changes (To Delete, the @CatalogId must be specified)
+	-- Apply Changes
 	Delete From [App_DataDictionary].[ModelCatalog]
 	From	[App_DataDictionary].[ModelCatalog] T
 			Left Join @Values S
@@ -216,7 +216,7 @@ Begin Try
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
-			T.[CatalogId] = @CatalogId
+			T.[CatalogId] = @CatalogId -- @CatalogId must be specfied
 	Print FormatMessage ('Delete [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
