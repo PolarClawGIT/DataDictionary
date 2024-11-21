@@ -25,7 +25,6 @@ Select	[CatalogId],
 		[ObjName],
 		[PropertyName],
 		[PropertyValue],
-		[CreatedBy],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

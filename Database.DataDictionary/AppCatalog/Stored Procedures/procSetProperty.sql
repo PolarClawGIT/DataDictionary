@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetProperty]
-		@ModelId       UniqueIdentifier = Null,
 		@CatalogId     UniqueIdentifier = Null,
 		@PropertyId    UniqueIdentifier = Null,
 		@Data          [AppCatalog].[typeProperty] ReadOnly
@@ -8,7 +7,6 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseExtendedProperty.
 */
-; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -21,6 +19,12 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 601010, '@Data contains other Catalogs', 1;
 
 	-- Clean the Data
 	Declare @Values Table (
@@ -38,7 +42,8 @@ Begin Try
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null,
-		Primary Key ([PropertyId]))
+		Primary Key ([PropertyId]),
+		Unique ([CatalogId], [Level0Name], [Level1Name], [Level2Name], [PropertyName])
 
 	Insert Into @Values
 	Select	Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId) As [CatalogId],
@@ -63,25 +68,24 @@ Begin Try
 				IsNull(D.[Level2Name],'') = IsNull(T.[Level2Name],'') And
 				IsNull(D.[PropertyName],'') = IsNull(T.[PropertyName],'')
 	Where	(@PropertyId is Null Or @PropertyId = Coalesce(T.[PropertyId], D.[PropertyId]) ) And
-			(@CatalogId is Null Or @CatalogId = Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId) ) And
-			(@ModelId is Null Or Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId)  In (
-				Select	[CatalogId]
-				From	[AppModel].[ModelCatalogAK]
-				Where	@ModelId = [ModelId]))
+			(@CatalogId is Null Or @CatalogId = Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
 
 	-- Apply Changes
 	Delete From [AppCatalog].[Property]
 	From	[AppCatalog].[Property] T
-			Inner Join [AppCatalog].[PropertyHs] K
-			On	T.[PropertyId] = K.[PropertyId]
+			Inner Join [AppCatalog].[PropertyHs] H
+			On	T.[PropertyId] = H.[PropertyId]
 			Left Join @Values S
-			On	T.[PropertyId] = S.[PropertyId]
+			On	H.[PropertyId] = S.[PropertyId]
 	Where	S.[PropertyId] is Null And
-			Not(@CatalogId is Null And @PropertyId is Null) And
-			(@PropertyId is Null Or @PropertyId = T.[PropertyId]) And
-			(@CatalogId is Null Or @CatalogId = T.[CatalogId]) 
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			(@PropertyId is Not Null Or @CatalogId is Not Null) And
+			(@PropertyId is Null Or @PropertyId = H.[PropertyId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 ;	With [Delta] As (
 		Select	[CatalogId],
@@ -128,7 +132,7 @@ Begin Try
 			Inner Join [Delta] S
 			On	T.[CatalogId] = S.[CatalogId] And
 				T.[PropertyId] = S.[PropertyId]
-	Print FormatMessage ('Update [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Property] (
 			[CatalogId],
@@ -160,7 +164,7 @@ Begin Try
 			On	S.[CatalogId] = T.[CatalogId] And
 				S.[PropertyId] = T.[PropertyId]
 	Where	T.[CatalogId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseExtendedProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
