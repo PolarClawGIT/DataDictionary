@@ -3,8 +3,8 @@
     [ConstraintId]         UNIQUEIDENTIFIER                     NULL,
     [DatabaseName]         [sysname]                            NULL,
     [SchemaName]           [sysname]                            NULL,
-    [ConstraintName]       [sysname]                            NULL,
     [TableName]            [sysname]                            NULL,
+    [ConstraintName]       [sysname]                            NULL,
     [ConstraintType]       NVARCHAR (60)                        NULL,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,

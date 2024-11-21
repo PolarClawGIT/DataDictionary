@@ -70,7 +70,8 @@ From	[AppCatalog].[ConstraintColumn]  D
 					[ColumnId],
 					[ColumnName]
 			From	[AppCatalog].[TableColumn]
-			Where	[TableId] = FR.[TableId] And
+			Where	--[TableId] = FR.[TableId] And
+					[ColumnId] = D.[ColumnId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FM
 		Outer Apply (

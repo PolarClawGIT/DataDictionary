@@ -10,6 +10,10 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 **
 ** To Use: Call Throw with the exception number for the message to be returned.
 ** Then in the Catch Block, call this procedure instead of re-throwing the error.
+**
+** Example (inside Catch Block):
+** 	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+**	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 */
 Declare	@ObjectId Int = Object_Id(ERROR_PROCEDURE()),
 		@Number Int = IsNull(ERROR_NUMBER(), 60000),
@@ -37,7 +41,9 @@ From	[AppGeneral].[HelpSubject] H
 Where	N.[IsBase] = 1
 Order By M.[RankIndex]
 
-If ERROR_NUMBER() is Not Null -- This only works if the procedure is called within the Catch part of a Throw/Catch statemet.
+If ERROR_NUMBER() is Not Null
+-- This only works if the procedure is called within the Catch part of a Throw/Catch statemet.
+-- ERROR_NUMBER() < 50000 must be handled by the calling procedure. This will throw an error otherwise.
   Begin
 	Print FormatMessage ('*** Error Report- %s', ERROR_PROCEDURE())
 	--Print FormatMessage ('    Object Name [%s].[%s]', Object_Schema_Name(@ObjectId), Object_Name(@ObjectId))
@@ -52,8 +58,8 @@ If ERROR_NUMBER() is Not Null -- This only works if the procedure is called with
 	Print FormatMessage ('    Original_Login - %s', Original_Login())
 	Print FormatMessage ('    Current_User - %s', Current_User)
 	Print FormatMessage ('    XAct_State - %i', XAct_State())
-
-	Set	@Message = IsNull(@Message, ERROR_MESSAGE())
-	;Throw @Number, @Message, @State;
+	
+	Set	@Message = IsNull(@Message, ERROR_MESSAGE());
+	Throw @Number, @Message, @State;
   End
 GO
