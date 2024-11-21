@@ -78,6 +78,9 @@ Begin Try
 			(@DomainId is Null Or @DomainId = Coalesce(D.[DomainId], H.[DomainId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
+
 	-- Apply Changes
 	Delete From [AppCatalog].[Domain]
 	From	[AppCatalog].[Domain] T

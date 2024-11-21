@@ -67,6 +67,9 @@ Begin Try
 			(@ConstraintId is Null Or @ConstraintId = C.[ConstraintId])
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
+
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]
 	From	[AppCatalog].[ConstraintColumn] T
