@@ -5,7 +5,7 @@ Select	FC.[CatalogId], -- AK
 		D.[ConstraintId],
 		D.[ConstraintColumnId], -- PK
 		FT.[TableId],
-		D.[ColumnId],
+		D.[TableColumnId],
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
 		FR.[ConstraintName], -- AK
@@ -67,11 +67,11 @@ From	[AppCatalog].[ConstraintColumn]  D
 		Outer Apply (
 			Select	Top 1
 					[TableId],
-					[ColumnId],
+					[TableColumnId],
 					[ColumnName]
 			From	[AppCatalog].[TableColumn]
 			Where	--[TableId] = FR.[TableId] And
-					[ColumnId] = D.[ColumnId] And
+					[TableColumnId] = D.[TableColumnId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FM
 		Outer Apply (

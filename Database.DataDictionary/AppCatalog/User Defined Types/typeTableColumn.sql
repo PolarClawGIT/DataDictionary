@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppCatalog].[typeTableColumn] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
-	[ColumnId]               UniqueIdentifier Null,
+	[TableColumnId]          UniqueIdentifier Null,
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,

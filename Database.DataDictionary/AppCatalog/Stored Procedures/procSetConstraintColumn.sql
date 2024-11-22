@@ -42,7 +42,7 @@ Begin Try
 	Insert Into @Values
 	Select	Coalesce(D.[ConstraintColumnId], H.[ConstraintColumnId], NewId()) As [ConstraintColumnId],
 			C.[ConstraintId],
-			T.[ColumnId],
+			T.[TableColumnId],
 			D.[OrdinalPosition],
 			NullIf(Trim(D.[ReferencedSchemaName]),'') As [ReferencedSchemaName],
 			NullIf(Trim(D.[ReferencedTableName]),'') As [ReferencedTableName],
@@ -95,7 +95,7 @@ Begin Try
 		Except
 		Select	[ConstraintColumnId],
 				[ConstraintId],
-				[ColumnId],
+				[TableColumnId],
 				[OrdinalPosition],
 				[ReferencedSchemaName],
 				[ReferencedTableName],
@@ -103,7 +103,7 @@ Begin Try
 		From	[AppCatalog].[ConstraintColumn])
 	Update [AppCatalog].[ConstraintColumn]
 	Set		[ConstraintId] = S.[ConstraintId],
-			[ColumnId] = S.[ColumnId],
+			[TableColumnId] = S.[ColumnId],
 			[OrdinalPosition] = S.[OrdinalPosition],
 			[ReferencedSchemaName] = S.[ReferencedSchemaName],
 			[ReferencedTableName] = S.[ReferencedTableName],
@@ -116,7 +116,7 @@ Begin Try
 	Insert Into [AppCatalog].[ConstraintColumn] (
 			[ConstraintColumnId],
 			[ConstraintId],
-			[ColumnId],
+			[TableColumnId],
 			[OrdinalPosition],
 			[ReferencedSchemaName],
 			[ReferencedTableName],

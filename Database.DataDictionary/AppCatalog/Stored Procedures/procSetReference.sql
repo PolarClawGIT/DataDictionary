@@ -1,13 +1,12 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetReference]
-		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
+		@ReferenceId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeReference] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseReference.
 */
-; Throw 50000, 'TODO: Fix for Temporal Data', 1;
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -18,31 +17,34 @@ Begin Try
 		Begin Transaction
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
-/*
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ReferenceId]				uniqueidentifier NOT NULL,
-		[ObjectId]					uniqueidentifier NOT NULL,
-		[ObjectType]				[App_DataDictionary].[typeObjectType] NOT NULL,
-		[ReferencedDatabaseName]	sysname NULL,
-		[ReferencedSchemaName]		sysname NULL,
-		[ReferencedObjectName]		sysname NULL,
-		[ReferencedColumnName]		sysname NULL,
+		[CatalogId]				    uniqueidentifier NOT NULL,
+		[SchemaName]                SysName NULL,
+		[ObjectName]                SysName Null,
+		[ReferencedDatabaseName]	SysName NULL,
+		[ReferencedSchemaName]		SysName NULL,
+		[ReferencedObjectName]		SysName NULL,
+		[ReferencedColumnName]		SysName NULL,
 		[ReferencedType]			[App_DataDictionary].[typeObjectType] NULL,
-		[IsCallerDependent]			bit NULL,
-		[IsAmbiguous]				bit NULL,
-		[IsSelected]				bit NULL,
-		[IsUpdated]					bit NULL,
-		[IsSelectAll]				bit NULL,
-		[IsAllColumnsFound]			bit NULL,
-		[IsInsertAll]				bit NULL,
-		[IsIncomplete]				bit NULL,
-		Primary Key ([ReferenceId]))
+		[IsCallerDependent]			Bit NULL,
+		[IsAmbiguous]				Bit NULL,
+		[IsSelected]				Bit NULL,
+		[IsUpdated]					Bit NULL,
+		[IsSelectAll]				Bit NULL,
+		[IsAllColumnsFound]			Bit NULL,
+		[IsInsertAll]				Bit NULL,
+		[IsIncomplete]				Bit NULL,
+		Primary Key ([ReferenceId]),
+		Unique ([CatalogId], [SchemaName], [ObjectName], [ReferencedDatabaseName], [ReferencedSchemaName], [ReferencedObjectName], [ReferencedColumnName]))
 
 	Insert Into @Values
-	Select		X.[ReferenceId],
-				O.[ObjectId] As [ObjectId],
-				D.[ObjectType],
+	Select		Coalesce(D.[ReferenceId], H.[ReferenceId], NewId()) As [ReferenceId],
+				Coalesce(D.[CatalogId], H.[CatalogId], @CatalogId) As [CatalogId],
+				D.[SchemaName],
+				D.[ObjectName],
 				D.[ReferencedDatabaseName],
 				D.[ReferencedSchemaName],
 				D.[ReferencedObjectName],
@@ -57,51 +59,39 @@ Begin Try
 				D.[IsInsertAll],
 				D.[IsIncomplete]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseObject] O
-			On	IsNull(D.[CatalogId], @CatalogId) = O.[CatalogId] And
-				D.[DatabaseName] = O.[DatabaseName] And
-				D.[SchemaName] = O.[SchemaName] And
-				D.[ObjectName] = O.[ObjectName]
-			Left Join [AppCatalog].[Reference] R
-			On	O.[ObjectId] = R.[ObjectId] And
-				IsNull(D.[ReferencedDatabaseName],'') = IsNull(R.[ReferencedDatabaseName],'') And
-				IsNull(D.[ReferencedSchemaName],'') = IsNull(R.[ReferencedSchemaName],'') And
-				IsNull(D.[ReferencedObjectName],'') = IsNull(R.[ReferencedObjectName],'') And
-				IsNull(D.[ReferencedColumnName],'') = IsNull(R.[ReferencedColumnName],'')
-			Cross Apply (
-				Select	Coalesce(R.[ReferenceId], D.[ReferenceId], NewId()) As [ReferenceId],
-						Coalesce(O.[CatalogId], @CatalogId) As [CatalogId]) X
-	Where	@CatalogId is Null or
-			X.[CatalogId] = @CatalogId or
-			X.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[AppCatalog].[Catalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] C
-					On	A.[CatalogId] = C.[CatalogId]
-			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Left Join [AppCatalog].[ReferenceHs] H
+			On	Coalesce(D.[CatalogId], @CatalogId) = H.[CatalogId] And
+				(D.[ReferenceId] = H.[ReferenceId] Or 
+				 (D.[SchemaName] = H.[SchemaName] And
+				  D.[ObjectName] = H.[ObjectName] And
+				  IsNull(D.[ReferencedDatabaseName], '') = IsNull(H.[ReferencedDatabaseName], '') And
+				  IsNull(D.[ReferencedSchemaName], '') = IsNull(H.[ReferencedSchemaName], '') And
+				  IsNull(D.[ReferencedObjectName], '') = IsNull(H.[ReferencedObjectName], '') And
+				  IsNull(D.[ReferencedColumnName], '') = IsNull(H.[ReferencedColumnName], '')))
+	Where	(@CatalogId is Null Or @CatalogId = Coalesce(D.[CatalogId], H.[CatalogId])) And
+			(@ReferenceId is Null Or @ReferenceId = Coalesce(D.[ReferenceId], H.[ReferenceId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
 				
 	-- Apply Changes
 	Delete From [AppCatalog].[Reference]
 	From	[AppCatalog].[Reference] T
-			Inner Join [App_DataDictionary].[DatabaseObject] P
-			On	T.[ObjectId] = P.[ObjectId]
+			Inner Join [AppCatalog].[ReferenceHs] H
+			On	T.[ReferenceId] = H.[ReferenceId]
 			Left Join @Values S
-			On	T.[ReferenceId] = S.[ReferenceId]
+			On	H.[ReferenceId] = S.[ReferenceId]
 	Where	S.[ReferenceId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseReference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			(@ReferenceId is Not Null Or @CatalogId is Not Null) And
+			(@ReferenceId is Null Or @ReferenceId = H.[ReferenceId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[Reference]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[ReferenceId],
-				[ObjectId],
-				[ObjectType],
+				[SchemaName],
+				[ObjectName],
 				[ReferencedDatabaseName],
 				[ReferencedSchemaName],
 				[ReferencedObjectName],
@@ -118,8 +108,8 @@ Begin Try
 		From	@Values
 		Except
 		Select	[ReferenceId],
-				[ObjectId],
-				[ObjectType],
+				[SchemaName],
+				[ObjectName],
 				[ReferencedDatabaseName],
 				[ReferencedSchemaName],
 				[ReferencedObjectName],
@@ -135,8 +125,8 @@ Begin Try
 				[IsIncomplete]
 		From	[AppCatalog].[Reference])
 	Update [AppCatalog].[Reference]
-	Set		[ObjectId] = S.[ObjectId],
-			[ObjectType] = S.[ObjectType],
+	Set		[SchemaName] = S.[SchemaName],
+			[ObjectName] = S.[ObjectName],
 			[ReferencedDatabaseName] = S.[ReferencedDatabaseName],
 			[ReferencedSchemaName] = S.[ReferencedSchemaName],
 			[ReferencedObjectName] = S.[ReferencedObjectName],
@@ -153,12 +143,13 @@ Begin Try
 	From	[AppCatalog].[Reference] T
 			Inner Join [Delta] S
 			On	T.[ReferenceId] = S.[ReferenceId]
-	Print FormatMessage ('Update [App_DataDictionary].[DatabaseReference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Reference] (
 			[ReferenceId],
-			[ObjectId],
-			[ObjectType],
+			[CatalogId],
+			[SchemaName],
+			[ObjectName],
 			[ReferencedDatabaseName],
 			[ReferencedSchemaName],
 			[ReferencedObjectName],
@@ -173,8 +164,9 @@ Begin Try
 			[IsInsertAll],
 			[IsIncomplete])
 	Select	S.[ReferenceId],
-			S.[ObjectId],
-			S.[ObjectType],
+			S.[CatalogId],
+			S.[SchemaName],
+			S.[ObjectName],
 			S.[ReferencedDatabaseName],
 			S.[ReferencedSchemaName],
 			S.[ReferencedObjectName],
@@ -192,8 +184,8 @@ Begin Try
 			Left Join [AppCatalog].[Reference] T
 			On	S.[ReferenceId] = T.[ReferenceId]
 	Where	T.[ReferenceId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseReference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-*/
+	Print FormatMessage ('Insert [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

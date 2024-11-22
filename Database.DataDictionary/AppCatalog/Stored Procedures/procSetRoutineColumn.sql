@@ -1,13 +1,13 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetRoutineColumn]
-		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
+		@RoutineId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeRoutineColumn] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseColumn.
 */
-; Throw 50000, 'TODO: Fix for Temporal Data', 1;
+
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -20,13 +20,17 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If @ModelId is Null and @CatalogId is Null
-	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 601010, '@Data contains other Catalogs', 1;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[ColumnId]              UniqueIdentifier Not Null,
-		[RoutineId]               UniqueIdentifier Not Null,
+		[RoutineColumnId]       UniqueIdentifier Not Null,
+		[RoutineId]             UniqueIdentifier Not Null,
 		[ColumnName]            SysName Not Null,
 		[OrdinalPosition]       Int Not Null,
 		[IsNullable]            Bit Null,
@@ -52,11 +56,12 @@ Begin Try
 		[IsComputed]            Bit Null,
 		[ComputedDefinition]    NVarChar(Max) Null,
 		[GeneratedAlwayType]    NVarChar(60) Null,
-		Primary Key ([ColumnId]))
+		Primary Key ([RoutineColumnId]),
+		Unique ([RoutineId], [ColumnName]))
 
-	Insert Into @Values
-	Select	X.[ColumnId],
-			X.[RoutineId],
+	--Insert Into @Values
+	Select	Coalesce(D.[RoutineColumnId], H.[RoutineColumnId], NewId()) As [RoutineColumnId],
+			R.[RoutineId],
 			NullIf(Trim(D.[ColumnName]),'') As [ColumnName],
 			D.[OrdinalPosition],
 			D.[IsNullable],
@@ -83,65 +88,38 @@ Begin Try
 			NullIf(Trim(D.[ComputedDefinition]),'') As [ComputedDefinition],
 			NullIf(Trim(D.[GeneratedAlwayType]),'') As [GeneratedAlwayType]
 	From	@Data D
-			Inner Join [AppCatalog].[RoutineHs] P
-			On	D.[DatabaseName] = P.[DatabaseName] And
-				D.[SchemaName] = P.[SchemaName] And
-				D.[RoutineName] = P.[RoutineName]
-			Left Join [AppCatalog].[RoutineColumnHs] A
-			On	D.[DatabaseName] = A.[DatabaseName] And
-				D.[SchemaName] = A.[SchemaName] And
-				D.[RoutineName] = A.[RoutineName] And
-				D.[ColumnName] = A.[ColumnName]
-			Cross Apply (
-				Select	Coalesce(A.[ColumnId], D.[ColumnId], NewId()) As [ColumnId],
-						Coalesce(A.[RoutineId], P.[RoutineId]) As [RoutineId],
-						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
-						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
-	Where	@CatalogId is Null or
-			X.[CatalogId] = @CatalogId or
-			X.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[AppCatalog].[Catalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] C
-					On	A.[CatalogId] = C.[CatalogId]
-			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Left Join [AppCatalog].[RoutineColumnHs] H
+			On	Coalesce(D.[CatalogId], @CatalogId) = H.[CatalogId] And
+				(D.[RoutineColumnId] = H.[RoutineColumnId] Or
+				 (D.[SchemaName] = H.[SchemaName] And
+				  D.[RoutineName] = H.[RoutineName] And
+				  D.[ColumnName] = H.[ColumnName]))
+			Left Join [AppCatalog].[RoutineHs] R
+			On	Coalesce(D.[CatalogId], @CatalogId) = R.[CatalogId] And
+				D.[SchemaName] = R.[SchemaName] And
+				D.[RoutineName] = R.[RoutineName]
+	Where	(@CatalogId is Null Or @CatalogId = Coalesce(D.[CatalogId], H.[CatalogId])) And
+			(@RoutineId is Null Or @RoutineId = Coalesce(R.[RoutineId], H.[RoutineId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
 
 	-- Apply Changes
-	Delete From [AppCatalog].[ConstraintColumn]
-	From	[AppCatalog].[ConstraintColumn] T
-			Inner Join [AppCatalog].[ConstraintHs] P
-			On	T.[ConstraintId] = P.[ConstraintId]
-			Left Join @Values S
-			On	T.[ColumnId] = S.[ColumnId]
-	Where	S.[ColumnId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn] (Column): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [AppCatalog].[RoutineColumn]
 	From	[AppCatalog].[RoutineColumn] T
-			Inner Join [AppCatalog].[RoutineHs] P
-			On	T.[RoutineId] = P.[RoutineId]
+			Inner Join [AppCatalog].[RoutineColumnHs] H
+			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
-			On	T.[ColumnId] = S.[ColumnId]
-	Where	S.[ColumnId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	H.[RoutineColumnId] = S.[RoutineColumnId]
+	Where	S.[RoutineColumnId] is Null And
+			(@RoutineId is Not Null Or @CatalogId is Not Null) And
+			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[RoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[ColumnId],
+		Select	[RoutineColumnId],
 				[RoutineId],
 				[ColumnName],
 				[OrdinalPosition],
@@ -170,7 +148,7 @@ Begin Try
 				[GeneratedAlwayType]
 		From	@Values
 	Except
-		Select	[ColumnId],
+		Select	[RoutineColumnId],
 				[RoutineId],
 				[ColumnName],
 				[OrdinalPosition],
@@ -227,11 +205,11 @@ Begin Try
 			[GeneratedAlwayType] = S.[GeneratedAlwayType]
 	From	[AppCatalog].[RoutineColumn] T
 			Inner Join [Delta] S
-			On	T.[ColumnId] = S.[ColumnId]
-	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[RoutineColumnId] = S.[RoutineColumnId]
+	Print FormatMessage ('Update [AppCatalog].[RoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[RoutineColumn] (
-			[ColumnId],
+			[RoutineColumnId],
 			[RoutineId],
 			[ColumnName],
 			[OrdinalPosition],
@@ -258,7 +236,7 @@ Begin Try
 			[IsComputed],
 			[ComputedDefinition],
 			[GeneratedAlwayType])
-	Select	S.[ColumnId],
+	Select	S.[RoutineColumnId],
 			S.[RoutineId],
 			S.[ColumnName],
 			S.[OrdinalPosition],
@@ -287,9 +265,9 @@ Begin Try
 			S.[GeneratedAlwayType]
 	From	@Values S
 			Left Join [AppCatalog].[RoutineColumn] T
-			On	S.[ColumnId] = T.[ColumnId]
-	Where	T.[ColumnId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	S.[RoutineColumnId] = T.[RoutineColumnId]
+	Where	T.[RoutineColumnId] is Null
+	Print FormatMessage ('Insert [AppCatalog].[RoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -302,24 +280,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -329,6 +289,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO

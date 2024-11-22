@@ -1,13 +1,13 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetRoutine]
-		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
+		@RoutineId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeRoutine] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Set on DatabaseRoutine.
 */
-; Throw 50000, 'TODO: Fix for Temporal Data', 1;
+
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -20,8 +20,12 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If @ModelId is Null and @CatalogId is Null
-	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 601010, '@Data contains other Catalogs', 1;
 
 	-- Clean the Data
 	Declare @Values Table (
@@ -29,67 +33,66 @@ Begin Try
 		[SchemaId]           UniqueIdentifier Not Null,
 		[RoutineName]        SysName Not Null,
 		[RoutineType]        [App_DataDictionary].[typeObjectType] Null,
-		Primary Key ([RoutineId]))
+		Primary Key ([RoutineId]),
+		Unique ([SchemaId], [RoutineName]))
 
 	Insert Into @Values
-	Select	X.[RoutineId],  
-			X.[SchemaId],
+	Select	Coalesce(D.[RoutineId], H.[RoutineId], NewId()) As [RoutineId],
+			S.[SchemaId],
 			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
 			NullIf(Trim(D.[RoutineType]),'') As [RoutineType]
 	From	@Data D
-			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
-			On	D.[DatabaseName] = P.[DatabaseName] And
-				D.[SchemaName] = P.[SchemaName]
-			Left Join [AppCatalog].[RoutineHs] A
-			On	D.[DatabaseName] = A.[DatabaseName] And
-				D.[SchemaName] = A.[SchemaName] And
-				D.[RoutineName] = A.[RoutineName]
-			Cross Apply (
-				Select	Coalesce(A.[RoutineId], D.[RoutineId], NewId()) As [RoutineId],
-						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
-						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
-	Where	@CatalogId is Null or
-			X.[CatalogId] = @CatalogId or
-			X.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[AppCatalog].[Catalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] C
-					On	A.[CatalogId] = C.[CatalogId]
-			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Left Join [AppCatalog].[RoutineHs] H
+			On	Coalesce(D.[CatalogId], @CatalogId) = H.[CatalogId] And
+				(D.[RoutineId] = H.[RoutineId] Or
+				 (D.[SchemaName] = H.[SchemaName] And
+				  D.[RoutineName] = H.[RoutineName]))
+			Left Join [AppCatalog].[SchemaHs] S
+			On	Coalesce(D.[CatalogId], @CatalogId) = S.[CatalogId] And
+				D.[SchemaName] = S.[SchemaName]
+	Where	(@CatalogId is Null Or @CatalogId = Coalesce(D.[CatalogId], H.[CatalogId])) And
+			(@RoutineId is Null Or @RoutineId = Coalesce(D.[RoutineId], H.[RoutineId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog]
 
 	-- Apply Changes
 	Delete From [AppCatalog].[RoutineParameter]
 	From	[AppCatalog].[RoutineParameter] T
-			Inner Join [AppCatalog].[RoutineHs] P
-			On	T.[RoutineId] = P.[RoutineId]
+			Inner Join [AppCatalog].[RoutineParameterHs] H
+			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
-			On	T.[RoutineId] = S.[RoutineId]
-	Where	S.[RoutineId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineParameter] (Routine): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	H.[RoutineId] = S.[RoutineId]
+	Where	S.[SchemaId] is Null And
+			(@RoutineId is Not Null Or @CatalogId is Not Null) And
+			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[RoutineParameter] (Routine): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppCatalog].[RoutineColumn]
+	From	[AppCatalog].[RoutineColumn] T
+			Inner Join [AppCatalog].[RoutineColumnHs] H
+			On	T.[RoutineColumnId] = H.[RoutineColumnId]
+			Left Join @Values S
+			On	H.[RoutineId] = S.[RoutineId]
+	Where	S.[SchemaId] is Null And
+			(@RoutineId is Not Null Or @CatalogId is Not Null) And
+			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[RoutineColumn] (Routine): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppCatalog].[Routine]
 	From	[AppCatalog].[Routine] T
-			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
-			On	T.[SchemaId] = P.[SchemaId]
+			Inner Join [AppCatalog].[RoutineHs] H
+			On	T.[RoutineId] = H.[RoutineId]
 			Left Join @Values S
-			On	T.[RoutineId] = S.[RoutineId]
-	Where	S.[RoutineId] is Null And
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[AppCatalog].[Catalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	H.[RoutineId] = S.[RoutineId]
+	Where	S.[SchemaId] is Null And
+			(@RoutineId is Not Null Or @CatalogId is Not Null) And
+			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
+			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+	Print FormatMessage ('Delete [AppCatalog].[Routine] (Routine): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[RoutineId],
@@ -138,23 +141,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -164,6 +150,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO

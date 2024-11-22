@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppCatalog].[typeRoutineColumn] AS Table
 (
 	[CatalogId]              UniqueIdentifier Null,
-	[ColumnId]               UniqueIdentifier Null,
+	[RoutineColumnId]        UniqueIdentifier Null,
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[RoutineName]            SysName          Null,

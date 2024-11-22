@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [HsCatalog].[RoutineColumn]
 (
-	[ColumnId]                UniqueIdentifier Not Null,
+	[RoutineColumnId]                UniqueIdentifier Not Null,
 	[RoutineId]               UniqueIdentifier Not Null,
 	-- Note: TableColumn, RoutineColumn and ConstraintColumn all use the same base definitions
 	[ColumnName]              SysName Not Null,
@@ -35,5 +35,5 @@ CREATE CLUSTERED INDEX [IX_RoutineColumn]
     ON [HsCatalog].[RoutineColumn]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_RoutineColumn]
-    ON [HsCatalog].[RoutineColumn]([ColumnId] ASC)
+    ON [HsCatalog].[RoutineColumn]([RoutineColumnId] ASC)
 GO

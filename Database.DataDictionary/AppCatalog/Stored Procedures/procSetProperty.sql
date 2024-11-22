@@ -43,7 +43,7 @@ Begin Try
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null,
 		Primary Key ([PropertyId]),
-		Unique ([CatalogId], [Level0Name], [Level1Name], [Level2Name], [PropertyName])
+		Unique ([CatalogId], [Level0Name], [Level1Name], [Level2Name], [PropertyName]))
 
 	Insert Into @Values
 	Select	Coalesce(T.[CatalogId], D.[CatalogId], @CatalogId) As [CatalogId],
@@ -177,23 +177,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -203,6 +186,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO

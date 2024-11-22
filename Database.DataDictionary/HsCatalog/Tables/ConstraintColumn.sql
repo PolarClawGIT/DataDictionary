@@ -2,13 +2,13 @@
 (
 	[ConstraintColumnId]   UniqueIdentifier Not Null,
 	[ConstraintId]         UniqueIdentifier Not Null,
-	[ColumnId]             UniqueIdentifier Not Null,
+	[TableColumnId]        UniqueIdentifier Not Null,
 	[OrdinalPosition]      Int Null,
 	[ReferencedSchemaName] SysName Null,
 	[ReferencedTableName]  SysName Null,
 	[ReferencedColumnName] SysName Null,
-	[SysStart]            DateTime2 (7) Not Null,
-	[SysEnd]              DateTime2 (7)  Not Null,
+	[SysStart]             DateTime2 (7) Not Null,
+	[SysEnd]               DateTime2 (7)  Not Null,
 )
 GO
 CREATE CLUSTERED INDEX [IX_ConstraintColumn]

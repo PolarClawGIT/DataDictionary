@@ -3,7 +3,7 @@
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
 		FR.[RoutineId],
-		D.[ParameterId], -- PK
+		D.[RoutineParameterId], -- PK
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
 		FR.[RoutineName], -- AK

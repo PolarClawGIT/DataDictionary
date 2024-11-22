@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [HsCatalog].[RoutineParameter]
 (
-	[ParameterId]            UniqueIdentifier Not Null,
+	[RoutineParameterId]     UniqueIdentifier Not Null,
 	[RoutineId]              UniqueIdentifier Not Null,
 	[ParameterName]          SysName Not Null,
 	[OrdinalPosition]        Int Not Null,
@@ -27,5 +27,5 @@ CREATE CLUSTERED INDEX [IX_RoutineParameter]
     ON [HsCatalog].[RoutineParameter]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_RoutineParameter]
-    ON [HsCatalog].[RoutineParameter]([ParameterId] ASC)
+    ON [HsCatalog].[RoutineParameter]([RoutineParameterId] ASC)
 GO

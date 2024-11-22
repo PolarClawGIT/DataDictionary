@@ -3,7 +3,7 @@
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
 		FR.[RoutineId],
-		D.[ColumnId], -- PK
+		D.[RoutineColumnId], -- PK
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
 		FR.[RoutineName], -- AK
@@ -48,12 +48,12 @@ From	[AppCatalog].[RoutineColumn] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[HsCatalog].[RoutineColumn]
-			Where	[ColumnId] = D.[ColumnId] And
+			Where	[RoutineColumnId] = D.[RoutineColumnId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[HsCatalog].[RoutineColumn]
-			Where	[ColumnId] = D.[ColumnId] And
+			Where	[RoutineColumnId] = D.[RoutineColumnId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]

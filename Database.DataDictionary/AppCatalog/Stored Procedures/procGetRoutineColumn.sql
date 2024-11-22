@@ -14,7 +14,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
 Select	[CatalogId],
-		[ColumnId],
+		[RoutineColumnId],
 		[DatabaseName],
 		[SchemaName],
 		[RoutineName],
@@ -56,7 +56,7 @@ Select	[CatalogId],
 From	[AppCatalog].[RoutineColumnHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@RoutineId is Null Or @RoutineId = [RoutineId]) And
-		(@ColumnId is Null Or @ColumnId = [ColumnId]) And
+		(@ColumnId is Null Or @ColumnId = [RoutineColumnId]) And
 		(@CatalogId is Null Or @CatalogId = [CatalogId]) And
 		(@ModelId is Null Or [CatalogId] In (
 			Select	[CatalogId]

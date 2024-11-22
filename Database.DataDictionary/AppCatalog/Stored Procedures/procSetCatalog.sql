@@ -122,7 +122,7 @@ Begin Try
 	Delete From [AppCatalog].[RoutineParameter]
 	From	[AppCatalog].[RoutineParameter] T
 			Inner Join [AppCatalog].[RoutineParameterHs] H
-			On	T.[ParameterId] = H.[ParameterId]
+			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
@@ -133,7 +133,7 @@ Begin Try
 	Delete From [AppCatalog].[RoutineColumn]
 	From	[AppCatalog].[RoutineColumn] T
 			Inner Join [AppCatalog].[RoutineColumnHs] H
-			On	T.[ColumnId] = H.[ColumnId]
+			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
@@ -155,7 +155,7 @@ Begin Try
 	Delete From [AppCatalog].[TableColumn]
 	From	[AppCatalog].[TableColumn] T
 			Inner Join [AppCatalog].[TableColumnHs] H
-			On	T.[ColumnId] = H.[ColumnId]
+			On	T.[TableColumnId] = H.[TableColumnId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And

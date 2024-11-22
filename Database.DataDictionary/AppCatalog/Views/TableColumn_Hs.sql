@@ -3,7 +3,7 @@
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
 		FT.[TableId],
-		D.[ColumnId], -- PK
+		D.[TableColumnId], -- PK
 		FC.[DatabaseName], -- AK
 		FS.[SchemaName], -- AK
 		FT.[TableName], -- AK

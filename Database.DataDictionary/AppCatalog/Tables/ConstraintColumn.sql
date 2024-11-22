@@ -2,7 +2,7 @@
 (
 	[ConstraintColumnId]   UniqueIdentifier Not Null CONSTRAINT [DF_ConstraintColumnId] DEFAULT (newid()),
 	[ConstraintId]         UniqueIdentifier Not Null,
-	[ColumnId]             UniqueIdentifier Not Null,
+	[TableColumnId]        UniqueIdentifier Not Null,
 	[OrdinalPosition]      Int Null,
 	[ReferencedSchemaName] SysName Null,
 	[ReferencedTableName]  SysName Null,
@@ -14,7 +14,7 @@
 	-- Keys
 	CONSTRAINT [PK_ConstraintColumn] PRIMARY KEY CLUSTERED ([ConstraintColumnId]),
 	CONSTRAINT [FK_Constraint] FOREIGN KEY ([ConstraintId]) REFERENCES [AppCatalog].[Constraint] ([ConstraintId]),
-	CONSTRAINT [FK_ConstraintTableColumn] FOREIGN KEY ([ColumnId]) REFERENCES [AppCatalog].[TableColumn] ([ColumnId]),
+	CONSTRAINT [FK_ConstraintTableColumn] FOREIGN KEY ([TableColumnId]) REFERENCES [AppCatalog].[TableColumn] ([TableColumnId]),
 	CONSTRAINT [CK_ConstraintReferenced] CHECK (([ReferencedSchemaName] IS NULL AND [ReferencedTableName] IS NULL AND [ReferencedColumnName] IS NULL) OR ([ReferencedSchemaName] IS NOT NULL AND [ReferencedTableName] IS NOT NULL AND [ReferencedColumnName] IS NOT NULL)),
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsCatalog].[ConstraintColumn]))
 GO

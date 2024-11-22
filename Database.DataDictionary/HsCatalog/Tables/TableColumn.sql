@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [HsCatalog].[TableColumn]
 (
-	[ColumnId]              UniqueIdentifier Not Null,
+	[TableColumnId]         UniqueIdentifier Not Null,
 	[TableId]               UniqueIdentifier Not Null,
 	[ColumnName]            SysName Not Null,
     [OrdinalPosition]       Int Not Null,
@@ -35,5 +35,5 @@ CREATE CLUSTERED INDEX [IX_TableColumn]
     ON [HsCatalog].[TableColumn]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_TableColumn]
-    ON [HsCatalog].[TableColumn]([ColumnId])
+    ON [HsCatalog].[TableColumn]([TableColumnId])
 GO
