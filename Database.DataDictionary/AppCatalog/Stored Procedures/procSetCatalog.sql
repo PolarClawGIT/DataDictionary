@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetCatalog]
-		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@Data [AppCatalog].[typeCatalog] ReadOnly
 As
@@ -34,13 +33,6 @@ Begin Try
 		Group By IsNull([CatalogId], @CatalogId)
 		Having Count(*) > 1)
 	Throw 602010, 'Catalog Duplicate', 11;
-
-	If @ModelId is not null And Exists (
-		Select	1
-		From	@Data
-		Group By [DatabaseName]
-		Having Count(*) > 1)
-	Throw 602020, 'Duplicate Database within Model', 12;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table ( -- Needs to match the target data structure
@@ -83,14 +75,6 @@ Begin Try
 	If @RowCount > 0 Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelCatalog]
-	From	[App_DataDictionary].[ModelCatalog] T
-			Left Join @Values S
-			On	T.[CatalogId] = S.[CatalogId]
-	Where	S.[CatalogId] is Null And
-			T.[ModelId] = @ModelId -- @ModelId must be specified
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Catalog): %i, %s', @RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [AppCatalog].[Reference]
 	From	[AppCatalog].[Reference] T
 			Inner Join [AppCatalog].[ReferenceHs] H
@@ -265,17 +249,6 @@ Begin Try
 			On	S.[CatalogId] = T.[CatalogId]
 	Where	T.[CatalogId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [App_DataDictionary].[ModelCatalog] ([ModelId], [CatalogId])
-	Select	@ModelId As [ModelId],
-			S.[CatalogId]
-	from	@Values S
-			Left Join [App_DataDictionary].[ModelCatalog] T
-			On	S.[CatalogId] = T.[CatalogId] And
-				@ModelId = T.[ModelId]
-	Where	T.[ModelId] is Null And
-			@ModelId is Not Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
