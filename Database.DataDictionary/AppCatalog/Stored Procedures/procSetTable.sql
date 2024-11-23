@@ -56,7 +56,7 @@ Begin Try
 
 	
 	-- Set Transaction Log
-	Exec [AppGeneral].[procRecordTransactionLog]
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]

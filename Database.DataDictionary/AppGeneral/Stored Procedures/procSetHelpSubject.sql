@@ -62,6 +62,9 @@ Begin Try
 			S.[PrincipalId] is not null
 	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
+
 	-- Apply Changes
 	Delete From [AppGeneral].[HelpSubject]
 	From	[AppGeneral].[HelpSubject] T

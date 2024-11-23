@@ -58,7 +58,7 @@ Begin Try
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
-	Exec [AppGeneral].[procRecordTransactionLog]
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]

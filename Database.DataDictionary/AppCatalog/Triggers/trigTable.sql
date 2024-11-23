@@ -3,5 +3,6 @@
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN
-		Exec [AppGeneral].[procRecordTransactionLog]
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 	END

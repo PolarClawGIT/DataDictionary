@@ -13,6 +13,8 @@
 	[login_time] DateTime Not Null,  -- [sys].[dm_exec_sessions].[login_time]
 	[session_id] Int Not Null, -- [sys].[dm_exec_sessions].[session_id] and @@SPID
 	[transaction_id] BigInt Not Null, -- [sys].[dm_tran_session_transactions].[transaction_id]
+	[CallerSchema] SysName Null, -- Initial Caller, Object_Schema_Name(@@ProcID)
+	[CallerObject] SysName Null, -- Initial Caller, Object_Name(@@ProcId)
 	[OriginalLogin] SysName Not Null CONSTRAINT [DF_TransactionLog_OriginalLogin] DEFAULT (original_login()),
 	[ExecuteLogin] SysName Not Null CONSTRAINT [DF_TransactionLog_ExecuteLogin] Default (suser_name()),
 	[ExecuteUser] SysName Not Null CONSTRAINT [DF_TransactionLog_ExecuteUser] Default (user_name()),

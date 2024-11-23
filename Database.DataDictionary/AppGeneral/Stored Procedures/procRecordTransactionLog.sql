@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [AppGeneral].[procRecordTransactionLog]
+		@ProcId Int = null -- Pass @@ProcId
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -17,9 +18,11 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	Insert Into [AppGeneral].[TransactionLog] ([login_time], [session_id], [transaction_id])
+	Insert Into [AppGeneral].[TransactionLog] ([login_time], [session_id], [transaction_id], [CallerSchema], [CallerObject])
 	Select	S.[login_time],
 			S.[session_id],
+			Object_Schema_Name(@ProcId) [CallerSchema],
+			Object_Name(@ProcId) [CallerObject],
 			T.[transaction_id]
 	From	[sys].[dm_exec_sessions] S
 			Inner Join [sys].[dm_tran_session_transactions] T

@@ -57,7 +57,7 @@ Begin Try
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
-	Exec [AppGeneral].[procRecordTransactionLog]
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
