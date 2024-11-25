@@ -1,15 +1,14 @@
 ﻿using System.Data;
 using Toolbox.BindingTable;
-using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using DataDictionary.DataLayer.AppCatalog;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public interface IDbExtendedPropertyItem : ICatalogKeyName, ICatalogKey, IDbExtendedPropertyParameter
+    public interface IPropertyItem : ICatalogKeyName, ICatalogKey,
+        IPropertyParameter, ITemporalItem
     {
         /// <summary>
         /// MS SQL ExtendedProperty Level 0 Type
@@ -45,7 +44,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Implementation of MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem
+    public class PropertyItem : BindingTableRow, IPropertyItem
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -133,27 +132,96 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public Boolean IsDescription
         { get { return String.Equals(PropertyName, "MS_Description", StringComparison.OrdinalIgnoreCase); } }
 
+        /// <inheritdoc/>
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? CreatedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
+                else { return DbModificationType.Null; }
+            }
+        }
+
         /// <summary>
-        /// Constructor for DbExtendedPropertyItem.
+        /// Constructor for PropertyItem.
         /// </summary>
-        public DbExtendedPropertyItem() : base()
+        public PropertyItem() : base()
         { }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            // Parameter Data
             new DataColumn(nameof(Level0Type), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level0Name), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level1Type), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level1Name), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level2Type), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level2Name), typeof(string)){ AllowDBNull = true},
-
+            // Results Data
             new DataColumn(nameof(ObjType), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(ObjName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = false},
+            // Temporal Data
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
+
         };
 
         /// <inheritdoc/>

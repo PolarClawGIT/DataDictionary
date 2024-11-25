@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to get and temporary store the Information Schema of a Catalog Schema
     /// </summary>
-    public class SchemaInformationSchema : BindingTableRow
+    class SchemaInformationSchema : BindingTableRow, ISchemaKeyName
     {
         /// <summary>
         /// Database Name as the Database identifies itself.
@@ -35,24 +35,16 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <summary>
-        /// Creates a structure to hold the InformationSchema
-        /// </summary>
-        /// <returns></returns>
-        public static IBindingTable<SchemaInformationSchema> Create()
-        { return new BindingTable<SchemaInformationSchema>(); }
-
-        /// <summary>
-        /// Command Used to get the Information Schema
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        public static Command SchemaCommand(IConnection connection)
+        public static IReadOnlyList<SchemaInformationSchema> GetSchema(IConnection connection)
         {
+            BindingTable<SchemaInformationSchema> schemas = new BindingTable<SchemaInformationSchema>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = SqlScript.Schema.InformationSchema;
-            return command;
+            command.CommandText = Schema.InformationSchema;
+
+            schemas.Load(connection.ExecuteReader(command));
+
+            return schemas;
         }
 
     }

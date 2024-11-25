@@ -50,13 +50,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? CatalogDescription { get { return GetValue(nameof(CatalogDescription)); } set { SetValue(nameof(CatalogDescription), value); } }
 
         /// <inheritdoc/>
-        public String? ServerName { get { return GetValue(nameof(ServerName)); } protected set { SetValue(nameof(ServerName), value); } }
+        public String? ServerName { get { return GetValue(nameof(ServerName)); } internal set { SetValue(nameof(ServerName), value); } }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } protected set { SetValue(nameof(DatabaseName), value); } }
+        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } internal set { SetValue(nameof(DatabaseName), value); } }
 
         /// <inheritdoc/>
-        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } protected set { SetValue(nameof(SourceDate), value); } }
+        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } internal set { SetValue(nameof(SourceDate), value); } }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
@@ -124,20 +124,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         public CatalogItem() : base()
         { CatalogId = Guid.NewGuid(); }
-
-        /// <summary>
-        /// Constructor for CatalogItem.
-        /// </summary>
-        /// <param name="schema"></param>
-        protected CatalogItem (CatalogInformationSchema schema) : this()
-        {
-            CatalogTitle = schema.DatabaseName;
-            DatabaseName = schema.DatabaseName;
-            ServerName = schema.ServerName;
-            SourceDate = DateTime.Now;
-        }
-
-
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

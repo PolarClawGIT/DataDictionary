@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -23,7 +22,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Database Domain Item.
     /// </summary>
     [Serializable]
-    public class DomainItem : BindingTableRow, IDomainItem, IDbExtendedProperty, ISerializable
+    public class DomainItem : BindingTableRow, IDomainItem, IProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -184,13 +183,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            DbLevelObjectKey scopeKey = new DbLevelObjectKey()
+            PropertyObjectKey scopeKey = new PropertyObjectKey()
             { 
                 CatalogScope = DbLevelCatalogType.Schema, 
                 ObjectScope = DbLevelObjectType.Type
             };
 
-            return new DbExtendedPropertyGetCommand(connection)
+            return new PropertyGetCommand(connection)
             {
                 CatalogId = CatalogId,
                 Level0Name = SchemaName,

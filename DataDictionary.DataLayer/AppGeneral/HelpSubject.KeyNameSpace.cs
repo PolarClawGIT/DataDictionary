@@ -1,38 +1,33 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
     /// Unique Key for Help Documents, by NameSpace
     /// </summary>
-    public interface IHelpKeyNameSpace : IKey
+    public interface IHelpSubjectKeyNameSpace : IKey
     {
         /// <summary>
         /// Key to reference a Help Document by Name Space
         /// </summary>
-        string? NameSpace { get; }
+        String? NameSpace { get; }
     }
 
     /// <summary>
     /// Unique Key for Help Documents, by NameSpace
     /// </summary>
-    public class HelpKeyNameSpace : IHelpKeyNameSpace,
-        IKeyComparable<IHelpKeyNameSpace>,
-        IKeyComparable<HelpKeyNameSpace>
+    public class HelpSubjectKeyNameSpace : IHelpSubjectKeyNameSpace,
+        IKeyComparable<IHelpSubjectKeyNameSpace>,
+        IKeyComparable<HelpSubjectKeyNameSpace>
     {
         /// <inheritdoc/>
-        public string NameSpace { get; init; } = string.Empty;
+        public String NameSpace { get; init; } = string.Empty;
 
         /// <summary>
         /// Create a Help Key by NameSpace that implement the Unique Key
         /// </summary>
         /// <param name="source"></param>
-        public HelpKeyNameSpace(IHelpKeyNameSpace source) : base()
+        public HelpSubjectKeyNameSpace(IHelpSubjectKeyNameSpace source) : base()
         {
             if (source.NameSpace is string) { NameSpace = source.NameSpace; }
             else { NameSpace = string.Empty; }
@@ -42,7 +37,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// Create a Help Key from a Object. Uses the Objects Full Name.
         /// </summary>
         /// <param name="source"></param>
-        public HelpKeyNameSpace(object source) : base()
+        public HelpSubjectKeyNameSpace(object source) : base()
         {
             if (source.GetType().FullName is string value) { NameSpace = value; }
             else { NameSpace = string.Empty; }
@@ -50,10 +45,10 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(HelpKeyNameSpace? other)
+        public Boolean Equals(HelpSubjectKeyNameSpace? other)
         {
             return
-                other is IHelpKeyNameSpace &&
+                other is IHelpSubjectKeyNameSpace &&
                 !string.IsNullOrEmpty(NameSpace) &&
                 !string.IsNullOrEmpty(other.NameSpace) &&
                 NameSpace.Equals(other.NameSpace, KeyExtension.CompareString);
@@ -61,59 +56,59 @@ namespace DataDictionary.DataLayer.AppGeneral
 
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IHelpKeyNameSpace? other)
-        { return other is IHelpKeyNameSpace value && Equals(new HelpKeyNameSpace(value)); }
+        public virtual Boolean Equals(IHelpSubjectKeyNameSpace? other)
+        { return other is IHelpSubjectKeyNameSpace value && Equals(new HelpSubjectKeyNameSpace(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IHelpKeyNameSpace value && Equals(new HelpKeyNameSpace(value)); }
+        { return obj is IHelpSubjectKeyNameSpace value && Equals(new HelpSubjectKeyNameSpace(value)); }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(HelpKeyNameSpace? other)
+        public Int32 CompareTo(HelpSubjectKeyNameSpace? other)
         {
-            if (other is HelpKeyNameSpace value)
+            if (other is HelpSubjectKeyNameSpace value)
             { return string.Compare(NameSpace, value.NameSpace, true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(IHelpKeyNameSpace? other)
+        public virtual Int32 CompareTo(IHelpSubjectKeyNameSpace? other)
         {
-            if (other is IHelpKeyNameSpace value)
-            { return CompareTo(new HelpKeyNameSpace(value)); }
+            if (other is IHelpSubjectKeyNameSpace value)
+            { return CompareTo(new HelpSubjectKeyNameSpace(value)); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
         {
-            if (obj is IHelpKeyNameSpace value)
-            { return CompareTo(new HelpKeyNameSpace(value)); }
+            if (obj is IHelpSubjectKeyNameSpace value)
+            { return CompareTo(new HelpSubjectKeyNameSpace(value)); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator ==(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator !=(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator <(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator <=(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator >(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(HelpKeyNameSpace left, HelpKeyNameSpace right)
+        public static Boolean operator >=(HelpSubjectKeyNameSpace left, HelpSubjectKeyNameSpace right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

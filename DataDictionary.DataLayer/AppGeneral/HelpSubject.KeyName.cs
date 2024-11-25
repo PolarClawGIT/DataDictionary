@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
     /// Interface for the Help Subject name key.
     /// </summary>
-    public interface IHelpKeyName : IKey
+    public interface IHelpSubjectKeyName : IKey
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -21,8 +16,8 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// <summary>
     /// Implementation of the Help Subject name key.
     /// </summary>
-    public class HelpKeyName : IHelpKeyName,
-        IKeyComparable<IHelpKeyName>, IKeyComparable<HelpKeyName>
+    public class HelpSubjectKeyName : IHelpSubjectKeyName,
+        IKeyComparable<IHelpSubjectKeyName>, IKeyComparable<HelpSubjectKeyName>
     {
         /// <inheritdoc/>
         public String HelpSubject { get; init; } = String.Empty;
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// Constructor for the Help Subject name key.
         /// </summary>
         /// <param name="source"></param>
-        public HelpKeyName(IHelpKeyName source) : base()
+        public HelpSubjectKeyName(IHelpSubjectKeyName source) : base()
         {
             if (source.HelpSubject is string) { HelpSubject = source.HelpSubject; }
             else { HelpSubject = string.Empty; }
@@ -39,61 +34,61 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(HelpKeyName? other)
+        public Boolean Equals(HelpSubjectKeyName? other)
         {
             return
-                other is HelpKeyName &&
+                other is HelpSubjectKeyName &&
                 !string.IsNullOrEmpty(HelpSubject) &&
                 !string.IsNullOrEmpty(other.HelpSubject) &&
                 HelpSubject.Equals(other.HelpSubject, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IHelpKeyName? other)
-        { return other is IHelpKeyName value && Equals(new HelpKeyName(value)); }
+        public virtual Boolean Equals(IHelpSubjectKeyName? other)
+        { return other is IHelpSubjectKeyName value && Equals(new HelpSubjectKeyName(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IHelpKeyName value && Equals(new HelpKeyName(value)); }
+        { return obj is IHelpSubjectKeyName value && Equals(new HelpSubjectKeyName(value)); }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(HelpKeyName? other)
+        public Int32 CompareTo(HelpSubjectKeyName? other)
         {
-            if (other is HelpKeyName value)
+            if (other is HelpSubjectKeyName value)
             { return string.Compare(HelpSubject, value.HelpSubject, true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(IHelpKeyName? other)
-        { if (other is IHelpKeyName value) { return CompareTo(new HelpKeyName(value)); } else { return 1; } }
+        public virtual Int32 CompareTo(IHelpSubjectKeyName? other)
+        { if (other is IHelpSubjectKeyName value) { return CompareTo(new HelpSubjectKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
-        { if (obj is IHelpKeyName value) { return CompareTo(new HelpKeyName(value)); } else { return 1; } }
+        { if (obj is IHelpSubjectKeyName value) { return CompareTo(new HelpSubjectKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator ==(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator !=(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator <(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator <=(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator >(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(HelpKeyName left, HelpKeyName right)
+        public static Boolean operator >=(HelpSubjectKeyName left, HelpSubjectKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

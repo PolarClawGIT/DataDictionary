@@ -5,7 +5,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
-    public interface IHelpSubjectValue : IHelpItem, IScopeType,
+    public interface IHelpSubjectValue : IHelpSubjectItem, IScopeType,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
         ITemporalValue
     { }

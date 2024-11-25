@@ -1,44 +1,38 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Generic Base class for Database Extended Property Items.
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>,
+    public abstract class PropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>
-        where TItem : BindingTableRow, IDbExtendedPropertyItem, ICatalogKey, new()
+        where TItem : BindingTableRow, IPropertyItem, ICatalogKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null, null, null)); }
+        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null)); }
+        { return LoadCommand(connection, (null, catalogKey.CatalogId, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? propertyId, string? catalogName) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? propertyId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseExtendedProperty]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@PropertyId", parameters.propertyId);
-            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.CommandText = Property.GetProcedure;
+            command.AddParameter(Model.ModelId, parameters.modelId);
+            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(Property.PropertyId, parameters.propertyId);
             return command;
         }
 
@@ -55,10 +49,10 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseExtendedProperty]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseExtendedProperty]", this);
+            command.CommandText = Property.SetProcedure;
+            command.AddParameter(Model.ModelId, parameters.modelId);
+            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(WriteData.Data, Property.TableType, this);
             return command;
         }
 
@@ -71,10 +65,4 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// List of Database Extended Property Items.
-    /// </summary>
-    public class DbExtendedPropertyCollection : DbExtendedPropertyCollection<DbExtendedPropertyItem>
-    { }
 }

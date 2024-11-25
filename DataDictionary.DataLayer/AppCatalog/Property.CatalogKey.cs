@@ -1,12 +1,12 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for Level0 MS Extended Property Type.
     /// </summary>
-    public interface IDbLevelCatalogKey : IDbLevelKey, IDbLevelCatalogType 
+    public interface IPropertyCatalogKey : IDbLevelKey, IDbLevelCatalogType
     { }
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbLevelCatalogKey : IDbLevelCatalogKey, IKeyEquality<IDbLevelCatalogKey>
+    public class PropertyCatalogKey : IPropertyCatalogKey, IKeyEquality<IPropertyCatalogKey>
     {
         /// <inheritdoc/>
         public DbLevelCatalogType CatalogScope { get; init; } = DbLevelCatalogType.Null;
@@ -23,20 +23,20 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        internal protected DbLevelCatalogKey() : base() { }
+        internal protected PropertyCatalogKey() : base() { }
 
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        public DbLevelCatalogKey(IDbLevelCatalogKey source) : this()
+        public PropertyCatalogKey(IPropertyCatalogKey source) : this()
         { CatalogScope = source.CatalogScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbLevelCatalogKey? other)
+        public virtual bool Equals(IPropertyCatalogKey? other)
         {
             return
-                other is IDbLevelCatalogKey
+                other is IPropertyCatalogKey
                 && CatalogScope != DbLevelCatalogType.Null
                 && other.CatalogScope != DbLevelCatalogType.Null
                 && CatalogScope == other.CatalogScope;
@@ -44,14 +44,14 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbLevelCatalogKey value && Equals(new DbLevelCatalogKey(value)); }
+        { return other is IPropertyCatalogKey value && Equals(new PropertyCatalogKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbLevelCatalogKey left, DbLevelCatalogKey right)
+        public static bool operator ==(PropertyCatalogKey left, PropertyCatalogKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbLevelCatalogKey left, DbLevelCatalogKey right)
+        public static bool operator !=(PropertyCatalogKey left, PropertyCatalogKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

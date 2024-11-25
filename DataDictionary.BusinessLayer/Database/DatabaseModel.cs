@@ -323,8 +323,18 @@ namespace DataDictionary.BusinessLayer.Database
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
-            work.AddRange(catalogs.Import(factory));
-            work.AddRange(schemta.Import(factory, key));
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    ICatalogKey? result = catalogs.ImportSchema(factory.Connection);
+                    if (result is ICatalogKey) { key = new CatalogKey(result); }
+                }
+            });
+
+            work.Add(new WorkItem()
+            { DoWork = () => { schemta.ImportSchema(factory.Connection, key); } });
+
 
             work.Add(factory.CreateWork(
                 workName: "Load DbDomains",

@@ -1,29 +1,15 @@
 ﻿using DataDictionary.Resource.Enumerations;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppGeneral
 {
     /// <summary>
-    /// Interface for a Help Item Key and Name
-    /// </summary>
-    public interface IHelpKeyItem : IHelpKey, IHelpKeyName,
-        ITemporalItem
-    { }
-
-    /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKeyItem, IHelpKeyNameSpace
+    public interface IHelpSubjectItem : IHelpSubjectKey, IHelpSubjectKeyName, IHelpSubjectKeyNameSpace,
+        ITemporalItem
     {
         /// <summary>
         /// Body of the Help Document
@@ -40,7 +26,7 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// Help Documentation Item for the Application.
     /// </summary>
     [Serializable]
-    public class HelpItem : BindingTableRow, IHelpItem, ISerializable
+    public class HelpItem : BindingTableRow, IHelpSubjectItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? HelpId { get { return GetValue<Guid>(nameof(HelpId)); } protected set { SetValue(nameof(HelpId), value); } }
@@ -196,7 +182,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <param name="source"></param>
         /// <param name="nameSpace"></param>
         /// <returns></returns>
-        public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, IHelpKeyNameSpace nameSpace)
+        public static IHelpSubjectItem? GetSubject(this IEnumerable<IHelpSubjectItem> source, IHelpSubjectKeyNameSpace nameSpace)
         { return source.FirstOrDefault(w => nameSpace.Equals(w)); }
 
         /// <summary>
@@ -205,8 +191,8 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <param name="source"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, object obj)
-        { return source.GetSubject(new HelpKeyNameSpace(obj)); }
+        public static IHelpSubjectItem? GetSubject(this IEnumerable<IHelpSubjectItem> source, object obj)
+        { return source.GetSubject(new HelpSubjectKeyNameSpace(obj)); }
     }
 
 }

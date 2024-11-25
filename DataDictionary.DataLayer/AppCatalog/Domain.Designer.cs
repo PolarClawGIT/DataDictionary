@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DataDictionary.DataLayer.SqlScript {
+namespace DataDictionary.DataLayer.AppCatalog {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DataDictionary.DataLayer.SqlScript {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Schema {
+    internal class Domain {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Schema() {
+        internal Domain() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.SqlScript {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.SqlScript.Schema", typeof(Schema).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.AppCatalog.Domain", typeof(Domain).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,18 +61,36 @@ namespace DataDictionary.DataLayer.SqlScript {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[procGetSchema].
+        ///   Looks up a localized string similar to @DomainId.
         /// </summary>
-        internal static string GetMethod {
+        internal static string DomainId {
             get {
-                return ResourceManager.GetString("GetMethod", resourceCulture);
+                return ResourceManager.GetString("DomainId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CATALOG_NAME] As [DatabaseName],
-        ///	[SCHEMA_NAME] As [SchemaName]
-        ///From [INFORMATION_SCHEMA].[SCHEMATA].
+        ///   Looks up a localized string similar to [AppCatalog].[procGetDomain].
+        /// </summary>
+        internal static string GetProcedure {
+            get {
+                return ResourceManager.GetString("GetProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select [DOMAIN_CATALOG] As[DatabaseName],
+        ///	[DOMAIN_SCHEMA] As[SchemaName],
+        ///	[DOMAIN_NAME] As[DomainName],
+        ///	[DATA_TYPE] As[DataType],
+        ///	[DOMAIN_DEFAULT] As[DomainDefault],
+        ///	[CHARACTER_MAXIMUM_LENGTH] As[CharacterMaximumLength],
+        ///	[CHARACTER_OCTET_LENGTH] As[CharacterOctetLength],
+        ///	[NUMERIC_PRECISION] As[NumericPrecision],
+        ///	[NUMERIC_PRECISION_RADIX] As[NumericPrecisionRadix],
+        ///	[NUMERIC_SCALE] As[NumericScale],
+        ///	[DATETIME_PRECISION] As[DateTimePrecision],
+        ///	[CHARACTER_SET_CATALOG] As[CharacterSetCatalo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InformationSchema {
             get {
@@ -81,25 +99,16 @@ namespace DataDictionary.DataLayer.SqlScript {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @SchemaId.
+        ///   Looks up a localized string similar to [AppCatalog].[procSetDomain].
         /// </summary>
-        internal static string SchemaId {
+        internal static string SetProcedure {
             get {
-                return ResourceManager.GetString("SchemaId", resourceCulture);
+                return ResourceManager.GetString("SetProcedure", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[procSetSchema].
-        /// </summary>
-        internal static string SetMethod {
-            get {
-                return ResourceManager.GetString("SetMethod", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[typeSchema].
+        ///   Looks up a localized string similar to [AppCatalog].[typeDomain].
         /// </summary>
         internal static string TableType {
             get {

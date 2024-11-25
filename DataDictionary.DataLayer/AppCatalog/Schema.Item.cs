@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -20,13 +19,13 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog Schema Item
     /// </summary>
     [Serializable]
-    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
+    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, IProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId
         {
             get { return GetValue<Guid>(nameof(CatalogId)); }
-            private set { SetValue<Guid>(nameof(CatalogId), value); }
+            internal set { SetValue<Guid>(nameof(CatalogId), value); }
         }
 
         /// <inheritdoc/>
@@ -40,13 +39,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? DatabaseName
         {
             get { return GetValue(nameof(DatabaseName)); }
-            private set { SetValue(nameof(DatabaseName), value); }
+            internal set { SetValue(nameof(DatabaseName), value); }
         }
 
         /// <inheritdoc/>
         public String? SchemaName { 
             get { return GetValue(nameof(SchemaName)); }
-            private set { SetValue(nameof(SchemaName), value); }
+            internal set { SetValue(nameof(SchemaName), value); }
         }
 
         /// <inheritdoc/>
@@ -147,19 +146,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for the Database Schema Item
         /// </summary>
-        public SchemaItem() : base() { }
-
-        /// <summary>
-        /// Constructor for the Database Schema Item using InformationSchema
-        /// </summary>
-        /// <param name="catalogKey"></param>
-        /// <param name="schema"></param>
-        protected SchemaItem(ICatalogKey catalogKey, SchemaInformationSchema schema)
-        {
-            CatalogId = catalogKey.CatalogId;
-            DatabaseName = schema.DatabaseName;
-            SchemaName = schema.SchemaName;
-        }
+        public SchemaItem() : base()
+        { SchemaId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -168,10 +156,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            DbLevelCatalogKey scopeKey = new DbLevelCatalogKey()
+            PropertyCatalogKey scopeKey = new PropertyCatalogKey()
             { CatalogScope = DbLevelCatalogType.Schema };
 
-            return new DbExtendedPropertyGetCommand(connection)
+            return new PropertyGetCommand(connection)
             {
                 CatalogId = CatalogId,
                 Level0Name = SchemaName,

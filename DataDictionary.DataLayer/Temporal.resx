@@ -117,17 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GetMethod" xml:space="preserve">
-    <value>[AppGeneral].[procGetHelpSubject]</value>
+  <data name="AsOfUtcDate" xml:space="preserve">
+    <value>@AsOfUtcDate</value>
+    <comment>DateTime(7)</comment>
   </data>
-  <data name="HelpId" xml:space="preserve">
-    <value>@HelpId</value>
-    <comment>GUID</comment>
-  </data>
-  <data name="SetMethod" xml:space="preserve">
-    <value>[AppGeneral].[procSetHelpSubject]</value>
-  </data>
-  <data name="TableType" xml:space="preserve">
-    <value>[AppGeneral].[typeHelpSubject]</value>
+  <data name="IncludeHistory" xml:space="preserve">
+    <value>@IncludeHistory</value>
+    <comment>Bit</comment>
   </data>
 </root>

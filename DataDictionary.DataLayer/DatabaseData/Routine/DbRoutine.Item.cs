@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -18,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Implementation for Database Routine (procedures and functions).
     /// </summary>
     [Serializable]
-    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, IDbExtendedProperty, ISerializable
+    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, IProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -101,9 +100,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (this.Scope.ToDbLevel() is IDbLevelObjectKey scopeKey)
+            if (this.Scope.ToDbLevel() is IPropertyObjectKey scopeKey)
             {
-                return new DbExtendedPropertyGetCommand(connection)
+                return new PropertyGetCommand(connection)
                 {
                     CatalogId = CatalogId,
                     Level0Name = SchemaName,

@@ -33,10 +33,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public SchemaValue() : base()
         { pathValue = CreatePath(); }
 
-        [Obsolete("Needs rework")]
-        internal SchemaValue(ICatalogKey catalogKey, SchemaInformationSchema schema) : base(catalogKey, schema)
-        { pathValue = CreatePath(); }
-
         PathValue CreatePath()
         {
             return new PathValue(this)

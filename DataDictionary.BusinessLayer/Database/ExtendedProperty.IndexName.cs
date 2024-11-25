@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
@@ -9,51 +8,51 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IExtendedPropertyIndexName : IDbExtendedPropertyKeyName
+    public interface IExtendedPropertyIndexName : IPropertyKeyName
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyIndexName : DbExtendedPropertyKeyName, IDbExtendedPropertyKeyName,
+    public class ExtendedPropertyIndexName : PropertyKeyName, IPropertyKeyName,
         IKeyEquality<IExtendedPropertyIndexName>, IKeyEquality<ExtendedPropertyIndexName>
     {
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbExtendedPropertyKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IPropertyKeyName)"/>
         public ExtendedPropertyIndexName(IExtendedPropertyIndexName source): base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDbTableKeyName)"/>
         public ExtendedPropertyIndexName(ITableIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableColumnKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDbTableColumnKeyName)"/>
         public ExtendedPropertyIndexName(ITableColumnIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDbRoutineKeyName)"/>
         public ExtendedPropertyIndexName(IRoutineIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineParameterKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDbRoutineParameterKeyName)"/>
         public ExtendedPropertyIndexName(IRoutineParameterIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbConstraintKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDbConstraintKeyName)"/>
         public ExtendedPropertyIndexName(IConstraintIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(ISchemaKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(ISchemaKeyName)"/>
         public ExtendedPropertyIndexName(ISchemaIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="DbExtendedPropertyKeyName(IDomainKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IDomainKeyName)"/>
         public ExtendedPropertyIndexName(IDomainIndexName source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(IExtendedPropertyIndexName? other)
-        { return other is IDbExtendedPropertyKeyName key && Equals(new DbExtendedPropertyKeyName(key)); }
+        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(ExtendedPropertyIndexName? other)
-        { return other is IDbExtendedPropertyKeyName key && Equals(new DbExtendedPropertyKeyName(key)); }
+        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
     }
 }

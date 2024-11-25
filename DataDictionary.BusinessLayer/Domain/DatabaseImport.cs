@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
@@ -168,7 +168,7 @@ namespace DataDictionary.BusinessLayer.Domain
                         && !tableProperties.
                         Any(
                             e => tablePropertyName.Equals(e)
-                            && new DbExtendedPropertyKey(w).Equals(e))).
+                            && new PropertyKey(w).Equals(e))).
                     ToList())
                 { tableProperties.Add(item); }
             }
@@ -198,7 +198,7 @@ namespace DataDictionary.BusinessLayer.Domain
                         w => columnPropertyName.Equals(w)
                         && !tableColumnProperties.
                         Any(e => columnPropertyName.Equals(e)
-                        && new DbExtendedPropertyKey(w).Equals(e))))
+                        && new PropertyKey(w).Equals(e))))
                 { tableColumnProperties.Add(item); }
             }
 

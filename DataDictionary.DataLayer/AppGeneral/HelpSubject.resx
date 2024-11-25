@@ -117,26 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CatalogId" xml:space="preserve">
-    <value>@CatalogId</value>
+  <data name="GetProcedure" xml:space="preserve">
+    <value>[AppGeneral].[procGetHelpSubject]</value>
+  </data>
+  <data name="HelpId" xml:space="preserve">
+    <value>@HelpId</value>
     <comment>GUID</comment>
   </data>
-  <data name="GetMethod" xml:space="preserve">
-    <value>[AppCatalog].[procGetCatalog]</value>
-  </data>
-  <data name="InformationSchema" xml:space="preserve">
-    <value>Select	@@ServerName As [ServerName],
-	D.[name] As [DatabaseName],
-	D.[create_date] As [CreateDate],
-	P.[name] As [Owner]
-From	[sys].[databases] D
-	Left Join [sys].[server_principals] P
-	On D.[owner_sid] = P.[sid]</value>
-  </data>
-  <data name="SetMethod" xml:space="preserve">
-    <value>[AppCatalog].[procSetCatalog]</value>
+  <data name="SetProcedure" xml:space="preserve">
+    <value>[AppGeneral].[procSetHelpSubject]</value>
   </data>
   <data name="TableType" xml:space="preserve">
-    <value>[AppCatalog].[typeCatalog]</value>
+    <value>[AppGeneral].[typeHelpSubject]</value>
   </data>
 </root>

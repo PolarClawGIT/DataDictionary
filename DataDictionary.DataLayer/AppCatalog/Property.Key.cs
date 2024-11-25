@@ -1,17 +1,11 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Extended Property Name
     /// </summary>
-    public interface IDbExtendedPropertyName
+    public interface IPropertyName
     {
         /// <summary>
         /// Name of the Extended Property.
@@ -22,14 +16,14 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for the Database Extended Property Key
     /// </summary>
-    public interface IDbExtendedPropertyKey : IDbExtendedPropertyKeyName, IDbExtendedPropertyName
+    public interface IPropertyKey : IPropertyKeyName, IPropertyName
     { }
 
     /// <summary>
     /// Implementation for the Database Extended Property Key
     /// </summary>
-    public class DbExtendedPropertyKey : DbExtendedPropertyKeyName, IDbExtendedPropertyKey,
-        IKeyComparable<IDbExtendedPropertyKey>, IKeyComparable<DbExtendedPropertyKey>
+    public class PropertyKey : PropertyKeyName, IPropertyKey,
+        IKeyComparable<IPropertyKey>, IKeyComparable<PropertyKey>
     {
         /// <inheritdoc/>
         public String PropertyName { get; init; } = string.Empty;
@@ -38,67 +32,67 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKey(IDbExtendedPropertyKey source) : base(source)
+        public PropertyKey(IPropertyKey source) : base(source)
         {
             if (source.PropertyName is String) { Level0Name = source.PropertyName; }
         }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(DbExtendedPropertyKey? other)
+        public Boolean Equals(PropertyKey? other)
         {
             return
-                other is IDbExtendedPropertyKey &&
-                new DbExtendedPropertyKeyName(this).Equals(other) &&
+                other is IPropertyKey &&
+                new PropertyKeyName(this).Equals(other) &&
                 PropertyName.Equals(other.PropertyName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
-        public Boolean Equals(IDbExtendedPropertyKey? other)
-        { return other is IDbExtendedPropertyKey value && Equals(new DbExtendedPropertyKey(value)); }
+        public Boolean Equals(IPropertyKey? other)
+        { return other is IPropertyKey value && Equals(new PropertyKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IDbExtendedPropertyKey value && Equals(new DbExtendedPropertyKey(value)); }
+        { return obj is IPropertyKey value && Equals(new PropertyKey(value)); }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(DbExtendedPropertyKey? other)
+        public Int32 CompareTo(PropertyKey? other)
         {
             if (other is null) { return 1; }
-            else if (new DbExtendedPropertyKeyName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new PropertyKeyName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return string.Compare(PropertyName, other.PropertyName, true); }
         }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(IDbExtendedPropertyKey? other)
-        { if (other is IDbExtendedPropertyKey value) { return CompareTo(new DbExtendedPropertyKey(value)); } else { return 1; } }
+        public Int32 CompareTo(IPropertyKey? other)
+        { if (other is IPropertyKey value) { return CompareTo(new PropertyKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override Int32 CompareTo(object? obj)
-        { if (obj is IDbExtendedPropertyKey value) { return CompareTo(new DbExtendedPropertyKey(value)); } else { return 1; } }
+        { if (obj is IPropertyKey value) { return CompareTo(new PropertyKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator ==(PropertyKey left, PropertyKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator !=(PropertyKey left, PropertyKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator <(PropertyKey left, PropertyKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator <=(PropertyKey left, PropertyKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator >(PropertyKey left, PropertyKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(DbExtendedPropertyKey left, DbExtendedPropertyKey right)
+        public static Boolean operator >=(PropertyKey left, PropertyKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

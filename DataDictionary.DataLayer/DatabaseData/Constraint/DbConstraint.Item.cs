@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -24,7 +23,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// Implementation for the Database Constraint Item.
     /// </summary>
     [Serializable]
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, IDbExtendedProperty, ISerializable
+    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, IProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -83,9 +82,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public virtual Command PropertyCommand(IConnection connection)
         {
             {
-                if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
+                if (this.Scope.ToDbLevel() is IPropertyElementKey scopeKey)
                 {
-                    return new DbExtendedPropertyGetCommand(connection)
+                    return new PropertyGetCommand(connection)
                     {
                         CatalogId = CatalogId,
                         Level0Name = SchemaName,

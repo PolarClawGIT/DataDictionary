@@ -1,20 +1,15 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource.Enumerations;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for Database Extended Properties
     /// </summary>
-    public interface IDbExtendedProperty
+    public interface IProperty
     {  // DB Classes that have extended properties.
 
         /// <summary>
@@ -25,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         Command PropertyCommand(IConnection connection);
     }
 
-    internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter, ICatalogKey
+    internal class PropertyGetCommand : PropertyParameter, ICatalogKey
     {
         /// <inheritdoc/>
         public required Guid? CatalogId { get; init; }
@@ -50,7 +45,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         readonly Command command;
 
-        public DbExtendedPropertyGetCommand(IConnection connection) : base()
+        public PropertyGetCommand(IConnection connection) : base()
         { command = connection.CreateCommand(); }
 
         public Command GetCommand()
@@ -76,11 +71,11 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             command.Parameters["@Level2Type"].Value = ToValue(Level2Type);
             command.Parameters["@Level2Name"].Value = ToValue(Level2Name);
 
-            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = this.CatalogId });
+            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = CatalogId });
 
             return command;
 
-            Object ToValue (String? source)
+            Object ToValue(String? source)
             {
                 if (source is String value) { return value; }
                 else { return DBNull.Value; }

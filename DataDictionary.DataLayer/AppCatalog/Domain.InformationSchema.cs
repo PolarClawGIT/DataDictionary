@@ -9,7 +9,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
-    public class DomainInformationSchema : BindingTableRow
+    class DomainInformationSchema : BindingTableRow
     {
 
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
@@ -96,7 +96,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = SqlScript.Domain.InformationSchema;
+            command.CommandText = Domain.InformationSchema;
             return command;
 
         }

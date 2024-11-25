@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <param name="attributeKey"></param>
         /// <param name="propertyKey"></param>
         /// <param name="value"></param>
-        public DomainAttributePropertyItem(IDomainAttributeKey attributeKey, IDomainPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
+        public DomainAttributePropertyItem(IDomainAttributeKey attributeKey, IDomainPropertyKey propertyKey, IPropertyItem value) : this()
         {
             AttributeId = attributeKey.AttributeId;
             PropertyId = propertyKey.PropertyId;

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.DataLayer.AppModel;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -19,16 +20,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>
         where TItem : BindingTableRow, ISchemaItem, ICatalogKey, ISchemaKeyName, new()
     {
-        /// <inheritdoc/>
-        [Obsolete()]
-        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbSchemaItem;
-            command.Parameters.Add(new SqlParameter(SqlScript.Catalog.CatalogId, SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
-            return command;
-        }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -40,7 +31,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISchemaKey key)
-        { return LoadCommand(connection, (null, null , key.SchemaId, null, false)); }
+        { return LoadCommand(connection, (null, null, key.SchemaId, null, false)); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey key)
@@ -54,12 +45,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.Schema.GetMethod;
-            command.AddParameter(SqlScript.Model.ModelId, parameters.modelId);
-            command.AddParameter(SqlScript.Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(SqlScript.Schema.SchemaId, parameters.schemaId);
-            command.AddParameter(SqlScript.Common.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(SqlScript.Common.IncludeHistory, parameters.includeHistory);
+            command.CommandText = Schema.GetProcedure;
+            command.AddParameter(Model.ModelId, parameters.modelId);
+            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(Schema.SchemaId, parameters.schemaId);
+            command.AddParameter(Temporal.AsOfUtcDate, parameters.asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, parameters.includeHistory);
 
             return command;
         }
@@ -76,13 +67,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.Schema.SetMethod;
-            command.AddParameter(SqlScript.Model.ModelId, parameters.modelId);
-            command.AddParameter(SqlScript.Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(SqlScript.Schema.SchemaId, parameters.schemaId);
+            command.CommandText = Schema.GetProcedure;
+            command.AddParameter(Model.ModelId, parameters.modelId);
+            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(Schema.SchemaId, parameters.schemaId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter(SqlScript.Common.Data, SqlScript.Schema.TableType, data);
+            command.AddParameter(WriteData.Data, Schema.TableType, data);
             return command;
         }
 
@@ -102,6 +93,61 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
+        }
+
+        /// <summary>
+        /// Imports the Catalog InformationSchema value.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="key"></param>
+        public virtual void ImportSchema(IConnection connection, ICatalogKey key)
+        {
+            //TODO: Test, Then move to InfoSchema.
+
+            IEnumerable<SchemaInformationSchema> schemas = SchemaInformationSchema.GetSchema(connection);
+            CatalogKey catalogKey = new CatalogKey(key);
+
+            var allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new SchemaKeyName(s)).
+                Union(schemas.Select(s => new SchemaKeyName(s)));
+
+            foreach (var schemaKey in allKeys)
+            {
+                var oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
+                var newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
+
+                if (oldValue is SchemaItem oldMatches && newValue is SchemaInformationSchema newMatches)
+                {   // Update Old, Nothing really to do. No non-key values
+                    oldMatches.DatabaseName = newMatches.DatabaseName;
+                    oldMatches.SchemaName = newMatches.SchemaName;
+                }
+                else if(oldValue is SchemaItem newMissing) 
+                { // Delete Old
+                    this.Remove(schemaKey);
+                }
+                else if(newValue is SchemaInformationSchema oldMissing) 
+                { // Add New
+                    TItem newItem = new TItem();
+
+                    if (newItem is SchemaItem value)
+                    {
+                        value.CatalogId = key.CatalogId;
+                        value.DatabaseName = oldMissing.DatabaseName;
+                        value.SchemaName = oldMissing.SchemaName;
+                        Add(newItem);
+                    }
+                    else
+                    {
+                        Exception ex = new InvalidOperationException("Could not Import Schema");
+                        ex.Data.Add("Expected type", nameof(SchemaItem));
+                        ex.Data.Add("Actual type", newItem.GetType().Name);
+                        ex.Data.Add("Rows returned", schemas.Count());
+                        throw ex;
+                    }
+                }
+
+            }
+
         }
     }
 }

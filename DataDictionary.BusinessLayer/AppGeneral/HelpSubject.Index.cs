@@ -6,24 +6,24 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
-    public interface IHelpSubjectIndex :IHelpKey
+    public interface IHelpSubjectIndex :IHelpSubjectKey
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectIndex : HelpKey, IHelpSubjectIndex,
+    public class HelpSubjectIndex : HelpSubjectKey, IHelpSubjectIndex,
         IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>
     {
-        /// <inheritdoc cref="HelpKey.HelpKey(IHelpKey)"/>
+        /// <inheritdoc cref="HelpSubjectKey.HelpSubjectKey(IHelpSubjectKey)"/>
         public HelpSubjectIndex(IHelpSubjectIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(HelpSubjectIndex? other)
-        { return other is IHelpKey value && Equals(new HelpKey(value)); }
+        { return other is IHelpSubjectKey value && Equals(new HelpSubjectKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectIndex? other)
-        { return other is IHelpKey value && Equals(new HelpKey(value)); }
+        { return other is IHelpSubjectKey value && Equals(new HelpSubjectKey(value)); }
 
         /// <summary>
         /// Convert HelpSubjectIndex to a DataIndex

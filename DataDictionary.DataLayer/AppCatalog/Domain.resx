@@ -117,22 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GetMethod" xml:space="preserve">
-    <value>[AppCatalog].[procGetSchema]</value>
-  </data>
-  <data name="InformationSchema" xml:space="preserve">
-    <value>Select	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName]
-From [INFORMATION_SCHEMA].[SCHEMATA]</value>
-  </data>
-  <data name="SchemaId" xml:space="preserve">
-    <value>@SchemaId</value>
+  <data name="DomainId" xml:space="preserve">
+    <value>@DomainId</value>
     <comment>GUID</comment>
   </data>
-  <data name="SetMethod" xml:space="preserve">
-    <value>[AppCatalog].[procSetSchema]</value>
+  <data name="GetProcedure" xml:space="preserve">
+    <value>[AppCatalog].[procGetDomain]</value>
+  </data>
+  <data name="InformationSchema" xml:space="preserve">
+    <value>Select [DOMAIN_CATALOG] As[DatabaseName],
+	[DOMAIN_SCHEMA] As[SchemaName],
+	[DOMAIN_NAME] As[DomainName],
+	[DATA_TYPE] As[DataType],
+	[DOMAIN_DEFAULT] As[DomainDefault],
+	[CHARACTER_MAXIMUM_LENGTH] As[CharacterMaximumLength],
+	[CHARACTER_OCTET_LENGTH] As[CharacterOctetLength],
+	[NUMERIC_PRECISION] As[NumericPrecision],
+	[NUMERIC_PRECISION_RADIX] As[NumericPrecisionRadix],
+	[NUMERIC_SCALE] As[NumericScale],
+	[DATETIME_PRECISION] As[DateTimePrecision],
+	[CHARACTER_SET_CATALOG] As[CharacterSetCatalog],
+	[CHARACTER_SET_SCHEMA] As[CharacterSetSchema],
+	[CHARACTER_SET_NAME] As[CharacterSetName],
+	[COLLATION_CATALOG] As[CollationCatalog],
+	[COLLATION_SCHEMA] As[CollationSchema], 
+	[COLLATION_NAME] As[CollationName]
+From[INFORMATION_SCHEMA].[DOMAINS]</value>
+  </data>
+  <data name="SetProcedure" xml:space="preserve">
+    <value>[AppCatalog].[procSetDomain]</value>
   </data>
   <data name="TableType" xml:space="preserve">
-    <value>[AppCatalog].[typeSchema]</value>
+    <value>[AppCatalog].[typeDomain]</value>
   </data>
 </root>

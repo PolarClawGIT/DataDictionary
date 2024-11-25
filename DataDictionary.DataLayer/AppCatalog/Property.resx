@@ -117,16 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AsOfUtcDate" xml:space="preserve">
-    <value>@AsOfUtcDate</value>
-    <comment>DateTime(7)</comment>
+  <data name="GetProcedure" xml:space="preserve">
+    <value>[AppCatalog].[procGetProperty]</value>
   </data>
-  <data name="Data" xml:space="preserve">
-    <value>@Data</value>
-    <comment>Table Type (varies)</comment>
+  <data name="PropertyId" xml:space="preserve">
+    <value>@PropertyId</value>
+    <comment>GUID</comment>
   </data>
-  <data name="IncludeHistory" xml:space="preserve">
-    <value>@IncludeHistory</value>
-    <comment>Bit</comment>
+  <data name="SetProcedure" xml:space="preserve">
+    <value>[AppCatalog].[procSetProperty]</value>
+  </data>
+  <data name="TableType" xml:space="preserve">
+    <value>[AppCatalog].[typeProperty]</value>
   </data>
 </root>

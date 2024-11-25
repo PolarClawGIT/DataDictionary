@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// <summary>
     /// Parent Key reference to the Primary Key of an Help Item.
     /// </summary>
-    public interface IHelpKeyParent : IKey
+    public interface IHelpSubjectKeyParent : IKey
     {
         /// <summary>
         /// Parent Primary Key reference to a Parent Help document.
@@ -19,9 +19,9 @@ namespace DataDictionary.DataLayer.AppGeneral
     }
 
     /// <inheritdoc/>
-    public class HelpKeyParent : IHelpKeyParent,
-        IKeyEquality<IHelpKeyParent>, IKeyEquality<IHelpKey>,
-        IKeyEquality<HelpKeyParent>
+    public class HelpSubjectKeyParent : IHelpSubjectKeyParent,
+        IKeyEquality<IHelpSubjectKeyParent>, IKeyEquality<IHelpSubjectKey>,
+        IKeyEquality<HelpSubjectKeyParent>
     {
         /// <inheritdoc/>
         public Guid? HelpParentId { get; init; } = Guid.Empty;
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// Creates a Help Key from a item that implements the Primary key.
         /// </summary>
         /// <param name="source"></param>
-        public HelpKeyParent(IHelpKeyParent source) : base()
+        public HelpSubjectKeyParent(IHelpSubjectKeyParent source) : base()
         {
             if (source.HelpParentId is Guid) { HelpParentId = source.HelpParentId; }
             else { HelpParentId = Guid.Empty; }
@@ -38,27 +38,27 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(HelpKeyParent? other)
-        { return other is HelpKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
+        public Boolean Equals(HelpSubjectKeyParent? other)
+        { return other is HelpSubjectKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
 
         /// <inheritdoc/>
-        public Boolean Equals(IHelpKeyParent? other)
-        { return other is IHelpKeyParent value && Equals(new HelpKeyParent(value)); }
+        public Boolean Equals(IHelpSubjectKeyParent? other)
+        { return other is IHelpSubjectKeyParent value && Equals(new HelpSubjectKeyParent(value)); }
 
         /// <inheritdoc/>
-        public Boolean Equals(IHelpKey? other)
-        { return other is IHelpKey && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpId); }
+        public Boolean Equals(IHelpSubjectKey? other)
+        { return other is IHelpSubjectKey && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpId); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IHelpKeyParent value && Equals(new HelpKeyParent(value)); }
+        { return obj is IHelpSubjectKeyParent value && Equals(new HelpSubjectKeyParent(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(HelpKeyParent left, HelpKeyParent right)
+        public static Boolean operator ==(HelpSubjectKeyParent left, HelpSubjectKeyParent right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(HelpKeyParent left, HelpKeyParent right)
+        public static Boolean operator !=(HelpSubjectKeyParent left, HelpSubjectKeyParent right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

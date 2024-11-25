@@ -27,7 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SqlScript\Catalog.Designer.cs">
+    <Compile Update="AppCatalog\Property.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Property.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppCatalog\Catalog.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Catalog.resx</DependentUpon>
@@ -37,40 +42,49 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DbScript.resx</DependentUpon>
     </Compile>
-    <Compile Update="SqlScript\Domain.Designer.cs">
+    <Compile Update="AppCatalog\Domain.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Domain.resx</DependentUpon>
     </Compile>
-    <Compile Update="SqlScript\HelpSubject.Designer.cs">
+    <Compile Update="AppGeneral\HelpSubject.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>HelpSubject.resx</DependentUpon>
     </Compile>
-    <Compile Update="SqlScript\Model.Designer.cs">
+    <Compile Update="AppModel\Model.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Model.resx</DependentUpon>
     </Compile>
-    <Compile Update="SqlScript\Common.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Common.resx</DependentUpon>
-    </Compile>
-    <Compile Update="SqlScript\Schema.Designer.cs">
+    <Compile Update="AppCatalog\Schema.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Schema.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Temporal.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Temporal.resx</DependentUpon>
     </Compile>
     <Compile Update="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>VersionNumber.tt</DependentUpon>
     </Compile>
+    <Compile Update="WriteData.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WriteData.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="SqlScript\Catalog.resx">
+    <EmbeddedResource Update="AppCatalog\Property.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Property.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\Catalog.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Catalog.Designer.cs</LastGenOutput>
       <CustomToolNamespace></CustomToolNamespace>
@@ -79,26 +93,29 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DbScript.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\Domain.resx">
+    <EmbeddedResource Update="AppCatalog\Domain.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Domain.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\HelpSubject.resx">
+    <EmbeddedResource Update="AppGeneral\HelpSubject.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\Model.resx">
+    <EmbeddedResource Update="AppModel\Model.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\Common.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Common.Designer.cs</LastGenOutput>
-      <CustomToolNamespace></CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SqlScript\Schema.resx">
+    <EmbeddedResource Update="AppCatalog\Schema.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Schema.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Temporal.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Temporal.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="WriteData.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WriteData.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -115,9 +132,9 @@
 
   <ItemGroup>
     <Folder Include="AppLibrary\" />
-    <Folder Include="AppModel\" />
     <Folder Include="AppScript\" />
     <Folder Include="DatabaseData\Domain\" />
+    <Folder Include="DatabaseData\ExtendedProperty\" />
     <Folder Include="DatabaseData\Schema\" />
   </ItemGroup>
 

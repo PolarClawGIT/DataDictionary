@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using Microsoft.Data.SqlClient;
 using System;
@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="source"></param>
         /// <returns></returns>
         WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-            where TDbItem : class, IBindingTableRow, IDbExtendedProperty;
+            where TDbItem : class, IBindingTableRow, IProperty;
 
         /// <summary>
         /// Create a WorkItem for loading a Data Object.
@@ -194,7 +194,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         /// <inheritdoc/>
         public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-            where TDbItem : class, IBindingTableRow, IDbExtendedProperty
+            where TDbItem : class, IBindingTableRow, IProperty
         {
             Action<int, int> progress = (x, y) => { };
 

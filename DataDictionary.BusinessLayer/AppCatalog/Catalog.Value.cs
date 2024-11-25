@@ -33,11 +33,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public CatalogValue() : base()
         { pathValue = CreatePath(); }
 
-        /// <inheritdoc/>
-        [Obsolete("Needs rework")]
-        internal CatalogValue(CatalogInformationSchema schema) : base(schema)
-        { pathValue = CreatePath(); }
-
         PathValue CreatePath()
         {
             return new PathValue(this)

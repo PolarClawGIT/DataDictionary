@@ -1,13 +1,13 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+namespace DataDictionary.DataLayer.AppCatalog
 {
-  
+
     /// <summary>
     /// Interface for Level2 MS Extended Property Type.
     /// </summary>
-    public interface IDbLevelElementKey: IDbLevelObjectKey, IDbLevelElementType
+    public interface IPropertyElementKey : IPropertyObjectKey, IDbLevelElementType
     { }
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbLevelElementKey : DbLevelObjectKey, IDbLevelElementKey, IKeyEquality<IDbLevelElementKey>
+    public class PropertyElementKey : PropertyObjectKey, IPropertyElementKey, IKeyEquality<IPropertyElementKey>
     {
         /// <inheritdoc/>
         public DbLevelElementType ElementScope { get; init; } = DbLevelElementType.Null;
@@ -24,21 +24,21 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <summary>
         /// Constructor for a Element Scope.
         /// </summary>
-        internal protected DbLevelElementKey() : base() { }
+        internal protected PropertyElementKey() : base() { }
 
         /// <summary>
         /// Constructor for a Element Scope.
         /// </summary>
-        public DbLevelElementKey(IDbLevelElementKey source) : base(source)
+        public PropertyElementKey(IPropertyElementKey source) : base(source)
         { ElementScope = source.ElementScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbLevelElementKey? other)
+        public virtual bool Equals(IPropertyElementKey? other)
         {
             return
-                other is IDbLevelObjectKey
-                && new DbLevelObjectKey(this).Equals(other)
+                other is IPropertyObjectKey
+                && new PropertyObjectKey(this).Equals(other)
                 && ObjectScope != DbLevelObjectType.Null
                 && other.ObjectScope != DbLevelObjectType.Null
                 && ObjectScope == other.ObjectScope;
@@ -46,14 +46,14 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbLevelElementKey value && Equals(new DbLevelElementKey(value)); }
+        { return other is IPropertyElementKey value && Equals(new PropertyElementKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbLevelElementKey left, DbLevelElementKey right)
+        public static bool operator ==(PropertyElementKey left, PropertyElementKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbLevelElementKey left, DbLevelElementKey right)
+        public static bool operator !=(PropertyElementKey left, PropertyElementKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

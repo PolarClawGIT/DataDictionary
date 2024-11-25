@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.DataLayer.AppModel;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -25,7 +26,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbDomainItem;
-            command.Parameters.Add(new SqlParameter(SqlScript.Catalog.CatalogId, SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
+            command.Parameters.Add(new SqlParameter(Catalog.CatalogId, SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
             return command;
         }
 
@@ -41,10 +42,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.Domain.GetMethod;
-            command.AddParameter(SqlScript.Model.ModelId, modelId);
-            command.AddParameter(SqlScript.Catalog.CatalogId, catalogId);
-            command.AddParameter(SqlScript.Domain.DomainId, domainId);
+            command.CommandText = Domain.GetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Domain.DomainId, domainId);
 
             return command;
         }
@@ -61,13 +62,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.Domain.SetMethod;
-            command.AddParameter(SqlScript.Model.ModelId, modelId);
-            command.AddParameter(SqlScript.Catalog.CatalogId, catalogId);
-            command.AddParameter(SqlScript.Domain.DomainId, domainId);
+            command.CommandText = Domain.SetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Domain.DomainId, domainId);
 
             IEnumerable<TItem> data = this.Where(w => catalogId is null || w.CatalogId == catalogId);
-            command.AddParameter(SqlScript.Common.Data, SqlScript.Domain.TableType, data);
+            command.AddParameter(WriteData.Data, Domain.TableType, data);
             return command;
         }
 

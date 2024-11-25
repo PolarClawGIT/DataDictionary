@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -14,15 +9,15 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class HelpCollection<TItem> : BindingTable<TItem>,
+    public abstract class HelpSubjectCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
-        IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IRemoveItem<IHelpKey>,
-        ITemporalData, ITemporalData<IHelpKey>
+        IReadData<IHelpSubjectKey>, IWriteData<IHelpSubjectKey>,
+        IRemoveItem<IHelpSubjectKey>,
+        ITemporalData, ITemporalData<IHelpSubjectKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IHelpKey key)
+        public Command LoadCommand(IConnection connection, IHelpSubjectKey key)
         { return LoadCommand(connection, (key.HelpId, null, false)); }
 
         /// <inheritdoc/>
@@ -34,17 +29,17 @@ namespace DataDictionary.DataLayer.AppGeneral
         { return LoadCommand(connection, (null, null, true)); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IHelpKey key)
+        public Command HistoryCommand(IConnection connection, IHelpSubjectKey key)
         { return LoadCommand(connection, (key.HelpId, null, true)); }
 
         Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.HelpSubject.GetMethod;
-            command.AddParameter(SqlScript.HelpSubject.HelpId, parameters.helpId);
-            command.AddParameter(SqlScript.Common.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(SqlScript.Common.IncludeHistory, parameters.includeHistory);
+            command.CommandText = HelpSubject.GetProcedure;
+            command.AddParameter(HelpSubject.HelpId, parameters.helpId);
+            command.AddParameter(Temporal.AsOfUtcDate, parameters.asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, parameters.includeHistory);
 
             return command;
         }
@@ -54,18 +49,18 @@ namespace DataDictionary.DataLayer.AppGeneral
         { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IHelpKey key)
+        public Command SaveCommand(IConnection connection, IHelpSubjectKey key)
         { return SaveCommand(connection, (key.HelpId, null)); }
 
         Command SaveCommand(IConnection connection, (Guid? helpId, Guid? dummy) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = SqlScript.HelpSubject.SetMethod;
-            command.AddParameter(SqlScript.HelpSubject.HelpId, parameters.helpId);
+            command.CommandText = HelpSubject.SetProcedure;
+            command.AddParameter(HelpSubject.HelpId, parameters.helpId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
-            command.AddParameter(SqlScript.Common.Data, SqlScript.HelpSubject.TableType, data);
+            command.AddParameter(WriteData.Data, HelpSubject.TableType, data);
             return command;
         }
 
@@ -84,7 +79,7 @@ namespace DataDictionary.DataLayer.AppGeneral
             foreach (HelpItem item in
                 this.Where(w =>
                 {
-                    HelpKeyNameSpace key = new HelpKeyNameSpace(w);
+                    HelpSubjectKeyNameSpace key = new HelpSubjectKeyNameSpace(w);
                     return this.Any(r => key.Equals(r) && !ReferenceEquals(w, r));
                 }))
             { }
@@ -93,9 +88,9 @@ namespace DataDictionary.DataLayer.AppGeneral
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IHelpKey helpItem)
+        public virtual void Remove(IHelpSubjectKey helpItem)
         {
-            HelpKey key = new HelpKey(helpItem);
+            HelpSubjectKey key = new HelpSubjectKey(helpItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Domain Property Index by Value.
     /// </summary>
-    public interface IPropertyIndexValue : IKey, IDomainPropertyType, IDbExtendedPropertyName
+    public interface IPropertyIndexValue : IKey, IDomainPropertyType, IPropertyName
     { }
 
     /// <summary>

@@ -1,9 +1,9 @@
 ﻿using DataDictionary.DataLayer.DomainData.Property;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 using DataDictionary.Resource.Enumerations;
+using DataDictionary.DataLayer.AppCatalog;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <param name="EntityKey"></param>
         /// <param name="propertyKey"></param>
         /// <param name="value"></param>
-        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IDomainPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
+        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IDomainPropertyKey propertyKey, IPropertyItem value) : this()
         {
             EntityId = EntityKey.EntityId;
             PropertyId = propertyKey.PropertyId;
