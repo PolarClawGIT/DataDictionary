@@ -14,22 +14,11 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
+        IReadData<IModelKey>, IReadData<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>
         where TItem : DomainItem, new()
     {
-        /// <inheritdoc/>
-        [Obsolete("Needs work")]
-        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbDomainItem;
-            command.Parameters.Add(new SqlParameter(Catalog.CatalogId, SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
-            return command;
-        }
-
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
@@ -90,27 +79,19 @@ namespace DataDictionary.DataLayer.AppCatalog
             { base.Remove(item); }
         }
 
-        /// <summary>
-        /// Imports the InformationSchema values.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="catalogKey"></param>
-        /// <remarks>Merge behavior: existing values are updated (do nothing), new values are added, missing values are removed</remarks>
-        public virtual void Import(IConnection connection, ICatalogKey catalogKey)
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IDomain> domains)
         {
-            IEnumerable<DomainMetaData> schemas = DomainMetaData.GetSchema(connection);
-            //CatalogKey catalogKey = new CatalogKey(catalogKey);
-
             IEnumerable<DomainKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new DomainKeyName(s)).
-                Union(schemas.Select(s => new DomainKeyName(s)));
+                Union(domains.Select(s => new DomainKeyName(s)));
 
             foreach (var key in allKeys)
             {
                 TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
-                DomainMetaData? newValue = schemas.FirstOrDefault(w => key.Equals(w));
+                IDomain? newValue = domains.FirstOrDefault(w => key.Equals(w));
 
-                if (oldValue is DomainItem oldMatches && newValue is DomainMetaData newMatches)
+                if (oldValue is DomainItem oldMatches && newValue is IDomain newMatches)
                 { // Update Old
                     oldMatches.CharacterMaximumLength = newMatches.CharacterMaximumLength;
                     oldMatches.CharacterOctetLength = newMatches.CharacterMaximumLength;
@@ -129,8 +110,8 @@ namespace DataDictionary.DataLayer.AppCatalog
                 }
                 else if (oldValue is DomainItem newMissing)
                 { this.Remove(key); } // Delete Old
-                else if (newValue is DomainMetaData oldMissing)
-                { TItem newItem = DomainItem.Create<TItem>(catalogKey, oldMissing); } // Add New
+                else if (newValue is IDomain oldMissing)
+                { Add(DomainItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
             }
         }
     }

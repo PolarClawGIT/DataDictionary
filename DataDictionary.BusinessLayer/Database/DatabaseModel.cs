@@ -323,24 +323,25 @@ namespace DataDictionary.BusinessLayer.Database
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
-            work.Add(new WorkItem()
-            {
-                DoWork = () =>
+            work.Add(factory.CreateImport(
+                workName: "Import InformationSchema- Catalog",
+                getData: CatalogMetaData.GetSchema,
+                import: (data) =>
                 {
-                    ICatalogKey result = catalogs.Import(factory.Connection);
+                    ICatalogKey result = catalogs.Import(data);
                     if (result is ICatalogKey) { key = new CatalogKey(result); }
                     else { throw new InvalidOperationException("CatalogKey could not be determined."); }
-                }
-            });
+                }));
 
-            work.Add(new WorkItem()
-            { DoWork = () => { schemta.Import(factory.Connection, key); } });
+            work.Add(factory.CreateImport(
+                workName: "Import InformationSchema- Schema",
+                getData: SchemaMetaData.GetSchema,
+                import: (data) => schemta.Import(key, data)));
 
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbDomains",
-                target: domains,
-                command: (conn) => domains.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Domain",
+               getData: DomainMetaData.GetSchema,
+               import: (data) => domains.Import(key, data)));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbTables",

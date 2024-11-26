@@ -90,24 +90,23 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Imports the InformationSchema values.
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="catalogs"></param>
         /// <returns></returns>
         /// <remarks>Merge behavior: existing values are updated, new values are added</remarks>
-        public virtual ICatalogKey Import(IConnection connection)
+        public virtual ICatalogKey Import(IEnumerable<ICatalog> catalogs)
         {
-            IEnumerable<CatalogMetaData> schemas = CatalogMetaData.GetSchema(connection);
             CatalogKey? catalogKey = null;
 
             IEnumerable<CatalogKeyName> allKeys = this.
                 Select(s => new CatalogKeyName(s)).
-                Union(schemas.Select(s => new CatalogKeyName(s)));
+                Union(catalogs.Select(s => new CatalogKeyName(s)));
 
-            foreach (var schemaKey in allKeys) // Only one value is expected
+            foreach (var key in allKeys) // Only one value is expected
             {
-                TItem? oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
-                CatalogMetaData? newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                ICatalog? newValue = catalogs.FirstOrDefault(w => key.Equals(w));
 
-                if (oldValue is CatalogItem oldMatches && newValue is CatalogMetaData newMatches)
+                if (oldValue is CatalogItem oldMatches && newValue is ICatalog newMatches)
                 { // Update Old
                     oldMatches.SourceDate = DateTime.Now;
                     oldMatches.ServerName = newMatches.ServerName;
@@ -117,10 +116,11 @@ namespace DataDictionary.DataLayer.AppCatalog
                 { // Nothing to do, old items are not removed this way
                     catalogKey = new CatalogKey(newMissing);
                 }
-                else if (newValue is CatalogMetaData oldMissing) // Add New
+                else if (newValue is ICatalog oldMissing) // Add New
                 {
                     TItem newItem = CatalogItem.Create<TItem>(oldMissing);
                     catalogKey = new CatalogKey(newItem);
+                    Add(newItem);
                 }
             }
 

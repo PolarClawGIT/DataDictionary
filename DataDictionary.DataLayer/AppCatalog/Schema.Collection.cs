@@ -98,29 +98,26 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Imports the InformationSchema values.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="key"></param>
+        /// <param name="catalogKey"></param>
+        /// <param name="schemas"></param>
         /// <remarks>Merge behavior: existing values are updated (do nothing), new values are added, missing values are removed</remarks>
-        public virtual void Import(IConnection connection, ICatalogKey key)
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<ISchema> schemas)
         {
-            IEnumerable<SchemaMetaData> schemas = SchemaMetaData.GetSchema(connection);
-            CatalogKey catalogKey = new CatalogKey(key);
-
             IEnumerable<SchemaKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new SchemaKeyName(s)).
                 Union(schemas.Select(s => new SchemaKeyName(s)));
 
-            foreach (var schemaKey in allKeys)
+            foreach (var key in allKeys)
             {
-                TItem? oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
-                SchemaMetaData? newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                ISchema? newValue = schemas.FirstOrDefault(w => key.Equals(w));
 
-                if (oldValue is SchemaItem oldMatches && newValue is SchemaMetaData newMatches)
+                if (oldValue is SchemaItem oldMatches && newValue is ISchema newMatches)
                 { } // Update Old, Nothing really to do.
                 else if (oldValue is SchemaItem newMissing)
-                { this.Remove(schemaKey); } // Delete Old
-                else if (newValue is SchemaMetaData oldMissing) 
-                { TItem newItem = SchemaItem.Create<TItem>(catalogKey, oldMissing); } // Add New
+                { this.Remove(key); } // Delete Old
+                else if (newValue is ISchema oldMissing)
+                { Add(SchemaItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
             }
         }
     }

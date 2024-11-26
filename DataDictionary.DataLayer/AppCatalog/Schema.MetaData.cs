@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to store the Information Schema of a Catalog Schema
     /// </summary>
-    class SchemaMetaData : BindingTableRow, ISchema
+    public class SchemaMetaData : BindingTableRow, ISchema
     {
         /// <inheritdoc/>
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
@@ -31,7 +31,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IReadOnlyList<SchemaMetaData> GetSchema(IConnection connection)
+        /// <summary>
+        /// Gets the Information Schema from the Database
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static IEnumerable<ISchema> GetSchema(IConnection connection)
         {
             BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
             Command command = connection.CreateCommand();

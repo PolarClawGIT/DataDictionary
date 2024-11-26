@@ -93,6 +93,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IWriteData<TKey>;
 
         /// <summary>
+        /// Create a WorkItem for Importing Information Schema data into an Data Object
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="getSchema"></param>
+        /// <param name="import"></param>
+        /// <returns></returns>
+        WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getSchema, Action<IEnumerable<TData>> import)
+            where TData: class;
+
+        /// <summary>
         /// Creates the WorkItem that opens the Connection to the Database.
         /// </summary>
         /// <returns></returns>
@@ -241,6 +252,20 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 }
                 else { throw new ArgumentNullException(nameof(Connection)); }
             }
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getData, Action<IEnumerable<TData>> import)
+            where TData : class
+        {
+            WorkItem result = new WorkItem()
+            {
+                WorkName = workName,
+                DoWork = () => import(getData(Connection)),
+                IsCanceling = () => Connection.HasException
+            };
+
+            return result;
         }
 
         /// <inheritdoc/>

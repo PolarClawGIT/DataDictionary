@@ -8,16 +8,12 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to store the Information Schema of a Catalog
     /// </summary>
-    class CatalogMetaData : BindingTableRow, ICatalog
+    public class CatalogMetaData : BindingTableRow, ICatalog
     {
-        /// <summary>
-        /// Server Name as the Server identifies itself.
-        /// </summary>
+        /// <inheritdoc/>
         public String ServerName { get { return GetValue(nameof(ServerName)) ?? String.Empty; } }
 
-        /// <summary>
-        /// Database Name as the Database identifies itself.
-        /// </summary>
+        /// <inheritdoc/>
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static IReadOnlyList<CatalogMetaData> GetSchema (IConnection connection)
+        public static IEnumerable<ICatalog> GetSchema (IConnection connection)
         {
             BindingTable<CatalogMetaData> schemas = new BindingTable<CatalogMetaData>();
             Command command = connection.CreateCommand();

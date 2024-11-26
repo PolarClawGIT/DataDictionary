@@ -9,7 +9,10 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
-    class DomainMetaData : BindingTableRow, IDomain
+    /// <summary>
+    /// Class used to store the Information Schema of a Catalog Domain
+    /// </summary>
+    public class DomainMetaData : BindingTableRow, IDomain
     {
         /// <inheritdoc/>
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
@@ -92,7 +95,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IReadOnlyList<DomainMetaData> GetSchema(IConnection connection)
+        /// <summary>
+        /// Gets the Information Schema from the Database
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static IEnumerable<IDomain> GetSchema(IConnection connection)
         {
             BindingTable<DomainMetaData> schemas = new BindingTable<DomainMetaData>();
             Command command = connection.CreateCommand();
