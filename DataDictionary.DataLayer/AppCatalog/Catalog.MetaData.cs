@@ -6,9 +6,9 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Class used to get and temporary store the Information Schema of a Catalog
+    /// Class used to store the Information Schema of a Catalog
     /// </summary>
-    class CatalogInformationSchema : BindingTableRow, ICatalogKeyName
+    class CatalogMetaData : BindingTableRow, ICatalog
     {
         /// <summary>
         /// Server Name as the Server identifies itself.
@@ -33,7 +33,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for Catalog Information Schema
         /// </summary>
-        public CatalogInformationSchema() : base() { }
+        public CatalogMetaData() : base() { }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -52,9 +52,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static IReadOnlyList<CatalogInformationSchema> GetSchema (IConnection connection)
+        public static IReadOnlyList<CatalogMetaData> GetSchema (IConnection connection)
         {
-            BindingTable<CatalogInformationSchema> schemas = new BindingTable<CatalogInformationSchema>();
+            BindingTable<CatalogMetaData> schemas = new BindingTable<CatalogMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = Catalog.InformationSchema;

@@ -313,7 +313,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            CatalogKey key = new CatalogKey(new CatalogItem());
+            CatalogKey key = new CatalogKey(); // Dummy value
 
             //TODO: Need to re-work loading of the Db Schema
             //The ID's are not yet assigned so they need to be looked up.
@@ -327,13 +327,14 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DoWork = () =>
                 {
-                    ICatalogKey? result = catalogs.ImportSchema(factory.Connection);
+                    ICatalogKey result = catalogs.Import(factory.Connection);
                     if (result is ICatalogKey) { key = new CatalogKey(result); }
+                    else { throw new InvalidOperationException("CatalogKey could not be determined."); }
                 }
             });
 
             work.Add(new WorkItem()
-            { DoWork = () => { schemta.ImportSchema(factory.Connection, key); } });
+            { DoWork = () => { schemta.Import(factory.Connection, key); } });
 
 
             work.Add(factory.CreateWork(

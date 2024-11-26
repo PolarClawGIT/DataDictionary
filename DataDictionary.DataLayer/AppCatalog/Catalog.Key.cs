@@ -24,6 +24,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? CatalogId { get; init; } = Guid.Empty;
 
         /// <summary>
+        /// Constructor for the Catalog Key. Empty Value.
+        /// </summary>
+        public CatalogKey() : base()
+        { }
+
+        /// <summary>
         /// Constructor for the Catalog Key.
         /// </summary>
         /// <param name="source"></param>

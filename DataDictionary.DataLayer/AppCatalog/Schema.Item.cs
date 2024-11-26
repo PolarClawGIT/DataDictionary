@@ -9,9 +9,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
+    /// Base Catalog Schema interface (data elements only)
+    /// </summary>
+    public interface ISchema : ISchemaKeyName
+    { }
+
+    /// <summary>
     /// Interface for the Catalog Schema Item
     /// </summary>
-    public interface ISchemaItem : ISchemaKeyName, ISchemaKey, ICatalogKey,
+    public interface ISchemaItem : ISchema, ISchemaKey, ICatalogKey,
         IDbIsSystem, ITemporalItem
     { }
 
@@ -25,7 +31,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? CatalogId
         {
             get { return GetValue<Guid>(nameof(CatalogId)); }
-            internal set { SetValue<Guid>(nameof(CatalogId), value); }
+            private set { SetValue<Guid>(nameof(CatalogId), value); }
         }
 
         /// <inheritdoc/>
@@ -39,13 +45,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? DatabaseName
         {
             get { return GetValue(nameof(DatabaseName)); }
-            internal set { SetValue(nameof(DatabaseName), value); }
+            private set { SetValue(nameof(DatabaseName), value); }
         }
 
         /// <inheritdoc/>
-        public String? SchemaName { 
+        public String? SchemaName
+        {
             get { return GetValue(nameof(SchemaName)); }
-            internal set { SetValue(nameof(SchemaName), value); }
+            private set { SetValue(nameof(SchemaName), value); }
         }
 
         /// <inheritdoc/>
@@ -126,7 +133,6 @@ namespace DataDictionary.DataLayer.AppCatalog
             }
         }
 
-
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
@@ -144,10 +150,35 @@ namespace DataDictionary.DataLayer.AppCatalog
         };
 
         /// <summary>
-        /// Constructor for the Database Schema Item
+        /// Constructor for the SchemaItem
         /// </summary>
         public SchemaItem() : base()
         { SchemaId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Constructor for the SchemaItem
+        /// </summary>
+        /// <param name="catalog"></param>
+        public SchemaItem(ICatalogKey catalog) : base()
+        { CatalogId = catalog.CatalogId; }
+
+        /// <summary>
+        /// Generic constructor of a SchemaItem
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="catalog"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
+            where TResult : SchemaItem, new()
+        {
+            TResult result = new TResult();
+            result.CatalogId = catalog.CatalogId;
+            result.DatabaseName = source.DatabaseName;
+            result.SchemaName = source.SchemaName;
+
+            return result;
+        }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

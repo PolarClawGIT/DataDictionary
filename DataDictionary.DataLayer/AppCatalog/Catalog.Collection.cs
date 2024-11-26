@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>,
         ITemporalData, ITemporalData<ICatalogKey>
-        where TItem : BindingTableRow, ICatalogItem, ICatalogKey, new()
+        where TItem : CatalogItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -87,56 +87,44 @@ namespace DataDictionary.DataLayer.AppCatalog
             { base.Remove(item); }
         }
 
-
         /// <summary>
-        /// Imports the Catalog InformationSchema newValue.
+        /// Imports the InformationSchema values.
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public ICatalogKey? ImportSchema(IConnection connection)
+        /// <remarks>Merge behavior: existing values are updated, new values are added</remarks>
+        public virtual ICatalogKey Import(IConnection connection)
         {
-            IEnumerable<CatalogInformationSchema> schemas = CatalogInformationSchema.GetSchema(connection);
-            CatalogKey? result = null; // There is only suppose to be one item.
+            IEnumerable<CatalogMetaData> schemas = CatalogMetaData.GetSchema(connection);
+            CatalogKey? catalogKey = null;
 
-            foreach (CatalogInformationSchema item in schemas)
+            IEnumerable<CatalogKeyName> allKeys = this.
+                Select(s => new CatalogKeyName(s)).
+                Union(schemas.Select(s => new CatalogKeyName(s)));
+
+            foreach (var schemaKey in allKeys) // Only one value is expected
             {
-                CatalogKeyName schemakey = new CatalogKeyName(item);
+                TItem? oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
+                CatalogMetaData? newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
 
-                if (this.FirstOrDefault(w => schemakey.Equals(w)) is CatalogItem updateValue)
-                {
-                    updateValue.ServerName = connection.ServerName;
-                    updateValue.DatabaseName = item.DatabaseName;
-                    updateValue.SourceDate = DateTime.Now;
-
-                    result = new CatalogKey(updateValue);
+                if (oldValue is CatalogItem oldMatches && newValue is CatalogMetaData newMatches)
+                { // Update Old
+                    oldMatches.SourceDate = DateTime.Now;
+                    oldMatches.ServerName = newMatches.ServerName;
+                    catalogKey = new CatalogKey(oldMatches);
                 }
-                else
+                else if (oldValue is CatalogItem newMissing)
+                { // Nothing to do, old items are not removed this way
+                    catalogKey = new CatalogKey(newMissing);
+                }
+                else if (newValue is CatalogMetaData oldMissing) // Add New
                 {
-                    TItem newValue = new TItem();
-
-                    if (newValue is CatalogItem value)
-                    {
-                        value.CatalogTitle = item.DatabaseName;
-                        value.ServerName = connection.ServerName;
-                        value.DatabaseName = item.DatabaseName;
-                        value.SourceDate = DateTime.Now;
-
-                    }
-                    else
-                    {
-                        Exception ex = new InvalidOperationException("Could not Import Schema");
-                        ex.Data.Add("Expected type", nameof(CatalogItem));
-                        ex.Data.Add("Actual type", newValue.GetType().Name);
-                        ex.Data.Add("Rows returned", schemas.Count());
-                        throw ex;
-                    }
-
-                    Add(newValue);
-                    result = new CatalogKey(newValue);
+                    TItem newItem = CatalogItem.Create<TItem>(oldMissing);
+                    catalogKey = new CatalogKey(newItem);
                 }
             }
 
-            return result;
+            return catalogKey ?? new CatalogKey();
         }
     }
 }

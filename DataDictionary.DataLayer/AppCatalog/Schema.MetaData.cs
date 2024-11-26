@@ -6,24 +6,20 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Class used to get and temporary store the Information Schema of a Catalog Schema
+    /// Class used to store the Information Schema of a Catalog Schema
     /// </summary>
-    class SchemaInformationSchema : BindingTableRow, ISchemaKeyName
+    class SchemaMetaData : BindingTableRow, ISchema
     {
-        /// <summary>
-        /// Database Name as the Database identifies itself.
-        /// </summary>
+        /// <inheritdoc/>
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
 
-        /// <summary>
-        /// Database Name as the Database identifies itself.
-        /// </summary>
+        /// <inheritdoc/>
         public String SchemaName { get { return GetValue(nameof(SchemaName)) ?? String.Empty; } }
 
         /// <summary>
         /// Constructor for Catalog Schema Information Schema
         /// </summary>
-        public SchemaInformationSchema() : base() { }
+        public SchemaMetaData() : base() { }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -35,9 +31,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IReadOnlyList<SchemaInformationSchema> GetSchema(IConnection connection)
+        public static IReadOnlyList<SchemaMetaData> GetSchema(IConnection connection)
         {
-            BindingTable<SchemaInformationSchema> schemas = new BindingTable<SchemaInformationSchema>();
+            BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = Schema.InformationSchema;

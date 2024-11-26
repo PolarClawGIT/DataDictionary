@@ -8,9 +8,20 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
+    /// Base Catalog Interface (data elements only)
+    /// </summary>
+    public interface ICatalog : ICatalogKeyName
+    {
+        /// <summary>
+        /// The SQL Server that the database was extracted from.
+        /// </summary>
+        String? ServerName { get; }
+    }
+
+    /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface ICatalogItem : ICatalogKeyName, ICatalogKey,
+    public interface ICatalogItem : ICatalog, ICatalogKey,
         IDbIsSystem, ITemporalItem
     {
         /// <summary>
@@ -22,11 +33,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Description given to the Catalog.
         /// </summary>
         String? CatalogDescription { get; }
-
-        /// <summary>
-        /// The SQL Server that the database was extracted from.
-        /// </summary>
-        String? ServerName { get; }
 
         /// <summary>
         /// The Date that the database was extracted.
@@ -50,13 +56,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? CatalogDescription { get { return GetValue(nameof(CatalogDescription)); } set { SetValue(nameof(CatalogDescription), value); } }
 
         /// <inheritdoc/>
-        public String? ServerName { get { return GetValue(nameof(ServerName)); } internal set { SetValue(nameof(ServerName), value); } }
+        public String? ServerName { get { return GetValue(nameof(ServerName)); } set { SetValue(nameof(ServerName), value); } }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } internal set { SetValue(nameof(DatabaseName), value); } }
+        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } protected set { SetValue(nameof(DatabaseName), value); } }
 
         /// <inheritdoc/>
-        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } internal set { SetValue(nameof(SourceDate), value); } }
+        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } set { SetValue(nameof(SourceDate), value); } }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
@@ -125,6 +131,22 @@ namespace DataDictionary.DataLayer.AppCatalog
         public CatalogItem() : base()
         { CatalogId = Guid.NewGuid(); }
 
+        /// <summary>
+        /// Generic constructor for CatalogItem
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static TResult Create<TResult>(ICatalog source)
+            where TResult : CatalogItem, new()
+        {
+            TResult result = new TResult();
+            result.CatalogTitle = source.DatabaseName;
+            result.ServerName = source.ServerName;
+            result.DatabaseName = source.DatabaseName;
+            return result;
+        }
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
@@ -146,6 +168,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+
 
         #region ISerializable
         /// <summary>

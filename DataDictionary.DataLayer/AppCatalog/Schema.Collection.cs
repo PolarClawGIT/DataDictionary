@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>,
         ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>
-        where TItem : BindingTableRow, ISchemaItem, ICatalogKey, ISchemaKeyName, new()
+        where TItem : SchemaItem, ICatalogKey, ISchemaKeyName, new()
     {
 
         /// <inheritdoc/>
@@ -96,58 +96,32 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <summary>
-        /// Imports the Catalog InformationSchema value.
+        /// Imports the InformationSchema values.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="key"></param>
-        public virtual void ImportSchema(IConnection connection, ICatalogKey key)
+        /// <remarks>Merge behavior: existing values are updated (do nothing), new values are added, missing values are removed</remarks>
+        public virtual void Import(IConnection connection, ICatalogKey key)
         {
-            //TODO: Test, Then move to InfoSchema.
-
-            IEnumerable<SchemaInformationSchema> schemas = SchemaInformationSchema.GetSchema(connection);
+            IEnumerable<SchemaMetaData> schemas = SchemaMetaData.GetSchema(connection);
             CatalogKey catalogKey = new CatalogKey(key);
 
-            var allKeys = this.Where(w => catalogKey.Equals(w)).
+            IEnumerable<SchemaKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new SchemaKeyName(s)).
                 Union(schemas.Select(s => new SchemaKeyName(s)));
 
             foreach (var schemaKey in allKeys)
             {
-                var oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
-                var newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
+                TItem? oldValue = this.FirstOrDefault(w => schemaKey.Equals(w));
+                SchemaMetaData? newValue = schemas.FirstOrDefault(w => schemaKey.Equals(w));
 
-                if (oldValue is SchemaItem oldMatches && newValue is SchemaInformationSchema newMatches)
-                {   // Update Old, Nothing really to do. No non-key values
-                    oldMatches.DatabaseName = newMatches.DatabaseName;
-                    oldMatches.SchemaName = newMatches.SchemaName;
-                }
-                else if(oldValue is SchemaItem newMissing) 
-                { // Delete Old
-                    this.Remove(schemaKey);
-                }
-                else if(newValue is SchemaInformationSchema oldMissing) 
-                { // Add New
-                    TItem newItem = new TItem();
-
-                    if (newItem is SchemaItem value)
-                    {
-                        value.CatalogId = key.CatalogId;
-                        value.DatabaseName = oldMissing.DatabaseName;
-                        value.SchemaName = oldMissing.SchemaName;
-                        Add(newItem);
-                    }
-                    else
-                    {
-                        Exception ex = new InvalidOperationException("Could not Import Schema");
-                        ex.Data.Add("Expected type", nameof(SchemaItem));
-                        ex.Data.Add("Actual type", newItem.GetType().Name);
-                        ex.Data.Add("Rows returned", schemas.Count());
-                        throw ex;
-                    }
-                }
-
+                if (oldValue is SchemaItem oldMatches && newValue is SchemaMetaData newMatches)
+                { } // Update Old, Nothing really to do.
+                else if (oldValue is SchemaItem newMissing)
+                { this.Remove(schemaKey); } // Delete Old
+                else if (newValue is SchemaMetaData oldMissing) 
+                { TItem newItem = SchemaItem.Create<TItem>(catalogKey, oldMissing); } // Add New
             }
-
         }
     }
 }
