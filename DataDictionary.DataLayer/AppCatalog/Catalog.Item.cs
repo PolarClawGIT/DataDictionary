@@ -47,22 +47,46 @@ namespace DataDictionary.DataLayer.AppCatalog
     public class CatalogItem : BindingTableRow, ICatalogItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } protected set { SetValue(nameof(CatalogId), value); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            private set { SetValue(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CatalogTitle { get { return GetValue(nameof(CatalogTitle)); } set { SetValue(nameof(CatalogTitle), value); } }
+        public String? CatalogTitle
+        {
+            get { return GetValue(nameof(CatalogTitle)); }
+            set { SetValue(nameof(CatalogTitle), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CatalogDescription { get { return GetValue(nameof(CatalogDescription)); } set { SetValue(nameof(CatalogDescription), value); } }
+        public String? CatalogDescription
+        {
+            get { return GetValue(nameof(CatalogDescription)); }
+            set { SetValue(nameof(CatalogDescription), value); }
+        }
 
         /// <inheritdoc/>
-        public String? ServerName { get { return GetValue(nameof(ServerName)); } set { SetValue(nameof(ServerName), value); } }
+        public String? ServerName
+        {
+            get { return GetValue(nameof(ServerName)); }
+            set { SetValue(nameof(ServerName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } protected set { SetValue(nameof(DatabaseName), value); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } set { SetValue(nameof(SourceDate), value); } }
+        public DateTime? SourceDate
+        {
+            get { return GetValue<DateTime>(nameof(SourceDate)); }
+            set { SetValue(nameof(SourceDate), value); }
+        }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
@@ -140,11 +164,13 @@ namespace DataDictionary.DataLayer.AppCatalog
         public static TResult Create<TResult>(ICatalog source)
             where TResult : CatalogItem, new()
         {
-            TResult result = new TResult();
-            result.CatalogTitle = source.DatabaseName;
-            result.ServerName = source.ServerName;
-            result.DatabaseName = source.DatabaseName;
-            return result;
+            return new TResult()
+            {
+                CatalogTitle = source.DatabaseName,
+                ServerName = source.ServerName,
+                DatabaseName = source.DatabaseName,
+                SourceDate = DateTime.Now
+            };
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

@@ -7,10 +7,9 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Interface for the Database Domain Item.
+    /// Base Catalog Domain interface (data elements only)
     /// </summary>
-    public interface IDomainItem : IDomainKeyName, IDomainKey, ICatalogKey,
-        IDomain, ITemporalItem
+    public interface IDomain : IDomainKeyName, IDataType
     {
         /// <summary>
         /// The Default value for the Domain
@@ -19,67 +18,150 @@ namespace DataDictionary.DataLayer.AppCatalog
     }
 
     /// <summary>
-    /// Implementation for the Database Domain Item.
+    /// Interface for the Catalog DomainItem.
+    /// </summary>
+    public interface IDomainItem : IDomain, IDomainKey, ICatalogKey,
+        ITemporalItem
+    { }
+
+    /// <summary>
+    /// Implementation for the Catalog DomainItem.
     /// </summary>
     [Serializable]
     public class DomainItem : BindingTableRow, IDomainItem, IProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            init { SetValue<Guid>(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public Guid? DomainId { get { return GetValue<Guid>(nameof(DomainId)); } }
+        public Guid? DomainId
+        {
+            get { return GetValue<Guid>(nameof(DomainId)); }
+            private set { SetValue<Guid>(nameof(DomainId), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? SchemaName
+        {
+            get { return GetValue(nameof(SchemaName)); }
+            init { SetValue(nameof(SchemaName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DomainName { get { return GetValue(nameof(DomainName)); } }
+        public String? DomainName
+        {
+            get { return GetValue(nameof(DomainName)); }
+            init { SetValue(nameof(DomainName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DataType { get { return GetValue(nameof(DataType)); } }
+        public String? DataType
+        {
+            get { return GetValue(nameof(DataType)); }
+            set { SetValue(nameof(DataType), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DomainDefault { get { return GetValue(nameof(DomainDefault)); } }
+        public String? DomainDefault
+        {
+            get { return GetValue(nameof(DomainDefault)); }
+            set { SetValue(nameof(DomainDefault), value); }
+        }
 
         /// <inheritdoc/>
-        public Int32? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
+        public Int32? CharacterMaximumLength
+        {
+            get { return GetValue<int>(nameof(CharacterMaximumLength)); }
+            set { SetValue(nameof(CharacterMaximumLength), value); }
+        }
 
         /// <inheritdoc/>
-        public Int32? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
+        public Int32? CharacterOctetLength
+        {
+            get { return GetValue<int>(nameof(CharacterOctetLength)); }
+            set { SetValue(nameof(CharacterOctetLength), value); }
+        }
 
         /// <inheritdoc/>
-        public Byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
+        public Byte? NumericPrecision
+        {
+            get { return GetValue<Byte>(nameof(NumericPrecision)); }
+            set { SetValue(nameof(NumericPrecision), value); }
+        }
 
         /// <inheritdoc/>
-        public Int16? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
+        public Int16? NumericPrecisionRadix
+        {
+            get { return GetValue<Int16>(nameof(NumericPrecisionRadix)); }
+            set { SetValue(nameof(NumericPrecisionRadix), value); }
+        }
 
         /// <inheritdoc/>
-        public Int32? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
+        public Int32? NumericScale
+        {
+            get { return GetValue<Int32>(nameof(NumericScale)); }
+            set { SetValue(nameof(NumericScale), value); }
+        }
 
         /// <inheritdoc/>
-        public Int16? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
+        public Int16? DateTimePrecision
+        {
+            get { return GetValue<Int16>(nameof(DateTimePrecision)); }
+            set { SetValue(nameof(DateTimePrecision), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
+        public String? CharacterSetCatalog
+        {
+            get { return GetValue(nameof(CharacterSetCatalog)); }
+            set { SetValue(nameof(CharacterSetCatalog), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CharacterSetSchema { get { return GetValue(nameof(CharacterSetSchema)); } }
+        public String? CharacterSetSchema
+        {
+            get { return GetValue(nameof(CharacterSetSchema)); }
+            set { SetValue(nameof(CharacterSetSchema), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CharacterSetName { get { return GetValue(nameof(CharacterSetName)); } }
+        public String? CharacterSetName
+        {
+            get { return GetValue(nameof(CharacterSetName)); }
+            set { SetValue(nameof(CharacterSetName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CollationCatalog { get { return GetValue(nameof(CollationCatalog)); } }
+        public String? CollationCatalog
+        {
+            get { return GetValue(nameof(CollationCatalog)); }
+            set { SetValue(nameof(CollationCatalog), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CollationSchema { get { return GetValue(nameof(CollationSchema)); } }
+        public String? CollationSchema
+        {
+            get { return GetValue(nameof(CollationSchema)); }
+            set { SetValue(nameof(CollationSchema), value); }
+        }
 
         /// <inheritdoc/>
-        public String? CollationName { get { return GetValue(nameof(CollationName)); } }
+        public String? CollationName
+        {
+            get { return GetValue(nameof(CollationName)); }
+            set { SetValue(nameof(CollationName), value); }
+        }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
@@ -113,19 +195,19 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public Boolean? IsInserted
-        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+        { get { return GetValue<Boolean>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public Boolean? IsUpdated
-        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+        { get { return GetValue<Boolean>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public Boolean? IsDeleted
-        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+        { get { return GetValue<Boolean>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public Boolean? IsCurrent
-        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+        { get { return GetValue<Boolean>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public DbModificationType Modification
@@ -172,9 +254,43 @@ namespace DataDictionary.DataLayer.AppCatalog
         };
 
         /// <summary>
-        /// Constructor for the Database Domain Item
+        /// Constructor for the Catalog DomainItem
         /// </summary>
-        public DomainItem() : base() { }
+        public DomainItem() : base()
+        { DomainId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Generic constructor of a DomainItem
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="catalog"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
+            where TResult : DomainItem, new()
+        {
+            return new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName,
+                DomainName = source.DomainName,
+                CharacterMaximumLength = source.CharacterMaximumLength,
+                CharacterOctetLength = source.CharacterMaximumLength,
+                CharacterSetCatalog = source.CharacterSetCatalog,
+                CharacterSetName = source.CharacterSetName,
+                CharacterSetSchema = source.CharacterSetSchema,
+                CollationCatalog = source.CharacterSetCatalog,
+                CollationName = source.CollationName,
+                CollationSchema = source.CollationSchema,
+                DataType = source.DataType,
+                DateTimePrecision = source.DateTimePrecision,
+                DomainDefault = source.DomainDefault,
+                NumericPrecision = source.NumericPrecision,
+                NumericPrecisionRadix = source.NumericPrecisionRadix,
+                NumericScale = source.NumericScale
+            };
+        }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -184,8 +300,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         public virtual Command PropertyCommand(IConnection connection)
         {
             PropertyObjectKey scopeKey = new PropertyObjectKey()
-            { 
-                CatalogScope = DbLevelCatalogType.Schema, 
+            {
+                CatalogScope = DbLevelCatalogType.Schema,
                 ObjectScope = DbLevelObjectType.Type
             };
 

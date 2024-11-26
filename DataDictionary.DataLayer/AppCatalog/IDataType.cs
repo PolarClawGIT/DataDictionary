@@ -4,7 +4,7 @@
     /// Common Properties of a Database Domain (data Type).
     /// Used by Domain, Table Column, and Routine Parameter
     /// </summary>
-    public interface IDomain
+    public interface IDataType
     {
         /// <summary>
         /// SQL Data Type

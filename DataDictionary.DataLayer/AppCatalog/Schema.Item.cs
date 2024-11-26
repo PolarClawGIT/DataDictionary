@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? CatalogId
         {
             get { return GetValue<Guid>(nameof(CatalogId)); }
-            private set { SetValue<Guid>(nameof(CatalogId), value); }
+            init { SetValue(nameof(CatalogId), value); }
         }
 
         /// <inheritdoc/>
@@ -45,14 +45,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? DatabaseName
         {
             get { return GetValue(nameof(DatabaseName)); }
-            private set { SetValue(nameof(DatabaseName), value); }
+            init { SetValue(nameof(DatabaseName), value); }
         }
 
         /// <inheritdoc/>
         public String? SchemaName
         {
             get { return GetValue(nameof(SchemaName)); }
-            private set { SetValue(nameof(SchemaName), value); }
+            init { SetValue(nameof(SchemaName), value); }
         }
 
         /// <inheritdoc/>
@@ -159,7 +159,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the SchemaItem
         /// </summary>
         /// <param name="catalog"></param>
-        public SchemaItem(ICatalogKey catalog) : base()
+        public SchemaItem(ICatalogKey catalog) : this()
         { CatalogId = catalog.CatalogId; }
 
         /// <summary>
@@ -172,12 +172,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         public static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
             where TResult : SchemaItem, new()
         {
-            TResult result = new TResult();
-            result.CatalogId = catalog.CatalogId;
-            result.DatabaseName = source.DatabaseName;
-            result.SchemaName = source.SchemaName;
-
-            return result;
+            return new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName
+            };
         }
 
         /// <inheritdoc/>

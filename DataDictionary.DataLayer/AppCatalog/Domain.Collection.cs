@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>
-        where TItem : BindingTableRow, IDomainItem, ICatalogKey, IDomainKeyName, new()
+        where TItem : DomainItem, new()
     {
         /// <inheritdoc/>
         [Obsolete("Needs work")]
@@ -88,6 +88,50 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
+        }
+
+        /// <summary>
+        /// Imports the InformationSchema values.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="catalogKey"></param>
+        /// <remarks>Merge behavior: existing values are updated (do nothing), new values are added, missing values are removed</remarks>
+        public virtual void Import(IConnection connection, ICatalogKey catalogKey)
+        {
+            IEnumerable<DomainMetaData> schemas = DomainMetaData.GetSchema(connection);
+            //CatalogKey catalogKey = new CatalogKey(catalogKey);
+
+            IEnumerable<DomainKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new DomainKeyName(s)).
+                Union(schemas.Select(s => new DomainKeyName(s)));
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                DomainMetaData? newValue = schemas.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is DomainItem oldMatches && newValue is DomainMetaData newMatches)
+                { // Update Old
+                    oldMatches.CharacterMaximumLength = newMatches.CharacterMaximumLength;
+                    oldMatches.CharacterOctetLength = newMatches.CharacterMaximumLength;
+                    oldMatches.CharacterSetCatalog = newMatches.CharacterSetCatalog;
+                    oldMatches.CharacterSetName = newMatches.CharacterSetName;
+                    oldMatches.CharacterSetSchema = newMatches.CharacterSetSchema;
+                    oldMatches.CollationCatalog = newMatches.CharacterSetCatalog;
+                    oldMatches.CollationName = newMatches.CollationName;
+                    oldMatches.CollationSchema = newMatches.CollationSchema;
+                    oldMatches.DataType = newMatches.DataType;
+                    oldMatches.DateTimePrecision = newMatches.DateTimePrecision;
+                    oldMatches.DomainDefault = newMatches.DomainDefault;
+                    oldMatches.NumericPrecision = newMatches.NumericPrecision;
+                    oldMatches.NumericPrecisionRadix = newMatches.NumericPrecisionRadix;
+                    oldMatches.NumericScale = newMatches.NumericScale;
+                }
+                else if (oldValue is DomainItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is DomainMetaData oldMissing)
+                { TItem newItem = DomainItem.Create<TItem>(catalogKey, oldMissing); } // Add New
+            }
         }
     }
 }

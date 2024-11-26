@@ -9,15 +9,15 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
-    class DomainInformationSchema : BindingTableRow
+    class DomainMetaData : BindingTableRow, IDomain
     {
-
+        /// <inheritdoc/>
         public String DatabaseName { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
 
-
+        /// <inheritdoc/>
         public String SchemaName { get { return GetValue(nameof(SchemaName)) ?? String.Empty; } }
 
-
+        /// <inheritdoc/>
         public String DomainName { get { return GetValue(nameof(DomainName)) ?? String.Empty; } }
 
         /// <inheritdoc/>
@@ -65,7 +65,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for Catalog Schema Information Schema
         /// </summary>
-        public DomainInformationSchema() : base() { }
+        public DomainMetaData() : base() { }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -92,13 +92,16 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static Command SchemaCommand(IConnection connection)
+        public static IReadOnlyList<DomainMetaData> GetSchema(IConnection connection)
         {
+            BindingTable<DomainMetaData> schemas = new BindingTable<DomainMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = Domain.InformationSchema;
-            return command;
 
+            schemas.Load(connection.ExecuteReader(command));
+
+            return schemas;
         }
     }
 }

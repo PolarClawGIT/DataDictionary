@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// Common Properties of a Database Column and Parameters.
     /// Used by Table Column and Routine Parameter.
     /// </summary>
-    public interface IDbColumn : IDomain, IDbColumnPosition
+    public interface IDbColumn : IDataType, IDbColumnPosition
     {
 
     }
