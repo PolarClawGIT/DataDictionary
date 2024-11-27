@@ -120,6 +120,27 @@
   <data name="GetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procGetProperty]</value>
   </data>
+  <data name="InformationSchema" xml:space="preserve">
+    <value>Select	Db_Name() [DatabaseName],
+	NullIf(@Level0Type,'') [Level0Type],
+	NullIf(@Level0Name,'') [Level0Name],
+	NullIf(@Level1Type,'') [Level1Type],
+	NullIf(@Level1Name,'') [Level1Name],
+	NullIf(@Level2Type,'') [Level2Type],
+	NullIf(@Level2Name,'') [Level2Name],
+	[objtype] As [ObjectType],
+	[objname] As [ObjectName],
+	[name] As [PropertyName],
+	Convert(NVarChar(Max),[value]) As [PropertyValue]
+FROM [fn_listextendedproperty] (
+	NullIf(@PropertyName,''),
+	NullIf(@Level0Type,''),
+	NullIf(@Level0Name,''),
+	NullIf(@Level1Type,''),
+	NullIf(@Level1Name,''),
+	NullIf(@Level2Type,''),
+	NullIf(@Level2Name,''))</value>
+  </data>
   <data name="PropertyId" xml:space="preserve">
     <value>@PropertyId</value>
     <comment>GUID</comment>

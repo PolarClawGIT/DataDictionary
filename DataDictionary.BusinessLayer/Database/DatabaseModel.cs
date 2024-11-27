@@ -374,65 +374,65 @@ namespace DataDictionary.BusinessLayer.Database
                 command: (conn) => routineParameters.SchemaCommand(conn, key)));
 
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load DbReferences",
-                DoWork = () =>
-                {
-                    foreach (DbTableItem item in tables)
-                    {
-                        references.Load(
-                            factory.Connection.ExecuteReader(
-                                references.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
+            //work.Add(new WorkItem()
+            //{
+            //    WorkName = "Load DbReferences",
+            //    DoWork = () =>
+            //    {
+            //        foreach (DbTableItem item in tables)
+            //        {
+            //            references.Load(
+            //                factory.Connection.ExecuteReader(
+            //                    references.SchemaCommand(
+            //                        factory.Connection, item)));
+            //        }
 
-                    foreach (DbRoutineItem item in routines)
-                    {
-                        references.Load(
-                            factory.Connection.ExecuteReader(
-                                references.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
-                },
-                IsCanceling = () => factory.IsCanceling
-            });
+            //        foreach (DbRoutineItem item in routines)
+            //        {
+            //            references.Load(
+            //                factory.Connection.ExecuteReader(
+            //                    references.SchemaCommand(
+            //                        factory.Connection, item)));
+            //        }
+            //    },
+            //    IsCanceling = () => factory.IsCanceling
+            //});
 
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbSchemta",
-                source: schemta,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbSchemta",
+            //    source: schemta,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTables",
-                source: tables,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbTables",
+            //    source: tables,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTableColumns",
-                source: tableColumns,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbTableColumns",
+            //    source: tableColumns,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbConstraints",
-                source: constraints,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbConstraints",
+            //    source: constraints,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbDomains",
-                source: domains,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbDomains",
+            //    source: domains,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutines",
-                source: routines,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbRoutines",
+            //    source: routines,
+            //    target: extendedProperties));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutineParameters",
-                source: routineParameters,
-                target: extendedProperties));
+            //work.Add(factory.CreateWork(
+            //    workName: "Load DbExtendedProperties, DbRoutineParameters",
+            //    source: routineParameters,
+            //    target: extendedProperties));
 
             return work;
         }

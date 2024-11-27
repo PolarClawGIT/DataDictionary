@@ -70,6 +70,29 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select	Db_Name() [DatabaseName],
+        ///	NullIf(@Level0Type,&apos;&apos;) [Level0Type],
+        ///	NullIf(@Level0Name,&apos;&apos;) [Level0Name],
+        ///	NullIf(@Level1Type,&apos;&apos;) [Level1Type],
+        ///	NullIf(@Level1Name,&apos;&apos;) [Level1Name],
+        ///	NullIf(@Level2Type,&apos;&apos;) [Level2Type],
+        ///	NullIf(@Level2Name,&apos;&apos;) [Level2Name],
+        ///	[objtype] As [ObjectType],
+        ///	[objname] As [ObjectName],
+        ///	[name] As [PropertyName],
+        ///	Convert(NVarChar(Max),[value]) As [PropertyValue]
+        ///FROM [fn_listextendedproperty] (
+        ///	NullIf(@PropertyName,&apos;&apos;),
+        ///	NullIf(@Level0Type,&apos;&apos;),
+        ///	NullIf(@Level0Nam [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InformationSchema {
+            get {
+                return ResourceManager.GetString("InformationSchema", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @PropertyId.
         /// </summary>
         internal static string PropertyId {

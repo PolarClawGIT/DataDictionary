@@ -7,17 +7,6 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Base Catalog Domain interface (data elements only)
-    /// </summary>
-    public interface IDomain : IDomainKeyName, IDataType
-    {
-        /// <summary>
-        /// The Default value for the Domain
-        /// </summary>
-        String? DomainDefault { get; }
-    }
-
-    /// <summary>
     /// Interface for the Catalog DomainItem.
     /// </summary>
     public interface IDomainItem : IDomain, IDomainKey, ICatalogKey,
@@ -28,7 +17,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog DomainItem.
     /// </summary>
     [Serializable]
-    public class DomainItem : BindingTableRow, IDomainItem, IProperty, ISerializable
+    public class DomainItem : BindingTableRow, IDomainItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -296,26 +285,25 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <inheritdoc/>
-        public virtual Command PropertyCommand(IConnection connection)
-        {
-            PropertyObjectKey scopeKey = new PropertyObjectKey()
-            {
-                CatalogScope = DbLevelCatalogType.Schema,
-                ObjectScope = DbLevelObjectType.Type
-            };
+        //public virtual Command PropertyCommand(IConnection connection)
+        //{
+        //    PropertyObjectKey scopeKey = new PropertyObjectKey()
+        //    {
+        //        CatalogScope = DbLevelCatalogType.Schema,
+        //        ObjectScope = DbLevelObjectType.Type
+        //    };
 
-            return new PropertyGetCommand(connection)
-            {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = scopeKey.CatalogScope.ToString(),
-                Level1Name = DomainName,
-                Level1Type = scopeKey.ObjectScope.ToString(),
-                Level2Name = String.Empty,
-                Level2Type = String.Empty,
-            }.GetCommand();
-        }
+        //    return new PropertyGetCommand(connection)
+        //    {
+        //        CatalogId = CatalogId,
+        //        Level0Name = SchemaName,
+        //        Level0Type = scopeKey.CatalogScope.ToString(),
+        //        Level1Name = DomainName,
+        //        Level1Type = scopeKey.ObjectScope.ToString(),
+        //        Level2Name = String.Empty,
+        //        Level2Type = String.Empty,
+        //    }.GetCommand();
+        //}
 
         #region ISerializable
         /// <summary>

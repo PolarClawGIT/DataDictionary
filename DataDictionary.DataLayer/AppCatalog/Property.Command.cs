@@ -9,7 +9,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for Database Extended Properties
     /// </summary>
-    public interface IProperty
+    [Obsolete("Being replaced by MetaData", true)]
+    public interface IPropertyCommand
     {  // DB Classes that have extended properties.
 
         /// <summary>
@@ -20,7 +21,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         Command PropertyCommand(IConnection connection);
     }
 
-    internal class PropertyGetCommand : PropertyParameter, ICatalogKey
+    internal class PropertyCommand : PropertyParameter, ICatalogKey
     {
         /// <inheritdoc/>
         public required Guid? CatalogId { get; init; }
@@ -45,7 +46,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         readonly Command command;
 
-        public PropertyGetCommand(IConnection connection) : base()
+        public PropertyCommand(IConnection connection) : base()
         { command = connection.CreateCommand(); }
 
         public Command GetCommand()

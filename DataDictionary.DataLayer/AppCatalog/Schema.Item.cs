@@ -9,12 +9,6 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Base Catalog Schema interface (data elements only)
-    /// </summary>
-    public interface ISchema : ISchemaKeyName
-    { }
-
-    /// <summary>
     /// Interface for the Catalog Schema Item
     /// </summary>
     public interface ISchemaItem : ISchema, ISchemaKey, ICatalogKey,
@@ -25,7 +19,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog Schema Item
     /// </summary>
     [Serializable]
-    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, IProperty, ISerializable
+    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -184,23 +178,22 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <inheritdoc/>
-        public virtual Command PropertyCommand(IConnection connection)
-        {
-            PropertyCatalogKey scopeKey = new PropertyCatalogKey()
-            { CatalogScope = DbLevelCatalogType.Schema };
+        //public virtual Command PropertyCommand(IConnection connection)
+        //{
+        //    PropertyCatalogKey scopeKey = new PropertyCatalogKey()
+        //    { CatalogScope = DbLevelCatalogType.Schema };
 
-            return new PropertyGetCommand(connection)
-            {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = scopeKey.CatalogScope.ToString(),
-                Level1Name = String.Empty,
-                Level1Type = String.Empty,
-                Level2Name = String.Empty,
-                Level2Type = String.Empty,
-            }.GetCommand();
-        }
+        //    return new PropertyGetCommand(connection)
+        //    {
+        //        CatalogId = CatalogId,
+        //        Level0Name = SchemaName,
+        //        Level0Type = scopeKey.CatalogScope.ToString(),
+        //        Level1Name = String.Empty,
+        //        Level1Type = String.Empty,
+        //        Level2Name = String.Empty,
+        //        Level2Type = String.Empty,
+        //    }.GetCommand();
+        //}
 
         #region ISerializable
         /// <summary>

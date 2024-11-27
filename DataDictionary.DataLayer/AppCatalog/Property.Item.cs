@@ -4,6 +4,8 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
+
+
     /// <summary>
     /// Interface for MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>

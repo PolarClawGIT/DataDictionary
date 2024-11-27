@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Implementation for Database Routine (procedures and functions).
     /// </summary>
     [Serializable]
-    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, IProperty, ISerializable
+    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -97,31 +97,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <inheritdoc/>
-        public virtual Command PropertyCommand(IConnection connection)
-        {
-            if (this.Scope.ToDbLevel() is IPropertyObjectKey scopeKey)
-            {
-                return new PropertyGetCommand(connection)
-                {
-                    CatalogId = CatalogId,
-                    Level0Name = SchemaName,
-                    Level0Type = scopeKey.CatalogScope.ToString(),
-                    Level1Name = RoutineName,
-                    Level1Type = scopeKey.ObjectScope.ToString(),
-                    Level2Name = String.Empty,
-                    Level2Type = String.Empty,
-                }.GetCommand();
-            }
-            else
-            {
-                Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(DatabaseName), DatabaseName);
-                ex.Data.Add(nameof(SchemaName), SchemaName);
-                ex.Data.Add(nameof(RoutineName), RoutineName);
-                throw ex;
-            }
-        }
+        //public virtual Command PropertyCommand(IConnection connection)
+        //{
+        //    if (this.Scope.ToDbLevel() is IPropertyObjectKey scopeKey)
+        //    {
+        //        return new PropertyGetCommand(connection)
+        //        {
+        //            CatalogId = CatalogId,
+        //            Level0Name = SchemaName,
+        //            Level0Type = scopeKey.CatalogScope.ToString(),
+        //            Level1Name = RoutineName,
+        //            Level1Type = scopeKey.ObjectScope.ToString(),
+        //            Level2Name = String.Empty,
+        //            Level2Type = String.Empty,
+        //        }.GetCommand();
+        //    }
+        //    else
+        //    {
+        //        Exception ex = new InvalidOperationException("Could not determine LevelType");
+        //        ex.Data.Add(nameof(DatabaseName), DatabaseName);
+        //        ex.Data.Add(nameof(SchemaName), SchemaName);
+        //        ex.Data.Add(nameof(RoutineName), RoutineName);
+        //        throw ex;
+        //    }
+        //}
 
         #region ISerializable
         /// <summary>

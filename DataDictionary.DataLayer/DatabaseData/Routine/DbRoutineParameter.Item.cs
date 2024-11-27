@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Implementation for the Database Routine Parameter
     /// </summary>
     [Serializable]
-    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, IProperty, ISerializable
+    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -148,35 +148,34 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// </summary>
         public DbRoutineParameterItem() : base() { }
 
-        /// <inheritdoc/>
-        public virtual Command PropertyCommand(IConnection connection)
-        {
-            {
-                if (this.Scope.ToDbLevel() is IPropertyElementKey scopeKey)
-                {
-                    return new PropertyGetCommand(connection)
-                    {
-                        CatalogId = CatalogId,
-                        Level0Name = SchemaName,
-                        Level0Type = scopeKey.CatalogScope.ToString(),
-                        Level1Name = RoutineName,
-                        Level1Type = scopeKey.ObjectScope.ToString(),
-                        Level2Name = ParameterName,
-                        Level2Type = scopeKey.ElementScope.ToString(),
-                    }.GetCommand();
-                }
-                else
-                {
-                    Exception ex = new InvalidOperationException("Could not determine LevelType");
-                    ex.Data.Add(nameof(ScopeName), ScopeName);
-                    ex.Data.Add(nameof(DatabaseName), DatabaseName);
-                    ex.Data.Add(nameof(SchemaName), SchemaName);
-                    ex.Data.Add(nameof(RoutineName), RoutineName);
-                    ex.Data.Add(nameof(ParameterName), ParameterName);
-                    throw ex;
-                }
-            }
-        }
+        //public virtual Command PropertyCommand(IConnection connection)
+        //{
+        //    {
+        //        if (this.Scope.ToDbLevel() is IPropertyElementKey scopeKey)
+        //        {
+        //            return new PropertyGetCommand(connection)
+        //            {
+        //                CatalogId = CatalogId,
+        //                Level0Name = SchemaName,
+        //                Level0Type = scopeKey.CatalogScope.ToString(),
+        //                Level1Name = RoutineName,
+        //                Level1Type = scopeKey.ObjectScope.ToString(),
+        //                Level2Name = ParameterName,
+        //                Level2Type = scopeKey.ElementScope.ToString(),
+        //            }.GetCommand();
+        //        }
+        //        else
+        //        {
+        //            Exception ex = new InvalidOperationException("Could not determine LevelType");
+        //            ex.Data.Add(nameof(ScopeName), ScopeName);
+        //            ex.Data.Add(nameof(DatabaseName), DatabaseName);
+        //            ex.Data.Add(nameof(SchemaName), SchemaName);
+        //            ex.Data.Add(nameof(RoutineName), RoutineName);
+        //            ex.Data.Add(nameof(ParameterName), ParameterName);
+        //            throw ex;
+        //        }
+        //    }
+        //}
 
 
         #region ISerializable
