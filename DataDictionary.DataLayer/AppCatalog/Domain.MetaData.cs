@@ -105,7 +105,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<DomainMetaData> schemas = new BindingTable<DomainMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Domain.InformationSchema;
+            command.CommandText = Domain.TSql_InformationSchema;
 
             schemas.Load(connection.ExecuteReader(command));
 

@@ -79,26 +79,6 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select [DOMAIN_CATALOG] As[DatabaseName],
-        ///	[DOMAIN_SCHEMA] As[SchemaName],
-        ///	[DOMAIN_NAME] As[DomainName],
-        ///	[DATA_TYPE] As[DataType],
-        ///	[DOMAIN_DEFAULT] As[DomainDefault],
-        ///	[CHARACTER_MAXIMUM_LENGTH] As[CharacterMaximumLength],
-        ///	[CHARACTER_OCTET_LENGTH] As[CharacterOctetLength],
-        ///	[NUMERIC_PRECISION] As[NumericPrecision],
-        ///	[NUMERIC_PRECISION_RADIX] As[NumericPrecisionRadix],
-        ///	[NUMERIC_SCALE] As[NumericScale],
-        ///	[DATETIME_PRECISION] As[DateTimePrecision],
-        ///	[CHARACTER_SET_CATALOG] As[CharacterSetCatalo [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InformationSchema {
-            get {
-                return ResourceManager.GetString("InformationSchema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetDomain].
         /// </summary>
         internal static string SetProcedure {
@@ -113,6 +93,26 @@ namespace DataDictionary.DataLayer.AppCatalog {
         internal static string TableType {
             get {
                 return ResourceManager.GetString("TableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	[DOMAIN_CATALOG] As[DatabaseName],
+        ///		[DOMAIN_SCHEMA] As[SchemaName],
+        ///		[DOMAIN_NAME] As[DomainName],
+        ///		[DATA_TYPE] As[DataType],
+        ///		[DOMAIN_DEFAULT] As[DomainDefault],
+        ///		[CHARACTER_MAXIMUM_LENGTH] As[CharacterMaximumLength],
+        ///		[CHARACTER_OCTET_LENGTH] As[CharacterOctetLength],
+        ///		[NUMERIC_PRECISION] As[NumericPrecision],
+        ///		[NUMERIC_PRECISION_RADIX] As[NumericPrecisionRadix],
+        ///		[NUMERIC_SCALE] As[NumericScale],
+        ///		[DATETIME_PRECISION] As[DateTimePrecision],
+        ///		[CHARACTER_SET_CATALOG] As[Charact [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TSql_InformationSchema {
+            get {
+                return ResourceManager.GetString("TSql_InformationSchema", resourceCulture);
             }
         }
     }

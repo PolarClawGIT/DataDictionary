@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<CatalogMetaData> schemas = new BindingTable<CatalogMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Catalog.InformationSchema;
+            command.CommandText = Catalog.TSql_InformationSchema;
 
             schemas.Load(connection.ExecuteReader(command));
 

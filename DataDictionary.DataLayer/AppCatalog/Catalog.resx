@@ -124,20 +124,14 @@
   <data name="GetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procGetCatalog]</value>
   </data>
-  <data name="InformationSchema" xml:space="preserve">
-    <value>Select	@@ServerName As [ServerName],
-	D.[name] As [DatabaseName],
-	D.[create_date] As [CreateDate],
-	P.[name] As [Owner]
-From	[sys].[databases] D
-	Left Join [sys].[server_principals] P
-	On D.[owner_sid] = P.[sid]
-Where	db_name() = D.[name]</value>
-  </data>
   <data name="SetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procSetCatalog]</value>
   </data>
   <data name="TableType" xml:space="preserve">
     <value>[AppCatalog].[typeCatalog]</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TSql_InformationSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Catalog.TSql.InformationSchema.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

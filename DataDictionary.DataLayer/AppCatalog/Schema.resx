@@ -120,11 +120,6 @@
   <data name="GetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procGetSchema]</value>
   </data>
-  <data name="InformationSchema" xml:space="preserve">
-    <value>Select	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName]
-From [INFORMATION_SCHEMA].[SCHEMATA]</value>
-  </data>
   <data name="SchemaId" xml:space="preserve">
     <value>@SchemaId</value>
     <comment>GUID</comment>
@@ -134,5 +129,9 @@ From [INFORMATION_SCHEMA].[SCHEMATA]</value>
   </data>
   <data name="TableType" xml:space="preserve">
     <value>[AppCatalog].[typeSchema]</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="TSql_InformationSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Schema.TSql.InformationSchema.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

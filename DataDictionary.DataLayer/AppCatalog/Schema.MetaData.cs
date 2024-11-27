@@ -41,7 +41,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Schema.InformationSchema;
+            command.CommandText = Schema.TSql_InformationSchema;
 
             schemas.Load(connection.ExecuteReader(command));
 

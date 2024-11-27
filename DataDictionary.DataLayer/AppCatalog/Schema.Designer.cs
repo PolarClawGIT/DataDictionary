@@ -70,17 +70,6 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CATALOG_NAME] As [DatabaseName],
-        ///	[SCHEMA_NAME] As [SchemaName]
-        ///From [INFORMATION_SCHEMA].[SCHEMATA].
-        /// </summary>
-        internal static string InformationSchema {
-            get {
-                return ResourceManager.GetString("InformationSchema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to @SchemaId.
         /// </summary>
         internal static string SchemaId {
@@ -104,6 +93,17 @@ namespace DataDictionary.DataLayer.AppCatalog {
         internal static string TableType {
             get {
                 return ResourceManager.GetString("TableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	[CATALOG_NAME] As [DatabaseName],
+        ///		[SCHEMA_NAME] As [SchemaName]
+        ///From	[INFORMATION_SCHEMA].[SCHEMATA].
+        /// </summary>
+        internal static string TSql_InformationSchema {
+            get {
+                return ResourceManager.GetString("TSql_InformationSchema", resourceCulture);
             }
         }
     }

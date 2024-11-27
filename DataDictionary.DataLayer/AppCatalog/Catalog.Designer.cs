@@ -79,22 +79,6 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	@@ServerName As [ServerName],
-        ///	D.[name] As [DatabaseName],
-        ///	D.[create_date] As [CreateDate],
-        ///	P.[name] As [Owner]
-        ///From	[sys].[databases] D
-        ///	Left Join [sys].[server_principals] P
-        ///	On D.[owner_sid] = P.[sid]
-        ///Where	db_name() = D.[name].
-        /// </summary>
-        internal static string InformationSchema {
-            get {
-                return ResourceManager.GetString("InformationSchema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetCatalog].
         /// </summary>
         internal static string SetProcedure {
@@ -109,6 +93,22 @@ namespace DataDictionary.DataLayer.AppCatalog {
         internal static string TableType {
             get {
                 return ResourceManager.GetString("TableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	@@ServerName As [ServerName],
+        ///		D.[name] As [DatabaseName],
+        ///		D.[create_date] As [CreateDate],
+        ///		P.[name] As [Owner]
+        ///From	[sys].[databases] D
+        ///		Left Join [sys].[server_principals] P
+        ///		On D.[owner_sid] = P.[sid]
+        ///Where	db_name() = D.[name].
+        /// </summary>
+        internal static string TSql_InformationSchema {
+            get {
+                return ResourceManager.GetString("TSql_InformationSchema", resourceCulture);
             }
         }
     }
