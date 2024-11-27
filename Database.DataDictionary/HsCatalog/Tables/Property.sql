@@ -10,10 +10,9 @@
 	[Level2Type]     SysName Null,
 	[Level2Name]     SysName Null,
 	-- Results from [fn_listextendedproperty]
-	[ObjType]        SysName Not Null,
-	[ObjName]        SysName Not Null,
 	[PropertyName]   SysName Not Null,
 	[PropertyValue]  NVarChar(Max) Null,
+	-- Temporal History Support
 	[SysStart]       DATETIME2 (7) NOT NULL,
 	[SysEnd]         DATETIME2 (7) NOT NULL,
 )

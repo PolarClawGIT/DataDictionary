@@ -21,8 +21,6 @@ Select	[CatalogId],
 		[Level1Name],
 		[Level2Type],
 		[Level2Name],
-		[ObjType],
-		[ObjName],
 		[PropertyName],
 		[PropertyValue],
 		-- Temporal Data

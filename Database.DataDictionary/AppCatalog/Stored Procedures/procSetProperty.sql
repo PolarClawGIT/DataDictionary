@@ -38,8 +38,6 @@ Begin Try
 		[Level2Type]     SysName Null,
 		[Level2Name]     SysName Null,
 		-- Results from [fn_listextendedproperty]
-		[ObjType]        SysName Not Null,
-		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null,
 		Primary Key ([PropertyId]),
@@ -56,8 +54,6 @@ Begin Try
 			D.[Level2Type],
 			D.[Level2Name],
 			-- Results from [fn_listextendedproperty]
-			D.[ObjType],
-			D.[ObjName],
 			D.[PropertyName],
 			D.[PropertyValue]
 	From	@Data D
@@ -96,8 +92,6 @@ Begin Try
 				[Level1Name],
 				[Level2Type],
 				[Level2Name],
-				[ObjType],
-				[ObjName],
 				[PropertyName],
 				[PropertyValue]
 		From	@Values
@@ -110,8 +104,6 @@ Begin Try
 				[Level1Name],
 				[Level2Type],
 				[Level2Name],
-				[ObjType],
-				[ObjName],
 				[PropertyName],
 				[PropertyValue]
 		From	[AppCatalog].[Property])
@@ -124,8 +116,6 @@ Begin Try
 			[Level1Name] = S.[Level1Name],
 			[Level2Type] = S.[Level2Type],
 			[Level2Name] = S.[Level2Name],
-			[ObjType] = S.[ObjType],
-			[ObjName] = S.[ObjName],
 			[PropertyName] = S.[PropertyName],
 			[PropertyValue] = S.[PropertyValue]
 	From	[AppCatalog].[Property] T
@@ -143,8 +133,6 @@ Begin Try
 			[Level1Name],
 			[Level2Type],
 			[Level2Name],
-			[ObjType],
-			[ObjName],
 			[PropertyName],
 			[PropertyValue])
 	Select	S.[CatalogId],
@@ -155,8 +143,6 @@ Begin Try
 			S.[Level1Name],
 			S.[Level2Type],
 			S.[Level2Name],
-			S.[ObjType],
-			S.[ObjName],
 			S.[PropertyName],
 			S.[PropertyValue]
 	From	@Values S

@@ -9,8 +9,6 @@ Select	FC.[CatalogId],
 		D.[Level1Name],
 		D.[Level2Type],
 		D.[Level2Name],
-		D.[ObjType],
-		D.[ObjName],
 		D.[PropertyName],
 		D.[PropertyValue],
 		-- Temporal Status

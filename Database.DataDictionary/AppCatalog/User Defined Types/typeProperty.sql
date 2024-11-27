@@ -11,8 +11,6 @@
 	[Level2Type]             SysName          Null,
 	[Level2Name]             SysName          Null,
 	-- Results from [fn_listextendedproperty]
-	[ObjType]                SysName          Null,
-	[ObjName]                SysName          Null,
 	[PropertyName]           SysName          Null,
 	[PropertyValue]          NVarChar(Max)    Null,
 	-- Temporal Data
