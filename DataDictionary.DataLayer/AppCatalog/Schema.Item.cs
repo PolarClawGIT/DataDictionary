@@ -180,7 +180,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         //public virtual Command PropertyCommand(IConnection connection)
         //{
-        //    PropertyCatalogKey scopeKey = new PropertyCatalogKey()
+        //    PropertyCatalogLevel scopeKey = new PropertyCatalogLevel()
         //    { CatalogScope = DbLevelCatalogType.Schema };
 
         //    return new PropertyGetCommand(connection)

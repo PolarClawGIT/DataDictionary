@@ -78,35 +78,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-
-        //public virtual Command PropertyCommand(IConnection connection)
-        //{
-        //    {
-        //        if (this.Scope.ToDbLevel() is IPropertyElementKey scopeKey)
-        //        {
-        //            return new PropertyGetCommand(connection)
-        //            {
-        //                CatalogId = CatalogId,
-        //                Level0Name = SchemaName,
-        //                Level0Type = scopeKey.CatalogScope.ToString(),
-        //                Level1Name = TableName,
-        //                Level1Type = scopeKey.ObjectScope.ToString(),
-        //                Level2Name = ConstraintName,
-        //                Level2Type = scopeKey.ElementScope.ToString(),
-        //            }.GetCommand();
-        //        }
-        //        else
-        //        {
-        //            Exception ex = new InvalidOperationException("Could not determine LevelType");
-        //            ex.Data.Add(nameof(DatabaseName), DatabaseName);
-        //            ex.Data.Add(nameof(SchemaName), SchemaName);
-        //            ex.Data.Add(nameof(TableName), TableName);
-        //            ex.Data.Add(nameof(ConstraintName), ConstraintName);
-        //            throw ex;
-        //        }
-        //    }
-        //}
-
         #region ISerializable
         /// <summary>
         /// Serialization constructor for Database Constraint Item.

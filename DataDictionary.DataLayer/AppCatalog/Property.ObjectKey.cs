@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for Level1 MS Extended Property Type.
     /// </summary>
-    public interface IPropertyObjectKey : IPropertyCatalogKey, IDbLevelObjectType
+    public interface IPropertyObjectLevel : IPropertyCatalogLevel, IDbLevelObjectType
     { }
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class PropertyObjectKey : PropertyCatalogKey, IPropertyObjectKey, IKeyEquality<IPropertyObjectKey>
+    public class PropertyObjectLevel : PropertyCatalogLevel, IPropertyObjectLevel, IKeyEquality<IPropertyObjectLevel>
     {
         /// <inheritdoc/>
         public DbLevelObjectType ObjectScope { get; init; } = DbLevelObjectType.Null;
@@ -25,21 +25,21 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for a Object Scope.
         /// </summary>
-        internal protected PropertyObjectKey() : base() { }
+        internal protected PropertyObjectLevel() : base() { }
 
         /// <summary>
         /// Constructor for a Object Scope.
         /// </summary>
-        public PropertyObjectKey(IPropertyObjectKey source) : base(source)
+        public PropertyObjectLevel(IPropertyObjectLevel source) : base(source)
         { ObjectScope = source.ObjectScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IPropertyObjectKey? other)
+        public virtual bool Equals(IPropertyObjectLevel? other)
         {
             return
-                other is IPropertyObjectKey
-                && new PropertyCatalogKey(this).Equals(other)
+                other is IPropertyObjectLevel
+                && new PropertyCatalogLevel(this).Equals(other)
                 && ObjectScope != DbLevelObjectType.Null
                 && other.ObjectScope != DbLevelObjectType.Null
                 && ObjectScope == other.ObjectScope;
@@ -47,14 +47,14 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IPropertyObjectKey value && Equals(new PropertyObjectKey(value)); }
+        { return other is IPropertyObjectLevel value && Equals(new PropertyObjectLevel(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(PropertyObjectKey left, PropertyObjectKey right)
+        public static bool operator ==(PropertyObjectLevel left, PropertyObjectLevel right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(PropertyObjectKey left, PropertyObjectKey right)
+        public static bool operator !=(PropertyObjectLevel left, PropertyObjectLevel right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

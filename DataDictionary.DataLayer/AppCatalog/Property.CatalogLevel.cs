@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for Level0 MS Extended Property Type.
     /// </summary>
-    public interface IPropertyCatalogKey : IDbLevelKey, IDbLevelCatalogType
+    public interface IPropertyCatalogLevel : IDbLevelKey, IDbLevelCatalogType
     { }
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class PropertyCatalogKey : IPropertyCatalogKey, IKeyEquality<IPropertyCatalogKey>
+    public class PropertyCatalogLevel : IPropertyCatalogLevel, IKeyEquality<IPropertyCatalogLevel>
     {
         /// <inheritdoc/>
         public DbLevelCatalogType CatalogScope { get; init; } = DbLevelCatalogType.Null;
@@ -23,20 +23,20 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        internal protected PropertyCatalogKey() : base() { }
+        internal protected PropertyCatalogLevel() : base() { }
 
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        public PropertyCatalogKey(IPropertyCatalogKey source) : this()
+        public PropertyCatalogLevel(IPropertyCatalogLevel source) : this()
         { CatalogScope = source.CatalogScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IPropertyCatalogKey? other)
+        public virtual bool Equals(IPropertyCatalogLevel? other)
         {
             return
-                other is IPropertyCatalogKey
+                other is IPropertyCatalogLevel
                 && CatalogScope != DbLevelCatalogType.Null
                 && other.CatalogScope != DbLevelCatalogType.Null
                 && CatalogScope == other.CatalogScope;
@@ -44,14 +44,14 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IPropertyCatalogKey value && Equals(new PropertyCatalogKey(value)); }
+        { return other is IPropertyCatalogLevel value && Equals(new PropertyCatalogLevel(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(PropertyCatalogKey left, PropertyCatalogKey right)
+        public static bool operator ==(PropertyCatalogLevel left, PropertyCatalogLevel right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(PropertyCatalogKey left, PropertyCatalogKey right)
+        public static bool operator !=(PropertyCatalogLevel left, PropertyCatalogLevel right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

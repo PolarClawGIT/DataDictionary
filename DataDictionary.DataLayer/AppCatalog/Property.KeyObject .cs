@@ -6,9 +6,9 @@ using DataDictionary.Resource;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Interface for the Database Extended Property Name Key
+    /// Interface for the Database Extended Property Object Key
     /// </summary>
-    public interface IPropertyKeyName : IKey, ICatalogKeyName
+    public interface IPropertyKeyObject : IKey, ICatalogKeyName
     {
         /// <summary>
         /// Level 0 (Catalog) Name parameter
@@ -24,13 +24,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Level 2 (Element) Name parameter
         /// </summary>
         String? Level2Name { get; }
-
     }
 
     /// <summary>
-    /// Implementation for the Database Extended Property Name Key
+    /// Implementation for the Database Extended Property Object Key
     /// </summary>
-    public class PropertyKeyName : CatalogKeyName, IPropertyKeyName, IKeyComparable<IPropertyKeyName>
+    public class PropertyKeyObject : CatalogKeyName, IPropertyKeyObject, IKeyComparable<IPropertyKeyObject>
     {
         /// <inheritdoc/>
         public String Level0Name { get; init; } = string.Empty;
@@ -45,7 +44,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IPropertyKeyName source) : base(source)
+        public PropertyKeyObject(IPropertyKeyObject source) : base(source)
         {
             if (!String.IsNullOrWhiteSpace(source.Level0Name)) { Level0Name = source.Level0Name; }
             if (!String.IsNullOrWhiteSpace(source.Level1Name)) { Level1Name = source.Level1Name; }
@@ -56,7 +55,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDbTableKeyName source) : base(source)
+        public PropertyKeyObject(IDbTableKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.TableName is String) { Level1Name = source.TableName; }
@@ -66,7 +65,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDbTableColumnKeyName source) : base(source)
+        public PropertyKeyObject(IDbTableColumnKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.TableName is String) { Level1Name = source.TableName; }
@@ -77,7 +76,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDbRoutineKeyName source) : base(source)
+        public PropertyKeyObject(IDbRoutineKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -87,7 +86,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDbRoutineParameterKeyName source) : base(source)
+        public PropertyKeyObject(IDbRoutineParameterKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -98,7 +97,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDbConstraintKeyName source) : base(source)
+        public PropertyKeyObject(IDbConstraintKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.ConstraintName is String) { Level1Name = source.ConstraintName; }
@@ -108,7 +107,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(ISchemaKeyName source) : base(source)
+        public PropertyKeyObject(ISchemaKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
         }
@@ -117,7 +116,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyName(IDomainKeyName source) : base(source)
+        public PropertyKeyObject(IDomainKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.DomainName is String) { Level1Name = source.DomainName; }
@@ -125,10 +124,10 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(IPropertyKeyName? other)
+        public bool Equals(IPropertyKeyObject? other)
         {
             return
-                other is IPropertyKeyName &&
+                other is IPropertyKeyObject &&
                 new CatalogKeyName(this).Equals(other) &&
                 (String.IsNullOrWhiteSpace(Level0Name) &&
                   String.IsNullOrWhiteSpace(other.Level0Name) ||
@@ -143,10 +142,10 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IPropertyKeyName value && Equals(new PropertyKeyName(value)); }
+        { return obj is IPropertyKeyObject value && Equals(new PropertyKeyObject(value)); }
 
         /// <inheritdoc/>
-        public int CompareTo(IPropertyKeyName? other)
+        public int CompareTo(IPropertyKeyObject? other)
         {
             if (other is null) { return 1; }
             else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
@@ -157,30 +156,30 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override int CompareTo(object? obj)
-        { if (obj is IPropertyKeyName value) { return CompareTo(new PropertyKeyName(value)); } else { return 1; } }
+        { if (obj is IPropertyKeyObject value) { return CompareTo(new PropertyKeyObject(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator ==(PropertyKeyObject left, PropertyKeyObject right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator !=(PropertyKeyObject left, PropertyKeyObject right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator <(PropertyKeyObject left, PropertyKeyObject right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator <=(PropertyKeyObject left, PropertyKeyObject right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator >(PropertyKeyObject left, PropertyKeyObject right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(PropertyKeyName left, PropertyKeyName right)
+        public static bool operator >=(PropertyKeyObject left, PropertyKeyObject right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

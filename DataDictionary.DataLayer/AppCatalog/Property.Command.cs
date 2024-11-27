@@ -21,6 +21,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         Command PropertyCommand(IConnection connection);
     }
 
+    [Obsolete("Being replaced by MetaData", true)]
     internal class PropertyCommand : PropertyParameter, ICatalogKey
     {
         /// <inheritdoc/>

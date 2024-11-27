@@ -40,17 +40,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         WorkItem CreateWork(String workName, IBindingTable target, Func<IConnection, Command> command);
 
         /// <summary>
-        /// Creates a WorkItem for Loading Extended Properties
-        /// </summary>
-        /// <typeparam name="TDbItem"></typeparam>
-        /// <param name="workName"></param>
-        /// <param name="target"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        //WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-        //    where TDbItem : class, IBindingTableRow, IPropertyCommand;
-
-        /// <summary>
         /// Create a WorkItem for loading a Data Object.
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
@@ -202,57 +191,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 catch (Exception ex) { ex.Data.Add("Command", execute.CommandText); throw; }
             }
         }
-
-        /// <inheritdoc/>
-        //public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-        //    where TDbItem : class, IBindingTableRow, IPropertyCommand
-        //{
-        //    Action<int, int> progress = (x, y) => { };
-
-        //    WorkItem result = new WorkItem()
-        //    {
-        //        WorkName = workName,
-        //        DoWork = Work,
-        //        IsCanceling = () => Connection.HasException
-        //    };
-        //    progress = result.OnProgressChanged;
-
-        //    workItems.Add(result, new WorkState() { IsComplete = false, Ex = null }); ;
-        //    result.Completing += WorkItem_Completing;
-
-        //    return result;
-
-        //    void Work()
-        //    {
-        //        Int32 toDo = source.Count();
-        //        Int32 complete = 0;
-
-        //        if (Connection is IConnection)
-        //        {
-        //            foreach (TDbItem item in source)
-        //            {
-        //                Command command = item.PropertyCommand(Connection);
-        //                try { target.Load(Connection.ExecuteReader(command)); }
-        //                catch (Exception ex)
-        //                {
-        //                    ex.Data.Add("Command", "MSSQL Extended Property");
-        //                    foreach (DbParameter parameter in command.Parameters)
-        //                    {
-        //                        if (parameter.Value is not null)
-        //                        { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
-        //                        else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
-        //                    }
-
-        //                    throw;
-        //                }
-
-        //                complete++;
-        //                progress(complete, toDo);
-        //            }
-        //        }
-        //        else { throw new ArgumentNullException(nameof(Connection)); }
-        //    }
-        //}
 
         /// <inheritdoc/>
         public WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getData, Action<IEnumerable<TData>> import)

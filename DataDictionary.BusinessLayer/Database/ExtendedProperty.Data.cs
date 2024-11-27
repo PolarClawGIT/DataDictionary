@@ -111,7 +111,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <returns></returns>
         public IEnumerable<PropertyItem> GetExtendedProperty(IExtendedPropertyIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
@@ -122,42 +122,42 @@ namespace DataDictionary.BusinessLayer.Database
         /// <returns></returns>
         public IEnumerable<PropertyItem> GetExtendedProperty(ITableColumnIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PropertyItem> GetExtendedProperty(ITableIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PropertyItem> GetExtendedProperty(IRoutineIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PropertyItem> GetExtendedProperty(IRoutineParameterIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PropertyItem> GetExtendedProperty(IConstraintIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
         public IEnumerable<PropertyItem> GetExtendedProperty(ISchemaIndexName source)
         {
-            PropertyKeyName key = new PropertyKeyName(source);
+            PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 

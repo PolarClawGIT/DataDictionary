@@ -3,6 +3,7 @@
     /// <summary>
     /// Interface structure for MS SQL ExtendedProperty parameters.
     /// </summary>
+    [Obsolete("Being replaced by MetaData", true)]
     public interface IPropertyParameter : IPropertyKey
     {
         /// <summary>
@@ -29,6 +30,7 @@
     /// <summary>
     /// Parameters used by MS SQL ExtendedProperty methods.
     /// </summary>
+    [Obsolete("Being replaced by MetaData", true)]
     public class PropertyParameter : IPropertyParameter
     { 
         /// <inheritdoc/>
@@ -58,5 +60,7 @@
         /// <inheritdoc/>
         public string? Level2Name { get; set; } // Null will return all objects of Level2 matching the Type and of Level0 & Level1 Name
 
+        /// <inheritdoc/>
+        public Guid? PropertyId => throw new NotImplementedException();
     }
 }

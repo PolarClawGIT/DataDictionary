@@ -3,73 +3,47 @@
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Interface for the Database Extended Property Name
+    /// Interface for the Database Property Key.
     /// </summary>
-    public interface IPropertyName
+    public interface IPropertyKey : IKey
     {
         /// <summary>
-        /// Name of the Extended Property.
+        /// Application ID for the Property.
         /// </summary>
-        String? PropertyName { get; }
+        Guid? PropertyId { get; }
     }
 
     /// <summary>
-    /// Interface for the Database Extended Property Key
+    /// Implementation for the Database Property Key.
     /// </summary>
-    public interface IPropertyKey : IPropertyKeyName, IPropertyName
-    { }
-
-    /// <summary>
-    /// Implementation for the Database Extended Property Key
-    /// </summary>
-    public class PropertyKey : PropertyKeyName, IPropertyKey,
-        IKeyComparable<IPropertyKey>, IKeyComparable<PropertyKey>
+    public class PropertyKey : IPropertyKey,
+        IKeyEquality<IPropertyKey>, IKeyEquality<PropertyKey>
     {
         /// <inheritdoc/>
-        public String PropertyName { get; init; } = string.Empty;
+        public Guid? PropertyId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Database Extended Property Key
+        /// Constructor for the Property Key.
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKey(IPropertyKey source) : base(source)
+        public PropertyKey(IPropertyKey source) : base()
         {
-            if (source.PropertyName is String) { Level0Name = source.PropertyName; }
+            if (source.PropertyId is Guid value) { PropertyId = value; }
+            else { PropertyId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(PropertyKey? other)
-        {
-            return
-                other is IPropertyKey &&
-                new PropertyKeyName(this).Equals(other) &&
-                PropertyName.Equals(other.PropertyName, KeyExtension.CompareString);
-        }
+        public virtual Boolean Equals(PropertyKey? other)
+        { return other is PropertyKey && EqualityComparer<Guid?>.Default.Equals(PropertyId, other.PropertyId); }
 
         /// <inheritdoc/>
-        public Boolean Equals(IPropertyKey? other)
+        public virtual Boolean Equals(IPropertyKey? other)
         { return other is IPropertyKey value && Equals(new PropertyKey(value)); }
 
         /// <inheritdoc/>
-        public override Boolean Equals(object? obj)
-        { return obj is IPropertyKey value && Equals(new PropertyKey(value)); }
-
-        /// <inheritdoc/>
-        public Int32 CompareTo(PropertyKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new PropertyKeyName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
-            else { return string.Compare(PropertyName, other.PropertyName, true); }
-        }
-
-        /// <inheritdoc/>
-        public Int32 CompareTo(IPropertyKey? other)
-        { if (other is IPropertyKey value) { return CompareTo(new PropertyKey(value)); } else { return 1; } }
-
-        /// <inheritdoc/>
-        public override Int32 CompareTo(object? obj)
-        { if (obj is IPropertyKey value) { return CompareTo(new PropertyKey(value)); } else { return 1; } }
+        public override Boolean Equals(object? other)
+        { return other is IPropertyKey value && Equals(new PropertyKey(value)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(PropertyKey left, PropertyKey right)
@@ -80,34 +54,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(PropertyKey left, PropertyKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator <=(PropertyKey left, PropertyKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator >(PropertyKey left, PropertyKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static Boolean operator >=(PropertyKey left, PropertyKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), PropertyName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(PropertyId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override String ToString()
-        {
-            String result = base.ToString();
-            if (!String.IsNullOrWhiteSpace(PropertyName)) { result = String.Format("{0}.{1}", result, PropertyName); }
-
-            return result;
-        }
-
     }
 }

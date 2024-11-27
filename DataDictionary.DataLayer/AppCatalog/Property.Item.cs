@@ -4,13 +4,11 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
-
-
     /// <summary>
     /// Interface for MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public interface IPropertyItem : ICatalogKeyName, ICatalogKey,
-        IPropertyParameter, ITemporalItem
+    public interface IPropertyItem : ICatalogKey,
+        IProperty, ITemporalItem
     {
         /// <summary>
         /// MS SQL ExtendedProperty Level 0 Type
@@ -28,16 +26,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         DbLevelElementType ElementScope { get; }
 
         /// <summary>
-        /// Object Type returned sys.fn_listextendedproperty 
-        /// </summary>
-        String? ObjectType { get; }
-
-        /// <summary>
-        /// Object Name returned by sys.fn_listextendedproperty
-        /// </summary>
-        String? ObjectName { get; }
-
-        /// <summary>
         /// Is the MS SQL ExtendedProperty the MS_Description property.
         /// </summary>
         Boolean IsDescription { get; }
@@ -49,16 +37,39 @@ namespace DataDictionary.DataLayer.AppCatalog
     public class PropertyItem : BindingTableRow, IPropertyItem
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            init { SetValue<Guid>(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public Guid? PropertyId
+        {
+            get { return GetValue<Guid>(nameof(PropertyId)); }
+            private set { SetValue<Guid>(nameof(PropertyId), value); }
+        }
 
         /// <inheritdoc/>
-        public string? Level0Type { get { return GetValue(nameof(Level0Type)); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? Level0Name { get { return GetValue(nameof(Level0Name)); } }
+        public String? Level0Type
+        {
+            get { return GetValue(nameof(Level0Type)); }
+            init { SetValue(nameof(Level0Type), value); }
+        }
+
+        /// <inheritdoc/>
+        public String? Level0Name
+        {
+            get { return GetValue(nameof(Level0Name)); }
+            init { SetValue(nameof(Level0Name), value); }
+        }
 
         /// <inheritdoc/>
         public DbLevelCatalogType CatalogScope
@@ -73,10 +84,18 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public string? Level1Type { get { return GetValue(nameof(Level1Type)); } }
+        public String? Level1Type
+        {
+            get { return GetValue(nameof(Level1Type)); }
+            init { SetValue(nameof(Level1Type), value); }
+        }
 
         /// <inheritdoc/>
-        public string? Level1Name { get { return GetValue(nameof(Level1Name)); } }
+        public String? Level1Name
+        {
+            get { return GetValue(nameof(Level1Name)); }
+            init { SetValue(nameof(Level1Name), value); }
+        }
 
         /// <inheritdoc/>
         public DbLevelObjectType ObjectScope
@@ -91,10 +110,18 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public string? Level2Type { get { return GetValue(nameof(Level2Type)); } }
+        public String? Level2Type
+        {
+            get { return GetValue(nameof(Level2Type)); }
+            init { SetValue(nameof(Level2Type), value); }
+        }
 
         /// <inheritdoc/>
-        public string? Level2Name { get { return GetValue(nameof(Level2Name)); } }
+        public String? Level2Name
+        {
+            get { return GetValue(nameof(Level2Name)); }
+            init { SetValue(nameof(Level2Name), value); }
+        }
 
         /// <inheritdoc/>
         public DbLevelElementType ElementScope
@@ -108,27 +135,19 @@ namespace DataDictionary.DataLayer.AppCatalog
             }
         }
 
-        /// <summary>
-        /// Alias of ObjectType
-        /// </summary>
-        protected String? ObjType { get { return GetValue(nameof(ObjType)); } }
+        /// <inheritdoc/>
+        public String? PropertyName
+        {
+            get { return GetValue(nameof(PropertyName)); }
+            init { SetValue(nameof(PropertyName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ObjectType { get { return ObjType; } }
-
-        /// <summary>
-        /// Alias of ObjectName
-        /// </summary>
-        protected String? ObjName { get { return GetValue(nameof(ObjName)); } }
-
-        /// <inheritdoc/>
-        public string? ObjectName { get { return ObjName; } }
-
-        /// <inheritdoc/>
-        public string? PropertyName { get { return GetValue(nameof(PropertyName)); } }
-
-        /// <inheritdoc/>
-        public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } }
+        public String? PropertyValue
+        {
+            get { return GetValue(nameof(PropertyValue)); }
+            set { SetValue(nameof(PropertyValue), value); }
+        }
 
         /// <inheritdoc/>
         public Boolean IsDescription
@@ -192,15 +211,42 @@ namespace DataDictionary.DataLayer.AppCatalog
             }
         }
 
+
         /// <summary>
         /// Constructor for PropertyItem.
         /// </summary>
         public PropertyItem() : base()
-        { }
+        { PropertyId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Generic constructor of a PropertyItem
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="catalog"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static TResult Create<TResult>(ICatalogKey catalog, IProperty source)
+            where TResult : PropertyItem, new()
+        {
+            return new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                Level0Type = source.Level0Type,
+                Level0Name = source.Level0Name,
+                Level1Type = source.Level1Type,
+                Level1Name = source.Level1Name,
+                Level2Type = source.Level2Type,
+                Level2Name = source.Level2Name,
+                PropertyName = source.PropertyName,
+                PropertyValue = source.PropertyValue,
+            };
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             // Parameter Data
             new DataColumn(nameof(Level0Type), typeof(string)){ AllowDBNull = true},
@@ -210,8 +256,6 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(Level2Type), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(Level2Name), typeof(string)){ AllowDBNull = true},
             // Results Data
-            new DataColumn(nameof(ObjType), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ObjName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = false},
             // Temporal Data
@@ -230,16 +274,4 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
     }
-
-    #region Enum ExtendedProperty translation
-
-    /// <summary>
-    /// Helper class that translates the Enums listed above to string values returned by the Database.
-    /// Source: https://learn.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-listextendedproperty-transact-sql?view=sql-server-ver16
-    /// </summary>
-    static class ExtendedPropertyExtension
-    {
-
-    }
-    #endregion
 }

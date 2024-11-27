@@ -285,26 +285,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        //public virtual Command PropertyCommand(IConnection connection)
-        //{
-        //    PropertyObjectKey scopeKey = new PropertyObjectKey()
-        //    {
-        //        CatalogScope = DbLevelCatalogType.Schema,
-        //        ObjectScope = DbLevelObjectType.Type
-        //    };
-
-        //    return new PropertyGetCommand(connection)
-        //    {
-        //        CatalogId = CatalogId,
-        //        Level0Name = SchemaName,
-        //        Level0Type = scopeKey.CatalogScope.ToString(),
-        //        Level1Name = DomainName,
-        //        Level1Type = scopeKey.ObjectScope.ToString(),
-        //        Level2Name = String.Empty,
-        //        Level2Type = String.Empty,
-        //    }.GetCommand();
-        //}
-
         #region ISerializable
         /// <summary>
         /// Serialization Constructor for the Domain Item.

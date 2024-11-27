@@ -8,51 +8,51 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IExtendedPropertyIndexName : IPropertyKeyName
+    public interface IExtendedPropertyIndexName : IPropertyKeyObject
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyIndexName : PropertyKeyName, IPropertyKeyName,
+    public class ExtendedPropertyIndexName : PropertyKeyObject, IPropertyKeyObject,
         IKeyEquality<IExtendedPropertyIndexName>, IKeyEquality<ExtendedPropertyIndexName>
     {
-        /// <inheritdoc cref="PropertyKeyName(IPropertyKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IPropertyKeyObject)"/>
         public ExtendedPropertyIndexName(IExtendedPropertyIndexName source): base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDbTableKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDbTableKeyName)"/>
         public ExtendedPropertyIndexName(ITableIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDbTableColumnKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDbTableColumnKeyName)"/>
         public ExtendedPropertyIndexName(ITableColumnIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDbRoutineKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDbRoutineKeyName)"/>
         public ExtendedPropertyIndexName(IRoutineIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDbRoutineParameterKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDbRoutineParameterKeyName)"/>
         public ExtendedPropertyIndexName(IRoutineParameterIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDbConstraintKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDbConstraintKeyName)"/>
         public ExtendedPropertyIndexName(IConstraintIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(ISchemaKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(ISchemaKeyName)"/>
         public ExtendedPropertyIndexName(ISchemaIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyName(IDomainKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IDomainKeyName)"/>
         public ExtendedPropertyIndexName(IDomainIndexName source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(IExtendedPropertyIndexName? other)
-        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
+        { return other is IPropertyKeyObject key && Equals(new PropertyKeyObject(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(ExtendedPropertyIndexName? other)
-        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
+        { return other is IPropertyKeyObject key && Equals(new PropertyKeyObject(key)); }
     }
 }

@@ -70,29 +70,6 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	Db_Name() [DatabaseName],
-        ///	NullIf(@Level0Type,&apos;&apos;) [Level0Type],
-        ///	NullIf(@Level0Name,&apos;&apos;) [Level0Name],
-        ///	NullIf(@Level1Type,&apos;&apos;) [Level1Type],
-        ///	NullIf(@Level1Name,&apos;&apos;) [Level1Name],
-        ///	NullIf(@Level2Type,&apos;&apos;) [Level2Type],
-        ///	NullIf(@Level2Name,&apos;&apos;) [Level2Name],
-        ///	[objtype] As [ObjectType],
-        ///	[objname] As [ObjectName],
-        ///	[name] As [PropertyName],
-        ///	Convert(NVarChar(Max),[value]) As [PropertyValue]
-        ///FROM [fn_listextendedproperty] (
-        ///	NullIf(@PropertyName,&apos;&apos;),
-        ///	NullIf(@Level0Type,&apos;&apos;),
-        ///	NullIf(@Level0Nam [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string InformationSchema {
-            get {
-                return ResourceManager.GetString("InformationSchema", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to @PropertyId.
         /// </summary>
         internal static string PropertyId {
@@ -116,6 +93,22 @@ namespace DataDictionary.DataLayer.AppCatalog {
         internal static string TableType {
             get {
                 return ResourceManager.GetString("TableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With [Parameter] As (
+        ///	Select Convert(SysName,Null) As [Level0Type], Convert(SysName,Null) As [Level0Name], Convert(SysName,Null) As [Level1Type], Convert(SysName,Null) As [Level1Name], Convert(SysName,Null) As [Level2Type], Convert(SysName,Null) As [Level2Name]
+        ///	Where 1=2
+        ///	Union
+        ///	Select &apos;SCHEMA&apos; As [Level0Type], [SCHEMA_NAME] As [Level0Name], Null As [Level1Type], Null As [Level1Name], Null As [Level2Type], Null As [Level2Name]
+        ///	From [INFORMATION_SCHEMA].[SCHEMATA]
+        ///	Union
+        ///	Select &apos;SCHEMA&apos; As [Level0 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TSql_InformationSchema {
+            get {
+                return ResourceManager.GetString("TSql_InformationSchema", resourceCulture);
             }
         }
     }

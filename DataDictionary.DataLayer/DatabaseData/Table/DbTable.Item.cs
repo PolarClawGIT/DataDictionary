@@ -85,32 +85,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-
-        //public virtual Command PropertyCommand(IConnection connection)
-        //{
-        //    if (this.Scope.ToDbLevel() is IPropertyObjectKey scopeKey)
-        //    {
-        //        return new PropertyGetCommand(connection)
-        //        {
-        //            CatalogId = CatalogId,
-        //            Level0Name = SchemaName,
-        //            Level0Type = scopeKey.CatalogScope.ToString(),
-        //            Level1Name = TableName,
-        //            Level1Type = scopeKey.ObjectScope.ToString(),
-        //            Level2Name = String.Empty,
-        //            Level2Type = String.Empty,
-        //        }.GetCommand();
-        //    }
-        //    else
-        //    {
-        //        Exception ex = new InvalidOperationException("Could not determine LevelType");
-        //        ex.Data.Add(nameof(DatabaseName), DatabaseName);
-        //        ex.Data.Add(nameof(SchemaName), SchemaName);
-        //        ex.Data.Add(nameof(TableName), TableName);
-        //        throw ex;
-        //    }
-        //}
-
         #region ISerializable
         /// <summary>
         /// Serialization Constructor for Database Column 

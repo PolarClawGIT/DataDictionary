@@ -14,8 +14,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     public abstract class PropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>
-        where TItem : BindingTableRow, IPropertyItem, ICatalogKey, new()
+        IRemoveItem<ICatalogKey>, IRemoveItem<IPropertyKeyName>
+        where TItem : PropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -63,6 +63,38 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IPropertyKeyName propertyKey)
+        {
+            PropertyKeyName key = new PropertyKeyName(propertyKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IProperty> properties)
+        {
+            IEnumerable<PropertyKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new PropertyKeyName(s)).
+                Union(properties.Select(s => new PropertyKeyName(s)));
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                IProperty? newValue = properties.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is PropertyItem oldMatches && newValue is IProperty newMatches)
+                { // Update Old
+                    oldMatches.PropertyValue = newMatches.PropertyValue;
+                }
+                else if (oldValue is PropertyItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is IProperty oldMissing)
+                { Add(PropertyItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+            }
         }
     }
 }

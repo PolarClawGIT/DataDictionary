@@ -398,41 +398,10 @@ namespace DataDictionary.BusinessLayer.Database
             //    IsCanceling = () => factory.IsCanceling
             //});
 
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbSchemta",
-            //    source: schemta,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbTables",
-            //    source: tables,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbTableColumns",
-            //    source: tableColumns,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbConstraints",
-            //    source: constraints,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbDomains",
-            //    source: domains,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbRoutines",
-            //    source: routines,
-            //    target: extendedProperties));
-
-            //work.Add(factory.CreateWork(
-            //    workName: "Load DbExtendedProperties, DbRoutineParameters",
-            //    source: routineParameters,
-            //    target: extendedProperties));
+            work.Add(factory.CreateImport(
+               workName: "Import Extended Properties",
+               getData: PropertyMetaData.GetProperties,
+               import: (data) => extendedProperties.Import(key, data)));
 
             return work;
         }
