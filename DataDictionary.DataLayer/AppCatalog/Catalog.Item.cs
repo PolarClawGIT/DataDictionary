@@ -150,7 +150,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <typeparam name="TResult"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static TResult Create<TResult>(ICatalog source)
+        internal static TResult Create<TResult>(ICatalog source)
             where TResult : CatalogItem, new()
         {
             return new TResult()
@@ -183,8 +183,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
-
-
 
         #region ISerializable
         /// <summary>

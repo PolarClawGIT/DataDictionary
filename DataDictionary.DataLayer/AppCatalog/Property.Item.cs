@@ -225,7 +225,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="catalog"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static TResult Create<TResult>(ICatalogKey catalog, IProperty source)
+        internal static TResult Create<TResult>(ICatalogKey catalog, IProperty source)
             where TResult : PropertyItem, new()
         {
             return new TResult()

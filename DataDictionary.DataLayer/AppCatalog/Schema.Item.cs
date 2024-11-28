@@ -163,7 +163,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="catalog"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
+        internal static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
             where TResult : SchemaItem, new()
         {
             return new TResult()

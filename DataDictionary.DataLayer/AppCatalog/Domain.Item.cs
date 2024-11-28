@@ -255,7 +255,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="catalog"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
+        internal static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
             where TResult : DomainItem, new()
         {
             return new TResult()
