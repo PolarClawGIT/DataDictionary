@@ -20,60 +20,61 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class CatalogCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ICatalogKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
+        IWriteData, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>,
         ITemporalData, ITemporalData<ICatalogKey>
         where TItem : CatalogItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null, false)); }
+        { return LoadCommand(connection); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey key)
-        { return LoadCommand(connection, (key.ModelId, null, null, false)); }
+        { return LoadCommand(connection, modelId: key.ModelId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey key)
-        { return LoadCommand(connection, (null, key.CatalogId, null, false)); }
+        { return LoadCommand(connection, catalogId: key.CatalogId); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null, true)); }
+        { return LoadCommand(connection, includeHistory: true); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey key)
-        { return LoadCommand(connection, (null, key.CatalogId, null, true)); }
+        { return LoadCommand(connection, catalogId: key.CatalogId, includeHistory: true); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
+        Command LoadCommand(IConnection connection,
+            Guid? modelId = null, Guid? catalogId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Catalog.GetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(Temporal.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(Temporal.IncludeHistory, parameters.includeHistory);
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
-        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+        { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
 
-        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
+        Command SaveCommand(IConnection connection, Guid? catalogId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Catalog.SetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            IEnumerable<TItem> data = this.Where(w => catalogId is null || w.CatalogId == catalogId);
             command.AddParameter(WriteData.Data, Catalog.TableType, data);
             return command;
         }

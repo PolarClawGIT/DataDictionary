@@ -14,9 +14,10 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IDomainKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<IDomainKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>,
+        ITemporalData<ICatalogKey>, ITemporalData<IDomainKey>
         where TItem : DomainItem, new()
     {
         /// <inheritdoc/>
@@ -27,7 +28,21 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
-        Command LoadCommand(IConnection connection, Guid? modelId = null, Guid? catalogId = null, Guid? domainId = null)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainKey domainKey)
+        { return LoadCommand(connection, domainId: domainKey.DomainId); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IDomainKey domainKey)
+        { return LoadCommand(connection, domainId: domainKey.DomainId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
+
+        Command LoadCommand(IConnection connection, 
+            Guid? modelId = null, Guid? catalogId = null, Guid? domainId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -35,19 +50,25 @@ namespace DataDictionary.DataLayer.AppCatalog
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Domain.DomainId, domainId);
-
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelId)
-        { return SaveCommand(connection, modelId: modelId.ModelId); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
         { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
 
-        Command SaveCommand(IConnection connection, Guid? modelId = null, Guid? catalogId = null, Guid? domainId = null)
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainKey domainKey)
+        { return SaveCommand(connection, domainId: domainKey.DomainId); }
+
+        Command SaveCommand(IConnection connection,
+            Guid? modelId = null, Guid? catalogId = null, Guid? domainId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -56,7 +77,9 @@ namespace DataDictionary.DataLayer.AppCatalog
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Domain.DomainId, domainId);
 
-            IEnumerable<TItem> data = this.Where(w => catalogId is null || w.CatalogId == catalogId);
+            IEnumerable<TItem> data = this.Where(w => 
+                (catalogId is null || w.CatalogId == catalogId) && 
+                (domainId is null || w.DomainId == domainId));
             command.AddParameter(WriteData.Data, Domain.TableType, data);
             return command;
         }

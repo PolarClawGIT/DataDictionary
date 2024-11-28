@@ -12,46 +12,75 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class PropertyCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<IPropertyKeyName>
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IPropertyKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<IPropertyKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<IPropertyKeyName>,
+        ITemporalData<ICatalogKey>, ITemporalData<IPropertyKey>
         where TItem : PropertyItem, new()
     {
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection)
+        { return LoadCommand(connection); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, (null, catalogKey.CatalogId, null)); }
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? propertyId) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IPropertyKey propertyKey)
+        { return LoadCommand(connection, propertyId: propertyKey.PropertyId); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IPropertyKey propertyKey)
+        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, includeHistory: true); }
+
+
+        Command LoadCommand(IConnection connection, 
+            Guid? modelId = null, Guid? catalogId = null, Guid? propertyId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Property.GetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(Property.PropertyId, parameters.propertyId);
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Property.PropertyId, propertyId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
-        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+        { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
+        public Command SaveCommand(IConnection connection, IPropertyKey propertyKey)
+        { return SaveCommand(connection, propertyId: propertyKey.PropertyId); }
+
+        /// <inheritdoc/>
+        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? propertyId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Property.SetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId) &&
+                (propertyId is null || w.PropertyId == propertyId));
             command.AddParameter(WriteData.Data, Property.TableType, this);
             return command;
         }

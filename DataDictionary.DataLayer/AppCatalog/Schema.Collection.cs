@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class SchemaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ISchemaKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<ISchemaKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>,
         ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>
         where TItem : SchemaItem, new()
@@ -23,56 +23,63 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null, null, null, false)); }
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, false)); }
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ISchemaKey key)
-        { return LoadCommand(connection, (null, null, key.SchemaId, null, false)); }
+        public Command LoadCommand(IConnection connection, ISchemaKey schemaKey)
+        { return LoadCommand(connection, schemaId: schemaKey.SchemaId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, ICatalogKey key)
-        { return LoadCommand(connection, (null, key.CatalogId, null, null, true)); }
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, ISchemaKey key)
-        { return LoadCommand(connection, (null, null, key.SchemaId, null, true)); }
+        public Command HistoryCommand(IConnection connection, ISchemaKey schemaKey)
+        { return LoadCommand(connection, schemaId: schemaKey.SchemaId, includeHistory: true); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? schemaId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
+        Command LoadCommand(IConnection connection,
+            Guid? modelId = null, Guid? catalogId = null, Guid? schemaId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Schema.GetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(Schema.SchemaId, parameters.schemaId);
-            command.AddParameter(Temporal.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(Temporal.IncludeHistory, parameters.includeHistory);
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Schema.SchemaId, schemaId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
 
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection, (modelKey.ModelId, null, null)); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
-        { return SaveCommand(connection, (null, catalogKey.CatalogId, null)); }
+        { return SaveCommand(connection, catalogId:catalogKey.CatalogId); }
 
-        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId, Guid? schemaId) parameters)
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, ISchemaKey schemaKey)
+        { return SaveCommand(connection, schemaId: schemaKey.SchemaId); }
+
+        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? schemaId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Schema.GetProcedure;
-            command.AddParameter(Model.ModelId, parameters.modelId);
-            command.AddParameter(Catalog.CatalogId, parameters.catalogId);
-            command.AddParameter(Schema.SchemaId, parameters.schemaId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Schema.SchemaId, schemaId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId) &&
+                (schemaId is null || w.SchemaId == schemaId));
             command.AddParameter(WriteData.Data, Schema.TableType, data);
             return command;
         }
