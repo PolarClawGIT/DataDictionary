@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Resource;
 using System;
@@ -21,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc cref="DomainEntityKeyName(IDomainEntityKeyName)"/>
         public EntityIndexName(IEntityIndexName source) : base(source) { }
 
-        /// <inheritdoc cref="DomainEntityKeyName(DataLayer.DatabaseData.Table.IDbTableKeyName)"/>
+        /// <inheritdoc cref="DomainEntityKeyName(ITableKeyName)"/>
         internal EntityIndexName(ITableIndexName source) : base(source) { }
 
         /// <inheritdoc cref="DomainEntityKeyName(DataLayer.DatabaseData.Routine.IDbRoutineKeyName)"/>

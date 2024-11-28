@@ -1,12 +1,12 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Database Table Key
 /// </summary>
-public interface IDbTableKeyName : IKey, ISchemaKeyName
+public interface ITableKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Table (or View)
@@ -17,8 +17,8 @@ public interface IDbTableKeyName : IKey, ISchemaKeyName
 /// <summary>
 /// Implementation for the Database Table Key
 /// </summary>
-public class DbTableKeyName : SchemaKeyName, IDbTableKeyName,
-    IKeyComparable<IDbTableKeyName>, IKeyComparable<DbTableKeyName>
+public class TableKeyName : SchemaKeyName, ITableKeyName,
+    IKeyComparable<ITableKeyName>, IKeyComparable<TableKeyName>
 {
     /// <inheritdoc/>
     public String TableName { get; init; } = string.Empty;
@@ -26,18 +26,18 @@ public class DbTableKeyName : SchemaKeyName, IDbTableKeyName,
     /// <summary>
     /// Constructor for a blank Database Table Key
     /// </summary>
-    protected internal DbTableKeyName() : base() { }
+    protected internal TableKeyName() : base() { }
 
     /// <summary>
     /// Constructor for the Database Table Key
     /// </summary>
     /// <param name="source"></param>
-    public DbTableKeyName(IDbTableKeyName source) : base(source)
+    public TableKeyName(ITableKeyName source) : base(source)
     { if (source.TableName is string) { TableName = source.TableName; } }
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbTableKeyName? other)
+    public Boolean Equals(TableKeyName? other)
     {
         return
             other is ISchemaKeyName &&
@@ -48,15 +48,15 @@ public class DbTableKeyName : SchemaKeyName, IDbTableKeyName,
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbTableKeyName? other)
-    { return other is IDbTableKeyName value && Equals(new DbTableKeyName(value)); }
+    public Boolean Equals(ITableKeyName? other)
+    { return other is ITableKeyName value && Equals(new TableKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbTableKeyName value && Equals(new DbTableKeyName(value)); }
+    { return obj is ITableKeyName value && Equals(new TableKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbTableKeyName? other)
+    public Int32 CompareTo(TableKeyName? other)
     {
         if (other is null) { return 1; }
         else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
@@ -64,35 +64,35 @@ public class DbTableKeyName : SchemaKeyName, IDbTableKeyName,
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbTableKeyName? other)
-    { if (other is IDbTableKeyName value) { return CompareTo(new DbTableKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(ITableKeyName? other)
+    { if (other is ITableKeyName value) { return CompareTo(new TableKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbTableKeyName value) { return CompareTo(new DbTableKeyName(value)); } else { return 1; } }
+    { if (obj is ITableKeyName value) { return CompareTo(new TableKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator ==(TableKeyName left, TableKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator !=(TableKeyName left, TableKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator <(TableKeyName left, TableKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator <=(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator <=(TableKeyName left, TableKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator >(TableKeyName left, TableKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbTableKeyName left, DbTableKeyName right)
+    public static Boolean operator >=(TableKeyName left, TableKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>

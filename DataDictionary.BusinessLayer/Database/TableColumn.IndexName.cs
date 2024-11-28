@@ -1,30 +1,30 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ITableColumnIndexName : IDbTableColumnKeyName, ITableIndexName
+    public interface ITableColumnIndexName : ITableColumnKeyName, ITableIndexName
     { }
 
     /// <inheritdoc/>
-    public class TableColumnIndexName : DbTableColumnKeyName, ITableColumnIndexName,
+    public class TableColumnIndexName : TableColumnKeyName, ITableColumnIndexName,
         IKeyEquality<ITableColumnIndexName>, IKeyEquality<TableColumnIndexName>
     {
-        /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
+        /// <inheritdoc cref="TableColumnKeyName(ITableColumnKeyName)"/>
         public TableColumnIndexName(ITableColumnIndexName source) : base(source) { }
 
-        /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
-        public TableColumnIndexName(IDbTableColumnKeyName source) : base(source) { }
+        /// <inheritdoc cref="TableColumnKeyName(ITableColumnKeyName)"/>
+        public TableColumnIndexName(ITableColumnKeyName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ITableColumnIndexName? other)
-        { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+        { return other is ITableColumnKeyName value && Equals(new TableColumnKeyName(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(TableColumnIndexName? other)
-        { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+        { return other is ITableColumnKeyName value && Equals(new TableColumnKeyName(value)); }
 
         /// <summary>
         /// Convert TableColumnIndexName to a DataIndexName

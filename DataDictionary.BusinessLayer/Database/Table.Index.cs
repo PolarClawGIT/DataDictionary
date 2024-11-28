@@ -1,28 +1,28 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ITableIndex : IDbTableKey
+    public interface ITableIndex : ITableKey
     { }
 
     /// <inheritdoc/>
-    public class TableIndex : DbTableKey, ITableIndex,
+    public class TableIndex : TableKey, ITableIndex,
         IKeyEquality<ITableIndex>, IKeyEquality<TableIndex>
     {
-        /// <inheritdoc cref="DbTableKey(IDbTableKey)"/>
-        public TableIndex(IDbTableKey source) : base(source)
+        /// <inheritdoc cref="TableKey(ITableKey)"/>
+        public TableIndex(ITableKey source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(ITableIndex? other)
-        { return other is IDbTableKey value && Equals(new DbTableKey(value)); }
+        { return other is ITableKey value && Equals(new TableKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(TableIndex? other)
-        { return other is IDbTableKey value && Equals(new DbTableKey(value)); }
+        { return other is ITableKey value && Equals(new TableKey(value)); }
 
         /// <summary>
         /// Convert TableIndex to a DataIndex

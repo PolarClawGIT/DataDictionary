@@ -1,29 +1,29 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ITableColumnIndex : IDbTableColumnKey
+    public interface ITableColumnIndex : ITableColumnKey
     { }
 
     /// <inheritdoc/>
-    public class TableColumnIndex : DbTableColumnKey, ITableColumnIndex,
+    public class TableColumnIndex : TableColumnKey, ITableColumnIndex,
         IKeyEquality<ITableColumnIndex>, IKeyEquality<TableColumnIndex>
     {
-        /// <inheritdoc cref="DbTableColumnKey(IDbTableColumnKey)"/>
-        public TableColumnIndex(IDbTableColumnKey source) : base(source)
+        /// <inheritdoc cref="TableColumnKey(ITableColumnKey)"/>
+        public TableColumnIndex(ITableColumnKey source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(ITableColumnIndex? other)
-        { return other is IDbTableColumnKey value && Equals(new DbTableColumnKey(value)); }
+        { return other is ITableColumnKey value && Equals(new TableColumnKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(TableColumnIndex? other)
-        { return other is IDbTableColumnKey value && Equals(new DbTableColumnKey(value)); }
+        { return other is ITableColumnKey value && Equals(new TableColumnKey(value)); }
 
         /// <summary>
         /// Convert TableColumnIndex to a DataIndex

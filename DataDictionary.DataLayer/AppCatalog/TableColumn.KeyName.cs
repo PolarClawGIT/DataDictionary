@@ -1,13 +1,12 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Database Table Column Key
 /// </summary>
-public interface IDbTableColumnKeyName : IKey, IDbTableKeyName
+public interface ITableColumnKeyName : IKey, ITableKeyName
 {
     /// <summary>
     /// Name of the Database Column
@@ -18,8 +17,8 @@ public interface IDbTableColumnKeyName : IKey, IDbTableKeyName
 /// <summary>
 /// Implementation of the Database Table Column Key
 /// </summary>
-public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
-    IKeyComparable<IDbTableColumnKeyName>, IKeyComparable<DbTableColumnKeyName>
+public class TableColumnKeyName : TableKeyName, ITableColumnKeyName,
+    IKeyComparable<ITableColumnKeyName>, IKeyComparable<TableColumnKeyName>
 {
     /// <inheritdoc/>
     public string ColumnName { get; init; } = string.Empty;
@@ -27,73 +26,73 @@ public class DbTableColumnKeyName : DbTableKeyName, IDbTableColumnKeyName,
     /// <summary>
     /// Constructor for a blank Database Column Key
     /// </summary>
-    protected internal DbTableColumnKeyName() : base() { }
+    protected internal TableColumnKeyName() : base() { }
 
     /// <summary>
     /// Constructor for the Database Column Key
     /// </summary>
     /// <param name="source"></param>
-    public DbTableColumnKeyName(IDbTableColumnKeyName source) : base(source)
+    public TableColumnKeyName(ITableColumnKeyName source) : base(source)
     { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbTableColumnKeyName? other)
+    public Boolean Equals(TableColumnKeyName? other)
     {
         return
             other is ISchemaKeyName &&
-            new DbTableKeyName(this).Equals(other) &&
+            new TableKeyName(this).Equals(other) &&
             !String.IsNullOrEmpty(ColumnName) &&
             !String.IsNullOrEmpty(other.ColumnName) &&
             ColumnName.Equals(other.ColumnName, KeyExtension.CompareString);
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbTableColumnKeyName? other)
-    { return other is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+    public Boolean Equals(ITableColumnKeyName? other)
+    { return other is ITableColumnKeyName value && Equals(new TableColumnKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbTableColumnKeyName value && Equals(new DbTableColumnKeyName(value)); }
+    { return obj is ITableColumnKeyName value && Equals(new TableColumnKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbTableColumnKeyName? other)
+    public Int32 CompareTo(TableColumnKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbTableKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new TableKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(ColumnName, other.ColumnName, true); }
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbTableColumnKeyName? other)
-    { if (other is IDbTableColumnKeyName value) { return CompareTo(new DbTableColumnKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(ITableColumnKeyName? other)
+    { if (other is ITableColumnKeyName value) { return CompareTo(new TableColumnKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbTableColumnKeyName value) { return CompareTo(new DbTableColumnKeyName(value)); } else { return 1; } }
+    { if (obj is ITableColumnKeyName value) { return CompareTo(new TableColumnKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static Boolean operator ==(TableColumnKeyName left, TableColumnKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static Boolean operator !=(TableColumnKeyName left, TableColumnKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static Boolean operator <(TableColumnKeyName left, TableColumnKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator <=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static Boolean operator <=(TableColumnKeyName left, TableColumnKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static Boolean operator >(TableColumnKeyName left, TableColumnKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static bool operator >=(DbTableColumnKeyName left, DbTableColumnKeyName right)
+    public static bool operator >=(TableColumnKeyName left, TableColumnKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>

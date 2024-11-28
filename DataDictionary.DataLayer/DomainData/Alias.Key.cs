@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -36,20 +36,6 @@ namespace DataDictionary.DataLayer.DomainData
         /// <param name="source"></param>
         public AliasKey(IAliasKey source) : base(source)
         { AliasScope = source.AliasScope; }
-
-        /// <summary>
-        /// Constructor for the Key used by Domain Aliases from TableColumn
-        /// </summary>
-        /// <param name="source"></param>
-        public AliasKey(IDbTableColumnItem source) : base(source)
-        { AliasScope = source.Scope; }
-
-        /// <summary>
-        /// Constructor for the Key used by Domain Aliases from Table
-        /// </summary>
-        /// <param name="source"></param>
-        public AliasKey(IDbTableItem source) : base(source)
-        { AliasScope = source.Scope; }
 
         #region IEquatable
         /// <inheritdoc/>

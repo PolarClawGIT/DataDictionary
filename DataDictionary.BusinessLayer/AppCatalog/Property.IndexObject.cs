@@ -2,7 +2,6 @@
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
@@ -19,11 +18,11 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public PropertyIndexObject(IPropertyIndexObject source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyObject(IDbTableKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(ITableKeyName)"/>
         public PropertyIndexObject(ITableIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyObject(IDbTableColumnKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(ITableColumnKeyName)"/>
         public PropertyIndexObject(ITableColumnIndexName source) : base(source)
         { }
 

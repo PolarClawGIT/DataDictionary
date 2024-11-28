@@ -1,6 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -22,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     public class DbReferenceCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, 
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IReadSchema<IDbRoutineItem>, IReadSchema<IDbTableItem>,
+        IReadSchema<IDbRoutineItem>, IReadSchema<ITableItem>,
         IRemoveItem<ICatalogKey>
         where TItem : BindingTableRow, IDbReferenceItem, new()
     {
@@ -39,7 +38,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         }
 
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, IDbTableItem key)
+        public Command SchemaCommand(IConnection connection, ITableItem key)
         {
             Command result = connection.CreateCommand();
             result.CommandType = CommandType.Text;

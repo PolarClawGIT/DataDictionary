@@ -1,6 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Reference
@@ -44,7 +43,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbReferenceKeyName(IDbTableKeyName source) : base(source)
+        public DbReferenceKeyName(ITableKeyName source) : base(source)
         {
             if (source.TableName is string) { ObjectName = source.TableName; }
             else { ObjectName = string.Empty; }
@@ -64,9 +63,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Converts Reference Object Key into a Table Key.
         /// </summary>
         /// <returns></returns>
-        public DbTableKeyName AsTable()
+        public TableKeyName AsTable()
         {
-            return new DbTableKeyName()
+            return new TableKeyName()
             {
                 DatabaseName = this.DatabaseName,
                 SchemaName = this.SchemaName,

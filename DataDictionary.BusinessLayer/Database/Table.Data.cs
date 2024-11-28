@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
@@ -14,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface ITableData: IBindingData<TableValue>
     { }
 
-    class TableData: DbTableCollection<TableValue>,
+    class TableData: TableCollection<TableValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, ITableData, INamedScopeSourceData

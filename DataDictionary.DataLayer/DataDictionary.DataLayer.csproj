@@ -37,6 +37,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Catalog.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppCatalog\Table.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Table.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppCatalog\TableColumn.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TableColumn.resx</DependentUpon>
+    </Compile>
     <Compile Update="DatabaseData\DbScript.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -88,6 +98,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Catalog.Designer.cs</LastGenOutput>
       <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\Table.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Table.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\TableColumn.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TableColumn.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="DatabaseData\DbScript.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.Threading;
@@ -14,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface ITableColumnData: IBindingData<TableColumnValue>
     { }
 
-    class TableColumnData : DbTableColumnCollection<TableColumnValue>, ITableColumnData,
+    class TableColumnData : TableColumnCollection<TableColumnValue>, ITableColumnData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData
@@ -49,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Database
             return INamedScopeSourceData.LoadNamedScope<TableColumnData, TableColumnValue>
                 (this, addNamedScope,
                 (value) => Database.DbTables.
-                    FirstOrDefault(w => new DbTableKeyName(value).Equals(w)));
+                    FirstOrDefault(w => new TableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

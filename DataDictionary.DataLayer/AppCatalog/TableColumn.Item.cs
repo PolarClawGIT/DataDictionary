@@ -1,151 +1,116 @@
-﻿// Ignore Spelling: Nullable
-
-using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, ICatalogKey, IDomainKeyReference, IDbColumn, IDbTableType, IScopeType
-    {
-        /// <summary>
-        /// Is the Column Nullable
-        /// </summary>
-        Boolean? IsNullable { get; }
-
-        /// <summary>
-        /// Column Default value
-        /// </summary>
-        String? ColumnDefault { get; }
-
-        /// <summary>
-        /// Is the Column an Identity
-        /// </summary>
-        Boolean? IsIdentity { get; }
-
-        /// <summary>
-        /// Is the Column Hidden
-        /// </summary>
-        Boolean? IsHidden { get; }
-
-        /// <summary>
-        /// Is the Column Computed
-        /// </summary>
-        Boolean? IsComputed { get; }
-
-        /// <summary>
-        /// If the Column is Computed, the Computed Definition
-        /// </summary>
-        String? ComputedDefinition { get; }
-
-        /// <summary>
-        /// Type of Always Generated Column. Used by System Version.
-        /// </summary>
-        String? GeneratedAlwayType { get; }
-    }
+    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey, IDbTableType
+    { }
 
     /// <summary>
     /// Implementation of the Database Table Column
     /// </summary>
     [Serializable]
-    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, ISerializable
+    public class TableColumnItem : BindingTableRow, ITableColumnItem, INotifyPropertyChanged, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
         public Guid? ColumnId { get { return GetValue<Guid>(nameof(ColumnId)); } }
-        
-        /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue(nameof(TableName)); } }
+        public String? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ColumnName { get { return GetValue(nameof(ColumnName)); } }
+        public String? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
-        public int? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
+        String? ITableColumn.TableType { get { return GetValue(nameof(TableType)); } }
 
         /// <inheritdoc/>
-        public bool? IsNullable { get { return GetValue<bool>(nameof(IsNullable), BindingItemParsers.BooleanTryParse); } }
+        public String? ColumnName { get { return GetValue(nameof(ColumnName)); } }
 
         /// <inheritdoc/>
-        public string? DataType { get { return GetValue(nameof(DataType)); } }
+        public Int32? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
 
         /// <inheritdoc/>
-        public string? ColumnDefault { get { return GetValue(nameof(ColumnDefault)); } }
+        public Boolean? IsNullable { get { return GetValue<bool>(nameof(IsNullable), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public int? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
+        public String? DataType { get { return GetValue(nameof(DataType)); } }
 
         /// <inheritdoc/>
-        public int? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
+        public String? ColumnDefault { get { return GetValue(nameof(ColumnDefault)); } }
 
         /// <inheritdoc/>
-        public byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
+        public Int32? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
 
         /// <inheritdoc/>
-        public short? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
+        public Int32? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
 
         /// <inheritdoc/>
-        public int? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
+        public Byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
 
         /// <inheritdoc/>
-        public short? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
+        public Int16? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
+        public Int32? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetSchema { get { return GetValue(nameof(CharacterSetSchema)); } }
+        public Int16? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetName { get { return GetValue(nameof(CharacterSetName)); } }
+        public String? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
 
         /// <inheritdoc/>
-        public string? CollationCatalog { get { return GetValue(nameof(CollationCatalog)); } }
+        public String? CharacterSetSchema { get { return GetValue(nameof(CharacterSetSchema)); } }
 
         /// <inheritdoc/>
-        public string? CollationSchema { get { return GetValue(nameof(CollationSchema)); } }
+        public String? CharacterSetName { get { return GetValue(nameof(CharacterSetName)); } }
 
         /// <inheritdoc/>
-        public string? CollationName { get { return GetValue(nameof(CollationName)); } }
+        public String? CollationCatalog { get { return GetValue(nameof(CollationCatalog)); } }
 
         /// <inheritdoc/>
-        public string? DomainCatalog { get { return GetValue(nameof(DomainCatalog)); } }
+        public String? CollationSchema { get { return GetValue(nameof(CollationSchema)); } }
 
         /// <inheritdoc/>
-        public string? DomainSchema { get { return GetValue(nameof(DomainSchema)); } }
+        public String? CollationName { get { return GetValue(nameof(CollationName)); } }
 
         /// <inheritdoc/>
-        public string? DomainName { get { return GetValue(nameof(DomainName)); } }
+        public String? DomainCatalog { get { return GetValue(nameof(DomainCatalog)); } }
 
         /// <inheritdoc/>
-        public bool? IsIdentity { get { return GetValue<bool>(nameof(IsIdentity), BindingItemParsers.BooleanTryParse); } }
+        public String? DomainSchema { get { return GetValue(nameof(DomainSchema)); } }
 
         /// <inheritdoc/>
-        public bool? IsHidden { get { return GetValue<bool>(nameof(IsHidden), BindingItemParsers.BooleanTryParse); } }
+        public String? DomainName { get { return GetValue(nameof(DomainName)); } }
 
         /// <inheritdoc/>
-        public bool? IsComputed { get { return GetValue<bool>(nameof(IsComputed), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsIdentity { get { return GetValue<bool>(nameof(IsIdentity), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public string? ComputedDefinition { get { return GetValue(nameof(ComputedDefinition)); } }
+        public Boolean? IsHidden { get { return GetValue<bool>(nameof(IsHidden), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public string? GeneratedAlwayType { get { return GetValue(nameof(GeneratedAlwayType)); } }
+        public Boolean? IsComputed { get { return GetValue<bool>(nameof(IsComputed), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public String? ComputedDefinition { get { return GetValue(nameof(ComputedDefinition)); } }
+
+        /// <inheritdoc/>
+        public String? GeneratedAlwayType { get { return GetValue(nameof(GeneratedAlwayType)); } }
 
         /// <inheritdoc/>
         public DbTableType TableType
@@ -159,21 +124,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             }
         }
 
-        /// <inheritdoc/>
-        public ScopeType Scope
-        {
-            get
-            {
-                switch (TableType)
-                {
-                    case DbTableType.Table: return ScopeType.DatabaseTableColumn;
-                    case DbTableType.TemporalTable: return ScopeType.DatabaseTableColumn;
-                    case DbTableType.HistoryTable: return ScopeType.DatabaseTableColumn;
-                    case DbTableType.View: return ScopeType.DatabaseViewColumn;
-                    default: return ScopeType.Null;
-                }
-            }
-        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -213,7 +163,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <summary>
         /// Constructor for the Database Table Column
         /// </summary>
-        public DbTableColumnItem() : base() { }
+        public TableColumnItem() : base() { }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -225,12 +175,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbTableColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected TableColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbTableColumnKeyName(this).ToString(); }
+        { return new TableColumnKeyName(this).ToString(); }
     }
 }

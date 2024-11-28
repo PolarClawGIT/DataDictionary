@@ -379,7 +379,7 @@ namespace DataDictionary.BusinessLayer.Database
             //    WorkName = "Load DbReferences",
             //    DoWork = () =>
             //    {
-            //        foreach (DbTableItem item in tables)
+            //        foreach (TableItem item in tables)
             //        {
             //            references.Load(
             //                factory.Connection.ExecuteReader(

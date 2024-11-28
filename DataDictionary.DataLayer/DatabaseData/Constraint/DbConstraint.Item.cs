@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -11,7 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, ICatalogKey,  IDbTableKeyName, IScopeType
+    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, ICatalogKey,  ITableKeyName, IScopeType
     {
         /// <summary>
         /// Type of the Database Constraint.

@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Commonly used Column Position
     /// </summary>
+    [Obsolete()]
     public interface IDbColumnPosition
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// Common Properties of a Database Column and Parameters.
     /// Used by Table Column and Routine Parameter.
     /// </summary>
+    [Obsolete]
     public interface IDbColumn : IDataType, IDbColumnPosition
     {
 

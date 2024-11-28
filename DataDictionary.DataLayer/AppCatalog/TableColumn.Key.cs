@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Table Column Key.
     /// </summary>
-    public interface IDbTableColumnKey : IKey
+    public interface ITableColumnKey : IKey
     {
         /// <summary>
         /// Application ID for the Table Column.
@@ -21,8 +16,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Implementation for the Database Table Column Key.
     /// </summary>
-    public class DbTableColumnKey : IDbTableColumnKey,
-        IKeyEquality<IDbTableColumnKey>, IKeyEquality<DbTableColumnKey>
+    public class TableColumnKey : ITableColumnKey,
+        IKeyEquality<ITableColumnKey>, IKeyEquality<TableColumnKey>
     {
         /// <inheritdoc/>
         public Guid? ColumnId { get; init; } = Guid.Empty;
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// Constructor for the TableColumn Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbTableColumnKey(IDbTableColumnKey source) : base()
+        public TableColumnKey(ITableColumnKey source) : base()
         {
             if (source.ColumnId is Guid value) { ColumnId = value; }
             else { ColumnId = Guid.Empty; }
@@ -39,23 +34,23 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(DbTableColumnKey? other)
-        { return other is DbTableColumnKey && EqualityComparer<Guid?>.Default.Equals(ColumnId, other.ColumnId); }
+        public Boolean Equals(TableColumnKey? other)
+        { return other is TableColumnKey && EqualityComparer<Guid?>.Default.Equals(ColumnId, other.ColumnId); }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbTableColumnKey? other)
-        { return other is IDbTableColumnKey value && Equals(new DbTableColumnKey(value)); }
+        public virtual Boolean Equals(ITableColumnKey? other)
+        { return other is ITableColumnKey value && Equals(new TableColumnKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? other)
-        { return other is IDbTableColumnKey value && Equals(new DbTableColumnKey(value)); }
+        { return other is ITableColumnKey value && Equals(new TableColumnKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbTableColumnKey left, DbTableColumnKey right)
+        public static Boolean operator ==(TableColumnKey left, TableColumnKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbTableColumnKey left, DbTableColumnKey right)
+        public static Boolean operator !=(TableColumnKey left, TableColumnKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

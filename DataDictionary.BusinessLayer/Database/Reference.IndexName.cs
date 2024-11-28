@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database;
@@ -17,7 +17,7 @@ public class ReferenceIndexName : DbReferenceKeyName, IReferenceIndexName,
     /// <inheritdoc cref="DbReferenceKeyName(IDbReferenceKeyName)"/>
     public ReferenceIndexName(IDbReferenceKeyName source) : base(source) { }
 
-    /// <inheritdoc cref="DbReferenceKeyName(IDbTableKeyName)"/>
+    /// <inheritdoc cref="DbReferenceKeyName(ITableKeyName)"/>
     public ReferenceIndexName(ITableIndexName source) : base(source) { }
 
     /// <inheritdoc cref="DbReferenceKeyName(IDbRoutineKeyName)"/>

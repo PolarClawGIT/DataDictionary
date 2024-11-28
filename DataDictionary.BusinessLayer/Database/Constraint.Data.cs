@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.Database
             return INamedScopeSourceData.LoadNamedScope<ConstraintData, ConstraintValue>
                 (this, addNamedScope,
                 (value) => Database.DbTables.
-                    FirstOrDefault(w => new DbTableKeyName(value).Equals(w)));
+                    FirstOrDefault(w => new TableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

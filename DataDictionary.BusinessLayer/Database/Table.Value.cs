@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -9,13 +9,13 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ITableValue : IDbTableItem,
+    public interface ITableValue : ITableItem,
         ITableIndex, ITableIndexName, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class TableValue : DbTableItem, ITableValue, IPathValue, INamedScopeSourceValue
+    public class TableValue : TableItem, ITableValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

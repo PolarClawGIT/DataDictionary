@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Reference;
@@ -38,7 +38,7 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     /// Constructor for Referenced Object Name by Table
     /// </summary>
     /// <param name="source"></param>
-    public DbReferencedKeyColumn(IDbTableColumnKeyName source) : base(source)
+    public DbReferencedKeyColumn(ITableColumnKeyName source) : base(source)
     {
         if (source.ColumnName is string)
         { ReferencedColumnName = source.ColumnName; }
@@ -49,9 +49,9 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     /// Converts Reference Column Key into a Table Column Key.
     /// </summary>
     /// <returns></returns>
-    public DbTableColumnKeyName AsColumn()
+    public TableColumnKeyName AsColumn()
     {
-        return new DbTableColumnKeyName()
+        return new TableColumnKeyName()
         {
             DatabaseName = this.ReferencedDatabaseName,
             SchemaName = this.ReferencedSchemaName,
