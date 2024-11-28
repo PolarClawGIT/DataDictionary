@@ -21,19 +21,39 @@ namespace DataDictionary.DataLayer.AppCatalog
     public class TableItem : BindingTableRow, ITableItem, INotifyPropertyChanged, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            init { SetValue<Guid>(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public Guid? TableId { get { return GetValue<Guid>(nameof(TableId)); } }
+        public Guid? TableId
+        {
+            get { return GetValue<Guid>(nameof(TableId)); }
+            private set { SetValue<Guid>(nameof(TableId), value); }
+        }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? SchemaName
+        {
+            get { return GetValue(nameof(SchemaName)); }
+            init { SetValue(nameof(SchemaName), value); }
+        }
 
         /// <inheritdoc/>
-        public String? TableName { get { return GetValue(nameof(TableName)); } }
+        public String? TableName
+        {
+            get { return GetValue(nameof(TableName)); }
+            init { SetValue(nameof(TableName), value); }
+        }
 
         /// <inheritdoc/>
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
@@ -48,11 +68,12 @@ namespace DataDictionary.DataLayer.AppCatalog
                 { return result.Value; }
                 else { return DbTableType.Null; }
             }
+            init
+            { SetValue(nameof(TableType), DbTableEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>
         String? ITable.TableType { get { return GetValue(nameof(TableType)); } }
-
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
@@ -133,7 +154,32 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for Database Column 
         /// </summary>
-        public TableItem() : base() { }
+        public TableItem() : base()
+        { TableId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Generic constructor of a PropertyItem
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="catalog"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        internal static TResult Create<TResult>(ICatalogKey catalog, ITable source)
+            where TResult : TableItem, new()
+        {
+            DbTableType tableType = DbTableType.Null;
+            if (DbTableEnumeration.TryParse(source.TableType, null, out DbTableEnumeration? result))
+            { tableType = result.Value; }
+
+            return new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName,
+                TableName = source.TableName,
+                TableType = tableType,
+            };
+        }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -152,5 +198,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override string ToString()
         { return new TableKeyName(this).ToString(); }
+
+
     }
 }

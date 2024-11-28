@@ -103,5 +103,26 @@ namespace DataDictionary.DataLayer.AppCatalog
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<ITable> tables)
+        {
+            IEnumerable<TableKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new TableKeyName(s)).
+                Union(tables.Select(s => new TableKeyName(s)));
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                ITable? newValue = tables.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is TableItem oldMatches && newValue is ITable newMatches)
+                { } // Update Old, Nothing really to do.
+                else if (oldValue is TableItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is ITable oldMissing)
+                { Add(TableItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+            }
+        }
     }
 }

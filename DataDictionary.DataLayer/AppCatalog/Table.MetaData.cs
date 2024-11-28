@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
@@ -36,5 +37,22 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        /// <summary>
+        /// Gets the Information Schema from the Database
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static IEnumerable<ISchema> GetSchema(IConnection connection)
+        {
+            BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.Text;
+            command.CommandText = Table.TSql_InformationSchema;
+
+            schemas.Load(connection.ExecuteReader(command));
+
+            return schemas;
+        }
     }
 }
