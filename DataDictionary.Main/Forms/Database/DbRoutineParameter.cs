@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -23,14 +24,14 @@ namespace DataDictionary.Main.Forms.Database
         public DbRoutineParameter(IRoutineParameterValue parameterItem) : this()
         {
             RoutineParameterIndexName key = new RoutineParameterIndexName(parameterItem);
-            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
             bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {
-                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
             }
         }
 

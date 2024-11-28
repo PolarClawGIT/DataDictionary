@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -23,14 +22,14 @@ namespace DataDictionary.Main.Forms.Database
         public DbSchema(ISchemaValue schemaItem) : this()
         {
             SchemaIndexName key = new SchemaIndexName(schemaItem);
-            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
             bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;
 
             if (bindingSchema.Current is ISchemaValue current)
             {
-                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
             }
         }
 

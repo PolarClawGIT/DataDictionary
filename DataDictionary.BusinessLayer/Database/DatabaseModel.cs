@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Extended Properties within the Model.
         /// </summary>
-        IExtendedPropertyData DbExtendedProperties { get; }
+        AppCatalog.IPropertyData DbProperties { get; }
 
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
@@ -85,10 +85,10 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="key"></param>
         /// <returns>Value or Null if no MS_Description.</returns>
         /// <example><![CDATA[
-        ///  TableValue dbObject = new TableValue(); // ExtendedPropertyIndexName takes an DbObject Name Keys
-        ///  String? result = GetDescription(new ExtendedPropertyIndexName(dbObject));
+        ///  TableValue dbObject = new TableValue(); // PropertyIndexObject takes an DbObject Name Keys
+        ///  String? result = GetDescription(new PropertyIndexObject(dbObject));
         /// ]]></example>
-        String? GetDescription(ExtendedPropertyIndexName key);
+        String? GetDescription(PropertyIndexObject key);
     }
 
     /// <summary>
@@ -129,8 +129,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly ConstraintColumnData constraintColumns;
 
         /// <inheritdoc/>
-        public IExtendedPropertyData DbExtendedProperties { get { return extendedProperties; } }
-        private readonly ExtendedPropertyData extendedProperties;
+        public AppCatalog.IPropertyData DbProperties { get { return properties; } }
+        private readonly AppCatalog.PropertyData properties;
 
         /// <inheritdoc/>
         public IRoutineData DbRoutines { get { return routines; } }
@@ -168,7 +168,7 @@ namespace DataDictionary.BusinessLayer.Database
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };
 
-            extendedProperties = new ExtendedPropertyData() { Database = this };
+            properties = new PropertyData() { Database = this };
         }
 
         /// <inheritdoc/>
@@ -179,7 +179,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Load(factory, dataKey));
             work.AddRange(schemta.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(extendedProperties.Load(factory, dataKey));
+            work.AddRange(properties.Load(factory, dataKey));
 
             work.AddRange(tables.Load(factory, dataKey));
             work.AddRange(tableColumns.Load(factory, dataKey));
@@ -202,7 +202,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Save(factory, dataKey));
             work.AddRange(schemta.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
-            work.AddRange(extendedProperties.Save(factory, dataKey));
+            work.AddRange(properties.Save(factory, dataKey));
 
             work.AddRange(tables.Save(factory, dataKey));
             work.AddRange(tableColumns.Save(factory, dataKey));
@@ -225,7 +225,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Load(factory, dataKey));
             work.AddRange(schemta.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(extendedProperties.Load(factory, dataKey));
+            work.AddRange(properties.Load(factory, dataKey));
 
             work.AddRange(tables.Load(factory, dataKey));
             work.AddRange(tableColumns.Load(factory, dataKey));
@@ -248,7 +248,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Save(factory, dataKey));
             work.AddRange(schemta.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
-            work.AddRange(extendedProperties.Save(factory, dataKey));
+            work.AddRange(properties.Save(factory, dataKey));
 
             work.AddRange(tables.Save(factory, dataKey));
             work.AddRange(tableColumns.Save(factory, dataKey));
@@ -282,7 +282,7 @@ namespace DataDictionary.BusinessLayer.Database
             result.Add(constraints.ToDataTable());
             result.Add(constraintColumns.ToDataTable());
 
-            result.Add(extendedProperties.ToDataTable());
+            result.Add(properties.ToDataTable());
             return result;
         }
 
@@ -304,7 +304,7 @@ namespace DataDictionary.BusinessLayer.Database
             constraints.Load(source);
             constraintColumns.Load(source);
 
-            extendedProperties.Load(source);
+            properties.Load(source);
         }
 
         /// <inheritdoc/>
@@ -401,7 +401,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.Add(factory.CreateImport(
                workName: "Import Extended Properties",
                getData: PropertyMetaData.GetProperties,
-               import: (data) => extendedProperties.Import(key, data)));
+               import: (data) => properties.Import(key, data)));
 
             return work;
         }
@@ -425,7 +425,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(constraints.Delete(key));
             work.AddRange(constraintColumns.Delete(key));
 
-            work.AddRange(extendedProperties.Delete(key));
+            work.AddRange(properties.Delete(key));
             return work;
         }
 
@@ -448,7 +448,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(constraints.Delete());
             work.AddRange(constraintColumns.Delete());
 
-            work.AddRange(extendedProperties.Delete());
+            work.AddRange(properties.Delete());
 
             return work;
         }
@@ -459,9 +459,9 @@ namespace DataDictionary.BusinessLayer.Database
         { return Delete(); }
 
         /// <inheritdoc/>
-        public String? GetDescription(ExtendedPropertyIndexName key)
+        public String? GetDescription(PropertyIndexObject key)
         {
-            if (DbExtendedProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IExtendedPropertyValue value)
+            if (DbProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IPropertyValue value)
             { return value.PropertyValue; }
             else { return null; }
         }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -29,10 +30,10 @@ namespace DataDictionary.Main.Forms.Database
             if (bindingConstraint.Current is IConstraintValue current)
             {
                 ConstraintIndexName name = new ConstraintIndexName(current);
-                ExtendedPropertyIndexName property = new ExtendedPropertyIndexName(name);
+                PropertyIndexObject property = new PropertyIndexObject(name);
 
                 bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.DatabaseModel.DbConstraintColumns, w => name.Equals(w));
-                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => property.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => property.Equals(w));
             }
         }
 

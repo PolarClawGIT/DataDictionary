@@ -1,67 +1,67 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Interface representing Catalog ExtendedProperty data
     /// </summary>
-    public interface IExtendedPropertyData: IBindingData<ExtendedPropertyValue>
+    public interface IPropertyData : IBindingData<PropertyValue>
     {
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(IExtendedPropertyIndexName source);
+        IEnumerable<PropertyItem> GetProperty(IPropertyIndexObject source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(ITableColumnIndexName source);
+        IEnumerable<PropertyItem> GetProperty(ITableColumnIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(ITableIndexName source);
+        IEnumerable<PropertyItem> GetProperty(ITableIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(IRoutineIndexName source);
+        IEnumerable<PropertyItem> GetProperty(IRoutineIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(IRoutineParameterIndexName source);
+        IEnumerable<PropertyItem> GetProperty(IRoutineParameterIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(IConstraintIndexName source);
+        IEnumerable<PropertyItem> GetProperty(IConstraintIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetExtendedProperty(ISchemaIndexName source);
+        IEnumerable<PropertyItem> GetProperty(ISchemaIndexName source);
     }
 
-    class ExtendedPropertyData : PropertyCollection<ExtendedPropertyValue>, IExtendedPropertyData,
+    class PropertyData : PropertyCollection<PropertyValue>, IPropertyData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
@@ -97,19 +97,19 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>ExtendedProperty</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>DoExtendedPropertymain</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyItem> GetExtendedProperty(IExtendedPropertyIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(IPropertyIndexObject source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
@@ -120,42 +120,42 @@ namespace DataDictionary.BusinessLayer.Database
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyItem> GetExtendedProperty(ITableColumnIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(ITableColumnIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetExtendedProperty(ITableIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(ITableIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetExtendedProperty(IRoutineIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(IRoutineIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetExtendedProperty(IRoutineParameterIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(IRoutineParameterIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetExtendedProperty(IConstraintIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(IConstraintIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetExtendedProperty(ISchemaIndexName source)
+        public IEnumerable<PropertyItem> GetProperty(ISchemaIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));

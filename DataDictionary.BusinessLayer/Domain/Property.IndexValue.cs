@@ -10,8 +10,8 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Domain Property Index by Value.
     /// </summary>
-    public interface IPropertyIndexValue : IKey, IDomainPropertyType, IPropertyName
-    { }
+    public interface IPropertyIndexValue : IKey, IDomainPropertyType
+    { String? PropertyName { get; } }
 
     /// <summary>
     /// Implementation for the Domain Property Index by Value.
@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public DomainPropertyType PropertyType { get; } = DomainPropertyType.Null;
 
         /// <inheritdoc/>
-        /// <remarks>Database</remarks>
+        /// <remarks>Domain</remarks>
         public String? PropertyName { get; } = String.Empty;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// Constructor to build PropertyIndexValue
         /// </summary>
         /// <param name="source"></param>
-        public PropertyIndexValue(IExtendedPropertyValue source)
+        public PropertyIndexValue(AppCatalog.IPropertyValue source)
         {
             PropertyType = DomainPropertyType.MS_ExtendedProperty;
             PropertyName = source.PropertyName;

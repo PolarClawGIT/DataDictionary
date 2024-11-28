@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -29,13 +30,13 @@ namespace DataDictionary.Main.Forms.Database
         public DbTableColumn(ITableColumnValue columnItem) : this()
         {
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
-            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
             bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
             if (bindingColumn.Current is ITableColumnValue current)
-            { bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w)); }
+            { bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w)); }
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
