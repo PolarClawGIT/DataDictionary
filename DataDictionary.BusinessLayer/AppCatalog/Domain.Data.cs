@@ -3,7 +3,6 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
-using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
@@ -40,7 +39,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>

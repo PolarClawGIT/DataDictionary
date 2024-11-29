@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, catalogId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)

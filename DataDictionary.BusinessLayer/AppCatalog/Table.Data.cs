@@ -1,70 +1,70 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ModelData;
-using System.ComponentModel;
 using Toolbox.Threading;
+using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
-    /// Interface representing Catalog TableColumn data
+    /// Interface representing Catalog Table data
     /// </summary>
-    public interface ITableColumnData: IBindingData<TableColumnValue>
+    public interface ITableData : IBindingData<TableValue>
     { }
 
-    class TableColumnData : TableColumnCollection<TableColumnValue>, ITableColumnData,
+    class TableData : TableCollection<TableValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSourceData
+        IDatabaseModelItem, ITableData, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSourceData.LoadNamedScope<TableColumnData, TableColumnValue>
+            return INamedScopeSourceData.LoadNamedScope<TableData, TableValue>
                 (this, addNamedScope,
-                (value) => Database.DbTables.
-                    FirstOrDefault(w => new TableKeyName(value).Equals(w)));
+                (value) => Database.DbSchemta.
+                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
     }
 }

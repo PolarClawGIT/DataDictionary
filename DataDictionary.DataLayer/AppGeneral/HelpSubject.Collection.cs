@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection); }
+        { return LoadCommand(connection, helpId: null); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)

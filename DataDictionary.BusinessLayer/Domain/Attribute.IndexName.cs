@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData.Attribute;

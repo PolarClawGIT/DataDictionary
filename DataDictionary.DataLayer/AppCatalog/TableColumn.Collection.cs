@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class TableColumnCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ITableKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>, IWriteData<ITableKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<ITableKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<ITableKeyName>, IRemoveItem<ITableColumnKeyName>,
         ITemporalData<ICatalogKey>, ITemporalData<ITableKey>, IInfomationSchemaCollection<ITableColumn>
         where TItem : TableColumnItem, ITableColumn, new()
@@ -55,8 +55,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection, catalogId : null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)

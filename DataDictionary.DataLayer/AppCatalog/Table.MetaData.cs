@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Class used to store the Information Schema of a Catalog Table
     /// </summary>
-    class TableMetaData : BindingTableRow, ITable
+    public class TableMetaData : BindingTableRow, ITable
     {
         /// <inheritdoc/>
         public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
@@ -43,9 +43,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static IEnumerable<ISchema> GetSchema(IConnection connection)
+        public static IEnumerable<ITable> GetSchema(IConnection connection)
         {
-            BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
+            BindingTable<TableMetaData> schemas = new BindingTable<TableMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = Table.TSql_InformationSchema;

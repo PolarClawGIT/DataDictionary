@@ -343,15 +343,15 @@ namespace DataDictionary.BusinessLayer.Database
                getData: DomainMetaData.GetSchema,
                import: (data) => domains.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbTables",
-                target: tables,
-                command: (conn) => tables.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Table",
+               getData: TableMetaData.GetSchema,
+               import: (data) => tables.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbTableColumns",
-                target: tableColumns,
-                command: (conn) => tableColumns.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- TableColumn",
+               getData: TableColumnMetaData.GetSchema,
+               import: (data) => tableColumns.Import(key, data)));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbConstraints",

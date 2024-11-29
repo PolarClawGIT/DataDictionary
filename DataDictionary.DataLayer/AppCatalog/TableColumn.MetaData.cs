@@ -149,9 +149,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static IEnumerable<ISchema> GetSchema(IConnection connection)
+        public static IEnumerable<ITableColumn> GetSchema(IConnection connection)
         {
-            BindingTable<SchemaMetaData> schemas = new BindingTable<SchemaMetaData>();
+            BindingTable<TableColumnMetaData> schemas = new BindingTable<TableColumnMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = TableColumn.TSql_InformationSchema;

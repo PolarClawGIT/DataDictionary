@@ -12,7 +12,10 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>
     public interface ITableItem : ITable, ITableKey, ICatalogKey,
         IDbIsSystem, IDbTableType, ITemporalItem
-    { }
+    {
+        /// <inheritdoc cref="IDbTableType.TableType"/>
+        new DbTableType TableType { get; }
+    }
 
     /// <summary>
     /// Implementation of Database Column Item

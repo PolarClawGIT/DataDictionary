@@ -1,12 +1,10 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface ITableValue : ITableItem,
@@ -15,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableValue : TableItem, ITableValue, IPathValue, INamedScopeSourceValue
+    public class TableValue : TableItem, ITableValue, IPathValue, INamedScopeSourceValue, IScopeType
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -27,6 +25,23 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (TableType)
+                {
+                    case DbTableType.Null: return ScopeType.Null;
+                    case DbTableType.Table: return ScopeType.DatabaseTable;
+                    case DbTableType.TemporalTable: return ScopeType.DatabaseTable;
+                    case DbTableType.HistoryTable: return ScopeType.DatabaseTable;
+                    case DbTableType.View: return ScopeType.DatabaseView;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         /// <inheritdoc/>
         public TableValue() : base()

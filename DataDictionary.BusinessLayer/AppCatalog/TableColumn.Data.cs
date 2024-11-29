@@ -1,70 +1,70 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
-using System.ComponentModel;
-using DataDictionary.DataLayer.AppCatalog;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
-    /// Interface representing Catalog Table data
+    /// Interface representing Catalog TableColumn data
     /// </summary>
-    public interface ITableData: IBindingData<TableValue>
+    public interface ITableColumnData : IBindingData<TableColumnValue>
     { }
 
-    class TableData: TableCollection<TableValue>,
+    class TableColumnData : TableColumnCollection<TableColumnValue>, ITableColumnData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, ITableData, INamedScopeSourceData
+        IDatabaseModelItem, INamedScopeSourceData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
-            return INamedScopeSourceData.LoadNamedScope<TableData, TableValue>
+            return INamedScopeSourceData.LoadNamedScope<TableColumnData, TableColumnValue>
                 (this, addNamedScope,
-                (value) => Database.DbSchemta.
-                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
+                (value) => Database.DbTables.
+                    FirstOrDefault(w => new TableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
     }
 }

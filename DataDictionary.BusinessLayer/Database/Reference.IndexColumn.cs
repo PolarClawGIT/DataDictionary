@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 

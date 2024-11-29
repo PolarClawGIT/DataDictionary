@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 

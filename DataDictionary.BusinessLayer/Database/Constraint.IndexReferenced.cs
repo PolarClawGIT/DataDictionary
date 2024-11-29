@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;

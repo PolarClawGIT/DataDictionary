@@ -37,6 +37,16 @@ namespace DataDictionary.DataLayer.DomainData
         public AliasKey(IAliasKey source) : base(source)
         { AliasScope = source.AliasScope; }
 
+        public AliasKey(ITableKeyName source) : base(source)
+        {
+            throw new NotImplementedException("Needs to be re-factored");
+        }
+
+        public AliasKey(ITableColumnKeyName source) : base(source)
+        {
+            throw new NotImplementedException("Needs to be re-factored");
+        }
+
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AliasKey? other)
