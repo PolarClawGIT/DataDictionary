@@ -1,13 +1,6 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -23,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IWriteData, IWriteData<ICatalogKey>,
         IRemoveItem<ICatalogKey>,
         ITemporalData, ITemporalData<ICatalogKey>
-        where TItem : CatalogItem, new()
+        where TItem : CatalogItem, ICatalogItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -109,16 +102,15 @@ namespace DataDictionary.DataLayer.AppCatalog
 
                 if (oldValue is CatalogItem oldMatches && newValue is ICatalog newMatches)
                 { // Update Old
-                    oldMatches.SourceDate = DateTime.Now;
-                    oldMatches.ServerName = newMatches.ServerName;
+                    oldMatches.Update(newMatches);
                     catalogKey = new CatalogKey(oldMatches);
                 }
                 else if (oldValue is CatalogItem newMissing)
                 { // Nothing to do, old items are not removed this way
                     catalogKey = new CatalogKey(newMissing);
                 }
-                else if (newValue is ICatalog oldMissing) // Add New
-                {
+                else if (newValue is ICatalog oldMissing)
+                { // Add New
                     TItem newItem = CatalogItem.Create<TItem>(oldMissing);
                     catalogKey = new CatalogKey(newItem);
                     Add(newItem);

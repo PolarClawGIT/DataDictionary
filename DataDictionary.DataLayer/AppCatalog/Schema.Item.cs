@@ -19,7 +19,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog Schema Item
     /// </summary>
     [Serializable]
-    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, ISerializable
+    public class SchemaItem : BindingTableRow, ISchemaItem, INotifyPropertyChanged, ISerializable,
+        IInfomationSchemaItem<ISchema, SchemaItem>
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -32,7 +33,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
-            private set { SetValue<Guid>(nameof(SchemaId), value); }
+            private init { SetValue<Guid>(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
@@ -156,14 +157,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         public SchemaItem(ICatalogKey catalog) : this()
         { CatalogId = catalog.CatalogId; }
 
-        /// <summary>
-        /// Generic constructor of a SchemaItem
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="catalog"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        internal static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, ISchema source)
             where TResult : SchemaItem, new()
         {
             return new TResult()
@@ -175,25 +170,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
+        public virtual void Update(ISchema source)
+        {
+            // Nothing to actually do. All values are Keys.
+        }
+
+        /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
-
-        //public virtual Command PropertyCommand(IConnection connection)
-        //{
-        //    PropertyCatalogLevel scopeKey = new PropertyCatalogLevel()
-        //    { CatalogScope = DbLevelCatalogType.Schema };
-
-        //    return new PropertyGetCommand(connection)
-        //    {
-        //        CatalogId = CatalogId,
-        //        Level0Name = SchemaName,
-        //        Level0Type = scopeKey.CatalogScope.ToString(),
-        //        Level1Name = String.Empty,
-        //        Level1Type = String.Empty,
-        //        Level2Name = String.Empty,
-        //        Level2Type = String.Empty,
-        //    }.GetCommand();
-        //}
 
         #region ISerializable
         /// <summary>

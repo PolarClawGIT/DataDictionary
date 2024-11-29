@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectValue : HelpItem, IHelpSubjectValue
+    public class HelpSubjectValue : HelpSubjectItem, IHelpSubjectValue
     {
         ITemporalValue modificationValue; // Backing field for IModificationValue
 

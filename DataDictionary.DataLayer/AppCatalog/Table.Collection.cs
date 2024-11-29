@@ -14,8 +14,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ITableKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>, IWriteData<ITableKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<ITableKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<ITableKey>
-        where TItem : TableItem, new()
+        ITemporalData<ICatalogKey>, ITemporalData<ITableKey>, IInfomationSchemaCollection<ITable>
+        where TItem : TableItem, ITableItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -117,7 +117,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 ITable? newValue = tables.FirstOrDefault(w => key.Equals(w));
 
                 if (oldValue is TableItem oldMatches && newValue is ITable newMatches)
-                { } // Update Old, Nothing really to do.
+                { oldMatches.Update(newMatches); } // Update Old
                 else if (oldValue is TableItem newMissing)
                 { this.Remove(key); } // Delete Old
                 else if (newValue is ITable oldMissing)

@@ -16,8 +16,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ITableKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>, IWriteData<ITableKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<ITableKeyName>, IRemoveItem<ITableColumnKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<ITableKey>
-        where TItem : TableColumnItem, new()
+        ITemporalData<ICatalogKey>, ITemporalData<ITableKey>, IInfomationSchemaCollection<ITableColumn>
+        where TItem : TableColumnItem, ITableColumn, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -114,6 +114,27 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<ITableColumn> columns)
+        {
+            IEnumerable<TableColumnKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new TableColumnKeyName(s)).
+                Union(columns.Select(s => new TableColumnKeyName(s)));
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                ITableColumn? newValue = columns.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is TableColumnItem oldMatches && newValue is ITableColumn newMatches)
+                { oldMatches.Update(newMatches); } // Update Old
+                else if (oldValue is TableColumnItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is ITableColumn oldMissing)
+                { Add(TableColumnItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+            }
         }
     }
 }

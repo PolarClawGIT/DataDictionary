@@ -1,7 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -17,8 +15,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ISchemaKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<ISchemaKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>
-        where TItem : SchemaItem, new()
+        ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>, IInfomationSchemaCollection<ISchema>
+        where TItem : SchemaItem, ISchemaItem, new()
     {
 
         /// <inheritdoc/>
@@ -120,7 +118,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 ISchema? newValue = schemas.FirstOrDefault(w => key.Equals(w));
 
                 if (oldValue is SchemaItem oldMatches && newValue is ISchema newMatches)
-                { } // Update Old, Nothing really to do.
+                { oldMatches.Update(newMatches); } // Update Old
                 else if (oldValue is SchemaItem newMissing)
                 { this.Remove(key); } // Delete Old
                 else if (newValue is ISchema oldMissing)

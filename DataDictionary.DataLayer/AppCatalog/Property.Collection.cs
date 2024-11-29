@@ -15,8 +15,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IPropertyKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IPropertyKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IPropertyKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<IPropertyKey>
-        where TItem : PropertyItem, new()
+        ITemporalData<ICatalogKey>, ITemporalData<IPropertyKey>, IInfomationSchemaCollection<IProperty>
+        where TItem : PropertyItem, IPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -43,7 +43,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, propertyId: propertyKey.PropertyId, includeHistory: true); }
 
 
-        Command LoadCommand(IConnection connection, 
+        Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? catalogId = null, Guid? propertyId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
@@ -116,9 +116,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 IProperty? newValue = properties.FirstOrDefault(w => key.Equals(w));
 
                 if (oldValue is PropertyItem oldMatches && newValue is IProperty newMatches)
-                { // Update Old
-                    oldMatches.PropertyValue = newMatches.PropertyValue;
-                }
+                { oldMatches.Update(newMatches); } // Update Old
                 else if (oldValue is PropertyItem newMissing)
                 { this.Remove(key); } // Delete Old
                 else if (newValue is IProperty oldMissing)

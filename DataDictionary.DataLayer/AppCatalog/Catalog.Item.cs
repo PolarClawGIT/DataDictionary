@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? CatalogId
         {
             get { return GetValue<Guid>(nameof(CatalogId)); }
-            private set { SetValue(nameof(CatalogId), value); }
+            private init { SetValue(nameof(CatalogId), value); }
         }
 
         /// <inheritdoc/>
@@ -153,13 +153,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         internal static TResult Create<TResult>(ICatalog source)
             where TResult : CatalogItem, new()
         {
-            return new TResult()
+            TResult newValue = new TResult()
             {
                 CatalogTitle = source.DatabaseName,
-                ServerName = source.ServerName,
                 DatabaseName = source.DatabaseName,
-                SourceDate = DateTime.Now
             };
+
+            newValue.Update(source);
+            return newValue;
+        }
+
+        /// <summary>
+        /// Used to Update based on Information Schema values
+        /// </summary>
+        /// <param name="source"></param>
+        public virtual void Update(ICatalog source)
+        {
+            ServerName = source.ServerName;
+            SourceDate = DateTime.Now;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

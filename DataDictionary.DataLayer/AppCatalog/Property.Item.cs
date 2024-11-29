@@ -34,7 +34,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Implementation of MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public class PropertyItem : BindingTableRow, IPropertyItem
+    public class PropertyItem : BindingTableRow, IPropertyItem,
+        IInfomationSchemaItem<IProperty, PropertyItem>
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -47,7 +48,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? PropertyId
         {
             get { return GetValue<Guid>(nameof(PropertyId)); }
-            private set { SetValue<Guid>(nameof(PropertyId), value); }
+            private init { SetValue<Guid>(nameof(PropertyId), value); }
         }
 
         /// <inheritdoc/>
@@ -218,14 +219,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         public PropertyItem() : base()
         { PropertyId = Guid.NewGuid(); }
 
-        /// <summary>
-        /// Generic constructor of a PropertyItem
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="catalog"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        internal static TResult Create<TResult>(ICatalogKey catalog, IProperty source)
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, IProperty source)
             where TResult : PropertyItem, new()
         {
             return new TResult()
@@ -242,6 +237,10 @@ namespace DataDictionary.DataLayer.AppCatalog
                 PropertyValue = source.PropertyValue,
             };
         }
+
+        /// <inheritdoc/>
+        public virtual void Update(IProperty source)
+        {   PropertyValue = source.PropertyValue; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

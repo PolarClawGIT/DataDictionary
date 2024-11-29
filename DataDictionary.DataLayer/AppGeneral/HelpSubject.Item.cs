@@ -26,16 +26,28 @@ namespace DataDictionary.DataLayer.AppGeneral
     /// Help Documentation Item for the Application.
     /// </summary>
     [Serializable]
-    public class HelpItem : BindingTableRow, IHelpSubjectItem, ISerializable
+    public class HelpSubjectItem : BindingTableRow, IHelpSubjectItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? HelpId { get { return GetValue<Guid>(nameof(HelpId)); } protected set { SetValue(nameof(HelpId), value); } }
+        public Guid? HelpId
+        {
+            get { return GetValue<Guid>(nameof(HelpId)); }
+            protected init { SetValue(nameof(HelpId), value); }
+        }
 
         /// <inheritdoc/>
-        public string? HelpSubject { get { return GetValue(nameof(HelpSubject)); } set { SetValue(nameof(HelpSubject), value); } }
+        public string? HelpSubject
+        {
+            get { return GetValue(nameof(HelpSubject)); }
+            set { SetValue(nameof(HelpSubject), value); }
+        }
 
         /// <inheritdoc/>
-        public string? HelpToolTip { get { return GetValue(nameof(HelpToolTip)); } set { SetValue(nameof(HelpToolTip), value); } }
+        public string? HelpToolTip
+        {
+            get { return GetValue(nameof(HelpToolTip)); }
+            set { SetValue(nameof(HelpToolTip), value); }
+        }
 
         /// <inheritdoc/>
         public string? HelpText
@@ -50,7 +62,11 @@ namespace DataDictionary.DataLayer.AppGeneral
         }
 
         /// <inheritdoc/>
-        public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
+        public string? NameSpace
+        {
+            get { return GetValue(nameof(NameSpace)); }
+            set { SetValue(nameof(NameSpace), value); }
+        }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
@@ -113,9 +129,9 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <summary>
         /// Creates an Instance of a Help Document Item.
         /// </summary>
-        public HelpItem() : base()
+        public HelpSubjectItem() : base()
         {
-            if (HelpId is null) { HelpId = Guid.NewGuid(); }
+            HelpId = Guid.NewGuid();
 
             HelpSubject = "(new Help Subject)";
             NameSpace = String.Format("[NewSubject].[{0}]", HelpId);
@@ -162,7 +178,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected HelpItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected HelpSubjectItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 

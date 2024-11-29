@@ -14,69 +14,71 @@ namespace DataDictionary.DataLayer.AppGeneral
         IReadData<IHelpSubjectKey>, IWriteData<IHelpSubjectKey>,
         IRemoveItem<IHelpSubjectKey>,
         ITemporalData, ITemporalData<IHelpSubjectKey>
-        where TItem : HelpItem, new()
+        where TItem : HelpSubjectItem, IHelpSubjectItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IHelpSubjectKey key)
-        { return LoadCommand(connection, (key.HelpId, null, false)); }
+        { return LoadCommand(connection, helpId: key.HelpId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, false)); }
+        { return LoadCommand(connection); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, true)); }
+        { return LoadCommand(connection, includeHistory: true); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IHelpSubjectKey key)
-        { return LoadCommand(connection, (key.HelpId, null, true)); }
+        { return LoadCommand(connection, helpId: key.HelpId, includeHistory: true); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, DateTime? asOfUtcDate, Boolean includeHistory) parameters)
+        Command LoadCommand(IConnection connection, 
+            Guid? helpId = null, 
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = HelpSubject.GetProcedure;
-            command.AddParameter(HelpSubject.HelpId, parameters.helpId);
-            command.AddParameter(Temporal.AsOfUtcDate, parameters.asOfUtcDate);
-            command.AddParameter(Temporal.IncludeHistory, parameters.includeHistory);
+            command.AddParameter(HelpSubject.HelpId, helpId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
 
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
+        { return SaveCommand(connection); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IHelpSubjectKey key)
-        { return SaveCommand(connection, (key.HelpId, null)); }
+        { return SaveCommand(connection, helpId: key.HelpId); }
 
-        Command SaveCommand(IConnection connection, (Guid? helpId, Guid? dummy) parameters)
+        Command SaveCommand(IConnection connection, Guid? helpId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = HelpSubject.SetProcedure;
-            command.AddParameter(HelpSubject.HelpId, parameters.helpId);
+            command.AddParameter(HelpSubject.HelpId, helpId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
+            IEnumerable<TItem> data = this.Where(w => helpId is null || w.HelpId == helpId);
             command.AddParameter(WriteData.Data, HelpSubject.TableType, data);
             return command;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<HelpItem> Validate()
+        public IReadOnlyList<HelpSubjectItem> Validate()
         {
-            List<HelpItem> result = new List<HelpItem>();
+            List<HelpSubjectItem> result = new List<HelpSubjectItem>();
 
-            foreach (HelpItem item in this)
+            foreach (HelpSubjectItem item in this)
             {
                 item.ClearRowErrors();
                 if (!item.Validate())
                 { result.Add(item); }
             }
 
-            foreach (HelpItem item in
+            foreach (HelpSubjectItem item in
                 this.Where(w =>
                 {
                     HelpSubjectKeyNameSpace key = new HelpSubjectKeyNameSpace(w);

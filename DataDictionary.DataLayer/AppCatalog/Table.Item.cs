@@ -18,7 +18,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation of Database Column Item
     /// </summary>
     [Serializable]
-    public class TableItem : BindingTableRow, ITableItem, INotifyPropertyChanged, ISerializable
+    public class TableItem : BindingTableRow, ITableItem, INotifyPropertyChanged, ISerializable,
+        IInfomationSchemaItem<ITable, TableItem>
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -31,7 +32,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? TableId
         {
             get { return GetValue<Guid>(nameof(TableId)); }
-            private set { SetValue<Guid>(nameof(TableId), value); }
+            private init { SetValue<Guid>(nameof(TableId), value); }
         }
 
         /// <inheritdoc/>
@@ -73,7 +74,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? ITable.TableType { get { return GetValue(nameof(TableType)); } }
+        String? ITable.TableType { get { return GetValue(nameof(ITable.TableType)); } }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
@@ -157,14 +158,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         public TableItem() : base()
         { TableId = Guid.NewGuid(); }
 
-        /// <summary>
-        /// Generic constructor of a PropertyItem
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="catalog"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        internal static TResult Create<TResult>(ICatalogKey catalog, ITable source)
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, ITable source)
             where TResult : TableItem, new()
         {
             DbTableType tableType = DbTableType.Null;
@@ -179,6 +174,12 @@ namespace DataDictionary.DataLayer.AppCatalog
                 TableName = source.TableName,
                 TableType = tableType,
             };
+        }
+
+        /// <inheritdoc/>
+        public virtual void Update(ITable source)
+        {
+            // Nothing to actually do. All values are fixed.
         }
 
         /// <inheritdoc/>

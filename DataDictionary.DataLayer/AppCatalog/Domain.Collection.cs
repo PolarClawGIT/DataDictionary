@@ -1,7 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -17,8 +15,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IDomainKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IDomainKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IDomainKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<IDomainKey>
-        where TItem : DomainItem, new()
+        ITemporalData<ICatalogKey>, ITemporalData<IDomainKey>, IInfomationSchemaCollection<IDomain>
+        where TItem : DomainItem, IDomainItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -40,7 +38,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
 
-        Command LoadCommand(IConnection connection, 
+        Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? catalogId = null, Guid? domainId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
@@ -77,8 +75,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Domain.DomainId, domainId);
 
-            IEnumerable<TItem> data = this.Where(w => 
-                (catalogId is null || w.CatalogId == catalogId) && 
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId) &&
                 (domainId is null || w.DomainId == domainId));
             command.AddParameter(WriteData.Data, Domain.TableType, data);
             return command;
@@ -115,22 +113,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 IDomain? newValue = domains.FirstOrDefault(w => key.Equals(w));
 
                 if (oldValue is DomainItem oldMatches && newValue is IDomain newMatches)
-                { // Update Old
-                    oldMatches.CharacterMaximumLength = newMatches.CharacterMaximumLength;
-                    oldMatches.CharacterOctetLength = newMatches.CharacterMaximumLength;
-                    oldMatches.CharacterSetCatalog = newMatches.CharacterSetCatalog;
-                    oldMatches.CharacterSetName = newMatches.CharacterSetName;
-                    oldMatches.CharacterSetSchema = newMatches.CharacterSetSchema;
-                    oldMatches.CollationCatalog = newMatches.CharacterSetCatalog;
-                    oldMatches.CollationName = newMatches.CollationName;
-                    oldMatches.CollationSchema = newMatches.CollationSchema;
-                    oldMatches.DataType = newMatches.DataType;
-                    oldMatches.DateTimePrecision = newMatches.DateTimePrecision;
-                    oldMatches.DomainDefault = newMatches.DomainDefault;
-                    oldMatches.NumericPrecision = newMatches.NumericPrecision;
-                    oldMatches.NumericPrecisionRadix = newMatches.NumericPrecisionRadix;
-                    oldMatches.NumericScale = newMatches.NumericScale;
-                }
+                { oldMatches.Update(newMatches); } // Update Old
                 else if (oldValue is DomainItem newMissing)
                 { this.Remove(key); } // Delete Old
                 else if (newValue is IDomain oldMissing)

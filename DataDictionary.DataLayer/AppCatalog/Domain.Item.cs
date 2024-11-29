@@ -17,7 +17,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Implementation for the Catalog DomainItem.
     /// </summary>
     [Serializable]
-    public class DomainItem : BindingTableRow, IDomainItem, ISerializable
+    public class DomainItem : BindingTableRow, IDomainItem, ISerializable,
+        IInfomationSchemaItem<IDomain, DomainItem>
     {
         /// <inheritdoc/>
         public Guid? CatalogId
@@ -30,7 +31,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public Guid? DomainId
         {
             get { return GetValue<Guid>(nameof(DomainId)); }
-            private set { SetValue<Guid>(nameof(DomainId), value); }
+            private init { SetValue<Guid>(nameof(DomainId), value); }
         }
 
         /// <inheritdoc/>
@@ -248,37 +249,39 @@ namespace DataDictionary.DataLayer.AppCatalog
         public DomainItem() : base()
         { DomainId = Guid.NewGuid(); }
 
-        /// <summary>
-        /// Generic constructor of a DomainItem
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="catalog"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        internal static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
             where TResult : DomainItem, new()
         {
-            return new TResult()
+            TResult newValue = new TResult()
             {
                 CatalogId = catalog.CatalogId,
                 DatabaseName = source.DatabaseName,
                 SchemaName = source.SchemaName,
                 DomainName = source.DomainName,
-                CharacterMaximumLength = source.CharacterMaximumLength,
-                CharacterOctetLength = source.CharacterMaximumLength,
-                CharacterSetCatalog = source.CharacterSetCatalog,
-                CharacterSetName = source.CharacterSetName,
-                CharacterSetSchema = source.CharacterSetSchema,
-                CollationCatalog = source.CharacterSetCatalog,
-                CollationName = source.CollationName,
-                CollationSchema = source.CollationSchema,
-                DataType = source.DataType,
-                DateTimePrecision = source.DateTimePrecision,
-                DomainDefault = source.DomainDefault,
-                NumericPrecision = source.NumericPrecision,
-                NumericPrecisionRadix = source.NumericPrecisionRadix,
-                NumericScale = source.NumericScale
             };
+
+            newValue.Update(source);
+            return newValue;
+        }
+
+        /// <inheritdoc/>
+        public virtual void Update(IDomain source)
+        {
+            CharacterMaximumLength = source.CharacterMaximumLength;
+            CharacterOctetLength = source.CharacterMaximumLength;
+            CharacterSetCatalog = source.CharacterSetCatalog;
+            CharacterSetName = source.CharacterSetName;
+            CharacterSetSchema = source.CharacterSetSchema;
+            CollationCatalog = source.CharacterSetCatalog;
+            CollationName = source.CollationName;
+            CollationSchema = source.CollationSchema;
+            DataType = source.DataType;
+            DateTimePrecision = source.DateTimePrecision;
+            DomainDefault = source.DomainDefault;
+            NumericPrecision = source.NumericPrecision;
+            NumericPrecisionRadix = source.NumericPrecisionRadix;
+            NumericScale = source.NumericScale;
         }
 
         /// <inheritdoc/>
@@ -298,5 +301,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override String ToString()
         { return new DomainKeyName(this).ToString(); }
+
+
     }
 }
