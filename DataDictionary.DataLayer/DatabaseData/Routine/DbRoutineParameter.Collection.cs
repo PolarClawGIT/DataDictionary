@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -19,13 +18,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
-        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
-        where TItem : BindingTableRow, IDbRoutineParameterItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
+        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
+        where TItem : BindingTableRow, IDbRoutineParameterItem, ICatalogKey, ISchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
     {
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
@@ -39,7 +38,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         { return LoadCommand(connection, (modelKey.ModelId, null, null, null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName, string? schemaName, string? routineName) parameters)
@@ -60,7 +59,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         { return SaveCommand(connection, (modelKey.ModelId, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
         { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
 
         /// <inheritdoc/>
@@ -78,9 +77,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(ICatalogKey catalogItem)
         {
-            DbCatalogKey key = new DbCatalogKey(catalogItem);
+            CatalogKey key = new CatalogKey(catalogItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
@@ -105,9 +104,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(ISchemaKeyName schemaItem)
         {
-            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
+            SchemaKeyName key = new SchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

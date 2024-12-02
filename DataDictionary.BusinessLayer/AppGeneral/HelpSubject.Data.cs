@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <summary>
     /// Wrapper Class for Application Help.
     /// </summary>
-    class HelpSubjectData : HelpCollection<HelpSubjectValue>, IHelpSubjectData
+    class HelpSubjectData : HelpSubjectCollection<HelpSubjectValue>, IHelpSubjectData
     {
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey)
-        { return factory.CreateLoad(this, (IHelpKey)helpKey).ToList(); }
+        { return factory.CreateLoad(this, (IHelpSubjectKey)helpKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
@@ -61,7 +61,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IHelpSubjectIndex helpKey)
-        { return factory.CreateSave(this, (IHelpKey)helpKey).ToList(); }
+        { return factory.CreateSave(this, (IHelpSubjectKey)helpKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>

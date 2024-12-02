@@ -160,7 +160,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseDependency,         Resources.Icon_Dependancy, Resources.Dependancy) ,
-                new NavigationEnumeration(ScopeType.DatabaseExtendedProperties, Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
+                new NavigationEnumeration(ScopeType.DatabaseProperty, Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
 
                 new NavigationEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},

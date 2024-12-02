@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [HsCatalog]
+    AUTHORIZATION [dbo];

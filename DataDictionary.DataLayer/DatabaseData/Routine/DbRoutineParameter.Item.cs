@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -13,14 +11,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainKeyReference, IDbColumn, IDbCatalogKey, IDbRoutineType, IScopeType
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
     { }
 
     /// <summary>
     /// Implementation for the Database Routine Parameter
     /// </summary>
     [Serializable]
-    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, IDbExtendedProperty, ISerializable
+    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -149,37 +147,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// Constructor for the Database Routine Parameter
         /// </summary>
         public DbRoutineParameterItem() : base() { }
-
-        /// <inheritdoc/>
-        public virtual Command PropertyCommand(IConnection connection)
-        {
-            {
-                if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
-                {
-                    return new DbExtendedPropertyGetCommand(connection)
-                    {
-                        CatalogId = CatalogId,
-                        Level0Name = SchemaName,
-                        Level0Type = scopeKey.CatalogScope.ToString(),
-                        Level1Name = RoutineName,
-                        Level1Type = scopeKey.ObjectScope.ToString(),
-                        Level2Name = ParameterName,
-                        Level2Type = scopeKey.ElementScope.ToString(),
-                    }.GetCommand();
-                }
-                else
-                {
-                    Exception ex = new InvalidOperationException("Could not determine LevelType");
-                    ex.Data.Add(nameof(ScopeName), ScopeName);
-                    ex.Data.Add(nameof(DatabaseName), DatabaseName);
-                    ex.Data.Add(nameof(SchemaName), SchemaName);
-                    ex.Data.Add(nameof(RoutineName), RoutineName);
-                    ex.Data.Add(nameof(ParameterName), ParameterName);
-                    throw ex;
-                }
-            }
-        }
-
 
         #region ISerializable
         /// <summary>

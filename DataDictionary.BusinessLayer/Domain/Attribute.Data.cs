@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
@@ -365,8 +366,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
 
                 // Create Properties
-                ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
-                foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
+                PropertyIndexObject propertyKey = new PropertyIndexObject(item);
+                foreach (AppCatalog.PropertyValue property in source.DbProperties.Where(w => propertyKey.Equals(w)))
                 {
                     PropertyIndexValue appKey = new PropertyIndexValue(property);
 

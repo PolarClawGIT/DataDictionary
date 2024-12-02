@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Constraint
@@ -7,7 +6,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Object Reference Key
     /// </summary>
-    public interface IDbConstraintKeyReferenced : IKey, IDbCatalogKeyName
+    public interface IDbConstraintKeyReferenced : IKey, ICatalogKeyName
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
@@ -23,8 +22,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Implementation of the Database Object Reference Key
     /// </summary>
-    public class DbConstraintKeyReferenced : DbCatalogKeyName, IDbConstraintKeyReferenced,
-        IKeyComparable<IDbConstraintKeyReferenced>, IKeyEquality<IDbTableKeyName>
+    public class DbConstraintKeyReferenced : CatalogKeyName, IDbConstraintKeyReferenced,
+        IKeyComparable<IDbConstraintKeyReferenced>, IKeyEquality<ITableKeyName>
     {
         /// <inheritdoc/>
         public String ReferencedSchemaName { get; init; }
@@ -49,9 +48,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Converts the Constraint Referenced Key into a Table Key.
         /// </summary>
         /// <returns></returns>
-        public virtual DbTableKeyName AsTableName()
+        public virtual TableKeyName AsTableName()
         {
-            return new DbTableKeyName()
+            return new TableKeyName()
             {
                 DatabaseName = this.DatabaseName,
                 SchemaName = this.ReferencedSchemaName,
@@ -65,7 +64,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             return
                 other is IDbConstraintKeyReferenced &&
-                new DbCatalogKeyName(this).Equals(other) &&
+                new CatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(ReferencedTableName) &&
@@ -75,11 +74,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public Boolean Equals(IDbTableKeyName? other)
+        public Boolean Equals(ITableKeyName? other)
         {
             return
-                other is IDbTableKeyName &&
-                new DbCatalogKeyName(this).Equals(other) &&
+                other is ITableKeyName &&
+                new CatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(other.SchemaName) &&
                 !string.IsNullOrEmpty(ReferencedTableName) &&
@@ -92,14 +91,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public override Boolean Equals(object? obj)
         {
             return obj is IDbConstraintKeyReferenced value && Equals(new DbConstraintKeyReferenced(value))
-                || obj is IDbTableKeyName talbeValue && Equals(new DbTableKeyName(talbeValue));
+                || obj is ITableKeyName talbeValue && Equals(new TableKeyName(talbeValue));
         }
 
         /// <inheritdoc/>
         public Int32 CompareTo(IDbConstraintKeyReferenced? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0)
+            else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0)
             { return value; }
             else
             {

@@ -1,0 +1,31 @@
+﻿CREATE TYPE [AppCatalog].[typeDomain] AS TABLE (
+	-- TIP: This matches the C# DataTable structure and results of the Get Procedure.
+	[CatalogId]              UniqueIdentifier Null,
+	[DomainId]               UniqueIdentifier Null,
+	[DatabaseName]           SysName Null,
+	[SchemaName]             SysName Null,
+	[DomainName]             SysName Null,
+	[DataType]               SysName Null,
+	[DomainDefault]          NVarChar(Max) Null,
+	[CharacterMaximumLength]  Int Null,
+	[CharacterOctetLength]   Int Null,
+	[NumericPrecision]       TinyInt Null,
+	[NumericPrecisionRadix]  SmallInt Null,
+	[NumericScale]           Int Null,
+	[DateTimePrecision]      SmallInt Null,
+	[CharacterSetCatalog]    SysName Null,
+	[CharacterSetSchema]     SysName Null,
+	[CharacterSetName]       SysName Null,
+	[CollationCatalog]       SysName Null,
+	[CollationSchema]        SysName Null,
+	[CollationName]          SysName Null,
+	-- Temporal Data
+	[CreatedOn]            DateTime2 (7) Null,
+	[CreatedBy]            NVarChar(4000) Null,
+	[RemovedOn]            DateTime2 (7) Null,
+	[RemovedBy]            NVarChar(4000) Null,
+	[IsInserted]           Bit Null,
+	[IsUpdated]            Bit Null,
+	[IsDeleted]            Bit Null,
+	[IsCurrent]            Bit Null
+)

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.AppGeneral;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.Library;
@@ -164,8 +165,8 @@ namespace DataDictionary.Main
         private void menuPropertyItem_Click(object sender, EventArgs e)
         {
             Activate((data) => 
-                new DetailDataView(ScopeType.DatabaseExtendedProperties, data), 
-                BusinessData.DatabaseModel.DbExtendedProperties);
+                new DetailDataView(ScopeType.DatabaseProperty, data), 
+                BusinessData.DatabaseModel.DbProperties);
         }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)

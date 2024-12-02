@@ -4,11 +4,14 @@ WITH SCHEMABINDING AS
 -- Allows methods to determine the correct CatalogId given the ModelId and DatabaseName.
 Select	M.[ModelId],
 		C.[CatalogId],
-		C.[SourceDatabaseName] As [DatabaseName]
-From	[App_DataDictionary].[DatabaseCatalog] C
+		C.[DatabaseName] As [DatabaseName]
+From	[AppCatalog].[Catalog] C
 		Inner Join [App_DataDictionary].[ModelCatalog] M
 		On	C.[CatalogId] = M.[CatalogId]
 GO
+/*
+-- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_ModelDatabase]
     ON [App_DataDictionary].[ModelDatabase_AK]([ModelId] ASC, [DatabaseName] ASC)
 GO
+*/

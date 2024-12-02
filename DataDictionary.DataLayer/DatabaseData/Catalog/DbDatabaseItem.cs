@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// This represents a list of Database on the Server.
     /// This is used when filling a list of Catalogs for the User Interface.
     /// </summary>
-    public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyName
+    public class DbDatabaseItem : BindingTableRow, ICatalogKeyName
     {
         /// <inheritdoc/>
         public virtual string? DatabaseName { get { return GetValue("database_name"); } }

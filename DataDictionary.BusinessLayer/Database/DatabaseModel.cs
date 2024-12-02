@@ -1,11 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppCatalog;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -13,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog data
     /// </summary>
     public interface IDatabaseModel :
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IDeleteData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>, IDeleteData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -29,12 +30,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Domains (types) within the Model.
         /// </summary>
-        IDomainData DbDomains { get; }
+        AppCatalog.IDomainData DbDomains { get; }
 
         /// <summary>
         /// List of Database Extended Properties within the Model.
         /// </summary>
-        IExtendedPropertyData DbExtendedProperties { get; }
+        AppCatalog.IPropertyData DbProperties { get; }
 
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
@@ -84,10 +85,10 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="key"></param>
         /// <returns>Value or Null if no MS_Description.</returns>
         /// <example><![CDATA[
-        ///  TableValue dbObject = new TableValue(); // ExtendedPropertyIndexName takes an DbObject Name Keys
-        ///  String? result = GetDescription(new ExtendedPropertyIndexName(dbObject));
+        ///  TableValue dbObject = new TableValue(); // PropertyIndexObject takes an DbObject Name Keys
+        ///  String? result = GetDescription(new PropertyIndexObject(dbObject));
         /// ]]></example>
-        String? GetDescription(ExtendedPropertyIndexName key);
+        String? GetDescription(PropertyIndexObject key);
     }
 
     /// <summary>
@@ -116,8 +117,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly SchemaData schemta;
 
         /// <inheritdoc/>
-        public IDomainData DbDomains { get { return domains; } }
-        private readonly DomainData domains;
+        public AppCatalog.IDomainData DbDomains { get { return domains; } }
+        private readonly AppCatalog.DomainData domains;
 
         /// <inheritdoc/>
         public IConstraintData DbConstraints { get { return constraints; } }
@@ -128,8 +129,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly ConstraintColumnData constraintColumns;
 
         /// <inheritdoc/>
-        public IExtendedPropertyData DbExtendedProperties { get { return extendedProperties; } }
-        private readonly ExtendedPropertyData extendedProperties;
+        public AppCatalog.IPropertyData DbProperties { get { return properties; } }
+        private readonly AppCatalog.PropertyData properties;
 
         /// <inheritdoc/>
         public IRoutineData DbRoutines { get { return routines; } }
@@ -167,7 +168,7 @@ namespace DataDictionary.BusinessLayer.Database
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };
 
-            extendedProperties = new ExtendedPropertyData() { Database = this };
+            properties = new PropertyData() { Database = this };
         }
 
         /// <inheritdoc/>
@@ -178,7 +179,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Load(factory, dataKey));
             work.AddRange(schemta.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(extendedProperties.Load(factory, dataKey));
+            work.AddRange(properties.Load(factory, dataKey));
 
             work.AddRange(tables.Load(factory, dataKey));
             work.AddRange(tableColumns.Load(factory, dataKey));
@@ -201,7 +202,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(catalogs.Save(factory, dataKey));
             work.AddRange(schemta.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
-            work.AddRange(extendedProperties.Save(factory, dataKey));
+            work.AddRange(properties.Save(factory, dataKey));
 
             work.AddRange(tables.Save(factory, dataKey));
             work.AddRange(tableColumns.Save(factory, dataKey));
@@ -218,13 +219,13 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey));
             work.AddRange(schemta.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(extendedProperties.Load(factory, dataKey));
+            work.AddRange(properties.Load(factory, dataKey));
 
             work.AddRange(tables.Load(factory, dataKey));
             work.AddRange(tableColumns.Load(factory, dataKey));
@@ -241,13 +242,13 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
             work.AddRange(schemta.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
-            work.AddRange(extendedProperties.Save(factory, dataKey));
+            work.AddRange(properties.Save(factory, dataKey));
 
             work.AddRange(tables.Save(factory, dataKey));
             work.AddRange(tableColumns.Save(factory, dataKey));
@@ -281,7 +282,7 @@ namespace DataDictionary.BusinessLayer.Database
             result.Add(constraints.ToDataTable());
             result.Add(constraintColumns.ToDataTable());
 
-            result.Add(extendedProperties.ToDataTable());
+            result.Add(properties.ToDataTable());
             return result;
         }
 
@@ -303,43 +304,54 @@ namespace DataDictionary.BusinessLayer.Database
             constraints.Load(source);
             constraintColumns.Load(source);
 
-            extendedProperties.Load(source);
+            properties.Load(source);
         }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
+        [Obsolete("Needs rework")]
         public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DbCatalogKey key = new DbCatalogKey(new DbCatalogItem());
+            CatalogKey key = new CatalogKey(); // Dummy value
+
+            //TODO: Need to re-work loading of the Db Schema
+            //The ID's are not yet assigned so they need to be looked up.
+            // Old methods assumed that the SQL Script assigned everything.
+            // That does not work with temporal data.
 
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
-            work.Add(factory.CreateWork(
-                            workName: "Load DbCatalogs",
-                            target: catalogs,
-                            command: (conn) => catalogs.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+                workName: "Import InformationSchema- Catalog",
+                getData: CatalogMetaData.GetSchema,
+                import: (data) =>
+                {
+                    ICatalogKey result = catalogs.Import(data);
+                    if (result is ICatalogKey) { key = new CatalogKey(result); }
+                    else { throw new InvalidOperationException("CatalogKey could not be determined."); }
+                }));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbSchemta",
-                target: schemta,
-                command: (conn) => schemta.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+                workName: "Import InformationSchema- Schema",
+                getData: SchemaMetaData.GetSchema,
+                import: (data) => schemta.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbDomains",
-                target: domains,
-                command: (conn) => domains.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Domain",
+               getData: DomainMetaData.GetSchema,
+               import: (data) => domains.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbTables",
-                target: tables,
-                command: (conn) => tables.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Table",
+               getData: TableMetaData.GetSchema,
+               import: (data) => tables.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbTableColumns",
-                target: tableColumns,
-                command: (conn) => tableColumns.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- TableColumn",
+               getData: TableColumnMetaData.GetSchema,
+               import: (data) => tableColumns.Import(key, data)));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbConstraints",
@@ -362,72 +374,41 @@ namespace DataDictionary.BusinessLayer.Database
                 command: (conn) => routineParameters.SchemaCommand(conn, key)));
 
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load DbReferences",
-                DoWork = () =>
-                {
-                    foreach (DbTableItem item in tables)
-                    {
-                        references.Load(
-                            factory.Connection.ExecuteReader(
-                                references.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
+            //work.Add(new WorkItem()
+            //{
+            //    WorkName = "Load DbReferences",
+            //    DoWork = () =>
+            //    {
+            //        foreach (TableItem item in tables)
+            //        {
+            //            references.Load(
+            //                factory.Connection.ExecuteReader(
+            //                    references.SchemaCommand(
+            //                        factory.Connection, item)));
+            //        }
 
-                    foreach (DbRoutineItem item in routines)
-                    {
-                        references.Load(
-                            factory.Connection.ExecuteReader(
-                                references.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
-                },
-                IsCanceling = () => factory.IsCanceling
-            });
+            //        foreach (DbRoutineItem item in routines)
+            //        {
+            //            references.Load(
+            //                factory.Connection.ExecuteReader(
+            //                    references.SchemaCommand(
+            //                        factory.Connection, item)));
+            //        }
+            //    },
+            //    IsCanceling = () => factory.IsCanceling
+            //});
 
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbSchemta",
-                source: schemta,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTables",
-                source: tables,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTableColumns",
-                source: tableColumns,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbConstraints",
-                source: constraints,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbDomains",
-                source: domains,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutines",
-                source: routines,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutineParameters",
-                source: routineParameters,
-                target: extendedProperties));
+            work.Add(factory.CreateImport(
+               workName: "Import Extended Properties",
+               getData: PropertyMetaData.GetProperties,
+               import: (data) => properties.Import(key, data)));
 
             return work;
         }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey key)
+        public IReadOnlyList<WorkItem> Delete(ICatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Delete(key));
@@ -444,7 +425,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(constraints.Delete(key));
             work.AddRange(constraintColumns.Delete(key));
 
-            work.AddRange(extendedProperties.Delete(key));
+            work.AddRange(properties.Delete(key));
             return work;
         }
 
@@ -467,7 +448,7 @@ namespace DataDictionary.BusinessLayer.Database
             work.AddRange(constraints.Delete());
             work.AddRange(constraintColumns.Delete());
 
-            work.AddRange(extendedProperties.Delete());
+            work.AddRange(properties.Delete());
 
             return work;
         }
@@ -478,9 +459,9 @@ namespace DataDictionary.BusinessLayer.Database
         { return Delete(); }
 
         /// <inheritdoc/>
-        public String? GetDescription(ExtendedPropertyIndexName key)
+        public String? GetDescription(PropertyIndexObject key)
         {
-            if (DbExtendedProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IExtendedPropertyValue value)
+            if (DbProperties.FirstOrDefault(w => w.IsDescription && key.Equals(w)) is IPropertyValue value)
             { return value.PropertyValue; }
             else { return null; }
         }

@@ -1,0 +1,66 @@
+﻿namespace DataDictionary.DataLayer.AppCatalog
+{
+    /// <summary>
+    /// Interface structure for MS SQL ExtendedProperty parameters.
+    /// </summary>
+    [Obsolete("Being replaced by MetaData", true)]
+    public interface IPropertyParameter : IPropertyKey
+    {
+        /// <summary>
+        /// Level 0 (Catalog) Type parameter
+        /// </summary>
+        string? Level0Type { get; }
+
+        /// <summary>
+        /// Level 1 (Object) Type parameter
+        /// </summary>
+        string? Level1Type { get; }
+
+        /// <summary>
+        /// Level 2 (Element) Type parameter
+        /// </summary>
+        string? Level2Type { get; }
+
+        /// <summary>
+        /// Value of the Property.
+        /// </summary>
+        string? PropertyValue { get; }
+    }
+
+    /// <summary>
+    /// Parameters used by MS SQL ExtendedProperty methods.
+    /// </summary>
+    [Obsolete("Being replaced by MetaData", true)]
+    public class PropertyParameter : IPropertyParameter
+    { 
+        /// <inheritdoc/>
+        public String? DatabaseName { get; set; }
+
+        /// <inheritdoc/>
+        public string? PropertyName { get; set; } // Null will return all extended properties
+
+        /// <inheritdoc/>
+        public string? PropertyValue { get; set; } // Used in Set
+
+        /// <inheritdoc/>
+        public string? Level0Type { get; set; }
+
+        /// <inheritdoc/>
+        public string? Level0Name { get; set; } // Null will return all objects of Level0 matching the Type
+
+        /// <inheritdoc/>
+        public string? Level1Type { get; set; }
+
+        /// <inheritdoc/>
+        public string? Level1Name { get; set; } // Null will return all objects of Level1 matching the Type and of Level0 Name
+
+        /// <inheritdoc/>
+        public string? Level2Type { get; set; }
+
+        /// <inheritdoc/>
+        public string? Level2Name { get; set; } // Null will return all objects of Level2 matching the Type and of Level0 & Level1 Name
+
+        /// <inheritdoc/>
+        public Guid? PropertyId => throw new NotImplementedException();
+    }
+}

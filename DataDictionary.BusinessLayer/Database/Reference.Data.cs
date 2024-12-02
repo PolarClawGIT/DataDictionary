@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
@@ -15,7 +15,7 @@ public interface IReferenceData : IBindingData<ReferenceValue>
 { }
 
 class ReferenceData : DbReferenceCollection<ReferenceValue>,
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IReferenceData
 {
@@ -24,7 +24,7 @@ class ReferenceData : DbReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
     { return factory.CreateLoad(this, dataKey).ToList(); }
 
     /// <inheritdoc/>
@@ -34,7 +34,7 @@ class ReferenceData : DbReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
     { return factory.CreateSave(this, dataKey).ToList(); }
 
     /// <inheritdoc/>
@@ -54,7 +54,7 @@ class ReferenceData : DbReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+    public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
     { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
 }

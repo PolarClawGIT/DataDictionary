@@ -98,11 +98,17 @@ namespace DataDictionary.Main.Enumerations
                     if (temporal.IsCurrent == false)
                     { temporalValue = String.Format("{0}/Historic", temporalValue); }
 
-                    if (temporal.ModifiedOn is DateTime modifiedOn)
-                    { temporalValue = String.Format("{0} on {1}", temporalValue, modifiedOn); }
+                    if (temporal.CreatedOn is DateTime createdOn && temporal.IsDeleted == false)
+                    { temporalValue = String.Format("{0} on {1}", temporalValue, createdOn); }
 
-                    if (temporal.ModifiedBy is String modifiedBy)
-                    { temporalValue = String.Format("{0} by {1}", temporalValue, modifiedBy); }
+                    if (temporal.CreatedOn is DateTime removedOn && temporal.IsDeleted == true)
+                    { temporalValue = String.Format("{0} on {1}", temporalValue, removedOn); }
+
+                    if (temporal.CreatedBy is String createdBy && temporal.IsDeleted == false)
+                    { temporalValue = String.Format("{0} by {1}", temporalValue, createdBy); }
+
+                    if (temporal.CreatedBy is String removedBy && temporal.IsDeleted == true)
+                    { temporalValue = String.Format("{0} by {1}", temporalValue, removedBy); }
                 }
                 else
                 { temporalValue = String.Empty; }

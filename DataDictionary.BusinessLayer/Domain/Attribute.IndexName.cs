@@ -1,5 +1,7 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource;
 using System;
@@ -21,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc cref="DomainAttributeKeyName(IDomainAttributeKeyName)"/>
         public AttributeIndexName(IAttributeIndexName source) : base(source) { }
 
-        /// <inheritdoc cref="DomainAttributeKeyName(DataLayer.DatabaseData.Table.IDbTableColumnKeyName)"/>
+        /// <inheritdoc cref="DomainAttributeKeyName(ITableColumnKeyName)"/>
         internal AttributeIndexName(ITableColumnIndexName source) : base(source) { }
 
         /// <inheritdoc cref="DomainAttributeKeyName(DataLayer.DatabaseData.Routine.IDbRoutineParameterKeyName)"/>

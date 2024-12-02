@@ -1,6 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Reference
@@ -8,7 +7,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Interface for the Database Reference Key
     /// </summary>
-    public interface IDbReferenceKeyName : IKey, IDbSchemaKeyName
+    public interface IDbReferenceKeyName : IKey, ISchemaKeyName
     {
         /// <summary>
         /// Name of the Database Reference Object (Table, View, Procedure, Function, ...)
@@ -19,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Implementation of the Database Reference Key
     /// </summary>
-    public class DbReferenceKeyName : DbSchemaKeyName, IDbReferenceKeyName,
+    public class DbReferenceKeyName : SchemaKeyName, IDbReferenceKeyName,
         IKeyComparable<IDbReferenceKeyName>, IKeyComparable<DbReferenceKeyName>
     {
         /// <inheritdoc/>
@@ -44,7 +43,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Constructor for the Database Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbReferenceKeyName(IDbTableKeyName source) : base(source)
+        public DbReferenceKeyName(ITableKeyName source) : base(source)
         {
             if (source.TableName is string) { ObjectName = source.TableName; }
             else { ObjectName = string.Empty; }
@@ -64,9 +63,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         /// Converts Reference Object Key into a Table Key.
         /// </summary>
         /// <returns></returns>
-        public DbTableKeyName AsTable()
+        public TableKeyName AsTable()
         {
-            return new DbTableKeyName()
+            return new TableKeyName()
             {
                 DatabaseName = this.DatabaseName,
                 SchemaName = this.SchemaName,
@@ -93,8 +92,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         public Boolean Equals(DbReferenceKeyName? other)
         {
             return
-                other is IDbSchemaKeyName &&
-                new DbSchemaKeyName(this).Equals(other) &&
+                other is ISchemaKeyName &&
+                new SchemaKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ObjectName) &&
                 !string.IsNullOrEmpty(other.ObjectName) &&
                 ObjectName.Equals(other.ObjectName, KeyExtension.CompareString);
@@ -112,7 +111,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         public Int32 CompareTo(DbReferenceKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbSchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+            else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
             else { return string.Compare(ObjectName, other.ObjectName, true); }
         }
 

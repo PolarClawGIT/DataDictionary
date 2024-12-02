@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -43,14 +43,14 @@ namespace DataDictionary.DataLayer.DomainData
         /// Constructor for the Domain Alias Name Key from TableColumn
         /// </summary>
         /// <param name="source"></param>
-        public AliasKeyName(IDbTableColumnKeyName source) : base()
+        public AliasKeyName(ITableColumnKeyName source) : base()
         { AliasName = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
 
         /// <summary>
         /// Constructor for the Domain Alias Name Key from Table
         /// </summary>
         /// <param name="source"></param>
-        public AliasKeyName(IDbTableKeyName source) : base()
+        public AliasKeyName(ITableKeyName source) : base()
         { AliasName = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName); }
 
         #region IEquatable

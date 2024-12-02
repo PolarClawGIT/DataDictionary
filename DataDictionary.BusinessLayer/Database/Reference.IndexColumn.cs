@@ -1,5 +1,6 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Reference;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database;
@@ -15,7 +16,7 @@ public class ReferencedIndexColumn : DbReferencedKeyColumn, IReferencedIndexColu
     /// <inheritdoc cref="DbReferencedKeyColumn(IDbReferencedKeyColumn)"/>
     public ReferencedIndexColumn(IReferencedIndexColumn source) : base(source) { }
 
-    /// <inheritdoc cref="DbReferencedKeyColumn(IDbTableColumnKeyName)"/>
+    /// <inheritdoc cref="DbReferencedKeyColumn(ITableColumnKeyName)"/>
     public ReferencedIndexColumn(ITableColumnIndexName source) : base(source) { }
 
     /// <inheritdoc/>

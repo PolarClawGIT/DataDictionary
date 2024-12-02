@@ -11,5 +11,5 @@
 	-- Keys
 	CONSTRAINT [PK_ModelCatalog] PRIMARY KEY CLUSTERED ([ModelId] ASC, [CatalogId] ASC),
 	CONSTRAINT [FK_ModelCatalogModel] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
-	CONSTRAINT [FK_ModelCatalogDatabaseCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+	CONSTRAINT [FK_ModelCatalogDatabaseCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [AppCatalog].[Catalog] ([CatalogId]),
 )

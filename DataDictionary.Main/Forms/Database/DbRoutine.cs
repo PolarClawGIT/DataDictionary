@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
@@ -26,7 +27,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbRoutine(IRoutineValue routineItem) : this()
         {
             RoutineIndexName key = new RoutineIndexName(routineItem);
-            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
             bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;
@@ -35,7 +36,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 ReferenceIndexName referenceName = new ReferenceIndexName(current);
                 bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
                 bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.DatabaseModel.DbReferences, w => referenceName.Equals(w));
             }
         }

@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
@@ -59,8 +59,8 @@ namespace DataDictionary.Main.Forms.Database
 
                 catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogTitle))));
                 catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
-                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceServerName))));
-                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDatabaseName))));
+                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.ServerName))));
+                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.DatabaseName))));
                 sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDate))));
             }
         }
@@ -72,11 +72,11 @@ namespace DataDictionary.Main.Forms.Database
             using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
             {
                 if (catalogBinding.Current is ICatalogValue catalogItem
-                    && catalogItem.SourceServerName is String
-                    && catalogItem.SourceDatabaseName is String)
+                    && catalogItem.ServerName is String
+                    && catalogItem.DatabaseName is String)
                 {
-                    dialog.ServerName = catalogItem.SourceServerName;
-                    dialog.DatabaseName = catalogItem.SourceDatabaseName;
+                    dialog.ServerName = catalogItem.ServerName;
+                    dialog.DatabaseName = catalogItem.DatabaseName;
                 }
 
                 foreach (String? item in Settings.Default.UserServers)

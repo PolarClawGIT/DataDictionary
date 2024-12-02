@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     { }
 
     /// <inheritdoc/>
-    public interface IHelpSubjectIndexNameSpace : IHelpKeyNameSpace
+    public interface IHelpSubjectIndexNameSpace : IHelpSubjectKeyNameSpace
     { }
 
     /// <inheritdoc/>
@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source)
         { }
 
-        /// <inheritdoc cref="HelpKeyNameSpace(IHelpKeyNameSpace)"/>
+        /// <inheritdoc cref="HelpSubjectKeyNameSpace(IHelpSubjectKeyNameSpace)"/>
         public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(PathIndex.Parse(source.NameSpace).ToArray())
         { }
 

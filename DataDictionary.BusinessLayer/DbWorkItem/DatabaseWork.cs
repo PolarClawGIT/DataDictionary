@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using Microsoft.Data.SqlClient;
 using System;
@@ -38,17 +38,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="command">the function that returns the command to execute</param>
         /// <returns>WorkItem with the database connection handing wired up</returns>
         WorkItem CreateWork(String workName, IBindingTable target, Func<IConnection, Command> command);
-
-        /// <summary>
-        /// Creates a WorkItem for Loading Extended Properties
-        /// </summary>
-        /// <typeparam name="TDbItem"></typeparam>
-        /// <param name="workName"></param>
-        /// <param name="target"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-            where TDbItem : class, IBindingTableRow, IDbExtendedProperty;
 
         /// <summary>
         /// Create a WorkItem for loading a Data Object.
@@ -91,6 +80,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         WorkItem CreateSave<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IWriteData<TKey>;
+
+        /// <summary>
+        /// Create a WorkItem for Importing Information Schema data into an Data Object
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="getSchema"></param>
+        /// <param name="import"></param>
+        /// <returns></returns>
+        WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getSchema, Action<IEnumerable<TData>> import)
+            where TData: class;
 
         /// <summary>
         /// Creates the WorkItem that opens the Connection to the Database.
@@ -193,54 +193,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
-            where TDbItem : class, IBindingTableRow, IDbExtendedProperty
+        public WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getData, Action<IEnumerable<TData>> import)
+            where TData : class
         {
-            Action<int, int> progress = (x, y) => { };
-
             WorkItem result = new WorkItem()
             {
                 WorkName = workName,
-                DoWork = Work,
+                DoWork = () => import(getData(Connection)),
                 IsCanceling = () => Connection.HasException
             };
-            progress = result.OnProgressChanged;
-
-            workItems.Add(result, new WorkState() { IsComplete = false, Ex = null }); ;
-            result.Completing += WorkItem_Completing;
 
             return result;
-
-            void Work()
-            {
-                Int32 toDo = source.Count();
-                Int32 complete = 0;
-
-                if (Connection is IConnection)
-                {
-                    foreach (TDbItem item in source)
-                    {
-                        Command command = item.PropertyCommand(Connection);
-                        try { target.Load(Connection.ExecuteReader(command)); }
-                        catch (Exception ex)
-                        {
-                            ex.Data.Add("Command", "MSSQL Extended Property");
-                            foreach (DbParameter parameter in command.Parameters)
-                            {
-                                if (parameter.Value is not null)
-                                { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
-                                else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
-                            }
-
-                            throw;
-                        }
-
-                        complete++;
-                        progress(complete, toDo);
-                    }
-                }
-                else { throw new ArgumentNullException(nameof(Connection)); }
-            }
         }
 
         /// <inheritdoc/>

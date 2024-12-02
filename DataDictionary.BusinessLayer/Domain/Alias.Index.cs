@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DomainData;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -14,10 +14,10 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc cref="AliasKey(IAliasKey)"/>
         public AliasIndex(IAliasIndex source) : base(source) { }
 
-        /// <inheritdoc cref="AliasKey(IDbTableColumnItem)"/>
+        /// <inheritdoc cref="AliasKey(ITableColumnItem)"/>
         public AliasIndex(ITableColumnValue source) : base(source) {  }
 
-        /// <inheritdoc cref="AliasKey(IDbTableItem)"/>
+        /// <inheritdoc cref="AliasKey(ITableItem)"/>
         public AliasIndex(ITableValue source) : base(source) { }
 
         /// <inheritdoc/>

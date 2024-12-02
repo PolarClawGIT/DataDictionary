@@ -91,7 +91,23 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public PropertyValue() : base()
         {
-            pathValue = new PathValue(this)
+            pathValue = CreatePath();
+        }
+
+        /// <summary>
+        /// Create a Domain Property from a Database Property.
+        /// </summary>
+        /// <param name="source"></param>
+        public PropertyValue(AppCatalog.PropertyValue source) : this()
+        {
+            PropertyType = DomainPropertyType.MS_ExtendedProperty;
+            PropertyTitle = source.PropertyName;
+            PropertyData = source.PropertyName;
+        }
+
+        PathValue CreatePath()
+        {
+            return new PathValue(this)
             {
                 GetIndex = () => new PropertyIndex(this),
                 GetPath = () => new PathIndex(PropertyTitle),

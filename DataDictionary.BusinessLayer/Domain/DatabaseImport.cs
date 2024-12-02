@@ -1,6 +1,7 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
@@ -21,8 +22,8 @@ namespace DataDictionary.BusinessLayer.Domain
         IList<TableColumnValue> tableColumns = new List<TableColumnValue>();
         IList<ConstraintValue> tableConstraints = new List<ConstraintValue>();
         IList<ConstraintColumnValue> tableConstraintColumns = new List<ConstraintColumnValue>();
-        IList<ExtendedPropertyValue> tableProperties = new List<ExtendedPropertyValue>();
-        IList<ExtendedPropertyValue> tableColumnProperties = new List<ExtendedPropertyValue>();
+        IList<AppCatalog.PropertyValue> tableProperties = new List<AppCatalog.PropertyValue>();
+        IList<AppCatalog.PropertyValue> tableColumnProperties = new List<AppCatalog.PropertyValue>();
         IList<ReferenceValue> tableReferences = new List<ReferenceValue>();
 
         // Target Data
@@ -158,16 +159,16 @@ namespace DataDictionary.BusinessLayer.Domain
 
             void TableProperties(IDatabaseModel source, TableIndexName tableName)
             {
-                ExtendedPropertyIndexName tablePropertyName = new ExtendedPropertyIndexName(tableName);
+                PropertyIndexObject tablePropertyName = new PropertyIndexObject(tableName);
 
-                foreach (ExtendedPropertyValue item in
-                    source.DbExtendedProperties.
+                foreach (AppCatalog.PropertyValue item in
+                    source.DbProperties.
                     Where(
                         w => tablePropertyName.Equals(w)
                         && !tableProperties.
                         Any(
                             e => tablePropertyName.Equals(e)
-                            && new DbExtendedPropertyKey(w).Equals(e))).
+                            && new PropertyKey(w).Equals(e))).
                     ToList())
                 { tableProperties.Add(item); }
             }
@@ -189,15 +190,15 @@ namespace DataDictionary.BusinessLayer.Domain
 
             void ColumnProperties(IDatabaseModel source, TableColumnIndexName columnName)
             {
-                ExtendedPropertyIndexName columnPropertyName = new ExtendedPropertyIndexName(columnName);
+                PropertyIndexObject columnPropertyName = new PropertyIndexObject(columnName);
 
-                foreach (ExtendedPropertyValue item in
-                    source.DbExtendedProperties.
+                foreach (AppCatalog.PropertyValue item in
+                    source.DbProperties.
                     Where(
                         w => columnPropertyName.Equals(w)
                         && !tableColumnProperties.
                         Any(e => columnPropertyName.Equals(e)
-                        && new DbExtendedPropertyKey(w).Equals(e))))
+                        && new PropertyKey(w).Equals(e))))
                 { tableColumnProperties.Add(item); }
             }
 
@@ -342,7 +343,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 List<AttributePropertyValue> newProperties = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
                     Join(tableColumnProperties.
-                        Where(w => new ExtendedPropertyIndexName(column).Equals(w)),
+                        Where(w => new PropertyIndexObject(column).Equals(w)),
                         model => model.ExtendedPropertyName,
                         data => data.PropertyName,
                         (model, data) => new AttributePropertyValue(attribute, model, data)).
@@ -355,7 +356,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 String? newDescription = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
                     Join(tableColumnProperties.
-                        Where(w => new ExtendedPropertyIndexName(column).Equals(w)
+                        Where(w => new PropertyIndexObject(column).Equals(w)
                             && w.IsDescription),
                         model => model.ExtendedPropertyName,
                         data => data.PropertyName,
@@ -501,13 +502,13 @@ namespace DataDictionary.BusinessLayer.Domain
                 List<EntityPropertyValue> newProperties = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
                     Join(tableProperties.
-                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)),
+                        Where(w => new PropertyIndexObject(table).Equals(w)),
                         model => model.ExtendedPropertyName,
                         data => data.PropertyName,
                         (model, data) => new EntityPropertyValue(entity, model, data)).
                     ToList();
                 var x = tableProperties.
-                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)).
+                        Where(w => new PropertyIndexObject(table).Equals(w)).
                         ToList();
 
                 foreach (EntityPropertyValue item in newProperties)
@@ -517,7 +518,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 String? newDescription = properties.
                     Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
                     Join(tableProperties.
-                        Where(w => new ExtendedPropertyIndexName(table).Equals(w)
+                        Where(w => new PropertyIndexObject(table).Equals(w)
                             && w.IsDescription),
                         model => model.ExtendedPropertyName,
                         data => data.PropertyName,

@@ -5,13 +5,13 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
-    public interface IHelpSubjectValue : IHelpItem, IScopeType,
+    public interface IHelpSubjectValue : IHelpSubjectItem, IScopeType,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
         ITemporalValue
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectValue : HelpItem, IHelpSubjectValue
+    public class HelpSubjectValue : HelpSubjectItem, IHelpSubjectValue
     {
         ITemporalValue modificationValue; // Backing field for IModificationValue
 

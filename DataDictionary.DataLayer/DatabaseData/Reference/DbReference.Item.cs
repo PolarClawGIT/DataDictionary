@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// Interface for a Database Reference Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
-    public interface IDbReferenceItem : IDbReferenceKey, IDbCatalogKey, IDbReferenceKeyName, IDbReferencedKeyColumn
+    public interface IDbReferenceItem : IDbReferenceKey, ICatalogKey, IDbReferenceKeyName, IDbReferencedKeyColumn
     {
         /// <summary>
         /// Database Object Type

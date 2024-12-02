@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Constraint
@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// Implementation of the Database Column Reference Key
     /// </summary>
     public class DbConstraintColumnKeyReferenced : DbConstraintKeyReferenced, IDbConstraintColumnKeyReferenced,
-        IKeyComparable<IDbConstraintColumnKeyReferenced>, IKeyEquality<IDbTableColumnKeyName>
+        IKeyComparable<IDbConstraintColumnKeyReferenced>, IKeyEquality<ITableColumnKeyName>
     {
         /// <inheritdoc/>
         public String ReferencedColumnName { get; init; } = String.Empty;
@@ -37,9 +37,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Converts Constraint Column Referenced Key into a Table Column Key.
         /// </summary>
         /// <returns></returns>
-        public virtual DbTableColumnKeyName AsColumnName()
+        public virtual TableColumnKeyName AsColumnName()
         {
-            return new DbTableColumnKeyName()
+            return new TableColumnKeyName()
             {
                 DatabaseName = this.DatabaseName,
                 SchemaName = this.ReferencedSchemaName,
@@ -61,10 +61,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public Boolean Equals(IDbTableColumnKeyName? other)
+        public Boolean Equals(ITableColumnKeyName? other)
         {
             return
-                other is IDbTableColumnKeyName &&
+                other is ITableColumnKeyName &&
                 new DbConstraintKeyReferenced(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedColumnName) &&
                 !string.IsNullOrEmpty(other.ColumnName) &&

@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource;
 using System;
 using System.Collections;
@@ -44,7 +44,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeKeyName(IDbTableColumnKeyName source) : base()
+        public DomainAttributeKeyName(ITableColumnKeyName source) : base()
         {
             if (source.ColumnName is string) { AttributeTitle = source.ColumnName; }
             else { AttributeTitle = string.Empty; }

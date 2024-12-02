@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.Threading;
 using Toolbox.DbContext;
 using Toolbox.BindingTable;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.AppCatalog;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -17,6 +17,6 @@ namespace DataDictionary.BusinessLayer
     /// This Database Context is used to get Schema information from the database. 
     /// It is expected to be used Read-Only
     /// </summary>
-    public class DbSchemaContext : Toolbox.DbContext.Context, IDbCatalogKeyName
+    public class DbSchemaContext : Toolbox.DbContext.Context, ICatalogKeyName
     { }
 }

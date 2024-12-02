@@ -9,28 +9,28 @@ With [Object] As (
 			[SchemaName],
 			[ConstraintName] As [ObjectName],
 			[ConstraintId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseConstraint_AK]
+	From	[AppCatalog].[ConstraintHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],
 			[SchemaName],
 			[DomainName] As [ObjectName],
 			[DomainId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseDomain_AK]
+	From	[AppCatalog].[DomainHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],
 			[SchemaName],
 			[RoutineName] As [ObjectName],
 			[RoutineId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseRoutine_AK]
+	From	[AppCatalog].[RoutineHs]
 	Union
 	Select	[CatalogId],
 			[DatabaseName],
 			[SchemaName],
 			[TableName] As [ObjectName],
 			[TableId] As [ObjectId]
-	From	[App_DataDictionary].[DatabaseTable_AK])
+	From	[AppCatalog].[TableHs])
 Select	[CatalogId],
 		[DatabaseName],
 		[SchemaName],

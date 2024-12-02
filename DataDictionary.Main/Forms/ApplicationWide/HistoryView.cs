@@ -54,7 +54,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                 foreach (var item in modificationValues.GroupBy(g => g.Index))
                 {
-                    ITemporalValue lastValue = item.OrderBy(o => o.ModifiedOn).Last();
+                    ITemporalValue lastValue = item.OrderBy(o => o.CreatedOn).Last();
                     String modification = DbModificationEnumeration.Cast(lastValue.Modification).DisplayName;
                     ListViewItem newItem = new ListViewItem([lastValue.Title, modification]);
                     historyValuesData.Items.Add(newItem);
@@ -81,7 +81,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 {
                     String itemModification = DbModificationEnumeration.Cast(item.Modification).DisplayName;
                     String itemModifiedOn;
-                    if (item.ModifiedOn is DateTime modifiedOnvalue)
+                    if (item.CreatedOn is DateTime modifiedOnvalue)
                     { itemModifiedOn = modifiedOnvalue.ToString(); }
                     else { itemModifiedOn = String.Empty; }
 
@@ -122,11 +122,16 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             isUpdatedData.Checked = (value.IsUpdated is true);
             isDeleteData.Checked = (value.IsDeleted is true);
             isCurrentData.Checked = (value.IsCurrent is true);
-            modifiedByData.Text = value.ModifiedBy ?? String.Empty;
+            createdByData.Text = value.CreatedBy ?? String.Empty;
+            removedByData.Text = value.RemovedBy ?? String.Empty;
 
-            if (value.ModifiedOn is DateTime modifiedOn)
-            { modifiedOnDate.Text = modifiedOn.ToString(); }
-            else { modifiedOnDate.Text = String.Empty; }
+            if (value.CreatedOn is DateTime createdOn)
+            { createdOnDate.Text = createdOn.ToString(); }
+            else { createdOnDate.Text = String.Empty; }
+
+            if (value.RemovedOn is DateTime removedOn)
+            { removedOnData.Text = removedOn.ToString(); }
+            else { removedOnData.Text = String.Empty; }
         }
 
         private void HistoryModificationData_DoubleClick(object sender, EventArgs e)

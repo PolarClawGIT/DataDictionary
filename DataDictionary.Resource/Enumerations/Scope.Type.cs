@@ -222,7 +222,7 @@
         /// <summary>
         /// SQL Database Extended Properties
         /// </summary>
-        DatabaseExtendedProperties,
+        DatabaseProperty,
 
         /// <summary>
         /// Security Objects
