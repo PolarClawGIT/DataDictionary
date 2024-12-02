@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -55,18 +56,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get
             {
-                return SchemaName is "sys" or
-                    "db_owner" or
-                    "db_accessadmin" or
-                    "db_securityadmin" or
-                    "db_ddladmin" or
-                    "db_backupoperator" or
-                    "db_datareader" or
-                    "db_datawriter" or
-                    "db_denydatareader" or
-                    "db_denydatawriter" or
-                    "INFORMATION_SCHEMA" or
-                    "guest";
+                return Schema.IsSystem
+                    .Split(',')
+                    .Any(w => w.Equals(SchemaName, KeyExtension.CompareString));
             }
         }
 

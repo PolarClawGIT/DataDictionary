@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -64,15 +65,11 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get
             {
-                return SchemaName is "dbo" &&
-                    RoutineName is "sp_creatediagram" or
-                    "sp_renamediagram" or
-                    "sp_alterdiagram" or
-                    "sp_dropdiagram" or
-                    "fn_diagramobjects" or
-                    "sp_helpdiagrams" or
-                    "sp_helpdiagramdefinition" or
-                    "sp_upgraddiagrams";
+                return Routine.IsSystem
+                    .Split(',')
+                    .Any(w => w.Equals(
+                        String.Format("{0}.{1}", SchemaName, RoutineName),
+                        KeyExtension.CompareString));
             }
         }
 

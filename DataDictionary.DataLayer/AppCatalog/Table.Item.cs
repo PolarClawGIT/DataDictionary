@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -60,7 +61,17 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+        public Boolean IsSystem
+        {
+            get
+            {
+                return Table.IsSystem
+                    .Split(',')
+                    .Any(w => w.Equals(
+                        String.Format("{0}.{1}", SchemaName, TableName),
+                        KeyExtension.CompareString));
+            }
+        }
 
         /// <inheritdoc/>
         public DbTableType TableType

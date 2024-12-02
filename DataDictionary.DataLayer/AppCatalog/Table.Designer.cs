@@ -70,6 +70,15 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo.__RefactorLog, dbo.sysdiagrams.
+        /// </summary>
+        internal static string IsSystem {
+            get {
+                return ResourceManager.GetString("IsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetTable].
         /// </summary>
         internal static string SetProcedure {

@@ -124,6 +124,9 @@
   <data name="GetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procGetCatalog]</value>
   </data>
+  <data name="IsSystem" xml:space="preserve">
+    <value>tempdb, master, msdb, model</value>
+  </data>
   <data name="SetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procSetCatalog]</value>
   </data>

@@ -70,6 +70,15 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo.sp_creatediagram, dbo.sp_renamediagram, dbo.sp_alterdiagram, dbo.sp_dropdiagram, dbo.fn_diagramobjects, dbo.sp_helpdiagrams, dbo.sp_helpdiagramdefinition, dbo.sp_upgraddiagrams.
+        /// </summary>
+        internal static string IsSystem {
+            get {
+                return ResourceManager.GetString("IsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @RoutineId.
         /// </summary>
         internal static string RoutineId {
@@ -97,7 +106,16 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Select	[ROUTINE_CATALOG] As [DatabaseName],
+        ///		[ROUTINE_SCHEMA] As [SchemaName],
+        ///		[ROUTINE_NAME] As [RoutineName],
+        ///		Case
+        ///			When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Procedure&apos;
+        ///			When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Function&apos;
+        ///			Else [ROUTINE_TYPE] 
+        ///			End As [RoutineType]
+        ///From	[INFORMATION_SCHEMA].[ROUTINES]
+        ///.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

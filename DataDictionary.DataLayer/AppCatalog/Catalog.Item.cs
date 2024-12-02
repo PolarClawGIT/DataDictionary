@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -78,7 +79,15 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
+        public Boolean IsSystem
+        {
+            get
+            {
+                return Catalog.IsSystem
+                    .Split(',')
+                    .Any(w => w.Equals(DatabaseName, KeyExtension.CompareString));
+            }
+        }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
