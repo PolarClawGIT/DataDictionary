@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -363,10 +362,10 @@ namespace DataDictionary.BusinessLayer.Database
                 target: constraintColumns,
                 command: (conn) => constraintColumns.SchemaCommand(conn, key)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbRoutines",
-                target: routines,
-                command: (conn) => routines.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Routine",
+               getData: RoutineMetaData.GetSchema,
+               import: (data) => routines.Import(key, data)));
 
             work.Add(factory.CreateWork(
                 workName: "Load DbRoutineParameters",

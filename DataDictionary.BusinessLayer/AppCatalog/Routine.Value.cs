@@ -1,15 +1,13 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IRoutineValue : IRoutineItem, 
+    public interface IRoutineValue : IRoutineItem,
         IRoutineIndex, IRoutineIndexName, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
@@ -27,6 +25,21 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (RoutineType)
+                {
+                    case DbRoutineType.Null: return ScopeType.Null;
+                    case DbRoutineType.Function: return ScopeType.DatabaseFunction;
+                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedure;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         /// <inheritdoc/>
         public RoutineValue() : base()

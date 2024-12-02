@@ -27,6 +27,21 @@ namespace DataDictionary.BusinessLayer.Database
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (RoutineType)
+                {
+                    case DbRoutineType.Null: return ScopeType.Null;
+                    case DbRoutineType.Function: return ScopeType.DatabaseFunctionParameter;
+                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedureParameter;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public RoutineParameterValue() : base()
         {
             pathValue = new PathValue(this)
