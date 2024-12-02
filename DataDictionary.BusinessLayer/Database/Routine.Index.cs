@@ -1,28 +1,28 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IRoutineIndex : IDbRoutineKey
+    public interface IRoutineIndex : IRoutineKey
     { }
 
     /// <inheritdoc/>
-    public class RoutineIndex : DbRoutineKey, IRoutineIndex,
+    public class RoutineIndex : RoutineKey, IRoutineIndex,
         IKeyEquality<IRoutineIndex>, IKeyEquality<RoutineIndex>
     {
-        /// <inheritdoc cref="DbRoutineKey(IDbRoutineKey)"/>
-        public RoutineIndex(IDbRoutineKey source) : base(source)
+        /// <inheritdoc cref="RoutineKey(IRoutineKey)"/>
+        public RoutineIndex(IRoutineKey source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoutineIndex? other)
-        { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
+        { return other is IRoutineKey value && Equals(new RoutineKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(RoutineIndex? other)
-        { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
+        { return other is IRoutineKey value && Equals(new RoutineKey(value)); }
 
         /// <summary>
         /// Convert RoutineIndex to a DataIndex

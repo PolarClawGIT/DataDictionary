@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface IRoutineParameterData: IBindingData<RoutineParameterValue>
     { }
 
-    class RoutineParameterData: DbRoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
+    class RoutineParameterData: RoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Database
             return INamedScopeSourceData.LoadNamedScope<RoutineParameterData, RoutineParameterValue>
                 (this, addNamedScope,
                 (value) => Database.DbRoutines.
-                    FirstOrDefault(w => new DbRoutineKeyName(value).Equals(w)));
+                    FirstOrDefault(w => new RoutineKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>

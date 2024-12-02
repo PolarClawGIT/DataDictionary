@@ -1,23 +1,22 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, ICatalogKey, IDbIsSystem, IDbRoutineType, IScopeType
+    public interface IRoutineItem : IRoutineKeyName, IRoutineKey, ICatalogKey, IDbIsSystem, IDbRoutineType, IScopeType
     { }
 
     /// <summary>
     /// Implementation for Database Routine (procedures and functions).
     /// </summary>
     [Serializable]
-    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, ISerializable
+    public class RoutineItem : BindingTableRow, IRoutineItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -91,7 +90,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <summary>
         /// Constructor for Database Routine Item.
         /// </summary>
-        public DbRoutineItem() : base() { }
+        public RoutineItem() : base() { }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -103,12 +102,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbRoutineItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected RoutineItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbRoutineKeyName(this).ToString(); }
+        { return new RoutineKeyName(this).ToString(); }
     }
 }

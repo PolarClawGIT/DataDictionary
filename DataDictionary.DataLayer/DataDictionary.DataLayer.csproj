@@ -37,6 +37,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Catalog.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppCatalog\Routine.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Routine.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppCatalog\RoutineColumn.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RoutineColumn.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppCatalog\RoutineParameter.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RoutineParameter.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppCatalog\Table.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -99,6 +114,18 @@
       <LastGenOutput>Catalog.Designer.cs</LastGenOutput>
       <CustomToolNamespace></CustomToolNamespace>
     </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\Routine.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Routine.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\RoutineColumn.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RoutineColumn.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\RoutineParameter.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RoutineParameter.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="AppCatalog\Table.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Table.Designer.cs</LastGenOutput>
@@ -153,6 +180,7 @@
     <Folder Include="AppScript\" />
     <Folder Include="DatabaseData\Domain\" />
     <Folder Include="DatabaseData\ExtendedProperty\" />
+    <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
   </ItemGroup>
 

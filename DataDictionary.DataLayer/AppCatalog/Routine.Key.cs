@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Routine Key.
     /// </summary>
-    public interface IDbRoutineKey : IKey
+    public interface IRoutineKey : IKey
     {
         /// <summary>
         /// Application ID for the Routine.
@@ -21,8 +16,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Implementation for the Database Routine Key.
     /// </summary>
-    public class DbRoutineKey : IDbRoutineKey,
-        IKeyEquality<IDbRoutineKey>, IKeyEquality<DbRoutineKey>
+    public class RoutineKey : IRoutineKey,
+        IKeyEquality<IRoutineKey>, IKeyEquality<RoutineKey>
     {
         /// <inheritdoc/>
         public Guid? RoutineId { get; init; } = Guid.Empty;
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// Constructor for the Routine Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbRoutineKey(IDbRoutineKey source) : base()
+        public RoutineKey(IRoutineKey source) : base()
         {
             if (source.RoutineId is Guid value) { RoutineId = value; }
             else { RoutineId = Guid.Empty; }
@@ -39,23 +34,23 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(DbRoutineKey? other)
-        { return other is DbRoutineKey && EqualityComparer<Guid?>.Default.Equals(RoutineId, other.RoutineId); }
+        public Boolean Equals(RoutineKey? other)
+        { return other is RoutineKey && EqualityComparer<Guid?>.Default.Equals(RoutineId, other.RoutineId); }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbRoutineKey? other)
-        { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
+        public virtual Boolean Equals(IRoutineKey? other)
+        { return other is IRoutineKey value && Equals(new RoutineKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? other)
-        { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
+        { return other is IRoutineKey value && Equals(new RoutineKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbRoutineKey left, DbRoutineKey right)
+        public static Boolean operator ==(RoutineKey left, RoutineKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbRoutineKey left, DbRoutineKey right)
+        public static Boolean operator !=(RoutineKey left, RoutineKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

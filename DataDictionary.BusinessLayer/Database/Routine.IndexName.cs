@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IRoutineIndexName : IDbRoutineKeyName, ISchemaIndexName
+    public interface IRoutineIndexName : IRoutineKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>
-    public class RoutineIndexName : DbRoutineKeyName, IRoutineIndexName,
+    public class RoutineIndexName : RoutineKeyName, IRoutineIndexName,
         IKeyEquality<IRoutineIndexName>, IKeyEquality<RoutineIndexName>
     {
-        /// <inheritdoc cref="DbRoutineKeyName(IDbRoutineKeyName)"/>
+        /// <inheritdoc cref="RoutineKeyName(IRoutineKeyName)"/>
         public RoutineIndexName(IRoutineIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoutineIndexName? other)
-        { return other is IDbRoutineKeyName value && Equals(new DbRoutineKeyName(value)); }
+        { return other is IRoutineKeyName value && Equals(new RoutineKeyName(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(RoutineIndexName? other)
-        { return other is IDbRoutineKeyName value && Equals(new DbRoutineKeyName(value)); }
+        { return other is IRoutineKeyName value && Equals(new RoutineKeyName(value)); }
 
         /// <summary>
         /// Convert RoutineIndexName to a DataIndexName

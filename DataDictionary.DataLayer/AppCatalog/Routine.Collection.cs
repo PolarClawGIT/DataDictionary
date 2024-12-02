@@ -1,34 +1,29 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Generic Base class for Database Routine Parameter Items
+    /// Generic Base class for Database Routine Dependency Items
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
+    public abstract class RoutineCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
-        where TItem : BindingTableRow, IDbRoutineParameterItem, ICatalogKey, ISchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>
+        where TItem : BindingTableRow, IRoutineItem, ICatalogKey, ISchemaKeyName, IRoutineKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbRoutineParameterItem;
+            command.CommandText = DbScript.DbRoutineItem;
             command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
             return command;
         }
@@ -45,7 +40,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutineParameter]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutine]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@CatalogName", parameters.catalogName);
@@ -62,17 +57,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
         { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
 
-        /// <inheritdoc/>
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineParameter]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutine]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", data);
             return command;
         }
 
@@ -86,24 +80,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbRoutineKeyName routineItem)
-        {
-            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
-            { base.Remove(item); }
-        }
-
-        /// <inheritdoc/>
-        public virtual void Remove(IDbRoutineParameterKeyName parameterItem)
-        {
-            DbRoutineParameterKeyName key = new DbRoutineParameterKeyName(parameterItem);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
-            { base.Remove(item); }
-        }
-
-        /// <inheritdoc/>
         public virtual void Remove(ISchemaKeyName schemaItem)
         {
             SchemaKeyName key = new SchemaKeyName(schemaItem);
@@ -111,11 +87,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
-    }
 
-    /// <summary>
-    /// Default List/Collection of Routine Parameter Items
-    /// </summary>
-    public class DbRoutineParameterCollection : DbRoutineParameterCollection<DbRoutineParameterItem>
-    { }
+        /// <inheritdoc/>
+        public virtual void Remove(IRoutineKeyName routineItem)
+        {
+            RoutineKeyName key = new RoutineKeyName(routineItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+    }
 }

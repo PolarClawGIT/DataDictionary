@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -8,12 +8,12 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IRoutineParameterValue : IDbRoutineParameterItem, IRoutineParameterIndexName,
+    public interface IRoutineParameterValue : IRoutineParameterItem, IRoutineParameterIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, IPathValue, INamedScopeSourceValue
+    public class RoutineParameterValue : RoutineParameterItem, IRoutineParameterValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

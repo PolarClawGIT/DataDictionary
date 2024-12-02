@@ -1,28 +1,28 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IRoutineParameterIndex : IDbRoutineParameterKey
+    public interface IRoutineParameterIndex : IRoutineParameterKey
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterIndex : DbRoutineParameterKey, IRoutineParameterIndex,
+    public class RoutineParameterIndex : RoutineParameterKey, IRoutineParameterIndex,
         IKeyEquality<IRoutineParameterIndex>, IKeyEquality<RoutineParameterIndex>
     {
-        /// <inheritdoc cref="DbRoutineParameterKey(IDbRoutineParameterKey)"/>
-        public RoutineParameterIndex(IDbRoutineParameterKey source) : base(source)
+        /// <inheritdoc cref="RoutineParameterKey(IRoutineParameterKey)"/>
+        public RoutineParameterIndex(IRoutineParameterKey source) : base(source)
         { }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoutineParameterIndex? other)
-        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
+        { return other is IRoutineParameterKey value && Equals(new RoutineParameterKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(RoutineParameterIndex? other)
-        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
+        { return other is IRoutineParameterKey value && Equals(new RoutineParameterKey(value)); }
 
         /// <summary>
         /// Convert RoutineParameterIndex to a DataIndex

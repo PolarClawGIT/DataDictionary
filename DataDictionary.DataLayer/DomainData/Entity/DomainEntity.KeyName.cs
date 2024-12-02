@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -53,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// Constructor for the Entity Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainEntityKeyName(IDbRoutineKeyName source) : base()
+        public DomainEntityKeyName(IRoutineKeyName source) : base()
         {
             if (source.RoutineName is string) { EntityTitle = source.RoutineName; }
             else { EntityTitle = string.Empty; }

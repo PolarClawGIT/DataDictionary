@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -14,19 +14,19 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterIndexName : DbRoutineParameterKeyName, IRoutineParameterIndexName,
+    public class RoutineParameterIndexName : RoutineParameterKeyName, IRoutineParameterIndexName,
         IKeyEquality<IRoutineParameterIndexName>, IKeyEquality<RoutineParameterIndexName>
     {
-        /// <inheritdoc cref="DbRoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
+        /// <inheritdoc cref="RoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
         public RoutineParameterIndexName(IRoutineParameterIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IRoutineParameterIndexName? other)
-        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
+        { return other is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(RoutineParameterIndexName? other)
-        { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
+        { return other is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
         /// <summary>
         /// Convert DomainIndexName to a DataIndexName

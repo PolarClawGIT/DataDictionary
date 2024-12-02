@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc cref="DomainAttributeKeyName(ITableColumnKeyName)"/>
         internal AttributeIndexName(ITableColumnIndexName source) : base(source) { }
 
-        /// <inheritdoc cref="DomainAttributeKeyName(DataLayer.DatabaseData.Routine.IDbRoutineParameterKeyName)"/>
+        /// <inheritdoc cref="DomainAttributeKeyName(IDbRoutineParameterKeyName)"/>
         internal AttributeIndexName(IRoutineParameterIndexName source) : base(source) { }
 
         /// <inheritdoc/>

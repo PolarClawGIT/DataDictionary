@@ -1,31 +1,29 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
+    public interface IRoutineParameterItem : IDbRoutineParameterKeyName, IRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
     { }
 
     /// <summary>
     /// Implementation for the Database Routine Parameter
     /// </summary>
     [Serializable]
-    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, ISerializable
+    public class RoutineParameterItem : BindingTableRow, IRoutineParameterItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
         public Guid? ParameterId { get { return GetValue<Guid>(nameof(ParameterId)); } }
-        
+
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
@@ -146,7 +144,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <summary>
         /// Constructor for the Database Routine Parameter
         /// </summary>
-        public DbRoutineParameterItem() : base() { }
+        public RoutineParameterItem() : base() { }
 
         #region ISerializable
         /// <summary>
@@ -154,12 +152,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbRoutineParameterItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected RoutineParameterItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbRoutineParameterKeyName(this).ToString(); }
+        { return new RoutineParameterKeyName(this).ToString(); }
     }
 }

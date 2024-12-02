@@ -387,7 +387,7 @@ namespace DataDictionary.BusinessLayer.Database
             //                        factory.Connection, item)));
             //        }
 
-            //        foreach (DbRoutineItem item in routines)
+            //        foreach (RoutineItem item in routines)
             //        {
             //            references.Load(
             //                factory.Connection.ExecuteReader(

@@ -1,11 +1,12 @@
-﻿using DataDictionary.Resource;
+﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Database Routine Parameter Key
 /// </summary>
-public interface IDbRoutineParameterKeyName : IKey, IDbRoutineKeyName
+public interface IDbRoutineParameterKeyName : IKey, IRoutineKeyName
 {
     /// <summary>
     /// Name of the Database Parameter
@@ -16,8 +17,8 @@ public interface IDbRoutineParameterKeyName : IKey, IDbRoutineKeyName
 /// <summary>
 /// Implementation for Database Routine Parameter Key
 /// </summary>
-public class DbRoutineParameterKeyName : DbRoutineKeyName, IDbRoutineParameterKeyName,
-    IKeyComparable<IDbRoutineParameterKeyName>, IKeyComparable<DbRoutineParameterKeyName>
+public class RoutineParameterKeyName : RoutineKeyName, IDbRoutineParameterKeyName,
+    IKeyComparable<IDbRoutineParameterKeyName>, IKeyComparable<RoutineParameterKeyName>
 {
     /// <inheritdoc/>
     public String ParameterName { get; set; } = string.Empty;
@@ -25,13 +26,13 @@ public class DbRoutineParameterKeyName : DbRoutineKeyName, IDbRoutineParameterKe
     /// <summary>
     /// Constructor for a blank Database Routine Parameter Key
     /// </summary>
-    protected internal DbRoutineParameterKeyName() : base() { }
+    protected internal RoutineParameterKeyName() : base() { }
 
     /// <summary>
     /// Constructor for Database Routine Parameter Key
     /// </summary>
     /// <param name="source"></param>
-    public DbRoutineParameterKeyName(IDbRoutineParameterKeyName source) : base(source)
+    public RoutineParameterKeyName(IDbRoutineParameterKeyName source) : base(source)
     {
         if (source.ParameterName is string) { ParameterName = source.ParameterName; }
         else { ParameterName = string.Empty; }
@@ -39,11 +40,11 @@ public class DbRoutineParameterKeyName : DbRoutineKeyName, IDbRoutineParameterKe
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbRoutineParameterKeyName? other)
+    public Boolean Equals(RoutineParameterKeyName? other)
     {
         return
-            other is IDbRoutineKeyName &&
-            new DbRoutineKeyName(this).Equals(other) &&
+            other is IRoutineKeyName &&
+            new RoutineKeyName(this).Equals(other) &&
             !string.IsNullOrEmpty(ParameterName) &&
             !string.IsNullOrEmpty(other.ParameterName) &&
             ParameterName.Equals(other.ParameterName, KeyExtension.CompareString);
@@ -51,50 +52,50 @@ public class DbRoutineParameterKeyName : DbRoutineKeyName, IDbRoutineParameterKe
 
     /// <inheritdoc/>
     public Boolean Equals(IDbRoutineParameterKeyName? other)
-    { return other is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
+    { return other is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbRoutineParameterKeyName value && Equals(new DbRoutineParameterKeyName(value)); }
+    { return obj is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbRoutineParameterKeyName? other)
+    public Int32 CompareTo(RoutineParameterKeyName? other)
     {
         if (other is null) { return 1; }
-        else if (new DbRoutineKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else if (new RoutineKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
         else { return string.Compare(ParameterName, other.ParameterName, true); }
     }
 
     /// <inheritdoc/>
     public Int32 CompareTo(IDbRoutineParameterKeyName? other)
-    { if (other is IDbRoutineParameterKeyName value) { return CompareTo(new DbRoutineParameterKeyName(value)); } else { return 1; } }
+    { if (other is IDbRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbRoutineParameterKeyName value) { return CompareTo(new DbRoutineParameterKeyName(value)); } else { return 1; } }
+    { if (obj is IDbRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator ==(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator !=(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator <(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator <=(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator <=(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator >(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbRoutineParameterKeyName left, DbRoutineParameterKeyName right)
+    public static Boolean operator >=(RoutineParameterKeyName left, RoutineParameterKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>

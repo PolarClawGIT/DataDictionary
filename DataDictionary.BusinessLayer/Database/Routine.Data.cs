@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.Threading;
@@ -14,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface IRoutineData: IBindingData<RoutineValue>
     { }
 
-    class RoutineData : DbRoutineCollection<RoutineValue>, IRoutineData,
+    class RoutineData : RoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData

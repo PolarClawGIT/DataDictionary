@@ -1,16 +1,11 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Routine
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Routine Parameter Key.
     /// </summary>
-    public interface IDbRoutineParameterKey : IKey
+    public interface IRoutineParameterKey : IKey
     {
         /// <summary>
         /// Application ID for the Routine Parameter.
@@ -21,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Implementation for the Database Routine Parameter Key.
     /// </summary>
-    public class DbRoutineParameterKey : IDbRoutineParameterKey, IKeyEquality<IDbRoutineParameterKey>
+    public class RoutineParameterKey : IRoutineParameterKey, IKeyEquality<IRoutineParameterKey>
     {
         /// <inheritdoc/>
         public Guid? ParameterId { get; init; } = Guid.Empty;
@@ -30,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// Constructor for the RoutineParameter Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbRoutineParameterKey(IDbRoutineParameterKey source) : base()
+        public RoutineParameterKey(IRoutineParameterKey source) : base()
         {
             if (source.ParameterId is Guid value) { ParameterId = value; }
             else { ParameterId = Guid.Empty; }
@@ -38,19 +33,19 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbRoutineParameterKey? other)
-        { return other is IDbRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(ParameterId, other.ParameterId); }
+        public virtual bool Equals(IRoutineParameterKey? other)
+        { return other is IRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(ParameterId, other.ParameterId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
+        { return other is IRoutineParameterKey value && Equals(new RoutineParameterKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbRoutineParameterKey left, DbRoutineParameterKey right)
+        public static bool operator ==(RoutineParameterKey left, RoutineParameterKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbRoutineParameterKey left, DbRoutineParameterKey right)
+        public static bool operator !=(RoutineParameterKey left, RoutineParameterKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
