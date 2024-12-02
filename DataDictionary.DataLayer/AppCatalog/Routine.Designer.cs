@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[procGetRoutine].
         /// </summary>
         internal static string GetProcedure {
             get {
@@ -70,7 +70,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to @RoutineId.
         /// </summary>
         internal static string RoutineId {
             get {
@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[procSetRoutine].
         /// </summary>
         internal static string SetProcedure {
             get {
@@ -88,7 +88,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[typeRoutine].
         /// </summary>
         internal static string TableType {
             get {

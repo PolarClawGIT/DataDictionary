@@ -118,17 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="GetProcedure" xml:space="preserve">
-    <value />
+    <value>[AppCatalog].[procGetRoutine]</value>
   </data>
   <data name="RoutineId" xml:space="preserve">
-    <value />
+    <value>@RoutineId</value>
     <comment>GUID</comment>
   </data>
   <data name="SetProcedure" xml:space="preserve">
-    <value />
+    <value>[AppCatalog].[procSetRoutine]</value>
   </data>
   <data name="TableType" xml:space="preserve">
-    <value />
+    <value>[AppCatalog].[typeRoutine]</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="TSql_InformationSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">

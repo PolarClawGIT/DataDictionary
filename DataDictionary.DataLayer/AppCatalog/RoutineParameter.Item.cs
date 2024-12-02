@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IRoutineParameterItem : IDbRoutineParameterKeyName, IRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType, IScopeType
+    public interface IRoutineParameterItem : IDbRoutineParameterKeyName, IRoutineParameterKey, IDomainKeyReference, IDbColumn, ICatalogKey, IDbRoutineType
     { }
 
     /// <summary>
@@ -93,21 +93,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public DbRoutineType RoutineType
         { get { return DbRoutineEnumeration.Parse(GetValue(nameof(RoutineType)) ?? String.Empty, null).Value; } }
-
-        /// <inheritdoc/>
-        public ScopeType Scope
-        {
-            get
-            {
-                switch (RoutineType)
-                {
-                    case DbRoutineType.Null: return ScopeType.Null;
-                    case DbRoutineType.Function: return ScopeType.DatabaseFunctionParameter;
-                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedureParameter;
-                    default: return ScopeType.Null;
-                }
-            }
-        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

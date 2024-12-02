@@ -9,32 +9,54 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IRoutineItem : IRoutineKeyName, IRoutineKey, ICatalogKey, IDbIsSystem, IDbRoutineType, IScopeType
+    public interface IRoutineItem : IRoutine, IRoutineKey, ICatalogKey, 
+        IDbIsSystem, IDbRoutineType, ITemporalItem
     { }
 
     /// <summary>
     /// Implementation for Database Routine (procedures and functions).
     /// </summary>
     [Serializable]
-    public class RoutineItem : BindingTableRow, IRoutineItem, ISerializable
+    public class RoutineItem : BindingTableRow, IRoutineItem, ISerializable,
+        IInfomationSchemaItem<IRoutine, RoutineItem>
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            init { SetValue<Guid>(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public Guid? RoutineId { get { return GetValue<Guid>(nameof(RoutineId)); } }
+        public Guid? RoutineId
+        {
+            get { return GetValue<Guid>(nameof(RoutineId)); }
+            private init { SetValue<Guid>(nameof(RoutineId), value); }
+        }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? SchemaName
+        {
+            get { return GetValue(nameof(SchemaName)); }
+            init { SetValue(nameof(SchemaName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? RoutineName { get { return GetValue(nameof(RoutineName)); } }
+        public String? RoutineName
+        {
+            get { return GetValue(nameof(RoutineName)); }
+            init { SetValue(nameof(RoutineName), value); }
+        }
 
         /// <inheritdoc/>
-        public bool IsSystem
+        public Boolean IsSystem
         {
             get
             {
@@ -60,20 +82,68 @@ namespace DataDictionary.DataLayer.AppCatalog
                 { return result.Value; }
                 else { return DbRoutineType.Null; }
             }
+            init
+            { SetValue(nameof(RoutineType), DbRoutineEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>
-        public ScopeType Scope
+        String? IRoutine.RoutineType { get {return GetValue(nameof(RoutineType)); } }
+
+        /// <inheritdoc/>
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? CreatedOn
         {
             get
             {
-                switch (RoutineType)
-                {
-                    case DbRoutineType.Null: return ScopeType.Null;
-                    case DbRoutineType.Function: return ScopeType.DatabaseFunction;
-                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedure;
-                    default: return ScopeType.Null;
-                }
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<Boolean>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<Boolean>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<Boolean>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<Boolean>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
+                else { return DbModificationType.Null; }
             }
         }
 
@@ -85,16 +155,52 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(RoutineName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(RoutineType), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <summary>
         /// Constructor for Database Routine Item.
         /// </summary>
-        public RoutineItem() : base() { }
+        public RoutineItem() : base()
+        { RoutineId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, IRoutine source)
+            where TResult : RoutineItem, new()
+        {
+            DbRoutineType routineType = DbRoutineType.Null;
+            if (DbRoutineEnumeration.TryParse(source.RoutineType, null, out DbRoutineEnumeration? result))
+            { routineType = result.Value; }
+
+            TResult newValue = new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName,
+                RoutineName = source.RoutineName,
+                RoutineType = routineType
+            };
+
+            newValue.Update(source);
+            return newValue;
+        }
+
+        /// <inheritdoc/>
+        public void Update(IRoutine source)
+        {
+            // Nothing to actually do. All values are fixed.
+        }
 
         #region ISerializable
         /// <summary>
@@ -109,5 +215,6 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public override string ToString()
         { return new RoutineKeyName(this).ToString(); }
+
     }
 }

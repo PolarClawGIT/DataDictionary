@@ -41,4 +41,5 @@
         abstract static TResult Create<TResult>(ICatalogKey catalog, TData source)
             where TResult: TItem, new();
     }
+
 }
