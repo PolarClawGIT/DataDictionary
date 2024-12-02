@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? ITableColumn.TableType { get { return GetValue(nameof(ITableColumn.TableType)); } }
+        String? ITableType.TableType { get { return GetValue(nameof(ITableColumn.TableType)); } }
 
         /// <inheritdoc/>
         public DbTableType TableType

@@ -5,7 +5,7 @@ using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface IRoutineParameterValue : IRoutineParameterItem, IRoutineParameterIndexName,

@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.AppCatalog;
 /// <summary>
 /// Interface for the Database Routine Parameter Key
 /// </summary>
-public interface IDbRoutineParameterKeyName : IKey, IRoutineKeyName
+public interface IRoutineParameterKeyName : IKey, IRoutineKeyName
 {
     /// <summary>
     /// Name of the Database Parameter
@@ -17,8 +17,8 @@ public interface IDbRoutineParameterKeyName : IKey, IRoutineKeyName
 /// <summary>
 /// Implementation for Database Routine Parameter Key
 /// </summary>
-public class RoutineParameterKeyName : RoutineKeyName, IDbRoutineParameterKeyName,
-    IKeyComparable<IDbRoutineParameterKeyName>, IKeyComparable<RoutineParameterKeyName>
+public class RoutineParameterKeyName : RoutineKeyName, IRoutineParameterKeyName,
+    IKeyComparable<IRoutineParameterKeyName>, IKeyComparable<RoutineParameterKeyName>
 {
     /// <inheritdoc/>
     public String ParameterName { get; set; } = string.Empty;
@@ -32,7 +32,7 @@ public class RoutineParameterKeyName : RoutineKeyName, IDbRoutineParameterKeyNam
     /// Constructor for Database Routine Parameter Key
     /// </summary>
     /// <param name="source"></param>
-    public RoutineParameterKeyName(IDbRoutineParameterKeyName source) : base(source)
+    public RoutineParameterKeyName(IRoutineParameterKeyName source) : base(source)
     {
         if (source.ParameterName is string) { ParameterName = source.ParameterName; }
         else { ParameterName = string.Empty; }
@@ -51,12 +51,12 @@ public class RoutineParameterKeyName : RoutineKeyName, IDbRoutineParameterKeyNam
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbRoutineParameterKeyName? other)
-    { return other is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
+    public Boolean Equals(IRoutineParameterKeyName? other)
+    { return other is IRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
+    { return obj is IRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
 
     /// <inheritdoc/>
     public Int32 CompareTo(RoutineParameterKeyName? other)
@@ -67,12 +67,12 @@ public class RoutineParameterKeyName : RoutineKeyName, IDbRoutineParameterKeyNam
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbRoutineParameterKeyName? other)
-    { if (other is IDbRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(IRoutineParameterKeyName? other)
+    { if (other is IRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
+    { if (obj is IRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public static Boolean operator ==(RoutineParameterKeyName left, RoutineParameterKeyName right)

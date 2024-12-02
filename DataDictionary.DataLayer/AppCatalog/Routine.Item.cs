@@ -9,9 +9,13 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IRoutineItem : IRoutine, IRoutineKey, ICatalogKey, 
+    public interface IRoutineItem : IRoutine, 
+        IRoutineKey, ICatalogKey, 
         IDbIsSystem, IDbRoutineType, ITemporalItem
-    { }
+    {
+        /// <inheritdoc cref="IDbRoutineType.RoutineType"/>
+        new DbRoutineType RoutineType { get; }
+    }
 
     /// <summary>
     /// Implementation for Database Routine (procedures and functions).
@@ -87,7 +91,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? IRoutine.RoutineType { get {return GetValue(nameof(RoutineType)); } }
+        String? IRoutineType.RoutineType { get {return GetValue(nameof(RoutineType)); } }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }

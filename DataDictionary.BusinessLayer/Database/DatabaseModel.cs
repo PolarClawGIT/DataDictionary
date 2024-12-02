@@ -367,10 +367,10 @@ namespace DataDictionary.BusinessLayer.Database
                getData: RoutineMetaData.GetSchema,
                import: (data) => routines.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbRoutineParameters",
-                target: routineParameters,
-                command: (conn) => routineParameters.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- RoutineParameter",
+               getData: RoutineParameterMetaData.GetSchema,
+               import: (data) => routineParameters.Import(key, data)));
 
 
             //work.Add(new WorkItem()

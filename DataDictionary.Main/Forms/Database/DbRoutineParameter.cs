@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Data;

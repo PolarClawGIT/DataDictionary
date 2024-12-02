@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? ITable.TableType { get { return GetValue(nameof(ITable.TableType)); } }
+        String? ITableType.TableType { get { return GetValue(nameof(ITable.TableType)); } }
 
         /// <inheritdoc/>
         public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }

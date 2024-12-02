@@ -84,7 +84,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyObject(IDbRoutineParameterKeyName source) : base(source)
+        public PropertyKeyObject(IRoutineParameterKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }

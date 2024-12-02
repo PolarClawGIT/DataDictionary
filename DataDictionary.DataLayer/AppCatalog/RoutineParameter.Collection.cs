@@ -13,61 +13,71 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class RoutineParameterCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
-        IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
-        where TItem : BindingTableRow, IRoutineParameterItem, ICatalogKey, ISchemaKeyName, IRoutineKeyName, IDbRoutineParameterKeyName, new()
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IRoutineKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<IRoutineKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>, IRemoveItem<IRoutineParameterKeyName>,
+        ITemporalData<ICatalogKey>, ITemporalData<IRoutineKey>, IInfomationSchemaCollection<IRoutineParameter>
+        where TItem : RoutineParameterItem, IRoutineParameterItem, new()
     {
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbRoutineParameterItem;
-            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
-            return command;
-        }
-
-        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null, null, null, null)); }
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, null)); }
+        { return LoadCommand(connection, catalogId:catalogKey.CatalogId); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName, string? schemaName, string? routineName) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IRoutineKey routineKey)
+        { return LoadCommand(connection, routineId: routineKey.RoutineId); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IRoutineKey routineKey)
+        { return LoadCommand(connection, routineId: routineKey.RoutineId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
+
+        Command LoadCommand(IConnection connection, 
+            Guid? modelId = null, Guid? catalogId = null, Guid? routineId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutineParameter]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@CatalogName", parameters.catalogName);
-            command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@RoutineName", parameters.routineName);
+            command.CommandText = RoutineParameter.GetProcedure;
+            command.AddParameter(AppModel.Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Routine.RoutineId, routineId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection, catalogId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
-        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+        { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
+        public Command SaveCommand(IConnection connection, IRoutineKey routineKey)
+        { return SaveCommand(connection, routineId: routineKey.RoutineId); }
+
+        /// <inheritdoc/>
+        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? routineId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineParameter]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@CatalogId", parameters.catalogId);
+            command.CommandText = RoutineParameter.SetProcedure;
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Routine.RoutineId, routineId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", data);
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId));
+            command.AddParameter(WriteData.Data, RoutineParameter.TableType, data);
             return command;
         }
 
@@ -90,7 +100,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbRoutineParameterKeyName parameterItem)
+        public virtual void Remove(IRoutineParameterKeyName parameterItem)
         {
             RoutineParameterKeyName key = new RoutineParameterKeyName(parameterItem);
 
@@ -105,6 +115,27 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IRoutineParameter> routines)
+        {
+            IEnumerable<RoutineParameterKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new RoutineParameterKeyName(s)).
+                Union(routines.Select(s => new RoutineParameterKeyName(s)));
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                IRoutineParameter? newValue = routines.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is RoutineParameterItem oldMatches && newValue is IRoutineParameter newMatches)
+                { oldMatches.Update(newMatches); } // Update Old
+                else if (oldValue is RoutineParameterItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is IRoutineParameter oldMissing)
+                { Add(RoutineParameterItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+            }
         }
     }
 }

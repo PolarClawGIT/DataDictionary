@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[procGetRoutineParameter].
         /// </summary>
         internal static string GetProcedure {
             get {
@@ -70,16 +70,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string RoutineParameterId {
-            get {
-                return ResourceManager.GetString("RoutineParameterId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[procSetRoutineParameter].
         /// </summary>
         internal static string SetProcedure {
             get {
@@ -88,7 +79,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[typeRoutineParameter].
         /// </summary>
         internal static string TableType {
             get {
@@ -97,7 +88,9 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to [AppCatalog].[typeRoutineParameter]
+        ///[AppCatalog].[procSetRoutineParameter]
+        ///[AppCatalog].[procGetRoutineParameter].
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

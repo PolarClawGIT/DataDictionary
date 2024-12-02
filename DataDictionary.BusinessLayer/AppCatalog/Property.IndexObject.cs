@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public PropertyIndexObject(IRoutineIndexName source) : base(source)
         { }
 
-        /// <inheritdoc cref="PropertyKeyObject(IDbRoutineParameterKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyObject(IRoutineParameterKeyName)"/>
         public PropertyIndexObject(IRoutineParameterIndexName source) : base(source)
         { }
 

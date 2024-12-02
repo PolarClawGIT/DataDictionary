@@ -4,18 +4,8 @@ namespace DataDictionary.DataLayer.AppCatalog;
 /// <summary>
 /// Base Catalog TableColumn interface (data elements only)
 /// </summary>
-public interface ITableColumn: ITableColumnKeyName, IDataType, IDomainKeyReference
+public interface ITableColumn: ITableColumnKeyName, IDataType, IOrdinalPosition, ITableType, IDomainKeyReference
 {
-    /// <summary>
-    /// Type of Table (Table, Temporal Table, Historic Table, View)
-    /// </summary>
-    String? TableType { get; }
-
-    /// <summary>
-    /// The Position/Order of the Column
-    /// </summary>
-    Nullable<Int32> OrdinalPosition { get; }
-
     /// <summary>
     /// Is the Column Nullable
     /// </summary>

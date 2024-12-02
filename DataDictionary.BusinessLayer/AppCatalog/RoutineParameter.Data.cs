@@ -1,19 +1,20 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Interface representing Catalog RoutineParameter data
     /// </summary>
-    public interface IRoutineParameterData: IBindingData<RoutineParameterValue>
+    public interface IRoutineParameterData : IBindingData<RoutineParameterValue>
     { }
 
-    class RoutineParameterData: RoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
+    class RoutineParameterData : RoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeSourceData
@@ -39,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
@@ -59,12 +60,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
     }
 }

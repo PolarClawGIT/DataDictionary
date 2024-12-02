@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeKeyName(IDbRoutineParameterKeyName source) : base()
+        public DomainAttributeKeyName(IRoutineParameterKeyName source) : base()
         {
             if (source.ParameterName is string) { AttributeTitle = source.ParameterName.Replace("@",""); }
             else { AttributeTitle = string.Empty; }
