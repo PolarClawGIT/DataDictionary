@@ -1,6 +1,5 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -8,26 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IConstraintIndexName : IDbConstraintKeyName, ISchemaIndexName
+    public interface IConstraintIndexName : IConstraintKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>
-    public class ConstraintIndexName : DbConstraintKeyName, IConstraintIndexName,
+    public class ConstraintIndexName : ConstraintKeyName, IConstraintIndexName,
         IKeyEquality<IConstraintIndexName>, IKeyEquality<ConstraintIndexName>
     {
-        /// <inheritdoc cref="DbConstraintKeyName(IDbConstraintKeyName)"/>
+        /// <inheritdoc cref="ConstraintKeyName(IConstraintKeyName)"/>
         public ConstraintIndexName(IConstraintIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IConstraintIndexName? other)
-        { return other is IDbConstraintKeyName value && Equals(new DbConstraintKeyName(value)); }
+        { return other is IConstraintKeyName value && Equals(new ConstraintKeyName(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(ConstraintIndexName? other)
-        { return other is IDbConstraintKeyName value && Equals(new DbConstraintKeyName(value)); }
+        { return other is IConstraintKeyName value && Equals(new ConstraintKeyName(value)); }
 
         /// <summary>
         /// Convert ConstraintIndex to a DataIndexName

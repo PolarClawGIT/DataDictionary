@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Constraint Column Key.
     /// </summary>
-    public interface IDbConstraintColumnKey: IKey
+    public interface IConstraintColumnKey : IKey
     {
         /// <summary>
         /// Application ID for the Constraint Column.
@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Implementation for the Database Constraint Column Key.
     /// </summary>
-    public class DbConstraintColumnKey : IDbConstraintColumnKey,
-        IKeyEquality<IDbConstraintColumnKey>, IKeyEquality<DbConstraintColumnKey>
+    public class ConstraintColumnKey : IConstraintColumnKey,
+        IKeyEquality<IConstraintColumnKey>, IKeyEquality<ConstraintColumnKey>
     {
         /// <inheritdoc/>
         public Guid? ConstraintColumnId { get; init; } = Guid.Empty;
@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Constructor for the Catalog Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbConstraintColumnKey(IDbConstraintColumnKey source) : base()
+        public ConstraintColumnKey(IConstraintColumnKey source) : base()
         {
             if (source.ConstraintColumnId is Guid value) { ConstraintColumnId = value; }
             else { ConstraintColumnId = Guid.Empty; }
@@ -39,23 +39,23 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(DbConstraintColumnKey? other)
-        { return other is DbConstraintColumnKey && EqualityComparer<Guid?>.Default.Equals(ConstraintColumnId, other.ConstraintColumnId); }
+        public Boolean Equals(ConstraintColumnKey? other)
+        { return other is ConstraintColumnKey && EqualityComparer<Guid?>.Default.Equals(ConstraintColumnId, other.ConstraintColumnId); }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbConstraintColumnKey? other)
-        { return other is IDbConstraintColumnKey value && Equals(new DbConstraintColumnKey(value)); }
+        public virtual Boolean Equals(IConstraintColumnKey? other)
+        { return other is IConstraintColumnKey value && Equals(new ConstraintColumnKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? other)
-        { return other is IDbConstraintColumnKey value && Equals(new DbConstraintColumnKey(value)); }
+        { return other is IConstraintColumnKey value && Equals(new ConstraintColumnKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbConstraintColumnKey left, DbConstraintColumnKey right)
+        public static Boolean operator ==(ConstraintColumnKey left, ConstraintColumnKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbConstraintColumnKey left, DbConstraintColumnKey right)
+        public static Boolean operator !=(ConstraintColumnKey left, ConstraintColumnKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

@@ -4,5 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.Database
-{ }
+namespace DataDictionary.DataLayer.AppCatalog
+{
+    internal class ConstraintColumnMetaData
+    {
+    }
+}

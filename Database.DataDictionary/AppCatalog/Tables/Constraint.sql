@@ -3,6 +3,8 @@
 	-- [INFORMATION_SCHEMA] does not contain Indexes.
 	-- For the purpose of this applications, non-key indexes are not very interesting.
 	-- The additional values can be gotten from Sys.Indexes.
+	-- The INFORMATION_SCHEMA allows the constraint to be in a different database/schema then
+	-- the table is is on. RDBS do not allow the table and constraint to be in different schema's.
 	[ConstraintId]        UniqueIdentifier Not Null CONSTRAINT [DF_ConstraintId] DEFAULT (newid()),
 	[SchemaId]            UniqueIdentifier Not Null,
 	[ConstraintName]      SysName Not Null,

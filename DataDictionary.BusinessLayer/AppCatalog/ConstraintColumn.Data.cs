@@ -1,19 +1,19 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
     /// Interface representing Catalog ConstraintColumn data
     /// </summary>
-    public interface IConstraintColumnData: IBindingData<ConstraintColumnValue>
+    public interface IConstraintColumnData : IBindingData<ConstraintColumnValue>
     { }
 
-    class ConstraintColumnData : DbConstraintColumnCollection<ConstraintColumnValue>, IConstraintColumnData,
+    class ConstraintColumnData : ConstraintColumnCollection<ConstraintColumnValue>, IConstraintColumnData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
@@ -49,12 +49,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove ConstraintColumn", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove ConstraintColumn", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-        { return new WorkItem() { WorkName = "Remove ConstraintColumn", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove ConstraintColumn", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
     }
 }

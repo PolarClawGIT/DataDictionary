@@ -1,16 +1,15 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, ICatalogKey,  ITableKeyName, IScopeType
+    public interface IConstraintItem : IConstraintKeyName, IConstraintKey, ICatalogKey, ITableKeyName
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -22,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// Implementation for the Database Constraint Item.
     /// </summary>
     [Serializable]
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, ISerializable
+    public class ConstraintItem : BindingTableRow, IConstraintItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
@@ -71,7 +70,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <summary>
         /// Constructor for the Database Constraint Item
         /// </summary>
-        public DbConstraintItem() : base() { }
+        public ConstraintItem() : base() { }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -83,12 +82,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbConstraintItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected ConstraintItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbConstraintKeyName(this).ToString(); }
+        { return new ConstraintKeyName(this).ToString(); }
     }
 }

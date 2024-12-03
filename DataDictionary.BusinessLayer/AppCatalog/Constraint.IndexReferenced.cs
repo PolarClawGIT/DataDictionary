@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -7,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IConstraintIndexReferenced : IDbConstraintKeyReferenced
+    public interface IConstraintIndexReferenced : IConstraintKeyReferenced
     { }
 
     /// <inheritdoc/>
-    public class ConstraintIndexReferenced : DbConstraintKeyReferenced, IConstraintIndexReferenced,
+    public class ConstraintIndexReferenced : ConstraintKeyReferenced, IConstraintIndexReferenced,
         IKeyEquality<IConstraintIndexReferenced>, IKeyEquality<ConstraintIndexName>
     {
-        /// <inheritdoc cref="DbConstraintKeyReferenced(IDbConstraintKeyReferenced)"/>
+        /// <inheritdoc cref="ConstraintKeyReferenced(IConstraintKeyReferenced)"/>
         public ConstraintIndexReferenced(IConstraintIndexReferenced source) : base(source) { }
 
         /// <inheritdoc/>
@@ -26,10 +25,10 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public Boolean Equals(IConstraintIndexReferenced? other)
-        { return other is IConstraintIndexReferenced value && Equals(new DbConstraintKeyReferenced(value)); }
+        { return other is IConstraintIndexReferenced value && Equals(new ConstraintKeyReferenced(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(ConstraintIndexName? other)
-        { return other is IConstraintIndexReferenced value && Equals(new DbConstraintKeyReferenced(value)); }
+        { return other is IConstraintIndexReferenced value && Equals(new ConstraintKeyReferenced(value)); }
     }
 }

@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IConstraintIndex : IDbConstraintKey { }
+    public interface IConstraintIndex : IConstraintKey { }
 
     /// <inheritdoc/>
-    public class ConstraintIndex : DbConstraintKey, IConstraintIndex,
+    public class ConstraintIndex : ConstraintKey, IConstraintIndex,
         IKeyEquality<IConstraintIndex>, IKeyEquality<ConstraintIndex>
     {
-        /// <inheritdoc cref="DbConstraintKey(IDbConstraintKey)"/>
+        /// <inheritdoc cref="ConstraintKey(IConstraintKey)"/>
         public ConstraintIndex(IConstraintIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IConstraintIndex? other)
-        { return other is IDbConstraintKey value && Equals(new DbConstraintKey(value)); }
+        { return other is IConstraintKey value && Equals(new ConstraintKey(value)); }
 
         /// <inheritdoc/>
         public Boolean Equals(ConstraintIndex? other)
-        { return other is IDbConstraintKey value && Equals(new DbConstraintKey(value)); }
+        { return other is IConstraintKey value && Equals(new ConstraintKey(value)); }
 
         /// <summary>
         /// Convert ConstraintIndex to a DataIndex

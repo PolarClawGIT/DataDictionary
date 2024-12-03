@@ -1,29 +1,28 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Table;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKeyName, ICatalogKey, IDbColumnPosition, ITableColumnKeyName, IDbConstraintColumnKeyReferenced
+    public interface IConstraintColumnItem : IConstraintKeyName, ICatalogKey, IDbColumnPosition, ITableColumnKeyName, IConstraintColumnKeyReferenced
     { }
 
     /// <summary>
     /// Implantation for the Database Constraint Column
     /// </summary>
     [Serializable]
-    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, ISerializable
+    public class ConstraintColumnItem : BindingTableRow, IConstraintColumnItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
         public Guid? ConstraintColumnId { get { return GetValue<Guid>(nameof(ConstraintColumnId)); } }
-        
+
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
@@ -69,7 +68,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <summary>
         /// Constructor for the Database Constraint Column
         /// </summary>
-        public DbConstraintColumnItem() : base() { }
+        public ConstraintColumnItem() : base() { }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -81,7 +80,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DbConstraintColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected ConstraintColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
 

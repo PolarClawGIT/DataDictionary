@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -10,25 +10,25 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Generic Base class for Database Constraint Columns
+    /// Generic Base class for Database Constraint Items.
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>,
+    public abstract class ConstraintCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadSchema<ICatalogKey>,
         IWriteData<IModelKey>, IWriteData<ICatalogKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<IDbConstraintKeyName>
-        where TItem : BindingTableRow, IDbConstraintColumnItem, ICatalogKey, IDbConstraintKeyName, new()
+        IRemoveItem<ICatalogKey>, IRemoveItem<IConstraintKeyName>
+        where TItem : BindingTableRow, IConstraintItem, ICatalogKey, IConstraintKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, ICatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbConstraintColumnItem;
+            command.CommandText = DbScript.DbConstraintItem;
             command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
             return command;
         }
@@ -36,6 +36,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, (modelKey.ModelId, null, null, null, null)); }
+
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
@@ -45,7 +46,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraintColumn]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraint]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@CatalogName", parameters.catalogName);
@@ -67,12 +68,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraintColumn]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraint]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", data);
             return command;
         }
 
@@ -86,9 +87,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDbConstraintKeyName constraintItem)
+        public virtual void Remove(IConstraintKeyName constraintItem)
         {
-            DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
+            ConstraintKeyName key = new ConstraintKeyName(constraintItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

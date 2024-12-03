@@ -27,6 +27,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AppCatalog\Constraint.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Constraint.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppCatalog\ConstraintColumn.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConstraintColumn.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppCatalog\Property.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -105,6 +115,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AppCatalog\Constraint.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Constraint.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppCatalog\ConstraintColumn.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ConstraintColumn.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="AppCatalog\Property.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Property.Designer.cs</LastGenOutput>
@@ -178,6 +196,7 @@
   <ItemGroup>
     <Folder Include="AppLibrary\" />
     <Folder Include="AppScript\" />
+    <Folder Include="DatabaseData\Constraint\" />
     <Folder Include="DatabaseData\Domain\" />
     <Folder Include="DatabaseData\ExtendedProperty\" />
     <Folder Include="DatabaseData\Routine\" />

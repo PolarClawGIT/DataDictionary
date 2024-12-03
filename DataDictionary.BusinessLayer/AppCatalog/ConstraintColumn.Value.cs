@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+﻿using DataDictionary.DataLayer.AppCatalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
-    public interface IConstraintColumnValue : IDbConstraintColumnItem,
+    public interface IConstraintColumnValue : IConstraintColumnItem,
         IConstraintIndexName, ITableColumnIndexName, IConstraintColumnIndexReferenced,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class ConstraintColumnValue : DbConstraintColumnItem, IConstraintColumnValue
+    public class ConstraintColumnValue : ConstraintColumnItem, IConstraintColumnValue
     { }
 }

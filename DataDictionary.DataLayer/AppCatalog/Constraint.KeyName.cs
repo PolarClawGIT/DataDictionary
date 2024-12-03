@@ -1,12 +1,12 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Database Constraint Key.
 /// </summary>
-public interface IDbConstraintKeyName : IKey, ISchemaKeyName
+public interface IConstraintKeyName : IKey, ISchemaKeyName
 {
     /// <summary>
     /// Name of the Database Constraint
@@ -17,8 +17,8 @@ public interface IDbConstraintKeyName : IKey, ISchemaKeyName
 /// <summary>
 /// Implementation for the Database Constraint Key.
 /// </summary>
-public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
-    IKeyComparable<IDbConstraintKeyName>, IKeyComparable<DbConstraintKeyName>
+public class ConstraintKeyName : SchemaKeyName, IConstraintKeyName,
+    IKeyComparable<IConstraintKeyName>, IKeyComparable<ConstraintKeyName>
 {
     /// <inheritdoc/>
     public String ConstraintName { get; init; } = string.Empty;
@@ -26,13 +26,13 @@ public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
     /// <summary>
     /// Constructor for a blank Database Constraint Key
     /// </summary>
-    protected internal DbConstraintKeyName() : base() { }
+    protected internal ConstraintKeyName() : base() { }
 
     /// <summary>
     /// Constructor for the Database Constraint Key.
     /// </summary>
     /// <param name="source"></param>
-    public DbConstraintKeyName(IDbConstraintKeyName source) : base(source)
+    public ConstraintKeyName(IConstraintKeyName source) : base(source)
     {
         if (source.ConstraintName is string) { ConstraintName = source.ConstraintName; }
         else { ConstraintName = string.Empty; }
@@ -40,7 +40,7 @@ public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbConstraintKeyName? other)
+    public Boolean Equals(ConstraintKeyName? other)
     {
         return
             other is SchemaKeyName &&
@@ -51,15 +51,15 @@ public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbConstraintKeyName? other)
-    { return other is IDbConstraintKeyName value && Equals(new DbConstraintKeyName(value)); }
+    public Boolean Equals(IConstraintKeyName? other)
+    { return other is IConstraintKeyName value && Equals(new ConstraintKeyName(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbConstraintKeyName value && Equals(new DbConstraintKeyName(value)); }
+    { return obj is IConstraintKeyName value && Equals(new ConstraintKeyName(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbConstraintKeyName? other)
+    public Int32 CompareTo(ConstraintKeyName? other)
     {
         if (other is null) { return 1; }
         else if (new SchemaKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
@@ -67,35 +67,35 @@ public class DbConstraintKeyName : SchemaKeyName, IDbConstraintKeyName,
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbConstraintKeyName? other)
-    { if (other is IDbConstraintKeyName value) { return CompareTo(new DbConstraintKeyName(value)); } else { return 1; } }
+    public Int32 CompareTo(IConstraintKeyName? other)
+    { if (other is IConstraintKeyName value) { return CompareTo(new ConstraintKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbConstraintKeyName value) { return CompareTo(new DbConstraintKeyName(value)); } else { return 1; } }
+    { if (obj is IConstraintKeyName value) { return CompareTo(new ConstraintKeyName(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator ==(ConstraintKeyName left, ConstraintKeyName right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator !=(ConstraintKeyName left, ConstraintKeyName right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator <(ConstraintKeyName left, ConstraintKeyName right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator <=(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator <=(ConstraintKeyName left, ConstraintKeyName right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator >(ConstraintKeyName left, ConstraintKeyName right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbConstraintKeyName left, DbConstraintKeyName right)
+    public static Boolean operator >=(ConstraintKeyName left, ConstraintKeyName right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>

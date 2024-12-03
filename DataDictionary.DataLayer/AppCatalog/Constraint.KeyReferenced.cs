@@ -1,12 +1,12 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for the Database Object Reference Key
     /// </summary>
-    public interface IDbConstraintKeyReferenced : IKey, ICatalogKeyName
+    public interface IConstraintKeyReferenced : IKey, ICatalogKeyName
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
@@ -22,8 +22,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Implementation of the Database Object Reference Key
     /// </summary>
-    public class DbConstraintKeyReferenced : CatalogKeyName, IDbConstraintKeyReferenced,
-        IKeyComparable<IDbConstraintKeyReferenced>, IKeyEquality<ITableKeyName>
+    public class ConstraintKeyReferenced : CatalogKeyName, IConstraintKeyReferenced,
+        IKeyComparable<IConstraintKeyReferenced>, IKeyEquality<ITableKeyName>
     {
         /// <inheritdoc/>
         public String ReferencedSchemaName { get; init; }
@@ -35,7 +35,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// Constructor for the Database Object Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbConstraintKeyReferenced(IDbConstraintKeyReferenced source) : base(source)
+        public ConstraintKeyReferenced(IConstraintKeyReferenced source) : base(source)
         {
             if (source.ReferencedSchemaName is string) { ReferencedSchemaName = source.ReferencedSchemaName; }
             else { ReferencedSchemaName = string.Empty; }
@@ -52,18 +52,18 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             return new TableKeyName()
             {
-                DatabaseName = this.DatabaseName,
-                SchemaName = this.ReferencedSchemaName,
-                TableName = this.ReferencedTableName
+                DatabaseName = DatabaseName,
+                SchemaName = ReferencedSchemaName,
+                TableName = ReferencedTableName
             };
         }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(IDbConstraintKeyReferenced? other)
+        public Boolean Equals(IConstraintKeyReferenced? other)
         {
             return
-                other is IDbConstraintKeyReferenced &&
+                other is IConstraintKeyReferenced &&
                 new CatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferencedSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferencedSchemaName) &&
@@ -90,12 +90,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
         {
-            return obj is IDbConstraintKeyReferenced value && Equals(new DbConstraintKeyReferenced(value))
+            return obj is IConstraintKeyReferenced value && Equals(new ConstraintKeyReferenced(value))
                 || obj is ITableKeyName talbeValue && Equals(new TableKeyName(talbeValue));
         }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(IDbConstraintKeyReferenced? other)
+        public Int32 CompareTo(IConstraintKeyReferenced? other)
         {
             if (other is null) { return 1; }
             else if (new CatalogKeyName(this).CompareTo(other) is int value && value != 0)
@@ -112,30 +112,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
 
         /// <inheritdoc/>
         public override Int32 CompareTo(object? obj)
-        { if (obj is IDbConstraintKeyReferenced value) { return CompareTo(new DbConstraintKeyReferenced(value)); } else { return 1; } }
+        { if (obj is IConstraintKeyReferenced value) { return CompareTo(new ConstraintKeyReferenced(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator ==(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator !=(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator <(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator <=(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator >(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(DbConstraintKeyReferenced left, DbConstraintKeyReferenced right)
+        public static Boolean operator >=(ConstraintKeyReferenced left, ConstraintKeyReferenced right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
