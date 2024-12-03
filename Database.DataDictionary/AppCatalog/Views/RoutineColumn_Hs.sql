@@ -29,10 +29,10 @@ Select	FC.[CatalogId], -- AK
 		D.[DomainSchema],
 		D.[DomainName],
 		D.[IsIdentity],
-		D.[IsHidden],
+		--D.[IsHidden],
 		D.[IsComputed],
 		D.[ComputedDefinition],
-		D.[GeneratedAlwayType],
+		--D.[GeneratedAlwayType],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

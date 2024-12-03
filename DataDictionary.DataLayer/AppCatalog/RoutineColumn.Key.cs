@@ -1,12 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
-    public class RoutineColumnKey
+
+    /// <summary>
+    /// Interface for the Database RoutineColumn Key.
+    /// </summary>
+    public interface IRoutineColumnKey : IKey
     {
+        /// <summary>
+        /// Application ID for the RoutineColumn.
+        /// </summary>
+        Guid? RoutineColumnId { get; }
+    }
+
+    /// <summary>
+    /// Implementation for the Database RoutineColumn Key.
+    /// </summary>
+    public class RoutineColumnKey : IRoutineColumnKey,
+        IKeyEquality<IRoutineColumnKey>, IKeyEquality<RoutineColumnKey>
+    {
+        /// <inheritdoc/>
+        public Guid? RoutineColumnId { get; init; } = Guid.Empty;
+
+        /// <summary>
+        /// Constructor for the RoutineColumn Key.
+        /// </summary>
+        /// <param name="source"></param>
+        public RoutineColumnKey(IRoutineColumnKey source) : base()
+        {
+            if (source.RoutineColumnId is Guid value) { RoutineColumnId = value; }
+            else { RoutineColumnId = Guid.Empty; }
+        }
+
+        #region IEquatable
+        /// <inheritdoc/>
+        public virtual Boolean Equals(RoutineColumnKey? other)
+        { return other is RoutineColumnKey && EqualityComparer<Guid?>.Default.Equals(RoutineColumnId, other.RoutineColumnId); }
+
+        /// <inheritdoc/>
+        public virtual Boolean Equals(IRoutineColumnKey? other)
+        { return other is IRoutineColumnKey value && Equals(new RoutineColumnKey(value)); }
+
+        /// <inheritdoc/>
+        public override Boolean Equals(object? other)
+        { return other is IRoutineColumnKey value && Equals(new RoutineColumnKey(value)); }
+
+        /// <inheritdoc/>
+        public static Boolean operator ==(RoutineColumnKey left, RoutineColumnKey right)
+        { return left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static Boolean operator !=(RoutineColumnKey left, RoutineColumnKey right)
+        { return !left.Equals(right); }
+
+        /// <inheritdoc/>
+        public override Int32 GetHashCode()
+        { return HashCode.Combine(RoutineColumnId); }
+        #endregion
     }
 }

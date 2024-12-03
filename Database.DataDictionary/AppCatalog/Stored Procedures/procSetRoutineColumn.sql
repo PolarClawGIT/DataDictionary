@@ -52,10 +52,10 @@ Begin Try
 		[DomainSchema]          SysName Null,
 		[DomainName]            SysName Null,
 		[IsIdentity]            Bit Null,
-		[IsHidden]              Bit Null,
+		--[IsHidden]              Bit Null,
 		[IsComputed]            Bit Null,
 		[ComputedDefinition]    NVarChar(Max) Null,
-		[GeneratedAlwayType]    NVarChar(60) Null,
+		--[GeneratedAlwayType]    NVarChar(60) Null,
 		Primary Key ([RoutineColumnId]),
 		Unique ([RoutineId], [ColumnName]))
 
@@ -83,10 +83,10 @@ Begin Try
 			NullIf(Trim(D.[DomainSchema]),'') As [DomainSchema],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
 			D.[IsIdentity],
-			D.[IsHidden],
+			--D.[IsHidden],
 			D.[IsComputed],
-			NullIf(Trim(D.[ComputedDefinition]),'') As [ComputedDefinition],
-			NullIf(Trim(D.[GeneratedAlwayType]),'') As [GeneratedAlwayType]
+			NullIf(Trim(D.[ComputedDefinition]),'') As [ComputedDefinition]
+			--NullIf(Trim(D.[GeneratedAlwayType]),'') As [GeneratedAlwayType]
 	From	@Data D
 			Left Join [AppCatalog].[RoutineColumnHs] H
 			On	Coalesce(D.[CatalogId], @CatalogId) = H.[CatalogId] And
@@ -142,10 +142,10 @@ Begin Try
 				[DomainSchema],
 				[DomainName],
 				[IsIdentity],
-				[IsHidden],
+				--[IsHidden],
 				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType]
+				[ComputedDefinition]
+				--[GeneratedAlwayType]
 		From	@Values
 	Except
 		Select	[RoutineColumnId],
@@ -171,10 +171,10 @@ Begin Try
 				[DomainSchema],
 				[DomainName],
 				[IsIdentity],
-				[IsHidden],
+				--[IsHidden],
 				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType]
+				[ComputedDefinition]
+				--[GeneratedAlwayType]
 		From	[AppCatalog].[RoutineColumn])
 	Update [AppCatalog].[RoutineColumn]
 	Set		[RoutineId] = S.[RoutineId],
@@ -199,10 +199,10 @@ Begin Try
 			[DomainSchema] = S.[DomainSchema],
 			[DomainName] = S.[DomainName],
 			[IsIdentity] = S.[IsIdentity],
-			[IsHidden] = S.[IsHidden],
+			--[IsHidden] = S.[IsHidden],
 			[IsComputed] = S.[IsComputed],
-			[ComputedDefinition] = S.[ComputedDefinition],
-			[GeneratedAlwayType] = S.[GeneratedAlwayType]
+			[ComputedDefinition] = S.[ComputedDefinition]
+			--[GeneratedAlwayType] = S.[GeneratedAlwayType]
 	From	[AppCatalog].[RoutineColumn] T
 			Inner Join [Delta] S
 			On	T.[RoutineColumnId] = S.[RoutineColumnId]
@@ -232,10 +232,10 @@ Begin Try
 			[DomainSchema],
 			[DomainName],
 			[IsIdentity],
-			[IsHidden],
+			--[IsHidden],
 			[IsComputed],
-			[ComputedDefinition],
-			[GeneratedAlwayType])
+			[ComputedDefinition])
+			--[GeneratedAlwayType])
 	Select	S.[RoutineColumnId],
 			S.[RoutineId],
 			S.[ColumnName],
@@ -259,10 +259,10 @@ Begin Try
 			S.[DomainSchema],
 			S.[DomainName],
 			S.[IsIdentity],
-			S.[IsHidden],
+			--S.[IsHidden],
 			S.[IsComputed],
-			S.[ComputedDefinition],
-			S.[GeneratedAlwayType]
+			S.[ComputedDefinition]
+			--S.[GeneratedAlwayType]
 	From	@Values S
 			Left Join [AppCatalog].[RoutineColumn] T
 			On	S.[RoutineColumnId] = T.[RoutineColumnId]

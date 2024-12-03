@@ -24,10 +24,10 @@
 	[DomainSchema]				SysName Null,
 	[DomainName]				SysName Null,
 	[IsIdentity]				Bit Null,
-	[IsHidden]					Bit Null,
+	--[IsHidden]					Bit Null,
 	[IsComputed]				Bit Null,
 	[ComputedDefinition]		NVarChar(Max) Null,
-	[GeneratedAlwayType]		NVarChar(60) Null,
+	--[GeneratedAlwayType]		NVarChar(60) Null,
 	[SysStart]                  DateTime2 (7) Not Null,
 	[SysEnd]                    DateTime2 (7)  Not Null,)  
 GO
