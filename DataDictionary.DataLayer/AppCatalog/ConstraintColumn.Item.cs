@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -8,71 +9,210 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IConstraintColumnItem : IConstraintKeyName, ICatalogKey, IDbColumnPosition, ITableColumnKeyName, IConstraintColumnKeyReferenced
+    public interface IConstraintColumnItem : IConstraintColumn, ICatalogKey, IConstraintColumnKey,
+        ITemporalItem
     { }
 
     /// <summary>
     /// Implantation for the Database Constraint Column
     /// </summary>
     [Serializable]
-    public class ConstraintColumnItem : BindingTableRow, IConstraintColumnItem, ISerializable
+    public class ConstraintColumnItem : BindingTableRow, IConstraintColumnItem, ISerializable,
+        IInfomationSchemaItem<IConstraintColumn, ConstraintColumnItem>
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
+        public Guid? CatalogId
+        {
+            get { return GetValue<Guid>(nameof(CatalogId)); }
+            init { SetValue<Guid>(nameof(CatalogId), value); }
+        }
 
         /// <inheritdoc/>
-        public Guid? ConstraintColumnId { get { return GetValue<Guid>(nameof(ConstraintColumnId)); } }
+        public Guid? ConstraintColumnId
+        {
+            get { return GetValue<Guid>(nameof(ConstraintColumnId)); }
+            private init { SetValue(nameof(ConstraintColumnId), value); }
+        }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
+        public String? DatabaseName
+        {
+            get { return GetValue(nameof(DatabaseName)); }
+            init { SetValue(nameof(DatabaseName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
+        public String? SchemaName
+        {
+            get { return GetValue(nameof(SchemaName)); }
+            init { SetValue(nameof(SchemaName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ConstraintName { get { return GetValue(nameof(ConstraintName)); } }
+        public String? ConstraintName
+        {
+            get { return GetValue(nameof(ConstraintName)); }
+            init { SetValue(nameof(ConstraintName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue(nameof(TableName)); } }
+        public String? TableName
+        {
+            get { return GetValue(nameof(TableName)); }
+            init { SetValue(nameof(TableName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ColumnName { get { return GetValue(nameof(ColumnName)); } }
+        public String? ColumnName
+        {
+            get { return GetValue(nameof(ColumnName)); }
+            init { SetValue(nameof(ColumnName), value); }
+        }
 
         /// <inheritdoc/>
-        public int? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
+        public Int32? OrdinalPosition
+        {
+            get { return GetValue<Int32>(nameof(OrdinalPosition)); }
+            set { SetValue(nameof(OrdinalPosition), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ReferencedSchemaName { get { return GetValue(nameof(ReferencedSchemaName)); } }
+        public String? ReferencedSchemaName
+        {
+            get { return GetValue(nameof(ReferencedSchemaName)); }
+            set { SetValue(nameof(ReferencedSchemaName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ReferencedTableName { get { return GetValue(nameof(ReferencedTableName)); } }
+        public String? ReferencedTableName
+        {
+            get { return GetValue(nameof(ReferencedTableName)); }
+            set { SetValue(nameof(ReferencedTableName), value); }
+        }
 
         /// <inheritdoc/>
-        public string? ReferencedColumnName { get { return GetValue(nameof(ReferencedColumnName)); } }
+        public String? ReferencedColumnName
+        {
+            get { return GetValue(nameof(ReferencedColumnName)); }
+            set { SetValue(nameof(ReferencedColumnName), value); }
+        }
+
+        /// <inheritdoc/>
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? CreatedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
+                else { return DbModificationType.Null; }
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ConstraintColumnId), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ConstraintName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ColumnName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(OrdinalPosition), typeof(int)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferencedSchemaName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferencedTableName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ReferencedColumnName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ConstraintColumnId), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(TableName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(ConstraintName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(ColumnName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedSchemaName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedTableName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferencedColumnName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <summary>
         /// Constructor for the Database Constraint Column
         /// </summary>
-        public ConstraintColumnItem() : base() { }
+        public ConstraintColumnItem() : base()
+        { ConstraintColumnId = new Guid(); }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        /// <inheritdoc/>
+        public static TResult Create<TResult>(ICatalogKey catalog, IConstraintColumn source)
+            where TResult : ConstraintColumnItem, new()
+        {
+            TResult newValue = new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName,
+                TableName = source.TableName,
+                ColumnName = source.ColumnName,
+            };
+
+            newValue.Update(source);
+            return newValue;
+        }
+
+        /// <inheritdoc/>
+        public virtual void Update(IConstraintColumn source)
+        {
+            OrdinalPosition = source.OrdinalPosition;
+            ReferencedSchemaName = source.ReferencedSchemaName;
+            ReferencedTableName = source.ReferencedTableName;
+            ReferencedColumnName = source.ReferencedColumnName;
+        }
 
         #region ISerializable
         /// <summary>

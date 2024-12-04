@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface IConstraintColumnValue : IConstraintColumnItem,
-        IConstraintIndexName, ITableColumnIndexName, IConstraintColumnIndexReferenced,
+        IConstraintIndexName, ITableColumnIndexName, IConstraintColumnIndexName, IConstraintColumnIndexReferenced,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

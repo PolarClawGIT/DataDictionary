@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>

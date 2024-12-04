@@ -368,15 +368,15 @@ namespace DataDictionary.BusinessLayer.Database
                getData: TableColumnMetaData.GetSchema,
                import: (data) => tableColumns.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbConstraints",
-                target: constraints,
-                command: (conn) => constraints.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- Constraint",
+               getData: ConstraintMetaData.GetSchema,
+               import: (data) => constraints.Import(key, data)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DbConstraintColumns",
-                target: constraintColumns,
-                command: (conn) => constraintColumns.SchemaCommand(conn, key)));
+            work.Add(factory.CreateImport(
+               workName: "Import InformationSchema- ConstraintColumn",
+               getData: ConstraintColumnMetaData.GetSchema,
+               import: (data) => constraintColumns.Import(key, data)));
 
             work.Add(factory.CreateImport(
                workName: "Import InformationSchema- Routine",

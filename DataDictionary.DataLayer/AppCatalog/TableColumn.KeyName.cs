@@ -21,7 +21,7 @@ public class TableColumnKeyName : TableKeyName, ITableColumnKeyName,
     IKeyComparable<ITableColumnKeyName>, IKeyComparable<TableColumnKeyName>
 {
     /// <inheritdoc/>
-    public string ColumnName { get; init; } = string.Empty;
+    public String ColumnName { get; init; } = string.Empty;
 
     /// <summary>
     /// Constructor for a blank Database Column Key
