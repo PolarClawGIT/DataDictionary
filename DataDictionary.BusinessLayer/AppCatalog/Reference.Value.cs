@@ -1,21 +1,19 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Reference;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Database;
+namespace DataDictionary.BusinessLayer.AppCatalog;
 
 /// <inheritdoc/>
-public interface IReferenceValue : IDbReferenceItem,
+public interface IReferenceValue : IReferenceItem,
     IReferenceIndex, IReferencedIndexObject, IReferencedIndexColumn, ICatalogIndex,
     IBindingTableRow, IBindingRowState, IBindingPropertyChanged
 { }
 
 /// <inheritdoc/>
-public class ReferenceValue : DbReferenceItem, IReferenceValue, IPathValue, INamedScopeSourceValue
+public class ReferenceValue : ReferenceItem, IReferenceValue, IPathValue, INamedScopeSourceValue
 {
     /// <inheritdoc/>
     public ScopeType Scope { get { return ScopeType.DatabaseDependency; } }
@@ -32,7 +30,7 @@ public class ReferenceValue : DbReferenceItem, IReferenceValue, IPathValue, INam
     String IDataValue.Title { get { return pathValue.Title; } }
 
     /// <inheritdoc/>
-    public ReferenceValue() : base ()
+    public ReferenceValue() : base()
     {
         pathValue = new PathValue(this)
         {

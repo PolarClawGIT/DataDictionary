@@ -6,49 +6,50 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
-    /// Generic Base class for Database Routine Dependency Items
+    /// Generic Base class for Database Reference Items
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class RoutineCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IRoutineKey>,
-        IWriteData, IWriteData<ICatalogKey>, IWriteData<IRoutineKey>,
-        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<IRoutineKey>, IInfomationSchemaCollection<IRoutine>
-        where TItem : RoutineItem, IRoutineItem, new()
+    public class ReferenceCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IReferenceKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<IReferenceKey>,
+        IRemoveItem<ICatalogKey>,
+        ITemporalData<ICatalogKey>, ITemporalData<IReferenceKey>, IInfomationSchemaCollection<IReference>
+        where TItem : ReferenceItem, IReferenceItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, modelId: modelKey.ModelId); }
+        { return LoadCommand(connection, modelId : modelKey.ModelId); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IRoutineKey routineKey)
-        { return LoadCommand(connection, routineId: routineKey.RoutineId); }
+        public Command LoadCommand(IConnection connection, IReferenceKey referenceKey)
+        { return LoadCommand(connection, referenceId: referenceKey.ReferenceId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IRoutineKey routineKey)
-        { return LoadCommand(connection, routineId: routineKey.RoutineId, includeHistory: true); }
+        public Command HistoryCommand(IConnection connection, IReferenceKey referenceKey)
+        { return LoadCommand(connection, referenceId: referenceKey.ReferenceId, includeHistory: true); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
 
-        Command LoadCommand(IConnection connection,
-            Guid? modelId = null, Guid? catalogId = null, Guid? routineId = null,
+        Command LoadCommand(IConnection connection, 
+            Guid? modelId = null, Guid? catalogId = null, Guid? referenceId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Routine.GetProcedure;
+            command.CommandText = Reference.GetProcedure;
             command.AddParameter(AppModel.Model.ModelId, modelId);
             command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Routine.RoutineId, routineId);
+            command.AddParameter(Reference.ReferenceId, referenceId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
+
             return command;
         }
 
@@ -61,21 +62,21 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IRoutineKey routineKey)
-        { return SaveCommand(connection, routineId: routineKey.RoutineId); }
+        public Command SaveCommand(IConnection connection, IReferenceKey referenceKey)
+        { return SaveCommand(connection, referenceId: referenceKey.ReferenceId); }
 
-        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? routineId = null)
+        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? referenceId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Routine.SetProcedure;
+            command.CommandText = Reference.SetProcedure;
             command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Routine.RoutineId, routineId);
+            command.AddParameter(Reference.ReferenceId, referenceId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (catalogId is null || w.CatalogId == catalogId) &&
-                (routineId is null || w.RoutineId == routineId));
-            command.AddParameter(WriteData.Data, Routine.TableType, data);
+                (referenceId is null || w.ReferenceId == referenceId));
+            command.AddParameter(WriteData.Data, Reference.TableType, data);
             return command;
         }
 
@@ -88,43 +89,36 @@ namespace DataDictionary.DataLayer.AppCatalog
             { base.Remove(item); }
         }
 
+
         /// <inheritdoc/>
-        public virtual void Remove(ISchemaKeyName schemaItem)
+        public virtual void Remove(IReferenceKeyName dependencyItem)
         {
-            SchemaKeyName key = new SchemaKeyName(schemaItem);
+            ReferenceKeyName key = new ReferenceKeyName(dependencyItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IRoutineKeyName routineItem)
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IReference> references)
         {
-            RoutineKeyName key = new RoutineKeyName(routineItem);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
-            { base.Remove(item); }
-        }
-
-        /// <inheritdoc/>
-        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IRoutine> routines)
-        {
-            IEnumerable<RoutineKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
-                Select(s => new RoutineKeyName(s)).
-                Union(routines.Select(s => new RoutineKeyName(s)));
+            IEnumerable<ReferenceKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new ReferenceKeyName(s)).
+                Union(references.Select(s => new ReferenceKeyName(s)));
 
             foreach (var key in allKeys)
             {
                 TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
-                IRoutine? newValue = routines.FirstOrDefault(w => key.Equals(w));
+                IReference? newValue = references.FirstOrDefault(w => key.Equals(w));
 
-                if (oldValue is RoutineItem oldMatches && newValue is IRoutine newMatches)
+                if (oldValue is ReferenceItem oldMatches && newValue is IReference newMatches)
                 { oldMatches.Update(newMatches); } // Update Old
-                else if (oldValue is RoutineItem newMissing)
+                else if (oldValue is ReferenceItem newMissing)
                 { this.Remove(key); } // Delete Old
-                else if (newValue is IRoutine oldMissing)
-                { Add(RoutineItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+                else if (newValue is IReference oldMissing)
+                { Add(ReferenceItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
             }
         }
     }
+
 }

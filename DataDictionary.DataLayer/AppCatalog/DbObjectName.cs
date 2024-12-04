@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData
+namespace DataDictionary.DataLayer.AppCatalog
 {
-    static class  DbObjectName
+    static class DbObjectName
     {
         /// <summary>
         /// Used to Format a Database Object Name.

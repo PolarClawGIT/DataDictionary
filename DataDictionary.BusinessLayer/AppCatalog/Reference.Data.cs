@@ -1,12 +1,10 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.ModelData;
-using System.ComponentModel;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Database;
+namespace DataDictionary.BusinessLayer.AppCatalog;
 
 /// <summary>
 /// Interface representing Catalog Reference data
@@ -14,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Database;
 public interface IReferenceData : IBindingData<ReferenceValue>
 { }
 
-class ReferenceData : DbReferenceCollection<ReferenceValue>,
+class ReferenceData : ReferenceCollection<ReferenceValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IReferenceData
@@ -40,7 +38,7 @@ class ReferenceData : DbReferenceCollection<ReferenceValue>,
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
     public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-    { return factory.CreateSave(this, dataKey).ToList(); }
+    { return factory.CreateSave(this).ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
@@ -50,11 +48,11 @@ class ReferenceData : DbReferenceCollection<ReferenceValue>,
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
     public IReadOnlyList<WorkItem> Delete()
-    { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { this.Clear(); } }.ToList(); }
+    { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { Clear(); } }.ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
     public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
-    { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+    { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
 }

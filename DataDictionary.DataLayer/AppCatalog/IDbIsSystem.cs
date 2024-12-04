@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DatabaseData
+namespace DataDictionary.DataLayer.AppCatalog
 {
     /// <summary>
     /// Interface for Database Items are a system object.

@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
@@ -224,12 +223,12 @@ namespace DataDictionary.BusinessLayer.Domain
 
             void TableRefrences(IDatabaseModel source, TableIndexName tableName)
             {
-                DbReferenceKeyName tableRefrenceName = new DbReferenceKeyName(tableName);
+                ReferenceKeyName tableRefrenceName = new ReferenceKeyName(tableName);
                 foreach (ReferenceValue item in
                     source.DbReferences.
                     Where(
                         w => tableRefrenceName.Equals(w)
-                        && !tableReferences.Any(r => new DbReferenceKey(w).Equals(r))).
+                        && !tableReferences.Any(r => new ReferenceKey(w).Equals(r))).
                     ToList())
                 { tableReferences.Add(item); }
             }

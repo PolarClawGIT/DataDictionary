@@ -36,6 +36,5 @@ public enum DbObjectType
     UserTable,
     View,
     // Added for the Application
-    Column 
-
+    Column
 }

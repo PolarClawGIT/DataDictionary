@@ -1,12 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.DataLayer.ModelData;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 

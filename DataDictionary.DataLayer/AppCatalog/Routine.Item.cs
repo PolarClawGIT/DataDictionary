@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.Resource;
+﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;

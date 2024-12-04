@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using System.Data;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 

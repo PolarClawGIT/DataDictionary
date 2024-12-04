@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.ModelData;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;

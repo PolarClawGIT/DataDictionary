@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -95,7 +95,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetTitle = () => source.Title;
             GetPath = () => source.Path;
 
-            if (source is IDbColumnPosition position)
+            if (source is IOrdinalPosition position)
             { OrdinalPosition = position.OrdinalPosition ?? 0; }
 
             if (source is IBindingPropertyChanged propertyChanged)

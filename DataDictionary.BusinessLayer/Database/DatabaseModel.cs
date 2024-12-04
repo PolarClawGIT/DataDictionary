@@ -3,7 +3,6 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppCatalog;
 
@@ -393,30 +392,10 @@ namespace DataDictionary.BusinessLayer.Database
                getData: RoutineColumnMetaData.GetSchema,
                import: (data) => routineColumns.Import(key, data)));
 
-
-            //work.Add(new WorkItem()
-            //{
-            //    WorkName = "Load DbReferences",
-            //    DoWork = () =>
-            //    {
-            //        foreach (TableItem item in tables)
-            //        {
-            //            references.Load(
-            //                factory.Connection.ExecuteReader(
-            //                    references.SchemaCommand(
-            //                        factory.Connection, item)));
-            //        }
-
-            //        foreach (RoutineItem item in routines)
-            //        {
-            //            references.Load(
-            //                factory.Connection.ExecuteReader(
-            //                    references.SchemaCommand(
-            //                        factory.Connection, item)));
-            //        }
-            //    },
-            //    IsCanceling = () => factory.IsCanceling
-            //});
+            work.Add(factory.CreateImport(
+               workName: "Import Object Reference",
+               getData: ReferenceMetaData.GetSchema,
+               import: (data) => references.Import(key, data)));
 
             work.Add(factory.CreateImport(
                workName: "Import Extended Properties",

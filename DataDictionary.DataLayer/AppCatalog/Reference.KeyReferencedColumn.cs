@@ -1,12 +1,11 @@
-﻿using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.Resource;
+﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.DatabaseData.Reference;
+namespace DataDictionary.DataLayer.AppCatalog;
 
 /// <summary>
 /// Interface for the Referenced Column Name
 /// </summary>
-public interface IDbReferencedKeyColumn: IDbReferencedKeyObject
+public interface IReferencedKeyColumn : IReferencedKeyObject
 {
     /// <summary>
     /// The Database Column Name of the Referenced Object
@@ -17,8 +16,8 @@ public interface IDbReferencedKeyColumn: IDbReferencedKeyObject
 /// <summary>
 /// Implementation for the Referenced Column Name
 /// </summary>
-public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColumn,
-    IKeyComparable<IDbReferencedKeyColumn>, IKeyComparable<DbReferencedKeyColumn>
+public class ReferencedKeyColumn : ReferencedKeyObject, IReferencedKeyColumn,
+    IKeyComparable<IReferencedKeyColumn>, IKeyComparable<ReferencedKeyColumn>
 {
     /// <inheritdoc/>
     public String ReferencedColumnName { get; init; } = string.Empty;
@@ -27,7 +26,7 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     /// Constructor for Referenced Object Name
     /// </summary>
     /// <param name="source"></param>
-    public DbReferencedKeyColumn(IDbReferencedKeyColumn source) : base(source)
+    public ReferencedKeyColumn(IReferencedKeyColumn source) : base(source)
     {
         if (source.ReferencedColumnName is string)
         { ReferencedColumnName = source.ReferencedColumnName; }
@@ -38,7 +37,7 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     /// Constructor for Referenced Object Name by Table
     /// </summary>
     /// <param name="source"></param>
-    public DbReferencedKeyColumn(ITableColumnKeyName source) : base(source)
+    public ReferencedKeyColumn(ITableColumnKeyName source) : base(source)
     {
         if (source.ColumnName is string)
         { ReferencedColumnName = source.ColumnName; }
@@ -53,19 +52,19 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     {
         return new TableColumnKeyName()
         {
-            DatabaseName = this.ReferencedDatabaseName,
-            SchemaName = this.ReferencedSchemaName,
-            TableName = this.ReferencedObjectName,
-            ColumnName = this.ReferencedColumnName
+            DatabaseName = ReferencedDatabaseName,
+            SchemaName = ReferencedSchemaName,
+            TableName = ReferencedObjectName,
+            ColumnName = ReferencedColumnName
         };
     }
 
     #region IEquatable, IComparable
     /// <inheritdoc/>
-    public Boolean Equals(DbReferencedKeyColumn? other)
+    public Boolean Equals(ReferencedKeyColumn? other)
     {
         return
-            other is DbReferencedKeyObject &&
+            other is ReferencedKeyObject &&
             base.Equals(other) &&
             !string.IsNullOrEmpty(ReferencedColumnName) &&
             !string.IsNullOrEmpty(other.ReferencedColumnName) &&
@@ -73,15 +72,15 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     }
 
     /// <inheritdoc/>
-    public Boolean Equals(IDbReferencedKeyColumn? other)
-    { return other is IDbReferencedKeyColumn value && Equals(new DbReferencedKeyObject(value)); }
+    public Boolean Equals(IReferencedKeyColumn? other)
+    { return other is IReferencedKeyColumn value && Equals(new ReferencedKeyObject(value)); }
 
     /// <inheritdoc/>
     public override Boolean Equals(object? obj)
-    { return obj is IDbReferencedKeyColumn value && Equals(new DbReferencedKeyObject(value)); }
+    { return obj is IReferencedKeyColumn value && Equals(new ReferencedKeyObject(value)); }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(DbReferencedKeyColumn? other)
+    public Int32 CompareTo(ReferencedKeyColumn? other)
     {
         if (other is null) { return 1; }
         else if (base.CompareTo(other) is int value && value != 0) { return value; }
@@ -89,35 +88,35 @@ public class DbReferencedKeyColumn : DbReferencedKeyObject, IDbReferencedKeyColu
     }
 
     /// <inheritdoc/>
-    public Int32 CompareTo(IDbReferencedKeyColumn? other)
-    { if (other is IDbReferencedKeyColumn value) { return CompareTo(new DbReferencedKeyColumn(value)); } else { return 1; } }
+    public Int32 CompareTo(IReferencedKeyColumn? other)
+    { if (other is IReferencedKeyColumn value) { return CompareTo(new ReferencedKeyColumn(value)); } else { return 1; } }
 
     /// <inheritdoc/>
     public override Int32 CompareTo(object? obj)
-    { if (obj is IDbReferencedKeyColumn value) { return CompareTo(new DbReferencedKeyColumn(value)); } else { return 1; } }
+    { if (obj is IReferencedKeyColumn value) { return CompareTo(new ReferencedKeyColumn(value)); } else { return 1; } }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static Boolean operator ==(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static Boolean operator !=(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator <(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static Boolean operator <(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
     /// <inheritdoc/>
-    public static bool operator <=(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static bool operator <=(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static Boolean operator >(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
     /// <inheritdoc/>
-    public static Boolean operator >=(DbReferencedKeyColumn left, DbReferencedKeyColumn right)
+    public static Boolean operator >=(ReferencedKeyColumn left, ReferencedKeyColumn right)
     { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
     /// <inheritdoc/>
