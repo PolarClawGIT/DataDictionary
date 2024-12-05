@@ -127,6 +127,13 @@
   <data name="IsSystem" xml:space="preserve">
     <value>tempdb, master, msdb, model</value>
   </data>
+  <data name="LocalDbContains" xml:space="preserve">
+    <value>\LOCALDB</value>
+    <comment>If the ServerName contains this value, use the LocalDbName instead.</comment>
+  </data>
+  <data name="LocalDbName" xml:space="preserve">
+    <value>(LocalDb)\MSSQLLocalDb</value>
+  </data>
   <data name="SetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procSetCatalog]</value>
   </data>

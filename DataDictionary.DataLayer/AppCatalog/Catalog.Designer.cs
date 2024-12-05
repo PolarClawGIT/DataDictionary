@@ -88,6 +88,24 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to \LOCALDB.
+        /// </summary>
+        internal static string LocalDbContains {
+            get {
+                return ResourceManager.GetString("LocalDbContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (LocalDb)\MSSQLLocalDb.
+        /// </summary>
+        internal static string LocalDbName {
+            get {
+                return ResourceManager.GetString("LocalDbName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetCatalog].
         /// </summary>
         internal static string SetProcedure {

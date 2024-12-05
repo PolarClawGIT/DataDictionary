@@ -177,7 +177,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="source"></param>
         public virtual void Update(ICatalog source)
         {
-            ServerName = source.ServerName;
+            // Handle LocalDb
+            if(source.ServerName is String && source.ServerName.Contains(Catalog.LocalDbContains))
+            { ServerName = Catalog.LocalDbName; }
+            else
+            { ServerName = source.ServerName; }
+            
             SourceDate = DateTime.Now;
         }
 
