@@ -45,7 +45,6 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = ConstraintColumn.GetProcedure;
-            command.CommandText = Table.GetProcedure;
             command.AddParameter(AppModel.Model.ModelId, modelId);
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Constraint.ConstraintId, constraintId);
