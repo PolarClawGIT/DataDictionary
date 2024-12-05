@@ -284,13 +284,47 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public void Update(IReference source)
         {
-            throw new NotImplementedException();
+            IsCallerDependent = source.IsCallerDependent;
+            IsAmbiguous = source.IsAmbiguous;
+            IsSelected = source.IsSelected;
+            IsModified = source.IsModified;
+            IsSelectAll = source.IsSelectAll;
+            IsAllColumnsFound = source.IsAllColumnsFound;
+            IsInsertAll = source.IsInsertAll;
+            IsIncomplete = source.IsIncomplete;
         }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, IReference source) 
             where TResult : ReferenceItem, new()
         {
+            DbObjectType objectType = DbObjectType.Null;
+            if (DbObjectEnumeration.TryParse(source.ObjectType, null, out DbObjectEnumeration? objectValue))
+            { objectType = objectValue.Value; }
+
+            DbObjectType referencedType = DbObjectType.Null;
+            if (DbObjectEnumeration.TryParse(source.ReferencedType, null, out DbObjectEnumeration? refrencedValue))
+            { referencedType = refrencedValue.Value; }
+
+            TResult newValue = new TResult()
+            {
+                CatalogId = catalog.CatalogId,
+                DatabaseName = source.DatabaseName,
+                SchemaName = source.SchemaName,
+
+                ObjectName = source.ObjectName,
+                ObjectType = objectType,
+
+                ReferencedDatabaseName = source.ReferencedDatabaseName,
+                ReferencedSchemaName = source.ReferencedSchemaName,
+                ReferencedObjectName = source.ReferencedObjectName,
+                ReferencedColumnName = source.ReferencedColumnName,
+                ReferencedType = referencedType,
+            };
+
+            newValue.Update(source);
+            return newValue;
+
             throw new NotImplementedException();
         }
 

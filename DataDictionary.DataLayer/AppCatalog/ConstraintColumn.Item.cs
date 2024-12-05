@@ -196,6 +196,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 CatalogId = catalog.CatalogId,
                 DatabaseName = source.DatabaseName,
                 SchemaName = source.SchemaName,
+                ConstraintName = source.ConstraintName,
                 TableName = source.TableName,
                 ColumnName = source.ColumnName,
             };

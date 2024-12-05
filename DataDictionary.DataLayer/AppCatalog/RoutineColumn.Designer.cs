@@ -97,7 +97,19 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Remember, Resource files do not update until they are saved directly.
+        ///Select	I.[TABLE_CATALOG] As [DatabaseName],
+        ///		I.[TABLE_SCHEMA] As [SchemaName],
+        ///		I.[TABLE_NAME] As [RoutineName],
+        ///		Case
+        ///		When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Procedure&apos;
+        ///		When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Function&apos;
+        ///		Else [ROUTINE_TYPE] 
+        ///		End As [RoutineType],
+        ///		I.[COLUMN_NAME] As [ColumnName],
+        ///		I.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///		iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
+        ///		 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

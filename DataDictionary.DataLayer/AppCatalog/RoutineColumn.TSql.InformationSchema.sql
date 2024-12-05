@@ -1,4 +1,5 @@
-﻿Select	I.[TABLE_CATALOG] As [DatabaseName],
+﻿-- Remember, Resource files do not update until they are saved directly.
+Select	I.[TABLE_CATALOG] As [DatabaseName],
 		I.[TABLE_SCHEMA] As [SchemaName],
 		I.[TABLE_NAME] As [RoutineName],
 		Case
@@ -44,4 +45,3 @@ From	[INFORMATION_SCHEMA].[ROUTINE_COLUMNS] I
 		Left Join [sys].[computed_columns] P
 		On	C.[object_id] = P.[object_id] And
 			C.[column_id] = P.[column_id]
-GO

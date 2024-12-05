@@ -90,7 +90,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="import"></param>
         /// <returns></returns>
         WorkItem CreateImport<TData>(String workName, Func<IConnection, IEnumerable<TData>> getSchema, Action<IEnumerable<TData>> import)
-            where TData: class;
+            where TData : class;
 
         /// <summary>
         /// Creates the WorkItem that opens the Connection to the Database.
@@ -199,12 +199,31 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             WorkItem result = new WorkItem()
             {
                 WorkName = workName,
-                DoWork = () => import(getData(Connection)),
+                DoWork = ExecuteImport,
                 IsCanceling = () => Connection.HasException
             };
 
+            workItems.Add(result, new WorkState() { IsComplete = false, Ex = null }); ;
+            result.Completing += WorkItem_Completing;
+
             return result;
+
+            void ExecuteImport()
+            {
+                try
+                {
+                    IEnumerable<TData> data = getData(Connection);
+                    import(data);
+                }
+                catch (Exception ex)
+                {
+                    ex.Data.Add("Type", typeof(TData).Name);
+                    ex.Data.Add("Get Method", getData.Method.Name);
+                    throw;
+                }
+            }
         }
+
 
         /// <inheritdoc/>
         public WorkItem OpenConnection()
