@@ -56,10 +56,10 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.DatabaseView,               ScopeType.DatabaseSchema,    "Database.Schema.View"),
             new ScopeEnumeration(ScopeType.DatabaseViewColumn,         ScopeType.DatabaseSchema,    "Database.Schema.View.Column"),
             new ScopeEnumeration(ScopeType.DatabaseTableColumn,        ScopeType.DatabaseSchema,    "Database.Schema.Table.Column"),
-            new ScopeEnumeration(ScopeType.DatabaseTableConstraint,    ScopeType.DatabaseSchema,    "Database.Schema.Table.Constraint"),
+            new ScopeEnumeration(ScopeType.DatabaseConstraint,    ScopeType.DatabaseSchema,    "Database.Schema.Table.Constraint"),
             new ScopeEnumeration(ScopeType.DatabaseProcedureParameter, ScopeType.DatabaseProcedure, "Database.Schema.Procedure.Parameter"),
             new ScopeEnumeration(ScopeType.DatabaseFunctionParameter,  ScopeType.DatabaseFunction,  "Database.Schema.Function.Parameter"),
-            new ScopeEnumeration(ScopeType.DatabaseDependency,         ScopeType.DatabaseSchema,    "Database.Schema.Function.Parameter"),
+            new ScopeEnumeration(ScopeType.DatabaseReference,         ScopeType.DatabaseSchema,    "Database.Schema.Function.Parameter"),
             new ScopeEnumeration(ScopeType.DatabaseProperty, ScopeType.Database,          "Database.ExtendedProperties"),
 
             new ScopeEnumeration(ScopeType.Model,                      "Model"),

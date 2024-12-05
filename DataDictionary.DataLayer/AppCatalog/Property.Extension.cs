@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             {ScopeType.DatabaseView, new PropertyObjectLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.View} },
             {ScopeType.DatabaseViewColumn, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.View, ElementScope= DbLevelElementType.Column} },
             {ScopeType.DatabaseTableColumn, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table, ElementScope= DbLevelElementType.Column} },
-            {ScopeType.DatabaseTableConstraint, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table, ElementScope= DbLevelElementType.Constraint} },
+            {ScopeType.DatabaseConstraint, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Table, ElementScope= DbLevelElementType.Constraint} },
             {ScopeType.DatabaseProcedureParameter, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Procedure, ElementScope= DbLevelElementType.Parameter} },
             {ScopeType.DatabaseFunctionParameter, new PropertyElementLevel(){ CatalogScope = DbLevelCatalogType.Schema, ObjectScope = DbLevelObjectType.Function, ElementScope= DbLevelElementType.Parameter} },
         };

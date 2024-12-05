@@ -200,7 +200,12 @@
         /// <summary>
         /// SQL Table Constraint
         /// </summary>
-        DatabaseTableConstraint,
+        DatabaseConstraint,
+
+        /// <summary>
+        /// SQL Table Constraint Column
+        /// </summary>
+        DatabaseConstraintColumn,
 
         //DatabaseSchemaTableIndex,
 
@@ -215,9 +220,9 @@
         DatabaseFunctionParameter,
 
         /// <summary>
-        /// SQL Dependency between Objects
+        /// SQL Reference between Objects
         /// </summary>
-        DatabaseDependency,
+        DatabaseReference,
 
         /// <summary>
         /// SQL Database Extended Properties

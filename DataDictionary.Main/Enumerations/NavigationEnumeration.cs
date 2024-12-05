@@ -156,10 +156,10 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column,
                     new(CommandImageType.Default, Resources.Column),
                     new(CommandImageType.Export, Resources.ExportData)),
-                new NavigationEnumeration(ScopeType.DatabaseTableConstraint,    Resources.Icon_Key, Resources.Key) ,
+                new NavigationEnumeration(ScopeType.DatabaseConstraint,    Resources.Icon_Key, Resources.Key) ,
                 new NavigationEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
-                new NavigationEnumeration(ScopeType.DatabaseDependency,         Resources.Icon_Dependancy, Resources.Dependancy) ,
+                new NavigationEnumeration(ScopeType.DatabaseReference,         Resources.Icon_Dependancy, Resources.Dependancy) ,
                 new NavigationEnumeration(ScopeType.DatabaseProperty, Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
 
                 new NavigationEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},

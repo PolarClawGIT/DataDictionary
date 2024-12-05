@@ -10,17 +10,18 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <inheritdoc/>
     public interface IConstraintValue : IConstraintItem,
         IConstraintIndex, IConstraintIndexName, ICatalogIndex, ITableIndexName,
-        IBindingTableRow, IBindingRowState, IBindingPropertyChanged
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
-    public class ConstraintValue : ConstraintItem, IConstraintValue, IPathValue, INamedScopeSourceValue
+    public class ConstraintValue : ConstraintItem, IConstraintValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return pathValue.Path; } }
-
+        
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
 
@@ -28,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.DatabaseTableConstraint;
+        public ScopeType Scope { get; } = ScopeType.DatabaseConstraint;
 
         /// <inheritdoc/>
         public ConstraintValue() : base()

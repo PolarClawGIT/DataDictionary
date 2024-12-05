@@ -88,7 +88,7 @@ namespace DataDictionary.Main
         {
             Activate((data) =>
                 new DetailDataView<ConstraintValue, Forms.Database.DbConstraint>
-                    (ScopeType.DatabaseTableConstraint, data)
+                    (ScopeType.DatabaseConstraint, data)
                 { SelectedForm = (data) => new Forms.Database.DbConstraint(data) },
                 BusinessData.DatabaseModel.DbConstraints);
         }
@@ -130,7 +130,7 @@ namespace DataDictionary.Main
         private void menuDependencyItem_Click(object sender, EventArgs e)
         {
             Activate((data) => 
-                new DetailDataView(ScopeType.DatabaseDependency, data),
+                new DetailDataView(ScopeType.DatabaseReference, data),
                 BusinessData.DatabaseModel.DbReferences);
         }
 

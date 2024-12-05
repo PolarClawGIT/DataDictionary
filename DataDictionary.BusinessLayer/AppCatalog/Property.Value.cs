@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppProperty;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
@@ -8,12 +9,13 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface IPropertyValue : IPropertyItem,
-        IPropertyIndex, IPropertyIndexObject, ICatalogIndex, IScopeType,
-        IBindingTableRow, IBindingRowState, IBindingPropertyChanged
+        IPropertyIndex, IPropertyIndexObject, ICatalogIndex,
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
-    public class PropertyValue : PropertyItem, IPropertyValue, IPathValue
+    public class PropertyValue : PropertyItem, IPropertyValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

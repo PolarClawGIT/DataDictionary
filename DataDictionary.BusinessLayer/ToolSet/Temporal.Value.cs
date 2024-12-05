@@ -10,13 +10,13 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Item can be cast as a Modification Value
+    /// Item can be cast as a Temporal Value
     /// </summary>
     public interface ITemporalValue : IDataValue, ITemporalItem, ITemporalIndex
     { }
 
     /// <summary>
-    /// Implementation for an Item can be cast as a Modification Value
+    /// Implementation for an Item can be cast as a Temporal Value
     /// </summary>
     class TemporalValue : DataValue, ITemporalValue
     {

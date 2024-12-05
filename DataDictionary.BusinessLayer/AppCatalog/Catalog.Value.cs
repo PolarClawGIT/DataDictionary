@@ -9,11 +9,12 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <inheritdoc/>
     public interface ICatalogValue : ICatalogItem, ICatalogIndex, ICatalogIndexName,
-        IBindingTableRow, IBindingRowState, IBindingPropertyChanged, IScopeType
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : CatalogItem, ICatalogValue, IPathValue, INamedScopeSourceValue
+    public class CatalogValue : CatalogItem, ICatalogValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
