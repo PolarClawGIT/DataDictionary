@@ -97,7 +97,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[DOMAIN_CATALOG] As[DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	[DOMAIN_CATALOG] As[DatabaseName],
         ///		[DOMAIN_SCHEMA] As[SchemaName],
         ///		[DOMAIN_NAME] As[DomainName],
         ///		[DATA_TYPE] As[DataType],
@@ -107,8 +108,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         ///		[NUMERIC_PRECISION] As[NumericPrecision],
         ///		[NUMERIC_PRECISION_RADIX] As[NumericPrecisionRadix],
         ///		[NUMERIC_SCALE] As[NumericScale],
-        ///		[DATETIME_PRECISION] As[DateTimePrecision],
-        ///		[CHARACTER_SET_CATALOG] As[Charact [rest of string was truncated]&quot;;.
+        ///		[DATETI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

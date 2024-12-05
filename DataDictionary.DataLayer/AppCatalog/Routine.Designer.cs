@@ -70,7 +70,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dbo.sp_creatediagram, dbo.sp_renamediagram, dbo.sp_alterdiagram, dbo.sp_dropdiagram, dbo.fn_diagramobjects, dbo.sp_helpdiagrams, dbo.sp_helpdiagramdefinition, dbo.sp_upgraddiagrams.
+        ///   Looks up a localized string similar to dbo.sp_creatediagram, dbo.sp_renamediagram, dbo.sp_alterdiagram, dbo.sp_dropdiagram, dbo.fn_diagramobjects, dbo.sp_helpdiagrams, dbo.sp_helpdiagramdefinition, dbo.sp_upgraddiagrams, INFORMATION_SCHEMA.*, sys.*.
         /// </summary>
         internal static string IsSystem {
             get {
@@ -106,7 +106,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[ROUTINE_CATALOG] As [DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	[ROUTINE_CATALOG] As [DatabaseName],
         ///		[ROUTINE_SCHEMA] As [SchemaName],
         ///		[ROUTINE_NAME] As [RoutineName],
         ///		Case

@@ -88,9 +88,17 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppCatalog].[typeRoutineParameter]
-        ///[AppCatalog].[procSetRoutineParameter]
-        ///[AppCatalog].[procGetRoutineParameter].
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	P.[SPECIFIC_CATALOG] As [DatabaseName],
+        ///		P.[SPECIFIC_SCHEMA] As [SchemaName],
+        ///		P.[SPECIFIC_NAME] As [RoutineName],
+        ///		Case
+        ///		When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Procedure&apos;
+        ///		When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Function&apos;
+        ///		Else [ROUTINE_TYPE] 
+        ///		End As [RoutineType],
+        ///		IIF(R.[ROUTINE_TYPE] IN (&apos;FUNCTION&apos;) AND P.[ORDINAL_POSITION] = 0,&apos;RETURN&apos;,P.[PARAMETER_NAME]) As [ParameterName],
+        ///		P.[ORDINAL_POSITION] A [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

@@ -121,7 +121,7 @@
     <value>[AppCatalog].[procGetRoutine]</value>
   </data>
   <data name="IsSystem" xml:space="preserve">
-    <value>dbo.sp_creatediagram, dbo.sp_renamediagram, dbo.sp_alterdiagram, dbo.sp_dropdiagram, dbo.fn_diagramobjects, dbo.sp_helpdiagrams, dbo.sp_helpdiagramdefinition, dbo.sp_upgraddiagrams</value>
+    <value>dbo.sp_creatediagram, dbo.sp_renamediagram, dbo.sp_alterdiagram, dbo.sp_dropdiagram, dbo.fn_diagramobjects, dbo.sp_helpdiagrams, dbo.sp_helpdiagramdefinition, dbo.sp_upgraddiagrams, INFORMATION_SCHEMA.*, sys.*</value>
   </data>
   <data name="RoutineId" xml:space="preserve">
     <value>@RoutineId</value>

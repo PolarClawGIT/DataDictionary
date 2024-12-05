@@ -121,7 +121,7 @@
     <value>[AppCatalog].[procGetTable]</value>
   </data>
   <data name="IsSystem" xml:space="preserve">
-    <value>dbo.__RefactorLog, dbo.sysdiagrams</value>
+    <value>dbo.__RefactorLog, dbo.sysdiagrams, INFORMATION_SCHEMA.*, sys.*</value>
   </data>
   <data name="SetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procSetTable]</value>

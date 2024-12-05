@@ -64,9 +64,15 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get
             {
-                return Table.IsSystem
-                    .Split(',')
-                    .Any(w => w.Equals(
+                var list = Table.IsSystem.Split(',').Select(s =>
+                    {
+                        if (s.EndsWith(".*") && TableName is String)
+                        { s.Substring(0, s.Length - 1).Concat(TableName); }
+
+                        return s.Trim();
+                    });
+
+                return list.Any(w => w.Trim().Equals(
                         String.Format("{0}.{1}", SchemaName, TableName),
                         KeyExtension.CompareString));
             }

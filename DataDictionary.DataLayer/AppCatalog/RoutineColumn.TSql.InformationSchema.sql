@@ -1,4 +1,4 @@
-﻿-- Remember, Resource files do not update until they are saved directly.
+﻿-- Remember: Resource files do not update until they are saved directly.
 Select	I.[TABLE_CATALOG] As [DatabaseName],
 		I.[TABLE_SCHEMA] As [SchemaName],
 		I.[TABLE_NAME] As [RoutineName],

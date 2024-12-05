@@ -1,4 +1,5 @@
-﻿Select	[CONSTRAINT_CATALOG] As [DatabaseName],
+﻿-- Remember: Resource files do not update until they are saved directly.
+Select	[CONSTRAINT_CATALOG] As [DatabaseName],
 		[CONSTRAINT_SCHEMA] As [SchemaName],
 		[CONSTRAINT_NAME] As [ConstraintName],
 		[TABLE_NAME] As [TableName],

@@ -84,7 +84,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             {
                 return Catalog.IsSystem
                     .Split(',')
-                    .Any(w => w.Equals(DatabaseName, KeyExtension.CompareString));
+                    .Any(w => w.Trim().Equals(DatabaseName, KeyExtension.CompareString));
             }
         }
 

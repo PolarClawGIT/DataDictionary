@@ -1,4 +1,5 @@
-﻿Select	[ROUTINE_CATALOG] As [DatabaseName],
+﻿-- Remember: Resource files do not update until they are saved directly.
+Select	[ROUTINE_CATALOG] As [DatabaseName],
 		[ROUTINE_SCHEMA] As [SchemaName],
 		[ROUTINE_NAME] As [RoutineName],
 		Case

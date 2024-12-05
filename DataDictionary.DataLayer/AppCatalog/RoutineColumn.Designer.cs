@@ -97,7 +97,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -- Remember, Resource files do not update until they are saved directly.
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
         ///Select	I.[TABLE_CATALOG] As [DatabaseName],
         ///		I.[TABLE_SCHEMA] As [SchemaName],
         ///		I.[TABLE_NAME] As [RoutineName],

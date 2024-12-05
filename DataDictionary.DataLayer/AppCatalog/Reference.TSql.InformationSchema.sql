@@ -1,4 +1,5 @@
-﻿Set NoCount On;
+﻿-- Remember: Resource files do not update until they are saved directly.
+Set NoCount On;
 
 Declare @Object Table (
 	[object_id] int Not Null,

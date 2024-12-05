@@ -97,7 +97,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CONSTRAINT_CATALOG] As [DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	[CONSTRAINT_CATALOG] As [DatabaseName],
         ///		[CONSTRAINT_SCHEMA] As [SchemaName],
         ///		[CONSTRAINT_NAME] As [ConstraintName],
         ///		[TABLE_NAME] As [TableName],

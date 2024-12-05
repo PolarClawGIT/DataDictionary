@@ -97,7 +97,23 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Set NoCount On;
+        ///
+        ///Declare @Object Table (
+        ///	[object_id] int Not Null,
+        ///	[SchemaName] SysName Not Null,
+        ///	[ObjectName] SysName Not Null,
+        ///	Primary Key ([object_id]))
+        ///
+        ///Declare @Result Table (
+        ///	-- [sys].[dm_sql_referenced_entities]
+        ///	[referencing_id]			int Not Null,
+        ///	[referencing_minor_id]		int Null,
+        ///	[referenced_server_name]	sysname Null,
+        ///	[referenced_database_name]	sysname Null,
+        ///	[referenced_schema_name]	sysname Null,
+        ///	[refere [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

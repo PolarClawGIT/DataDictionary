@@ -88,7 +88,18 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	T.[CONSTRAINT_CATALOG] As [DatabaseName],
+        ///		T.[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///		T.[TABLE_NAME] As [TableName],
+        ///		T.[CONSTRAINT_NAME] As [ConstraintName],
+        ///		C.[COLUMN_NAME] As [ColumnName],
+        ///		C.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///		F.[TABLE_SCHEMA] As [ReferencedSchemaName],
+        ///		F.[TABLE_NAME] As [ReferencedTableName],
+        ///		F.[COLUMN_NAME] As [ReferencedColumnName]
+        ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
+        ///	 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

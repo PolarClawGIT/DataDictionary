@@ -57,7 +57,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             {
                 return Schema.IsSystem
                     .Split(',')
-                    .Any(w => w.Equals(SchemaName, KeyExtension.CompareString));
+                    .Any(w => w.Trim().Equals(SchemaName, KeyExtension.CompareString));
             }
         }
 
