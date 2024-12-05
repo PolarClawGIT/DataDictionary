@@ -5,6 +5,7 @@ Select	FC.[CatalogId], -- AK
 		FC.[DatabaseName], --AK
 		D.[SchemaName], -- AK
 		D.[ObjectName], -- AK
+		D.[ObjectType],
 		D.[ReferencedDatabaseName], --AK
 		D.[ReferencedSchemaName], -- AK
 		D.[ReferencedObjectName], -- AK
