@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Application ID for the Routine Parameter.
         /// </summary>
-        Guid? ParameterId { get; }
+        Guid? RoutineParameterId { get; }
     }
 
     /// <summary>
@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     public class RoutineParameterKey : IRoutineParameterKey, IKeyEquality<IRoutineParameterKey>
     {
         /// <inheritdoc/>
-        public Guid? ParameterId { get; init; } = Guid.Empty;
+        public Guid? RoutineParameterId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the RoutineParameter Key.
@@ -27,14 +27,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="source"></param>
         public RoutineParameterKey(IRoutineParameterKey source) : base()
         {
-            if (source.ParameterId is Guid value) { ParameterId = value; }
-            else { ParameterId = Guid.Empty; }
+            if (source.RoutineParameterId is Guid value) { RoutineParameterId = value; }
+            else { RoutineParameterId = Guid.Empty; }
         }
 
         #region IEquatable
         /// <inheritdoc/>
         public virtual bool Equals(IRoutineParameterKey? other)
-        { return other is IRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(ParameterId, other.ParameterId); }
+        { return other is IRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(RoutineParameterId, other.RoutineParameterId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(ParameterId); }
+        { return HashCode.Combine(RoutineParameterId); }
         #endregion
     }
 }

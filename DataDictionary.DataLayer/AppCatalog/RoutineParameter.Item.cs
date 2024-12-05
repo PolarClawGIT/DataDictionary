@@ -27,10 +27,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Guid? ParameterId
+        public Guid? RoutineParameterId
         {
-            get { return GetValue<Guid>(nameof(ParameterId)); }
-            private init { SetValue<Guid>(nameof(ParameterId), value); }
+            get { return GetValue<Guid>(nameof(RoutineParameterId)); }
+            private init { SetValue<Guid>(nameof(RoutineParameterId), value); }
         }
 
         /// <inheritdoc/>
@@ -258,7 +258,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ParameterId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(RoutineParameterId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(RoutineName), typeof(string)){ AllowDBNull = false},
@@ -299,7 +299,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Routine Parameter
         /// </summary>
         public RoutineParameterItem() : base()
-        { ParameterId = Guid.NewGuid(); }
+        { RoutineParameterId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, IRoutineParameter source)

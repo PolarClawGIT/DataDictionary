@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataIndex(RoutineParameterIndex source)
-        { return new DataIndex() { SystemId = source.ParameterId ?? Guid.Empty }; }
+        { return new DataIndex() { SystemId = source.RoutineParameterId ?? Guid.Empty }; }
     }
 
 

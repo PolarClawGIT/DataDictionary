@@ -9,7 +9,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey, IDbTableType
+    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey, 
+        IDbTableType, ITemporalItem
     { }
 
     /// <summary>
@@ -27,10 +28,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Guid? ColumnId
+        public Guid? TableColumnId
         {
-            get { return GetValue<Guid>(nameof(ColumnId)); }
-            private init { SetValue<Guid>(nameof(ColumnId), value); }
+            get { return GetValue<Guid>(nameof(TableColumnId)); }
+            private init { SetValue<Guid>(nameof(TableColumnId), value); }
         }
 
         /// <inheritdoc/>
@@ -246,10 +247,68 @@ namespace DataDictionary.DataLayer.AppCatalog
             set { SetValue(nameof(GeneratedAlwayType), value); }
         }
 
+        /// <inheritdoc/>
+        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? CreatedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn
+        {
+            get
+            {
+                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
+                if (value is DateTime baseDate)
+                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted
+        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated
+        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted
+        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent
+        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification
+        {
+            get
+            {
+                if (IsDeleted == true) { return DbModificationType.Deleted; }
+                else if (IsInserted == true) { return DbModificationType.Inserted; }
+                else if (IsUpdated == true) { return DbModificationType.Updated; }
+                else { return DbModificationType.Null; }
+            }
+        }
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ColumnId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TableColumnId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
@@ -279,13 +338,21 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(IsComputed), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(ComputedDefinition), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(GeneratedAlwayType), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <summary>
         /// Constructor for the Database Table Column
         /// </summary>
         public TableColumnItem() : base()
-        { ColumnId = new Guid(); }
+        { TableColumnId = new Guid(); }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, ITableColumn source)

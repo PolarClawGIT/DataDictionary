@@ -162,6 +162,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 try { Connection.ExecuteNonQuery(execute); }
                 catch (Exception ex)
                 {
+                    ex.Data.Add("WorkName", workName);
                     ex.Data.Add("Command", execute.CommandText);
                     throw;
                 }
@@ -188,7 +189,12 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 Command execute = command(Connection);
 
                 try { target.Load(Connection.ExecuteReader(execute)); }
-                catch (Exception ex) { ex.Data.Add("Command", execute.CommandText); throw; }
+                catch (Exception ex)
+                {
+                    ex.Data.Add("WorkName", workName);
+                    ex.Data.Add("Command", execute.CommandText);
+                    throw;
+                }
             }
         }
 
@@ -217,6 +223,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 }
                 catch (Exception ex)
                 {
+                    ex.Data.Add("WorkName", workName);
                     ex.Data.Add("Type", typeof(TData).Name);
                     ex.Data.Add("Get Method", getData.Method.Name);
                     throw;

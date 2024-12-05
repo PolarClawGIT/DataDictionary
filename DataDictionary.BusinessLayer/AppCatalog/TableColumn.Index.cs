@@ -29,6 +29,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator DataIndex(TableColumnIndex source)
-        { return new DataIndex() { SystemId = source.ColumnId ?? Guid.Empty }; }
+        { return new DataIndex() { SystemId = source.TableColumnId ?? Guid.Empty }; }
     }
 }
