@@ -75,7 +75,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             IEnumerable<TItem> data = this.Where(w =>
                 (catalogId is null || w.CatalogId == catalogId));
-            command.AddParameter(WriteData.Data, TableColumn.TSql_InformationSchema, data);
+            command.AddParameter(WriteData.Data, TableColumn.TableType, data);
             return command;
         }
 
