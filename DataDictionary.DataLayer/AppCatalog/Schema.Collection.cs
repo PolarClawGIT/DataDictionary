@@ -71,7 +71,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Schema.GetProcedure;
+            command.CommandText = Schema.SetProcedure;
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Schema.SchemaId, schemaId);
 
