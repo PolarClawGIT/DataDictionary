@@ -262,10 +262,10 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(IsInsertAll), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(IsIncomplete), typeof(bool)){ AllowDBNull = true},
 
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},

@@ -258,10 +258,10 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(PropertyName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = false},
             // Temporal Data
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
