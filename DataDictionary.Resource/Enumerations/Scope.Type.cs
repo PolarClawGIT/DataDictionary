@@ -220,6 +220,11 @@
         DatabaseFunctionParameter,
 
         /// <summary>
+        /// SQL Table Value Function Column
+        /// </summary>
+        DatabaseFunctionColumn,
+
+        /// <summary>
         /// SQL Reference between Objects
         /// </summary>
         DatabaseReference,
