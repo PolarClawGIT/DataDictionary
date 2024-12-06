@@ -181,7 +181,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Constraint Column
         /// </summary>
         public ConstraintColumnItem() : base()
-        { ConstraintColumnId = new Guid(); }
+        { ConstraintColumnId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

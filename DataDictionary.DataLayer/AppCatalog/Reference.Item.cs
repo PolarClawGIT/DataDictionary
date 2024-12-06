@@ -275,7 +275,8 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Constructor for the Database Reference Item
         /// </summary>
-        public ReferenceItem() : base() { }
+        public ReferenceItem() : base()
+        { ReferenceId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

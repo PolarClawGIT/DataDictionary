@@ -351,7 +351,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Table Column
         /// </summary>
         public RoutineColumnItem() : base()
-        { RoutineColumnId = new Guid(); }
+        { RoutineColumnId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, IRoutineColumn source)

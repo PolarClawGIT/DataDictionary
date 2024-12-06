@@ -352,7 +352,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Table Column
         /// </summary>
         public TableColumnItem() : base()
-        { TableColumnId = new Guid(); }
+        { TableColumnId = Guid.NewGuid(); }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, ITableColumn source)
