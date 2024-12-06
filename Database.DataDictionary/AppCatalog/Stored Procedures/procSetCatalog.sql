@@ -201,7 +201,7 @@ Begin Try
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId]
 	Where	S.[CatalogId] is Null And
-			T.[CatalogId] = @CatalogId -- @CatalogId must be specfied
+			T.[CatalogId] = @CatalogId -- @CatalogId must be specified
 	Print FormatMessage ('Delete [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
