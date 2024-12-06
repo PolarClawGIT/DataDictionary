@@ -10,6 +10,12 @@ namespace DataDictionary.DataLayer.AppCatalog
     public class CatalogMetaData : BindingTableRow, ICatalog
     {
         /// <inheritdoc/>
+        public String? CatalogTitle { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
+
+        /// <inheritdoc/>
+        public String? CatalogDescription { get {return String.Empty; } }
+
+        /// <inheritdoc/>
         public String ServerName { get { return GetValue(nameof(ServerName)) ?? String.Empty; } }
 
         /// <inheritdoc/>
@@ -24,6 +30,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Owner of the Database
         /// </summary>
         public String Owner { get { return GetValue(nameof(Owner)) ?? String.Empty; } }
+
+        /// <inheritdoc/>
+        public DateTime? SourceDate { get; } = DateTime.Now;
 
         /// <summary>
         /// Constructor for Catalog Information Schema

@@ -50,18 +50,17 @@ namespace DataDictionary.Main.Forms.Database
 
             void BindData()
             {
-                CatalogSynchronizeValue catalogNames;
                 catalogBinding.DataSource = catalogs;
-                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(catalogNames.Source), name); };
+                //Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(catalogNames.Source), name); };
 
                 catalogNavigation.AutoGenerateColumns = false;
                 catalogNavigation.DataSource = catalogBinding;
 
-                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogTitle))));
-                catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.CatalogDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
-                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.ServerName))));
-                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.DatabaseName))));
-                sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDate))));
+                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogTitle)));
+                catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, nameof(CatalogSynchronizeValue.ServerName)));
+                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, nameof(CatalogSynchronizeValue.DatabaseName)));
+                sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, nameof(CatalogSynchronizeValue.SourceDate)));
             }
         }
 
@@ -121,12 +120,14 @@ namespace DataDictionary.Main.Forms.Database
 
                     IsLocked(true);
                     work.AddRange(catalogs.ImportFromSchema(source));
+                    SuspendBinding(catalogBinding);
                     DoWork(work, onCompleting);
                 }
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                ResumeBinding(catalogBinding);
                 catalogs.Refresh();
                 SendMessage(new RefreshNavigation());
                 IsLocked(false);

@@ -12,22 +12,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>
     public interface ICatalogItem : ICatalog, ICatalogKey,
         IDbIsSystem, ITemporalItem
-    {
-        /// <summary>
-        /// Title given to the Catalog. Default is the Database Name.
-        /// </summary>
-        String? CatalogTitle { get; }
-
-        /// <summary>
-        /// Description given to the Catalog.
-        /// </summary>
-        String? CatalogDescription { get; }
-
-        /// <summary>
-        /// The Date that the database was extracted.
-        /// </summary>
-        DateTime? SourceDate { get; }
-    }
+    { }
 
     /// <summary>
     /// Implementation for Database Catalog Item.
@@ -178,11 +163,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         public virtual void Update(ICatalog source)
         {
             // Handle LocalDb
-            if(source.ServerName is String && source.ServerName.Contains(Catalog.LocalDbContains))
+            if (source.ServerName is String && source.ServerName.Contains(Catalog.LocalDbContains))
             { ServerName = Catalog.LocalDbName; }
-            else
-            { ServerName = source.ServerName; }
-            
+            else { ServerName = source.ServerName; }
+
             SourceDate = DateTime.Now;
         }
 

@@ -12,18 +12,33 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize value
     /// </summary>
-    public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>
+    public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>, ICatalog
     {
-        /// <inheritdoc cref="CatalogItem.CatalogTitle"/>
+        /// <inheritdoc cref="ICatalog.CatalogTitle"/>
         public String CatalogTitle
         {
             get { return Source.CatalogTitle ?? String.Empty; }
             set { Source.CatalogTitle = value; }
         }
 
-        /// <inheritdoc cref="CatalogItem.DatabaseName"/>
+        /// <inheritdoc cref="ICatalog.CatalogDescription"/>
+        public String? CatalogDescription
+        {
+            get { return Source.CatalogDescription ?? String.Empty; }
+            set { Source.CatalogDescription = value; }
+        }
+
+        /// <inheritdoc cref="ICatalog.ServerName"/>
+        public String ServerName
+        { get { return Source.ServerName ?? String.Empty; } }
+
+        /// <inheritdoc cref="ICatalogKeyName.DatabaseName"/>
         public String DatabaseName
         { get { return Source.DatabaseName ?? String.Empty; } }
+
+        /// <inheritdoc cref="ICatalog.SourceDate"/>
+        public DateTime? SourceDate
+        { get { return Source.SourceDate ?? DateTime.Now; } }
 
         /// <inheritdoc/>
         public CatalogSynchronizeValue(CatalogValue data) : base(data)
@@ -32,8 +47,9 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc/>
         protected override void Source_OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName))
-            { OnPropertyChanged(e.PropertyName); }
+            OnPropertyChanged(e.PropertyName);
+            //if (e.PropertyName is nameof(CatalogTitle) or nameof(ServerName) or nameof(DatabaseName) or nameof(SourceDate))
+            //{ OnPropertyChanged(e.PropertyName); }
         }
     }
 
