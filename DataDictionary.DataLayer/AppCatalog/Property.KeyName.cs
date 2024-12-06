@@ -44,7 +44,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 new PropertyKeyObject(this).Equals(other) &&
                 (String.IsNullOrWhiteSpace(PropertyName) &&
                   String.IsNullOrWhiteSpace(other.PropertyName) ||
-                  Level0Name.Equals(other.PropertyName, KeyExtension.CompareString));
+                  PropertyName.Equals(other.PropertyName, KeyExtension.CompareString));
         }
 
         /// <inheritdoc/>
@@ -100,7 +100,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public override string ToString()
         {
             String result = base.ToString();
-            if (!String.IsNullOrWhiteSpace(PropertyName)) { result = String.Format("{0}.{1}", result, PropertyName); }
+            if (!String.IsNullOrWhiteSpace(PropertyName)) { result = String.Format("{0}: {1}", result, PropertyName); }
 
             return result;
         }

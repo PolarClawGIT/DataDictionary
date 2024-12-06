@@ -82,5 +82,18 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             return schemas;
         }
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            String result = String.Empty;
+            if (!String.IsNullOrWhiteSpace(DatabaseName)) { result = String.Format("{0}", result, DatabaseName); }
+            if (!String.IsNullOrWhiteSpace(Level0Name)) { result = String.Format("{0}.{1}", result, Level0Name); }
+            if (!String.IsNullOrWhiteSpace(Level1Name)) { result = String.Format("{0}.{1}", result, Level1Name); }
+            if (!String.IsNullOrWhiteSpace(Level2Name)) { result = String.Format("{0}.{1}", result, Level2Name); }
+
+            if (!String.IsNullOrWhiteSpace(PropertyName)) { result = String.Format("{0}: {1}", result, PropertyName); }
+
+            return result;
+        }
     }
 }
