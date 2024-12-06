@@ -58,10 +58,11 @@
             menuPropertyItem = new ToolStripMenuItem();
             menuConstraintItem = new ToolStripMenuItem();
             menuConstraintColumnItem = new ToolStripMenuItem();
-            menuDataTypeItem = new ToolStripMenuItem();
+            menuDomainItem = new ToolStripMenuItem();
             menuRoutineItem = new ToolStripMenuItem();
             menuRoutineParameterItem = new ToolStripMenuItem();
-            menuDependencyItem = new ToolStripMenuItem();
+            menuRoutineColumnItem = new ToolStripMenuItem();
+            menuReferenceItem = new ToolStripMenuItem();
             manageDatabasesCommand = new ToolStripSplitButton();
             libraryContextMenu = new ContextMenuStrip(components);
             viewLibrarySourceCommand = new ToolStripMenuItem();
@@ -321,10 +322,9 @@
             // 
             // catalogContextMenu
             // 
-            catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuDependencyItem });
+            catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuConstraintItem, menuConstraintColumnItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineColumnItem, menuDomainItem, menuPropertyItem, menuReferenceItem });
             catalogContextMenu.Name = "dbSchemacontextMenu";
-            catalogContextMenu.OwnerItem = manageDatabasesCommand;
-            catalogContextMenu.Size = new Size(222, 246);
+            catalogContextMenu.Size = new Size(223, 290);
             // 
             // menuCatalogItem
             // 
@@ -382,13 +382,13 @@
             menuConstraintColumnItem.Text = "browse Constraint Columns";
             menuConstraintColumnItem.Click += menuConstraintColumnItem_Click;
             // 
-            // menuDataTypeItem
+            // menuDomainItem
             // 
-            menuDataTypeItem.Image = Properties.Resources.DomainType;
-            menuDataTypeItem.Name = "menuDataTypeItem";
-            menuDataTypeItem.Size = new Size(221, 22);
-            menuDataTypeItem.Text = "browse Data Types";
-            menuDataTypeItem.Click += menuDataTypeItem_Click;
+            menuDomainItem.Image = Properties.Resources.DomainType;
+            menuDomainItem.Name = "menuDomainItem";
+            menuDomainItem.Size = new Size(222, 22);
+            menuDomainItem.Text = "browse Domains (data type)";
+            menuDomainItem.Click += menuDataTypeItem_Click;
             // 
             // menuRoutineItem
             // 
@@ -406,13 +406,21 @@
             menuRoutineParameterItem.Text = "browse Routine Parameters";
             menuRoutineParameterItem.Click += menuRoutineParameterItem_Click;
             // 
-            // menuDependencyItem
+            // menuRoutineColumnItem
             // 
-            menuDependencyItem.Image = Properties.Resources.Dependancy;
-            menuDependencyItem.Name = "menuDependencyItem";
-            menuDependencyItem.Size = new Size(221, 22);
-            menuDependencyItem.Text = "browse Dependencies";
-            menuDependencyItem.Click += menuDependencyItem_Click;
+            menuRoutineColumnItem.Image = Properties.Resources.Column;
+            menuRoutineColumnItem.Name = "menuRoutineColumnItem";
+            menuRoutineColumnItem.Size = new Size(221, 22);
+            menuRoutineColumnItem.Text = "browse Routine Columns";
+            menuRoutineColumnItem.Click += menuRoutineColumnItem_Click;
+            // 
+            // menuReferenceItem
+            // 
+            menuReferenceItem.Image = Properties.Resources.Dependancy;
+            menuReferenceItem.Name = "menuReferenceItem";
+            menuReferenceItem.Size = new Size(221, 22);
+            menuReferenceItem.Text = "browse Reference";
+            menuReferenceItem.Click += menuReferenceItem_Click;
             // 
             // manageDatabasesCommand
             // 
@@ -747,13 +755,14 @@
             // 
             securityContextMenu.Items.AddRange(new ToolStripItem[] { securityPrincipal, securityRole });
             securityContextMenu.Name = "securityContextMenu";
-            securityContextMenu.Size = new Size(181, 70);
+            securityContextMenu.OwnerItem = securityToolStripMenuItem;
+            securityContextMenu.Size = new Size(121, 48);
             // 
             // securityPrincipal
             // 
             securityPrincipal.Image = Properties.Resources.User;
             securityPrincipal.Name = "securityPrincipal";
-            securityPrincipal.Size = new Size(180, 22);
+            securityPrincipal.Size = new Size(120, 22);
             securityPrincipal.Text = "Principal";
             securityPrincipal.Click += SecurityPrincipal_Click;
             // 
@@ -761,7 +770,7 @@
             // 
             securityRole.Image = Properties.Resources.ApplicationRole;
             securityRole.Name = "securityRole";
-            securityRole.Size = new Size(180, 22);
+            securityRole.Size = new Size(120, 22);
             securityRole.Text = "Role";
             securityRole.Click += SecurityRole_Click;
             // 
@@ -1031,10 +1040,10 @@
         private ToolStripMenuItem gridViewToolStripMenuItem;
         private ToolStripMenuItem menuConstraintItem;
         private ToolStripMenuItem menuConstraintColumnItem;
-        private ToolStripMenuItem menuDataTypeItem;
+        private ToolStripMenuItem menuDomainItem;
         private ToolStripMenuItem menuRoutineItem;
         private ToolStripMenuItem menuRoutineParameterItem;
-        private ToolStripMenuItem menuDependencyItem;
+        private ToolStripMenuItem menuReferenceItem;
         private ToolStripMenuItem applicationToolStripMenuItem;
         private ToolStripMenuItem testFormToolStripMenuItem;
         private ToolStripMenuItem peekAtClipboardToolStripMenuItem;
@@ -1086,5 +1095,6 @@
         private ToolStripMenuItem securityPrincipal;
         private ToolStripMenuItem securityRole;
         private ToolStripMenuItem securityToolStripMenuItem;
+        private ToolStripMenuItem menuRoutineColumnItem;
     }
 }

@@ -96,7 +96,7 @@ namespace DataDictionary.Main
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView(ScopeType.DatabaseTableColumn, data),
+                new DetailDataView(ScopeType.DatabaseConstraintColumn, data),
                 BusinessData.DatabaseModel.DbConstraintColumns);
         }
 
@@ -127,9 +127,16 @@ namespace DataDictionary.Main
                 BusinessData.DatabaseModel.DbRoutineParameters);
         }
 
-        private void menuDependencyItem_Click(object sender, EventArgs e)
+        private void menuRoutineColumnItem_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
+            Activate((data) =>
+                new DetailDataView(ScopeType.DatabaseFunctionColumn, data),
+                BusinessData.DatabaseModel.DbRoutineColumns);
+        }
+
+        private void menuReferenceItem_Click(object sender, EventArgs e)
+        {
+            Activate((data) =>
                 new DetailDataView(ScopeType.DatabaseReference, data),
                 BusinessData.DatabaseModel.DbReferences);
         }
@@ -163,15 +170,15 @@ namespace DataDictionary.Main
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
-                new DetailDataView(ScopeType.DatabaseProperty, data), 
+            Activate((data) =>
+                new DetailDataView(ScopeType.DatabaseProperty, data),
                 BusinessData.DatabaseModel.DbProperties);
         }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
-                new DetailDataView(ScopeType.ModelAttributeProperty, data), 
+            Activate((data) =>
+                new DetailDataView(ScopeType.ModelAttributeProperty, data),
                 BusinessData.DomainModel.Attributes.Properties);
         }
 
@@ -214,7 +221,7 @@ namespace DataDictionary.Main
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
+            Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityAlias, data),
                 BusinessData.DomainModel.Entities.Aliases);
         }
@@ -235,8 +242,8 @@ namespace DataDictionary.Main
 
         private void menuModelDefinition_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
-                new DetailDataView(ScopeType.ModelDefinition, data), 
+            Activate((data) =>
+                new DetailDataView(ScopeType.ModelDefinition, data),
                 BusinessData.DomainModel.Definitions);
         }
 
@@ -269,13 +276,13 @@ namespace DataDictionary.Main
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView(ScopeType.ScriptingTemplateNode, data), 
+                new DetailDataView(ScopeType.ScriptingTemplateNode, data),
                 BusinessData.ScriptingEngine.TemplateNodes);
         }
 
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
         {
-            Activate((data) => 
+            Activate((data) =>
                 new DetailDataView(ScopeType.ScriptingTemplateAttribute, data),
                 BusinessData.ScriptingEngine.TemplateAttributes);
         }
