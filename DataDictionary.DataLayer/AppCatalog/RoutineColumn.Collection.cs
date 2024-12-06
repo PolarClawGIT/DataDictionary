@@ -120,7 +120,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<RoutineColumnKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new RoutineColumnKeyName(s)).
-                Union(columns.Select(s => new RoutineColumnKeyName(s)));
+                Union(columns.Select(s => new RoutineColumnKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

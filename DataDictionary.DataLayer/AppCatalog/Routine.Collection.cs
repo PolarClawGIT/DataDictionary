@@ -111,7 +111,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<RoutineKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new RoutineKeyName(s)).
-                Union(routines.Select(s => new RoutineKeyName(s)));
+                Union(routines.Select(s => new RoutineKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

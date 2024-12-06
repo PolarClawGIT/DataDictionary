@@ -108,7 +108,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<PropertyKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new PropertyKeyName(s)).
-                Union(properties.Select(s => new PropertyKeyName(s)));
+                Union(properties.Select(s => new PropertyKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

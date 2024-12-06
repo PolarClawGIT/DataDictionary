@@ -110,7 +110,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<SchemaKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new SchemaKeyName(s)).
-                Union(schemas.Select(s => new SchemaKeyName(s)));
+                Union(schemas.Select(s => new SchemaKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

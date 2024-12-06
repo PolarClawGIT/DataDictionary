@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             IEnumerable<CatalogKeyName> allKeys = this.
                 Select(s => new CatalogKeyName(s)).
-                Union(catalogs.Select(s => new CatalogKeyName(s)));
+                Union(catalogs.Select(s => new CatalogKeyName(s))).ToList();
 
             foreach (var key in allKeys) // Only one value is expected
             {

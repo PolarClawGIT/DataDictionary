@@ -103,7 +103,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<ConstraintColumnKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new ConstraintColumnKeyName(s)).
-                Union(source.Select(s => new ConstraintColumnKeyName(s)));
+                Union(source.Select(s => new ConstraintColumnKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

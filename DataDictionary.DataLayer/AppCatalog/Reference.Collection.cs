@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<ReferenceKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new ReferenceKeyName(s)).
-                Union(references.Select(s => new ReferenceKeyName(s)));
+                Union(references.Select(s => new ReferenceKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {
