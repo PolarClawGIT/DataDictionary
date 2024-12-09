@@ -77,6 +77,24 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
+	Delete From [App_DataDictionary].[ModelProperty]
+	From	[App_DataDictionary].[ModelProperty] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Set @RowCount = @@RowCount
+	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelDefinition]
+	From	[App_DataDictionary].[ModelDefinition] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Set @RowCount = @@RowCount
+	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[ModelProcess]
 	From	[App_DataDictionary].[ModelProcess] T
 			Left Join @Values S
