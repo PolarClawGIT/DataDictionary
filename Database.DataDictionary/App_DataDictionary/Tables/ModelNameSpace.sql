@@ -19,7 +19,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ModelNameSpace] PRIMARY KEY CLUSTERED ([NameSpaceId] ASC),
 --	CONSTRAINT [FK_ModelNameSpaceParent] FOREIGN KEY ([ParentNameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
-	CONSTRAINT [FK_ModelNameSpaceModel] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
+	CONSTRAINT [FK_ModelNameSpaceModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
 	CONSTRAINT [UK_ModelNameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_ModelNameSpaceParent] FOREIGN KEY ([ModelId], [ParentNameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([ModelId], [NameSpaceId]),
 )

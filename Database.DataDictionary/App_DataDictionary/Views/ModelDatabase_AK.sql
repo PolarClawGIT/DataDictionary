@@ -6,7 +6,7 @@ Select	M.[ModelId],
 		C.[CatalogId],
 		C.[DatabaseName] As [DatabaseName]
 From	[AppCatalog].[Catalog] C
-		Inner Join [App_DataDictionary].[ModelCatalog] M
+		Inner Join [AppModel].[ModelCatalog] M
 		On	C.[CatalogId] = M.[CatalogId]
 GO
 /*

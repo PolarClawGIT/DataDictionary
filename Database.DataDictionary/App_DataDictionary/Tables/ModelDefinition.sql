@@ -9,7 +9,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_ModelDefinition] PRIMARY KEY ([ModelId] ASC, [DefinitionId] ASC),
-	CONSTRAINT [FK_ModelDefinition_Model] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
+	CONSTRAINT [FK_ModelDefinition_Model] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
 	CONSTRAINT [FK_ModelDefinition_Definition] FOREIGN KEY ([DefinitionId]) REFERENCES [App_DataDictionary].[DomainDefinition] ([DefinitionId]),
 )
 GO

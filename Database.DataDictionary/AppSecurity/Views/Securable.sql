@@ -16,7 +16,7 @@ With [Securable] As (
 	Union
 	Select	[ModelId] As [SecurableId],
 			[ModelTitle] As [SecurableTitle]
-	From	[App_DataDictionary].[Model]
+	From	[AppModel].[Model]
 	Union
 	Select	[TemplateId] As [SecurableId],
 			[TemplateTitle] As [SecurableTitle]
