@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppModel].[procSetDefinitionEnumeration]
+﻿CREATE PROCEDURE [AppModel].[procSetDefinition]
 		@ModelId UniqueIdentifier = Null,
 		@DefinitionId UniqueIdentifier = Null,
 		@Data [AppModel].[typeDefinition] ReadOnly
@@ -24,71 +24,80 @@ Begin Try
 		[DefinitionId]             UniqueIdentifier NOT NULL,
 		[DefinitionTitle]          [App_DataDictionary].[typeTitle] Not Null,
 		[DefinitionDescription]    [App_DataDictionary].[typeDescription] Null,
-		Primary Key ([DefinitionId]))
+		[IsCommon]                 Bit Not Null,
+		Primary Key ([DefinitionId]),
+		Unique ([DefinitionTitle]))
 
 	Insert Into @Values
-	Select	X.[DefinitionId],
+	Select	Coalesce(D.[DefinitionId], @DefinitionId, NewId()),
 			NullIf(Trim(D.[DefinitionTitle]),'') As [DefinitionTitle],
-			NullIf(Trim(D.[DefinitionDescription]),'') As [DefinitionDescription]
+			NullIf(Trim(D.[DefinitionDescription]),'') As [DefinitionDescription],
+			IsNull(D.[IsCommon],0) As [IsCommon]
 	From	@Data D
-			Cross apply (
-				Select	Coalesce(D.[DefinitionId], @DefinitionId, NewId()) As [DefinitionId]) X
+	Where	(@DefinitionId is Null Or @DefinitionId = Coalesce(D.[DefinitionId], @DefinitionId))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
 	Delete From [AppModel].[ModelDefinition]
-	From	@Values S
-			Left Join [AppModel].[ModelDefinition] T
-			On	S.[DefinitionId] = T.[DefinitionId]
-	Where	@ModelId = T.[ModelId] And
-			T.[DefinitionId] is Null
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	From	[AppModel].[ModelDefinition] T
+			Inner Join [AppModel].[ModelDefinitionHs] H
+			On	T.[DefinitionId] = H.[DefinitionId] And
+				T.[ModelId] = H.[ModelId]
+			Left Join @Values S
+			On	H.[DefinitionId] = S.[DefinitionId]
+	Where	S.[DefinitionId] is Null And
+			(@DefinitionId is Not Null Or @ModelId is Not Null) And
+			(@DefinitionId is Null Or H.[DefinitionId] = @DefinitionId) And
+			(@ModelId is Null Or H.[ModelId] = @ModelId)
+	Print FormatMessage ('Delete [AppModel].[ModelDefinition]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[DefinitionEnumeration]
 	From	[AppModel].[DefinitionEnumeration] T
 			Left Join @Values S
 			On	T.[DefinitionId] = S.[DefinitionId]
 	Where	S.[DefinitionId] is Null And
-			T.[IsCommon] = 0 And -- Common Definitions cannot be altered by this procedure
-			T.[DefinitionId] In (
-				Select	A.[DefinitionId]
-				From	[AppModel].[DefinitionEnumeration] A
-						Left Join [AppModel].[ModelDefinition] C
-						On	A.[DefinitionId] = C.[DefinitionId]
-				Where	(@DefinitionId is Null Or @DefinitionId = A.[DefinitionId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			T.[DefinitionId] = @DefinitionId 
+	Print FormatMessage ('Delete [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[DefinitionId],
 				[DefinitionTitle],
-				[DefinitionDescription]
+				[DefinitionDescription],
+				[IsCommon]
 		From	@Values
 		Except
 		Select	[DefinitionId],
 				[DefinitionTitle],
-				[DefinitionDescription]
+				[DefinitionDescription],
+				[IsCommon]
 		From	[AppModel].[DefinitionEnumeration])
 	Update [AppModel].[DefinitionEnumeration]
 	Set		[DefinitionTitle] = S.[DefinitionTitle],
-			[DefinitionDescription] = S.[DefinitionDescription]
+			[DefinitionDescription] = S.[DefinitionDescription],
+			[IsCommon] = S.[IsCommon]
 	From	[AppModel].[DefinitionEnumeration] T
 			Inner Join [Delta] S
 			On	T.[DefinitionId] = S.[DefinitionId]
 	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
-	Print FormatMessage ('Update [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[DefinitionEnumeration] (
 			[DefinitionId],
 			[DefinitionTitle],
-			[DefinitionDescription])
+			[DefinitionDescription],
+			[IsCommon])
 	Select	S.[DefinitionId],
 			S.[DefinitionTitle],
-			S.[DefinitionDescription]
+			S.[DefinitionDescription],
+			S.[IsCommon]
 	From	@Values S
 			Left Join [AppModel].[DefinitionEnumeration] T
 			On	S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[DefinitionId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[ModelDefinition] (
 			[ModelId],
@@ -101,7 +110,7 @@ Begin Try
 				S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[DefinitionId] is Null And
 			@ModelId is Not Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

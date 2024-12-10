@@ -4,6 +4,7 @@ Select	D.[ModelId], -- PK
 		FM.[ModelTitle], -- AK
 		D.[DefinitionId], -- PK
 		FD.[DefinitionTitle], -- AK
+		FD.[DefinitionDescription],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -38,7 +39,8 @@ From	[AppModel].[ModelDefinition] D
 		Outer Apply (
 			Select	Top 1
 					[DefinitionId],
-					[DefinitionTitle]
+					[DefinitionTitle],
+					[DefinitionDescription]
 			From	[AppModel].[DefinitionEnumeration]
 			Where	[DefinitionId] = D.[DefinitionId] And
 					[SysStart] <= D.[SysEnd]

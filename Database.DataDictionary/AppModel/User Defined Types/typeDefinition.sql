@@ -3,6 +3,7 @@
 	[DefinitionId]             UniqueIdentifier NULL,
 	[DefinitionTitle]          [App_DataDictionary].[typeTitle] Null,
 	[DefinitionDescription]    [App_DataDictionary].[typeDescription] Null,
+	[IsCommon]                 Bit Null,
 	-- Temporal Data
 	[CreatedOn]	               DateTime2 (7) Null,
 	[CreatedBy]	               NVarChar(4000) Null,

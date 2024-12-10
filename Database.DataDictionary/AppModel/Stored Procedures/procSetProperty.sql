@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppModel].[procSetPropertyEnumeration]
+﻿CREATE PROCEDURE [AppModel].[procSetProperty]
 		@ModelId UniqueIdentifier = Null,
 		@PropertyId UniqueIdentifier = Null,
 		@Data [AppModel].[typeProperty] ReadOnly
@@ -24,6 +24,7 @@ Begin Try
 		[PropertyId]             UniqueIdentifier NOT NULL,
 		[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null,
 		[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
+		[IsCommon]               Bit Not Null,
 		[DataType]               NVarChar(20) Not Null,
 		[PropertyData]           NVarChar(2000) Null,
 		Primary Key ([PropertyId]))
@@ -36,45 +37,48 @@ Begin Try
 		Where	[DataType] In ('List')
 		Group By D.[PropertyId])
 	Insert Into @Values
-	Select	X.[PropertyId],
+	Select	Coalesce(D.[PropertyId], @PropertyId, NewId()),
 			NullIf(Trim(D.[PropertyTitle]),'') As [PropertyTitle],
 			NullIf(Trim(D.[PropertyDescription]),'') As [PropertyDescription],
+			IsNull(D.[IsCommon],0) As [IsCommon],
 			NullIf(Trim(D.[DataType]),'') As [PropertyType],
 			IsNull(C.[ChoiceList], D.[PropertyData]) As [PropertyData]
 	From	@Data D
-			Cross apply (
-				Select	Coalesce(D.[PropertyId], @PropertyId, NewId()) As [PropertyId]) X
 			Left Join [Choice] C
 			On	D.[PropertyId] = C.[PropertyId]
+	Where	(@PropertyId is Null Or @PropertyId = Coalesce(D.[PropertyId], @PropertyId))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
 	Delete From [AppModel].[ModelProperty]
-	From	@Values S
-			Left Join [AppModel].[ModelProperty] T
-			On	S.[PropertyId] = T.[PropertyId]
-	Where	@ModelId = T.[ModelId] And
-			T.[PropertyId] is Null
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	From	[AppModel].[ModelProperty] T
+			Inner Join [AppModel].[ModelPropertyHs] H
+			On	T.[PropertyId] = H.[PropertyId] And
+				T.[ModelId] = H.[ModelId]
+			Left Join @Values S
+			On	H.[PropertyId] = S.[PropertyId]
+	Where	S.[PropertyId] is Null And
+			(@PropertyId is Not Null Or @ModelId is Not Null) And
+			(@PropertyId is Null Or H.[PropertyId] = @PropertyId) And
+			(@ModelId is Null Or H.[ModelId] = @ModelId)
+	Print FormatMessage ('Delete [AppModel].[ModelProperty]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[PropertyEnumeration]
 	From	[AppModel].[PropertyEnumeration] T
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]
 	Where	S.[PropertyId] is Null And
-			T.[IsCommon] = 0 And -- Common Properties cannot be altered by this procedure
-			T.[PropertyId] In (
-				Select	A.[PropertyId]
-				From	[AppModel].[PropertyEnumeration] A
-						Left Join [AppModel].[ModelProperty] C
-						On	A.[PropertyId] = C.[PropertyId]
-				Where	(@PropertyId is Null Or @PropertyId = A.[PropertyId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			T.[PropertyId] = @PropertyId 
+	Print FormatMessage ('Delete [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[PropertyId],
 				[PropertyTitle],
 				[PropertyDescription],
+				[IsCommon],
 				[DataType],
 				[PropertyData]
 		From	@Values
@@ -82,6 +86,7 @@ Begin Try
 		Select	[PropertyId],
 				[PropertyTitle],
 				[PropertyDescription],
+				[IsCommon],
 				[DataType],
 				[PropertyData]
 		From	[AppModel].[PropertyEnumeration])
@@ -89,29 +94,31 @@ Begin Try
 	Set		[PropertyTitle] = S.[PropertyTitle],
 			[PropertyDescription] = S.[PropertyDescription],
 			[DataType] = S.[DataType],
-			[PropertyData] = S.[PropertyData]
+			[PropertyData] = S.[PropertyData],
+			[IsCommon] = S.[IsCommon]
 	From	[AppModel].[PropertyEnumeration] T
 			Inner Join [Delta] S
 			On	T.[PropertyId] = S.[PropertyId]
-	Where	T.[IsCommon] = 0 -- Common Properties cannot be altered by this procedure
-	Print FormatMessage ('Update [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[PropertyEnumeration] (
 			[PropertyId],
 			[PropertyTitle],
 			[PropertyDescription],
+			[IsCommon],
 			[DataType],
 			[PropertyData])
 	Select	S.[PropertyId],
 			S.[PropertyTitle],
 			S.[PropertyDescription],
+			S.[IsCommon],
 			S.[DataType],
 			S.[PropertyData]
 	From	@Values S
 			Left Join [AppModel].[PropertyEnumeration] T
 			On	S.[PropertyId] = T.[PropertyId]
 	Where	T.[PropertyId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[ModelProperty] (
 			[ModelId],
@@ -124,7 +131,7 @@ Begin Try
 				S.[PropertyId] = T.[PropertyId]
 	Where	T.[PropertyId] is Null And
 			@ModelId is Not Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

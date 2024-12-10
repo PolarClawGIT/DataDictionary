@@ -4,6 +4,7 @@ Select	D.[ModelId], -- PK
 		FM.[ModelTitle], -- AK
 		D.[PropertyId], -- PK
 		FP.[PropertyTitle], -- AK
+		FP.[PropertyDescription],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -38,7 +39,8 @@ From	[AppModel].[ModelProperty] D
 		Outer Apply (
 			Select	Top 1
 					[PropertyId],
-					[PropertyTitle]
+					[PropertyTitle],
+					[PropertyDescription]
 			From	[AppModel].[PropertyEnumeration]
 			Where	[PropertyId] = D.[PropertyId] And
 					[SysStart] <= D.[SysEnd]
