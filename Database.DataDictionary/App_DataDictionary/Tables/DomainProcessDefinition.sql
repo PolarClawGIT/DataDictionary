@@ -12,5 +12,5 @@
 	-- Keys
 	CONSTRAINT [PK_DomainProcessDefinition] PRIMARY KEY CLUSTERED ([ProcessId] ASC, [DefinitionId] ASC),
 	CONSTRAINT [FK_DomainProcessDefinitionProcess] FOREIGN KEY ([ProcessId]) REFERENCES [App_DataDictionary].[DomainProcess] ([ProcessId]),
-	CONSTRAINT [FK_DomainProcessDefinitionDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [App_DataDictionary].[DomainDefinition] ([DefinitionId]),
+	CONSTRAINT [FK_DomainProcessDefinitionDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [AppModel].[DefinitionEnumeration] ([DefinitionId]),
 )

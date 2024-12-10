@@ -11,7 +11,7 @@
 	-- Keys
 	CONSTRAINT [PK_DomainAttributeProperty] PRIMARY KEY CLUSTERED ([AttributeId] ASC, [PropertyId] ASC),
 	CONSTRAINT [FK_DomainAttributePropertyDomainAttribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
-	CONSTRAINT [FK_DomainAttributePropertyApplicationProperty] FOREIGN KEY ([PropertyId]) REFERENCES [App_DataDictionary].[DomainProperty] ([PropertyId]),
+	CONSTRAINT [FK_DomainAttributePropertyApplicationProperty] FOREIGN KEY ([PropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttributeProperty]

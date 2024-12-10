@@ -43,6 +43,9 @@ Begin Try
 	Where	(@ModelId is Null Or @ModelId = Coalesce(D.[ModelId], @ModelId))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
+
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
 			[PrincipalId],
@@ -77,8 +80,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelProperty]
-	From	[App_DataDictionary].[ModelProperty] T
+	Delete From [AppModel].[ModelProperty]
+	From	[AppModel].[ModelProperty] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And
@@ -86,8 +89,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelDefinition]
-	From	[App_DataDictionary].[ModelDefinition] T
+	Delete From [AppModel].[ModelDefinition]
+	From	[AppModel].[ModelDefinition] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And

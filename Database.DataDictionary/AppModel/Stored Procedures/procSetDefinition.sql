@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainDefinition]
+﻿CREATE PROCEDURE [AppModel].[procSetDefinitionEnumeration]
 		@ModelId UniqueIdentifier = Null,
 		@DefinitionId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainDefinition] ReadOnly
+		@Data [AppModel].[typeDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -35,24 +35,24 @@ Begin Try
 				Select	Coalesce(D.[DefinitionId], @DefinitionId, NewId()) As [DefinitionId]) X
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelDefinition]
+	Delete From [AppModel].[ModelDefinition]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelDefinition] T
+			Left Join [AppModel].[ModelDefinition] T
 			On	S.[DefinitionId] = T.[DefinitionId]
 	Where	@ModelId = T.[ModelId] And
 			T.[DefinitionId] is Null
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainDefinition]
-	From	[App_DataDictionary].[DomainDefinition] T
+	Delete From [AppModel].[DefinitionEnumeration]
+	From	[AppModel].[DefinitionEnumeration] T
 			Left Join @Values S
 			On	T.[DefinitionId] = S.[DefinitionId]
 	Where	S.[DefinitionId] is Null And
 			T.[IsCommon] = 0 And -- Common Definitions cannot be altered by this procedure
 			T.[DefinitionId] In (
 				Select	A.[DefinitionId]
-				From	[App_DataDictionary].[DomainDefinition] A
-						Left Join [App_DataDictionary].[ModelDefinition] C
+				From	[AppModel].[DefinitionEnumeration] A
+						Left Join [AppModel].[ModelDefinition] C
 						On	A.[DefinitionId] = C.[DefinitionId]
 				Where	(@DefinitionId is Null Or @DefinitionId = A.[DefinitionId]) And
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
@@ -67,17 +67,17 @@ Begin Try
 		Select	[DefinitionId],
 				[DefinitionTitle],
 				[DefinitionDescription]
-		From	[App_DataDictionary].[DomainDefinition])
-	Update [App_DataDictionary].[DomainDefinition]
+		From	[AppModel].[DefinitionEnumeration])
+	Update [AppModel].[DefinitionEnumeration]
 	Set		[DefinitionTitle] = S.[DefinitionTitle],
 			[DefinitionDescription] = S.[DefinitionDescription]
-	From	[App_DataDictionary].[DomainDefinition] T
+	From	[AppModel].[DefinitionEnumeration] T
 			Inner Join [Delta] S
 			On	T.[DefinitionId] = S.[DefinitionId]
 	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
 	Print FormatMessage ('Update [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainDefinition] (
+	Insert Into [AppModel].[DefinitionEnumeration] (
 			[DefinitionId],
 			[DefinitionTitle],
 			[DefinitionDescription])
@@ -85,18 +85,18 @@ Begin Try
 			S.[DefinitionTitle],
 			S.[DefinitionDescription]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainDefinition] T
+			Left Join [AppModel].[DefinitionEnumeration] T
 			On	S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[DefinitionId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelDefinition] (
+	Insert Into [AppModel].[ModelDefinition] (
 			[ModelId],
 			[DefinitionId])
 	Select	@ModelId,
 			S.[DefinitionId]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelDefinition] T
+			Left Join [AppModel].[ModelDefinition] T
 			On	@ModelId = T.[ModelId] And
 				S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[DefinitionId] is Null And

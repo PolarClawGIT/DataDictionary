@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainProperty]
+﻿CREATE PROCEDURE [AppModel].[procSetPropertyEnumeration]
 		@ModelId UniqueIdentifier = Null,
 		@PropertyId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainProperty] ReadOnly
+		@Data [AppModel].[typeProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -48,24 +48,24 @@ Begin Try
 			On	D.[PropertyId] = C.[PropertyId]
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelProperty]
+	Delete From [AppModel].[ModelProperty]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelProperty] T
+			Left Join [AppModel].[ModelProperty] T
 			On	S.[PropertyId] = T.[PropertyId]
 	Where	@ModelId = T.[ModelId] And
 			T.[PropertyId] is Null
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainProperty]
-	From	[App_DataDictionary].[DomainProperty] T
+	Delete From [AppModel].[PropertyEnumeration]
+	From	[AppModel].[PropertyEnumeration] T
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]
 	Where	S.[PropertyId] is Null And
 			T.[IsCommon] = 0 And -- Common Properties cannot be altered by this procedure
 			T.[PropertyId] In (
 				Select	A.[PropertyId]
-				From	[App_DataDictionary].[DomainProperty] A
-						Left Join [App_DataDictionary].[ModelProperty] C
+				From	[AppModel].[PropertyEnumeration] A
+						Left Join [AppModel].[ModelProperty] C
 						On	A.[PropertyId] = C.[PropertyId]
 				Where	(@PropertyId is Null Or @PropertyId = A.[PropertyId]) And
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
@@ -84,19 +84,19 @@ Begin Try
 				[PropertyDescription],
 				[DataType],
 				[PropertyData]
-		From	[App_DataDictionary].[DomainProperty])
-	Update [App_DataDictionary].[DomainProperty]
+		From	[AppModel].[PropertyEnumeration])
+	Update [AppModel].[PropertyEnumeration]
 	Set		[PropertyTitle] = S.[PropertyTitle],
 			[PropertyDescription] = S.[PropertyDescription],
 			[DataType] = S.[DataType],
 			[PropertyData] = S.[PropertyData]
-	From	[App_DataDictionary].[DomainProperty] T
+	From	[AppModel].[PropertyEnumeration] T
 			Inner Join [Delta] S
 			On	T.[PropertyId] = S.[PropertyId]
 	Where	T.[IsCommon] = 0 -- Common Properties cannot be altered by this procedure
 	Print FormatMessage ('Update [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainProperty] (
+	Insert Into [AppModel].[PropertyEnumeration] (
 			[PropertyId],
 			[PropertyTitle],
 			[PropertyDescription],
@@ -108,18 +108,18 @@ Begin Try
 			S.[DataType],
 			S.[PropertyData]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainProperty] T
+			Left Join [AppModel].[PropertyEnumeration] T
 			On	S.[PropertyId] = T.[PropertyId]
 	Where	T.[PropertyId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelProperty] (
+	Insert Into [AppModel].[ModelProperty] (
 			[ModelId],
 			[PropertyId])
 	Select	@ModelId,
 			S.[PropertyId]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelProperty] T
+			Left Join [AppModel].[ModelProperty] T
 			On	@ModelId = T.[ModelId] And
 				S.[PropertyId] = T.[PropertyId]
 	Where	T.[PropertyId] is Null And

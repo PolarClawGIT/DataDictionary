@@ -12,5 +12,5 @@
 	-- Keys
 	CONSTRAINT [PK_DomainAttributeDefinition] PRIMARY KEY CLUSTERED ([AttributeId] ASC, [DefinitionId] ASC),
 	CONSTRAINT [FK_DomainAttributeDefinitionAttribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
-	CONSTRAINT [FK_DomainAttributeDefinitionDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [App_DataDictionary].[DomainDefinition] ([DefinitionId]),
+	CONSTRAINT [FK_DomainAttributeDefinitionDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [AppModel].[DefinitionEnumeration] ([DefinitionId]),
 )
