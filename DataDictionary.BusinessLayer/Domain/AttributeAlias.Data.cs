@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain

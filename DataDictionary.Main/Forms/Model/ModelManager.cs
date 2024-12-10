@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Model;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -7,6 +6,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.Main.Forms.Model
 {

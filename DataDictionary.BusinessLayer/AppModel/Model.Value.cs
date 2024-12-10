@@ -1,11 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IModelValue : IModelItem, IModelIndex,
@@ -25,6 +25,9 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.Model; } }
 
         /// <inheritdoc/>
         public ModelValue() : base()

@@ -1,6 +1,8 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.BindingTable;

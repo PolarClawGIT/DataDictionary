@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Property;
-using DataDictionary.DataLayer.ModelData;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;

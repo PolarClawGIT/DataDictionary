@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ModelData
+namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
     /// Interface for the Primary Key of the Model.

@@ -2,10 +2,11 @@
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
-using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
 using System.Security.Principal;
 using DataDictionary.DataLayer.AppSecurity;
+using DataDictionary.DataLayer.AppModel;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -42,7 +43,7 @@ namespace DataDictionary.BusinessLayer
         /// The Current Model being used by the application
         /// </summary>
         /// <remarks>There should always be exactly one Model</remarks>
-        public ModelItem Model
+        public ModelValue Model
         {
             get
             {
@@ -73,7 +74,7 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new Model.ModelData();
+            modelValues = new AppModel.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 

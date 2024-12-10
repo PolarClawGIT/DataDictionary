@@ -1,11 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Model Synchronize value

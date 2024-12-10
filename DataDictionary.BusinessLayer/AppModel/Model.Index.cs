@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IModelIndex : IModelKey
@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Model
     public class ModelIndex : ModelKey, IModelIndex,
         IKeyEquality<IModelIndex>, IKeyEquality<ModelIndex>
     {
-        /// <inheritdoc cref="ModelKey.ModelKey(IModelKey)"/>
+        /// <inheritdoc cref="ModelKey(IModelKey)"/>
         public ModelIndex(IModelIndex source) : base(source) { }
 
         /// <inheritdoc/>

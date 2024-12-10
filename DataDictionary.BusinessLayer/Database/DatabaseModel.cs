@@ -1,10 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.DataLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.Database
 {

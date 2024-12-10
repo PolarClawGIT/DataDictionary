@@ -1,11 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;

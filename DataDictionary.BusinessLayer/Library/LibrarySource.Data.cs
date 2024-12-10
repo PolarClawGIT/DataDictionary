@@ -1,9 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
 using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.Library
 {

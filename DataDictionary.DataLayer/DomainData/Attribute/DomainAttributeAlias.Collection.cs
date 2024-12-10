@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;

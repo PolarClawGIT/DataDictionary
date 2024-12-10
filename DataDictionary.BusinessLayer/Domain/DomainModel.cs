@@ -1,8 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.Threading;

@@ -1,12 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;

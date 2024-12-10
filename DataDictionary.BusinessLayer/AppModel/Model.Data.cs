@@ -1,16 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Interface component for the Domain Model 

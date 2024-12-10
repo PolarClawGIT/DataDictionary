@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.DataLayer.AppModel;
 using System;
 using System.Collections.Generic;
 using System.Data;

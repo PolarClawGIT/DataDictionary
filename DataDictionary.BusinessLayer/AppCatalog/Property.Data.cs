@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
