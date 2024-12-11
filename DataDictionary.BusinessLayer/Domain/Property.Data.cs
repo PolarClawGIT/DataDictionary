@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DomainData.Property;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -28,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Domain
     }
 
     /// <inheritdoc/>
-    class PropertyData : DomainPropertyCollection<PropertyValue>, IPropertyData,
+    class PropertyData : PropertyCollection<PropertyValue>, IPropertyData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
@@ -39,21 +38,21 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Load(factory, (IDomainPropertyKey)dataKey); }
+        { return Load(factory, (IPropertyKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainPropertyKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Save(factory, (IDomainPropertyKey)dataKey); }
+        { return Save(factory, (IPropertyKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainPropertyKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>

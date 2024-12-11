@@ -6,28 +6,54 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
-    /// Interface for the Model.
+    /// Interface for Model Definition Item
     /// </summary>
-    public interface IModelItem : IModel, IModelKey,
+    public interface IDefinitionItem : IDefinitionKey, IDefinitionKeyName,
         ITemporalItem
-    { }
+    {
+        /// <summary>
+        /// Description of the Model Definition
+        /// </summary>
+        String? DefinitionDescription { get; set; }
+
+        /// <summary>
+        /// Definition Item is shared (common) across the application.
+        /// </summary>
+        Boolean? IsCommon { get; }
+    }
 
     /// <summary>
-    /// Implementation of the Model data.
+    /// Implementation for Model Definition Item
     /// </summary>
     [Serializable]
-    public class ModelItem : BindingTableRow, IModelItem, ISerializable
+    public class DefinitionItem : BindingTableRow, IDefinitionItem, ISerializable
     {
         TemporalItem temporal; // Backing field for Temporal Data.
 
         /// <inheritdoc/>
-        public Guid? ModelId { get { return GetValue<Guid>(nameof(ModelId)); } protected set { SetValue(nameof(ModelId), value); } }
+        public Guid? DefinitionId
+        {
+            get { return GetValue<Guid>(nameof(DefinitionId)); }
+            protected set { SetValue(nameof(DefinitionId), value); }
+        }
 
         /// <inheritdoc/>
-        public String? ModelTitle { get { return GetValue(nameof(ModelTitle)); } set { SetValue(nameof(ModelTitle), value); } }
+        public String? DefinitionTitle
+        {
+            get { return GetValue(nameof(DefinitionTitle)); }
+            set { SetValue(nameof(DefinitionTitle), value); }
+        }
 
         /// <inheritdoc/>
-        public String? ModelDescription { get { return GetValue(nameof(ModelDescription)); } set { SetValue(nameof(ModelDescription), value); } }
+        public String? DefinitionDescription
+        {
+            get { return GetValue(nameof(DefinitionDescription)); }
+            set { SetValue(nameof(DefinitionDescription), value); }
+        }
+
+        /// <inheritdoc/>
+        public Boolean? IsCommon
+        { get { return GetValue<bool>(nameof(IsCommon), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
@@ -57,12 +83,13 @@ namespace DataDictionary.DataLayer.AppModel
         public DbModificationType Modification { get { return temporal.Modification; } }
 
         /// <summary>
-        /// Constructor for the Model data
+        /// Constructor for Domain Definition Item
         /// </summary>
-        public ModelItem() : base()
+        public DefinitionItem() : base()
         {
-            ModelId = Guid.NewGuid();
-            ModelTitle = "New Model";
+            if (DefinitionId is null) { DefinitionId = Guid.NewGuid(); }
+            if (String.IsNullOrWhiteSpace(DefinitionTitle)) { DefinitionTitle = "(new Definition)"; }
+
             temporal = new TemporalItem()
             {
                 GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
@@ -73,38 +100,25 @@ namespace DataDictionary.DataLayer.AppModel
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
-            new DataColumn(nameof(ModelId), typeof(Guid)) { AllowDBNull = false},
-            new DataColumn(nameof(ModelTitle), typeof(String)) { AllowDBNull = false},
-            new DataColumn(nameof(ModelDescription), typeof(String)) { AllowDBNull = true},
-            .. TemporalItem.columnDefinitions,
+            new DataColumn(nameof(DefinitionId), typeof(Guid)) { AllowDBNull = false },
+            new DataColumn(nameof(DefinitionTitle), typeof(String)) { AllowDBNull = false },
+            new DataColumn(nameof(DefinitionDescription), typeof(String)) { AllowDBNull = true },
+            new DataColumn(nameof(IsCommon), typeof(Boolean)) { AllowDBNull = true },
+            ..TemporalItem.columnDefinitions,
         ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <inheritdoc/>
-        [Obsolete("Not in Use")]
-        public bool Validate()
-        {
-            bool result = false;
-
-            if (string.IsNullOrWhiteSpace(ModelTitle))
-            { SetRowError("[ModelTitle] cannot be empty"); }
-            else if (ModelId == Guid.Empty)
-            { SetRowError("[ModelId] cannot be empty"); }
-            else { result = true; }
-
-            return result;
-        }
 
         #region ISerializable
         /// <summary>
-        /// Serialization constructor for Model.
+        /// Serialization Constructor for Domain Definition Item
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected ModelItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected DefinitionItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
             temporal = new TemporalItem()
             {
@@ -114,5 +128,9 @@ namespace DataDictionary.DataLayer.AppModel
             };
         }
         #endregion
+
+        /// <inheritdoc/>
+        public override string ToString()
+        { if (DefinitionTitle is not null) { return DefinitionTitle; } else { return string.Empty; } }
     }
 }

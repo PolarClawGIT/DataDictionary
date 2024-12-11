@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DomainData.Definition;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -16,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    class DefinitionData : DomainDefinitionCollection<DefinitionValue>, IDefinitionData,
+    class DefinitionData : DefinitionCollection<DefinitionValue>, IDefinitionData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
@@ -27,21 +26,21 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionIndex dataKey)
-        { return Load(factory, (IDomainDefinitionKey)dataKey); }
+        { return Load(factory, (IDefinitionKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainDefinitionKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDefinitionIndex dataKey)
-        { return Save(factory, (IDomainDefinitionKey)dataKey); }
+        { return Save(factory, (IDefinitionKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainDefinitionKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDefinitionKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>

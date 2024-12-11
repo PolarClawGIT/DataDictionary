@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IPropertyIndex : IDomainPropertyKey
+    public interface IPropertyIndex : IPropertyKey
     { }
 
     /// <inheritdoc/>
-    public class PropertyIndex : DomainPropertyKey, IPropertyIndex,
+    public class PropertyIndex : PropertyKey, IPropertyIndex,
         IKeyEquality<IPropertyIndex>, IKeyEquality<PropertyIndex>
     {
-        /// <inheritdoc cref="DomainPropertyKey(IDomainPropertyKey)"/>
+        /// <inheritdoc cref="PropertyKey(IPropertyKey)"/>
         public PropertyIndex(IPropertyIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IPropertyIndex? other)
-        { return other is IDomainPropertyKey key && Equals(new DomainPropertyKey(key)); }
+        { return other is IPropertyKey key && Equals(new PropertyKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(PropertyIndex? other)
-        { return other is IDomainPropertyKey key && Equals(new DomainPropertyKey(key)); }
+        { return other is IPropertyKey key && Equals(new PropertyKey(key)); }
 
         /// <summary>
         /// Convert PropertyIndex to a DataIndex

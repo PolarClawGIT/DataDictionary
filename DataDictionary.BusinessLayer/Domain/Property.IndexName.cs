@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IPropertyIndexName : IDomainPropertyKeyName
+    public interface IPropertyIndexName : IPropertyKeyName
     { }
 
     /// <inheritdoc/>
-    public class PropertyIndexName : DomainPropertyKeyName, IPropertyIndexName,
+    public class PropertyIndexName : PropertyKeyName, IPropertyIndexName,
         IKeyEquality<IPropertyIndexName>, IKeyEquality<PropertyIndexName>
     {
-        /// <inheritdoc cref="DomainPropertyKeyName(IDomainPropertyKeyName)"/>
+        /// <inheritdoc cref="PropertyKeyName(IPropertyKeyName)"/>
         public PropertyIndexName(IPropertyIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IPropertyIndexName? other)
-        { return other is IDomainPropertyKeyName key && Equals(new DomainPropertyKeyName(key)); }
+        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(PropertyIndexName? other)
-        { return other is IDomainPropertyKeyName key && Equals(new DomainPropertyKeyName(key)); }
+        { return other is IPropertyKeyName key && Equals(new PropertyKeyName(key)); }
 
         /// <summary>
         /// Convert PropertyIndexName to a DataIndexName

@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.Property;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public EntityPropertyValue(IEntityIndex EntityKey) : base(EntityKey) { }
 
         /// <inheritdoc/>
-        public EntityPropertyValue(IDomainEntityKey EntityKey, IDomainPropertyKey propertyKey, IPropertyItem value) : base(EntityKey, propertyKey, value)
+        public EntityPropertyValue(IDomainEntityKey EntityKey, DataLayer.AppModel.IPropertyKey propertyKey, DataLayer.AppCatalog.IPropertyItem value) : base(EntityKey, propertyKey, value)
         { }
     }
 }

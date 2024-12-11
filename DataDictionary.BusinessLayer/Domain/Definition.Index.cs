@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Definition;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IDefinitionIndex : IDomainDefinitionKey
+    public interface IDefinitionIndex : IDefinitionKey
     { }
 
     /// <inheritdoc/>
-    public class DefinitionIndex : DomainDefinitionKey, IDefinitionIndex,
+    public class DefinitionIndex : DefinitionKey, IDefinitionIndex,
         IKeyEquality<IDefinitionIndex>, IKeyEquality<DefinitionIndex>
     {
-        /// <inheritdoc cref="DomainDefinitionKey(IDomainDefinitionKey)"/>
+        /// <inheritdoc cref="DefinitionKey(IDefinitionKey)"/>
         public DefinitionIndex(IDefinitionIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IDefinitionIndex? other)
-        { return other is IDomainDefinitionKey key && Equals(new DomainDefinitionKey(key)); }
+        { return other is IDefinitionKey key && Equals(new DefinitionKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(DefinitionIndex? other)
-        { return other is IDomainDefinitionKey key && Equals(new DomainDefinitionKey(key)); }
+        { return other is IDefinitionKey key && Equals(new DefinitionKey(key)); }
 
         /// <summary>
         /// Convert DefinitionIndex to a DataIndex

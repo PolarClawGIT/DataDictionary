@@ -87,6 +87,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HelpSubject.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppModel\Definition.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Definition.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppModel\Model.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -96,6 +101,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Schema.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\Property.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Property.resx</DependentUpon>
     </Compile>
     <Compile Update="Temporal.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -164,6 +174,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\Definition.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Definition.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Model.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
@@ -171,6 +185,10 @@
     <EmbeddedResource Update="AppCatalog\Schema.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Schema.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\Property.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Property.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Temporal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -204,6 +222,8 @@
     <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
     <Folder Include="DatabaseData\Table\" />
+    <Folder Include="DomainData\Definition\" />
+    <Folder Include="DomainData\Property\" />
   </ItemGroup>
 
 </Project>

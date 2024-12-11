@@ -1,17 +1,17 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Definition;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IDefinitionValue : IDomainDefinitionItem, IDefinitionIndex, IDefinitionIndexName
+    public interface IDefinitionValue : IDefinitionItem, IDefinitionIndex, IDefinitionIndexName
     { }
 
     /// <inheritdoc/>
-    public class DefinitionValue : DomainDefinitionItem, IDefinitionValue, IPathValue, INamedScopeSourceValue
+    public class DefinitionValue : DefinitionItem, IDefinitionValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -23,6 +23,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelDefinition; } }
 
         /// <inheritdoc/>
         public DefinitionValue() : base()

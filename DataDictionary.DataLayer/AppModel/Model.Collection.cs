@@ -91,6 +91,7 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
+        [Obsolete("Not in Use")]
         public IReadOnlyList<ModelItem> Validate()
         {
             List<ModelItem> result = new List<ModelItem>();

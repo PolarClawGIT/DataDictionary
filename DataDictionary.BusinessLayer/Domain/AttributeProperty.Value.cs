@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 
@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public AttributePropertyValue(IAttributeIndex attributeKey) : base(attributeKey) { }
 
         /// <inheritdoc/>
-        public AttributePropertyValue(IDomainAttributeKey attributeKey, IDomainPropertyKey propertyKey, IPropertyItem value) : base(attributeKey, propertyKey, value)
+        public AttributePropertyValue(IDomainAttributeKey attributeKey, DataLayer.AppModel.IPropertyKey propertyKey, DataLayer.AppCatalog.IPropertyItem value) : base(attributeKey, propertyKey, value)
         { }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()

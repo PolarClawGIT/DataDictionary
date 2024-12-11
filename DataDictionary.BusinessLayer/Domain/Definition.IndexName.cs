@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Definition;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IDefinitionIndexName : IDomainDefinitionKeyName
+    public interface IDefinitionIndexName : IDefinitionKeyName
     { }
 
     /// <inheritdoc/>
-    public class DefinitionIndexName : DomainDefinitionKeyName, IDefinitionIndexName,
+    public class DefinitionIndexName : DefinitionKeyName, IDefinitionIndexName,
         IKeyEquality<IDefinitionIndexName>, IKeyEquality<DefinitionIndexName>
     {
-        /// <inheritdoc cref="DomainDefinitionKeyName(IDomainDefinitionKeyName)"/>
+        /// <inheritdoc cref="DefinitionKeyName(IDefinitionKeyName)"/>
         public DefinitionIndexName(IDefinitionIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IDefinitionIndexName? other)
-        { return other is IDomainDefinitionKeyName key && Equals(new DomainDefinitionKeyName(key)); }
+        { return other is IDefinitionKeyName key && Equals(new DefinitionKeyName(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(DefinitionIndexName? other)
-        { return other is IDomainDefinitionKeyName key && Equals(new DomainDefinitionKeyName(key)); }
+        { return other is IDefinitionKeyName key && Equals(new DefinitionKeyName(key)); }
 
         /// <summary>
         /// Convert DefinitionIndexName to a DataIndexName

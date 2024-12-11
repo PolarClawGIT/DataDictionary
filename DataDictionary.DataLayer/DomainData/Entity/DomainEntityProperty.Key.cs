@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Property;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for the Domain Entity Property Key
     /// </summary>
-    public interface IDomainEntityPropertyKey : IDomainEntityKey, IDomainPropertyKey
+    public interface IDomainEntityPropertyKey : IDomainEntityKey, IPropertyKey
     { }
 
     /// <summary>

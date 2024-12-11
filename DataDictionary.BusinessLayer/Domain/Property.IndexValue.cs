@@ -1,7 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.DomainData.Property;
-using DataDictionary.Resource;
+﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain

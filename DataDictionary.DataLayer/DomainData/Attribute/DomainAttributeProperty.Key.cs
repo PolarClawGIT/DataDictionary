@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Property;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DomainData.Attribute
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for the Domain Attribute Property Key
     /// </summary>
-    public interface IDomainAttributePropertyKey : IDomainAttributeKey, IDomainPropertyKey
+    public interface IDomainAttributePropertyKey : IDomainAttributeKey, IPropertyKey
     { }
 
     /// <summary>

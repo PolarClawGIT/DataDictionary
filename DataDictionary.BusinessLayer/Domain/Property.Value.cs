@@ -1,17 +1,17 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IPropertyValue : IDomainPropertyItem, IPropertyIndex, IPropertyIndexName
+    public interface IPropertyValue : IPropertyItem, IPropertyIndex, IPropertyIndexName
     { }
 
     /// <inheritdoc/>
-    public class PropertyValue : DomainPropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
+    public class PropertyValue : PropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
     {
         /// <summary>
         /// Provides the List of Choices for PropertyType is List
@@ -87,6 +87,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelProperty; } }
 
         /// <inheritdoc/>
         public PropertyValue() : base()

@@ -3,17 +3,23 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.DomainData.Property
+namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
     /// Interface for Domain Property Item
     /// </summary>
-    public interface IDomainPropertyItem : IDomainPropertyKey, IDomainPropertyKeyName, IDomainPropertyType, IScopeType
+    public interface IPropertyItem : IPropertyKey, IPropertyKeyName, IDomainPropertyType,
+        ITemporalItem
     {
         /// <summary>
         /// Description of the Domain Property
         /// </summary>
         String? PropertyDescription { get; }
+
+        /// <summary>
+        /// Definition Item is shared (common) across the application.
+        /// </summary>
+        Boolean? IsCommon { get; }
 
         /// <summary>
         /// Contains the Data for the property.
@@ -23,11 +29,13 @@ namespace DataDictionary.DataLayer.DomainData.Property
     }
 
     /// <summary>
-    /// Implementation for Domain Property Item
+    /// Implementation for Model Property Item
     /// </summary>
     [Serializable]
-    public class DomainPropertyItem : BindingTableRow, IDomainPropertyItem, ISerializable
+    public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable
     {
+        TemporalItem temporal; // Backing field for Temporal Data.
+
         /// <inheritdoc/>
         public Guid? PropertyId
         {
@@ -48,6 +56,10 @@ namespace DataDictionary.DataLayer.DomainData.Property
             get { return GetValue(nameof(PropertyDescription)); }
             set { SetValue(nameof(PropertyDescription), value); }
         }
+
+        /// <inheritdoc/>
+        public Boolean? IsCommon
+        { get { return GetValue<bool>(nameof(IsCommon), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
         public DomainPropertyType PropertyType
@@ -80,26 +92,58 @@ namespace DataDictionary.DataLayer.DomainData.Property
         }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.ModelProperty; } }
+        public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
 
+        /// <inheritdoc/>
+        public String? CreatedBy { get { return temporal.CreatedBy; } }
+
+        /// <inheritdoc/>
+        public DateTime? RemovedOn { get { return temporal.RemovedOn; } }
+
+        /// <inheritdoc/>
+        public String? RemovedBy { get { return temporal.RemovedBy; } }
+
+        /// <inheritdoc/>
+        public Boolean? IsInserted { get { return temporal.IsInserted; } }
+
+        /// <inheritdoc/>
+        public Boolean? IsUpdated { get { return temporal.IsUpdated; } }
+
+        /// <inheritdoc/>
+        public Boolean? IsDeleted { get { return temporal.IsDeleted; } }
+
+        /// <inheritdoc/>
+        public Boolean? IsCurrent { get { return temporal.IsCurrent; } }
+
+        /// <inheritdoc/>
+        public DbModificationType Modification { get { return temporal.Modification; } }
 
         /// <summary>
         /// Constructor for Domain Property Item
         /// </summary>
-        public DomainPropertyItem() : base()
+        public PropertyItem() : base()
         {
             if (PropertyId is null) { PropertyId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(PropertyTitle)) { PropertyTitle = "(new Property)"; }
+
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
-            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(PropertyTitle), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(PropertyDescription), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DataType), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(PropertyData), typeof(string)){ AllowDBNull = true},
-        };
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
+            new DataColumn(nameof(PropertyId), typeof(Guid)) { AllowDBNull = false },
+            new DataColumn(nameof(PropertyTitle), typeof(String)) { AllowDBNull = false },
+            new DataColumn(nameof(PropertyDescription), typeof(String)) { AllowDBNull = true },
+            new DataColumn(nameof(IsCommon), typeof(Boolean)) { AllowDBNull = true },
+            new DataColumn(nameof(DataType), typeof(String)) { AllowDBNull = true },
+            new DataColumn(nameof(PropertyData), typeof(String)) { AllowDBNull = true },
+            ..TemporalItem.columnDefinitions,
+        ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -112,8 +156,15 @@ namespace DataDictionary.DataLayer.DomainData.Property
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected DomainPropertyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        protected PropertyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>
