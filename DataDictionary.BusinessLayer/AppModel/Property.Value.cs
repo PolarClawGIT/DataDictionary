@@ -6,7 +6,8 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IPropertyValue : IPropertyItem, IPropertyIndex, IPropertyIndexName
+    public interface IPropertyValue : IPropertyItem, IPropertyIndex, IPropertyIndexName,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
