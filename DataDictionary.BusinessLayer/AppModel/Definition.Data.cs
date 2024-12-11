@@ -3,7 +3,7 @@ using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Interface component for the Definition data
@@ -61,17 +61,17 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public void Import(System.Data.DataSet source)
-        { this.Load(source); }
+        { Load(source); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Delete(IDefinitionIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>

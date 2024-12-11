@@ -2,9 +2,8 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IDefinitionValue : IDefinitionItem, IDefinitionIndex, IDefinitionIndexName

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
@@ -14,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Domain
     public class DatabaseImport
     {
         // Lookup Data
-        IReadOnlyList<PropertyValue> properties = new List<PropertyValue>();
+        IReadOnlyList<AppCatalog.PropertyValue> properties = new List<AppCatalog.PropertyValue>();
 
         // Source Data
         IList<TableValue> tables = new List<TableValue>();
@@ -46,7 +47,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// Imports the Database to a work Structure
         /// </summary>
         /// <param name="propertyValues"></param>
-        public DatabaseImport(IEnumerable<PropertyValue> propertyValues) : this()
+        public DatabaseImport(IEnumerable<AppCatalog.PropertyValue> propertyValues) : this()
         { properties = propertyValues.ToList(); }
 
 
@@ -263,292 +264,293 @@ namespace DataDictionary.BusinessLayer.Domain
 
         void BuildModel(IDomainModel target)
         {
-            BuildAttributes(target);
-            BuildEntities(target);
+            throw new NotImplementedException();
+            //BuildAttributes(target);
+            //BuildEntities(target);
         }
 
-        void BuildAttributes(IDomainModel target)
-        {
-            attributes = target.Attributes;
-            attributeAliases = target.Attributes.Aliases;
-            attributeProperties = target.Attributes.Properties;
+        //void BuildAttributes(IDomainModel target)
+        //{
+        //    attributes = target.Attributes;
+        //    attributeAliases = target.Attributes.Aliases;
+        //    attributeProperties = target.Attributes.Properties;
 
-            var constraints = tableConstraints.
-                Where(w => w.ConstraintType is DbConstraintType.ForeignKey).
-                Join(tableConstraintColumns,
-                constraint => new ConstraintIndexName(constraint),
-                columns => new ConstraintIndexName(columns),
-                (constraint, column) => new
-                {
-                    constraint,
-                    parentKey = new ConstraintColumnIndexReferenced(column).AsColumnName(),
-                    childKey = new TableColumnIndexName(column),
-                }).ToList();
+        //    var constraints = tableConstraints.
+        //        Where(w => w.ConstraintType is DbConstraintType.ForeignKey).
+        //        Join(tableConstraintColumns,
+        //        constraint => new ConstraintIndexName(constraint),
+        //        columns => new ConstraintIndexName(columns),
+        //        (constraint, column) => new
+        //        {
+        //            constraint,
+        //            parentKey = new ConstraintColumnIndexReferenced(column).AsColumnName(),
+        //            childKey = new TableColumnIndexName(column),
+        //        }).ToList();
 
-            foreach (TableColumnValue column
-                in tableColumns.
-                OrderBy(o => constraints.
-                    Count(w => new TableColumnIndexName(o).Equals(w.childKey))).
-                ToList())
-            {
-                TableIndexName tableName = new TableIndexName(column);
-                TableColumnIndexName columnName = new TableColumnIndexName(column);
-                IReadOnlyList<TableColumnValue> alias = GetAlias(column);
+        //    foreach (TableColumnValue column
+        //        in tableColumns.
+        //        OrderBy(o => constraints.
+        //            Count(w => new TableColumnIndexName(o).Equals(w.childKey))).
+        //        ToList())
+        //    {
+        //        TableIndexName tableName = new TableIndexName(column);
+        //        TableColumnIndexName columnName = new TableColumnIndexName(column);
+        //        IReadOnlyList<TableColumnValue> alias = GetAlias(column);
 
-                // Add or find the existing Attribute
-                // Note: Duplicates Attributes can exist.
-                // This is caused by two fields with the same name but
-                // the relationship between them cannot be determined.
-                // As such, the fields have different alias chains.
-                AttributeValue attribute;
-                AttributeIndex attributeIndex;
+        //        // Add or find the existing Attribute
+        //        // Note: Duplicates Attributes can exist.
+        //        // This is caused by two fields with the same name but
+        //        // the relationship between them cannot be determined.
+        //        // As such, the fields have different alias chains.
+        //        AttributeValue attribute;
+        //        AttributeIndex attributeIndex;
 
-                if (attributeAliases.
-                    FirstOrDefault(w => alias.Any(a => new AliasIndex(a).Equals(w)))
-                    is AttributeAliasValue existingAlias &&
-                    attributes.FirstOrDefault(w => new AttributeIndex(existingAlias).Equals(w))
-                    is AttributeValue existingAttribute)
-                {
-                    attribute = existingAttribute;
-                    attributeIndex = new AttributeIndex(existingAttribute);
-                }
-                else
-                {
-                    attribute = new AttributeValue()
-                    {
-                        AttributeTitle = column.ColumnName,
-                        MemberName = GetMemberName(column).MemberFullPath,
-                        IsDerived = column.IsComputed ?? false,
-                        IsIntegral = !column.IsComputed ?? false,
-                        IsNullable = column.IsNullable ?? false,
-                        IsValued = !column.IsNullable ?? false,
-                    };
+        //        if (attributeAliases.
+        //            FirstOrDefault(w => alias.Any(a => new AliasIndex(a).Equals(w)))
+        //            is AttributeAliasValue existingAlias &&
+        //            attributes.FirstOrDefault(w => new AttributeIndex(existingAlias).Equals(w))
+        //            is AttributeValue existingAttribute)
+        //        {
+        //            attribute = existingAttribute;
+        //            attributeIndex = new AttributeIndex(existingAttribute);
+        //        }
+        //        else
+        //        {
+        //            attribute = new AttributeValue()
+        //            {
+        //                AttributeTitle = column.ColumnName,
+        //                MemberName = GetMemberName(column).MemberFullPath,
+        //                IsDerived = column.IsComputed ?? false,
+        //                IsIntegral = !column.IsComputed ?? false,
+        //                IsNullable = column.IsNullable ?? false,
+        //                IsValued = !column.IsNullable ?? false,
+        //            };
 
-                    attributes.Add(attribute);
-                    attributeIndex = new AttributeIndex(attribute);
-                }
+        //            attributes.Add(attribute);
+        //            attributeIndex = new AttributeIndex(attribute);
+        //        }
 
-                // Add any missing Aliases
-                foreach (TableColumnValue item in alias)
-                {
-                    AliasIndex aliasIndex = new AliasIndex(item);
+        //        // Add any missing Aliases
+        //        foreach (TableColumnValue item in alias)
+        //        {
+        //            AliasIndex aliasIndex = new AliasIndex(item);
 
-                    if (!attributeAliases.
-                        Any(a => attributeIndex.Equals(a) && aliasIndex.Equals(a)))
-                    { attributeAliases.Add(new AttributeAliasValue(attribute, aliasIndex)); }
-                }
+        //            if (!attributeAliases.
+        //                Any(a => attributeIndex.Equals(a) && aliasIndex.Equals(a)))
+        //            { attributeAliases.Add(new AttributeAliasValue(attribute, aliasIndex)); }
+        //        }
 
-                // Add any missing Properties
-                List<AttributePropertyValue> newProperties = properties.
-                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableColumnProperties.
-                        Where(w => new PropertyIndexObject(column).Equals(w)),
-                        model => model.ExtendedPropertyName,
-                        data => data.PropertyName,
-                        (model, data) => new AttributePropertyValue(attribute, model, data)).
-                    ToList();
+        //        // Add any missing Properties
+        //        List<AttributePropertyValue> newProperties = properties.
+        //            Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+        //            Join(tableColumnProperties.
+        //                Where(w => new PropertyIndexObject(column).Equals(w)),
+        //                model => model.ExtendedPropertyName,
+        //                data => data.PropertyName,
+        //                (model, data) => new AttributePropertyValue(attribute, model, data)).
+        //            ToList();
 
-                foreach (AttributePropertyValue item in newProperties)
-                { attributeProperties.Add(item); }
+        //        foreach (AttributePropertyValue item in newProperties)
+        //        { attributeProperties.Add(item); }
 
-                // Apply any Property Description, if there is one
-                String? newDescription = properties.
-                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableColumnProperties.
-                        Where(w => new PropertyIndexObject(column).Equals(w)
-                            && w.IsDescription),
-                        model => model.ExtendedPropertyName,
-                        data => data.PropertyName,
-                        (model, data) => data.PropertyValue).
-                    FirstOrDefault();
+        //        // Apply any Property Description, if there is one
+        //        String? newDescription = properties.
+        //            Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+        //            Join(tableColumnProperties.
+        //                Where(w => new PropertyIndexObject(column).Equals(w)
+        //                    && w.IsDescription),
+        //                model => model.ExtendedPropertyName,
+        //                data => data.PropertyName,
+        //                (model, data) => data.PropertyValue).
+        //            FirstOrDefault();
 
-                if (String.IsNullOrWhiteSpace(attribute.AttributeDescription) &&
-                    !String.IsNullOrWhiteSpace(newDescription))
-                { attribute.AttributeDescription = newDescription; }
-            }
+        //        if (String.IsNullOrWhiteSpace(attribute.AttributeDescription) &&
+        //            !String.IsNullOrWhiteSpace(newDescription))
+        //        { attribute.AttributeDescription = newDescription; }
+        //    }
 
-            IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
-            {
-                TableColumnIndexName columnName = new TableColumnIndexName(column);
-                List<TableColumnValue> result = new List<TableColumnValue>();
+        //    IReadOnlyList<TableColumnValue> GetAlias(TableColumnValue column)
+        //    {
+        //        TableColumnIndexName columnName = new TableColumnIndexName(column);
+        //        List<TableColumnValue> result = new List<TableColumnValue>();
 
-                // Itself
-                result.Add(column);
+        //        // Itself
+        //        result.Add(column);
 
-                // Alias by Reference
-                result.AddRange(tableReferences.
-                    Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
-                    Join(tableColumns,
-                        reference => new ReferenceIndexName(reference).AsTable(),
-                        column => new TableIndexName(column),
-                        (reference, column) => new { reference, column }).
-                    Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
-                    Select(s => s.column));
+        //        // Alias by Reference
+        //        result.AddRange(tableReferences.
+        //            Where(w => columnName.Equals(new ReferencedIndexColumn(w).AsColumn())).
+        //            Join(tableColumns,
+        //                reference => new ReferenceIndexName(reference).AsTable(),
+        //                column => new TableIndexName(column),
+        //                (reference, column) => new { reference, column }).
+        //            Where(w => String.Equals(w.reference.ReferencedColumnName, w.column.ColumnName, KeyExtension.CompareString)).
+        //            Select(s => s.column));
 
-                // Alias by Constraint
-                ByConstraint(column);
+        //        // Alias by Constraint
+        //        ByConstraint(column);
 
-                return result;
+        //        return result;
 
-                void ByConstraint(TableColumnValue column)
-                {   // Recursive Function that add values to result
-                    // So Long as the Name of the column does not change,
-                    // keep working down the constraint tree (parent to child).
-                    List<TableColumnValue> newAlias = constraints.
-                        Where(w => w.parentKey.Equals(column)).
-                        Join(tableColumns,
-                            constraint => constraint.childKey,
-                            column => new TableColumnIndexName(column),
-                            (constraint, column) => column
-                        ).Except(result).
-                        Where(w => String.Equals(column.ColumnName, w.ColumnName, KeyExtension.CompareString)).
-                        ToList();
+        //        void ByConstraint(TableColumnValue column)
+        //        {   // Recursive Function that add values to result
+        //            // So Long as the Name of the column does not change,
+        //            // keep working down the constraint tree (parent to child).
+        //            List<TableColumnValue> newAlias = constraints.
+        //                Where(w => w.parentKey.Equals(column)).
+        //                Join(tableColumns,
+        //                    constraint => constraint.childKey,
+        //                    column => new TableColumnIndexName(column),
+        //                    (constraint, column) => column
+        //                ).Except(result).
+        //                Where(w => String.Equals(column.ColumnName, w.ColumnName, KeyExtension.CompareString)).
+        //                ToList();
 
-                    result.AddRange(newAlias);
+        //            result.AddRange(newAlias);
 
-                    foreach (var item in newAlias)
-                    { ByConstraint(item); }
-                }
-            }
+        //            foreach (var item in newAlias)
+        //            { ByConstraint(item); }
+        //        }
+        //    }
 
-            PathIndex GetMemberName(TableColumnValue column)
-            {
-                TableColumnIndexName columnName = new TableColumnIndexName(column);
-                List<String> nameParts = new List<String>();
-                List<TableColumnValue> result = new List<TableColumnValue>();
-                if (column.ColumnName is String value) { nameParts.Add(value); }
+        //    PathIndex GetMemberName(TableColumnValue column)
+        //    {
+        //        TableColumnIndexName columnName = new TableColumnIndexName(column);
+        //        List<String> nameParts = new List<String>();
+        //        List<TableColumnValue> result = new List<TableColumnValue>();
+        //        if (column.ColumnName is String value) { nameParts.Add(value); }
 
-                ByConstraint(column);
+        //        ByConstraint(column);
 
-                void ByConstraint(TableColumnValue column)
-                {   // Recursive Function that add values to result.
-                    // Works up the constraint tree (child to parent).
-                    // In case of a circular relationship, the top cannot be determined.
-                    // This will result in two (possible more) entries.
-                    List<TableColumnValue> newNamePart = constraints.
-                        Where(w => w.childKey.Equals(column)).
-                        Join(tableColumns,
-                            constraint => constraint.parentKey,
-                            column => new TableColumnIndexName(column),
-                            (constraint, column) => column
-                        ).Except(result).
-                        Where(w => !nameParts.Any(a => String.Equals(w.ColumnName, a, KeyExtension.CompareString))).
-                        ToList();
+        //        void ByConstraint(TableColumnValue column)
+        //        {   // Recursive Function that add values to result.
+        //            // Works up the constraint tree (child to parent).
+        //            // In case of a circular relationship, the top cannot be determined.
+        //            // This will result in two (possible more) entries.
+        //            List<TableColumnValue> newNamePart = constraints.
+        //                Where(w => w.childKey.Equals(column)).
+        //                Join(tableColumns,
+        //                    constraint => constraint.parentKey,
+        //                    column => new TableColumnIndexName(column),
+        //                    (constraint, column) => column
+        //                ).Except(result).
+        //                Where(w => !nameParts.Any(a => String.Equals(w.ColumnName, a, KeyExtension.CompareString))).
+        //                ToList();
 
-                    result.AddRange(newNamePart);
+        //            result.AddRange(newNamePart);
 
-                    // Most cases there is exactly one value.
-                    // In complex db models, multiple could exist.
-                    // Application cannot determine best option, so just pick one.
-                    if (newNamePart.Count > 0 && newNamePart.First().ColumnName is String value)
-                    { nameParts.Insert(0, value); }
+        //            // Most cases there is exactly one value.
+        //            // In complex db models, multiple could exist.
+        //            // Application cannot determine best option, so just pick one.
+        //            if (newNamePart.Count > 0 && newNamePart.First().ColumnName is String value)
+        //            { nameParts.Insert(0, value); }
 
-                    foreach (var item in newNamePart)
-                    { ByConstraint(item); }
-                }
+        //            foreach (var item in newNamePart)
+        //            { ByConstraint(item); }
+        //        }
 
-                return new PathIndex(nameParts.ToArray());
-            }
-        }
+        //        return new PathIndex(nameParts.ToArray());
+        //    }
+        //}
 
-        void BuildEntities(IDomainModel target)
-        {
-            entities = target.Entities;
-            entityAliases = target.Entities.Aliases;
-            entityProperties = target.Entities.Properties;
-            entityAttributes = target.Entities.Attributes;
+        //void BuildEntities(IDomainModel target)
+        //{
+        //    entities = target.Entities;
+        //    entityAliases = target.Entities.Aliases;
+        //    entityProperties = target.Entities.Properties;
+        //    entityAttributes = target.Entities.Attributes;
 
-            foreach (TableValue table in tables)
-            {
-                TableIndexName tableName = new TableIndexName(table);
-                IReadOnlyList<TableValue> alias = new List<TableValue>() { table };
+        //    foreach (TableValue table in tables)
+        //    {
+        //        TableIndexName tableName = new TableIndexName(table);
+        //        IReadOnlyList<TableValue> alias = new List<TableValue>() { table };
 
-                // Add or find the existing Entity
-                EntityValue entity;
-                EntityIndex entityIndex;
-                if (entityAliases.
-                    FirstOrDefault(w => alias.Any(a => new AliasIndex(a).Equals(w)))
-                    is EntityAliasValue existingAlias &&
-                    entities.FirstOrDefault(w => new EntityIndex(existingAlias).Equals(w))
-                    is EntityValue existingEntity)
-                {
-                    entity = existingEntity;
-                    entityIndex = new EntityIndex(entity);
-                }
-                else
-                {
-                    entity = new EntityValue()
-                    {
-                        EntityTitle = table.TableName,
-                        MemberName = new PathIndex(table.SchemaName, table.TableName).MemberFullPath,
-                    };
-                    entityIndex = new EntityIndex(entity);
+        //        // Add or find the existing Entity
+        //        EntityValue entity;
+        //        EntityIndex entityIndex;
+        //        if (entityAliases.
+        //            FirstOrDefault(w => alias.Any(a => new AliasIndex(a).Equals(w)))
+        //            is EntityAliasValue existingAlias &&
+        //            entities.FirstOrDefault(w => new EntityIndex(existingAlias).Equals(w))
+        //            is EntityValue existingEntity)
+        //        {
+        //            entity = existingEntity;
+        //            entityIndex = new EntityIndex(entity);
+        //        }
+        //        else
+        //        {
+        //            entity = new EntityValue()
+        //            {
+        //                EntityTitle = table.TableName,
+        //                MemberName = new PathIndex(table.SchemaName, table.TableName).MemberFullPath,
+        //            };
+        //            entityIndex = new EntityIndex(entity);
 
-                    entities.Add(entity);
-                }
+        //            entities.Add(entity);
+        //        }
 
-                // Add any missing Aliases
-                foreach (TableValue item in alias)
-                {
-                    AliasIndex aliasIndex = new AliasIndex(item);
+        //        // Add any missing Aliases
+        //        foreach (TableValue item in alias)
+        //        {
+        //            AliasIndex aliasIndex = new AliasIndex(item);
 
-                    if (!attributeAliases.
-                        Any(a => entityIndex.Equals(a) && aliasIndex.Equals(a)))
-                    { entityAliases.Add(new EntityAliasValue(entity, aliasIndex)); }
-                }
+        //            if (!attributeAliases.
+        //                Any(a => entityIndex.Equals(a) && aliasIndex.Equals(a)))
+        //            { entityAliases.Add(new EntityAliasValue(entity, aliasIndex)); }
+        //        }
 
-                // Add any missing Properties
-                List<EntityPropertyValue> newProperties = properties.
-                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableProperties.
-                        Where(w => new PropertyIndexObject(table).Equals(w)),
-                        model => model.ExtendedPropertyName,
-                        data => data.PropertyName,
-                        (model, data) => new EntityPropertyValue(entity, model, data)).
-                    ToList();
-                var x = tableProperties.
-                        Where(w => new PropertyIndexObject(table).Equals(w)).
-                        ToList();
+        //        // Add any missing Properties
+        //        List<EntityPropertyValue> newProperties = properties.
+        //            Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+        //            Join(tableProperties.
+        //                Where(w => new PropertyIndexObject(table).Equals(w)),
+        //                model => model.ExtendedPropertyName,
+        //                data => data.PropertyName,
+        //                (model, data) => new EntityPropertyValue(entity, model, data)).
+        //            ToList();
+        //        var x = tableProperties.
+        //                Where(w => new PropertyIndexObject(table).Equals(w)).
+        //                ToList();
 
-                foreach (EntityPropertyValue item in newProperties)
-                { entityProperties.Add(item); }
+        //        foreach (EntityPropertyValue item in newProperties)
+        //        { entityProperties.Add(item); }
 
-                // Apply any Property Description, if there is one
-                String? newDescription = properties.
-                    Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
-                    Join(tableProperties.
-                        Where(w => new PropertyIndexObject(table).Equals(w)
-                            && w.IsDescription),
-                        model => model.ExtendedPropertyName,
-                        data => data.PropertyName,
-                        (model, data) => data.PropertyValue).
-                    FirstOrDefault();
+        //        // Apply any Property Description, if there is one
+        //        String? newDescription = properties.
+        //            Where(w => !String.IsNullOrWhiteSpace(w.ExtendedPropertyName)).
+        //            Join(tableProperties.
+        //                Where(w => new PropertyIndexObject(table).Equals(w)
+        //                    && w.IsDescription),
+        //                model => model.ExtendedPropertyName,
+        //                data => data.PropertyName,
+        //                (model, data) => data.PropertyValue).
+        //            FirstOrDefault();
 
-                if (String.IsNullOrWhiteSpace(entity.EntityDescription) &&
-                    !String.IsNullOrWhiteSpace(newDescription))
-                { entity.EntityDescription = newDescription; }
+        //        if (String.IsNullOrWhiteSpace(entity.EntityDescription) &&
+        //            !String.IsNullOrWhiteSpace(newDescription))
+        //        { entity.EntityDescription = newDescription; }
 
-                // Associate Attributes to Entity (by column)
-                foreach (TableColumnValue column in tableColumns.Where(w => tableName.Equals(w)))
-                {
-                    AliasIndex aliasName = new AliasIndex(column);
-                    List<EntityAttributeValue> newAttributes = attributeAliases.
-                        Where(w => aliasName.Equals(w)).
-                        Join(attributes,
-                            alias => new AttributeIndex(alias),
-                            attribute => new AttributeIndex(attribute),
-                            (alias, attribute) => new EntityAttributeValue(entity, attribute)
-                            {
-                                AttributeName = column.ColumnName,
-                                IsNullable = column.IsNullable,
-                                OrdinalPosition = column.OrdinalPosition
-                            }).
-                        ToList();
+        //        // Associate Attributes to Entity (by column)
+        //        foreach (TableColumnValue column in tableColumns.Where(w => tableName.Equals(w)))
+        //        {
+        //            AliasIndex aliasName = new AliasIndex(column);
+        //            List<EntityAttributeValue> newAttributes = attributeAliases.
+        //                Where(w => aliasName.Equals(w)).
+        //                Join(attributes,
+        //                    alias => new AttributeIndex(alias),
+        //                    attribute => new AttributeIndex(attribute),
+        //                    (alias, attribute) => new EntityAttributeValue(entity, attribute)
+        //                    {
+        //                        AttributeName = column.ColumnName,
+        //                        IsNullable = column.IsNullable,
+        //                        OrdinalPosition = column.OrdinalPosition
+        //                    }).
+        //                ToList();
 
-                    foreach (EntityAttributeValue attribute in newAttributes)
-                    { entityAttributes.Add(attribute); }
-                }
-            }
-        }
+        //            foreach (EntityAttributeValue attribute in newAttributes)
+        //            { entityAttributes.Add(attribute); }
+        //        }
+        //    }
+        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData.Entity;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.DataLayer.DomainData.Entity;
 
 namespace DataDictionary.BusinessLayer.Domain
 {

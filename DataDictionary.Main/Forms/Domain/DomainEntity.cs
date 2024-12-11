@@ -13,6 +13,7 @@ using System.Linq;
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.Main.Forms.Domain
 {

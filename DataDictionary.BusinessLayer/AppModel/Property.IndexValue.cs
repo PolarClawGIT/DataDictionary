@@ -1,18 +1,22 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
 
     /// <summary>
     /// Interface for the Domain Property Index by Value.
     /// </summary>
+    [Obsolete("Not Used", true)]
     public interface IPropertyIndexValue : IKey, IDomainPropertyType
-    { String? PropertyName { get; } }
+    {
+        [Obsolete("Not Used", true)]
+        String? PropertyName { get; } }
 
     /// <summary>
     /// Implementation for the Domain Property Index by Value.
     /// </summary>
+    [Obsolete("Not Used", true)]
     public class PropertyIndexValue : IPropertyIndexValue, IKeyEquality<IPropertyIndexValue>, IKeyEquality<IPropertyValue>
     {
         /// <inheritdoc/>
@@ -62,13 +66,13 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             return
                 other is IPropertyValue &&
-                this.PropertyType == other.PropertyType &&
-                String.Equals(this.PropertyName, other.PropertyName, KeyExtension.CompareString);
+                PropertyType == other.PropertyType &&
+                String.Equals(PropertyName, other.PropertyName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
         public Boolean Equals(IPropertyValue? other)
-        { return other is IPropertyValue && this.Equals(new PropertyIndexValue(other)); }
+        { return other is IPropertyValue && Equals(new PropertyIndexValue(other)); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

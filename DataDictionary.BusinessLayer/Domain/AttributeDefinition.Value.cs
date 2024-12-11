@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;
 using System.Linq;

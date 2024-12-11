@@ -2,7 +2,7 @@
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IPropertyIndex : IPropertyKey

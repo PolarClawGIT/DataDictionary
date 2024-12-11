@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Interface component for the Property data
@@ -73,17 +73,17 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public void Import(System.Data.DataSet source)
-        { this.Load(source); }
+        { Load(source); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Delete(IPropertyIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>

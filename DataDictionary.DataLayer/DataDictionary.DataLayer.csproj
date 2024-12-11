@@ -12,6 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DomainData\Definition\**" />
+    <Compile Remove="DomainData\Property\**" />
+    <EmbeddedResource Remove="DomainData\Definition\**" />
+    <EmbeddedResource Remove="DomainData\Property\**" />
+    <None Remove="DomainData\Definition\**" />
+    <None Remove="DomainData\Property\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -222,8 +231,6 @@
     <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
     <Folder Include="DatabaseData\Table\" />
-    <Folder Include="DomainData\Definition\" />
-    <Folder Include="DomainData\Property\" />
   </ItemGroup>
 
 </Project>

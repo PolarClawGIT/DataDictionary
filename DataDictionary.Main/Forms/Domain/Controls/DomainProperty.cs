@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;

@@ -11,6 +11,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.Main.Forms.Domain
 {
