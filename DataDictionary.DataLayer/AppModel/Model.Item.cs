@@ -18,6 +18,8 @@ namespace DataDictionary.DataLayer.AppModel
     [Serializable]
     public class ModelItem : BindingTableRow, IModelItem, ISerializable
     {
+        TemporalItem temporal; // Backing field for Temporal Data.
+
         /// <inheritdoc/>
         public Guid? ModelId { get { return GetValue<Guid>(nameof(ModelId)); } protected set { SetValue(nameof(ModelId), value); } }
 
@@ -27,64 +29,32 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String? ModelDescription { get { return GetValue(nameof(ModelDescription)); } set { SetValue(nameof(ModelDescription), value); } }
 
+        /// <inheritdoc/>
+        public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        public String? CreatedBy { get { return temporal.CreatedBy; } }
 
         /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public DateTime? RemovedOn { get { return temporal.RemovedOn; } }
 
         /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+        public String? RemovedBy { get { return temporal.RemovedBy; } }
 
         /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public Boolean? IsInserted { get { return temporal.IsInserted; } }
 
         /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<Boolean>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsUpdated { get { return temporal.IsUpdated; } }
 
         /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<Boolean>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsDeleted { get { return temporal.IsDeleted; } }
 
         /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<Boolean>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsCurrent { get { return temporal.IsCurrent; } }
 
         /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<Boolean>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
+        public DbModificationType Modification { get { return temporal.Modification; } }
 
         /// <summary>
         /// Constructor for the Model data
@@ -93,22 +63,21 @@ namespace DataDictionary.DataLayer.AppModel
         {
             ModelId = Guid.NewGuid();
             ModelTitle = "New Model";
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
-            new DataColumn(nameof(ModelId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(ModelTitle), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ModelDescription), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+                [
+                    new DataColumn(nameof(ModelId), typeof(Guid)) { AllowDBNull = false},
+                    new DataColumn(nameof(ModelTitle), typeof(string)) { AllowDBNull = false},
+                    new DataColumn(nameof(ModelDescription), typeof(string)) { AllowDBNull = true},
+                    .. TemporalItem.columnDefinitions,
+                ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -135,7 +104,14 @@ namespace DataDictionary.DataLayer.AppModel
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected ModelItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
     }
 }
