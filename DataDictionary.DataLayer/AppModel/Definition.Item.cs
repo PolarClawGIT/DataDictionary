@@ -28,8 +28,6 @@ namespace DataDictionary.DataLayer.AppModel
     [Serializable]
     public class DefinitionItem : BindingTableRow, IDefinitionItem, ISerializable
     {
-        TemporalItem temporal; // Backing field for Temporal Data.
-
         /// <inheritdoc/>
         public Guid? DefinitionId
         {
@@ -54,6 +52,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Boolean? IsCommon
         { get { return GetValue<bool>(nameof(IsCommon), BindingItemParsers.BooleanTryParse); } }
+
+        #region ITemporalItem
+        TemporalItem temporal; // Backing field for Temporal Data.
 
         /// <inheritdoc/>
         public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
@@ -81,6 +82,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public DbModificationType Modification { get { return temporal.Modification; } }
+        #endregion
 
         /// <summary>
         /// Constructor for Domain Definition Item

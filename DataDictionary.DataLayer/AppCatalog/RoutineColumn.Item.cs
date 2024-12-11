@@ -247,67 +247,39 @@ namespace DataDictionary.DataLayer.AppCatalog
             set { SetValue(nameof(GeneratedAlwayType), value); }
         }
 
+        #region ITemporalItem
+        TemporalItem temporal; // Backing field for Temporal Data.
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
 
         /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public String? CreatedBy { get { return temporal.CreatedBy; } }
 
         /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+        public DateTime? RemovedOn { get { return temporal.RemovedOn; } }
 
         /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public String? RemovedBy { get { return temporal.RemovedBy; } }
 
         /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<Boolean>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsInserted { get { return temporal.IsInserted; } }
 
         /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<Boolean>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsUpdated { get { return temporal.IsUpdated; } }
 
         /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<Boolean>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsDeleted { get { return temporal.IsDeleted; } }
 
         /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<Boolean>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsCurrent { get { return temporal.IsCurrent; } }
 
         /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
+        public DbModificationType Modification { get { return temporal.Modification; } }
+        #endregion
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(RoutineColumnId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
@@ -337,21 +309,23 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(IsIdentity), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(IsComputed), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(ComputedDefinition), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for the Database Table Column
         /// </summary>
         public RoutineColumnItem() : base()
-        { RoutineColumnId = Guid.NewGuid(); }
+        {
+            RoutineColumnId = Guid.NewGuid();
+
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, IRoutineColumn source)
@@ -414,7 +388,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected RoutineColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

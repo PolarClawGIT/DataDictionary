@@ -34,8 +34,6 @@ namespace DataDictionary.DataLayer.AppModel
     [Serializable]
     public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable
     {
-        TemporalItem temporal; // Backing field for Temporal Data.
-
         /// <inheritdoc/>
         public Guid? PropertyId
         {
@@ -91,6 +89,9 @@ namespace DataDictionary.DataLayer.AppModel
             set { SetValue(nameof(PropertyData), value); }
         }
 
+        #region ITemporalItem
+        TemporalItem temporal; // Backing field for Temporal Data.
+
         /// <inheritdoc/>
         public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
 
@@ -117,6 +118,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public DbModificationType Modification { get { return temporal.Modification; } }
+        #endregion
 
         /// <summary>
         /// Constructor for Domain Property Item

@@ -18,8 +18,6 @@ namespace DataDictionary.DataLayer.AppModel
     [Serializable]
     public class ModelItem : BindingTableRow, IModelItem, ISerializable
     {
-        TemporalItem temporal; // Backing field for Temporal Data.
-
         /// <inheritdoc/>
         public Guid? ModelId { get { return GetValue<Guid>(nameof(ModelId)); } protected set { SetValue(nameof(ModelId), value); } }
 
@@ -28,6 +26,9 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public String? ModelDescription { get { return GetValue(nameof(ModelDescription)); } set { SetValue(nameof(ModelDescription), value); } }
+
+        #region ITemporalItem
+        TemporalItem temporal; // Backing field for Temporal Data.
 
         /// <inheritdoc/>
         public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
@@ -55,6 +56,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public DbModificationType Modification { get { return temporal.Modification; } }
+        #endregion
 
         /// <summary>
         /// Constructor for the Model data

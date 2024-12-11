@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey, 
+    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey,
         IDbTableType, ITemporalItem
     { }
 
@@ -247,66 +247,39 @@ namespace DataDictionary.DataLayer.AppCatalog
             set { SetValue(nameof(GeneratedAlwayType), value); }
         }
 
-        /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        #region ITemporalItem
+        TemporalItem temporal; // Backing field for Temporal Data.
 
         /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
 
         /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
+        public String? CreatedBy { get { return temporal.CreatedBy; } }
 
         /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
+        public DateTime? RemovedOn { get { return temporal.RemovedOn; } }
 
         /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
+        public String? RemovedBy { get { return temporal.RemovedBy; } }
 
         /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsInserted { get { return temporal.IsInserted; } }
 
         /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsUpdated { get { return temporal.IsUpdated; } }
 
         /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
+        public Boolean? IsDeleted { get { return temporal.IsDeleted; } }
 
         /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
+        public Boolean? IsCurrent { get { return temporal.IsCurrent; } }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        /// <inheritdoc/>
+        public DbModificationType Modification { get { return temporal.Modification; } }
+        #endregion
+
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(TableColumnId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
@@ -338,21 +311,23 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(IsComputed), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(ComputedDefinition), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(GeneratedAlwayType), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for the Database Table Column
         /// </summary>
         public TableColumnItem() : base()
-        { TableColumnId = Guid.NewGuid(); }
+        {
+            TableColumnId = Guid.NewGuid();
+
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, ITableColumn source)
@@ -370,7 +345,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 TableName = source.TableName,
                 TableType = tableType,
                 ColumnName = source.ColumnName,
-                
+
             };
 
             newValue.Update(source);
@@ -378,7 +353,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public virtual void Update (ITableColumn source)
+        public virtual void Update(ITableColumn source)
         {
             OrdinalPosition = source.OrdinalPosition;
             IsNullable = source.IsNullable;
@@ -417,7 +392,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected TableColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>
