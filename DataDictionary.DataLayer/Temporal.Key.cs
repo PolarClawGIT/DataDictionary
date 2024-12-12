@@ -8,22 +8,13 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer
 {
     /// <summary>
-    /// Interface describes a Temporal Table Key (DateTime part)
-    /// </summary>
-    public interface ITemporalKey : IKey
-    {
-        /// <summary>
-        /// Date on which the record was removed (Update/Delete)
-        /// </summary>
-        DateTime? CreatedOn { get; }
-    }
-
-    /// <summary>
     /// Implementation for a Temporal Table Key (DateTime part)
     /// </summary>
-    public class TemporalKey : ITemporalKey, IKeyComparable<ITemporalKey>
+    public class TemporalKey :
+        IEquatable<ITemporal>, IComparable<ITemporal>,
+        IEquatable<ITemporalItem>, IComparable<ITemporalItem>, IComparable
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITemporal.CreatedOn"/>
         public DateTime? CreatedOn { get; } = DateTime.MaxValue;
 
         /// <summary>
@@ -35,34 +26,60 @@ namespace DataDictionary.DataLayer
         /// Constructor for the Temporal Key.
         /// </summary>
         /// <param name="source"></param>
-        public TemporalKey(ITemporalKey source) : base()
+        public TemporalKey(ITemporal source) : base()
         {
             if (source.CreatedOn is DateTime value)
             { CreatedOn = value; }
         }
 
+        /// <summary>
+        /// Constructor for the Temporal Key.
+        /// </summary>
+        /// <param name="source"></param>
+        public TemporalKey(ITemporalItem source) : base()
+        {
+            if (source.Temporal.CreatedOn is DateTime value)
+            { CreatedOn = value; }
+        }
+
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(ITemporalKey? other)
+        public Boolean Equals(ITemporal? other)
         {
             return
-                (other is TemporalKey 
-                    && CreatedOn is null 
-                    && other.CreatedOn is null ) ||
-                ( other is TemporalKey
+                (other is TemporalKey
+                    && CreatedOn is null
+                    && other.CreatedOn is null) ||
+                (other is TemporalKey
                     && CreatedOn is DateTime thisValue
                     && other.CreatedOn is DateTime otherValue
                     && DateTime.Equals(thisValue, otherValue));
         }
 
         /// <inheritdoc/>
-        public override Boolean Equals(object? obj)
-        { return obj is ITemporalKey value && Equals(new TemporalKey(value)); }
+        public Boolean Equals(ITemporalItem? other)
+        {
+            return
+                (other is TemporalKey
+                    && CreatedOn is null
+                    && other.Temporal.CreatedOn is null) ||
+                (other is TemporalKey
+                    && CreatedOn is DateTime thisValue
+                    && other.Temporal.CreatedOn is DateTime otherValue
+                    && DateTime.Equals(thisValue, otherValue));
+        }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(ITemporalKey? other)
+        public override Boolean Equals(object? obj)
         {
-            if (other is ITemporalKey value &&
+            return (obj is ITemporal value && Equals(new TemporalKey(value)) ||
+                (obj is ITemporalItem item && Equals(new TemporalKey(item))));
+        }
+
+        /// <inheritdoc/>
+        public Int32 CompareTo(ITemporal? other)
+        {
+            if (other is ITemporal value &&
                 CreatedOn is DateTime thisValue &&
                 other.CreatedOn is DateTime otherValue)
             { return DateTime.Compare(thisValue, otherValue); }
@@ -70,8 +87,19 @@ namespace DataDictionary.DataLayer
         }
 
         /// <inheritdoc/>
+        public Int32 CompareTo(ITemporalItem? other)
+        {
+            if (other is ITemporal value &&
+                CreatedOn is DateTime thisValue &&
+                other.Temporal.CreatedOn is DateTime otherValue)
+            { return DateTime.Compare(thisValue, otherValue); }
+            else { return 1; }
+        }
+
+
+        /// <inheritdoc/>
         public Int32 CompareTo(Object? obj)
-        { if (obj is ITemporalKey value) { return CompareTo(new TemporalKey(value)); } else { return 1; } }
+        { if (obj is ITemporal value) { return CompareTo(new TemporalKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public static Boolean operator ==(TemporalKey left, TemporalKey right)

@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -96,36 +97,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             set { SetValue(nameof(ReferencedColumnName), value); }
         }
 
-        #region ITemporalItem
-        TemporalItem temporal; // Backing field for Temporal Data.
-
         /// <inheritdoc/>
-        public DateTime? CreatedOn { get { return temporal.CreatedOn; } }
-
-        /// <inheritdoc/>
-        public String? CreatedBy { get { return temporal.CreatedBy; } }
-
-        /// <inheritdoc/>
-        public DateTime? RemovedOn { get { return temporal.RemovedOn; } }
-
-        /// <inheritdoc/>
-        public String? RemovedBy { get { return temporal.RemovedBy; } }
-
-        /// <inheritdoc/>
-        public Boolean? IsInserted { get { return temporal.IsInserted; } }
-
-        /// <inheritdoc/>
-        public Boolean? IsUpdated { get { return temporal.IsUpdated; } }
-
-        /// <inheritdoc/>
-        public Boolean? IsDeleted { get { return temporal.IsDeleted; } }
-
-        /// <inheritdoc/>
-        public Boolean? IsCurrent { get { return temporal.IsCurrent; } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification { get { return temporal.Modification; } }
-        #endregion
+        public ITemporal Temporal { get; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
@@ -150,7 +123,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             ConstraintColumnId = Guid.NewGuid();
 
-            temporal = new TemporalItem()
+            Temporal = new TemporalItem()
             {
                 GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
                 GetDate = GetValue<DateTime>,
@@ -197,7 +170,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="streamingContext"></param>
         protected ConstraintColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
-            temporal = new TemporalItem()
+            Temporal = new TemporalItem()
             {
                 GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
                 GetDate = GetValue<DateTime>,

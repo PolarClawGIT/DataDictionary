@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -7,53 +8,18 @@ namespace DataDictionary.DataLayer;
 /// <summary>
 /// Interface describes a Temporal Table
 /// </summary>
-public interface ITemporalItem : ITemporalKey
+public interface ITemporalItem 
 {
     /// <summary>
-    /// Account Name that Created (Insert/Update) this record
+    /// Temporal Data Elements
     /// </summary>
-    String? CreatedBy { get; }
-
-    /// <summary>
-    /// Date on which the record was removed (Update/Delete)
-    /// </summary>
-    DateTime? RemovedOn { get; }
-
-    /// <summary>
-    /// Account Name that removed (Update/Delete) this record
-    /// </summary>
-    String? RemovedBy { get; }
-
-    /// <summary>
-    /// The value was modified by an Insert action
-    /// </summary>
-    Boolean? IsInserted { get; }
-
-    /// <summary>
-    /// The value was modified by an Update action
-    /// </summary>
-    Boolean? IsUpdated { get; }
-
-    /// <summary>
-    /// The value was Deleted
-    /// </summary>
-    Boolean? IsDeleted { get; }
-
-    /// <summary>
-    /// The value is the current/last state
-    /// </summary>
-    Boolean? IsCurrent { get; }
-
-    /// <summary>
-    /// Type of Modification made.
-    /// </summary>
-    DbModificationType Modification { get; }
+    public ITemporal Temporal { get; }
 }
 
 /// <summary>
 /// Temporal sub-class for common functionality of Temporal data.
 /// </summary>
-class TemporalItem: ITemporalItem
+class TemporalItem: ITemporal
 {
     /// <inheritdoc cref="BindingTableRow.GetValue(string)"/>
     /// <remarks>Pass: BindingTableRow.GetValue</remarks>

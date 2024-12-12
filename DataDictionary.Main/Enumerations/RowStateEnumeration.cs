@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Enumerations
                 { result = rowState.RowState().AsBindingRowState(); }
 
                 if (item.Current is ITemporalValue temporal
-                    && temporal.IsCurrent == false
+                    && temporal.Temporal.IsCurrent == false
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { return BindingRowState.Historic; }
             }
@@ -93,21 +93,21 @@ namespace DataDictionary.Main.Enumerations
 
                 if (item.Current is ITemporalValue temporal)
                 {
-                    temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
+                    temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(temporal.Temporal.Modification).DisplayName);
 
-                    if (temporal.IsCurrent == false)
+                    if (temporal.Temporal.IsCurrent == false)
                     { temporalValue = String.Format("{0}/Historic", temporalValue); }
 
-                    if (temporal.CreatedOn is DateTime createdOn && temporal.IsDeleted == false)
+                    if (temporal.Temporal.CreatedOn is DateTime createdOn && temporal.Temporal.IsDeleted == false)
                     { temporalValue = String.Format("{0} on {1}", temporalValue, createdOn); }
 
-                    if (temporal.CreatedOn is DateTime removedOn && temporal.IsDeleted == true)
+                    if (temporal.Temporal.CreatedOn is DateTime removedOn && temporal.Temporal.IsDeleted == true)
                     { temporalValue = String.Format("{0} on {1}", temporalValue, removedOn); }
 
-                    if (temporal.CreatedBy is String createdBy && temporal.IsDeleted == false)
+                    if (temporal.Temporal.CreatedBy is String createdBy && temporal.Temporal.IsDeleted == false)
                     { temporalValue = String.Format("{0} by {1}", temporalValue, createdBy); }
 
-                    if (temporal.CreatedBy is String removedBy && temporal.IsDeleted == true)
+                    if (temporal.Temporal.CreatedBy is String removedBy && temporal.Temporal.IsDeleted == true)
                     { temporalValue = String.Format("{0} by {1}", temporalValue, removedBy); }
                 }
                 else

@@ -13,13 +13,13 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <inheritdoc/>
     public class HelpSubjectValue : HelpSubjectItem, IHelpSubjectValue
     {
-        ITemporalValue modificationValue; // Backing field for IModificationValue
+        IDataValue dataValue; // Backing field for IDataValue
 
         /// <inheritdoc/>
-        DataIndex IDataValue.Index { get { return modificationValue.Index; } }
+        DataIndex IDataValue.Index { get { return dataValue.Index; } }
 
         /// <inheritdoc/>
-        String IDataValue.Title { get { return modificationValue.Title; } }
+        String IDataValue.Title { get { return dataValue.Title; } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ApplicationHelpPage;
@@ -27,13 +27,13 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <inheritdoc/>
         public HelpSubjectValue() : base()
         {
-            modificationValue = TemporalValue.Create(new DataValue(this)
+            dataValue = new DataValue(this)
             {
                 GetIndex = () => new HelpSubjectIndex(this),
                 GetTitle = () => HelpSubject ?? String.Empty,
                 GetScope = () => Scope,
                 IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
-            }, this);
+            };
         }
     }
 }
