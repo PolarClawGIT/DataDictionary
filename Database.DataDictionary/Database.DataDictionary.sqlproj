@@ -192,7 +192,6 @@
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetNameSpace.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeSubjectArea.sql" />
@@ -450,6 +449,9 @@
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelSubjectArea.sql" />
+    <Build Include="AppModel\Tables\NameSpaceHierarchy.sql" />
+    <Build Include="HsModel\Tables\NameSpaceHierarchy.sql" />
+    <Build Include="AppSecurity\Policy\policyModelNameSpace.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

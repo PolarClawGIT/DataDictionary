@@ -30,7 +30,7 @@ Begin Try
 		Select	S.[NameSpaceId],
 				S.[MemberName],
 				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] S
+		From	[AppModel].[NameSpaceHierarchy] S
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
 		Where	S.[ModelId] = @ModelId),
 		[Data] As (
@@ -94,27 +94,27 @@ Begin Try
 		Select	U.[NameSpaceId],
 				P.[ParentNameSpaceId]
 		From	[InUse] U
-				Inner Join [App_DataDictionary].[ModelNameSpace] P
+				Inner Join [AppModel].[NameSpaceHierarchy] P
 				On	U.[NameSpaceId] = P.[NameSpaceId]
 		Union All
 		Select	P.[NameSpaceId],
 				P.[ParentNameSpaceId]
 		From	[Parents] U
-				Inner Join [App_DataDictionary].[ModelNameSpace] P
+				Inner Join [AppModel].[NameSpaceHierarchy] P
 				On	U.[ParentNameSpaceId] = P.[NameSpaceId]),
 	[Data] As (
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelNameSpace]
+		From	[AppModel].[NameSpaceHierarchy]
 		Except
 		Select	[NameSpaceId]
 		From	[Parents])
-	Delete From [App_DataDictionary].[ModelNameSpace]
-	From	[App_DataDictionary].[ModelNameSpace] T
+	Delete From [AppModel].[NameSpaceHierarchy]
+	From	[AppModel].[NameSpaceHierarchy] T
 			Inner Join [Data] S
 			On	T.[NameSpaceId] = S.[NameSpaceId]
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelNameSpace] (
+	Insert Into [AppModel].[NameSpaceHierarchy] (
 			[NameSpaceId],
 			[ModelId],
 			[ParentNameSpaceId],
@@ -126,7 +126,7 @@ Begin Try
 	From	@Values V
 			Left Join @Values P
 			On	V.[ParentNameSpace] = P.[NameSpace]
-			Left Join [App_DataDictionary].[ModelNameSpace] M
+			Left Join [AppModel].[NameSpaceHierarchy] M
 			On	@ModelId = M.[ModelId] And
 				V.[NameSpaceId] = M.[NameSpaceId]
 	Where	M.[NameSpaceId] is Null

@@ -12,7 +12,7 @@
     CONSTRAINT [PK_SubjectArea] PRIMARY KEY CLUSTERED ([SubjectAreaId] ASC),
     CONSTRAINT [FK_SubjectAreaModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
     CONSTRAINT [UK_SubjectArea] UNIQUE NONCLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC),
-    CONSTRAINT [FK_SubjectAreaNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+    CONSTRAINT [FK_SubjectAreaNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[SubjectArea]))
 

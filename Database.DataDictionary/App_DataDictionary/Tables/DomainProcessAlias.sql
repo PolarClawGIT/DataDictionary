@@ -10,6 +10,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_DomainProcessAlias] PRIMARY KEY CLUSTERED ([ProcessId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_DomainProcessAlias_Process] FOREIGN KEY ([ProcessId]) REFERENCES [App_DataDictionary].[DomainProcess] ([ProcessId]),
-	CONSTRAINT [FK_DomainProcessAlias_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+	CONSTRAINT [FK_DomainProcessAlias_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
 )
 

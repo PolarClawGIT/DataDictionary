@@ -13,7 +13,7 @@ From	[App_DataDictionary].[DomainEntityAlias] D
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelEntity] M
 		On	D.[EntityId] = M.[EntityId]
-		Left Join [App_DataDictionary].[ModelNameSpace] S
+		Left Join [AppModel].[NameSpaceHierarchy] S
 		On	D.[NameSpaceId] = S.[NameSpaceId] And
 			M.[ModelId] = S.[ModelId]
 Where	(@ModelId is Null or (@ModelId = M.[ModelId] And @ModelId = S.[ModelId])) And -- NameSpace must also be for the Model Specified

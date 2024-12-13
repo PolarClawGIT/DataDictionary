@@ -40,7 +40,7 @@ Begin Try
 	;With [NameSpace] As (
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] M
+		From	[AppModel].[NameSpaceHierarchy] M
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values

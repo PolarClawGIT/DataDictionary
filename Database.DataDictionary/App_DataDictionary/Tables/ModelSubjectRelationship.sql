@@ -9,7 +9,7 @@
     CONSTRAINT [PK_ModelSubjectRelationship] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [RelationshipId] ASC),
     CONSTRAINT [FK_ModelSubjectRelationship_Relationship] FOREIGN KEY ([ModelId], [RelationshipId]) REFERENCES [App_DataDictionary].[ModelRelationship] ([ModelId], [RelationshipId]),
     CONSTRAINT [FK_ModelSubjectRelationship_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
-    CONSTRAINT [FK_ModelSubjectRelationship_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+    CONSTRAINT [FK_ModelSubjectRelationship_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
 );
 

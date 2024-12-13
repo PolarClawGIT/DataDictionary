@@ -2827,4 +2827,24 @@
     <Property Name="NewSchema" Value="AppModel" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="405c8a91-bf3c-4306-9476-865f0330e689" ChangeDateTime="12/13/2024 15:48:02">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ModelNameSpace]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5400419e-bc21-4306-9e99-1c44557650e1" ChangeDateTime="12/13/2024 15:48:17">
+    <Property Name="ElementName" Value="[AppModel].[ModelNameSpace]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[NameSpace]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8cc19b64-41d2-49f1-a65f-405e2256ca72" ChangeDateTime="12/13/2024 15:51:48">
+    <Property Name="ElementName" Value="[AppModel].[NameSpace]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[NameSpaceHierarchy]" />
+  </Operation>
 </Operations>

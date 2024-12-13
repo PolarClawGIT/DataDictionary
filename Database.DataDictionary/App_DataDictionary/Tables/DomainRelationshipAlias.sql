@@ -10,5 +10,5 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_DomainRelationshipAlias] PRIMARY KEY CLUSTERED ([RelationshipId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_DomainRelationshipAlias_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [App_DataDictionary].[DomainRelationship] ([RelationshipId]),
-	CONSTRAINT [FK_DomainRelationshipAlias_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+	CONSTRAINT [FK_DomainRelationshipAlias_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
 )

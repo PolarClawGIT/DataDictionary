@@ -10,5 +10,5 @@
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingPath] PRIMARY KEY CLUSTERED ([TemplateId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_ScriptingPathTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [App_DataDictionary].[ScriptingTemplate] ([TemplateId]),
-	CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+	CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
 )

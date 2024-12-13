@@ -10,7 +10,7 @@ With [Data] As (
 				FormatMessage('[%s]',[MemberName])) As [NameSpace],
 			Convert(NVarChar(Max), Null) As [ParentNameSpace],
 			[MemberName]
-	From	[App_DataDictionary].[ModelNameSpace]
+	From	[AppModel].[NameSpaceHierarchy]
 	Where	[NameSpaceId] = @NameSpaceId
 	Union All
 	Select	D.[NameSpaceId],
@@ -24,7 +24,7 @@ With [Data] As (
 				As [ParentNameSpace],
 			D.[MemberName]
 	From	[Data] D
-			Inner Join [App_DataDictionary].[ModelNameSpace] P
+			Inner Join [AppModel].[NameSpaceHierarchy] P
 			On	D.[ParentNameSpaceId] = P.[NameSpaceId])
 Select	[NameSpaceId],
 		[MemberName],

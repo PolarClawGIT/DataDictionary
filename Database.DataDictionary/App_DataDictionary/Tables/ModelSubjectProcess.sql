@@ -9,7 +9,7 @@
     CONSTRAINT [PK_ModelSubjectProcess] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [ProcessId] ASC),
     CONSTRAINT [FK_ModelSubjectProcess_Process] FOREIGN KEY ([ModelId], [ProcessId]) REFERENCES [App_DataDictionary].[ModelProcess] ([ModelId], [ProcessId]),
     CONSTRAINT [FK_ModelSubjectProcess_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
-    CONSTRAINT [FK_ModelSubjectProcess_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
+    CONSTRAINT [FK_ModelSubjectProcess_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
 );
 
