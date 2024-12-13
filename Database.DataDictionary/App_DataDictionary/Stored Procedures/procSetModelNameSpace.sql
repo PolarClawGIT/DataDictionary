@@ -59,7 +59,7 @@ Begin Try
 	-- Apply Changes
 	;With [InUse] As (
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectArea]
+		From	[AppModel].[SubjectArea]
 		Union
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[ModelSubjectAttribute]

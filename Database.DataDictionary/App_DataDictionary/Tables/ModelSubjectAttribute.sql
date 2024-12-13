@@ -8,7 +8,7 @@
     [SysEnd]        DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN   CONSTRAINT [DF_ModelSubjectAttribute_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999') NOT NULL,
     CONSTRAINT [PK_ModelSubjectAttribute] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [AttributeId] ASC),
     CONSTRAINT [FK_ModelSubjectAttribute_Attribute] FOREIGN KEY ([ModelId], [AttributeId]) REFERENCES [App_DataDictionary].[ModelAttribute] ([ModelId], [AttributeId]),
-    CONSTRAINT [FK_ModelSubjectAttribute_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
+    CONSTRAINT [FK_ModelSubjectAttribute_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
     CONSTRAINT [FK_ModelSubjectAttribute_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
 );

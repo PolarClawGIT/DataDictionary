@@ -35,7 +35,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[ModelAttribute] A
 			On	A.[ModelId] = @ModelId And
 				D.[AttributeId] = A.[AttributeId] 
-			Inner Join [App_DataDictionary].[ModelSubjectArea] S
+			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
 			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J
@@ -59,7 +59,7 @@ Begin Try
 			Inner Join [App_DataDictionary].[ModelAttribute] A
 			On	A.[ModelId] = @ModelId And
 				D.[AttributeId] = A.[AttributeId] 
-			Inner Join [App_DataDictionary].[ModelSubjectArea] S
+			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
 			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J

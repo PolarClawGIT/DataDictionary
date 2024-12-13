@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelSubjectArea]
+﻿CREATE PROCEDURE [AppModel].[procSetSubjectArea]
 		@ModelId UniqueIdentifier = Null,
 		@SubjectAreaId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeModelSubjectArea] ReadOnly
+		@Data [AppModel].[typeSubjectArea] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -58,20 +58,20 @@ Begin Try
 			Left Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1
-			Left Join [App_DataDictionary].[ModelSubjectArea] T
+			Left Join [AppModel].[SubjectArea] T
 			On	T.[ModelId] = @ModelId And
 				N.[NameSpaceId] = T.[NameSpaceId]
 			Cross Apply (Select	Coalesce(T.[SubjectAreaId], D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]
-	From	[App_DataDictionary].[ModelSubjectArea] T
+	From	[AppModel].[SubjectArea] T
 			Left Join @Values S
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	S.[SubjectAreaId] is Null And
 			T.[SubjectAreaId] In (
 			Select	A.[SubjectAreaId]
-			From	[App_DataDictionary].[ModelSubjectArea] A
+			From	[AppModel].[SubjectArea] A
 			Where	(@SubjectAreaId is Null Or @SubjectAreaId = A.[SubjectAreaId]) And
 					(@ModelId is Null Or @ModelId = A.[ModelId]))
 
@@ -100,7 +100,7 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelSubjectArea]
+	Delete From [AppModel].[SubjectArea]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
@@ -117,17 +117,17 @@ Begin Try
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
 				[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectArea])
-	Update [App_DataDictionary].[ModelSubjectArea]
+		From	[AppModel].[SubjectArea])
+	Update [AppModel].[SubjectArea]
 	Set		[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription],
 			[NameSpaceId] = S.[NameSpaceId]
 	From	[Delta] S
-			Inner Join [App_DataDictionary].[ModelSubjectArea] T
+			Inner Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelSubjectArea] (
+	Insert Into [AppModel].[SubjectArea] (
 			[SubjectAreaId],
 			[SubjectAreaTitle],
 			[SubjectAreaDescription],
@@ -139,7 +139,7 @@ Begin Try
 			@ModelId As [ModelId],
 			S.[NameSpaceId]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelSubjectArea] T
+			Left Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	T.[SubjectAreaId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
