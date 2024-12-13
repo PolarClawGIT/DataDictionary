@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppModel].[DefinitionEnumerationHs] As
+﻿CREATE VIEW [AppModel].[DefinitionHs] As
 -- Temporal View
 Select	D.[DefinitionId], -- PK
 		D.[DefinitionTitle], -- AK

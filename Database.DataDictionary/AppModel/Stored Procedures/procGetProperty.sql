@@ -25,7 +25,7 @@ Select	[PropertyId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppModel].[PropertyEnumerationHs]
+From	[AppModel].[PropertyHs]
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@PropertyId is Null Or @PropertyId = [PropertyId]) And
 		(@ModelId is Null Or 

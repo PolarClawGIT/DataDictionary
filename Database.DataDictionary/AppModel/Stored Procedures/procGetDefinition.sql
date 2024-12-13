@@ -23,7 +23,7 @@ Select	[DefinitionId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppModel].[DefinitionEnumerationHs]
+From	[AppModel].[DefinitionHs]
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@DefinitionId is Null Or @DefinitionId = [DefinitionId]) And
 		(@ModelId is Null Or 

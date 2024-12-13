@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppModel].[PropertyEnumerationHs] As
+﻿CREATE VIEW [AppModel].[PropertyHs] As
 -- Temporal View
 Select	D.[PropertyId], -- PK
 		D.[PropertyTitle], -- AK

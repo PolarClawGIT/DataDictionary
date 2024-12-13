@@ -427,8 +427,8 @@
     <Build Include="AppModel\User Defined Types\typeProperty.sql" />
     <Build Include="AppModel\Triggers\trigPropertyEnumeration.sql" />
     <Build Include="AppModel\Triggers\trigDefinitionEnumeration.sql" />
-    <Build Include="AppModel\Views\DefinitionEnumeration.Hs.sql" />
-    <Build Include="AppModel\Views\PropertyEnumeration.Hs.sql" />
+    <Build Include="AppModel\Views\Definition.Hs.sql" />
+    <Build Include="AppModel\Views\Property.Hs.sql" />
     <Build Include="AppModel\Tables\ModelProperty.sql" />
     <Build Include="AppModel\Tables\ModelDefinition.sql" />
     <Build Include="HsModel\Tables\ModelProperty.sql" />

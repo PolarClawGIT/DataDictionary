@@ -2847,4 +2847,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[NameSpaceHierarchy]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="bf8c7c4b-c2f2-4ac5-a3fd-dccecf13dba9" ChangeDateTime="12/13/2024 16:17:05">
+    <Property Name="ElementName" Value="[AppModel].[DefinitionEnumerationHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DefinitionHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6c538a06-da4f-480d-8562-f79a0db925b0" ChangeDateTime="12/13/2024 16:17:20">
+    <Property Name="ElementName" Value="[AppModel].[PropertyEnumerationHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[PropertyHs]" />
+  </Operation>
 </Operations>
