@@ -31,7 +31,7 @@ Begin Try
 				S.[MemberName],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] S
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) N
 		Where	S.[ModelId] = @ModelId),
 		[Data] As (
 			Select	X.[NameSpaceId],

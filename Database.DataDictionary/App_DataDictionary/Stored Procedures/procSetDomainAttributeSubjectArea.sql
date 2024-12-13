@@ -38,7 +38,7 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J
+			Outer Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) J
 			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
 	Group By X.[NameSpace]
 
@@ -49,7 +49,7 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	D.[AttributeId],
@@ -62,7 +62,7 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) J
+			Outer Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) J
 			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
 			Inner Join [NameSpace] N
 			On	X.[NameSpace] = N.[NameSpace]

@@ -2861,4 +2861,10 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[PropertyHs]" />
   </Operation>
+  <Operation Name="Move Schema" Key="4e4f1ab9-ec65-4a10-b4a7-0eb718b7e9bf" ChangeDateTime="12/13/2024 18:42:31">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcGetNameSpace]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

@@ -40,7 +40,7 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
