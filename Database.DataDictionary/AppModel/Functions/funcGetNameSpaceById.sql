@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppModel].[funcGetNameSpace] (@NameSpaceId UniqueIdentifier)
+﻿CREATE FUNCTION [AppModel].[funcGetNameSpaceById] (@NameSpaceId UniqueIdentifier)
 -- This takes the NameSpace Member and rebuilds them into a fully Qualified NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 --

@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelNameSpace]
 		@ModelId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeNameSpace] ReadOnly
+		@Data [AppModel].[typeNameSpace] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -31,7 +31,7 @@ Begin Try
 				S.[MemberName],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] S
-				Cross Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpaceById](S.[NameSpaceId]) N
 		Where	S.[ModelId] = @ModelId),
 		[Data] As (
 			Select	X.[NameSpaceId],
@@ -43,7 +43,7 @@ Begin Try
 						Partition By S.[NameSpace]
 						Order By S.[NameSpace] Desc) As [RankIndex]
 			From	@Data D
-					Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[NameSpace]) S
+					Cross Apply [AppModel].[funcSplitNameSpace](D.[NameSpace]) S
 					Left Join [NameSpace] N
 					On	S.[NameSpace] = N.[NameSpace]
 					Cross apply (

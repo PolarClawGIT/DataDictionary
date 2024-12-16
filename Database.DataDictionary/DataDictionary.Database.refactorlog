@@ -2867,4 +2867,23 @@
     <Property Name="NewSchema" Value="AppModel" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="4eafbd1a-1d4b-489f-9222-3a7d0333e58d" ChangeDateTime="12/16/2024 15:25:03">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpace]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="36db48a8-bfef-4d4c-aa6e-9f08d66bc034" ChangeDateTime="12/16/2024 18:21:39">
+    <Property Name="ElementName" Value="[AppModel].[funcGetNameSpace]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcGetNameSpaceById]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8b2c9441-7dfc-4f34-b760-0319f160988b" ChangeDateTime="12/16/2024 18:31:33">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcSplitNameSpace]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

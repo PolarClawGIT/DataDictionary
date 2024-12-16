@@ -25,7 +25,7 @@ Begin Try
 		[PathScope]         [App_DataDictionary].[typeScopeName] NOT NULL,
 		Primary Key ([TemplateId], [NameSpaceId]))
 		
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
 	Select	Null As [NameSpaceId],
@@ -40,14 +40,14 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
 			N.[NameSpaceId],
 			D.[PathScope]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[PathName]) C
+			Cross Apply [AppModel].[funcSplitNameSpace](D.[PathName]) C
 			Inner Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1

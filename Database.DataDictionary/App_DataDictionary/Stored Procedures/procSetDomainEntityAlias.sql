@@ -26,7 +26,7 @@ Begin Try
 		[AliasScope]        [App_DataDictionary].[typeScopeName] Null,
 		Primary Key ([EntityId], [NameSpaceId]))
 
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
 	Select	Null As [NameSpaceId],
@@ -41,14 +41,14 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[EntityId], @EntityId, NewId()) As [EntityId],
 			N.[NameSpaceId],
 			D.[AliasScope]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) C
+			Cross Apply [AppModel].[funcSplitNameSpace](D.[AliasName]) C
 			Inner Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1

@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [App_DataDictionary].[funcSplitNameSpace](@NameSpace NVarChar(Max))
+﻿CREATE FUNCTION [AppModel].[funcSplitNameSpace](@NameSpace NVarChar(Max))
 -- This takes a String that has a Delimiter of a period and creates a hierarchy of values.
 -- Each level of the hierarchy is returned as separate row.
 -- The example of this is a Database Fully Qualified (aka the four part name) name where the period is the delimiter.

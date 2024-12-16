@@ -44,7 +44,7 @@ Begin Try
 				End As [HelpText],
 			NullIf(Trim(S.[NameSpace]),'') As [NameSpace]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace] (D.[NameSpace]) S
+			Outer Apply [AppModel].[funcSplitNameSpace] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
 

@@ -25,7 +25,7 @@ Select	[SubjectAreaId],
 		[IsDeleted],
 		[IsCurrent]
 From	[AppModel].[SubjectAreaHs] For System_Time All M
-		Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
+		Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@ModelId is Null Or @ModelId = [ModelId]) And
 		(@SubjectAreaId is Null Or @SubjectAreaId = [SubjectAreaId])

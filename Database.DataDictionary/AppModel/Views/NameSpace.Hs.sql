@@ -15,7 +15,7 @@ With [Data] As (
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
 					Row_Number() Over (Order By [MemberName])))
-				As [HierarchyId],
+				As [HierarchyId], -- Prototype
 			[SysStart],
 			[SysEnd]
 	From	[AppModel].[NameSpaceHierarchy]
@@ -28,7 +28,7 @@ With [Data] As (
 				As [NameSpace],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
 				Row_Number() Over (Partition By D.[NameSpaceId] Order By C.[MemberName])))
-				As [HierarchyId],
+				As [HierarchyId], -- Prototype
 			Greatest(D.[SysStart], C.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], C.[SysEnd]) As [SysEnd]
 	From	[Data] D

@@ -66,7 +66,7 @@ Begin Try
 				When D.[IsNonKey] = 1 Then 0
 				Else Null End As [IsKey]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[AttributeTitle])) M
+			Outer Apply [AppModel].[funcSplitNameSpace](IsNull(D.[MemberName], D.[AttributeTitle])) M
 			Cross apply (
 				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
 	Where	M.[IsBase] = 1

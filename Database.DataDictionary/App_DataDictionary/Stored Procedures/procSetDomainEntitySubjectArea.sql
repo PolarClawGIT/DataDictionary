@@ -26,7 +26,7 @@ Begin Try
 		[NameSpaceId]		UniqueIdentifier Not Null,
 		Primary Key ([EntityId], [SubjectAreaId]))
 
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
 	Select	Null As [NameSpaceId],
@@ -38,8 +38,8 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) J
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
+			Outer Apply [AppModel].[funcGetNameSpaceById](S.[NameSpaceId]) J
+			Outer Apply [AppModel].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
 	Group By X.[NameSpace]
 
 	-- Need to create & assign the NameSpaceID's
@@ -49,7 +49,7 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	D.[EntityId],
@@ -62,8 +62,8 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [AppModel].[funcGetNameSpace](S.[NameSpaceId]) J
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
+			Outer Apply [AppModel].[funcGetNameSpaceById](S.[NameSpaceId]) J
+			Outer Apply [AppModel].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
 			Inner Join [NameSpace] N
 			On	X.[NameSpace] = N.[NameSpace]
 	Where	X.[IsBase] = 1

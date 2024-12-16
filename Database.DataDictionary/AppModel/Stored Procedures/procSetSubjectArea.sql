@@ -27,7 +27,7 @@ Begin Try
 		[NameSpaceId]            UniqueIdentifier NULL,
 		Primary Key ([SubjectAreaId]))
 
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Declare @Delete Table (
 		[SubjectAreaId] UniqueIdentifier Not Null,
@@ -46,7 +46,7 @@ Begin Try
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
 		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpace](M.[NameSpaceId]) N
+				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	S.[SubjectAreaId],
@@ -54,7 +54,7 @@ Begin Try
 			D.[SubjectAreaDescription],
 			N.[NameSpaceId]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectName]) C
+			Outer Apply [AppModel].[funcSplitNameSpace](D.[SubjectName]) C
 			Left Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1

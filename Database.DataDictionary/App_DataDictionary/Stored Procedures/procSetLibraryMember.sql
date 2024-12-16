@@ -69,7 +69,7 @@ Begin Try
 						Order By IIF(X.[IsBase] = 1,0,1))
 						As [RankIndex]
 		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitNameSpace] (D.[MemberNameSpace]) X
+				Cross Apply [AppModel].[funcSplitNameSpace] (D.[MemberNameSpace]) X
 		Where	Coalesce(D.[MemberType],'NameSpace') In ('NameSpace','Type')),
 	[Data] As (
 		Select	[LibraryId],
@@ -99,7 +99,7 @@ Begin Try
 			D.[MemberType],
 			D.[MemberData]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace] (D.[MemberNameSpace]) X
+			Cross Apply [AppModel].[funcSplitNameSpace] (D.[MemberNameSpace]) X
 			-- Possible Parents
 			Left Join @Data P
 			On	D.[MemberParentId] = P.[MemberId]

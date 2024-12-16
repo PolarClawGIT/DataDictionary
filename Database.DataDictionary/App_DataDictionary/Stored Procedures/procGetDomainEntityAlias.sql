@@ -10,7 +10,7 @@ Select	D.[EntityId],
 		N.[NameSpace] As [AliasName],
 		D.[AliasScope]
 From	[App_DataDictionary].[DomainEntityAlias] D
-		Cross Apply [AppModel].[funcGetNameSpace](D.[NameSpaceId]) N
+		Cross Apply [AppModel].[funcGetNameSpaceById](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelEntity] M
 		On	D.[EntityId] = M.[EntityId]
 		Left Join [AppModel].[NameSpaceHierarchy] S

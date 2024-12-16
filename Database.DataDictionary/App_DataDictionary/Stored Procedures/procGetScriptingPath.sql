@@ -10,7 +10,7 @@ Select	D.[TemplateId],
 		N.[NameSpace] As [PathName],
 		D.[PathScope]
 From	[App_DataDictionary].[ScriptingPath] D
-		Cross Apply [AppModel].[funcGetNameSpace](D.[NameSpaceId]) N
+		Cross Apply [AppModel].[funcGetNameSpaceById](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelScripting] M
 		On	D.[TemplateId] = M.[TemplateId]
 		Left Join [AppModel].[NameSpaceHierarchy] S
