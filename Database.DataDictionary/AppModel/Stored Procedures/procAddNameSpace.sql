@@ -44,7 +44,6 @@ Begin Try
 			[ParentNameSpace]
 	From	[Data] D
 	Where	[RankIndex] = 1
-	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId

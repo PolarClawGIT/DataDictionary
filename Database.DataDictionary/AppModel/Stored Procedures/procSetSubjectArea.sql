@@ -19,49 +19,54 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Need to create & assign the NameSpaceID's
+	Declare @NameSpace [AppModel].[typeNameSpace]
+
+	Insert Into @NameSpace
+	Select	[SubjectName]
+	From	@Data
+	Group By [SubjectName]
+
+	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
+
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+		[ModelId]				 UniqueIdentifier Not NULL,
 		[NameSpaceId]            UniqueIdentifier NULL,
-		Primary Key ([SubjectAreaId]))
+		Primary Key ([SubjectAreaId]),
+		Unique ([SubjectAreaTitle]))
 
-	Declare @NameSpace [AppModel].[typeNameSpace]
-
-	Declare @Delete Table (
-		[SubjectAreaId] UniqueIdentifier Not Null,
-		Primary Key ([SubjectAreaId]))
-
-	Insert Into @NameSpace
-	Select	Null As [NameSpaceId],
-			[SubjectName]
-	From	@Data
-	Group By [SubjectName]
-
-	-- Need to create & assign the NameSpaceID's
-	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
-
-	;With [NameSpace] As (
-		Select	M.[NameSpaceId],
-				N.[NameSpace]
-		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
-		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
-	Select	S.[SubjectAreaId],
-			D.[SubjectAreaTitle],
-			D.[SubjectAreaDescription],
+	Select	Coalesce(D.[SubjectAreaId], H.[SubjectAreaId], NewId()) As [SubjectAreaId],
+			NullIf(Trim(D.[SubjectAreaTitle]),'') As [SubjectAreaTitle],
+			NullIf(Trim(D.[SubjectAreaDescription]),'') As [SubjectAreaDescription],
+			IsNull(H.[ModelId], @ModelId) As [ModelId],
 			N.[NameSpaceId]
 	From	@Data D
-			Outer Apply [AppModel].[funcSplitNameSpace](D.[SubjectName]) C
-			Left Join [NameSpace] N
-			On	C.[NameSpace] = N.[NameSpace] And
-				C.[IsBase] = 1
-			Left Join [AppModel].[SubjectArea] T
-			On	T.[ModelId] = @ModelId And
-				N.[NameSpaceId] = T.[NameSpaceId]
-			Cross Apply (Select	Coalesce(T.[SubjectAreaId], D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
+			Left Join [AppModel].[SubjectAreaHs] H
+			On	(D.[SubjectAreaId] = H.[SubjectAreaId] Or
+				 (H.[ModelId] = @ModelId And
+				  D.[SubjectAreaTitle] = H.[SubjectAreaTitle]))
+			Cross Apply (
+				Select	[NameSpaceId]
+				From	[AppModel].[funcGetNameSpaceByName] (D.[SubjectName])
+				Where	[ModelId] = @ModelId) N
+	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
+			(@SubjectAreaId is Null Or @SubjectAreaId = Coalesce(D.[SubjectAreaId], H.[SubjectAreaId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
+
+	-- Apply Changes
+;Throw 50000,'Debug', 1;
+
+
+/*
+
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]
@@ -143,7 +148,7 @@ Begin Try
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	T.[SubjectAreaId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
+*/
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it
@@ -155,23 +160,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -181,7 +169,8 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO
 

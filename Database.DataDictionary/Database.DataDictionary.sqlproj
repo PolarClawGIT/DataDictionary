@@ -224,10 +224,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingAttribute.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelSubjectRelationship.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelSubjectProcess.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelSubjectEntity.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelSubjectAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityAttribute.sql" />
@@ -457,6 +453,22 @@
     <Build Include="AppModel\Functions\funcGetNameSpaceByName.sql" />
     <Build Include="AppModel\Functions\funcSplitNameSpace.sql" />
     <Build Include="AppModel\Stored Procedures\procCleanNameSpace.sql" />
+    <Build Include="AppModel\Tables\AttributeSubjectArea.sql" />
+    <Build Include="AppModel\Tables\EntitySubjectArea.sql" />
+    <Build Include="AppModel\Tables\ProcessSubjectArea.sql" />
+    <Build Include="AppModel\Tables\RelationshipSubjectArea.sql" />
+    <Build Include="AppModel\Triggers\trigAttributeSubjectArea.sql" />
+    <Build Include="AppModel\Triggers\trigEntitySubjectArea.sql" />
+    <Build Include="AppModel\Triggers\trigProcessSubjectArea.sql" />
+    <Build Include="AppModel\Triggers\trigRelationshipSubjectArea.sql" />
+    <Build Include="HsModel\Tables\ProcessSubjectArea.sql" />
+    <Build Include="HsModel\Tables\RelationshipSubjectArea.sql" />
+    <Build Include="HsModel\Tables\AttributeSubjectArea.sql" />
+    <Build Include="HsModel\Tables\EntitySubjectArea.sql" />
+    <Build Include="AppSecurity\Policy\policyModelAttributeSubjectArea.sql" />
+    <Build Include="AppSecurity\Policy\policyModelEntitySubjectArea.sql" />
+    <Build Include="AppSecurity\Policy\policyModelProcessSubjectArea.sql" />
+    <Build Include="AppSecurity\Policy\policyModelRelationshipSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

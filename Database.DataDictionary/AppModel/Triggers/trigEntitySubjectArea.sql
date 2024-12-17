@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppModel].[trigSubjectArea]
-	ON [AppModel].[SubjectArea]
+﻿CREATE TRIGGER [AppModel].[trigEntitySubjectArea]
+	ON [AppModel].[EntitySubjectArea]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN

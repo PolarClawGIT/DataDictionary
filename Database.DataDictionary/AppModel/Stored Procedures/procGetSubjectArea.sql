@@ -11,22 +11,22 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	[SubjectAreaId],
-		[SubjectAreaTitle],
-		[SubjectAreaDescription],
+Select	M.[SubjectAreaId],
+		M.[SubjectAreaTitle],
+		M.[SubjectAreaDescription],
 		N.[NameSpace] As [SubjectName],
 		-- Temporal Data
-		[CreatedOn],
-		[CreatedBy],
-		[RemovedOn],
-		[RemovedBy],
-		[IsInserted],
-		[IsUpdated],
-		[IsDeleted],
-		[IsCurrent]
+		M.[CreatedOn],
+		M.[CreatedBy],
+		M.[RemovedOn],
+		M.[RemovedBy],
+		M.[IsInserted],
+		M.[IsUpdated],
+		M.[IsDeleted],
+		M.[IsCurrent]
 From	[AppModel].[SubjectAreaHs] For System_Time All M
 		Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
-Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		--(@ModelId is Null Or @ModelId = [ModelId]) And
-		(@SubjectAreaId is Null Or @SubjectAreaId = [SubjectAreaId])
+Where	(@IncludeHistory = 1 Or (M.[SysStart] <= @AsOfUtcDate And M.[SysEnd] > @AsOfUtcDate)) And
+		(@ModelId is Null Or @ModelId = M.[ModelId]) And
+		(@SubjectAreaId is Null Or @SubjectAreaId = M.[SubjectAreaId])
 GO

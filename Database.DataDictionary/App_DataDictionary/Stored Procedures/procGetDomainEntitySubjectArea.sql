@@ -9,7 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[EntityId],
 		D.[SubjectAreaId]
-From	[App_DataDictionary].[ModelSubjectEntity] D
+From	[AppModel].[EntitySubjectArea] D
 Where	(@ModelId is Null or @ModelId = D.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId]) And
 		(@SubjectAreaId is Null or @SubjectAreaId = D.[SubjectAreaId])

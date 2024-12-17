@@ -38,16 +38,16 @@ Begin Try
 		From	[AppModel].[SubjectArea]
 		Union
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectEntity]
+		From	[AppModel].[EntitySubjectArea]
 		Union
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectAttribute]
+		From	[AppModel].[AttributeSubjectArea]
 		Union
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectProcess]
+		From	[AppModel].[ProcessSubjectArea]
 		Union
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectRelationship]
+		From	[AppModel].[RelationshipSubjectArea]
 		-- Scripting (may be re-factored)
 		Union
 		Select	[NameSpaceId]

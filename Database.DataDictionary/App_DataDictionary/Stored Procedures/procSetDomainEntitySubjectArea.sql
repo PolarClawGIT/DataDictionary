@@ -68,8 +68,8 @@ Begin Try
 	Where	X.[IsBase] = 1
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelSubjectEntity]
-	From	[App_DataDictionary].[ModelSubjectEntity] T
+	Delete From [AppModel].[EntitySubjectArea]
+	From	[AppModel].[EntitySubjectArea] T
 			Left Join @Values V
 			On	T.[EntityId] = V.[EntityId] And
 				T.[SubjectAreaId] = V.[SubjectAreaId] And
@@ -94,24 +94,24 @@ Begin Try
 		Select	[SubjectAreaId],
 				[EntityId],
 				[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectEntity]
+		From	[AppModel].[EntitySubjectArea]
 		Where	[ModelId] = @ModelId)
-	Update	[App_DataDictionary].[ModelSubjectEntity]
+	Update	[AppModel].[EntitySubjectArea]
 	Set		[NameSpaceId] = S.[NameSpaceId]
-	From	[App_DataDictionary].[ModelSubjectEntity] T
+	From	[AppModel].[EntitySubjectArea] T
 			Inner Join [Delta] S
 			On	T.[ModelId] = @ModelId And
 				T.[EntityId] = S.[EntityId] And
 				T.[SubjectAreaId] = S.[SubjectAreaId]
 	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelSubjectEntity] ([ModelId], [EntityId], [SubjectAreaId], [NameSpaceId])
+	Insert Into [AppModel].[EntitySubjectArea] ([ModelId], [EntityId], [SubjectAreaId], [NameSpaceId])
 	Select	@ModelId As [ModelId],
 			V.[EntityId],
 			V.[SubjectAreaId],
 			V.[NameSpaceId]
 	From	@Values V
-			Left Join [App_DataDictionary].[ModelSubjectEntity] T
+			Left Join [AppModel].[EntitySubjectArea] T
 			On	V.[EntityId] = T.[EntityId] And
 				V.[SubjectAreaId] = T.[SubjectAreaId] And
 				T.[ModelId] = @ModelId

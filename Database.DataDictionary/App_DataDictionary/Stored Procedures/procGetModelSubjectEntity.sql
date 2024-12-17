@@ -5,7 +5,7 @@
 AS
 Select	[SubjectAreaId],
 		[EntityId]
-From	[App_DataDictionary].[ModelSubjectEntity] D
+From	[AppModel].[EntitySubjectArea] D
 Where	(@ModelId is Null Or @ModelId = D.[ModelId]) And
 		(@SubjectAreaId is Null Or @SubjectAreaId = D.[SubjectAreaId]) And
 		(@EntityId is Null Or @EntityId = D.[EntityId])
