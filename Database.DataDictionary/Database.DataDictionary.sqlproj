@@ -457,6 +457,7 @@
     <Build Include="AppModel\User Defined Types\typeNameSpace.sql" />
     <Build Include="AppModel\Functions\funcGetNameSpaceByName.sql" />
     <Build Include="AppModel\Functions\funcSplitNameSpace.sql" />
+    <Build Include="AppModel\Stored Procedures\procCleanNameSpace.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
