@@ -62,65 +62,58 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-;Throw 50000,'Debug', 1;
-
-
-/*
-
-
-	Insert Into @Delete
-	Select	T.[SubjectAreaId]
-	From	[AppModel].[SubjectArea] T
+	Delete From [AppModel].[AttributeSubjectArea]
+	From	[AppModel].[AttributeSubjectArea] T
 			Left Join @Values S
-			On	S.[SubjectAreaId] = T.[SubjectAreaId]
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
 	Where	S.[SubjectAreaId] is Null And
-			T.[SubjectAreaId] In (
-			Select	A.[SubjectAreaId]
-			From	[AppModel].[SubjectArea] A
-			Where	(@SubjectAreaId is Null Or @SubjectAreaId = A.[SubjectAreaId]) And
-					(@ModelId is Null Or @ModelId = A.[ModelId]))
+			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
+			(@ModelId is Null Or @ModelId = T.[ModelId])
+	Print FormatMessage ('Delete [AppModel].[AttributeSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelSubjectAttribute]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Delete From [AppModel].[EntitySubjectArea]
+	From	[AppModel].[EntitySubjectArea] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
+			(@ModelId is Null Or @ModelId = T.[ModelId])
+	Print FormatMessage ('Delete [AppModel].[EntitySubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelSubjectEntity]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Delete From [AppModel].[ProcessSubjectArea]
+	From	[AppModel].[ProcessSubjectArea] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
+			(@ModelId is Null Or @ModelId = T.[ModelId])
+	Print FormatMessage ('Delete [AppModel].[ProcessSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelSubjectProcess]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [App_DataDictionary].[ModelSubjectRelationship]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[SubjectArea]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Delete From [AppModel].[RelationshipSubjectArea]
+	From	[AppModel].[RelationshipSubjectArea] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
+			(@ModelId is Null Or @ModelId = T.[ModelId])
+	Print FormatMessage ('Delete [AppModel].[RelationshipSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
+				[ModelId],
 				[NameSpaceId]
 		From	@Values S
 		Except
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
+				[ModelId],
 				[NameSpaceId]
 		From	[AppModel].[SubjectArea])
 	Update [AppModel].[SubjectArea]
@@ -130,7 +123,7 @@ Begin Try
 	From	[Delta] S
 			Inner Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
-	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[SubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[SubjectArea] (
 			[SubjectAreaId],
@@ -141,14 +134,14 @@ Begin Try
 	Select	S.[SubjectAreaId],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription],
-			@ModelId As [ModelId],
+			S.[ModelId],
 			S.[NameSpaceId]
 	From	@Values S
 			Left Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	T.[SubjectAreaId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-*/
+	Print FormatMessage ('Insert [AppModel].[SubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it
