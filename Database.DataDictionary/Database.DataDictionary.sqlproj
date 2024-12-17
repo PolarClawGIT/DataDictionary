@@ -191,7 +191,6 @@
     <Build Include="App_DataDictionary\Tables\DomainRelationshipProperty.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntitySubjectArea.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeSubjectArea.sql" />

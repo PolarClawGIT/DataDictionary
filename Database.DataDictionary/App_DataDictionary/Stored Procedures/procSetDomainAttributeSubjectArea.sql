@@ -29,8 +29,7 @@ Begin Try
 	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
-	Select	Null As [NameSpaceId],
-			X.[NameSpace]
+	Select	X.[NameSpace]
 	From	@Data D
 			Inner Join [App_DataDictionary].[ModelAttribute] A
 			On	A.[ModelId] = @ModelId And
@@ -43,7 +42,7 @@ Begin Try
 	Group By X.[NameSpace]
 
 	-- Need to create & assign the NameSpaceID's
-	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
+	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
 
 	;With [NameSpace] As (
 		Select	M.[NameSpaceId],

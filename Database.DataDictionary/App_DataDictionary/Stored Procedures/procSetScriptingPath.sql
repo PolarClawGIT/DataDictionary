@@ -28,13 +28,12 @@ Begin Try
 	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
-	Select	Null As [NameSpaceId],
-			[PathName] As [NameSpace]
+	Select	[PathName] As [NameSpace]
 	From	@Data
 	Group By [PathName]
 
 	-- Need to create & assign the NameSpaceID's
-	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
+	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
 
 	;With [NameSpace] As (
 		Select	M.[NameSpaceId],

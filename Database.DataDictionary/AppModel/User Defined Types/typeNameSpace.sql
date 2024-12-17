@@ -3,6 +3,6 @@
 -- Implementation: Subject Area, Domain Alias, Catalog (and children), Library (and children).
 CREATE TYPE [AppModel].[typeNameSpace] AS TABLE
 (
-	[NameSpaceId]            UniqueIdentifier NULL,
+	--[NameSpaceId]           UniqueIdentifier NULL,
 	[NameSpace]             [App_DataDictionary].[typeNameSpacePath] Null
 )
