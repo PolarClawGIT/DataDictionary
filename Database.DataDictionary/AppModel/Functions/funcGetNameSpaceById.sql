@@ -6,7 +6,8 @@
 -- Use View [AppModel].[NameSpaceHs] for history.
 RETURNS TABLE AS RETURN (
 With [Data] As (
-	Select	[NameSpaceId],
+	Select	[ModelId],
+			[NameSpaceId],
 			NullIf([ParentNameSpaceId], [NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
 				FormatMessage('[%s]',[MemberName])) As [NameSpace],
@@ -15,7 +16,8 @@ With [Data] As (
 	From	[AppModel].[NameSpaceHierarchy]
 	Where	[NameSpaceId] = @NameSpaceId
 	Union All
-	Select	D.[NameSpaceId],
+	Select	P.[ModelId],
+			D.[NameSpaceId],
 			NullIf(P.[ParentNameSpaceId], D.[NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
 				FormatMessage('[%s].%s',P.[MemberName],D.[NameSpace])) As [NameSpace],
@@ -28,7 +30,9 @@ With [Data] As (
 	From	[Data] D
 			Inner Join [AppModel].[NameSpaceHierarchy] P
 			On	D.[ParentNameSpaceId] = P.[NameSpaceId])
-Select	[NameSpaceId],
+Select	[ModelId],
+		[NameSpaceId],
+		[ParentNameSpaceId],
 		[MemberName],
 		[NameSpace]
 From	[Data]

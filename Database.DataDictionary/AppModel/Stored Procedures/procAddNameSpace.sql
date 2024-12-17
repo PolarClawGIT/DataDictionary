@@ -25,7 +25,6 @@ Begin Try
 		[ParentNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
 		Primary Key ([NameSpaceId]))
 
-
 	;With [Data] As (
 		Select	Coalesce(S.[NameSpaceId], NewId()) As [NameSpaceId],
 				N.[MemberName],
@@ -36,9 +35,8 @@ Begin Try
 				Cross Apply [AppModel].[funcSplitNameSpace](D.[NameSpace]) N
 				Outer Apply (
 					Select	[NameSpaceId]
-					From	[AppModel].[funcGetNameSpaceByName](D.[NameSpace])
-					Where	[ModelId] = @ModelId And
-							[IsBase] = 1) S)
+					From	[AppModel].[funcGetNameSpaceByName](N.[NameSpace])
+					Where	[ModelId] = @ModelId) S)
 	Insert Into @Values
 	Select	[NameSpaceId],
 			[MemberName],

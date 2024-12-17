@@ -7,7 +7,8 @@
 --
 -- This function contains a CTE over a Temporal table but only supports the current state.
 -- Use View [AppModel].[NameSpaceHs] for history.
-RETURNS TABLE AS RETURN (With [Data] As (
+RETURNS TABLE AS RETURN (
+With [Data] As (
 	Select	[MemberName],
 			[NameSpace],
 			[Level],
@@ -45,7 +46,6 @@ Select	[ModelId],
 		[NameSpaceId],
 		[ParentNameSpaceId],
 		[NameSpace],
-		[MemberName],
-		[Level],
-		[IsBase]
-From	[Search])
+		[MemberName]
+From	[Search]
+Where	[IsBase] = 1)

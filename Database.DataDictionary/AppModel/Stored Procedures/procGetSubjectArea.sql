@@ -27,6 +27,6 @@ Select	[SubjectAreaId],
 From	[AppModel].[SubjectAreaHs] For System_Time All M
 		Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		(@ModelId is Null Or @ModelId = [ModelId]) And
+		--(@ModelId is Null Or @ModelId = [ModelId]) And
 		(@SubjectAreaId is Null Or @SubjectAreaId = [SubjectAreaId])
 GO
