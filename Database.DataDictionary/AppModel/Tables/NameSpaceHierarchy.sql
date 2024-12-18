@@ -14,7 +14,7 @@
 	-- The maximum length is not defined but is restricted to 1023 (2046 bytes) based on VB.Net definitions.
 	-- Fields of this type exceed the limits of a SQL Index (900 bytes for Clustered, 1700 bytes for non-clustered).
 	[NameSpaceId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_NameSpaceId] DEFAULT (newid()),
-	[ModelId]               UniqueIdentifier NOT NULL,
+	[ModelId]               UniqueIdentifier NULL,
 	[ParentNameSpaceId]     UniqueIdentifier NULL,
 	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
 	-- Temporal History Support
@@ -24,11 +24,11 @@
 	-- Keys
 	CONSTRAINT [PK_NameSpace] PRIMARY KEY CLUSTERED ([NameSpaceId] ASC),
 	CONSTRAINT [FK_NameSpaceModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
-	CONSTRAINT [UK_NameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC),
-	CONSTRAINT [FK_NameSpaceParent] FOREIGN KEY ([ModelId], [ParentNameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([ModelId], [NameSpaceId]),
+	CONSTRAINT [FK_NameSpaceParent] FOREIGN KEY ([ParentNameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
+	CONSTRAINT [UK_NameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC) -- Where ([ModelId] is not null)
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[NameSpaceHierarchy]))
 GO
 CREATE UNIQUE INDEX [AK_NameSpace]
-    ON [AppModel].[NameSpaceHierarchy]([ModelId], [ParentNameSpaceId] ASC, [MemberName] ASC)
+    ON [AppModel].[NameSpaceHierarchy]([ParentNameSpaceId] ASC, [ModelId] ASC, [MemberName] ASC)
 GO

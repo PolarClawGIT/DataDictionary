@@ -11,7 +11,7 @@
     CONSTRAINT [PK_ProcessSubjectArea] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [ProcessId] ASC),
     CONSTRAINT [FK_ProcessSubjectArea_Process] FOREIGN KEY ([ModelId], [ProcessId]) REFERENCES [App_DataDictionary].[ModelProcess] ([ModelId], [ProcessId]),
     CONSTRAINT [FK_ProcessSubjectArea_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
-    CONSTRAINT [FK_ProcessSubjectArea_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
+    CONSTRAINT [FK_ProcessSubjectArea_NameSpace] FOREIGN KEY ([ModelId], [NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([ModelId], [NameSpaceId]),
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessSubjectArea]))
 

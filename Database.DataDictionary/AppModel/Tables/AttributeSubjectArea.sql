@@ -11,7 +11,7 @@
     CONSTRAINT [PK_AttributeSubjectArea] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [AttributeId] ASC),
     CONSTRAINT [FK_AttributeSubjectArea_Attribute] FOREIGN KEY ([ModelId], [AttributeId]) REFERENCES [App_DataDictionary].[ModelAttribute] ([ModelId], [AttributeId]),
     CONSTRAINT [FK_AttributeSubjectArea_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
-    CONSTRAINT [FK_AttributeSubjectArea_NameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
+    CONSTRAINT [FK_AttributeSubjectArea_NameSpace] FOREIGN KEY ([ModelId], [NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([ModelId], [NameSpaceId]),
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[AttributeSubjectArea]))
 

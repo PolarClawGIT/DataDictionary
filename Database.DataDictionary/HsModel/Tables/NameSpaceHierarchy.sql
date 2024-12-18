@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [HsModel].[NameSpaceHierarchy]
 (
 	[NameSpaceId]           UniqueIdentifier NOT NULL,
-	[ModelId]               UniqueIdentifier NOT NULL,
+	[ModelId]               UniqueIdentifier NULL,
 	[ParentNameSpaceId]     UniqueIdentifier NULL,
 	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] NOT NULL,
 	[SysStart]              DateTime2 (7) NOT NULL,
