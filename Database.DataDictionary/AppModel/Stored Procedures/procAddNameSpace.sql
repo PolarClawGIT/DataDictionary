@@ -36,7 +36,7 @@ Begin Try
 				Outer Apply (
 					Select	[NameSpaceId]
 					From	[AppModel].[funcGetNameSpaceByName](N.[NameSpace])
-					Where	[ModelId] = @ModelId) S)
+					Where	(@ModelId is Null and [ModelId] is Null) Or [ModelId] = @ModelId) S)
 	Insert Into @Values
 	Select	[NameSpaceId],
 			[MemberName],
@@ -65,7 +65,6 @@ Begin Try
 			On	S.[NameSpaceId] = T.[NameSpaceId]
 	Where	T.[NameSpaceId] is Null
 	Print FormatMessage ('Insert [AppModel].[NameSpaceHierarchy]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

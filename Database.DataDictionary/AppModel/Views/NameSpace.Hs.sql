@@ -33,8 +33,7 @@ With [Data] As (
 			Least(D.[SysEnd], C.[SysEnd]) As [SysEnd]
 	From	[Data] D
 			Inner Join [AppModel].[NameSpaceHierarchy] C
-			On	D.[ModelId] = C.[ModelId] And
-				D.[NameSpaceId] = C.[ParentNameSpaceId] And
+			On	D.[NameSpaceId] = C.[ParentNameSpaceId] And
 				-- Temporal, multiple rows could be returned. Do not have confidence in this.
 				((D.[SysStart] >= C.[SysStart] And D.[SysStart] < C.[SysEnd]) Or
 				 (C.[SysStart] >= D.[SysStart] And C.[SysStart] < D.[SysEnd]))
