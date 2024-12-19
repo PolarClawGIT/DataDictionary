@@ -27,7 +27,6 @@
 	CONSTRAINT [FK_NameSpaceParent] FOREIGN KEY ([ParentNameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
 	CONSTRAINT [UK_NameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC) -- Where ([ModelId] is not null)
 )
-WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[NameSpaceHierarchy]))
 GO
 CREATE UNIQUE INDEX [AK_NameSpace]
     ON [AppModel].[NameSpaceHierarchy]([ParentNameSpaceId] ASC, [ModelId] ASC, [MemberName] ASC)

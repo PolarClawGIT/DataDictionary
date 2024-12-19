@@ -442,17 +442,10 @@
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelSubjectArea.sql" />
-    <Build Include="AppModel\Tables\NameSpaceHierarchy.sql" />
-    <Build Include="HsModel\Tables\NameSpaceHierarchy.sql" />
-    <Build Include="AppSecurity\Policy\policyModelNameSpace.sql" />
     <Build Include="AppModel\Triggers\trigNameSpaceHierarchy.sql" />
     <Build Include="AppModel\Views\NameSpace.Hs.sql" />
-    <Build Include="AppModel\Functions\funcGetNameSpaceById.sql" />
-    <Build Include="AppModel\Stored Procedures\procAddNameSpace.sql" />
     <Build Include="AppModel\User Defined Types\typeNameSpace.sql" />
-    <Build Include="AppModel\Functions\funcGetNameSpaceByName.sql" />
     <Build Include="AppModel\Functions\funcSplitNameSpace.sql" />
-    <Build Include="AppModel\Stored Procedures\procCleanNameSpace.sql" />
     <Build Include="AppModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="AppModel\Tables\EntitySubjectArea.sql" />
     <Build Include="AppModel\Tables\ProcessSubjectArea.sql" />
@@ -469,7 +462,13 @@
     <Build Include="AppSecurity\Policy\policyModelEntitySubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelProcessSubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelRelationshipSubjectArea.sql" />
-    <Build Include="AppSecurity\Functions\funcModelNameSpaceAuthorization.sql" />
+    <Build Include="Obsolete\NameSpaceHierarchy.sql" />
+    <Build Include="Obsolete\procAddNameSpace.sql" />
+    <Build Include="Obsolete\procCleanNameSpace.sql" />
+    <Build Include="Obsolete\funcGetNameSpaceById.sql" />
+    <Build Include="Obsolete\funcGetNameSpaceByName.sql" />
+    <Build Include="Obsolete\funcModelNameSpaceAuthorization.sql" />
+    <Build Include="Obsolete\policyModelNameSpace.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
