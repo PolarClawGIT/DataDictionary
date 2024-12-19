@@ -1,0 +1,11 @@
+﻿-- DOES NOT WORK. SQL 71617 Security Policies with a Block predicate on a view are not supported.
+
+--CREATE SECURITY POLICY [dbo].[policySecurityInstead]
+--    ADD BLOCK PREDICATE [dbo].[funcSecurityAllow] ()
+--		ON [dbo].[SecurityInstead] AFTER INSERT,
+--    ADD BLOCK PREDICATE [dbo].[funcSecurityAllow] ()
+--		ON [dbo].[SecurityInstead] BEFORE UPDATE,
+--    ADD BLOCK PREDICATE [dbo].[funcSecurityAllow] ()
+--		ON [dbo].[SecurityInstead] BEFORE DELETE
+--	WITH (STATE = ON, SCHEMABINDING = ON)
+--GO

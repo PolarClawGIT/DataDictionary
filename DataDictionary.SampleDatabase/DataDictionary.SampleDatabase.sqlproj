@@ -61,6 +61,8 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Views" />
+    <Folder Include="dbo\Functions" />
+    <Folder Include="dbo\Triggers" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Sequence\SampleSequence.sql" />
