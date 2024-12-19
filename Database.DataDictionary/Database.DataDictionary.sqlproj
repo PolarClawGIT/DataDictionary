@@ -469,6 +469,7 @@
     <Build Include="Obsolete\funcGetNameSpaceByName.sql" />
     <Build Include="Obsolete\funcModelNameSpaceAuthorization.sql" />
     <Build Include="Obsolete\policyModelNameSpace.sql" />
+    <Build Include="AppModel\User Defined Types\typeQualifiedName.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -33,9 +33,9 @@ Begin Try
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainRelationshipAlias]
 		-- Subject Area
-		Union		
-		Select	[NameSpaceId]
-		From	[AppModel].[SubjectArea]
+		--Union		
+		--Select	[NameSpaceId]
+		--From	[AppModel].[SubjectArea]
 		Union
 		Select	[NameSpaceId]
 		From	[AppModel].[EntitySubjectArea]

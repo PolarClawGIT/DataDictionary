@@ -19,23 +19,13 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Need to create & assign the NameSpaceID's
-	Declare @NameSpace [AppModel].[typeNameSpace]
-
-	Insert Into @NameSpace
-	Select	[SubjectName]
-	From	@Data
-	Group By [SubjectName]
-
-	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
-
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
 		[ModelId]				 UniqueIdentifier Not NULL,
-		[NameSpaceId]            UniqueIdentifier NULL,
+		[SubjectName]            [AppModel].[typeQualifiedName] Not Null
 		Primary Key ([SubjectAreaId]),
 		Unique ([SubjectAreaTitle]))
 
@@ -44,16 +34,15 @@ Begin Try
 			NullIf(Trim(D.[SubjectAreaTitle]),'') As [SubjectAreaTitle],
 			NullIf(Trim(D.[SubjectAreaDescription]),'') As [SubjectAreaDescription],
 			IsNull(H.[ModelId], @ModelId) As [ModelId],
-			N.[NameSpaceId]
+			N.[SubjectName]
 	From	@Data D
 			Left Join [AppModel].[SubjectAreaHs] H
 			On	(D.[SubjectAreaId] = H.[SubjectAreaId] Or
 				 (H.[ModelId] = @ModelId And
 				  D.[SubjectAreaTitle] = H.[SubjectAreaTitle]))
 			Cross Apply (
-				Select	[NameSpaceId]
-				From	[AppModel].[funcGetNameSpaceByName] (D.[SubjectName])
-				Where	[ModelId] = @ModelId) N
+				Select	[NameSpace] As [SubjectName]
+				From	[AppModel].[funcSplitNameSpace](D.[SubjectName])) N
 	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
 			(@SubjectAreaId is Null Or @SubjectAreaId = Coalesce(D.[SubjectAreaId], H.[SubjectAreaId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -107,19 +96,19 @@ Begin Try
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
 				[ModelId],
-				[NameSpaceId]
+				[SubjectName]
 		From	@Values S
 		Except
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
 				[ModelId],
-				[NameSpaceId]
+				[SubjectName]
 		From	[AppModel].[SubjectArea])
 	Update [AppModel].[SubjectArea]
 	Set		[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription],
-			[NameSpaceId] = S.[NameSpaceId]
+			[SubjectName] = S.[SubjectName]
 	From	[Delta] S
 			Inner Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
@@ -130,12 +119,12 @@ Begin Try
 			[SubjectAreaTitle],
 			[SubjectAreaDescription],
 			[ModelId],
-			[NameSpaceId])
+			[SubjectName])
 	Select	S.[SubjectAreaId],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription],
 			S.[ModelId],
-			S.[NameSpaceId]
+			S.[SubjectName]
 	From	@Values S
 			Left Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]

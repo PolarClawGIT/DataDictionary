@@ -14,7 +14,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 Select	M.[SubjectAreaId],
 		M.[SubjectAreaTitle],
 		M.[SubjectAreaDescription],
-		N.[NameSpace] As [SubjectName],
+		M.[SubjectName],
 		-- Temporal Data
 		M.[CreatedOn],
 		M.[CreatedBy],
@@ -25,7 +25,6 @@ Select	M.[SubjectAreaId],
 		M.[IsDeleted],
 		M.[IsCurrent]
 From	[AppModel].[SubjectAreaHs] For System_Time All M
-		Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 Where	(@IncludeHistory = 1 Or (M.[SysStart] <= @AsOfUtcDate And M.[SysEnd] > @AsOfUtcDate)) And
 		(@ModelId is Null Or @ModelId = M.[ModelId]) And
 		(@SubjectAreaId is Null Or @SubjectAreaId = M.[SubjectAreaId])

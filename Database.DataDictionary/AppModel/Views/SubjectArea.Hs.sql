@@ -3,10 +3,9 @@
 Select	D.[SubjectAreaId], -- PK
 		D.[SubjectAreaTitle], -- AK
 		D.[SubjectAreaDescription],
+		S.[SubjectName],
 		D.[ModelId], 
-		FM.[ModelTitle], 
-		D.[NameSpaceId],
-		-- [NameSpace]
+		FM.[ModelTitle],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -19,6 +18,9 @@ Select	D.[SubjectAreaId], -- PK
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[SubjectArea] D
+		Cross Apply (
+			Select	[NameSpace] As [SubjectName]
+			From	[AppModel].[funcSplitNameSpace](D.[SubjectName])) S
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[HsModel].[SubjectArea]

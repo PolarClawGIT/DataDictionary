@@ -2,8 +2,8 @@
     [SubjectAreaId]          UniqueIdentifier NOT NULL,
     [SubjectAreaTitle]       [App_DataDictionary].[typeTitle]       NULL,
     [SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+    [SubjectName]            [AppModel].[typeQualifiedName]         Null,
     [ModelId]                UniqueIdentifier                       NOT NULL,
-    [NameSpaceId]            UniqueIdentifier                       NOT NULL,
     -- Temporal History Support
     [SysStart]               DateTime2 (7) NOT NULL,
     [SysEnd]                 DateTime2 (7) NOT NULL,
