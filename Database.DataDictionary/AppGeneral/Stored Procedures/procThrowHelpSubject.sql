@@ -35,9 +35,9 @@ Values	-- Patterns to match to
 Select	Top 1
 		@Message = Coalesce([HelpToolTip], [HelpSubject])
 From	[AppGeneral].[HelpSubject] H
-		Cross Apply [AppModel].[funcSplitNameSpace](H.[NameSpace]) N
+		Cross Apply [AppModel].[funcParseName](H.[NameSpace]) N
 		Inner Join @NameSpace M
-		On	N.[NameSpace] = M.[NameSpace]
+		On	N.[QualifiedName] = M.[NameSpace]
 Where	N.[IsBase] = 1
 Order By M.[RankIndex]
 

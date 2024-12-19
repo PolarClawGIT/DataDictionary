@@ -47,9 +47,9 @@ Begin Try
 			N.[NameSpaceId],
 			D.[AliasScope]
 	From	@Data D
-			Cross Apply [AppModel].[funcSplitNameSpace](D.[AliasName]) C
+			Cross Apply [AppModel].[funcParseName](D.[AliasName]) C
 			Inner Join [NameSpace] N
-			On	C.[NameSpace] = N.[NameSpace] And
+			On	C.[QualifiedName] = N.[NameSpace] And
 				C.[IsBase] = 1
 
 

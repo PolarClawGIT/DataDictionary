@@ -29,7 +29,7 @@ Begin Try
 	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
-	Select	X.[NameSpace]
+	Select	X.[QualifiedName]
 	From	@Data D
 			Inner Join [App_DataDictionary].[ModelAttribute] A
 			On	A.[ModelId] = @ModelId And
@@ -37,9 +37,8 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [AppModel].[funcGetNameSpaceById](S.[NameSpaceId]) J
-			Outer Apply [AppModel].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
-	Group By X.[NameSpace]
+			Outer Apply [AppModel].[funcParseName](FormatMessage('%s.%s',S.[SubjectName],A.[MemberName])) X
+	Group By X.[QualifiedName]
 
 	-- Need to create & assign the NameSpaceID's
 	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
@@ -61,10 +60,9 @@ Begin Try
 			Inner Join [AppModel].[SubjectArea] S
 			On	S.[ModelId] = @ModelId And
 				D.[SubjectAreaId] = S.[SubjectAreaId]
-			Outer Apply [AppModel].[funcGetNameSpaceById](S.[NameSpaceId]) J
-			Outer Apply [AppModel].[funcSplitNameSpace](FormatMessage('%s.%s',J.[NameSpace],A.[MemberName])) X
+			Outer Apply [AppModel].[funcParseName](FormatMessage('%s.%s',S.[SubjectName],A.[MemberName])) X
 			Inner Join [NameSpace] N
-			On	X.[NameSpace] = N.[NameSpace]
+			On	X.[QualifiedName] = N.[NameSpace]
 	Where	X.[IsBase] = 1
 
 

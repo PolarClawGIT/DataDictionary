@@ -2951,4 +2951,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[RelationshipSubjectArea]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="6351039a-82de-4aa3-ae0d-b9a27796e1f6" ChangeDateTime="12/19/2024 18:02:44">
+    <Property Name="ElementName" Value="[AppModel].[funcSplitNameSpace]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcParseName]" />
+  </Operation>
 </Operations>

@@ -10,10 +10,10 @@
 RETURNS TABLE AS RETURN (
 With [Data] As (
 	Select	[MemberName],
-			[NameSpace],
+			[QualifiedName] As [NameSpace],
 			[Level],
 			[IsBase]
-	From	[AppModel].[funcSplitNameSpace](@NameSpace)),
+	From	[AppModel].[funcParseName](@NameSpace)),
 [Search] As (
 	Select	N.[ModelId],
 			N.[NameSpaceId],

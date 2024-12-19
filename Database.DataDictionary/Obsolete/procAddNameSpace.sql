@@ -28,20 +28,20 @@ Begin Try
 	;With [Data] As (
 		Select	Coalesce(S.[NameSpaceId], NewId()) As [NameSpaceId],
 				N.[MemberName],
-				N.[NameSpace],
-				N.[ParentNameSpace],
-				Row_Number() Over (Partition By N.[NameSpace] Order By N.[MemberName]) As [RankIndex]
+				N.[QualifiedName],
+				N.[ParentName],
+				Row_Number() Over (Partition By N.[QualifiedName] Order By N.[MemberName]) As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcSplitNameSpace](D.[NameSpace]) N
+				Cross Apply [AppModel].[funcParseName](D.[NameSpace]) N
 				Outer Apply (
 					Select	[NameSpaceId]
-					From	[AppModel].[funcGetNameSpaceByName](N.[NameSpace])
+					From	[AppModel].[funcGetNameSpaceByName](N.[QualifiedName])
 					Where	(@ModelId is Null and [ModelId] is Null) Or [ModelId] = @ModelId) S)
 	Insert Into @Values
 	Select	[NameSpaceId],
 			[MemberName],
-			[NameSpace],
-			[ParentNameSpace]
+			[QualifiedName] As [NameSpace],
+			[ParentName] As [ParentNameSpace]
 	From	[Data] D
 	Where	[RankIndex] = 1
 

@@ -59,17 +59,17 @@ Begin Try
 		Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
 				IIF(X.[IsBase] = 1, D.[MemberId], NewId()) As [MemberId],
 				X.[MemberName],
-				X.[NameSpace] As [MemberNameSpace],
-				X.[ParentNameSpace],
+				X.[QualifiedName] As [MemberNameSpace],
+				X.[ParentName] As [ParentNameSpace],
 				Row_Number() Over (
 						Partition By 
 							Coalesce(D.[LibraryId], @LibraryId),
 							X.[MemberName],
-							X.[NameSpace]
+							X.[QualifiedName]
 						Order By IIF(X.[IsBase] = 1,0,1))
 						As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcSplitNameSpace] (D.[MemberNameSpace]) X
+				Cross Apply [AppModel].[funcParseName] (D.[MemberNameSpace]) X
 		Where	Coalesce(D.[MemberType],'NameSpace') In ('NameSpace','Type')),
 	[Data] As (
 		Select	[LibraryId],
@@ -94,17 +94,17 @@ Begin Try
 	Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
 			Coalesce(D.[MemberId], NewId()) As [MemberId],
 			Coalesce(P.[MemberId], R.[MemberId]) As [MemberParentId],
-			X.[NameSpace] As [MemberNameSpace],
+			X.[QualifiedName] As [MemberNameSpace],
 			X.[MemberName] As [MemberName],
 			D.[MemberType],
 			D.[MemberData]
 	From	@Data D
-			Cross Apply [AppModel].[funcSplitNameSpace] (D.[MemberNameSpace]) X
+			Cross Apply [AppModel].[funcParseName] (D.[MemberNameSpace]) X
 			-- Possible Parents
 			Left Join @Data P
 			On	D.[MemberParentId] = P.[MemberId]
 			Left Join @NameSpace R
-			On	X.[ParentNameSpace] = R.[MemberNameSpace]
+			On	X.[ParentName] = R.[MemberNameSpace]
 	Where	X.[IsBase] = 1),
 [NameSpace] As (
 	Select	N.[LibraryId],

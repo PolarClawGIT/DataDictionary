@@ -42,9 +42,9 @@ Begin Try
 					Then FormatMessage('{\rtf1\ansi %s}', Trim(D.[HelpToolTip]))
 				Else Null
 				End As [HelpText],
-			NullIf(Trim(S.[NameSpace]),'') As [NameSpace]
+			NullIf(Trim(S.[QualifiedName]),'') As [NameSpace]
 	From	@Data D
-			Outer Apply [AppModel].[funcSplitNameSpace] (D.[NameSpace]) S
+			Outer Apply [AppModel].[funcParseName] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
 

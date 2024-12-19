@@ -19,8 +19,8 @@ Select	D.[SubjectAreaId], -- PK
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[SubjectArea] D
 		Cross Apply (
-			Select	[NameSpace] As [SubjectName]
-			From	[AppModel].[funcSplitNameSpace](D.[SubjectName])) S
+			Select	[QualifiedName] As [SubjectName]
+			From	[AppModel].[funcParseName](D.[SubjectName])) S
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[HsModel].[SubjectArea]

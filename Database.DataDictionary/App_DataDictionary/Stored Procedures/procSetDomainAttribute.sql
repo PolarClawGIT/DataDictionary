@@ -44,7 +44,7 @@ Begin Try
 	Select	X.[AttributeId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
-			M.[NameSpace] As [MemberName],
+			M.[QualifiedName] As [MemberName],
 			Case
 				When D.[IsSingleValue] = 1 Then 1
 				When D.[IsMultiValue] = 1 Then 0
@@ -66,7 +66,7 @@ Begin Try
 				When D.[IsNonKey] = 1 Then 0
 				Else Null End As [IsKey]
 	From	@Data D
-			Outer Apply [AppModel].[funcSplitNameSpace](IsNull(D.[MemberName], D.[AttributeTitle])) M
+			Outer Apply [AppModel].[funcParseName](IsNull(D.[MemberName], D.[AttributeTitle])) M
 			Cross apply (
 				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
 	Where	M.[IsBase] = 1

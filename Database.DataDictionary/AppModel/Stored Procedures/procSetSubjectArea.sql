@@ -41,8 +41,8 @@ Begin Try
 				 (H.[ModelId] = @ModelId And
 				  D.[SubjectAreaTitle] = H.[SubjectAreaTitle]))
 			Cross Apply (
-				Select	[NameSpace] As [SubjectName]
-				From	[AppModel].[funcSplitNameSpace](D.[SubjectName])) N
+				Select	[QualifiedName] As [SubjectName]
+				From	[AppModel].[funcParseName](D.[SubjectName])) N
 	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
 			(@SubjectAreaId is Null Or @SubjectAreaId = Coalesce(D.[SubjectAreaId], H.[SubjectAreaId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

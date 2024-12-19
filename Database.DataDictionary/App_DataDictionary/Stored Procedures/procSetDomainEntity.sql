@@ -39,11 +39,11 @@ Begin Try
 	Select	Coalesce(T.[EntityId], D.[EntityId], NewId()) As [EntityId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
-			M.[NameSpace] As [MemberName]
+			M.[QualifiedName] As [MemberName]
 	From	@Data D
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
-			Outer Apply [AppModel].[funcSplitNameSpace](IsNull(D.[MemberName], D.[EntityTitle])) M
+			Outer Apply [AppModel].[funcParseName](IsNull(D.[MemberName], D.[EntityTitle])) M
 	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
