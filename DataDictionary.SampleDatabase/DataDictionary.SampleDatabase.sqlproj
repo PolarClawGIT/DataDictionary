@@ -63,6 +63,7 @@
     <Folder Include="dbo\Views" />
     <Folder Include="dbo\Functions" />
     <Folder Include="dbo\Triggers" />
+    <Folder Include="dbo\Security" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Sequence\SampleSequence.sql" />
@@ -79,6 +80,12 @@
     <Build Include="dbo\Tables\RecursiveAlpha.sql" />
     <Build Include="dbo\Tables\RecursiveBeta.sql" />
     <Build Include="dbo\Tables\CircleRelation.sql" />
+    <Build Include="dbo\Security\policySecurityExample.sql" />
+    <Build Include="dbo\Security\policySecurityInstead.sql" />
+    <Build Include="dbo\Functions\funcSecurityAllow.sql" />
+    <Build Include="dbo\Functions\funcSecurityDeny.sql" />
+    <Build Include="dbo\Views\SecurityInstead.sql" />
+    <Build Include="dbo\Tables\SecurityExample.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
