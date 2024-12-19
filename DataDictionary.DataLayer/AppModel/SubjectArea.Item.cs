@@ -1,31 +1,21 @@
-﻿using DataDictionary.Resource.Enumerations;
-using System.Data;
+﻿using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ModelData
+namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
     /// Interface for Model Subject Area Item
     /// </summary>
-    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IScopeType
-    {
-        /// <summary>
-        /// Description of the Subject Area
-        /// </summary>
-        String? SubjectAreaDescription { get; }
-
-        /// <summary>
-        /// NameSpace used for the Subject Area
-        /// </summary>
-        String? SubjectName { get; }
-    }
+    public interface ISubjectAreaItem : ISubjectArea, ISubjectAreaKey, ISubjectAreaUniqueKey,
+        ITemporalItem
+    { }
 
     /// <summary>
     /// Implementation for Model Subject Area Item
     /// </summary>
     [Serializable]
-    public class ModelSubjectAreaItem : BindingTableRow, IModelSubjectAreaItem, ISerializable
+    public class SubjectAreaItem : BindingTableRow, ISubjectAreaItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? SubjectAreaId { get { return GetValue<Guid>(nameof(SubjectAreaId)); } protected set { SetValue(nameof(SubjectAreaId), value); } }
@@ -40,24 +30,32 @@ namespace DataDictionary.DataLayer.ModelData
         public String? SubjectName { get { return GetValue(nameof(SubjectName)); } set { SetValue(nameof(SubjectName), value); } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ModelSubjectArea;
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for Model Subject Area Item
         /// </summary>
-        public ModelSubjectAreaItem() : base()
+        public SubjectAreaItem() : base()
         {
             if (SubjectAreaId is null) { SubjectAreaId = Guid.NewGuid(); }
             if (string.IsNullOrWhiteSpace(SubjectAreaTitle)) { SubjectAreaTitle = "(new Subject Area)"; }
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
-            new DataColumn(nameof(SubjectAreaId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(SubjectAreaTitle), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(SubjectAreaDescription), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(SubjectName), typeof(string)){ AllowDBNull = true},
-        };
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
+            new DataColumn(nameof(SubjectAreaId), typeof(Guid)) { AllowDBNull = false},
+            new DataColumn(nameof(SubjectAreaTitle), typeof(String)) { AllowDBNull = false},
+            new DataColumn(nameof(SubjectAreaDescription), typeof(String)) { AllowDBNull = true},
+            new DataColumn(nameof(SubjectName), typeof(String)){ AllowDBNull = true},
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -70,8 +68,15 @@ namespace DataDictionary.DataLayer.ModelData
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected ModelSubjectAreaItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        protected SubjectAreaItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

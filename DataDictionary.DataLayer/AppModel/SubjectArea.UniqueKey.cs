@@ -1,11 +1,11 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ModelData
+namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
     /// Interface for the Model Subject Area Unique Key
     /// </summary>
-    public interface IModelSubjectAreaUniqueKey : IKey
+    public interface ISubjectAreaUniqueKey : IKey
     {
         /// <summary>
         /// Title of the Subject Area
@@ -17,8 +17,8 @@ namespace DataDictionary.DataLayer.ModelData
     /// <summary>
     /// Implementation for Model Subject Area Unique Key
     /// </summary>
-    public class ModelSubjectAreaUniqueKey : IModelSubjectAreaUniqueKey,
-        IKeyComparable<IModelSubjectAreaUniqueKey>, IKeyComparable<ModelSubjectAreaUniqueKey>
+    public class SubjectAreaUniqueKey : ISubjectAreaUniqueKey,
+        IKeyComparable<ISubjectAreaUniqueKey>, IKeyComparable<SubjectAreaUniqueKey>
     {
         /// <inheritdoc/>
         public String SubjectAreaTitle { get; init; } = string.Empty;
@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.ModelData
         /// Constrictor for Model Subject Area Unique Key
         /// </summary>
         /// <param name="source"></param>
-        public ModelSubjectAreaUniqueKey(IModelSubjectAreaUniqueKey source) : base()
+        public SubjectAreaUniqueKey(ISubjectAreaUniqueKey source) : base()
         {
             if (source.SubjectAreaTitle is String) { SubjectAreaTitle = source.SubjectAreaTitle; }
             else { SubjectAreaTitle = String.Empty; }
@@ -35,10 +35,10 @@ namespace DataDictionary.DataLayer.ModelData
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(ModelSubjectAreaUniqueKey? other)
+        public Boolean Equals(SubjectAreaUniqueKey? other)
         {
             return
-                other is ModelSubjectAreaUniqueKey &&
+                other is SubjectAreaUniqueKey &&
                 !String.IsNullOrEmpty(SubjectAreaTitle) &&
                 !String.IsNullOrEmpty(other.SubjectAreaTitle) &&
                 SubjectAreaTitle.Equals(other.SubjectAreaTitle, KeyExtension.CompareString);
@@ -46,51 +46,51 @@ namespace DataDictionary.DataLayer.ModelData
         }
 
         /// <inheritdoc/>
-        public virtual Boolean Equals(IModelSubjectAreaUniqueKey? other)
-        { return other is IModelSubjectAreaUniqueKey value && Equals(new ModelSubjectAreaUniqueKey(value)); }
+        public virtual Boolean Equals(ISubjectAreaUniqueKey? other)
+        { return other is ISubjectAreaUniqueKey value && Equals(new SubjectAreaUniqueKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IModelSubjectAreaUniqueKey value && Equals(new ModelSubjectAreaUniqueKey(value)); }
+        { return obj is ISubjectAreaUniqueKey value && Equals(new SubjectAreaUniqueKey(value)); }
 
         /// <inheritdoc/>
-        public Int32 CompareTo(ModelSubjectAreaUniqueKey? other)
+        public Int32 CompareTo(SubjectAreaUniqueKey? other)
         {
-            if (other is ModelSubjectAreaUniqueKey value)
+            if (other is SubjectAreaUniqueKey value)
             { return string.Compare(SubjectAreaTitle, value.SubjectAreaTitle, true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(IModelSubjectAreaUniqueKey? other)
-        { if (other is IModelSubjectAreaUniqueKey value) { return CompareTo(new ModelSubjectAreaUniqueKey(value)); } else { return 1; } }
+        public virtual Int32 CompareTo(ISubjectAreaUniqueKey? other)
+        { if (other is ISubjectAreaUniqueKey value) { return CompareTo(new SubjectAreaUniqueKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
-        { if (obj is IModelSubjectAreaUniqueKey value) { return CompareTo(new ModelSubjectAreaUniqueKey(value)); } else { return 1; } }
+        { if (obj is ISubjectAreaUniqueKey value) { return CompareTo(new SubjectAreaUniqueKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator ==(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator !=(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator <(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator <(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator <=(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator <=(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator >(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static Boolean operator >=(ModelSubjectAreaUniqueKey left, ModelSubjectAreaUniqueKey right)
+        public static Boolean operator >=(SubjectAreaUniqueKey left, SubjectAreaUniqueKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

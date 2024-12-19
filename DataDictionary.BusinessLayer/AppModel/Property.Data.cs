@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="properties"></param>
         /// <returns></returns>
         /// <remarks>Not for use outside of BusinessLayer</remarks>
-        IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IDomainProperty> properties);
+        IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties);
     }
 
     /// <inheritdoc/>
@@ -91,7 +91,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return Delete(); }
 
         /// <inheritdoc/>
-        public IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IDomainProperty> properties)
+        public IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties)
         {
             List<XAttribute> result = new List<XAttribute>();
 
@@ -101,7 +101,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 XAttribute? attrib = null;
                 PropertyIndex propertyKey = new PropertyIndex(templateAttrib);
                 PropertyValue? propertyValue = this.FirstOrDefault(w => propertyKey.Equals(w));
-                IDomainProperty? property = properties.FirstOrDefault(w => propertyKey.Equals(w));
+                IProperty? property = properties.FirstOrDefault(w => propertyKey.Equals(w));
 
                 String newTitle = String.Empty;
                 String newValue = String.Empty;
@@ -111,7 +111,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 else if (propertyValue is PropertyValue && !String.IsNullOrWhiteSpace(propertyValue.PropertyTitle))
                 { { newTitle = propertyValue.PropertyTitle; } }
 
-                if (property is IDomainProperty && !String.IsNullOrWhiteSpace(property.PropertyValue))
+                if (property is IProperty && !String.IsNullOrWhiteSpace(property.PropertyValue))
                 { newValue = property.PropertyValue; }
                 else if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeValue))
                 { newValue = templateAttrib.AttributeValue; }

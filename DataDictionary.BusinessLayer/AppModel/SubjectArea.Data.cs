@@ -1,14 +1,10 @@
-﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.ModelData;
-using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Interface component for the Model SubjectArea
@@ -27,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelSubjectAreaKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -37,7 +33,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelSubjectAreaKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ISubjectAreaKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>

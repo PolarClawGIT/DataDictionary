@@ -1,6 +1,6 @@
-﻿using DataDictionary.BusinessLayer.Model;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.ModelData;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public AttributeSubjectAreaValue() : base () { }
 
-        /// <inheritdoc cref="DomainAttributeSubjectAreaItem(IDomainAttributeKey, IModelSubjectAreaKey)"/>
+        /// <inheritdoc cref="DomainAttributeSubjectAreaItem(IDomainAttributeKey, ISubjectAreaKey)"/>
         public AttributeSubjectAreaValue(IAttributeIndex attribute, ISubjectAreaIndex subjectArea): base (attribute, subjectArea)
         { }
     }

@@ -1,9 +1,9 @@
 ﻿namespace DataDictionary.DataLayer.AppModel;
 
 /// <summary>
-/// Interface for the Domain Property
+/// Interface for the Model Property
 /// </summary>
-public interface IDomainProperty : IPropertyKey
+public interface IProperty : IPropertyKey
 {
     /// <summary>
     /// Property Value. Type and Format is dependent on PeropertyId.

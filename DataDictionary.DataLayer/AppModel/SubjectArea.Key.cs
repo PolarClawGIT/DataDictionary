@@ -1,11 +1,11 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ModelData
+namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
     /// Interface for the Model Subject Area Key
     /// </summary>
-    public interface IModelSubjectAreaKey : IKey
+    public interface ISubjectAreaKey : IKey
     {
         /// <summary>
         /// Application ID for the Model Subject Area.
@@ -16,8 +16,8 @@ namespace DataDictionary.DataLayer.ModelData
     /// <summary>
     /// Implementation for the Model Subject Area Key
     /// </summary>
-    public class ModelSubjectAreaKey : IModelSubjectAreaKey,
-        IKeyEquality<IModelSubjectAreaKey>, IKeyEquality<ModelSubjectAreaKey>
+    public class SubjectAreaKey : ISubjectAreaKey,
+        IKeyEquality<ISubjectAreaKey>, IKeyEquality<SubjectAreaKey>
     {
         /// <inheritdoc/>
         public Guid? SubjectAreaId { get; init; } = Guid.Empty;
@@ -26,7 +26,7 @@ namespace DataDictionary.DataLayer.ModelData
         /// Constructor for the Model Subject Area Key
         /// </summary>
         /// <param name="source"></param>
-        public ModelSubjectAreaKey(IModelSubjectAreaKey source) : base()
+        public SubjectAreaKey(ISubjectAreaKey source) : base()
         {
             if (source.SubjectAreaId is Guid) { SubjectAreaId = source.SubjectAreaId; }
             else { SubjectAreaId = Guid.Empty; }
@@ -34,23 +34,23 @@ namespace DataDictionary.DataLayer.ModelData
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(ModelSubjectAreaKey? other)
-        { return other is ModelSubjectAreaKey key && EqualityComparer<Guid?>.Default.Equals(SubjectAreaId, key.SubjectAreaId); }
+        public Boolean Equals(SubjectAreaKey? other)
+        { return other is SubjectAreaKey key && EqualityComparer<Guid?>.Default.Equals(SubjectAreaId, key.SubjectAreaId); }
 
         /// <inheritdoc/>
-        public Boolean Equals(IModelSubjectAreaKey? other)
-        { return other is IModelSubjectAreaKey value && Equals(new ModelSubjectAreaKey(value)); }
+        public Boolean Equals(ISubjectAreaKey? other)
+        { return other is ISubjectAreaKey value && Equals(new SubjectAreaKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IModelSubjectAreaKey value && Equals(new ModelSubjectAreaKey(value)); }
+        { return obj is ISubjectAreaKey value && Equals(new SubjectAreaKey(value)); }
 
         /// <inheritdoc/>
-        public static Boolean operator ==(ModelSubjectAreaKey left, ModelSubjectAreaKey right)
+        public static Boolean operator ==(SubjectAreaKey left, SubjectAreaKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static Boolean operator !=(ModelSubjectAreaKey left, ModelSubjectAreaKey right)
+        public static Boolean operator !=(SubjectAreaKey left, SubjectAreaKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

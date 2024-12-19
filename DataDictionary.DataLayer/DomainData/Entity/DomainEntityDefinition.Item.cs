@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Definition;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Definition Items
     /// </summary>
-    public interface IDomainEntityDefinitionItem : IDomainEntityKey, IDomainDefinition, IScopeType
+    public interface IDomainEntityDefinitionItem : IDomainEntityKey, IDefinition, IScopeType
     { }
 
     /// <summary>

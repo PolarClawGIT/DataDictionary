@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.DataLayer.AppModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Subject Area Item
     /// </summary>
-    public interface IDomainAttributeSubjectAreaItem : IDomainAttributeKey, IModelSubjectAreaKey
+    public interface IDomainAttributeSubjectAreaItem : IDomainAttributeKey, ISubjectAreaKey
     { }
 
     /// <summary>
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// </summary>
         /// <param name="attribute"></param>
         /// <param name="subject"></param>
-        public DomainAttributeSubjectAreaItem(IDomainAttributeKey attribute, IModelSubjectAreaKey subject) : this()
+        public DomainAttributeSubjectAreaItem(IDomainAttributeKey attribute, ISubjectAreaKey subject) : this()
         {
             AttributeId = attribute.AttributeId;
             SubjectAreaId = subject.SubjectAreaId;

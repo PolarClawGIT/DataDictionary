@@ -1,6 +1,4 @@
-﻿using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
-using System.Data;
+﻿using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 

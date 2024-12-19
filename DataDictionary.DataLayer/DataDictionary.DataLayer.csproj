@@ -116,6 +116,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Property.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppModel\SubjectArea.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SubjectArea.resx</DependentUpon>
+    </Compile>
     <Compile Update="Temporal.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -199,6 +204,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Property.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\SubjectArea.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SubjectArea.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Temporal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Temporal.Designer.cs</LastGenOutput>
@@ -231,6 +240,7 @@
     <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
     <Folder Include="DatabaseData\Table\" />
+    <Folder Include="ModelData\" />
   </ItemGroup>
 
 </Project>

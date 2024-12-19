@@ -1,11 +1,9 @@
-﻿using DataDictionary.DataLayer.AppModel;
-
-namespace DataDictionary.DataLayer.DomainData.Definition;
+﻿namespace DataDictionary.DataLayer.AppModel;
 
 /// <summary>
-/// Interface for the Domain Definition
+/// Interface for the Model Definition
 /// </summary>
-public interface IDomainDefinition : IDefinitionKey
+public interface IDefinition : IDefinitionKey
 {
     /// <summary>
     /// Definition Summary (Plain Text, limited length)

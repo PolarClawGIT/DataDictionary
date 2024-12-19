@@ -1,27 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface ISubjectAreaIndex : IModelSubjectAreaKey
+    public interface ISubjectAreaIndex : ISubjectAreaKey
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaIndex : ModelSubjectAreaKey, IModelSubjectAreaKey,
+    public class SubjectAreaIndex : SubjectAreaKey, ISubjectAreaKey,
         IKeyEquality<ISubjectAreaIndex>, IKeyEquality<SubjectAreaIndex>
     {
-        /// <inheritdoc cref="ModelSubjectAreaKey(IModelSubjectAreaKey)"/>
+        /// <inheritdoc cref="SubjectAreaKey(ISubjectAreaKey)"/>
         public SubjectAreaIndex(ISubjectAreaIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ISubjectAreaIndex? other)
-        { return other is IModelSubjectAreaKey key && Equals(new ModelSubjectAreaKey(key)); }
+        { return other is ISubjectAreaKey key && Equals(new SubjectAreaKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(SubjectAreaIndex? other)
-        { return other is IModelSubjectAreaKey key && Equals(new ModelSubjectAreaKey(key)); }
+        { return other is ISubjectAreaKey key && Equals(new SubjectAreaKey(key)); }
 
         /// <summary>
         /// Convert SubjectAreaIndex to a DataIndex

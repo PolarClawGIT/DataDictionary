@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;

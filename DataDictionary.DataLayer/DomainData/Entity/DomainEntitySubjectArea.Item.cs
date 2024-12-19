@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.DataLayer.AppModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Subject Area Item
     /// </summary>
-    public interface IDomainEntitySubjectAreaItem : IDomainEntityKey, IModelSubjectAreaKey
+    public interface IDomainEntitySubjectAreaItem : IDomainEntityKey, ISubjectAreaKey
     { }
 
     /// <summary>
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// </summary>
         /// <param name="Entity"></param>
         /// <param name="subject"></param>
-        public DomainEntitySubjectAreaItem(IDomainEntityKey Entity, IModelSubjectAreaKey subject) : this()
+        public DomainEntitySubjectAreaItem(IDomainEntityKey Entity, ISubjectAreaKey subject) : this()
         {
             EntityId = Entity.EntityId;
             SubjectAreaId = subject.SubjectAreaId;

@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;

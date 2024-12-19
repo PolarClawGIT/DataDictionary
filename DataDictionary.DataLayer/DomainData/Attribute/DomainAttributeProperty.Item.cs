@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Properties
     /// </summary>
-    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty, IScopeType
+    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IProperty, IScopeType
     { }
 
     /// <summary>

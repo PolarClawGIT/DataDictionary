@@ -1,32 +1,27 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.Model
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface ISubjectAreaIndexName : IModelSubjectAreaUniqueKey
+    public interface ISubjectAreaIndexName : ISubjectAreaUniqueKey
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaIndexName : ModelSubjectAreaUniqueKey, ISubjectAreaIndexName,
+    public class SubjectAreaIndexName : SubjectAreaUniqueKey, ISubjectAreaIndexName,
         IKeyEquality<ISubjectAreaIndexName>, IKeyEquality<SubjectAreaIndexName>
     {
-        /// <inheritdoc cref="ModelSubjectAreaUniqueKey(IModelSubjectAreaUniqueKey)"/>
+        /// <inheritdoc cref="SubjectAreaUniqueKey(ISubjectAreaUniqueKey)"/>
         public SubjectAreaIndexName(ISubjectAreaIndexName source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(ISubjectAreaIndexName? other)
-        { return other is IModelSubjectAreaUniqueKey key && Equals(new ModelSubjectAreaUniqueKey(key)); }
+        { return other is ISubjectAreaUniqueKey key && Equals(new SubjectAreaUniqueKey(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(SubjectAreaIndexName? other)
-        { return other is IModelSubjectAreaUniqueKey key && Equals(new ModelSubjectAreaUniqueKey(key)); }
+        { return other is ISubjectAreaUniqueKey key && Equals(new SubjectAreaUniqueKey(key)); }
 
         /// <summary>
         /// Convert SubjectAreaIndexName to a DataIndexName
