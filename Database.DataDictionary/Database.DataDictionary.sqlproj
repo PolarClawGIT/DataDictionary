@@ -442,9 +442,6 @@
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelSubjectArea.sql" />
-    <Build Include="AppModel\Triggers\trigNameSpaceHierarchy.sql" />
-    <Build Include="AppModel\Views\NameSpace.Hs.sql" />
-    <Build Include="AppModel\User Defined Types\typeNameSpace.sql" />
     <Build Include="AppModel\Functions\funcParseName.sql" />
     <Build Include="AppModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="AppModel\Tables\EntitySubjectArea.sql" />
@@ -470,6 +467,9 @@
     <Build Include="Obsolete\funcModelNameSpaceAuthorization.sql" />
     <Build Include="Obsolete\policyModelNameSpace.sql" />
     <Build Include="AppModel\User Defined Types\typeQualifiedName.sql" />
+    <Build Include="Obsolete\trigNameSpaceHierarchy.sql" />
+    <Build Include="Obsolete\typeNameSpace.sql" />
+    <Build Include="Obsolete\NameSpace.Hs.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
