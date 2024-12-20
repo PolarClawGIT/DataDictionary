@@ -62,8 +62,8 @@ Begin Try
 	If @RowCount > 0 Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelAttribute]
-	From	[App_DataDictionary].[ModelAttribute] T
+	Delete From [AppModel].[ModelAttribute]
+	From	[AppModel].[ModelAttribute] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And

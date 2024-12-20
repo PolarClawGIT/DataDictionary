@@ -6,7 +6,7 @@ Select	E.[EntityAttributeId],
 		E.[AttributeId],
 		IsNull(E.[AttributeName], A.[AttributeTitle]) As [AttributeName]
 From	[App_DataDictionary].[DomainEntityAttribute] E
-		Inner Join [App_DataDictionary].[DomainAttribute] A
+		Inner Join [AppModel].[Attribute] A
 		On	E.[AttributeId] = A.[AttributeId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DomainEntityAttribute]

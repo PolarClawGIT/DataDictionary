@@ -22,9 +22,6 @@ Begin Try
 	;With [Data] As (
 		-- Alias
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[DomainAttributeAlias]
-		Union
-		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainEntityAlias]
 		Union
 		Select	[NameSpaceId]
@@ -32,16 +29,9 @@ Begin Try
 		Union
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainRelationshipAlias]
-		-- Subject Area
-		--Union		
-		--Select	[NameSpaceId]
-		--From	[AppModel].[SubjectArea]
 		Union
 		Select	[NameSpaceId]
 		From	[AppModel].[EntitySubjectArea]
-		Union
-		Select	[NameSpaceId]
-		From	[AppModel].[AttributeSubjectArea]
 		Union
 		Select	[NameSpaceId]
 		From	[AppModel].[ProcessSubjectArea]

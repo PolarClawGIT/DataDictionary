@@ -13,5 +13,5 @@
 	-- Keys
 	CONSTRAINT [PK_DomainRelationshipAttribute] PRIMARY KEY CLUSTERED ([RelationshipId] ASC, [EntityId] ASC, [AttributeId] ASC),
 	CONSTRAINT [FK_DomainRelationshipAttribute_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [App_DataDictionary].[DomainRelationship] ([RelationshipId]),
-	CONSTRAINT [FK_DomainRelationshipAttribute_Attribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
+	CONSTRAINT [FK_DomainRelationshipAttribute_Attribute] FOREIGN KEY ([AttributeId]) REFERENCES [AppModel].[Attribute] ([AttributeId]),
 )

@@ -51,7 +51,7 @@ Begin Try
 			Left Join [App_DataDictionary].[DomainEntityAttribute] N
 			On	IsNull(D.[EntityId], @EntityId) = N.[EntityId] And
 				D.[AttributeName] = N.[AttributeName]
-			Left Join [App_DataDictionary].[DomainAttribute] A
+			Left Join [AppModel].[Attribute] A
 			On	D.[AttributeId] = A.[AttributeId]
 			Cross apply (
 				Select	Coalesce(I.[EntityAttributeId], N.[EntityAttributeId], NewId()) As [EntityAttributeId])  X

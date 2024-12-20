@@ -4,8 +4,8 @@ WITH SCHEMABINDING AS
 Select	M.[ModelId],
 		C.[AttributeId],
 		C.[AttributeTitle]
-From	[App_DataDictionary].[DomainAttribute] C
-		Inner Join [App_DataDictionary].[ModelAttribute] M
+From	[AppModel].[Attribute] C
+		Inner Join [AppModel].[ModelAttribute] M
 		On	C.[AttributeId] = M.[AttributeId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_ModelAttribute]

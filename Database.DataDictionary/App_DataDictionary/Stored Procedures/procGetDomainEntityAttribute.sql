@@ -15,10 +15,10 @@ Select	D.[EntityId],
 From	[App_DataDictionary].[DomainEntityAttribute] D
 		Left Join [App_DataDictionary].[ModelEntity] E
 		On	D.[EntityId] = E.[EntityId]
-		Left Join [App_DataDictionary].[ModelAttribute] A
+		Left Join [AppModel].[ModelAttribute] A
 		On	D.[AttributeId] = A.[AttributeId] And
 			E.[ModelId] = A.[ModelId]
-		Left Join [App_DataDictionary].[DomainAttribute] B
+		Left Join [AppModel].[Attribute] B
 		On	D.[AttributeId] = B.[AttributeId]
 Where	(@ModelId is Null or (@ModelId = A.[ModelId] and @ModelId = E.[ModelId])) And
 		(@EntityId is Null or @AttributeId = D.[EntityId]) And
