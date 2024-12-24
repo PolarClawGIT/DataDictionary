@@ -10,4 +10,4 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_EntityAlias] PRIMARY KEY CLUSTERED ([AliasId] ASC),
 	CONSTRAINT [FK_EntityAlias_Entity] FOREIGN KEY ([EntityId]) REFERENCES [AppModel].[Entity] ([EntityId]),
-)
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[EntityAlias]))
