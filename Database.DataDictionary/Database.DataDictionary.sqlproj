@@ -495,6 +495,12 @@
     <Build Include="HsModel\Tables\EntityAttribute.sql" />
     <Build Include="HsModel\Tables\EntityDefinition.sql" />
     <Build Include="HsModel\Tables\EntityProperty.sql" />
+    <Build Include="AppModel\Views\Entity.Hs.sql" />
+    <Build Include="AppModel\Views\EntityAlias.Hs.sql" />
+    <Build Include="AppModel\Views\EntityAttribute.Hs.sql" />
+    <Build Include="AppModel\Views\EntityDefinition.Hs.sql" />
+    <Build Include="AppModel\Views\EntityProperty.Hs.sql" />
+    <Build Include="AppModel\Views\EntitySubjectArea.Hs.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
