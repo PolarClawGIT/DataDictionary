@@ -5,7 +5,7 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainEntity.
+/* Description: Performs Set on Model Entity.
 */
 
 -- Transaction Handling
@@ -20,31 +20,39 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If @ModelId is Null and @EntityId is Null
-	Throw 50000, '@ModelId or @EntityId must be specified', 1;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[EntityId]          UniqueIdentifier Not Null,
-		[EntityTitle]       [App_DataDictionary].[typeTitle] Not Null,
-		[EntityDescription] [App_DataDictionary].[typeDescription] Null,
-		[MemberName]        [App_DataDictionary].[typeNameSpaceMember] NULL,
-		Primary Key ([EntityId]))
-
-	Declare @Delete Table (
-		[EntityId] UniqueIdentifier Not Null,
-		Primary Key ([EntityId]))
+		[EntityId]			    UniqueIdentifier Not Null,
+		[EntityTitle]		    [App_DataDictionary].[typeTitle] Not Null,
+		[EntityDescription]	    [App_DataDictionary].[typeDescription] Null,
+		[EntityName]			[AppModel].[typeQualifiedName] Null,
+		Primary Key ([EntityId]),
+		Unique ([EntityTitle]))
 
 	Insert Into @Values
-	Select	Coalesce(T.[EntityId], D.[EntityId], NewId()) As [EntityId],
+	Select	Coalesce(D.[EntityId], H.[EntityId], NewId()) As [EntityId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
-			M.[QualifiedName] As [MemberName]
+			N.[EntityName]
 	From	@Data D
-			Left Join [AppModel].[Entity] T
-			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
-			Outer Apply [AppModel].[funcParseName](IsNull(D.[MemberName], D.[EntityTitle])) M
-	Where	M.[IsBase] = 1
+			Left Join [AppModel].[ModelEntityHs] H
+			On	(D.[EntityId] = H.[EntityId] Or
+				 (H.[ModelId] = @ModelId And
+				  D.[EntityTitle] = H.[EntityTitle]))
+			Cross Apply (
+				Select	[QualifiedName] As [EntityName]
+				From	[AppModel].[funcParseName](D.[EntityName])
+				Where	[IsBase] = 1) N
+	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
+			(@EntityId is Null Or @EntityId = Coalesce(D.[EntityId], H.[EntityId]))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Set Transaction Log
+	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
+
+	-- Apply Changes
+	Declare @Delete Table ([EntityId] UniqueIdentifier Not Null)
 
 	Insert Into @Delete
 	Select	T.[EntityId]
@@ -52,107 +60,119 @@ Begin Try
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
 	Where	S.[EntityId] is Null And
-			T.[EntityId] In (
-			Select	A.[EntityId]
-			From	[AppModel].[Entity] A
-					Left Join [AppModel].[ModelEntity] C
-					On	A.[EntityId] = C.[EntityId]
-			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
-
-	-- Apply Changes
-	Delete From [AppModel].[EntityAttribute]
-	From	[AppModel].[EntityAttribute] T
-			Inner Join @Delete S
-			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[EntityProperty]
-	From	[AppModel].[EntityProperty] T
-			Inner Join @Delete S
-			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[EntityAlias]
-	From	[AppModel].[EntityAlias] T
-			Inner Join @Delete S
-			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			(@EntityId is Not Null Or @ModelId is Not Null) And
+			(@EntityId is Null Or @EntityId = T.[EntityId])  And
+			(@ModelId is Null Or T.[EntityId] In (
+				Select	[EntityId]
+				From	[AppModel].[ModelEntity]
+				Group By [EntityId]
+				Having Sum(Case When [ModelId] = @ModelId Then 0 Else 1 End) = 0))
 
 	Delete From [AppModel].[ModelEntity]
 	From	[AppModel].[ModelEntity] T
-			Inner Join @Delete S
+			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Where	S.[EntityId] is Null And
+			(@EntityId is Not Null Or @ModelId is Not Null) And
+			(@EntityId is Null Or @EntityId = T.[EntityId])  And
+			(@ModelId is Null Or @ModelId = T.[ModelId])
+	Print FormatMessage ('Delete [AppModel].[ModelEntity] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppModel].[EntityAlias]
+	From	[AppModel].[EntityAlias] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[EntityAlias] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppModel].[EntityDefinition]
+	From	[AppModel].[EntityDefinition] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[EntityDefinition] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppModel].[EntityProperty]
+	From	[AppModel].[EntityProperty] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[EntityProperty] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppModel].[EntitySubjectArea]
+	From	[AppModel].[EntitySubjectArea] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[EntitySubjectArea] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppModel].[EntityAttribute]
+	From	[AppModel].[EntityAttribute] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[EntityAttribute] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[Entity]
 	From	[AppModel].[Entity] T
-			Inner Join @Delete S
+			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (Select [EntityId] From @Delete)
+	Print FormatMessage ('Delete [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
+				[EntityDescription],
+				[EntityName]
 		From	@Values
 		Except
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
+				[EntityDescription],
+				[EntityName]
 		From	[AppModel].[Entity])
 	Update [AppModel].[Entity]
 	Set		[EntityTitle] = S.[EntityTitle],
-			[EntityDescription] = S.[EntityDescription]
+			[EntityDescription] = S.[EntityDescription],
+			[EntityName] = S.[EntityName]
 	From	[AppModel].[Entity] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Update [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	;With [Delta] As (
-		Select	@ModelId [ModelId],
-				[EntityId],
-				[MemberName]
-		From	@Values
-		Except
-		Select	[ModelId],
-				[EntityId],
-				[MemberName]
-		From	[AppModel].[ModelEntity])
-	Update [AppModel].[ModelEntity]
-	Set		[MemberName] = S.[MemberName]
-	From	[AppModel].[ModelEntity] T
-			Inner Join [Delta] S
-			On	T.[ModelId] = S.[ModelId] And
-				T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Update [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[Entity] (
 			[EntityId],
 			[EntityTitle],
-			[EntityDescription])
+			[EntityDescription],
+			[EntityName])
 	Select	S.[EntityId],
 			S.[EntityTitle],
-			S.[EntityDescription]
+			S.[EntityDescription],
+			S.[EntityName]
 	From	@Values S
 			Left Join [AppModel].[Entity] T
 			On	S.[EntityId] = T.[EntityId]
 	Where	T.[EntityId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[ModelEntity] (
 			[ModelId],
-			[EntityId],
-			[MemberName])
+			[EntityId])
 	Select	@ModelId As [ModelId],
-			S.[EntityId],
-			S.[MemberName]
+			S.[EntityId]
 	From	@Values S
 			Left Join [AppModel].[ModelEntity] T
 			On	S.[EntityId] = T.[EntityId] And
 				@ModelId = T.[ModelId]
 	Where	T.[EntityId] Is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -165,24 +185,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -192,6 +194,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO

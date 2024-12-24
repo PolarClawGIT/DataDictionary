@@ -5,7 +5,7 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainEntityDefinition.
+/* Description: Performs Set on Model EntityDefinition.
 */
 
 -- Transaction Handling
@@ -19,29 +19,55 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
+	-- Validation
+
+	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[EntityId]			UniqueIdentifier NOT NULL,
-		[DefinitionId]		UniqueIdentifier NOT NULL,
-		[DefinitionSummary] [App_DataDictionary].[typeDescription] Null, -- Plain Text summary, used where RTF cannot be used.
-		[DefinitionText]    [App_DataDictionary].[typeRichText] Null, -- Contains Rich Text Definition. Rich Text must be handled differently.
+		[EntityId]		    UniqueIdentifier Not Null,
+		[DefinitionId]		UniqueIdentifier Not Null,
+		[DefinitionSummary]	[App_DataDictionary].[typeDescription] Null,
+		[DefinitionText]	[App_DataDictionary].[typeRichText] Null,
 		Primary Key ([EntityId], [DefinitionId]))
 
 	Insert Into @Values
 	Select	D.[EntityId],
 			D.[DefinitionId],
 			NullIf(Trim(D.[DefinitionSummary]),'') As [DefinitionSummary],
-			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText]
+			Case
+				When D.[DefinitionText] Like '{\rtf1\ansi%'
+					Then D.[DefinitionText]
+				When D.[DefinitionText] is not null And
+					D.[DefinitionText] Not Like '{\rtf1\ansi%'
+					Then FormatMessage('{\rtf1\ansi %s}', D.[DefinitionText])
+				When NullIf(Trim(D.[DefinitionText]),'') is Null And 
+					NullIf(Trim(D.[DefinitionSummary]),'') is not null
+					Then FormatMessage('{\rtf1\ansi %s}', Trim(D.[DefinitionSummary]))
+				Else Null
+				End As [DefinitionText]
 	From	@Data D
+			Inner Join [AppModel].[DefinitionEnumeration] R
+			On	D.[DefinitionId] = R.[DefinitionId]
+	Where	(@EntityId is Null Or @EntityId = D.[EntityId]) And
+			(@ModelId is Null Or D.[EntityId] In (
+				Select	[EntityId]
+				From	[AppModel].[ModelEntity]
+				Where	[ModelId] = @ModelId))
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
 	Delete From [AppModel].[EntityDefinition]
-	From	@Values S
-			Left Join [AppModel].[ModelEntity] T
-			On	S.[EntityId] = T.[EntityId]
-	Where	@ModelId = T.[ModelId] And
-			T.[EntityId] is Null
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	From	[AppModel].[EntityDefinition] T
+			Left Join @Values V
+			On	T.[EntityId] = V.[EntityId] And
+				T.[DefinitionId] = V.[DefinitionId]
+	Where	V.[EntityId] is Null And
+			(@EntityId is Not Null Or @ModelId is Not Null) And
+			(@EntityId is Null Or @EntityId = T.[EntityId]) And
+			(@ModelId is Null Or T.[EntityId] In (
+				Select	[EntityId]
+				From	[AppModel].[ModelEntity]
+				Where	[ModelId] = @ModelId))
+	Print FormatMessage ('Delete [AppModel].[EntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[EntityId],
@@ -62,7 +88,7 @@ Begin Try
 			Inner Join [AppModel].[EntityDefinition] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[DefinitionId] = T.[DefinitionId]
-	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[EntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[EntityDefinition] (
 			[EntityId],
@@ -78,7 +104,21 @@ Begin Try
 			On	S.[EntityId] = T.[EntityId] And
 				S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[EntityId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[EntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [AppModel].[ModelDefinition] (
+		[ModelId],
+		[DefinitionId])
+	Select	@ModelId,
+			S.[DefinitionId]
+	From	@Values S
+			Left Join [AppModel].[ModelDefinition] T
+			On	S.[DefinitionId] = T.[DefinitionId] And
+				[ModelId] = @ModelId
+	Where	T.[DefinitionId] is Null
+	Group By S.[DefinitionId]
+	Print FormatMessage ('Insert [AppModel].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -91,23 +131,6 @@ Begin Try
 	Else Print FormatMessage ('Commit Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 End Try
 Begin Catch
-	-- Debug Data
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID))
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE())
-	Print FormatMessage (' Number- %i', ERROR_NUMBER())
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY())
-	Print FormatMessage (' State- %i', ERROR_STATE())
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE())
-	Print FormatMessage (' Line- %i', ERROR_LINE())
-	Print FormatMessage (' @@TranCount - %i', @@TranCount)
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel)
-	Print FormatMessage (' Original_Login - %s', Original_Login())
-	Print FormatMessage (' Current_User - %s', Current_User)
-	Print FormatMessage (' XAct_State - %i', XAct_State())
-	Print '*** Debug Report ***'
-
-	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
-
 	-- Rollback Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, roll it back
@@ -117,6 +140,7 @@ Begin Catch
 	-- This is a nested transaction, must be rolled back by outer transaction
 	Else Print FormatMessage ('Rollback Transaction Pending ([%s].[%s])', Object_Schema_Name(@@ProcID),Object_Name(@@ProcID))
 
-	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
+	If ERROR_NUMBER() >= 50000 Exec [AppGeneral].[procThrowHelpSubject]
+	Else If ERROR_SEVERITY() Not In (0, 11) Throw;
 End Catch
 GO
