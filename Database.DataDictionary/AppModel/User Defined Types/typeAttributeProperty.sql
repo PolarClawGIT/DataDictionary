@@ -2,7 +2,7 @@
 	-- TIP: This matches the C# DataTable structure
     [AttributeId]          UNIQUEIDENTIFIER NULL,
 	[PropertyId]           UNIQUEIDENTIFIER NULL,
-	[PropertyValue]        NVarChar(4000)  NULL,
+	[PropertyValue]        [AppModel].[typePropertyValue]  NULL,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

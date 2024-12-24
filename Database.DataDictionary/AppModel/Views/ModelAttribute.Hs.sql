@@ -1,11 +1,11 @@
-﻿CREATE VIEW [AppModel].[AttributeSubjectAreaHs] As
+﻿CREATE VIEW [AppModel].[ModelAttributeHs] AS
 -- Temporal View
-Select	D.[AttributeId], --PK
-		D.[SubjectAreaId], -- PK
+Select	D.[ModelId],
+		FM.[ModelTitle],
+		D.[AttributeId],
 		FA.[AttributeTitle],
-		FS.[SubjectAreaTitle],
 		-- Temporal Status
-		D.[SysStart], -- PK
+		D.[SysStart], -- AK, PK
 		D.[SysEnd],
 		C.[ModifiedOn] As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
@@ -15,18 +15,19 @@ Select	D.[AttributeId], --PK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppModel].[AttributeSubjectArea] D
+
+From	[AppModel].[ModelAttribute] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsModel].[AttributeSubjectArea]
-			Where	[AttributeId] = D.[AttributeId] And
-					[SubjectAreaId] = D.[SubjectAreaId] And
+			From	[HsModel].[ModelAttribute]
+			Where	[ModelId] = D.[ModelId] And
+					[AttributeId] = D.[AttributeId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsModel].[AttributeSubjectArea]
-			Where	[AttributeId] = D.[AttributeId] And
-					[SubjectAreaId] = D.[SubjectAreaId] And
+			From	[HsModel].[ModelAttribute]
+			Where	[ModelId] = D.[ModelId] And
+					[AttributeId] = D.[AttributeId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -38,16 +39,18 @@ From	[AppModel].[AttributeSubjectArea] D
 		Outer Apply (
 			Select	Top 1
 					[AttributeId],
-					[AttributeTitle]
+					[AttributeTitle],
+					[AttributeName]
 			From	[AppModel].[Attribute]
 			Where	[AttributeId] = D.[AttributeId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FA
 		Outer Apply (
 			Select	Top 1
-					[SubjectAreaId],
-					[SubjectAreaTitle]
-			From	[AppModel].[SubjectArea]
-			Where	[SubjectAreaId] = D.[SubjectAreaId] And
+					[ModelId],
+					[ModelTitle]
+			From	[AppModel].[Model]
+			Where	[ModelId] = D.[ModelId] and
 					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) FS
+			Order By [SysStart] Desc) FM
+GO

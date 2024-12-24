@@ -483,6 +483,8 @@
     <Build Include="AppModel\Views\AttributeDefinition.Hs.sql" />
     <Build Include="AppModel\Views\AttributeProperty.Hs.sql" />
     <Build Include="AppModel\Views\AttributeSubjectArea.Hs.sql" />
+    <Build Include="AppModel\Views\ModelAttribute.Hs.sql" />
+    <Build Include="AppModel\User Defined Types\typePropertyValue.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
