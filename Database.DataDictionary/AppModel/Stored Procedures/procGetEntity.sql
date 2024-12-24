@@ -1,19 +1,33 @@
 ﻿CREATE PROCEDURE [AppModel].[procGetEntity]
 		@ModelId UniqueIdentifier = Null,
-		@EntityId UniqueIdentifier = Null
+		@EntityId UniqueIdentifier = Null,
+		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
+		@IncludeHistory Bit = 0 -- History is included
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on DomainEntity.
+/* Description: Performs Get on Model Entity.
 */
+Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	D.[EntityId],
-		D.[EntityTitle],
-		D.[EntityDescription],
-		A.[MemberName]
-From	[AppModel].[Entity] D
-		Left Join [AppModel].[ModelEntity] A
-		On	D.[EntityId] = A.[EntityId]
-Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
-		(@EntityId is Null or @EntityId = D.[EntityId])
+Select	[EntityId],
+		[EntityTitle],
+		[EntityDescription],
+		[EntityName],
+		-- Temporal Data
+		[CreatedOn],
+		[CreatedBy],
+		[RemovedOn],
+		[RemovedBy],
+		[IsInserted],
+		[IsUpdated],
+		[IsDeleted],
+		[IsCurrent]
+From	[AppModel].[EntityHs] For System_Time All D
+Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
+		(@EntityId is Null Or @EntityId = [EntityId]) And
+		(@ModelId is Null Or @ModelId In (
+			Select	[ModelId]
+			From	[AppModel].[ModelEntity] For System_Time As of @AsOfUtcDate
+			Where	D.[EntityId] = [EntityId]))
 GO

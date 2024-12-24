@@ -1,6 +1,6 @@
 ﻿CREATE TYPE [AppModel].[typeAttributeAlias] AS TABLE 
 (    -- TIP: This matches the C# DataTable structure and GET procedure
-    [AttributeId]          UNIQUEIDENTIFIER NULL,
+    [AttributeId]          UniqueIdentifier NULL,
 	[AliasScope]           [App_DataDictionary].[typeScopeName] Null,
 	[AliasNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
 	-- Temporal Data

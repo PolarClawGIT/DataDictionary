@@ -501,6 +501,7 @@
     <Build Include="AppModel\Views\EntityDefinition.Hs.sql" />
     <Build Include="AppModel\Views\EntityProperty.Hs.sql" />
     <Build Include="AppModel\Views\EntitySubjectArea.Hs.sql" />
+    <Build Include="HsModel\Tables\ModelEntity.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

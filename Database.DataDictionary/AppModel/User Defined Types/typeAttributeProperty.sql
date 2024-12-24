@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeAttributeProperty] AS TABLE (
 	-- TIP: This matches the C# DataTable structure
-    [AttributeId]          UNIQUEIDENTIFIER NULL,
-	[PropertyId]           UNIQUEIDENTIFIER NULL,
+    [AttributeId]          UniqueIdentifier NULL,
+	[PropertyId]           UniqueIdentifier NULL,
 	[PropertyValue]        [AppModel].[typePropertyValue]  NULL,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
