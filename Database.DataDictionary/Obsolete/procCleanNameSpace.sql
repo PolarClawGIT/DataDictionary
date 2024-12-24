@@ -22,9 +22,6 @@ Begin Try
 	;With [Data] As (
 		-- Alias
 		Select	[NameSpaceId]
-		From	[AppModel].[EntityAlias]
-		Union
-		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainProcessAlias]
 		Union
 		Select	[NameSpaceId]

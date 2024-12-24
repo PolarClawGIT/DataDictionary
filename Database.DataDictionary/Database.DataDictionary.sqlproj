@@ -490,6 +490,11 @@
     <Build Include="AppModel\Triggers\trigEntityAttribute.sql" />
     <Build Include="AppModel\Triggers\trigEntityDefinition.sql" />
     <Build Include="AppModel\Triggers\trigEntityProperty.sql" />
+    <Build Include="HsModel\Tables\Entity.sql" />
+    <Build Include="HsModel\Tables\EntityAlias.sql" />
+    <Build Include="HsModel\Tables\EntityAttribute.sql" />
+    <Build Include="HsModel\Tables\EntityDefinition.sql" />
+    <Build Include="HsModel\Tables\EntityProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

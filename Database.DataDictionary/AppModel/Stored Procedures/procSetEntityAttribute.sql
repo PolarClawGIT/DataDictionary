@@ -18,7 +18,8 @@ Begin Try
 		Begin Transaction
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
-
+;Throw 50000,'Not Implemented',1;
+/*
 	-- Validation
 	If @ModelId is Null and @EntityId is Null
 	Throw 50000, '@ModelId or @EntityId must be specified', 1;
@@ -113,7 +114,7 @@ Begin Try
 			On	S.[EntityAttributeId] = T.[EntityAttributeId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
+*/
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

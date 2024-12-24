@@ -8,15 +8,6 @@ Returns Table With SchemaBinding
 -- VERFITED. NameSpace needs to be redesigned.
 As Return 
 With [NameSpace] As (
-
-	Select	[NameSpaceId],
-			[ModelId]
-	From	[AppModel].[EntityAlias] A
-			Inner Join [AppModel].[ModelEntity] M
-			On	A.[EntityId] = M.[EntityId]
-	Where	[NameSpaceId] = @NameSpaceId
-	
-	Union
 	Select	[NameSpaceId],
 			[ModelId]
 	From	[App_DataDictionary].[DomainProcessAlias] A

@@ -3,15 +3,9 @@ WITH SCHEMABINDING AS
 -- Enforces Natural Key for the Domain Entity Attribute
 Select	E.[EntityAttributeId],
 		E.[EntityId],
-		E.[AttributeId],
-		IsNull(E.[AttributeName], A.[AttributeTitle]) As [AttributeName]
+		--E.[AttributeId],
+		E.[AttributeName] --IsNull(E.[AttributeName], A.[AttributeTitle]) As [AttributeName]
 From	[AppModel].[EntityAttribute] E
-		Inner Join [AppModel].[Attribute] A
-		On	E.[AttributeId] = A.[AttributeId]
-GO
-CREATE UNIQUE CLUSTERED INDEX [PK_DomainEntityAttribute]
-    ON [App_DataDictionary].[DomainEntityAttribute_AK]([EntityAttributeId])
-GO
-CREATE UNIQUE INDEX [AK_DomainEntityAttribute]
-    ON [App_DataDictionary].[DomainEntityAttribute_AK]([EntityId], [AttributeName])
+		--Inner Join [AppModel].[Attribute] A
+		--On	E.[AttributeId] = A.[AttributeId]
 GO

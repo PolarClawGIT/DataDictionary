@@ -18,7 +18,8 @@ Begin Try
 		Begin Transaction
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
-
+;Throw 50000,'Not Implemented',1;
+/*
 	-- Clean Data
 	Declare @Values Table (
 		[EntityId]          UniqueIdentifier Not Null,
@@ -97,7 +98,7 @@ Begin Try
 				V.[NameSpaceId] = T.[NameSpaceId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
+*/
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it
