@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDomainEntityProperty] AS TABLE (
+﻿CREATE TYPE [AppModel].[typeEntityProperty] AS TABLE (
 	-- TIP: This matches the C# DataTable structure
     [EntityId]              UNIQUEIDENTIFIER NULL,
 	[PropertyId]            UNIQUEIDENTIFIER NULL,

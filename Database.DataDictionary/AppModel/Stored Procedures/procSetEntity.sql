@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntity]
+﻿CREATE PROCEDURE [AppModel].[procSetEntity]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainEntity] ReadOnly
+		@Data [AppModel].[typeEntity] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -41,52 +41,52 @@ Begin Try
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
 			M.[QualifiedName] As [MemberName]
 	From	@Data D
-			Left Join [App_DataDictionary].[DomainEntity] T
+			Left Join [AppModel].[Entity] T
 			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
 			Outer Apply [AppModel].[funcParseName](IsNull(D.[MemberName], D.[EntityTitle])) M
 	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
 	Select	T.[EntityId]
-	From	[App_DataDictionary].[DomainEntity] T
+	From	[AppModel].[Entity] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (
 			Select	A.[EntityId]
-			From	[App_DataDictionary].[DomainEntity] A
-					Left Join [App_DataDictionary].[ModelEntity] C
+			From	[AppModel].[Entity] A
+					Left Join [AppModel].[ModelEntity] C
 					On	A.[EntityId] = C.[EntityId]
 			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DomainEntityAttribute]
-	From	[App_DataDictionary].[DomainEntityAttribute] T
+	Delete From [AppModel].[EntityAttribute]
+	From	[AppModel].[EntityAttribute] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainEntityProperty]
-	From	[App_DataDictionary].[DomainEntityProperty] T
+	Delete From [AppModel].[EntityProperty]
+	From	[AppModel].[EntityProperty] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainEntityAlias]
-	From	[App_DataDictionary].[DomainEntityAlias] T
+	Delete From [AppModel].[EntityAlias]
+	From	[AppModel].[EntityAlias] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelEntity]
-	From	[App_DataDictionary].[ModelEntity] T
+	Delete From [AppModel].[ModelEntity]
+	From	[AppModel].[ModelEntity] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainEntity]
-	From	[App_DataDictionary].[DomainEntity] T
+	Delete From [AppModel].[Entity]
+	From	[AppModel].[Entity] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -100,11 +100,11 @@ Begin Try
 		Select	[EntityId],
 				[EntityTitle],
 				[EntityDescription]
-		From	[App_DataDictionary].[DomainEntity])
-	Update [App_DataDictionary].[DomainEntity]
+		From	[AppModel].[Entity])
+	Update [AppModel].[Entity]
 	Set		[EntityTitle] = S.[EntityTitle],
 			[EntityDescription] = S.[EntityDescription]
-	From	[App_DataDictionary].[DomainEntity] T
+	From	[AppModel].[Entity] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -118,16 +118,16 @@ Begin Try
 		Select	[ModelId],
 				[EntityId],
 				[MemberName]
-		From	[App_DataDictionary].[ModelEntity])
-	Update [App_DataDictionary].[ModelEntity]
+		From	[AppModel].[ModelEntity])
+	Update [AppModel].[ModelEntity]
 	Set		[MemberName] = S.[MemberName]
-	From	[App_DataDictionary].[ModelEntity] T
+	From	[AppModel].[ModelEntity] T
 			Inner Join [Delta] S
 			On	T.[ModelId] = S.[ModelId] And
 				T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Update [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainEntity] (
+	Insert Into [AppModel].[Entity] (
 			[EntityId],
 			[EntityTitle],
 			[EntityDescription])
@@ -135,12 +135,12 @@ Begin Try
 			S.[EntityTitle],
 			S.[EntityDescription]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainEntity] T
+			Left Join [AppModel].[Entity] T
 			On	S.[EntityId] = T.[EntityId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelEntity] (
+	Insert Into [AppModel].[ModelEntity] (
 			[ModelId],
 			[EntityId],
 			[MemberName])
@@ -148,7 +148,7 @@ Begin Try
 			S.[EntityId],
 			S.[MemberName]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelEntity] T
+			Left Join [AppModel].[ModelEntity] T
 			On	S.[EntityId] = T.[EntityId] And
 				@ModelId = T.[ModelId]
 	Where	T.[EntityId] Is Null

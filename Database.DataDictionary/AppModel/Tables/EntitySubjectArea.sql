@@ -9,7 +9,7 @@
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
     -- Keys
     CONSTRAINT [PK_EntitySubjectArea] PRIMARY KEY CLUSTERED ([ModelId] ASC, [SubjectAreaId] ASC, [EntityId] ASC),
-    CONSTRAINT [FK_EntitySubjectArea_Entity] FOREIGN KEY ([ModelId], [EntityId]) REFERENCES [App_DataDictionary].[ModelEntity] ([ModelId], [EntityId]),
+    CONSTRAINT [FK_EntitySubjectArea_Entity] FOREIGN KEY ([ModelId], [EntityId]) REFERENCES [AppModel].[ModelEntity] ([ModelId], [EntityId]),
     CONSTRAINT [FK_EntitySubjectArea_Subject] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([ModelId], [SubjectAreaId]),
     CONSTRAINT [FK_EntitySubjectArea_NameSpace] FOREIGN KEY ([ModelId], [NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([ModelId], [NameSpaceId]),
 )

@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityAttribute]
+﻿CREATE PROCEDURE [AppModel].[procSetEntityAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainEntityAttribute] ReadOnly
+		@Data [AppModel].[typeEntityAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -45,10 +45,10 @@ Begin Try
 					Order By D.[AttributeId]))
 				As [OrdinalPosition]
 	From	@Data D
-			Left Join [App_DataDictionary].[DomainEntityAttribute] I
+			Left Join [AppModel].[EntityAttribute] I
 			On	IsNull(D.[EntityId], @EntityId) = I.[EntityId] And
 				D.[AttributeId] = I.[AttributeId]
-			Left Join [App_DataDictionary].[DomainEntityAttribute] N
+			Left Join [AppModel].[EntityAttribute] N
 			On	IsNull(D.[EntityId], @EntityId) = N.[EntityId] And
 				D.[AttributeName] = N.[AttributeName]
 			Left Join [AppModel].[Attribute] A
@@ -57,15 +57,15 @@ Begin Try
 				Select	Coalesce(I.[EntityAttributeId], N.[EntityAttributeId], NewId()) As [EntityAttributeId])  X
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DomainEntityAttribute]
-	From	[App_DataDictionary].[DomainEntityAttribute] T
+	Delete From [AppModel].[EntityAttribute]
+	From	[AppModel].[EntityAttribute] T
 			Left Join @Values V
 			On	T.[EntityAttributeId] = V.[EntityAttributeId]
 	Where	V.[EntityId] is Null And
 			T.[EntityId] In (
 			Select	A.[EntityId]
-			From	[App_DataDictionary].[DomainEntity] A
-					Left Join [App_DataDictionary].[ModelEntity] C
+			From	[AppModel].[Entity] A
+					Left Join [AppModel].[ModelEntity] C
 					On	A.[EntityId] = C.[EntityId]
 			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
@@ -86,16 +86,16 @@ Begin Try
 				[AttributeName],
 				[IsNullable],
 				[OrdinalPosition]
-		From	[App_DataDictionary].[DomainEntityAttribute])
-	Update	[App_DataDictionary].[DomainEntityAttribute]
+		From	[AppModel].[EntityAttribute])
+	Update	[AppModel].[EntityAttribute]
 	Set		[OrdinalPosition] = S.[OrdinalPosition]
-	From	[App_DataDictionary].[DomainEntityAttribute] T
+	From	[AppModel].[EntityAttribute] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId] And
 				T.[AttributeId] = S.[AttributeId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainEntityAttribute] (
+	Insert Into [AppModel].[EntityAttribute] (
 			[EntityAttributeId],
 			[EntityId],
 			[AttributeId],
@@ -109,7 +109,7 @@ Begin Try
 			S.[IsNullable],
 			S.[OrdinalPosition]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainEntityAttribute] T
+			Left Join [AppModel].[EntityAttribute] T
 			On	S.[EntityAttributeId] = T.[EntityAttributeId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityAlias]
+﻿CREATE PROCEDURE [AppModel].[procSetEntitySubjectArea]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainEntityAlias] ReadOnly
+		@Data [AppModel].[typeEntitySubjectArea] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainEntityAlias.
+/* Description: Performs Set on ModelSubjectEntity.
 */
 
 -- Transaction Handling
@@ -21,17 +21,24 @@ Begin Try
 
 	-- Clean Data
 	Declare @Values Table (
-		[EntityId]          UniqueIdentifier Not Null,
-		[NameSpaceId]       UniqueIdentifier Not Null,
-		[AliasScope]        [App_DataDictionary].[typeScopeName] Null,
-		Primary Key ([EntityId], [NameSpaceId]))
+		[EntityId]       UniqueIdentifier Not Null,
+		[SubjectAreaId]		UniqueIdentifier Not Null,
+		[NameSpaceId]		UniqueIdentifier Not Null,
+		Primary Key ([EntityId], [SubjectAreaId]))
 
 	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
-	Select	[AliasName] As [NameSpace]
-	From	@Data
-	Group By [AliasName]
+	Select	X.[QualifiedName]
+	From	@Data D
+			Inner Join [AppModel].[ModelEntity] A
+			On	A.[ModelId] = @ModelId And
+				D.[EntityId] = A.[EntityId] 
+			Inner Join [AppModel].[SubjectArea] S
+			On	S.[ModelId] = @ModelId And
+				D.[SubjectAreaId] = S.[SubjectAreaId]
+			Outer Apply [AppModel].[funcParseName](FormatMessage('%s.%s',S.[SubjectName],A.[MemberName])) X
+	Group By X.[QualifiedName]
 
 	-- Need to create & assign the NameSpaceID's
 	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
@@ -43,60 +50,71 @@ Begin Try
 				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
-	Select	Coalesce(D.[EntityId], @EntityId, NewId()) As [EntityId],
-			N.[NameSpaceId],
-			D.[AliasScope]
+	Select	D.[EntityId],
+			D.[SubjectAreaId],
+			N.[NameSpaceId]
 	From	@Data D
-			Cross Apply [AppModel].[funcParseName](D.[AliasName]) C
+			Inner Join [AppModel].[ModelEntity] A
+			On	A.[ModelId] = @ModelId And
+				D.[EntityId] = A.[EntityId] 
+			Inner Join [AppModel].[SubjectArea] S
+			On	S.[ModelId] = @ModelId And
+				D.[SubjectAreaId] = S.[SubjectAreaId]
+			Outer Apply [AppModel].[funcParseName](FormatMessage('%s.%s',S.[SubjectName],A.[MemberName])) X
 			Inner Join [NameSpace] N
-			On	C.[QualifiedName] = N.[NameSpace] And
-				C.[IsBase] = 1
-
+			On	X.[QualifiedName] = N.[NameSpace]
+	Where	X.[IsBase] = 1
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DomainEntityAlias]
-	From	[App_DataDictionary].[DomainEntityAlias] T
+	Delete From [AppModel].[EntitySubjectArea]
+	From	[AppModel].[EntitySubjectArea] T
 			Left Join @Values V
 			On	T.[EntityId] = V.[EntityId] And
-				T.[NameSpaceId] = V.[NameSpaceId]
+				T.[SubjectAreaId] = V.[SubjectAreaId] And
+				T.[ModelId] = @ModelId
 	Where	V.[EntityId] is Null And
 			T.[EntityId] In (
 			Select	A.[EntityId]
-			From	[App_DataDictionary].[DomainEntity] A
-					Left Join [App_DataDictionary].[ModelEntity] C
+			From	[AppModel].[Entity] A
+					Left Join [AppModel].[ModelEntity] C
 					On	A.[EntityId] = C.[EntityId]
 			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[EntityId],
-				[NameSpaceId],
-				[AliasScope]
-		From	@Values S
+		Select	--[ModelId],
+				[SubjectAreaId],
+				[EntityId],
+				[NameSpaceId]
+		From	@Values
 		Except
-		Select	[EntityId],
-				[NameSpaceId],
-				[AliasScope]
-		From	[App_DataDictionary].[DomainEntityAlias])
-	Update	[App_DataDictionary].[DomainEntityAlias]
-	Set		[AliasScope] = S.[AliasScope]
-	From	[Delta] S
-			Inner Join [App_DataDictionary].[DomainEntityAlias] T
-			On	S.[EntityId] = T.[EntityId] And
-				S.[NameSpaceId] = T.[NameSpaceId]
-	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+		Select	[SubjectAreaId],
+				[EntityId],
+				[NameSpaceId]
+		From	[AppModel].[EntitySubjectArea]
+		Where	[ModelId] = @ModelId)
+	Update	[AppModel].[EntitySubjectArea]
+	Set		[NameSpaceId] = S.[NameSpaceId]
+	From	[AppModel].[EntitySubjectArea] T
+			Inner Join [Delta] S
+			On	T.[ModelId] = @ModelId And
+				T.[EntityId] = S.[EntityId] And
+				T.[SubjectAreaId] = S.[SubjectAreaId]
+	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainEntityAlias] ([EntityId], [NameSpaceId], [AliasScope])
-	Select	V.[EntityId],
-			V.[NameSpaceId],
-			V.[AliasScope]
+	Insert Into [AppModel].[EntitySubjectArea] ([ModelId], [EntityId], [SubjectAreaId], [NameSpaceId])
+	Select	@ModelId As [ModelId],
+			V.[EntityId],
+			V.[SubjectAreaId],
+			V.[NameSpaceId]
 	From	@Values V
-			Left Join [App_DataDictionary].[DomainEntityAlias] T
+			Left Join [AppModel].[EntitySubjectArea] T
 			On	V.[EntityId] = T.[EntityId] And
-				V.[NameSpaceId] = T.[NameSpaceId]
+				V.[SubjectAreaId] = T.[SubjectAreaId] And
+				T.[ModelId] = @ModelId
 	Where	T.[EntityId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

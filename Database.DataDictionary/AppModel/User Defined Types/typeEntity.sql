@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDomainEntity] AS TABLE (
+﻿CREATE TYPE [AppModel].[typeEntity] AS TABLE (
     [EntityId]          UNIQUEIDENTIFIER                           NULL,
     [EntityTitle]       [App_DataDictionary].[typeTitle]           NULL,
     [EntityDescription] [App_DataDictionary].[typeDescription]     NULL,

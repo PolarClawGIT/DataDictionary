@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainEntityAttribute]
+﻿CREATE PROCEDURE [AppModel].[procGetEntityAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
 		@AttributeId UniqueIdentifier = Null
@@ -12,8 +12,8 @@ Select	D.[EntityId],
 		IsNull(D.[AttributeName], B.[AttributeTitle]) As [AttributeName],
 		D.[IsNullable],
 		D.[OrdinalPosition]
-From	[App_DataDictionary].[DomainEntityAttribute] D
-		Left Join [App_DataDictionary].[ModelEntity] E
+From	[AppModel].[EntityAttribute] D
+		Left Join [AppModel].[ModelEntity] E
 		On	D.[EntityId] = E.[EntityId]
 		Left Join [AppModel].[ModelAttribute] A
 		On	D.[AttributeId] = A.[AttributeId] And

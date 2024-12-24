@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityProperty]
+﻿CREATE PROCEDURE [AppModel].[procSetEntityProperty]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainEntityProperty] ReadOnly
+		@Data [AppModel].[typeEntityProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -41,16 +41,16 @@ Begin Try
 	From	@Data D
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DomainEntityProperty]
-	From	[App_DataDictionary].[DomainEntityProperty] T
+	Delete From [AppModel].[EntityProperty]
+	From	[AppModel].[EntityProperty] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId] And
 				T.[PropertyId] = S.[PropertyId]
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (
 			Select	A.[EntityId]
-			From	[App_DataDictionary].[DomainEntity] A
-					Left Join [App_DataDictionary].[ModelEntity] C
+			From	[AppModel].[Entity] A
+					Left Join [AppModel].[ModelEntity] C
 					On	A.[EntityId] = C.[EntityId]
 			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
@@ -65,16 +65,16 @@ Begin Try
 		Select	[EntityId],
 				[PropertyId],
 				[PropertyValue]
-		From	[App_DataDictionary].[DomainEntityProperty])
-	Update [App_DataDictionary].[DomainEntityProperty]
+		From	[AppModel].[EntityProperty])
+	Update [AppModel].[EntityProperty]
 	Set		[PropertyValue] = S.[PropertyValue]
-	From	[App_DataDictionary].[DomainEntityProperty] T
+	From	[AppModel].[EntityProperty] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId] And
 				T.[PropertyId] = S.[PropertyId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into  [App_DataDictionary].[DomainEntityProperty] (
+	Insert Into  [AppModel].[EntityProperty] (
 			[EntityId],
 			[PropertyId],
 			[PropertyValue])
@@ -82,7 +82,7 @@ Begin Try
 			S.[PropertyId],
 			S.[PropertyValue]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainEntityProperty] T
+			Left Join [AppModel].[EntityProperty] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[PropertyId] = T.[PropertyId]
 	Where	T.[EntityId] is Null

@@ -4,8 +4,8 @@ WITH SCHEMABINDING AS
 Select	M.[ModelId],
 		C.[EntityId],
 		C.[EntityTitle]
-From	[App_DataDictionary].[DomainEntity] C
-		Inner Join [App_DataDictionary].[ModelEntity] M
+From	[AppModel].[Entity] C
+		Inner Join [AppModel].[ModelEntity] M
 		On	C.[EntityId] = M.[EntityId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_ModelEntity]

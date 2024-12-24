@@ -71,8 +71,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelEntity]
-	From	[App_DataDictionary].[ModelEntity] T
+	Delete From [AppModel].[ModelEntity]
+	From	[AppModel].[ModelEntity] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And

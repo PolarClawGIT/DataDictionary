@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityDefinition]
+﻿CREATE PROCEDURE [AppModel].[procSetEntityDefinition]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeDomainEntityDefinition] ReadOnly
+		@Data [AppModel].[typeEntityDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -35,9 +35,9 @@ Begin Try
 	From	@Data D
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[DomainEntityDefinition]
+	Delete From [AppModel].[EntityDefinition]
 	From	@Values S
-			Left Join [App_DataDictionary].[ModelEntity] T
+			Left Join [AppModel].[ModelEntity] T
 			On	S.[EntityId] = T.[EntityId]
 	Where	@ModelId = T.[ModelId] And
 			T.[EntityId] is Null
@@ -54,17 +54,17 @@ Begin Try
 				[DefinitionId],
 				[DefinitionSummary],
 				[DefinitionText]
-		From	[App_DataDictionary].[DomainEntityDefinition])
-	Update [App_DataDictionary].[DomainEntityDefinition]
+		From	[AppModel].[EntityDefinition])
+	Update [AppModel].[EntityDefinition]
 	Set		[DefinitionSummary] = S.[DefinitionSummary],
 			[DefinitionText] = S.[DefinitionText]
 	From	[Delta] S
-			Inner Join [App_DataDictionary].[DomainEntityDefinition] T
+			Inner Join [AppModel].[EntityDefinition] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[DefinitionId] = T.[DefinitionId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainEntityDefinition] (
+	Insert Into [AppModel].[EntityDefinition] (
 			[EntityId],
 			[DefinitionId],
 			[DefinitionSummary],
@@ -74,7 +74,7 @@ Begin Try
 			S.[DefinitionSummary],
 			S.[DefinitionText]
 	From	@Values S
-			Left Join [App_DataDictionary].[DomainEntityDefinition] T
+			Left Join [AppModel].[EntityDefinition] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[EntityId] is Null

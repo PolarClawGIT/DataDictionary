@@ -19,5 +19,5 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DomainRelationship] PRIMARY KEY CLUSTERED ([RelationshipId] ASC),
-	CONSTRAINT [FK_DomainRelationship_Entity] FOREIGN KEY ([EntityId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
+	CONSTRAINT [FK_DomainRelationship_Entity] FOREIGN KEY ([EntityId]) REFERENCES [AppModel].[Entity] ([EntityId]),
 )

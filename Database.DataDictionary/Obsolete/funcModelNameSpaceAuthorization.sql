@@ -11,8 +11,8 @@ With [NameSpace] As (
 
 	Select	[NameSpaceId],
 			[ModelId]
-	From	[App_DataDictionary].[DomainEntityAlias] A
-			Inner Join [App_DataDictionary].[ModelEntity] M
+	From	[AppModel].[EntityAlias] A
+			Inner Join [AppModel].[ModelEntity] M
 			On	A.[EntityId] = M.[EntityId]
 	Where	[NameSpaceId] = @NameSpaceId
 	

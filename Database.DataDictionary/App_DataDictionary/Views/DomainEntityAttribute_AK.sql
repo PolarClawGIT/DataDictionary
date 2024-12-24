@@ -5,7 +5,7 @@ Select	E.[EntityAttributeId],
 		E.[EntityId],
 		E.[AttributeId],
 		IsNull(E.[AttributeName], A.[AttributeTitle]) As [AttributeName]
-From	[App_DataDictionary].[DomainEntityAttribute] E
+From	[AppModel].[EntityAttribute] E
 		Inner Join [AppModel].[Attribute] A
 		On	E.[AttributeId] = A.[AttributeId]
 GO

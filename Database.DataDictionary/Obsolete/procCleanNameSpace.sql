@@ -22,7 +22,7 @@ Begin Try
 	;With [Data] As (
 		-- Alias
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[DomainEntityAlias]
+		From	[AppModel].[EntityAlias]
 		Union
 		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainProcessAlias]

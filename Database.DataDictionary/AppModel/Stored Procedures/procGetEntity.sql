@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainEntity]
+﻿CREATE PROCEDURE [AppModel].[procGetEntity]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null
 As
@@ -11,8 +11,8 @@ Select	D.[EntityId],
 		D.[EntityTitle],
 		D.[EntityDescription],
 		A.[MemberName]
-From	[App_DataDictionary].[DomainEntity] D
-		Left Join [App_DataDictionary].[ModelEntity] A
+From	[AppModel].[Entity] D
+		Left Join [AppModel].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId])

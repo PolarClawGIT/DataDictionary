@@ -135,8 +135,8 @@ Begin Try
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[AttributeSubjectArea] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[DomainEntityAttribute]
-	From	[App_DataDictionary].[DomainEntityAttribute] T
+	Delete From [AppModel].[EntityAttribute]
+	From	[AppModel].[EntityAttribute] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
 	Where	S.[AttributeId] is Null And

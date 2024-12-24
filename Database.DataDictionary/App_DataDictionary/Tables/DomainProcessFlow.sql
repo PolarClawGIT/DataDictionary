@@ -17,5 +17,5 @@
 	CONSTRAINT [PK_DomainProcessFlow] PRIMARY KEY CLUSTERED ([ProcessFlowId] ASC),	
 	CONSTRAINT [FK_DomainProcessFlow_Process] FOREIGN KEY ([ProcessId]) REFERENCES [App_DataDictionary].[DomainProcess] ([ProcessId]),
 	CONSTRAINT [FK_DomainProcessFlow_Attribute] FOREIGN KEY ([AttributeId]) REFERENCES [AppModel].[Attribute] ([AttributeId]),
-	CONSTRAINT [FK_DomainProcessFlow_Entity] FOREIGN KEY ([EntityId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
+	CONSTRAINT [FK_DomainProcessFlow_Entity] FOREIGN KEY ([EntityId]) REFERENCES [AppModel].[Entity] ([EntityId]),
 )

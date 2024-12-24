@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainEntityAlias]
+﻿CREATE PROCEDURE [AppModel].[procGetEntityAlias]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null
 As
@@ -9,9 +9,9 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[EntityId],
 		N.[NameSpace] As [AliasName],
 		D.[AliasScope]
-From	[App_DataDictionary].[DomainEntityAlias] D
+From	[AppModel].[EntityAlias] D
 		Cross Apply [AppModel].[funcGetNameSpaceById](D.[NameSpaceId]) N
-		Left Join [App_DataDictionary].[ModelEntity] M
+		Left Join [AppModel].[ModelEntity] M
 		On	D.[EntityId] = M.[EntityId]
 		Left Join [AppModel].[NameSpaceHierarchy] S
 		On	D.[NameSpaceId] = S.[NameSpaceId] And
