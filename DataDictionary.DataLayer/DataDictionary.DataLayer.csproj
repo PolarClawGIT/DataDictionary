@@ -96,6 +96,31 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HelpSubject.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppModel\Attribute.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Attribute.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\AttributeAlias.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributeAlias.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\AttributeDefinition.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributeDefinition.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\AttributeProperty.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributeProperty.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\AttributeSubjectArea.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AttributeSubjectArea.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppModel\Definition.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -188,6 +213,26 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\Attribute.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Attribute.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\AttributeAlias.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributeAlias.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\AttributeDefinition.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributeDefinition.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\AttributeProperty.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributeProperty.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\AttributeSubjectArea.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AttributeSubjectArea.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Definition.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Definition.Designer.cs</LastGenOutput>
@@ -240,6 +285,7 @@
     <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
     <Folder Include="DatabaseData\Table\" />
+    <Folder Include="DomainData\Attribute\" />
     <Folder Include="ModelData\" />
   </ItemGroup>
 

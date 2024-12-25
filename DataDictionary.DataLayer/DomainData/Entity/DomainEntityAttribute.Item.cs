@@ -1,6 +1,6 @@
 ﻿// Ignore Spelling: Nullable
 
-using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -91,7 +91,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="attribute"></param>
-        public DomainEntityAttributeItem(IDomainEntityKey entity, IDomainAttributeKey attribute) : this(entity)
+        public DomainEntityAttributeItem(IDomainEntityKey entity, IAttributeKey attribute) : this(entity)
         {
             EntityId = entity.EntityId;
             AttributeId = attribute.AttributeId;

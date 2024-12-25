@@ -319,7 +319,7 @@ namespace DataDictionary.BusinessLayer.Domain
         //            attribute = new AttributeValue()
         //            {
         //                AttributeTitle = column.ColumnName,
-        //                MemberName = GetMemberName(column).MemberFullPath,
+        //                AttributeName = GetMemberName(column).MemberFullPath,
         //                IsDerived = column.IsComputed ?? false,
         //                IsIntegral = !column.IsComputed ?? false,
         //                IsNullable = column.IsNullable ?? false,
@@ -482,7 +482,7 @@ namespace DataDictionary.BusinessLayer.Domain
         //            entity = new EntityValue()
         //            {
         //                EntityTitle = table.TableName,
-        //                MemberName = new PathIndex(table.SchemaName, table.TableName).MemberFullPath,
+        //                AttributeName = new PathIndex(table.SchemaName, table.TableName).MemberFullPath,
         //            };
         //            entityIndex = new EntityIndex(entity);
 

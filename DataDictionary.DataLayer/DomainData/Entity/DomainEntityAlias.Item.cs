@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -22,7 +23,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         { get { return GetValue<Guid>(nameof(EntityId)); } protected set { SetValue(nameof(EntityId), value); } }
 
         /// <inheritdoc/>
-        public String? AliasName { get { return GetValue(nameof(AliasName)); } set { SetValue(nameof(AliasName), value); } }
+        public String? AliasNameSpace { get { return GetValue(nameof(AliasNameSpace)); } set { SetValue(nameof(AliasNameSpace), value); } }
 
         /// <inheritdoc/>
         public ScopeType AliasScope
@@ -47,7 +48,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(AliasName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasNameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AliasScope), typeof(String)){ AllowDBNull = true},
         };
 
@@ -81,7 +82,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (AliasName is String) { return AliasName; }
+            if (AliasNameSpace is String) { return AliasNameSpace; }
             else { return String.Empty; }
         }
 

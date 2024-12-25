@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IDeleteData<IPropertyKey>,
         IRemoveItem<IPropertyKey>,
         ITemporalData<IModelKey>, ITemporalData<IPropertyKey>
-        where TItem : BindingTableRow, IPropertyItem, new()
+        where TItem : PropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)

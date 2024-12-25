@@ -69,6 +69,11 @@
         ModelAttributeDefinition,
 
         /// <summary>
+        /// Subject Areas of the Attribute
+        /// </summary>
+        ModelAttributeSubjectArea,
+
+        /// <summary>
         /// Application Model Entity
         /// </summary>
         ModelEntity,
@@ -87,6 +92,11 @@
         /// Application Model Entity Definition
         /// </summary>
         ModelEntityDefinition,
+
+        /// <summary>
+        /// Subject Areas of the Entity
+        /// </summary>
+        ModelEntitySubjectArea,
 
         /// <summary>
         /// Application Model Attribute of an Entity

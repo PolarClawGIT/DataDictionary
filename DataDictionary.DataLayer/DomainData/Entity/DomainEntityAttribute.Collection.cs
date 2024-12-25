@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DomainData.Attribute;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -14,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     public abstract class DomainEntityAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainEntityKey>,
         IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
-        IRemoveItem<IDomainEntityKey>, IRemoveItem<IDomainAttributeKey>
+        IRemoveItem<IDomainEntityKey>, IRemoveItem<IAttributeKey>
         where TItem : BindingTableRow, IDomainEntityAttributeItem, new()
     {
         /// <inheritdoc/>
@@ -66,9 +65,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDomainAttributeKey attributeItem)
+        public virtual void Remove(IAttributeKey attributeItem)
         {
-            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            AttributeKey key = new AttributeKey(attributeItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

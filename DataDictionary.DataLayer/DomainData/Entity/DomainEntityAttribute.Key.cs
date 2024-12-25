@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for the DomainEntityAttribute Key 
     /// </summary>
-    public interface IDomainEntityAttributeKey : IDomainEntityKey, IDomainAttributeKey
+    public interface IDomainEntityAttributeKey : IDomainEntityKey, IAttributeKey
     { }
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="attribute"></param>
-        public DomainEntityAttributeKey(IDomainEntityKey entity, IDomainAttributeKey attribute) : base()
+        public DomainEntityAttributeKey(IDomainEntityKey entity, IAttributeKey attribute) : base()
         {
             if (entity.EntityId is Guid) { EntityId = entity.EntityId; }
             else { EntityId = Guid.Empty; }

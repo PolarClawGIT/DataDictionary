@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DomainData.Entity;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -24,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="alias"></param>
         public EntityAliasValue(IEntityIndex key, AliasIndex alias) : base(key)
         {
-            AliasName = alias.AliasName;
+            AliasNameSpace = alias.AliasNameSpace;
             AliasScope = alias.AliasScope;
         }
 
@@ -32,12 +33,12 @@ namespace DataDictionary.BusinessLayer.Domain
         internal EntityAliasValue(IDomainEntityKey key) : base(key) { }
 
         /// <summary>
-        /// The Alias Path derived from AliasName
+        /// The Alias Path derived from AliasNameSpace
         /// </summary>
         public PathIndex AliasPath
         {
-            get { return new PathIndex(PathIndex.Parse(AliasName).ToArray()); }
-            set { AliasName = value.MemberFullPath; }
+            get { return new PathIndex(PathIndex.Parse(AliasNameSpace).ToArray()); }
+            set { AliasNameSpace = value.MemberFullPath; }
         }
     }
 }

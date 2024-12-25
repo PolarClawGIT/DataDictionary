@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;

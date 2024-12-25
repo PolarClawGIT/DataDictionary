@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using Toolbox.Threading;
 
@@ -11,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface for the Model Entity Attribute
     /// </summary>
     public interface IEntityAttributeData : IBindingData<EntityAttributeValue>,
-        IRemoveItem<IDomainAttributeKey>, IRemoveItem<IDomainEntityKey>
+        IRemoveItem<IAttributeKey>, IRemoveItem<IDomainEntityKey>
     { }
 
     /// <summary>

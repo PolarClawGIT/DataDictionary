@@ -67,17 +67,21 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.Model,                      "Model"),
             new ScopeEnumeration(ScopeType.ModelProperty,              ScopeType.Model,          "Model.Property"),
             new ScopeEnumeration(ScopeType.ModelDefinition,            ScopeType.Model,          "Model.Definition"),
+            new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
+            new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
+
             new ScopeEnumeration(ScopeType.ModelAttribute,             ScopeType.Model,          "Model.Attribute"),
             new ScopeEnumeration(ScopeType.ModelAttributeAlias,        ScopeType.ModelAttribute, "Model.Attribute.Alias"),
             new ScopeEnumeration(ScopeType.ModelAttributeProperty,     ScopeType.ModelAttribute, "Model.Attribute.Property"),
             new ScopeEnumeration(ScopeType.ModelAttributeDefinition,   ScopeType.ModelAttribute, "Model.Attribute.Definition"),
+            new ScopeEnumeration(ScopeType.ModelAttributeSubjectArea,  ScopeType.ModelAttribute, "Model.Attribute.SubjectArea"),
+
             new ScopeEnumeration(ScopeType.ModelEntity,                ScopeType.Model,          "Model.Entity"),
             new ScopeEnumeration(ScopeType.ModelEntityAlias,           ScopeType.ModelEntity,    "Model.Entity.Alias"),
             new ScopeEnumeration(ScopeType.ModelEntityProperty,        ScopeType.ModelEntity,    "Model.Entity.Property"),
             new ScopeEnumeration(ScopeType.ModelEntityDefinition,      ScopeType.ModelEntity,    "Model.Entity.Definition"),
+            new ScopeEnumeration(ScopeType.ModelEntitySubjectArea,     ScopeType.ModelEntity,    "Model.Entity.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelEntityAttribute,       ScopeType.ModelEntity,    "Model.Entity.Attribute"),
-            new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
-            new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
 
             new ScopeEnumeration(ScopeType.Security,                  "Security"),
             new ScopeEnumeration(ScopeType.SecurityPrincipal,          ScopeType.Security,         "Security.Principal"),
