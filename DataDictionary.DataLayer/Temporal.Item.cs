@@ -105,4 +105,27 @@ class TemporalItem: ITemporal
             new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
         ];
+
+    public override String ToString()
+    {
+        String temporalValue;
+        temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(Modification).DisplayName);
+
+        if (IsCurrent == false)
+        { temporalValue = String.Format("{0}/Historic", temporalValue); }
+
+        if (CreatedOn is DateTime createdOn && IsDeleted == false)
+        { temporalValue = String.Format("{0} on {1}", temporalValue, createdOn); }
+
+        if (CreatedOn is DateTime removedOn && IsDeleted == true)
+        { temporalValue = String.Format("{0} on {1}", temporalValue, removedOn); }
+
+        if (CreatedBy is String createdBy && IsDeleted == false)
+        { temporalValue = String.Format("{0} by {1}", temporalValue, createdBy); }
+
+        if (CreatedBy is String removedBy && IsDeleted == true)
+        { temporalValue = String.Format("{0} by {1}", temporalValue, removedBy); }
+
+        return temporalValue;
+    }
 }
