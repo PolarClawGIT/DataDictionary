@@ -1,0 +1,56 @@
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.BusinessLayer.AppModel
+{
+    /// <inheritdoc/>
+    public interface IEntityAliasValue : IEntityAliasItem,
+        IEntityIndex, IAliasIndex,
+        IScopeType, ITemporalValue
+    { }
+
+    /// <inheritdoc/>
+    public class EntityAliasValue : EntityAliasItem, IEntityAliasValue
+    {
+        /// <inheritdoc/>
+        public DataIndex Index => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public String Title => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelEntityAlias; } }
+
+        /// <inheritdoc/>
+        public EntityAliasValue() : base() { }
+
+        /// <inheritdoc cref="EntityAliasItem(IEntityKey)"/>
+        public EntityAliasValue(IEntityIndex key) : base(key) { }
+
+        /// <summary>
+        /// Create an Entity Alias form Entity and Alias.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="alias"></param>
+        public EntityAliasValue(IEntityIndex key, AliasIndex alias) : base(key)
+        {
+            AliasNameSpace = alias.AliasNameSpace;
+            AliasScope = alias.AliasScope;
+        }
+
+        /// <inheritdoc/>
+        internal EntityAliasValue(IEntityKey key) : base(key) { }
+
+        /// <summary>
+        /// The Alias Path derived from AliasNameSpace
+        /// </summary>
+        public PathIndex AliasPath
+        {
+            get { return new PathIndex(PathIndex.Parse(AliasNameSpace).ToArray()); }
+            set { AliasNameSpace = value.MemberFullPath; }
+        }
+
+
+    }
+}

@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DomainData;
-using DataDictionary.Resource;
+﻿using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {

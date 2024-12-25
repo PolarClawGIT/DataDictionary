@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
@@ -8,7 +9,8 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IAttributePropertyItem, IPropertyIndex
+    public interface IAttributePropertyValue : IAttributePropertyItem, IPropertyIndex,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
@@ -16,6 +18,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeProperty; } }
+
+        /// <inheritdoc/>
+        public DataIndex Index => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public String Title => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public AttributePropertyValue() : base() { }

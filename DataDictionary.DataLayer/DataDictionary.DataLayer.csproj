@@ -126,6 +126,36 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Definition.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppModel\Entity.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Entity.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\EntityAlias.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntityAlias.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\EntityAttribute.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntityAttribute.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\EntityDefinition.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntityDefinition.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\EntityProperty.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntityProperty.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\EntitySubjectArea.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EntitySubjectArea.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppModel\Model.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -237,6 +267,30 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Definition.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\Entity.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Entity.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\EntityAlias.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntityAlias.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\EntityAttribute.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntityAttribute.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\EntityDefinition.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntityDefinition.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\EntityProperty.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntityProperty.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\EntitySubjectArea.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EntitySubjectArea.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Model.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
@@ -285,7 +339,7 @@
     <Folder Include="DatabaseData\Routine\" />
     <Folder Include="DatabaseData\Schema\" />
     <Folder Include="DatabaseData\Table\" />
-    <Folder Include="DomainData\Attribute\" />
+    <Folder Include="DomainData\Entity\" />
     <Folder Include="ModelData\" />
   </ItemGroup>
 

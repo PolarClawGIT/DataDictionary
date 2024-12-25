@@ -13,7 +13,6 @@ namespace DataDictionary.DataLayer.AppModel
     public abstract class DomainAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
-        IDeleteData<IModelKey>, IDeleteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,
         ITemporalData<IModelKey>, ITemporalData<IAttributeKey>
         where TItem : AttributeItem, new()
@@ -67,28 +66,6 @@ namespace DataDictionary.DataLayer.AppModel
             IEnumerable<TItem> data = this.Where(w =>
                 (attributeId is null || w.AttributeId == attributeId));
             command.AddParameter(WriteData.Data, Attribute.TableType, data);
-            return command;
-        }
-
-        /// <inheritdoc/>
-        [Obsolete("Do not think this is needed")]
-        public Command DeleteCommand(IConnection connection, IAttributeKey parameters)
-        { return DeleteCommand(connection, (null, parameters.AttributeId)); }
-
-        /// <inheritdoc/>
-        [Obsolete("Do not think this is needed")]
-        public Command DeleteCommand(IConnection connection, IModelKey parameters)
-        { return DeleteCommand(connection, (parameters.ModelId, null)); }
-
-        [Obsolete("Do not think this is needed")]
-        Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@AttributeId", parameters.attributeId);
-
             return command;
         }
 

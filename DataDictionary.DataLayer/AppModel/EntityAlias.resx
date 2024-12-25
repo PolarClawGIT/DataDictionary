@@ -117,17 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AttributeId" xml:space="preserve">
-    <value>@AttributeId</value>
-    <comment>GUID</comment>
-  </data>
   <data name="GetProcedure" xml:space="preserve">
-    <value>[AppModel].[procGetAttribute]</value>
+    <value>[AppModel].[procGetEntityAlias]</value>
   </data>
   <data name="SetProcedure" xml:space="preserve">
-    <value>[AppModel].[procSetAttribute]</value>
+    <value>[AppModel].[procSetEntityAlias]</value>
   </data>
   <data name="TableType" xml:space="preserve">
-    <value>[AppModel].[typeAttribute]</value>
+    <value>[AppModel].[typeEntityAlias]</value>
   </data>
 </root>

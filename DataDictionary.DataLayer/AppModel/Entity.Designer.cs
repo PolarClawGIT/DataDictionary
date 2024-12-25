@@ -22,14 +22,14 @@ namespace DataDictionary.DataLayer.AppModel {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Attribute {
+    internal class Entity {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Attribute() {
+        internal Entity() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.AppModel {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.AppModel.Attribute", typeof(Attribute).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DataDictionary.DataLayer.AppModel.Entity", typeof(Entity).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,16 +61,16 @@ namespace DataDictionary.DataLayer.AppModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @AttributeId.
+        ///   Looks up a localized string similar to @EntityId.
         /// </summary>
-        internal static string AttributeId {
+        internal static string EntityId {
             get {
-                return ResourceManager.GetString("AttributeId", resourceCulture);
+                return ResourceManager.GetString("EntityId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppModel].[procGetAttribute].
+        ///   Looks up a localized string similar to [AppModel].[procGetEntity].
         /// </summary>
         internal static string GetProcedure {
             get {
@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.AppModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppModel].[procSetAttribute].
+        ///   Looks up a localized string similar to [AppModel].[procSetEntity].
         /// </summary>
         internal static string SetProcedure {
             get {
@@ -88,7 +88,7 @@ namespace DataDictionary.DataLayer.AppModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [AppModel].[typeAttribute].
+        ///   Looks up a localized string similar to [AppModel].[typeEntity].
         /// </summary>
         internal static string TableType {
             get {

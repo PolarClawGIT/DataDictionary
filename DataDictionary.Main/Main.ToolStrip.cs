@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.Library;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Forms.ApplicationWide;

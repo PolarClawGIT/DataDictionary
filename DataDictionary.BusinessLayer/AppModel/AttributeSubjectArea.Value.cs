@@ -1,10 +1,12 @@
-﻿using DataDictionary.DataLayer.AppModel;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributeSubjectAreaValue : IAttributeSubjectAreaItem, IAttributeIndex, ISubjectAreaIndex
+    public interface IAttributeSubjectAreaValue : IAttributeSubjectAreaItem, IAttributeIndex, ISubjectAreaIndex,
+        IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
@@ -12,6 +14,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeSubjectArea; } }
+
+        /// <inheritdoc/>
+        public DataIndex Index => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public String Title => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public AttributeSubjectAreaValue() : base() { }

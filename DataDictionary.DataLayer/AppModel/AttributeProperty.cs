@@ -1,1 +1,1 @@
-﻿namespace DataDictionary.DataLayer.DomainData.Attribute;
+﻿namespace DataDictionary.DataLayer.AppModel;

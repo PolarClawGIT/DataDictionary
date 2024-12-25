@@ -8,7 +8,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IAttributeAliasValue : IAttributeAliasItem,
-        IAttributeIndex, IAliasIndex
+        IAttributeIndex, IAliasIndex,
+        IScopeType, ITemporalValue
     {
         /// <summary>
         /// Attribute Alias Name returned as parts.
@@ -19,6 +20,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue, IScopeType
     {
+        /// <inheritdoc/>
+        public DataIndex Index => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public String Title => throw new NotImplementedException();
+
         /// <inheritdoc/>
         public List<String> AliasParts { get { return PathIndex.Parse(AliasNameSpace); } }
 
@@ -53,6 +60,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             get { return new PathIndex(PathIndex.Parse(AliasNameSpace).ToArray()); }
             set { AliasNameSpace = value.MemberFullPath; }
         }
+
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
