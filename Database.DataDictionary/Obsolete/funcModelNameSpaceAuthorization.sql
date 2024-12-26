@@ -8,19 +8,10 @@ Returns Table With SchemaBinding
 -- VERFITED. NameSpace needs to be redesigned.
 As Return 
 With [NameSpace] As (
-	Select	[NameSpaceId],
-			[ModelId]
-	From	[App_DataDictionary].[DomainProcessAlias] A
-			Inner Join [App_DataDictionary].[ModelProcess] M
-			On	A.[ProcessId] = M.[ProcessId]
-	Where	[NameSpaceId] = @NameSpaceId
-	Union
-	Select	[NameSpaceId],
-			[ModelId]
-	From	[App_DataDictionary].[DomainRelationshipAlias] A
-			Inner Join [App_DataDictionary].[ModelRelationship] M
-			On	A.[RelationshipId] = M.[RelationshipId]
-	Where	[NameSpaceId] = @NameSpaceId),
+	-- Dummy row
+	Select	Convert(UniqueIdentifier, Null) As [NameSpaceId],
+			Convert(UniqueIdentifier, Null) As [ModelId]
+	Where	1 = 2),
 [Model] As (
 	Select	H.[NameSpaceId],
 			IsNull(N.[ModelId],H.[ModelId]) As [ModelId],

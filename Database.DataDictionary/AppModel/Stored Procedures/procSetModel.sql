@@ -98,8 +98,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelProcess]
-	From	[App_DataDictionary].[ModelProcess] T
+	Delete From [AppModel].[ModelProcess]
+	From	[AppModel].[ModelProcess] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And
@@ -107,8 +107,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelRelationship]
-	From	[App_DataDictionary].[ModelRelationship] T
+	Delete From [AppModel].[ModelRelationship]
+	From	[AppModel].[ModelRelationship] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 	Where	S.[ModelId] is Null And

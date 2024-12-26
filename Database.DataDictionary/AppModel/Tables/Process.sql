@@ -1,0 +1,14 @@
+﻿CREATE TABLE [AppModel].[Process]
+(
+	[ProcessId]          UniqueIdentifier Not Null CONSTRAINT [DF_ProcessId] DEFAULT (newid()),
+	[ProcessTitle]       [App_DataDictionary].[typeTitle] Not Null,
+	[ProcessDescription] [App_DataDictionary].[typeDescription] Null,
+	[ProcessName]        [AppModel].[typeQualifiedName]         Null,
+	-- TODO: Add System Version later once the schema is locked down
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Process_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Process_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+   	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
+	-- Keys
+	CONSTRAINT [PK_Process] PRIMARY KEY CLUSTERED ([ProcessId] ASC),	
+
+)

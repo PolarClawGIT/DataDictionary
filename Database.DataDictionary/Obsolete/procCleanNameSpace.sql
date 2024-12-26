@@ -20,25 +20,9 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	;With [Data] As (
-		-- Alias
-		Select	[NameSpaceId]
-		From	[App_DataDictionary].[DomainProcessAlias]
-		Union
-		Select	[NameSpaceId]
-		From	[App_DataDictionary].[DomainRelationshipAlias]
-		Union
-		Select	[NameSpaceId]
-		From	[AppModel].[EntitySubjectArea]
-		Union
-		Select	[NameSpaceId]
-		From	[AppModel].[ProcessSubjectArea]
-		Union
-		Select	[NameSpaceId]
-		From	[AppModel].[RelationshipSubjectArea]
-		-- Scripting (may be re-factored)
-		Union
-		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ScriptingPath]),
+		 -- Dummy row
+		Select	Convert(UniqueIdentifier, Null) As [NameSpaceId]
+		Where	1 = 2),
 	[Parents] As (
 		Select	U.[NameSpaceId],
 				P.[ParentNameSpaceId]

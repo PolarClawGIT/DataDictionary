@@ -147,21 +147,11 @@
     <Build Include="App_DataDictionary\Views\ModelEntity_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcess.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessAlias.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainRelationship.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainRelationshipAlias.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainRelationshipAttribute.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessFlow.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelRelationship.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainRelationshipProperty.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntitySubjectArea.sql" />
@@ -169,7 +159,6 @@
     <Build Include="App_DataDictionary\Tables\ScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingNode.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingPath.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessDefinition.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingPath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingNode.sql" />
@@ -407,13 +396,9 @@
     <Build Include="AppModel\Triggers\trigEntitySubjectArea.sql" />
     <Build Include="AppModel\Triggers\trigProcessSubjectArea.sql" />
     <Build Include="AppModel\Triggers\trigRelationshipSubjectArea.sql" />
-    <Build Include="HsModel\Tables\ProcessSubjectArea.sql" />
-    <Build Include="HsModel\Tables\RelationshipSubjectArea.sql" />
     <Build Include="HsModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="HsModel\Tables\EntitySubjectArea.sql" />
     <Build Include="AppSecurity\Policy\policyModelEntitySubjectArea.sql" />
-    <Build Include="AppSecurity\Policy\policyModelProcessSubjectArea.sql" />
-    <Build Include="AppSecurity\Policy\policyModelRelationshipSubjectArea.sql" />
     <Build Include="Obsolete\NameSpaceHierarchy.sql" />
     <Build Include="Obsolete\procAddNameSpace.sql" />
     <Build Include="Obsolete\procCleanNameSpace.sql" />
@@ -502,6 +487,22 @@
     <Build Include="AppModel\Views\EntityProperty.Hs.sql" />
     <Build Include="AppModel\Views\EntitySubjectArea.Hs.sql" />
     <Build Include="HsModel\Tables\ModelEntity.sql" />
+    <Build Include="AppModel\Tables\Process.sql" />
+    <Build Include="AppModel\Tables\ProcessAlias.sql" />
+    <Build Include="AppModel\Tables\ProcessDefinition.sql" />
+    <Build Include="AppModel\Tables\ProcessDataFlow.sql" />
+    <Build Include="AppModel\Tables\ProcessProperty.sql" />
+    <Build Include="AppModel\Tables\Relationship.sql" />
+    <Build Include="AppModel\Tables\RelationshipAlias.sql" />
+    <Build Include="AppModel\Tables\RelationshipAttribute.sql" />
+    <Build Include="AppModel\Tables\RelationshipProperty.sql" />
+    <Build Include="AppModel\Tables\ModelProcess.sql" />
+    <Build Include="AppModel\Tables\ModelRelationship.sql" />
+    <Build Include="AppModel\Tables\DataFlow.sql" />
+    <Build Include="AppModel\Tables\DataFlowDefinition.sql" />
+    <Build Include="AppModel\Tables\DataFlowProperty.sql" />
+    <Build Include="AppModel\Tables\DataFlowElement.sql" />
+    <Build Include="AppModel\Tables\ModelDataFlow.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
