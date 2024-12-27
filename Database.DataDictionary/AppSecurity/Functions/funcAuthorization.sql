@@ -6,16 +6,18 @@ As Return
 With [Login] As (
 	-- Database Level security
 	Select	Original_Login() As [PrincipalLogin],
-			Convert(Bit, IIF(
+			Is_RoleMember('DataDictionaryApp') As [IsApplication],
+			IIF(
 				Is_RoleMember('DataDictionaryApp') = 0 And -- Cannot be executing using the application
 				Is_RoleMember('db_denydatawriter') = 0 And
 				(Is_RoleMember('db_datawriter') = 1 Or
-				 Is_RoleMember('db_owner') = 1), 1, 0)) As [IsDbWriter])
+				 Is_RoleMember('db_owner') = 1), 1, 0) As [IsDbWriter])
 Select	L.[PrincipalLogin],
 		P.[PrincipalId],
 		-- DB Security
-		Convert(Bit,Min(Convert(Int,L.[IsDbWriter]))) As [IsDbWriter],
-		-- Role Security
+		Convert(Bit,Min([IsApplication])) As [IsApplication],
+		Convert(Bit,Min(L.[IsDbWriter])) As [IsDbWriter],
+		-- Application Security
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsSecurityAdmin],0)))) As [IsSecurityAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpAdmin],0)))) As [IsHelpAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsHelpOwner],0)))) As [IsHelpOwner],
@@ -27,7 +29,7 @@ Select	L.[PrincipalLogin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsModelOwner],0)))) As [IsModelOwner],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsScriptOwner],0)))) As [IsScriptAdmin],
 		Convert(Bit,Max(Convert(Int,IsNull(R.[IsScriptOwner],0)))) As [IsScriptOwner],
-		-- Object Security
+		-- Application Object Security
 		@ObjectId As [ObjectId],
 		Convert(Bit,Max(IIF(O.[PrincipalId] = P.[PrincipalId],1,0))) As [IsOwner],
 		Convert(Bit,Max(IIF(O.[SecurableId] is Null, 0, 1))) As [HasOwner],

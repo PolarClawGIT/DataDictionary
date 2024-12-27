@@ -55,4 +55,14 @@ Select	IS_SRVROLEMEMBER('sysadmin') As [IsSysAdmin],
 -- * the end-user must be a valid login/user for the database
 -- * the end-user a member of the "public" fixed database role (most users are)
 --
+-- Limitations:
+-- * Index Views cannot be used on tables with Security Policy defined.
+-- * Many to Many relationships are not workable when security is dependent on the other side of the relationship.
+--   TableA contains the key used for Security and has a many-to-many relationship to TableB
+--   TableB does not contain security information. The security information comes from TableC
+--   TableC contains the many-to-many between TableA and TableB.
+--   Attempting to insert into TableB is in conflict with the Security Policy.
+--   This is because TableC does not yet resolve the Security Policy back to TableA.
+--   The row cannot first inserted into TableC because it does not exist in TableB.
+--
 -- This is not easy to to test.
