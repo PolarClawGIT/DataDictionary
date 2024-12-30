@@ -9,12 +9,19 @@
 			('00000000-0000-0000-0020-100000000000','About Application', '[About]', Null,'{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}  {\*\generator Riched20 10.0.19041}\viewkind4\uc1   \pard\b\f0\fs18 Data Dictionary Manager\b0\f1\par  \f0\''a9 2023 William Howard, All Rights Reserved\par  \par  \i Purpose\i0 : This application is intended as an editor for the Extended Properties within Microsoft SQL Server. The primary property of interest is the \ldblquote MS_Description\rdblquote  property. This is the property Microsoft and other products uses to populate meta data information.\par  \par  This is a tool I had wished we had during my professional carrier. Yes, Entity Relationship diagram (ERD) tools have this built in. But they are expensive and required every user to be licensed just to edit the data dictionary. Something my organization was not interested in paying for. We tried to maintain this within Visual Studio Database projects. It requires a lot of attention to detail and was not an interface that business users could deal with.\par  \par  This tool is intended to fill the gap. Something easy enough for Business to use to help maintain but technical enough that developers and designers can use to actually apply the descriptions to the extended properties.\par  \f1\par  }'),
 			-- Exceptions, shared
 			('00000000-0000-0000-1000-100000000000','Errors', '[Errors]','Describes various errors known errors that the application generates and any additional information that can be provided.',null),
+			
 			('00000000-0000-0010-1010-100000000000','Error: @Data contains other Catalogs then @CatalogId', '[Errors].[SqlException].[AppCatalog].[601010]','@Data passed contains Catalogs not specified by @CatalogId.',null),
 			('00000000-0000-0020-1010-100000000000','Error: @Data contains other Models then @ModelId', '[Errors].[SqlException].[AppModel].[601010]','@Data passed contains Models not specified by @ModelId.',null),
-			--('00000000-0000-0000-1020-100000000000','Error: @Catalog invalid for Model', '[Errors].[SqlException].[AppCatalog].[601020]','The CatalogId or @CatalogId passed is not contained in the Model specified.',null),
+			
+			('00000000-0000-0010-1020-100000000000','Error: Catalog Not Authorized', '[Errors].[SqlException].[AppCatalog].[601020]','The user is not Authorized to make changes to the Catalog',null),
+
 			-- Exceptions, procedure specific
 			('00000000-0000-0000-2010-100000000000','Error: Duplicate Catalog', '[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602010]','Duplicate CatalogId in @Data are not allowed.',null),
 			('00000000-0000-0000-2020-100000000000','Error: Duplicate Database Name for Model', '[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602020]','Duplicate Database Name are not allowed for a Model.',null),
+
+			('00000000-0000-0010-2030-100000000000','Error: @Data contains other Help Subjects other then @HelpId', '[Errors].[SqlException].[AppGeneral].[procSetHelpSubject].[602030]','@Data passed contains Help Subjects not specified by @HelpId.',null),
+			('00000000-0000-0020-2030-100000000000','Error: @Data contains other Tables other then @TableId', '[Errors].[SqlException].[AppCatalog].[602030]','@Data passed contains Tables not specified by @TableId.',null),
+
 			-- Exceptions, SQL Exceptions
 			('00000000-0000-0000-3010-100000000000','Error: Permission Denied by Policy (Row Level Security)', '[Errors].[SqlException].[33504]','Row Level Security Violation',null)
 
