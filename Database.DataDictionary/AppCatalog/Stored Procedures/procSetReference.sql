@@ -18,6 +18,20 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 601010, '@Data contains other Catalogs', 1;
+
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 1))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ReferenceId]				uniqueidentifier NOT NULL,
@@ -84,6 +98,7 @@ Begin Try
 			On	T.[ReferenceId] = H.[ReferenceId]
 			Left Join @Values S
 			On	H.[ReferenceId] = S.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[ReferenceId] is Null And
 			(@ReferenceId is Not Null Or @CatalogId is Not Null) And
 			(@ReferenceId is Null Or @ReferenceId = H.[ReferenceId]) And
@@ -148,6 +163,7 @@ Begin Try
 	From	[AppCatalog].[Reference] T
 			Inner Join [Delta] S
 			On	T.[ReferenceId] = S.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Print FormatMessage ('Update [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Reference] (
@@ -190,6 +206,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Reference] T
 			On	S.[ReferenceId] = T.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](S.[CatalogId], 1) 
 	Where	T.[ReferenceId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

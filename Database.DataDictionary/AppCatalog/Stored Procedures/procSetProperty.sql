@@ -26,6 +26,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull([CatalogId], @CatalogId), 1)) 
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[CatalogId]      UniqueIdentifier Not Null,
@@ -73,14 +79,13 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppCatalog].[Property]
 	From	[AppCatalog].[Property] T
-			Inner Join [AppCatalog].[PropertyHs] H
-			On	T.[PropertyId] = H.[PropertyId]
 			Left Join @Values S
-			On	H.[PropertyId] = S.[PropertyId]
+			On	T.[PropertyId] = S.[PropertyId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Where	S.[PropertyId] is Null And
 			(@PropertyId is Not Null Or @CatalogId is Not Null) And
-			(@PropertyId is Null Or @PropertyId = H.[PropertyId]) And
-			(@CatalogId is Null Or @CatalogId = H.[CatalogId])
+			(@PropertyId is Null Or @PropertyId = T.[PropertyId]) And
+			(@CatalogId is Null Or @CatalogId = T.[CatalogId])
 	Print FormatMessage ('Delete [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 ;	With [Delta] As (
@@ -122,6 +127,7 @@ Begin Try
 			Inner Join [Delta] S
 			On	T.[CatalogId] = S.[CatalogId] And
 				T.[PropertyId] = S.[PropertyId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Print FormatMessage ('Update [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Property] (
@@ -149,6 +155,7 @@ Begin Try
 			Left Join [AppCatalog].[Property] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				S.[PropertyId] = T.[PropertyId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](S.[CatalogId], 1) 
 	Where	T.[CatalogId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Property]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

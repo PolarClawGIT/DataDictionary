@@ -26,6 +26,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 1))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[DomainId]              UniqueIdentifier Not Null,
@@ -88,6 +94,7 @@ Begin Try
 			On	T.[DomainId] = H.[DomainId]
 			Left Join @Values S
 			On	H.[DomainId] = S.[DomainId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[DomainId] is Null And
 			(@DomainId is Not Null Or @CatalogId is Not Null) And
 			(@DomainId is Null Or @DomainId = H.[DomainId]) And
@@ -152,6 +159,10 @@ Begin Try
 	From	[AppCatalog].[Domain] T
 			Inner Join [Delta] S
 			On	T.[DomainId] = S.[DomainId]
+	Where	T.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[Domain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Domain] (
@@ -192,7 +203,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Domain] T
 			On	S.[DomainId] = T.[DomainId]
-	Where	T.[DomainId] is Null
+	Where	T.[DomainId] is Null And
+			S.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[Domain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

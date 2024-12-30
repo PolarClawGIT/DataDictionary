@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 1))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[RoutineColumnId]       UniqueIdentifier Not Null,
@@ -112,6 +118,7 @@ Begin Try
 			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
 			On	H.[RoutineColumnId] = S.[RoutineColumnId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[RoutineColumnId] is Null And
 			(@RoutineId is Not Null Or @CatalogId is Not Null) And
 			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
@@ -206,6 +213,10 @@ Begin Try
 	From	[AppCatalog].[RoutineColumn] T
 			Inner Join [Delta] S
 			On	T.[RoutineColumnId] = S.[RoutineColumnId]
+	Where	T.[RoutineId] In (
+				Select	[RoutineId]
+				From	[AppCatalog].[RoutineHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[RoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[RoutineColumn] (
@@ -266,7 +277,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[RoutineColumn] T
 			On	S.[RoutineColumnId] = T.[RoutineColumnId]
-	Where	T.[RoutineColumnId] is Null
+	Where	T.[RoutineColumnId] is Null And
+			S.[RoutineId] In (
+				Select	[RoutineId]
+				From	[AppCatalog].[RoutineHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[RoutineColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

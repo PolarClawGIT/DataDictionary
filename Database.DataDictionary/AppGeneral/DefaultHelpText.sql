@@ -20,7 +20,12 @@
 			('00000000-0000-0000-2020-100000000000','Error: Duplicate Database Name for Model', '[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602020]','Duplicate Database Name are not allowed for a Model.',null),
 
 			('00000000-0000-0010-2030-100000000000','Error: @Data contains other Help Subjects other then @HelpId', '[Errors].[SqlException].[AppGeneral].[procSetHelpSubject].[602030]','@Data passed contains Help Subjects not specified by @HelpId.',null),
-			('00000000-0000-0020-2030-100000000000','Error: @Data contains other Tables other then @TableId', '[Errors].[SqlException].[AppCatalog].[602030]','@Data passed contains Tables not specified by @TableId.',null),
+
+			('00000000-0000-0020-2030-100000000000','Error: @Data contains other Schemata other then @SchemaId', '[Errors].[SqlException].[AppCatalog].[procSetSchema].[602030]','@Data passed contains Schemata not specified by @SchemaId.',null),
+			('00000000-0000-0030-2030-100000000000','Error: @Data contains other Tables other then @TableId', '[Errors].[SqlException].[AppCatalog].[procSetTable].[602030]','@Data passed contains Tables not specified by @TableId.',null),
+			('00000000-0000-0031-2030-100000000000','Error: @Data contains other Tables other then @TableId', '[Errors].[SqlException].[AppCatalog].[procSetTableColumn].[602030]','@Data passed contains Tables not specified by @TableId.',null),
+			
+			
 
 			-- Exceptions, SQL Exceptions
 			('00000000-0000-0000-3010-100000000000','Error: Permission Denied by Policy (Row Level Security)', '[Errors].[SqlException].[33504]','Row Level Security Violation',null)

@@ -233,15 +233,12 @@
     <Build Include="AppCatalog\Stored Procedures\procSetCatalog.sql" />
     <Build Include="AppCatalog\User Defined Types\typeCatalog.sql" />
     <Build Include="HsCatalog\Tables\Catalog.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyCatalog.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseCatalog_AK.sql" />
     <Build Include="AppCatalog\Tables\Schema.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetSchema.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetSchema.sql" />
     <Build Include="HsCatalog\Tables\Schema.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogSchema.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogSchemaAuthorization.sql" />
     <Build Include="AppCatalog\Views\Catalog.Hs.sql" />
     <Build Include="AppCatalog\Views\Schema.Hs.sql" />
     <Build Include="AppGeneral\Views\HelpSubjectHs.sql" />
@@ -252,8 +249,6 @@
     <Build Include="AppCatalog\Stored Procedures\procGetDomain.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetDomain.sql" />
     <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogDomainAuthorization.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogDomain.sql" />
     <Build Include="AppModel\Views\ModelCatalog.Hs.sql" />
     <Build Include="AppCatalog\Tables\Property.sql" />
     <Build Include="HsCatalog\Tables\Property.sql" />
@@ -261,8 +256,6 @@
     <Build Include="AppCatalog\Stored Procedures\procSetProperty.sql" />
     <Build Include="AppCatalog\User Defined Types\typeProperty.sql" />
     <Build Include="AppCatalog\Views\Property.Hs.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogPropertyAuthroization.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogProperty.sql" />
     <Build Include="AppGeneral\Tables\TransactionLog.sql" />
     <Build Include="AppGeneral\Stored Procedures\procRecordTransactionLog.sql">
       <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
@@ -285,11 +278,8 @@
     <Build Include="HsCatalog\Tables\TableColumn.sql" />
     <Build Include="AppCatalog\Views\Table.Hs.sql" />
     <Build Include="AppCatalog\Views\TableColumn.Hs.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogTableAuthorization.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogTable.sql" />
     <Build Include="AppCatalog\Triggers\trigTable.sql" />
     <Build Include="AppCatalog\Triggers\trigTableColumn.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogTableColumn.sql" />
     <Build Include="AppCatalog\Tables\Routine.sql" />
     <Build Include="AppCatalog\Tables\RoutineParameter.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetRoutine.sql" />
@@ -308,10 +298,6 @@
     <Build Include="AppCatalog\Triggers\trigRoutine.sql" />
     <Build Include="AppCatalog\Triggers\trigRoutineColumn.sql" />
     <Build Include="AppCatalog\Triggers\trigRoutineParameter.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogRoutineAuthorization.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogRoutine.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogRoutineParameter.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogRoutineColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetRoutineColumn.sql" />
     <Build Include="AppCatalog\User Defined Types\typeRoutineColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetRoutineColumn.sql" />
@@ -325,9 +311,6 @@
     <Build Include="AppCatalog\User Defined Types\typeConstraintColumn.sql" />
     <Build Include="HsCatalog\Tables\Constraint.sql" />
     <Build Include="HsCatalog\Tables\ConstraintColumn.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogConstraintAuthorization.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogConstraintColumn.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogConstraint.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetConstraint.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetConstraintColumn.sql" />
     <Build Include="AppCatalog\Tables\Reference.sql" />
@@ -337,8 +320,6 @@
     <Build Include="HsCatalog\Tables\Reference.sql" />
     <Build Include="AppCatalog\Views\Reference.Hs.sql" />
     <Build Include="AppCatalog\Triggers\trigReference.sql" />
-    <Build Include="AppSecurity\Policy\policyCatalogReference.sql" />
-    <Build Include="AppSecurity\Functions\funcCatalogReferenceAuthorization.sql" />
     <Build Include="AppGeneral\Stored Procedures\procThrowHelpSubject.sql" />
     <Build Include="AppModel\Tables\Model.sql" />
     <Build Include="AppModel\Stored Procedures\procGetModel.sql" />
@@ -503,6 +484,8 @@
     <Build Include="AppModel\Tables\DataFlowProperty.sql" />
     <Build Include="AppModel\Tables\DataFlowElement.sql" />
     <Build Include="AppModel\Tables\ModelDataFlow.sql" />
+    <Build Include="AppSecurity\Functions\funcApplicationAuthorization.sql" />
+    <Build Include="AppSecurity\Functions\funcCatalogAuthorization.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

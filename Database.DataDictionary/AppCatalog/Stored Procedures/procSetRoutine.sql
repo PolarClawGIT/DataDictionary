@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 1))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[RoutineId]          UniqueIdentifier Not Null,
@@ -64,6 +70,7 @@ Begin Try
 			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
 			On	H.[RoutineId] = S.[RoutineId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[SchemaId] is Null And
 			(@RoutineId is Not Null Or @CatalogId is Not Null) And
 			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
@@ -76,6 +83,7 @@ Begin Try
 			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
 			On	H.[RoutineId] = S.[RoutineId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[SchemaId] is Null And
 			(@RoutineId is Not Null Or @CatalogId is Not Null) And
 			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
@@ -88,6 +96,7 @@ Begin Try
 			On	T.[RoutineId] = H.[RoutineId]
 			Left Join @Values S
 			On	H.[RoutineId] = S.[RoutineId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[SchemaId] is Null And
 			(@RoutineId is Not Null Or @CatalogId is Not Null) And
 			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
@@ -113,6 +122,10 @@ Begin Try
 	From	[AppCatalog].[Routine] T
 			Inner Join [Delta] S
 			On	T.[RoutineId] = S.[RoutineId]
+	Where	T.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Routine] (
@@ -127,7 +140,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Routine] T
 			On	S.[RoutineId] = T.[RoutineId]
-	Where	T.[RoutineId] is Null
+	Where	T.[RoutineId] is Null And
+			S.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
