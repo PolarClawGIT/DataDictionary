@@ -30,7 +30,7 @@ Begin Try
 	If Exists (
 		Select	1
 		From	@Data D
-				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 1))
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
 	Throw 601020, 'Catalog Not Authorized', 2;
 
 	-- Clean the Data, helps performance

@@ -20,8 +20,8 @@ Begin Try
 
 	If Exists (
 		Select	1
-		From	@Data D
-		Where	[AppSecurity].[funcHelpSubjectAuthorization]([HelpId]) = 0)
+		From	@Data
+				Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](IsNull([HelpId], @HelpId), 0)) 
 	Throw 601020, 'Help Subject Not Authorized', 2;
 
 	If @HelpId is Not Null And Exists (
@@ -59,6 +59,7 @@ Begin Try
 			Outer Apply [AppModel].[funcParseName] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
@@ -125,7 +126,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppGeneral].[HelpSubject] T
 			On	S.[HelpId] = T.[HelpId]
-			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](T.[HelpId], 1)
+			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](S.[HelpId], 1)
 	Where	T.[HelpId] is Null
 	Print FormatMessage ('Insert [AppGeneral].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
