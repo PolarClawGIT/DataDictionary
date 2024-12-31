@@ -19,8 +19,10 @@ With [Authorization] As (
 			[IsGrant],
 			[IsDeny],
 			Convert(Bit, Case
+				When [IsApplication] = 0 And [IsDbWriter] = 1 Then 1
 				When [IsApplication] = 1 And [IsCatalogAdmin] = 1 Then 1
 				When [IsApplication] = 1 And [IsCatalogOwner] = 1 And [HasOwner] = 0 Then 1
+				When @CatalogId Not In (Select [CatalogId] From [AppCatalog].[Catalog]) Then 0
 				When [IsApplication] = 1 And [IsOwner] = 1 Then 1
 				When [IsApplication] = 1 And [IsGrant] = 1 And [IsDeny] = 0 Then 1
 				Else 0 End)

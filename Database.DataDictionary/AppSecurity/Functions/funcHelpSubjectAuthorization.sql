@@ -19,8 +19,10 @@ With [Authorization] As (
 			[IsGrant],
 			[IsDeny],
 			Convert(Bit, Case
+				When [IsApplication] = 0 And [IsDbWriter] = 1 Then 1
 				When [IsApplication] = 1 And [IsHelpAdmin] = 1 Then 1
 				When [IsApplication] = 1 And [IsHelpOwner] = 1 And [HasOwner] = 0 Then 1
+				When @HelpId Not In (Select [HelpId] From [AppGeneral].[HelpSubject]) Then 0
 				When [IsApplication] = 1 And [IsOwner] = 1 Then 1
 				When [IsApplication] = 1 And [IsGrant] = 1 And [IsDeny] = 0 Then 1
 				Else 0 End)
