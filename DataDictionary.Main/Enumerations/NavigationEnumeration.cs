@@ -171,6 +171,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
+                
                 new NavigationEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute,
                     new(CommandImageType.Default, Resources.Attribute),
                     new(CommandImageType.Add, Resources.NewAttribute),
@@ -182,6 +183,8 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewSynonym)),
                 new NavigationEnumeration(ScopeType.ModelAttributeProperty,     Resources.Icon_Property, Resources.Property) ,
                 new NavigationEnumeration(ScopeType.ModelAttributeDefinition,   Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new NavigationEnumeration(ScopeType.ModelAttributeSubjectArea,  Resources.Icon_Diagram, Resources.Diagram) ,
+
                 new NavigationEnumeration(ScopeType.ModelEntity,                Resources.Icon_Entities,
                     new(CommandImageType.Default, Resources.Entity),
                     new(CommandImageType.Add, Resources.NewEntity),
@@ -194,6 +197,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
                 new NavigationEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
                 new NavigationEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new NavigationEnumeration(ScopeType.ModelEntitySubjectArea,     Resources.Icon_Diagram, Resources.Diagram) ,
 
                 new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,

@@ -10,13 +10,13 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Interface for Model EntityAttribute Item
     /// </summary>
-    public interface IEntityAttributeItem : IEntityAttributeKey,
+    public interface IEntityAttributeItem : IEntityAttributeKey, IAttributeSubjectAreaName,
         ITemporalItem
     {
         /// <summary>
         /// The Name of the Attribute as known to the Entity.
         /// </summary>
-        String? AttributeName { get; }
+        String? AttributeAlias { get; }
 
         /// <summary>
         /// Is the Attribute Nullable
@@ -46,6 +46,13 @@ namespace DataDictionary.DataLayer.AppModel
         {
             get { return GetValue<Guid>(nameof(AttributeId)); }
             set { SetValue(nameof(AttributeId), value); }
+        }
+
+        /// <inheritdoc/>
+        public String? AttributeAlias
+        {
+            get { return GetValue(nameof(AttributeAlias)); }
+            set { SetValue(nameof(AttributeAlias), value); }
         }
 
         /// <inheritdoc/>
@@ -85,7 +92,6 @@ namespace DataDictionary.DataLayer.AppModel
             };
         }
 
-
         /// <summary>
         /// Constructor for DomainEntityAttribute Item
         /// </summary>
@@ -108,10 +114,10 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeAlias), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

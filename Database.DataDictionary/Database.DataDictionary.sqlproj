@@ -476,6 +476,7 @@
     <Build Include="AppSecurity\Policy\policyModelAttribute.sql" />
     <Build Include="AppSecurity\Policy\policyModelEntity.sql" />
     <Build Include="AppSecurity\Functions\funcModelEntityAuthorization.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetEntitySubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

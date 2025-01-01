@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppModel].[procGetEntityAttribute]
+﻿CREATE PROCEDURE [AppModel].[procGetEntitySubjectArea]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -6,15 +6,12 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on Model EntityAttribute.
+/* Description: Performs Get on Model EntitySubjectArea.
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	[EntityId],
-		[AttributeAlias],
-		[AttributeName],
-		[OrdinalPosition],
-		[IsNullable],
+Select	D.[EntityId],
+		D.[SubjectAreaId],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -24,7 +21,7 @@ Select	[EntityId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppModel].[EntityAttributeHs] For System_Time All D
+From	[AppModel].[EntitySubjectAreaHs] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@EntityId is Null Or @EntityId = [EntityId]) And
 		(@ModelId is Null Or @ModelId In (
