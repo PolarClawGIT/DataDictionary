@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, [EntityId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -44,6 +49,7 @@ Begin Try
 			Left Join @Values V
 			On	T.[EntityId] = V.[EntityId] And
 				T.[SubjectAreaId] = V.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	V.[EntityId] is Null And
 			(@EntityId is Not Null Or @ModelId is Not Null) And
 			(@EntityId is Null Or @EntityId = T.[EntityId]) And
@@ -52,22 +58,6 @@ Begin Try
 				From	[AppModel].[ModelEntity]
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppModel].[EntitySubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	--;With [Delta] As (
-	--	Select	[EntityId],
-	--			[SubjectAreaId]
-	--	From	@Values
-	--	Except
-	--	Select	[EntityId],
-	--			[SubjectAreaId]
-	--	From	[AppModel].[EntitySubjectArea])
-	--Update [AppModel].[EntitySubjectArea]
-	--Set		[SubjectAreaValue] = S.[SubjectAreaValue]
-	--From	[Delta] S
-	--		Inner Join [AppModel].[EntitySubjectArea] T
-	--		On	S.[EntityId] = T.[EntityId] And
-	--			S.[SubjectAreaId] = T.[SubjectAreaId]
-	--Print FormatMessage ('Update [AppModel].[EntitySubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[EntitySubjectArea] (
 			[EntityId],
@@ -78,6 +68,7 @@ Begin Try
 			Left Join [AppModel].[EntitySubjectArea] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[SubjectAreaId] = T.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [AppModel].[EntitySubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

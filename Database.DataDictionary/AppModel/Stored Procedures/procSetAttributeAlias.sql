@@ -63,7 +63,7 @@ Begin Try
 	From	[AppModel].[AttributeAlias] T
 			Left Join @Values V
 			On	T.[AliasId] = V.[AliasId]
-			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](T.[ModelId], T.[AttributeId], 1)
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	V.[AttributeId] is Null And
 			(@AttributeId is Not Null Or @ModelId is Not Null) And
 			(@AttributeId is Null Or @AttributeId = T.[AttributeId])  And

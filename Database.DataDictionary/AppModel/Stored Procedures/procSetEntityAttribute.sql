@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, [EntityId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -62,6 +67,7 @@ Begin Try
 	From	[AppModel].[EntityAttribute] T
 			Left Join @Values V
 			On	T.[EntityAttributeId] = V.[EntityAttributeId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	V.[EntityAttributeId] is Null And
 			(@EntityId is Not Null Or @ModelId is Not Null) And
 			(@EntityId is Null Or @EntityId = T.[EntityId])  And
@@ -95,6 +101,7 @@ Begin Try
 	From	[AppModel].[EntityAttribute] T
 			Inner Join [Delta] S
 			On	T.[EntityAttributeId] = S.[EntityAttributeId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Print FormatMessage ('Update [AppModel].[EntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[EntityAttribute] (
@@ -113,6 +120,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[EntityAttribute] T
 			On	S.[EntityAttributeId] = T.[EntityAttributeId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Where	T.[EntityAttributeId] is Null
 	Print FormatMessage ('Insert [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

@@ -143,18 +143,13 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
-    <Build Include="App_DataDictionary\Views\ModelDatabase_AK.sql" />
-    <Build Include="App_DataDictionary\Views\ModelEntity_AK.sql" />
-    <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntitySubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\ModelScripting.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingNode.sql" />
@@ -173,9 +168,7 @@
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectEntity.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
-    <Build Include="App_DataDictionary\Views\DomainEntityAttribute_AK.sql" />
     <Build Include="AppGeneral\Tables\HelpSubject.sql" />
     <Build Include="HsGeneral\Tables\HelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
@@ -234,7 +227,6 @@
     <Build Include="AppCatalog\User Defined Types\typeCatalog.sql" />
     <Build Include="HsCatalog\Tables\Catalog.sql" />
     <Build Include="AppSecurity\Policy\policyCatalog.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseCatalog_AK.sql" />
     <Build Include="AppCatalog\Tables\Schema.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetSchema.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetSchema.sql" />
@@ -333,7 +325,6 @@
     <Build Include="AppModel\Triggers\trigModelCatalog.sql" />
     <Build Include="AppSecurity\Functions\funcModelAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyModel.sql" />
-    <Build Include="AppSecurity\Policy\policyModelCatalog.sql" />
     <Build Include="AppModel\Tables\PropertyEnumeration.sql" />
     <Build Include="AppModel\Tables\DefinitionEnumeration.sql" />
     <Build Include="HsModel\Tables\PropertyEnumeration.sql" />
@@ -354,10 +345,6 @@
     <Build Include="HsModel\Tables\ModelDefinition.sql" />
     <Build Include="AppModel\Views\ModelProperty.Hs.sql" />
     <Build Include="AppModel\Views\ModelDefinition.Hs.sql" />
-    <Build Include="AppSecurity\Functions\funcModelAdministrator.sql" />
-    <Build Include="AppSecurity\Policy\policyModelAdminstrator.sql" />
-    <Build Include="AppSecurity\Policy\policyModelDefinition.sql" />
-    <Build Include="AppSecurity\Policy\policyModelProperty.sql" />
     <Build Include="AppModel\Triggers\trigModelDefinition.sql" />
     <Build Include="AppModel\Triggers\trigModelProperty.sql" />
     <Build Include="AppModel\Tables\SubjectArea.sql" />
@@ -367,7 +354,6 @@
     <Build Include="AppModel\Views\SubjectArea.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
-    <Build Include="AppSecurity\Policy\policyModelSubjectArea.sql" />
     <Build Include="AppModel\Functions\funcParseName.sql" />
     <Build Include="AppModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="AppModel\Tables\EntitySubjectArea.sql" />
@@ -379,7 +365,6 @@
     <Build Include="AppModel\Triggers\trigRelationshipSubjectArea.sql" />
     <Build Include="HsModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="HsModel\Tables\EntitySubjectArea.sql" />
-    <Build Include="AppSecurity\Policy\policyModelEntitySubjectArea.sql" />
     <Build Include="Obsolete\NameSpaceHierarchy.sql" />
     <Build Include="Obsolete\procAddNameSpace.sql" />
     <Build Include="Obsolete\procCleanNameSpace.sql" />
@@ -486,6 +471,11 @@
     <Build Include="AppModel\Tables\ModelDataFlow.sql" />
     <Build Include="AppSecurity\Functions\funcApplicationAuthorization.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogAuthorization.sql" />
+    <Build Include="AppModel\Views\ModelEntity.Hs.sql" />
+    <Build Include="AppSecurity\Functions\funcModelAttributeAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyModelAttribute.sql" />
+    <Build Include="AppSecurity\Policy\policyModelEntity.sql" />
+    <Build Include="AppSecurity\Functions\funcModelEntityAuthorization.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

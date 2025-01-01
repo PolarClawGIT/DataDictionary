@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, [EntityId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -44,8 +49,10 @@ Begin Try
 				Select	[QualifiedName] As [EntityName]
 				From	[AppModel].[funcParseName](D.[EntityName])
 				Where	[IsBase] = 1) N
-	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
-			(@EntityId is Null Or @EntityId = Coalesce(D.[EntityId], H.[EntityId]))
+			Cross Apply (
+				Select	Coalesce(D.[EntityId], H.[EntityId], NewId()) As [EntityId]) X
+	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
+			(@EntityId is Null Or @EntityId = X.[EntityId])
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
@@ -72,6 +79,7 @@ Begin Try
 	From	[AppModel].[ModelEntity] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](T.[ModelId], T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			(@EntityId is Not Null Or @ModelId is Not Null) And
 			(@EntityId is Null Or @EntityId = T.[EntityId])  And
@@ -82,6 +90,7 @@ Begin Try
 	From	[AppModel].[EntityAlias] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[EntityAlias] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -90,6 +99,7 @@ Begin Try
 	From	[AppModel].[EntityDefinition] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[EntityDefinition] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -98,6 +108,7 @@ Begin Try
 	From	[AppModel].[EntityProperty] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[EntityProperty] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -106,6 +117,7 @@ Begin Try
 	From	[AppModel].[EntitySubjectArea] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[EntitySubjectArea] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -114,6 +126,7 @@ Begin Try
 	From	[AppModel].[EntityAttribute] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[EntityAttribute] (Entity): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -122,6 +135,7 @@ Begin Try
 	From	[AppModel].[Entity] T
 			Left Join @Values S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
 	Where	S.[EntityId] is Null And
 			T.[EntityId] In (Select [EntityId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -145,6 +159,7 @@ Begin Try
 	From	[AppModel].[Entity] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Print FormatMessage ('Update [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[Entity] (
@@ -159,6 +174,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[Entity] T
 			On	S.[EntityId] = T.[EntityId]
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -171,7 +187,9 @@ Begin Try
 			Left Join [AppModel].[ModelEntity] T
 			On	S.[EntityId] = T.[EntityId] And
 				@ModelId = T.[ModelId]
-	Where	T.[EntityId] Is Null
+			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
+	Where	T.[EntityId] Is Null And
+			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppModel].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
