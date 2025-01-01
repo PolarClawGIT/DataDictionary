@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Interface for Model EntityAttribute Item
     /// </summary>
-    public interface IEntityAttributeItem : IEntityAttributeKey, IAttributeSubjectAreaName,
+    public interface IEntityAttributeItem : IEntityKey, IAttributeSubjectAreaName,
         ITemporalItem
     {
         /// <summary>
@@ -39,13 +39,6 @@ namespace DataDictionary.DataLayer.AppModel
         {
             get { return GetValue<Guid>(nameof(EntityId)); }
             protected set { SetValue(nameof(EntityId), value); }
-        }
-
-        /// <inheritdoc/>
-        public Guid? AttributeId
-        {
-            get { return GetValue<Guid>(nameof(AttributeId)); }
-            set { SetValue(nameof(AttributeId), value); }
         }
 
         /// <inheritdoc/>
@@ -98,18 +91,6 @@ namespace DataDictionary.DataLayer.AppModel
         /// <param name="entity"></param>
         public EntityAttributeItem(IEntityKey entity) : this()
         { EntityId = entity.EntityId; }
-
-
-        /// <summary>
-        /// Constructor for DomainEntityAttribute Item
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="attribute"></param>
-        public EntityAttributeItem(IEntityKey entity, IAttributeKey attribute) : this(entity)
-        {
-            EntityId = entity.EntityId;
-            AttributeId = attribute.AttributeId;
-        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [

@@ -5,12 +5,14 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Interface for the Model EntityAttribute Key 
     /// </summary>
+    [Obsolete]
     public interface IEntityAttributeKey : IEntityKey, IAttributeKey
     { }
 
     /// <summary>
     /// Implementation of the DomainEntityAttribute Key 
     /// </summary>
+    [Obsolete]
     public class EntityAttributeKey : IEntityAttributeKey,
         IKeyEquality<IEntityAttributeKey>, IKeyEquality<EntityAttributeKey>
     {

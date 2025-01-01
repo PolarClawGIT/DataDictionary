@@ -228,21 +228,6 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                     foreach (AttributeValue attribute in this)
                     {
-                        //NamedScopeValue newItem = new NamedScopeValue(attribute);
-                        Boolean hasParent = false;
-
-                        foreach (EntityValue entityParent in ParentEntites(attribute))
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(attribute)
-                            {
-                                GetPath = () => new PathIndex(
-                                    ((IPathValue)entityParent).Path,
-                                     ((IPathValue)attribute).Path)
-                            };
-                            addNamedScope(entityParent, newItem);
-                            hasParent = true;
-                        }
-
                         foreach (SubjectAreaValue subjectParent in ParentSubjects(attribute))
                         {
                             NamedScopeValue newItem = new NamedScopeValue(attribute)
@@ -252,13 +237,6 @@ namespace DataDictionary.BusinessLayer.AppModel
                                     ((IPathValue)attribute).Path)
                             };
                             addNamedScope(subjectParent, newItem);
-                            hasParent = true;
-                        }
-
-                        if (!hasParent) // No Parents found
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(attribute);
-                            addNamedScope(model, newItem);
                         }
 
                         progressChanged(completed++, total);
@@ -269,23 +247,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.Add(newWork);
 
             return work;
-
-            IEnumerable<EntityValue> ParentEntites(AttributeValue attribute)
-            {
-                AttributeIndex key = new AttributeIndex(attribute);
-
-                return this.
-                    Where(w => key.Equals(w)).
-                    Join(Model.Entities.Attributes,
-                        attribute => new AttributeIndex(attribute),
-                        entity => new AttributeIndex(entity),
-                        (attribute, entity) => new EntityIndex(entity)).
-                    Join(Model.Entities,
-                        entityKey => entityKey,
-                        entity => new EntityIndex(entity),
-                        (key, entity) => entity).
-                    ToList();
-            }
 
             IEnumerable<SubjectAreaValue> ParentSubjects(AttributeValue attribute)
             {
