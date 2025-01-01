@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([ModelId], @ModelId) <> @ModelId)
 	Throw 601010, '@Data contains other model then @ModelId', 1;
 
+	If Exists (
+		Select	1
+		From	@Data
+				Cross Apply [AppSecurity].[funcModelAuthorization](IsNull([ModelId], @ModelId), 0)) 
+	Throw 601020, 'Model Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[ModelId] UniqueIdentifier NOT NULL,
@@ -53,7 +59,7 @@ Begin Try
 	Select	S.[PrincipalId],
 			V.[ModelId]
 	From	@Values V
-			Cross Apply [AppSecurity].[funcAuthorization](V.[ModelId]) S
+			Cross Apply [AppSecurity].[funcModelAuthorization](V.[ModelId],1) S
 	Where	S.[IsModelOwner] = 1 And
 			S.[IsModelAdmin] = 0 And
 			S.[HasOwner] = 0 And
@@ -66,6 +72,7 @@ Begin Try
 	From	[AppModel].[ModelAttribute] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -75,6 +82,7 @@ Begin Try
 	From	[AppModel].[ModelEntity] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -84,6 +92,7 @@ Begin Try
 	From	[AppModel].[ModelProperty] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -93,6 +102,7 @@ Begin Try
 	From	[AppModel].[ModelDefinition] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -102,15 +112,27 @@ Begin Try
 	From	[AppModel].[ModelProcess] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
+	Delete From [AppModel].[ModelDataFlow]
+	From	[AppModel].[ModelDataFlow] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Set @RowCount = @@RowCount
+	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDataFlow] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppModel].[ModelRelationship]
 	From	[AppModel].[ModelRelationship] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -120,6 +142,7 @@ Begin Try
 	From	[AppModel].[SubjectArea] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -129,6 +152,7 @@ Begin Try
 	From	[App_DataDictionary].[ModelLibrary] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -138,6 +162,7 @@ Begin Try
 	From	[AppModel].[ModelCatalog] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null  And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
@@ -147,6 +172,7 @@ Begin Try
 	From	[AppModel].[Model] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId -- @ModelId must be specified
 	Print FormatMessage ('Delete [AppModel].[Model]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -167,6 +193,7 @@ Begin Try
 	From	[AppModel].[Model] T
 			Inner Join [Delta] S
 			On	T.[ModelId] = S.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Print FormatMessage ('Update [AppModel].[Model]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[Model] (
@@ -179,6 +206,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[Model] T
 			On	S.[ModelId] = T.[ModelId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](S.[ModelId], 1) 
 	Where	T.[ModelId] is Null
 	Print FormatMessage ('Insert [AppModel].[Model]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

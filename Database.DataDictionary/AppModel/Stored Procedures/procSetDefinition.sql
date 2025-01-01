@@ -19,6 +19,12 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If Exists (
+		Select	1
+		From	[AppSecurity].[funcModelAuthorization](@ModelId, 0))
+	Throw 601020, 'Model Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[DefinitionId]             UniqueIdentifier NOT NULL,
@@ -48,6 +54,7 @@ Begin Try
 				T.[ModelId] = H.[ModelId]
 			Left Join @Values S
 			On	H.[DefinitionId] = S.[DefinitionId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[DefinitionId] is Null And
 			(@DefinitionId is Not Null Or @ModelId is Not Null) And
 			(@DefinitionId is Null Or H.[DefinitionId] = @DefinitionId) And
@@ -58,6 +65,7 @@ Begin Try
 	From	[AppModel].[DefinitionEnumeration] T
 			Left Join @Values S
 			On	T.[DefinitionId] = S.[DefinitionId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Where	S.[DefinitionId] is Null And
 			T.[DefinitionId] = @DefinitionId 
 	Print FormatMessage ('Delete [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -81,6 +89,7 @@ Begin Try
 	From	[AppModel].[DefinitionEnumeration] T
 			Inner Join [Delta] S
 			On	T.[DefinitionId] = S.[DefinitionId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
 	Print FormatMessage ('Update [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -96,6 +105,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[DefinitionEnumeration] T
 			On	S.[DefinitionId] = T.[DefinitionId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Where	T.[DefinitionId] is Null
 	Print FormatMessage ('Insert [AppModel].[DefinitionEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -108,6 +118,7 @@ Begin Try
 			Left Join [AppModel].[ModelDefinition] T
 			On	@ModelId = T.[ModelId] And
 				S.[DefinitionId] = T.[DefinitionId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	T.[DefinitionId] is Null And
 			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppModel].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

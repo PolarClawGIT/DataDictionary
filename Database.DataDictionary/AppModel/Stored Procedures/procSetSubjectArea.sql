@@ -19,6 +19,12 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If Exists (
+		Select	1
+		From	[AppSecurity].[funcCatalogAuthorization](@ModelId, 0))
+	Throw 601020, 'Model Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
@@ -55,40 +61,40 @@ Begin Try
 	From	[AppModel].[AttributeSubjectArea] T
 			Left Join @Values S
 			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[SubjectAreaId] is Null And
 			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
-			(@ModelId is Null Or @ModelId = T.[ModelId])
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[AttributeSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[EntitySubjectArea]
 	From	[AppModel].[EntitySubjectArea] T
 			Left Join @Values S
 			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[SubjectAreaId] is Null And
 			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
-			(@ModelId is Null Or @ModelId = T.[ModelId])
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[EntitySubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ProcessSubjectArea]
 	From	[AppModel].[ProcessSubjectArea] T
 			Left Join @Values S
 			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[SubjectAreaId] is Null And
 			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
-			(@ModelId is Null Or @ModelId = T.[ModelId])
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[ProcessSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[RelationshipSubjectArea]
 	From	[AppModel].[RelationshipSubjectArea] T
 			Left Join @Values S
 			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[SubjectAreaId] is Null And
 			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId]) And
-			(@ModelId is Null Or @ModelId = T.[ModelId])
+			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[RelationshipSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
@@ -112,6 +118,7 @@ Begin Try
 	From	[Delta] S
 			Inner Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Print FormatMessage ('Update [AppModel].[SubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[SubjectArea] (
@@ -128,6 +135,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[SubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	T.[SubjectAreaId] is Null
 	Print FormatMessage ('Insert [AppModel].[SubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

@@ -19,6 +19,12 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If Exists (
+		Select	1
+		From	[AppSecurity].[funcCatalogAuthorization](@ModelId, 0))
+	Throw 601020, 'Model Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[PropertyId]             UniqueIdentifier NOT NULL,
@@ -60,6 +66,7 @@ Begin Try
 				T.[ModelId] = H.[ModelId]
 			Left Join @Values S
 			On	H.[PropertyId] = S.[PropertyId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	S.[PropertyId] is Null And
 			(@PropertyId is Not Null Or @ModelId is Not Null) And
 			(@PropertyId is Null Or H.[PropertyId] = @PropertyId) And
@@ -70,6 +77,7 @@ Begin Try
 	From	[AppModel].[PropertyEnumeration] T
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Where	S.[PropertyId] is Null And
 			T.[PropertyId] = @PropertyId 
 	Print FormatMessage ('Delete [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -99,6 +107,7 @@ Begin Try
 	From	[AppModel].[PropertyEnumeration] T
 			Inner Join [Delta] S
 			On	T.[PropertyId] = S.[PropertyId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Print FormatMessage ('Update [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[PropertyEnumeration] (
@@ -117,6 +126,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[PropertyEnumeration] T
 			On	S.[PropertyId] = T.[PropertyId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](Null, 1)
 	Where	T.[PropertyId] is Null
 	Print FormatMessage ('Insert [AppModel].[PropertyEnumeration]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -129,6 +139,7 @@ Begin Try
 			Left Join [AppModel].[ModelProperty] T
 			On	@ModelId = T.[ModelId] And
 				S.[PropertyId] = T.[PropertyId]
+			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	T.[PropertyId] is Null And
 			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppModel].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
