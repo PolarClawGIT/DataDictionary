@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [AppModel].[EntitySubjectArea] (
-    [SubjectAreaId] UniqueIdentifier NOT NULL,
     [EntityId]      UniqueIdentifier NOT NULL,
-    [NameSpaceId]   UNIQUEIDENTIFIER NOT NULL,
+    [SubjectAreaId] UniqueIdentifier NOT NULL,
     -- Temporal History Support
     [SysStart]      DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN CONSTRAINT [DF_EntitySubjectArea_SysStart] DEFAULT (sysdatetime()) NOT NULL,
     [SysEnd]        DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN   CONSTRAINT [DF_EntitySubjectArea_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999') NOT NULL,

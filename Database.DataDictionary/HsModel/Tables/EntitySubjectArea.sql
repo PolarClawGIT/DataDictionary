@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [HsModel].[EntitySubjectArea] (
-    [SubjectAreaId] UniqueIdentifier NOT NULL,
     [EntityId]      UniqueIdentifier NOT NULL,
-    [NameSpaceId]   UniqueIdentifier NOT NULL,
+    [SubjectAreaId] UniqueIdentifier NOT NULL,
     [SysStart]      DateTime2 (7) NOT NULL,
     [SysEnd]        DateTime2 (7) NOT NULL,
 );
