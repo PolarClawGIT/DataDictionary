@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, [AttributeId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -58,6 +63,7 @@ Begin Try
 	From	[AppModel].[AttributeAlias] T
 			Left Join @Values V
 			On	T.[AliasId] = V.[AliasId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](T.[ModelId], T.[AttributeId], 1)
 	Where	V.[AttributeId] is Null And
 			(@AttributeId is Not Null Or @ModelId is Not Null) And
 			(@AttributeId is Null Or @AttributeId = T.[AttributeId])  And
@@ -85,6 +91,7 @@ Begin Try
 	From	[Delta] S
 			Inner Join [AppModel].[AttributeAlias] T
 			On	S.[AliasId] = T.[AliasId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Print FormatMessage ('Update [AppModel].[AttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[AttributeAlias] (
@@ -99,6 +106,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[AttributeAlias] T
 			On	S.[AliasId] = T.[AliasId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [AppModel].[AttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

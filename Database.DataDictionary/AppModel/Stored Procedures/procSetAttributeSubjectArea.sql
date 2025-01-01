@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, [AttributeId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -44,6 +49,7 @@ Begin Try
 			Left Join @Values V
 			On	T.[AttributeId] = V.[AttributeId] And
 				T.[SubjectAreaId] = V.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	V.[AttributeId] is Null And
 			(@AttributeId is Not Null Or @ModelId is Not Null) And
 			(@AttributeId is Null Or @AttributeId = T.[AttributeId]) And
@@ -53,21 +59,7 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppModel].[AttributeSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	--;With [Delta] As (
-	--	Select	[AttributeId],
-	--			[SubjectAreaId]
-	--	From	@Values
-	--	Except
-	--	Select	[AttributeId],
-	--			[SubjectAreaId]
-	--	From	[AppModel].[AttributeSubjectArea])
-	--Update [AppModel].[AttributeSubjectArea]
-	--Set		[SubjectAreaValue] = S.[SubjectAreaValue]
-	--From	[Delta] S
-	--		Inner Join [AppModel].[AttributeSubjectArea] T
-	--		On	S.[AttributeId] = T.[AttributeId] And
-	--			S.[SubjectAreaId] = T.[SubjectAreaId]
-	--Print FormatMessage ('Update [AppModel].[AttributeSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	-- No Update
 
 	Insert Into [AppModel].[AttributeSubjectArea] (
 			[AttributeId],
@@ -78,6 +70,7 @@ Begin Try
 			Left Join [AppModel].[AttributeSubjectArea] T
 			On	S.[AttributeId] = T.[AttributeId] And
 				S.[SubjectAreaId] = T.[SubjectAreaId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [AppModel].[AttributeSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

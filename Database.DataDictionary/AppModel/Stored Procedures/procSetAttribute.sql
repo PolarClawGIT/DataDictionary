@@ -20,6 +20,11 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, [AttributeId], 0))
+	Throw 601020, 'Model Not Authorized', 2;
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
@@ -32,11 +37,10 @@ Begin Try
 		[IsIntegral]			Bit Null,
 		[IsNullable]			Bit Null,
 		[IsKey]					Bit Null,
-		Primary Key ([AttributeId]),
-		Unique ([AttributeTitle]))
+		Primary Key ([AttributeId]))
 
 	Insert Into @Values
-	Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId],
+	Select	X.[AttributeId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
 			N.[AttributeName],
@@ -69,8 +73,10 @@ Begin Try
 				Select	[QualifiedName] As [AttributeName]
 				From	[AppModel].[funcParseName](D.[AttributeName])
 				Where	[IsBase] = 1) N
-	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
-			(@AttributeId is Null Or @AttributeId = Coalesce(D.[AttributeId], H.[AttributeId]))
+			Cross Apply (
+				Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId]) X
+	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
+			(@AttributeId is Null Or @AttributeId = X.[AttributeId])
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
@@ -97,6 +103,7 @@ Begin Try
 	From	[AppModel].[ModelAttribute] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](T.[ModelId], T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			(@AttributeId is Not Null Or @ModelId is Not Null) And
 			(@AttributeId is Null Or @AttributeId = T.[AttributeId])  And
@@ -107,6 +114,7 @@ Begin Try
 	From	[AppModel].[AttributeAlias] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[AttributeAlias] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -115,6 +123,7 @@ Begin Try
 	From	[AppModel].[AttributeDefinition] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[AttributeDefinition] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -123,6 +132,7 @@ Begin Try
 	From	[AppModel].[AttributeProperty] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[AttributeProperty] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
@@ -131,22 +141,16 @@ Begin Try
 	From	[AppModel].[AttributeSubjectArea] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[AttributeSubjectArea] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[EntityAttribute]
-	From	[AppModel].[EntityAttribute] T
-			Left Join @Values S
-			On	T.[AttributeId] = S.[AttributeId]
-	Where	S.[AttributeId] is Null And
-			T.[AttributeId] In (Select [AttributeId] From @Delete)
-	Print FormatMessage ('Delete [AppModel].[EntityAttribute] (Attribute): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[Attribute]
 	From	[AppModel].[Attribute] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	S.[AttributeId] is Null And
 			T.[AttributeId] In (Select [AttributeId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[Attribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -185,6 +189,7 @@ Begin Try
 	From	[AppModel].[Attribute] T
 			Inner Join [Delta] S
 			On	T.[AttributeId] = S.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Print FormatMessage ('Update [AppModel].[Attribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[Attribute] (
@@ -209,6 +214,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[Attribute] T
 			On	S.[AttributeId] = T.[AttributeId]
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [AppModel].[Attribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -221,7 +227,9 @@ Begin Try
 			Left Join [AppModel].[ModelAttribute] T
 			On	S.[AttributeId] = T.[AttributeId] And
 				@ModelId = T.[ModelId]
-	Where	T.[AttributeId] Is Null
+			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
+	Where	T.[AttributeId] Is Null And
+			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppModel].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

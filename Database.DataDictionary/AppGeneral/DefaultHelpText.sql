@@ -13,7 +13,9 @@
 			('00000000-0000-0010-1010-100000000000','Error: @Data contains other Catalogs then @CatalogId', '[Errors].[SqlException].[AppCatalog].[601010]','@Data passed contains Catalogs not specified by @CatalogId.',null),
 			('00000000-0000-0020-1010-100000000000','Error: @Data contains other Models then @ModelId', '[Errors].[SqlException].[AppModel].[601010]','@Data passed contains Models not specified by @ModelId.',null),
 			
+			('00000000-0000-0000-1020-100000000000','Error: Not Authorized', '[Errors].[SqlException].[601020]','The user is not Authorized to make changes',null),
 			('00000000-0000-0010-1020-100000000000','Error: Catalog Not Authorized', '[Errors].[SqlException].[AppCatalog].[601020]','The user is not Authorized to make changes to the Catalog',null),
+			('00000000-0000-0020-1020-100000000000','Error: Model Not Authorized', '[Errors].[SqlException].[AppModel].[601020]','The user is not Authorized to make changes to the Model',null),
 
 			-- Exceptions, procedure specific
 			('00000000-0000-0000-2010-100000000000','Error: Duplicate Catalog', '[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602010]','Duplicate CatalogId in @Data are not allowed.',null),
