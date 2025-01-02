@@ -1,4 +1,5 @@
-﻿Select	[DOMAIN_CATALOG] As[DatabaseName],
+﻿-- Remember: Resource files do not update until they are saved directly.
+Select	[DOMAIN_CATALOG] As[DatabaseName],
 		[DOMAIN_SCHEMA] As[SchemaName],
 		[DOMAIN_NAME] As[DomainName],
 		[DATA_TYPE] As[DataType],

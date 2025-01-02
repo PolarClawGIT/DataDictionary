@@ -35,14 +35,14 @@ Values	-- Patterns to match to
 Select	Top 1
 		@Message = Coalesce([HelpToolTip], [HelpSubject])
 From	[AppGeneral].[HelpSubject] H
-		Cross Apply [App_DataDictionary].[funcSplitNameSpace](H.[NameSpace]) N
+		Cross Apply [AppModel].[funcParseName](H.[NameSpace]) N
 		Inner Join @NameSpace M
-		On	N.[NameSpace] = M.[NameSpace]
+		On	N.[QualifiedName] = M.[NameSpace]
 Where	N.[IsBase] = 1
 Order By M.[RankIndex]
 
 If ERROR_NUMBER() is Not Null
--- This only works if the procedure is called within the Catch part of a Throw/Catch statemet.
+-- This only works if the procedure is called within the Catch part of a Throw/Catch statement.
 -- ERROR_NUMBER() < 50000 must be handled by the calling procedure. This will throw an error otherwise.
   Begin
 	Print FormatMessage ('*** Error Report- %s', ERROR_PROCEDURE())
@@ -60,6 +60,6 @@ If ERROR_NUMBER() is Not Null
 	Print FormatMessage ('    XAct_State - %i', XAct_State())
 	
 	Set	@Message = IsNull(@Message, ERROR_MESSAGE());
-	Throw @Number, @Message, @State;
+	If ERROR_NUMBER() < 50000  Throw @Number, @Message, @State;
   End
 GO

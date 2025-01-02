@@ -156,17 +156,22 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column,
                     new(CommandImageType.Default, Resources.Column),
                     new(CommandImageType.Export, Resources.ExportData)),
-                new NavigationEnumeration(ScopeType.DatabaseTableConstraint,    Resources.Icon_Key, Resources.Key) ,
+                new NavigationEnumeration(ScopeType.DatabaseConstraint,         Resources.Icon_Column, Resources.Column) ,
+                new NavigationEnumeration(ScopeType.DatabaseConstraintColumn,   Resources.Icon_Key, Resources.Key) ,
+                
                 new NavigationEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
-                new NavigationEnumeration(ScopeType.DatabaseDependency,         Resources.Icon_Dependancy, Resources.Dependancy) ,
-                new NavigationEnumeration(ScopeType.DatabaseProperty, Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
+                new NavigationEnumeration(ScopeType.DatabaseFunctionColumn,     Resources.Icon_Column, Resources.Column) ,
+
+                new NavigationEnumeration(ScopeType.DatabaseReference,          Resources.Icon_Dependancy, Resources.Dependancy) ,
+                new NavigationEnumeration(ScopeType.DatabaseProperty,           Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
 
                 new NavigationEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
+                
                 new NavigationEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute,
                     new(CommandImageType.Default, Resources.Attribute),
                     new(CommandImageType.Add, Resources.NewAttribute),
@@ -178,6 +183,8 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewSynonym)),
                 new NavigationEnumeration(ScopeType.ModelAttributeProperty,     Resources.Icon_Property, Resources.Property) ,
                 new NavigationEnumeration(ScopeType.ModelAttributeDefinition,   Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new NavigationEnumeration(ScopeType.ModelAttributeSubjectArea,  Resources.Icon_Diagram, Resources.Diagram) ,
+
                 new NavigationEnumeration(ScopeType.ModelEntity,                Resources.Icon_Entities,
                     new(CommandImageType.Default, Resources.Entity),
                     new(CommandImageType.Add, Resources.NewEntity),
@@ -190,6 +197,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
                 new NavigationEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
                 new NavigationEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new NavigationEnumeration(ScopeType.ModelEntitySubjectArea,     Resources.Icon_Diagram, Resources.Diagram) ,
 
                 new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,

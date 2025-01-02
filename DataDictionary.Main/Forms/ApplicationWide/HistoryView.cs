@@ -54,8 +54,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                 foreach (var item in modificationValues.GroupBy(g => g.Index))
                 {
-                    ITemporalValue lastValue = item.OrderBy(o => o.CreatedOn).Last();
-                    String modification = DbModificationEnumeration.Cast(lastValue.Modification).DisplayName;
+                    ITemporalValue lastValue = item.OrderBy(o => o.Temporal.CreatedOn).Last();
+                    String modification = DbModificationEnumeration.Cast(lastValue.Temporal.Modification).DisplayName;
                     ListViewItem newItem = new ListViewItem([lastValue.Title, modification]);
                     historyValuesData.Items.Add(newItem);
                     historyValues.Add(newItem, lastValue);
@@ -79,9 +79,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                 foreach (ITemporalValue item in GetHistoryDetail(selectedValue))
                 {
-                    String itemModification = DbModificationEnumeration.Cast(item.Modification).DisplayName;
+                    String itemModification = DbModificationEnumeration.Cast(item.Temporal.Modification).DisplayName;
                     String itemModifiedOn;
-                    if (item.CreatedOn is DateTime modifiedOnvalue)
+                    if (item.Temporal.CreatedOn is DateTime modifiedOnvalue)
                     { itemModifiedOn = modifiedOnvalue.ToString(); }
                     else { itemModifiedOn = String.Empty; }
 
@@ -118,18 +118,18 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             titleData.Text = value.Title;
 
-            isInsertedData.Checked = (value.IsInserted is true);
-            isUpdatedData.Checked = (value.IsUpdated is true);
-            isDeleteData.Checked = (value.IsDeleted is true);
-            isCurrentData.Checked = (value.IsCurrent is true);
-            createdByData.Text = value.CreatedBy ?? String.Empty;
-            removedByData.Text = value.RemovedBy ?? String.Empty;
+            isInsertedData.Checked = (value.Temporal.IsInserted is true);
+            isUpdatedData.Checked = (value.Temporal.IsUpdated is true);
+            isDeleteData.Checked = (value.Temporal.IsDeleted is true);
+            isCurrentData.Checked = (value.Temporal.IsCurrent is true);
+            createdByData.Text = value.Temporal.CreatedBy ?? String.Empty;
+            removedByData.Text = value.Temporal.RemovedBy ?? String.Empty;
 
-            if (value.CreatedOn is DateTime createdOn)
+            if (value.Temporal.CreatedOn is DateTime createdOn)
             { createdOnDate.Text = createdOn.ToString(); }
             else { createdOnDate.Text = String.Empty; }
 
-            if (value.RemovedOn is DateTime removedOn)
+            if (value.Temporal.RemovedOn is DateTime removedOn)
             { removedOnData.Text = removedOn.ToString(); }
             else { removedOnData.Text = String.Empty; }
         }

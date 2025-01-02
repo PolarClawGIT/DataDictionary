@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using System.Data;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -10,6 +9,12 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>
     public class CatalogMetaData : BindingTableRow, ICatalog
     {
+        /// <inheritdoc/>
+        public String? CatalogTitle { get { return GetValue(nameof(DatabaseName)) ?? String.Empty; } }
+
+        /// <inheritdoc/>
+        public String? CatalogDescription { get {return String.Empty; } }
+
         /// <inheritdoc/>
         public String ServerName { get { return GetValue(nameof(ServerName)) ?? String.Empty; } }
 
@@ -25,6 +30,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Owner of the Database
         /// </summary>
         public String Owner { get { return GetValue(nameof(Owner)) ?? String.Empty; } }
+
+        /// <inheritdoc/>
+        public DateTime? SourceDate { get; } = DateTime.Now;
 
         /// <summary>
         /// Constructor for Catalog Information Schema

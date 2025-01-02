@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.ModelData;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -71,7 +70,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Schema.GetProcedure;
+            command.CommandText = Schema.SetProcedure;
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Schema.SchemaId, schemaId);
 
@@ -110,7 +109,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<SchemaKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new SchemaKeyName(s)).
-                Union(schemas.Select(s => new SchemaKeyName(s)));
+                Union(schemas.Select(s => new SchemaKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

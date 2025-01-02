@@ -9,7 +9,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_ModelLibrary] PRIMARY KEY CLUSTERED ([ModelId] ASC, [LibraryId] ASC),
-	CONSTRAINT [FK_ModelLibraryModel] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
+	CONSTRAINT [FK_ModelLibraryModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
 	CONSTRAINT [FK_ModelLibrarySource] FOREIGN KEY ([LibraryId]) REFERENCES [App_DataDictionary].[LibrarySource] ([LibraryId]),
 
 )

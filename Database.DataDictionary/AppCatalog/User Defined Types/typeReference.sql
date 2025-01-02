@@ -5,6 +5,7 @@
 	[DatabaseName]            SysName Null,
 	[SchemaName]              SysName Null,
 	[ObjectName]              SysName Null,
+	[ObjectType]              [App_DataDictionary].[typeObjectType] Null,
 	[ReferencedDatabaseName]  SysName Null,
 	[ReferencedSchemaName]    SysName Null,
 	[ReferencedObjectName]    SysName Null,

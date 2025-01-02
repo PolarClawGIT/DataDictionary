@@ -71,4 +71,15 @@
         /// </summary>
         String? CollationName { get; }
     }
+
+    /// <summary>
+    /// Common Properties of a Database Domain (data Type) that have an OrdinalPosition (Columns, Parameters)
+    /// </summary>
+    public interface IOrdinalPosition
+    {
+        /// <summary>
+        /// The Position/Order of the Column
+        /// </summary>
+        Nullable<Int32> OrdinalPosition { get; }
+    }
 }

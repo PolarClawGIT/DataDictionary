@@ -26,6 +26,24 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
+	If @TableId is Not Null And Exists (
+		Select	1
+		From	@Data D
+				Inner Join [AppCatalog].[TableColumnHs] T
+				On	Coalesce(D.[CatalogId], @CatalogId) = T.[CatalogId] And
+					(D.[TableColumnId] = T.[TableColumnId] Or
+					 (D.[SchemaName] = T.[SchemaName] And
+					  D.[TableName] = T.[TableName] And
+					  D.[ColumnName] = T.[ColumnName]))
+		Where	IsNull(T.[TableId], @TableId) <> @TableId)
+	Throw 602030, '@Data contains other Tables', 3;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[TableColumnId]         UniqueIdentifier Not Null,
@@ -107,10 +125,11 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]
 	From	[AppCatalog].[ConstraintColumn] T
-			Inner Join [AppCatalog].[ConstraintColumnHS] H
+			Inner Join [AppCatalog].[ConstraintColumnHs] H
 			On	T.[ConstraintColumnId] = H.[ConstraintColumnId]
 			Left Join @Values S
 			On	H.[TableColumnId] = S.[TableColumnId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[TableId] is Null And
 			(@TableId is Not Null Or @CatalogId is Not Null) And
 			(@TableId is Null Or @TableId = H.[TableId]) And
@@ -123,6 +142,7 @@ Begin Try
 			On	T.[TableColumnId] = H.[TableColumnId]
 			Left Join @Values S
 			On	H.[TableColumnId] = S.[TableColumnId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[TableColumnId] is Null And
 			(@TableId is Not Null Or @CatalogId is Not Null) And
 			(@TableId is Null Or @TableId = H.[TableId]) And
@@ -217,6 +237,10 @@ Begin Try
 	From	[AppCatalog].[TableColumn] T
 			Inner Join [Delta] S
 			On	T.[TableColumnId] = S.[TableColumnId]
+	Where	T.[TableId] In (
+				Select	[TableId]
+				From	[AppCatalog].[TableHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[TableColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[TableColumn] (
@@ -277,7 +301,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[TableColumn] T
 			On	S.[TableColumnId] = T.[TableColumnId]
-	Where	T.[TableColumnId] is Null
+	Where	T.[TableColumnId] is Null And
+			S.[TableId] In (
+				Select	[TableId]
+				From	[AppCatalog].[TableHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[TableColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

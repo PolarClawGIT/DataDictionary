@@ -9,22 +9,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <inheritdoc/>
-    public interface ITemporalIndex : ITemporalKey
-    { }
-
-    /// <inheritdoc/>
-    public class TemporalIndex : TemporalKey, ITemporalIndex,
-        IKeyEquality<ITemporalIndex>, IKeyEquality<TemporalIndex>
+    public class TemporalIndex : TemporalKey
     {
-        /// <inheritdoc cref="TemporalKey(ITemporalKey)"/>
-        public TemporalIndex(ITemporalIndex source) : base(source) { }
+        /// <inheritdoc cref="TemporalKey(ITemporal)"/>
+        public TemporalIndex(ITemporal source) : base(source) { }
 
-        /// <inheritdoc/>
-        public Boolean Equals(ITemporalIndex? other)
-        { return other is ITemporalKey value && Equals(new TemporalKey(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(TemporalIndex? other)
-        { return other is ITemporalKey value && Equals(new TemporalKey(value)); }
+        /// <inheritdoc cref="TemporalKey(ITemporalItem)"/>
+        public TemporalIndex(ITemporalValue source) : base(source) { }
     }
 }

@@ -2,7 +2,7 @@
 namespace DataDictionary.Resource.Enumerations;
 
 /// <summary>
-/// Interface for DbRoutineType
+/// Interface for DbTableType
 /// </summary>
 public interface IDbTableType
 {

@@ -70,6 +70,15 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo.__RefactorLog, dbo.sysdiagrams, INFORMATION_SCHEMA.*, sys.*.
+        /// </summary>
+        internal static string IsSystem {
+            get {
+                return ResourceManager.GetString("IsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetTable].
         /// </summary>
         internal static string SetProcedure {
@@ -97,7 +106,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	I.[TABLE_CATALOG] As [DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	I.[TABLE_CATALOG] As [DatabaseName],
         ///		I.[TABLE_SCHEMA] As [SchemaName],
         ///		I.[TABLE_NAME] As [TableName],
         ///		Case
@@ -108,8 +118,7 @@ namespace DataDictionary.DataLayer.AppCatalog {
         ///			Else I.[TABLE_TYPE]
         ///			End As [TableType]
         ///From	[INFORMATION_SCHEMA].[TABLES] I
-        ///	Left Join [sys].[Tables] T
-        ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object [rest of string was truncated]&quot;;.
+        ///	Left  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

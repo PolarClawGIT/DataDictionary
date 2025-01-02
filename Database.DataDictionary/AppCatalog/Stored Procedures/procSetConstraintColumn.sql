@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[ConstraintColumnId]  UniqueIdentifier Not Null,
@@ -77,6 +83,7 @@ Begin Try
 			On	T.[ConstraintColumnId] = H.[ConstraintColumnId]
 			Left Join @Values S
 			On	H.[ConstraintColumnId] = S.[ConstraintColumnId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[ConstraintColumnId] is Null And
 			(@ConstraintId is Not Null Or @CatalogId is Not Null) And
 			(@ConstraintId is Null Or @ConstraintId = H.[ConstraintId]) And
@@ -111,6 +118,10 @@ Begin Try
 	From	[AppCatalog].[ConstraintColumn] T
 			Inner Join [Delta] S
 			On	T.[ConstraintColumnId] = S.[ConstraintColumnId]
+	Where	T.[ConstraintId] In (
+				Select	[ConstraintId]
+				From	[AppCatalog].[ConstraintHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[ConstraintColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[ConstraintColumn] (
@@ -131,7 +142,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[ConstraintColumn] T
 			On	S.[ConstraintColumnId] = T.[ConstraintColumnId]
-	Where	T.[ConstraintColumnId] is Null
+	Where	T.[ConstraintColumnId] is Null And
+			S.[ConstraintId] In (
+				Select	[ConstraintId]
+				From	[AppCatalog].[ConstraintHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[ConstraintColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

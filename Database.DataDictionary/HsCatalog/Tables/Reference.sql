@@ -4,6 +4,7 @@
 	[CatalogId]               UniqueIdentifier Not Null,
 	[SchemaName]              SysName Not Null,
 	[ObjectName]              SysName Not Null,
+	[ObjectType]		      [App_DataDictionary].[typeObjectType] Not Null,
 	[ReferencedDatabaseName]  SysName Null,
 	[ReferencedSchemaName]    SysName Null,
 	[ReferencedObjectName]    SysName Null,

@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.ModelData;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -105,7 +104,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<DomainKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new DomainKeyName(s)).
-                Union(domains.Select(s => new DomainKeyName(s)));
+                Union(domains.Select(s => new DomainKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

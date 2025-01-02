@@ -25,31 +25,30 @@ Begin Try
 		[PathScope]         [App_DataDictionary].[typeScopeName] NOT NULL,
 		Primary Key ([TemplateId], [NameSpaceId]))
 		
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+	Declare @NameSpace [AppModel].[typeNameSpace]
 
 	Insert Into @NameSpace
-	Select	Null As [NameSpaceId],
-			[PathName] As [NameSpace]
+	Select	[PathName] As [NameSpace]
 	From	@Data
 	Group By [PathName]
 
 	-- Need to create & assign the NameSpaceID's
-	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
+	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
 
 	;With [NameSpace] As (
 		Select	M.[NameSpaceId],
 				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] M
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+		From	[AppModel].[NameSpaceHierarchy] M
+				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
 			N.[NameSpaceId],
 			D.[PathScope]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[PathName]) C
+			Cross Apply [AppModel].[funcParseName](D.[PathName]) C
 			Inner Join [NameSpace] N
-			On	C.[NameSpace] = N.[NameSpace] And
+			On	C.[QualifiedName] = N.[NameSpace] And
 				C.[IsBase] = 1
 
 	-- Apply Changes

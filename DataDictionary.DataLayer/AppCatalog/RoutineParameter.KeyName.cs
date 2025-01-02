@@ -1,0 +1,108 @@
+﻿using DataDictionary.Resource;
+
+namespace DataDictionary.DataLayer.AppCatalog;
+
+/// <summary>
+/// Interface for the Database Routine Parameter Key
+/// </summary>
+public interface IRoutineParameterKeyName : IKey, IRoutineKeyName
+{
+    /// <summary>
+    /// Name of the Database Parameter
+    /// </summary>
+    String? ParameterName { get; }
+}
+
+/// <summary>
+/// Implementation for Database Routine Parameter Key
+/// </summary>
+public class RoutineParameterKeyName : RoutineKeyName, IRoutineParameterKeyName,
+    IKeyComparable<IRoutineParameterKeyName>, IKeyComparable<RoutineParameterKeyName>
+{
+    /// <inheritdoc/>
+    public String ParameterName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Constructor for a blank Database Routine Parameter Key
+    /// </summary>
+    protected internal RoutineParameterKeyName() : base() { }
+
+    /// <summary>
+    /// Constructor for Database Routine Parameter Key
+    /// </summary>
+    /// <param name="source"></param>
+    public RoutineParameterKeyName(IRoutineParameterKeyName source) : base(source)
+    {
+        if (source.ParameterName is string) { ParameterName = source.ParameterName; }
+        else { ParameterName = string.Empty; }
+    }
+
+    #region IEquatable, IComparable
+    /// <inheritdoc/>
+    public Boolean Equals(RoutineParameterKeyName? other)
+    {
+        return
+            other is IRoutineKeyName &&
+            new RoutineKeyName(this).Equals(other) &&
+            !string.IsNullOrEmpty(ParameterName) &&
+            !string.IsNullOrEmpty(other.ParameterName) &&
+            ParameterName.Equals(other.ParameterName, KeyExtension.CompareString);
+    }
+
+    /// <inheritdoc/>
+    public Boolean Equals(IRoutineParameterKeyName? other)
+    { return other is IRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
+
+    /// <inheritdoc/>
+    public override Boolean Equals(object? obj)
+    { return obj is IRoutineParameterKeyName value && Equals(new RoutineParameterKeyName(value)); }
+
+    /// <inheritdoc/>
+    public Int32 CompareTo(RoutineParameterKeyName? other)
+    {
+        if (other is null) { return 1; }
+        else if (new RoutineKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
+        else { return string.Compare(ParameterName, other.ParameterName, true); }
+    }
+
+    /// <inheritdoc/>
+    public Int32 CompareTo(IRoutineParameterKeyName? other)
+    { if (other is IRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
+
+    /// <inheritdoc/>
+    public override Int32 CompareTo(object? obj)
+    { if (obj is IRoutineParameterKeyName value) { return CompareTo(new RoutineParameterKeyName(value)); } else { return 1; } }
+
+    /// <inheritdoc/>
+    public static Boolean operator ==(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return left.Equals(right); }
+
+    /// <inheritdoc/>
+    public static Boolean operator !=(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return !left.Equals(right); }
+
+    /// <inheritdoc/>
+    public static Boolean operator <(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
+
+    /// <inheritdoc/>
+    public static Boolean operator <=(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
+
+    /// <inheritdoc/>
+    public static Boolean operator >(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
+
+    /// <inheritdoc/>
+    public static Boolean operator >=(RoutineParameterKeyName left, RoutineParameterKeyName right)
+    { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
+
+    /// <inheritdoc/>
+    public override Int32 GetHashCode()
+    { return HashCode.Combine(base.GetHashCode(), ParameterName.GetHashCode(KeyExtension.CompareString)); }
+    #endregion
+
+    /// <inheritdoc/>
+    public override String ToString()
+    { return DbObjectName.Format(DatabaseName, SchemaName, RoutineName, ParameterName); }
+}

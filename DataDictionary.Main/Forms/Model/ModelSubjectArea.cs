@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Model;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
@@ -42,8 +42,8 @@ namespace DataDictionary.Main.Forms.Model
                 //List<AttributeIndex> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
                 //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
 
-                //List<EntityIndex> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainEntityKey(s)).ToList();
-                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new DomainEntityKey(w)));
+                //List<EntityIndex> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
+                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new EntityKey(w)));
             }
         }
 

@@ -10,10 +10,10 @@ Select	D.[TemplateId],
 		N.[NameSpace] As [PathName],
 		D.[PathScope]
 From	[App_DataDictionary].[ScriptingPath] D
-		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
+		Cross Apply [AppModel].[funcGetNameSpaceById](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelScripting] M
 		On	D.[TemplateId] = M.[TemplateId]
-		Left Join [App_DataDictionary].[ModelNameSpace] S
+		Left Join [AppModel].[NameSpaceHierarchy] S
 		On	D.[NameSpaceId] = S.[NameSpaceId] And
 			M.[ModelId] = S.[ModelId]
 Where	(@ModelId is Null or (@ModelId = M.[ModelId] And @ModelId = S.[ModelId])) And -- NameSpace must also be for the Model Specified

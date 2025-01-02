@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
@@ -16,52 +16,52 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(IPropertyIndexObject source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IPropertyIndexObject source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(ITableColumnIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ITableColumnIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(ITableIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ITableIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(IRoutineIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IRoutineIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(IRoutineParameterIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IRoutineParameterIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(IConstraintIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IConstraintIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<PropertyItem> GetProperty(ISchemaIndexName source);
+        IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ISchemaIndexName source);
     }
 
-    class PropertyData : PropertyCollection<PropertyValue>, IPropertyData,
+    class PropertyData : DataLayer.AppCatalog.PropertyCollection<PropertyValue>, IPropertyData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
@@ -109,7 +109,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyItem> GetProperty(IPropertyIndexObject source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IPropertyIndexObject source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
@@ -120,42 +120,42 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<PropertyItem> GetProperty(ITableColumnIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ITableColumnIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetProperty(ITableIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ITableIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetProperty(IRoutineIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IRoutineIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetProperty(IRoutineParameterIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IRoutineParameterIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetProperty(IConstraintIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(IConstraintIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<PropertyItem> GetProperty(ISchemaIndexName source)
+        public IEnumerable<DataLayer.AppCatalog.PropertyItem> GetProperty(ISchemaIndexName source)
         {
             PropertyKeyObject key = new PropertyKeyObject(source);
             return this.Where(w => key.Equals(w));

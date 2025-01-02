@@ -1,6 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.BusinessLayer.Model;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Enumerations;
@@ -13,6 +11,7 @@ using System.Linq;
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -29,11 +28,10 @@ namespace DataDictionary.Main.Forms.Domain
 
             SetRowState(
                 bindingEntity,
-                bindingProperty, 
-                bindingDefinition, 
-                bindingAlias, 
-                bindingSubjectArea, 
-                bindingAttributeDetail, 
+                bindingProperty,
+                bindingDefinition,
+                bindingAlias,
+                bindingSubjectArea,
                 bindingAttribute);
             SetTitle(bindingEntity);
             SetCommand(ScopeType.ModelEntity, CommandImageType.Delete);
@@ -63,7 +61,6 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
-                bindingAttributeDetail.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => true);
                 bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.DomainModel.Entities.Attributes, w => key.Equals(w));
             }
         }
@@ -81,7 +78,7 @@ namespace DataDictionary.Main.Forms.Domain
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
 
-            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
+            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
@@ -90,15 +87,12 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.DataSource = bindingDefinition;
 
             // Attribute Handling
-            AttributeNameList.Load(attributeColumn);
-
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
 
-            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
-            attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
-            attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName)));
             attributeNameData.DataBindings.Add(new Binding(nameof(attributeNameData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
+            attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeAliasData.DataBindings.Add(new Binding(nameof(attributeAliasData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeAlias)));
             attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
             subjectArea.BindTo(bindingSubjectArea);
 
@@ -110,7 +104,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = bindingAlias;
 
             aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasName), false, DataSourceUpdateMode.OnPropertyChanged));
+            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasNameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
@@ -258,33 +252,10 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
-        { SetAttributeDetail(); }
-
-        private void SetAttributeDetail()
-        {
-            if (bindingAttribute.Current is EntityAttributeValue current)
-            {
-                AttributeIndex key = new AttributeIndex(current);
-
-                if (bindingAttributeDetail.DataSource is IList<AttributeValue> attributes
-                    && attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
-                { bindingAttributeDetail.Position = attributes.IndexOf(attribute); }
-            }
-
-        }
-
-        private void BindingAttributeDetail_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            AttributeValue newValue = new AttributeValue();
-
-            if (bindingAttribute.Current is EntityAttributeValue attribute)
-            { attribute.AttributeId = newValue.AttributeId; }
-
-            e.NewObject = newValue;
-        }
+        { }
 
         private void AttributeTitleData_Validated(object sender, EventArgs e)
-        { AttributeNameList.Load(attributeColumn); }
+        { }
 
         private void AttributeSelect_Click(object sender, EventArgs e)
         {
@@ -293,24 +264,32 @@ namespace DataDictionary.Main.Forms.Domain
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
-                    dialog.BuildData(attributes.Select(s => (DataIndex)new AttributeIndex(s)), GetDescription);
+
+                    dialog.BuildData();
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        IEnumerable<AttributeValue> selected = dialog.SelectedByValue<AttributeValue>();
+                        IEnumerable<IPathValue> selected = dialog.SelectedByValue<AttributeValue>().OfType<IPathValue>();
 
-                        foreach (EntityAttributeValue removeItem in attributes.Where(w => !selected.Select(s => new AttributeIndex(s)).Contains(new AttributeIndex(w))).ToList())
+                        var toAdd = selected.Where(w => !attributes.Any(a => a.AttributePath.Equals(w.Path))).ToList();
+                        var toRemove = attributes.Where(w => !selected.Any(a => w.AttributePath.Equals(a.Path))).ToList();
+
+                        foreach (EntityAttributeValue removeItem in toRemove)
                         { bindingAttribute.Remove(removeItem); }
 
-                        foreach (AttributeValue addItem in selected.Where(w => !attributes.Select(s => new AttributeIndex(s)).Contains(new AttributeIndex(w))).ToList())
-                        { // Add
+                        foreach (IPathValue addItem in toAdd)
+                        {
                             if (bindingAttribute.AddNew() is EntityAttributeValue newItem)
-                            { newItem.AttributeId = addItem.AttributeId; }
+                            {
+                                newItem.AttributeAlias = addItem.Title;
+                                newItem.AttributePath = addItem.Path;
+                            }
                         }
                     }
                 }
             }
 
+            // TODO: Hook Description into dialog.BuildData(???);
             String GetDescription(INamedScopeSourceValue value)
             {   // Needed a physical method rather then a Lambda expression.
                 // Properties don't get passed as expected.

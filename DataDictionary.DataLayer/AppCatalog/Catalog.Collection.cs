@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.ModelData;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -93,7 +92,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
             IEnumerable<CatalogKeyName> allKeys = this.
                 Select(s => new CatalogKeyName(s)).
-                Union(catalogs.Select(s => new CatalogKeyName(s)));
+                Union(catalogs.Select(s => new CatalogKeyName(s))).ToList();
 
             foreach (var key in allKeys) // Only one value is expected
             {

@@ -1,15 +1,15 @@
-﻿using DataDictionary.DataLayer.DomainData.Property;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 using System.Data;
 using DataDictionary.Resource.Enumerations;
+using DataDictionary.DataLayer.AppModel;
 
 namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template Node Attribute data.
     /// </summary>
-    public interface IScriptingAttributeItem : IScriptingAttributeKey, IScriptingNodeKey, IScriptingTemplateKey, IDomainPropertyKey, IScopeType
+    public interface IScriptingAttributeItem : IScriptingAttributeKey, IScriptingNodeKey, IScriptingTemplateKey, IPropertyKey, IScopeType
     {
         /// <summary>
         /// Name to appear for the XML Attribute

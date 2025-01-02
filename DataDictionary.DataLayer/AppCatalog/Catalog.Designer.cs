@@ -79,6 +79,33 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to tempdb, master, msdb, model.
+        /// </summary>
+        internal static string IsSystem {
+            get {
+                return ResourceManager.GetString("IsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to \LOCALDB.
+        /// </summary>
+        internal static string LocalDbContains {
+            get {
+                return ResourceManager.GetString("LocalDbContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (LocalDb)\MSSQLLocalDb.
+        /// </summary>
+        internal static string LocalDbName {
+            get {
+                return ResourceManager.GetString("LocalDbName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [AppCatalog].[procSetCatalog].
         /// </summary>
         internal static string SetProcedure {
@@ -97,7 +124,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	@@ServerName As [ServerName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	@@ServerName As [ServerName],
         ///		D.[name] As [DatabaseName],
         ///		D.[create_date] As [CreateDate],
         ///		P.[name] As [Owner]

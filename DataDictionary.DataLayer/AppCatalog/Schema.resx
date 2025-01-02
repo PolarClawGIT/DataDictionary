@@ -120,6 +120,9 @@
   <data name="GetProcedure" xml:space="preserve">
     <value>[AppCatalog].[procGetSchema]</value>
   </data>
+  <data name="IsSystem" xml:space="preserve">
+    <value>dbo, sys, db_owner, db_accessadmin, db_securityadmin, db_ddladmin, db_backupoperator, db_datareader, db_datawriter, db_denydatareader, db_denydatawriter, INFORMATION_SCHEMA, guest</value>
+  </data>
   <data name="SchemaId" xml:space="preserve">
     <value>@SchemaId</value>
     <comment>GUID</comment>

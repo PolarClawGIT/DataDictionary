@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.ModelData;
-using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -75,8 +73,9 @@ namespace DataDictionary.DataLayer.AppCatalog
             command.AddParameter(Catalog.CatalogId, catalogId);
             command.AddParameter(Table.TableId, tableId);
 
-            IEnumerable<TItem> data = this.Where(w => (catalogId is null || w.CatalogId == catalogId));
-            command.AddParameter(WriteData.Data, TableColumn.TSql_InformationSchema, data);
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId));
+            command.AddParameter(WriteData.Data, TableColumn.TableType, data);
             return command;
         }
 
@@ -121,7 +120,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             IEnumerable<TableColumnKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
                 Select(s => new TableColumnKeyName(s)).
-                Union(columns.Select(s => new TableColumnKeyName(s)));
+                Union(columns.Select(s => new TableColumnKeyName(s))).ToList();
 
             foreach (var key in allKeys)
             {

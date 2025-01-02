@@ -66,7 +66,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? CollationName { get { return GetValue(nameof(CollationName)); } }
 
         /// <summary>
-        /// Constructor for Catalog Schema Information Schema
+        /// Constructor for Catalog Domain Information Schema
         /// </summary>
         public DomainMetaData() : base() { }
 

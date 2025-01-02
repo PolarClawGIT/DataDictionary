@@ -1,4 +1,5 @@
-﻿With [Parameter] As (
+﻿-- Remember: Resource files do not update until they are saved directly.
+With [Parameter] As (
 	Select	Convert(SysName,Null) As [Level0Type],
 			Convert(SysName,Null) As [Level0Name],
 			Convert(SysName,Null) As [Level1Type],

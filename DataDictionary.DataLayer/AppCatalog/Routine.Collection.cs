@@ -1,0 +1,130 @@
+﻿using DataDictionary.DataLayer.AppModel;
+using System.Data;
+using Toolbox.BindingTable;
+using Toolbox.DbContext;
+
+namespace DataDictionary.DataLayer.AppCatalog
+{
+    /// <summary>
+    /// Generic Base class for Database Routine Dependency Items
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class RoutineCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IRoutineKey>,
+        IWriteData, IWriteData<ICatalogKey>, IWriteData<IRoutineKey>,
+        IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>,
+        ITemporalData<ICatalogKey>, ITemporalData<IRoutineKey>, IInfomationSchemaCollection<IRoutine>
+        where TItem : RoutineItem, IRoutineItem, new()
+    {
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IRoutineKey routineKey)
+        { return LoadCommand(connection, routineId: routineKey.RoutineId); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IRoutineKey routineKey)
+        { return LoadCommand(connection, routineId: routineKey.RoutineId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
+
+        Command LoadCommand(IConnection connection,
+            Guid? modelId = null, Guid? catalogId = null, Guid? routineId = null,
+            DateTime? asOfUtcDate = null, Boolean includeHistory = false)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = Routine.GetProcedure;
+            command.AddParameter(AppModel.Model.ModelId, modelId);
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Routine.RoutineId, routineId);
+            command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
+            command.AddParameter(Temporal.IncludeHistory, includeHistory);
+            return command;
+        }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection, catalogId: null); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, ICatalogKey catalogKey)
+        { return SaveCommand(connection, catalogId: catalogKey.CatalogId); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IRoutineKey routineKey)
+        { return SaveCommand(connection, routineId: routineKey.RoutineId); }
+
+        Command SaveCommand(IConnection connection, Guid? catalogId = null, Guid? routineId = null)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = Routine.SetProcedure;
+            command.AddParameter(Catalog.CatalogId, catalogId);
+            command.AddParameter(Routine.RoutineId, routineId);
+
+            IEnumerable<TItem> data = this.Where(w =>
+                (catalogId is null || w.CatalogId == catalogId) &&
+                (routineId is null || w.RoutineId == routineId));
+            command.AddParameter(WriteData.Data, Routine.TableType, data);
+            return command;
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ICatalogKey catalogItem)
+        {
+            CatalogKey key = new CatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ISchemaKeyName schemaItem)
+        {
+            SchemaKeyName key = new SchemaKeyName(schemaItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IRoutineKeyName routineItem)
+        {
+            RoutineKeyName key = new RoutineKeyName(routineItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Import(ICatalogKey catalogKey, IEnumerable<IRoutine> routines)
+        {
+            IEnumerable<RoutineKeyName> allKeys = this.Where(w => catalogKey.Equals(w)).
+                Select(s => new RoutineKeyName(s)).
+                Union(routines.Select(s => new RoutineKeyName(s))).ToList();
+
+            foreach (var key in allKeys)
+            {
+                TItem? oldValue = this.FirstOrDefault(w => key.Equals(w));
+                IRoutine? newValue = routines.FirstOrDefault(w => key.Equals(w));
+
+                if (oldValue is RoutineItem oldMatches && newValue is IRoutine newMatches)
+                { oldMatches.Update(newMatches); } // Update Old
+                else if (oldValue is RoutineItem newMissing)
+                { this.Remove(key); } // Delete Old
+                else if (newValue is IRoutine oldMissing)
+                { Add(RoutineItem.Create<TItem>(catalogKey, oldMissing)); }// Add New
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -69,62 +70,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         }
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
-
-        /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
-
-        /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Creates an Instance of a Help Document Item.
@@ -135,24 +81,24 @@ namespace DataDictionary.DataLayer.AppGeneral
 
             HelpSubject = "(new Help Subject)";
             NameSpace = String.Format("[NewSubject].[{0}]", HelpId);
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(HelpSubject), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(HelpToolTip), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(HelpText), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ]; 
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -179,7 +125,14 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected HelpSubjectItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

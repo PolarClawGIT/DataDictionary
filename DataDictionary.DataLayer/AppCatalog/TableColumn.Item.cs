@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +10,8 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey, IDbTableType
+    public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey,
+        IDbTableType, ITemporalItem
     { }
 
     /// <summary>
@@ -28,10 +29,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Guid? ColumnId
+        public Guid? TableColumnId
         {
-            get { return GetValue<Guid>(nameof(ColumnId)); }
-            private init { SetValue<Guid>(nameof(ColumnId), value); }
+            get { return GetValue<Guid>(nameof(TableColumnId)); }
+            private init { SetValue<Guid>(nameof(TableColumnId), value); }
         }
 
         /// <inheritdoc/>
@@ -56,7 +57,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? ITableColumn.TableType { get { return GetValue(nameof(ITableColumn.TableType)); } }
+        String? ITableType.TableType { get { return GetValue(nameof(ITableColumn.TableType)); } }
 
         /// <inheritdoc/>
         public DbTableType TableType
@@ -247,10 +248,13 @@ namespace DataDictionary.DataLayer.AppCatalog
             set { SetValue(nameof(GeneratedAlwayType), value); }
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
+
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(ColumnId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TableColumnId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
@@ -280,13 +284,23 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(IsComputed), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(ComputedDefinition), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(GeneratedAlwayType), typeof(string)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for the Database Table Column
         /// </summary>
         public TableColumnItem() : base()
-        { ColumnId = new Guid(); }
+        {
+            TableColumnId = Guid.NewGuid();
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, ITableColumn source)
@@ -304,7 +318,7 @@ namespace DataDictionary.DataLayer.AppCatalog
                 TableName = source.TableName,
                 TableType = tableType,
                 ColumnName = source.ColumnName,
-                
+
             };
 
             newValue.Update(source);
@@ -312,7 +326,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public virtual void Update (ITableColumn source)
+        public virtual void Update(ITableColumn source)
         {
             OrdinalPosition = source.OrdinalPosition;
             IsNullable = source.IsNullable;
@@ -351,7 +365,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected TableColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

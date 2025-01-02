@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -154,65 +155,10 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        public ITemporal Temporal { get; }
 
-        /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
-
-        /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<Boolean>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<Boolean>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<Boolean>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<Boolean>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
-
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DomainId), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
@@ -232,22 +178,23 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(CollationCatalog), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CollationSchema), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CollationName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for the Catalog DomainItem
         /// </summary>
         public DomainItem() : base()
-        { DomainId = Guid.NewGuid(); }
+        {
+            DomainId = Guid.NewGuid();
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, IDomain source)
@@ -295,7 +242,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected DomainItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

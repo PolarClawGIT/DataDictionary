@@ -28,10 +28,10 @@
 	[DomainSchema]           SysName Null,
 	[DomainName]             SysName Null,
 	[IsIdentity]             Bit Null,
-	[IsHidden]               Bit Null,
+	--[IsHidden]               Bit Null,
 	[IsComputed]             Bit Null,
 	[ComputedDefinition]     NVarChar(Max) Null,
-	[GeneratedAlwayType]     NVarChar(60) Null,
+	--[GeneratedAlwayType]     NVarChar(60) Null,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_RoutineColumn_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_RoutineColumn_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

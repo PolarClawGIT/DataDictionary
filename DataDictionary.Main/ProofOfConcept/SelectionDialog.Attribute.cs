@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

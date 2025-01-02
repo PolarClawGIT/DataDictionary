@@ -61,11 +61,38 @@ namespace DataDictionary.DataLayer.AppModel {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [AppModel].[procGetModel].
+        /// </summary>
+        internal static string GetProcedure {
+            get {
+                return ResourceManager.GetString("GetProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @ModelId.
         /// </summary>
         internal static string ModelId {
             get {
                 return ResourceManager.GetString("ModelId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [AppModel].[procSetModel].
+        /// </summary>
+        internal static string SetProcedure {
+            get {
+                return ResourceManager.GetString("SetProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [AppModel].[typeModel].
+        /// </summary>
+        internal static string TableType {
+            get {
+                return ResourceManager.GetString("TableType", resourceCulture);
             }
         }
     }

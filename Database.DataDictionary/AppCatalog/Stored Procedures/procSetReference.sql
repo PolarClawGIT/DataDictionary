@@ -18,12 +18,27 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If @CatalogId is Not Null And
+		Exists (
+			Select	1
+			From	@Data
+			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
+	Throw 601010, '@Data contains other Catalogs', 1;
+
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ReferenceId]				uniqueidentifier NOT NULL,
 		[CatalogId]				    uniqueidentifier NOT NULL,
 		[SchemaName]                SysName NULL,
 		[ObjectName]                SysName Null,
+		[ObjectType]				[App_DataDictionary].[typeObjectType] NULL,
 		[ReferencedDatabaseName]	SysName NULL,
 		[ReferencedSchemaName]		SysName NULL,
 		[ReferencedObjectName]		SysName NULL,
@@ -45,6 +60,7 @@ Begin Try
 				Coalesce(D.[CatalogId], H.[CatalogId], @CatalogId) As [CatalogId],
 				D.[SchemaName],
 				D.[ObjectName],
+				D.[ObjectType],
 				D.[ReferencedDatabaseName],
 				D.[ReferencedSchemaName],
 				D.[ReferencedObjectName],
@@ -82,6 +98,7 @@ Begin Try
 			On	T.[ReferenceId] = H.[ReferenceId]
 			Left Join @Values S
 			On	H.[ReferenceId] = S.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[ReferenceId] is Null And
 			(@ReferenceId is Not Null Or @CatalogId is Not Null) And
 			(@ReferenceId is Null Or @ReferenceId = H.[ReferenceId]) And
@@ -92,6 +109,7 @@ Begin Try
 		Select	[ReferenceId],
 				[SchemaName],
 				[ObjectName],
+				[ObjectType],
 				[ReferencedDatabaseName],
 				[ReferencedSchemaName],
 				[ReferencedObjectName],
@@ -110,6 +128,7 @@ Begin Try
 		Select	[ReferenceId],
 				[SchemaName],
 				[ObjectName],
+				[ObjectType],
 				[ReferencedDatabaseName],
 				[ReferencedSchemaName],
 				[ReferencedObjectName],
@@ -127,6 +146,7 @@ Begin Try
 	Update [AppCatalog].[Reference]
 	Set		[SchemaName] = S.[SchemaName],
 			[ObjectName] = S.[ObjectName],
+			[ObjectType] = S.[ObjectType],
 			[ReferencedDatabaseName] = S.[ReferencedDatabaseName],
 			[ReferencedSchemaName] = S.[ReferencedSchemaName],
 			[ReferencedObjectName] = S.[ReferencedObjectName],
@@ -143,6 +163,7 @@ Begin Try
 	From	[AppCatalog].[Reference] T
 			Inner Join [Delta] S
 			On	T.[ReferenceId] = S.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Print FormatMessage ('Update [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Reference] (
@@ -150,6 +171,7 @@ Begin Try
 			[CatalogId],
 			[SchemaName],
 			[ObjectName],
+			[ObjectType],
 			[ReferencedDatabaseName],
 			[ReferencedSchemaName],
 			[ReferencedObjectName],
@@ -167,6 +189,7 @@ Begin Try
 			S.[CatalogId],
 			S.[SchemaName],
 			S.[ObjectName],
+			S.[ObjectType],
 			S.[ReferencedDatabaseName],
 			S.[ReferencedSchemaName],
 			S.[ReferencedObjectName],
@@ -183,6 +206,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Reference] T
 			On	S.[ReferenceId] = T.[ReferenceId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](S.[CatalogId], 1) 
 	Where	T.[ReferenceId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Reference]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

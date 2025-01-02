@@ -30,6 +30,12 @@ Begin Try
 	If Exists (
 		Select	1
 		From	@Data
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull([CatalogId], @CatalogId), 0)) 
+	Throw 601020, 'Catalog Not Authorized', 2;
+
+	If Exists (
+		Select	1
+		From	@Data
 		Group By IsNull([CatalogId], @CatalogId)
 		Having Count(*) > 1)
 	Throw 602010, 'Catalog Duplicate', 11;
@@ -66,7 +72,7 @@ Begin Try
 	Select	S.[PrincipalId],
 			V.[CatalogId]
 	From	@Values V
-			Cross Apply [AppSecurity].[funcAuthorization](V.[CatalogId]) S
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](V.[CatalogId], 1) S
 	Where	S.[IsCatalogOwner] = 1 And
 			S.[IsCatalogAdmin] = 0 And
 			S.[HasOwner] = 0 And
@@ -81,6 +87,7 @@ Begin Try
 			On	T.[ReferenceId] = H.[ReferenceId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -92,17 +99,19 @@ Begin Try
 			On	T.[PropertyId] = H.[PropertyId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null  And
-			T.[CatalogId] = @CatalogId
+			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
 	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[Property] (Catalog): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppCatalog].[ConstraintColumn]
 	From	[AppCatalog].[ConstraintColumn] T
-			Inner Join [AppCatalog].[ConstraintColumnHS] H
+			Inner Join [AppCatalog].[ConstraintColumnHs] H
 			On	T.[ConstraintColumnId] = H.[ConstraintColumnId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -114,6 +123,7 @@ Begin Try
 			On	T.[ConstraintId] = H.[ConstraintId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -125,6 +135,7 @@ Begin Try
 			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -136,6 +147,7 @@ Begin Try
 			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -147,6 +159,7 @@ Begin Try
 			On	T.[RoutineId] = H.[RoutineId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -158,6 +171,7 @@ Begin Try
 			On	T.[TableColumnId] = H.[TableColumnId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -169,6 +183,7 @@ Begin Try
 			On	T.[TableId] = H.[TableId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -180,6 +195,7 @@ Begin Try
 			On	T.[DomainId] = H.[DomainId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -191,6 +207,7 @@ Begin Try
 			On	T.[SchemaId] = H.[SchemaId]
 			Left Join @Values S
 			On	H.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
 			H.[CatalogId] = @CatalogId
 	Set @RowCount = @@RowCount
@@ -200,8 +217,9 @@ Begin Try
 	From	[AppCatalog].[Catalog] T
 			Left Join @Values S
 			On	T.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Where	S.[CatalogId] is Null And
-			T.[CatalogId] = @CatalogId -- @CatalogId must be specfied
+			T.[CatalogId] = @CatalogId -- @CatalogId must be specified
 	Print FormatMessage ('Delete [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
@@ -229,6 +247,7 @@ Begin Try
 	From	[AppCatalog].[Catalog] T
 			Inner Join [Delta] S
 			On	T.[CatalogId] = S.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Print FormatMessage ('Update [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Catalog] (
@@ -247,6 +266,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Catalog] T
 			On	S.[CatalogId] = T.[CatalogId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](S.[CatalogId], 1) 
 	Where	T.[CatalogId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Catalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

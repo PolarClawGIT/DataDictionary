@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GetProcedure" xml:space="preserve">
+    <value>[AppModel].[procGetModel]</value>
+  </data>
   <data name="ModelId" xml:space="preserve">
     <value>@ModelId</value>
     <comment>GUID</comment>
+  </data>
+  <data name="SetProcedure" xml:space="preserve">
+    <value>[AppModel].[procSetModel]</value>
+  </data>
+  <data name="TableType" xml:space="preserve">
+    <value>[AppModel].[typeModel]</value>
   </data>
 </root>

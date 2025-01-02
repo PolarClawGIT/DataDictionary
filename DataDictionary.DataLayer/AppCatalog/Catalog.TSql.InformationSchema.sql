@@ -1,4 +1,5 @@
-﻿Select	@@ServerName As [ServerName],
+﻿-- Remember: Resource files do not update until they are saved directly.
+Select	@@ServerName As [ServerName],
 		D.[name] As [DatabaseName],
 		D.[create_date] As [CreateDate],
 		P.[name] As [Owner]

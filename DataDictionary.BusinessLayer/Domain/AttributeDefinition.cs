@@ -1,2 +1,0 @@
-﻿namespace DataDictionary.BusinessLayer.Domain
-{ }

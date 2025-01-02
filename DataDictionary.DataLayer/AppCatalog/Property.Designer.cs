@@ -97,14 +97,21 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to With [Parameter] As (
-        ///	Select Convert(SysName,Null) As [Level0Type], Convert(SysName,Null) As [Level0Name], Convert(SysName,Null) As [Level1Type], Convert(SysName,Null) As [Level1Name], Convert(SysName,Null) As [Level2Type], Convert(SysName,Null) As [Level2Name]
-        ///	Where 1=2
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///With [Parameter] As (
+        ///	Select	Convert(SysName,Null) As [Level0Type],
+        ///			Convert(SysName,Null) As [Level0Name],
+        ///			Convert(SysName,Null) As [Level1Type],
+        ///			Convert(SysName,Null) As [Level1Name],
+        ///			Convert(SysName,Null) As [Level2Type],
+        ///			Convert(SysName,Null) As [Level2Name]
+        ///	Where	1=2
         ///	Union
-        ///	Select &apos;SCHEMA&apos; As [Level0Type], [SCHEMA_NAME] As [Level0Name], Null As [Level1Type], Null As [Level1Name], Null As [Level2Type], Null As [Level2Name]
-        ///	From [INFORMATION_SCHEMA].[SCHEMATA]
-        ///	Union
-        ///	Select &apos;SCHEMA&apos; As [Level0 [rest of string was truncated]&quot;;.
+        ///	Select	&apos;SCHEMA&apos; As [Level0Type],
+        ///			[SCHEMA_NAME] As [Level0Name],
+        ///			Null As [Level1Type],
+        ///			Null As [Level1Name],
+        ///			Null As  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -60,7 +60,23 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+        public Boolean IsSystem
+        {
+            get
+            {
+                var list = Table.IsSystem.Split(',').Select(s =>
+                    {
+                        if (s.EndsWith(".*") && TableName is String)
+                        { s.Substring(0, s.Length - 1).Concat(TableName); }
+
+                        return s.Trim();
+                    });
+
+                return list.Any(w => w.Trim().Equals(
+                        String.Format("{0}.{1}", SchemaName, TableName),
+                        KeyExtension.CompareString));
+            }
+        }
 
         /// <inheritdoc/>
         public DbTableType TableType
@@ -77,89 +93,36 @@ namespace DataDictionary.DataLayer.AppCatalog
         }
 
         /// <inheritdoc/>
-        String? ITable.TableType { get { return GetValue(nameof(ITable.TableType)); } }
+        String? ITableType.TableType { get { return GetValue(nameof(ITable.TableType)); } }
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        public ITemporal Temporal { get; }
 
-        /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
-
-        /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
-
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(TableId), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(TableType), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for Database Column 
         /// </summary>
         public TableItem() : base()
-        { TableId = Guid.NewGuid(); }
+        {
+            TableId = Guid.NewGuid();
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <inheritdoc/>
         public static TResult Create<TResult>(ICatalogKey catalog, ITable source)
@@ -196,7 +159,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected TableItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

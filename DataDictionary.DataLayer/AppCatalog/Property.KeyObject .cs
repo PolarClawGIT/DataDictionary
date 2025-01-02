@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.Resource;
+﻿using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.AppCatalog
 {
@@ -75,7 +73,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyObject(IDbRoutineKeyName source) : base(source)
+        public PropertyKeyObject(IRoutineKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -85,7 +83,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyObject(IDbRoutineParameterKeyName source) : base(source)
+        public PropertyKeyObject(IRoutineParameterKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -96,7 +94,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public PropertyKeyObject(IDbConstraintKeyName source) : base(source)
+        public PropertyKeyObject(IConstraintKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.ConstraintName is String) { Level1Name = source.ConstraintName; }

@@ -1,12 +1,45 @@
-﻿CREATE FUNCTION [AppSecurity].[funcCatalogAuthorization](@CatalogId UniqueIdentifier, @OwnerOnly Bit)
-Returns Table With SchemaBinding
-As Return 
-Select	Convert(Bit, 1) As [IsAllowed]
-From	[AppCatalog].[Catalog] O
-		Cross Apply [AppSecurity].[funcAuthorization](O.[CatalogId]) F
-Where	O.[CatalogId] = @CatalogId And
-		([IsDbWriter] = 1 Or
-		 [IsCatalogAdmin] = 1 Or
-		 ([IsCatalogOwner] = 1 And [IsOwner] = 1) Or
-		 ([IsGrant] = 1 And [IsDeny] = 0 And IsNull(@OwnerOnly,0) = 0))
+﻿CREATE FUNCTION [AppSecurity].[funcCatalogAuthorization] (
+	@CatalogId UniqueIdentifier, 
+	@IsAuthorized Bit = 1
+		-- Null: return value only if [IsApplication] or [IsDbWriter] is true (for Security Policy).
+		-- 1: return values only if [IsAuthorized] is true
+		-- 0: return values only if [IsAuthorized] is false
+	)
+Returns Table With SchemaBinding as Return
+-- Row Level Security. Returns zero or one row.
+With [Authorization] As (
+	Select	[PrincipalLogin],
+			[PrincipalId],
+			[IsApplication],
+			[IsDbWriter],
+			[IsCatalogAdmin],
+			[IsCatalogOwner],
+			[HasOwner],
+			[IsOwner],
+			[IsGrant],
+			[IsDeny],
+			Convert(Bit, Case
+				When [IsApplication] = 0 And [IsDbWriter] = 1 Then 1
+				When [IsApplication] = 1 And [IsCatalogAdmin] = 1 Then 1
+				When [IsApplication] = 1 And [IsCatalogOwner] = 1 And [HasOwner] = 0 Then 1
+				When @CatalogId Not In (Select [CatalogId] From [AppCatalog].[Catalog]) Then 0
+				When [IsApplication] = 1 And [IsOwner] = 1 Then 1
+				When [IsApplication] = 1 And [IsGrant] = 1 And [IsDeny] = 0 Then 1
+				Else 0 End)
+				As [IsAuthorized]
+	From	[AppSecurity].[funcAuthorization](@CatalogId))
+Select	[PrincipalLogin],
+		[PrincipalId],
+		[IsApplication],
+		[IsDbWriter],
+		[IsCatalogAdmin],
+		[IsCatalogOwner],
+		[HasOwner],
+		[IsOwner],
+		[IsGrant],
+		[IsDeny],
+		[IsAuthorized]
+From	[Authorization]
+Where	(@CatalogId is Null And @IsAuthorized is Null And ([IsApplication] = 1 or [IsDbWriter] = 1)) Or
+		([IsAuthorized] = @IsAuthorized)
 GO

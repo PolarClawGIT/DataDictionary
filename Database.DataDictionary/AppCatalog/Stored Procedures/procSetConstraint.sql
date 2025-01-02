@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ConstraintId]		UniqueIdentifier Not Null,
@@ -63,10 +69,11 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]
 	From	[AppCatalog].[ConstraintColumn] T
-			Inner Join [AppCatalog].[ConstraintColumnHS] H
+			Inner Join [AppCatalog].[ConstraintColumnHs] H
 			On	T.[ConstraintColumnId] = H.[ConstraintColumnId]
 			Left Join @Values S
 			On	H.[ConstraintId] = S.[ConstraintId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[ConstraintId] is Null And
 			(@ConstraintId is Not Null Or @CatalogId is Not Null) And
 			(@ConstraintId is Null Or @ConstraintId = H.[ConstraintId]) And
@@ -79,6 +86,7 @@ Begin Try
 			On	T.[ConstraintId] = H.[ConstraintId]
 			Left Join @Values S
 			On	H.[ConstraintId] = S.[ConstraintId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[ConstraintId] is Null And
 			(@ConstraintId is Not Null Or @CatalogId is Not Null) And
 			(@ConstraintId is Null Or @ConstraintId = H.[ConstraintId]) And
@@ -107,6 +115,10 @@ Begin Try
 	From	[AppCatalog].[Constraint] T
 			Inner Join [Delta] S
 			On	T.[ConstraintId] = S.[ConstraintId]
+	Where	T.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[Constraint]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Constraint] (
@@ -123,7 +135,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Constraint] T
 			On	S.[ConstraintId] = T.[ConstraintId]
-	Where	T.[ConstraintId] is Null
+	Where	T.[ConstraintId] is Null And
+			S.[SchemaId] In (
+				Select	[SchemaId]
+				From	[AppCatalog].[SchemaHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[Constraint]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

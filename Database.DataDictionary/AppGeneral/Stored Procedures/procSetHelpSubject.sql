@@ -18,6 +18,18 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	If Exists (
+		Select	1
+		From	@Data
+				Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](IsNull([HelpId], @HelpId), 0)) 
+	Throw 601020, 'Help Subject Not Authorized', 2;
+
+	If @HelpId is Not Null And Exists (
+		Select	1
+		From	@Data D
+		Where	IsNull([HelpId], @HelpId) <> @HelpId)
+	Throw 602030, '@Data contains other Help Subjects', 3;
+
 	-- Clean the Data
 	Declare @Values Table (
 			[HelpId] UniqueIdentifier Not Null,
@@ -42,11 +54,12 @@ Begin Try
 					Then FormatMessage('{\rtf1\ansi %s}', Trim(D.[HelpToolTip]))
 				Else Null
 				End As [HelpText],
-			NullIf(Trim(S.[NameSpace]),'') As [NameSpace]
+			NullIf(Trim(S.[QualifiedName]),'') As [NameSpace]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace] (D.[NameSpace]) S
+			Outer Apply [AppModel].[funcParseName] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
+	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Deal with Ownership, Sets up Row Level Security
 	Insert Into [AppSecurity].[SecurableOwner] (
@@ -55,11 +68,10 @@ Begin Try
 	Select	S.[PrincipalId],
 			V.[HelpId]
 	From	@Values V
-			Cross Apply [AppSecurity].[funcAuthorization](V.[HelpId]) S
+			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](V.[HelpId], 1) S
 	Where	S.[IsHelpOwner] = 1 And
 			S.[IsHelpAdmin] = 0 And
-			S.[HasOwner] = 0 And
-			S.[PrincipalId] is not null
+			S.[HasOwner] = 0
 	Print FormatMessage ('Insert [AppSecurity].[SecurityOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
@@ -70,12 +82,10 @@ Begin Try
 	From	[AppGeneral].[HelpSubject] T
 			Left Join @Values S
 			On	T.[HelpId] = S.[HelpId]
+			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](T.[HelpId], 1)
 	Where	S.[HelpId] is Null And
-			T.[HelpId] In (
-				Select	[HelpId]
-				From	[AppGeneral].[HelpSubject]
-				Where	(@HelpId is Null Or @HelpId = [HelpId]))
-	Print FormatMessage ('Delete [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			T.[HelpId] = @HelpId -- @HelpId must be specified
+	Print FormatMessage ('Delete [AppGeneral].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[HelpId],
@@ -99,7 +109,8 @@ Begin Try
 	From	[AppGeneral].[HelpSubject] T
 			Inner Join [Delta] S
 			On	T.[HelpId] = S.[HelpId]
-	Print FormatMessage ('Update [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](T.[HelpId], 1)
+	Print FormatMessage ('Update [AppGeneral].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppGeneral].[HelpSubject] (
 			[HelpId],
@@ -115,8 +126,9 @@ Begin Try
 	From	@Values S
 			Left Join [AppGeneral].[HelpSubject] T
 			On	S.[HelpId] = T.[HelpId]
+			Cross Apply [AppSecurity].[funcHelpSubjectAuthorization](S.[HelpId], 1)
 	Where	T.[HelpId] is Null
-	Print FormatMessage ('Insert [App_General].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppGeneral].[HelpSubject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

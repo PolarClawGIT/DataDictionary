@@ -27,6 +27,12 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull(D.[CatalogId], @CatalogId), 0))
+	Throw 601020, 'Catalog Not Authorized', 2;
+
 	-- Clean the Data
 	Declare @Values Table (
 		[RoutineParameterId]     UniqueIdentifier Not Null,
@@ -97,6 +103,7 @@ Begin Try
 			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
 			On	H.[RoutineParameterId] = S.[RoutineParameterId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1)
 	Where	S.[RoutineParameterId] is Null And
 			(@RoutineId is Not Null Or @CatalogId is Not Null) And
 			(@RoutineId is Null Or @RoutineId = H.[RoutineId]) And
@@ -170,6 +177,10 @@ Begin Try
 	From	[AppCatalog].[RoutineParameter] T
 			Inner Join [Delta] S
 			On	T.[RoutineParameterId] = S.[RoutineParameterId]
+	Where	T.[RoutineId] In (
+				Select	[RoutineId]
+				From	[AppCatalog].[RoutineHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Update [AppCatalog].[RoutineParameter]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[RoutineParameter] (
@@ -216,7 +227,11 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[RoutineParameter] T
 			On	S.[RoutineParameterId] = T.[RoutineParameterId]
-	Where	T.[RoutineParameterId] is Null
+	Where	T.[RoutineParameterId] is Null And
+			S.[RoutineId] In (
+				Select	[RoutineId]
+				From	[AppCatalog].[RoutineHs]
+						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
 	Print FormatMessage ('Insert [AppCatalog].[RoutineParameter]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

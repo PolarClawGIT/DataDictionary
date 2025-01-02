@@ -1,8 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.Library;
-using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Controls;

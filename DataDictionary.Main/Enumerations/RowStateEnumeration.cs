@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Enumerations
                 { result = rowState.RowState().AsBindingRowState(); }
 
                 if (item.Current is ITemporalValue temporal
-                    && temporal.IsCurrent == false
+                    && temporal.Temporal.IsCurrent == false
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { return BindingRowState.Historic; }
             }
@@ -92,24 +92,7 @@ namespace DataDictionary.Main.Enumerations
                 else { stateValue = String.Empty; }
 
                 if (item.Current is ITemporalValue temporal)
-                {
-                    temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(temporal.Modification).DisplayName);
-
-                    if (temporal.IsCurrent == false)
-                    { temporalValue = String.Format("{0}/Historic", temporalValue); }
-
-                    if (temporal.CreatedOn is DateTime createdOn && temporal.IsDeleted == false)
-                    { temporalValue = String.Format("{0} on {1}", temporalValue, createdOn); }
-
-                    if (temporal.CreatedOn is DateTime removedOn && temporal.IsDeleted == true)
-                    { temporalValue = String.Format("{0} on {1}", temporalValue, removedOn); }
-
-                    if (temporal.CreatedBy is String createdBy && temporal.IsDeleted == false)
-                    { temporalValue = String.Format("{0} by {1}", temporalValue, createdBy); }
-
-                    if (temporal.CreatedBy is String removedBy && temporal.IsDeleted == true)
-                    { temporalValue = String.Format("{0} by {1}", temporalValue, removedBy); }
-                }
+                { temporalValue = temporal.Temporal.ToString() ?? String.Empty; }
                 else
                 { temporalValue = String.Empty; }
 

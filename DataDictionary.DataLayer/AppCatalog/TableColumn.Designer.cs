@@ -88,14 +88,14 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	I.[TABLE_CATALOG] As [DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	I.[TABLE_CATALOG] As [DatabaseName],
         ///		I.[TABLE_SCHEMA] As [SchemaName],
         ///		I.[TABLE_NAME] As [TableName],
         ///		Case
         ///		When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then &apos;Temporal Table&apos;
         ///		When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then &apos;History Table&apos;
-        ///		When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Table&apos;
-        ///		When T.[TABLE_TYPE] In (&apos;VIEW&apos;) Th [rest of string was truncated]&quot;;.
+        ///		When T.[TABLE_ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TSql_InformationSchema {
             get {

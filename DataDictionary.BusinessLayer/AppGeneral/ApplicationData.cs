@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -19,12 +20,12 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <summary>
         /// Wrapper for Application (Common) Properties.
         /// </summary>
-        Domain.IPropertyData Properties { get; }
+        IPropertyData Properties { get; }
 
         /// <summary>
         /// Wrapper for Application (Common) Definitions.
         /// </summary>
-        Domain.IDefinitionData Definitions { get; }
+        IDefinitionData Definitions { get; }
 
         /// <summary>
         /// Loads/Import the Application Data from file.
@@ -52,12 +53,12 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         private readonly HelpSubjectData helpSubjectValues = new HelpSubjectData();
 
         /// <inheritdoc/>
-        public Domain.IPropertyData Properties { get { return propertyValues; } }
-        private readonly Domain.PropertyData propertyValues = new Domain.PropertyData();
+        public IPropertyData Properties { get { return propertyValues; } }
+        private readonly PropertyData propertyValues = new PropertyData();
 
         /// <inheritdoc/>
-        public Domain.IDefinitionData Definitions { get { return definitionValues; } }
-        private readonly Domain.DefinitionData definitionValues = new Domain.DefinitionData();
+        public IDefinitionData Definitions { get { return definitionValues; } }
+        private readonly DefinitionData definitionValues = new DefinitionData();
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)

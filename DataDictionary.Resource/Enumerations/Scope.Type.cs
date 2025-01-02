@@ -69,6 +69,11 @@
         ModelAttributeDefinition,
 
         /// <summary>
+        /// Subject Areas of the Attribute
+        /// </summary>
+        ModelAttributeSubjectArea,
+
+        /// <summary>
         /// Application Model Entity
         /// </summary>
         ModelEntity,
@@ -87,6 +92,11 @@
         /// Application Model Entity Definition
         /// </summary>
         ModelEntityDefinition,
+
+        /// <summary>
+        /// Subject Areas of the Entity
+        /// </summary>
+        ModelEntitySubjectArea,
 
         /// <summary>
         /// Application Model Attribute of an Entity
@@ -200,7 +210,12 @@
         /// <summary>
         /// SQL Table Constraint
         /// </summary>
-        DatabaseTableConstraint,
+        DatabaseConstraint,
+
+        /// <summary>
+        /// SQL Table Constraint Column
+        /// </summary>
+        DatabaseConstraintColumn,
 
         //DatabaseSchemaTableIndex,
 
@@ -215,9 +230,14 @@
         DatabaseFunctionParameter,
 
         /// <summary>
-        /// SQL Dependency between Objects
+        /// SQL Table Value Function Column
         /// </summary>
-        DatabaseDependency,
+        DatabaseFunctionColumn,
+
+        /// <summary>
+        /// SQL Reference between Objects
+        /// </summary>
+        DatabaseReference,
 
         /// <summary>
         /// SQL Database Extended Properties

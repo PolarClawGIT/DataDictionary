@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -55,100 +55,37 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get
             {
-                return SchemaName is "sys" or
-                    "db_owner" or
-                    "db_accessadmin" or
-                    "db_securityadmin" or
-                    "db_ddladmin" or
-                    "db_backupoperator" or
-                    "db_datareader" or
-                    "db_datawriter" or
-                    "db_denydatareader" or
-                    "db_denydatawriter" or
-                    "INFORMATION_SCHEMA" or
-                    "guest";
+                return Schema.IsSystem
+                    .Split(',')
+                    .Any(w => w.Trim().Equals(SchemaName, KeyExtension.CompareString));
             }
         }
 
         /// <inheritdoc/>
-        public String? CreatedBy { get { return GetValue(nameof(CreatedBy)); } }
+        public ITemporal Temporal { get; }
 
-        /// <inheritdoc/>
-        public DateTime? CreatedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(CreatedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public String? RemovedBy { get { return GetValue(nameof(RemovedBy)); } }
-
-        /// <inheritdoc/>
-        public DateTime? RemovedOn
-        {
-            get
-            {
-                DateTime? value = GetValue<DateTime>(nameof(RemovedOn));
-                if (value is DateTime baseDate)
-                { return TimeZoneInfo.ConvertTimeFromUtc(baseDate, TimeZoneInfo.Local); }
-                else { return null; }
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean? IsInserted
-        { get { return GetValue<bool>(nameof(IsInserted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsUpdated
-        { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsDeleted
-        { get { return GetValue<bool>(nameof(IsDeleted), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public Boolean? IsCurrent
-        { get { return GetValue<bool>(nameof(IsCurrent), BindingItemParsers.BooleanTryParse); } }
-
-        /// <inheritdoc/>
-        public DbModificationType Modification
-        {
-            get
-            {
-                if (IsDeleted == true) { return DbModificationType.Deleted; }
-                else if (IsInserted == true) { return DbModificationType.Inserted; }
-                else if (IsUpdated == true) { return DbModificationType.Updated; }
-                else { return DbModificationType.Null; }
-            }
-        }
-
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaName), typeof(String)){ AllowDBNull = false},
-            new DataColumn(nameof(CreatedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CreatedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedBy), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RemovedOn), typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn(nameof(IsInserted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsUpdated), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDeleted), typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCurrent), typeof(Boolean)){ AllowDBNull = true},
-        };
+            .. TemporalItem.columnDefinitions,
+        ];
 
         /// <summary>
         /// Constructor for the SchemaItem
         /// </summary>
         public SchemaItem() : base()
-        { SchemaId = Guid.NewGuid(); }
+        { SchemaId = Guid.NewGuid();
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <summary>
         /// Constructor for the SchemaItem
@@ -186,7 +123,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected SchemaItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

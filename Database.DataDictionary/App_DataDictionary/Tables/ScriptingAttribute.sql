@@ -12,7 +12,7 @@
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingNodeAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),
 	CONSTRAINT [FK_ScriptingNodeAttribute] FOREIGN KEY ([NodeId]) REFERENCES [App_DataDictionary].[ScriptingNode] ([NodeId]),
-	CONSTRAINT [FK_ScriptingNodeAttributeProperty] FOREIGN KEY ([PropertyId]) REFERENCES [App_DataDictionary].[DomainProperty] ([PropertyId]),
+	CONSTRAINT [FK_ScriptingNodeAttributeProperty] FOREIGN KEY ([PropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_ScriptingNodeAttribute]

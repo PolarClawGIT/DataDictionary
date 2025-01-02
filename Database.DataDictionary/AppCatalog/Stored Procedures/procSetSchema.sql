@@ -28,6 +28,22 @@ Begin Try
 			Where	IsNull([CatalogId], @CatalogId) <> @CatalogId)
 	Throw 601010, '@Data contains other Catalogs', 1;
 
+	If Exists (
+		Select	1
+		From	@Data
+				Cross Apply [AppSecurity].[funcCatalogAuthorization](IsNull([CatalogId], @CatalogId), 0)) 
+	Throw 601020, 'Catalog Not Authorized', 2;
+
+	If @SchemaId is Not Null And Exists (
+		Select	1
+		From	@Data D
+				Inner Join [AppCatalog].[SchemaHs] T
+				On	Coalesce(D.[CatalogId], @CatalogId) = T.[CatalogId] And
+				(D.[SchemaId] = T.[SchemaId] Or 
+				 D.[SchemaName] = T.[SchemaName])
+		Where	IsNull(T.[SchemaId], @SchemaId) <> @SchemaId)
+	Throw 602030, '@Data contains other Schemta', 3;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[SchemaId]   UniqueIdentifier Not Null,
@@ -55,10 +71,11 @@ Begin Try
 	-- Apply Changes
 	Delete From [AppCatalog].[ConstraintColumn]
 	From	[AppCatalog].[ConstraintColumn] T
-			Inner Join [AppCatalog].[ConstraintColumnHS] H
+			Inner Join [AppCatalog].[ConstraintColumnHs] H
 			On	T.[ConstraintColumnId] = H.[ConstraintColumnId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -72,6 +89,7 @@ Begin Try
 			On	T.[ConstraintId] = H.[ConstraintId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -85,6 +103,7 @@ Begin Try
 			On	T.[RoutineParameterId] = H.[RoutineParameterId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -98,6 +117,7 @@ Begin Try
 			On	T.[RoutineColumnId] = H.[RoutineColumnId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -111,6 +131,7 @@ Begin Try
 			On	T.[RoutineId] = H.[RoutineId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -124,6 +145,7 @@ Begin Try
 			On	T.[TableColumnId] = H.[TableColumnId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -137,6 +159,7 @@ Begin Try
 			On	T.[TableId] = H.[TableId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -150,6 +173,7 @@ Begin Try
 			On	T.[DomainId] = H.[DomainId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -163,6 +187,7 @@ Begin Try
 			On	T.[SchemaId] = H.[SchemaId]
 			Left Join @Values S
 			On	H.[SchemaId] = S.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](H.[CatalogId], 1) 
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Not Null Or @CatalogId is Not Null) And
 			(@SchemaId is Null Or @SchemaId = H.[SchemaId]) And
@@ -180,11 +205,11 @@ Begin Try
 				[SchemaName]
 		From	[AppCatalog].[Schema])
 	Update [AppCatalog].[Schema]
-	Set		[CatalogId] = S.[CatalogId],
-			[SchemaName] = S.[SchemaName]
+	Set		[SchemaName] = S.[SchemaName]
 	From	[Delta] S
 			Inner Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](T.[CatalogId], 1) 
 	Print FormatMessage ('Update [AppCatalog].[Schema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Schema] (
@@ -197,6 +222,7 @@ Begin Try
 	From	@Values S
 			Left Join [AppCatalog].[Schema] T
 			On	S.[SchemaId] = T.[SchemaId]
+			Cross Apply [AppSecurity].[funcCatalogAuthorization](S.[CatalogId], 1) 
 	Where	T.[SchemaId] is Null
 	Print FormatMessage ('Insert [AppCatalog].[Schema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

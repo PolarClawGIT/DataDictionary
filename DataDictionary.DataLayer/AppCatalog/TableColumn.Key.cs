@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <summary>
         /// Application ID for the Table Column.
         /// </summary>
-        Guid? ColumnId { get; }
+        Guid? TableColumnId { get; }
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IKeyEquality<ITableColumnKey>, IKeyEquality<TableColumnKey>
     {
         /// <inheritdoc/>
-        public Guid? ColumnId { get; init; } = Guid.Empty;
+        public Guid? TableColumnId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the TableColumn Key.
@@ -28,14 +28,14 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <param name="source"></param>
         public TableColumnKey(ITableColumnKey source) : base()
         {
-            if (source.ColumnId is Guid value) { ColumnId = value; }
-            else { ColumnId = Guid.Empty; }
+            if (source.TableColumnId is Guid value) { TableColumnId = value; }
+            else { TableColumnId = Guid.Empty; }
         }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TableColumnKey? other)
-        { return other is TableColumnKey && EqualityComparer<Guid?>.Default.Equals(ColumnId, other.ColumnId); }
+        { return other is TableColumnKey && EqualityComparer<Guid?>.Default.Equals(TableColumnId, other.TableColumnId); }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(ITableColumnKey? other)
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(ColumnId); }
+        { return HashCode.Combine(TableColumnId); }
         #endregion
     }
 }

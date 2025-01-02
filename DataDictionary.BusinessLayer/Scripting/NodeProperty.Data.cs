@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
 using System.Collections.ObjectModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -34,9 +35,9 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public void Load()
         {
-            Load(Domain.AttributeValue.GetXColumns());
-            Load(Domain.AttributePropertyValue.GetXColumns());
-            Load(Domain.AttributeAliasValue.GetXColumns());
+            Load(AttributeValue.GetXColumns());
+            Load(AttributePropertyValue.GetXColumns());
+            Load(AttributeAliasValue.GetXColumns());
         }
 
         /// <summary>

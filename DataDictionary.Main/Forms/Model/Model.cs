@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Model;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using Toolbox.BindingTable;

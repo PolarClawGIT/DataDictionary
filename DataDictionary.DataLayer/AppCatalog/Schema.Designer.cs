@@ -70,6 +70,15 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to dbo, sys, db_owner, db_accessadmin, db_securityadmin, db_ddladmin, db_backupoperator, db_datareader, db_datawriter, db_denydatareader, db_denydatawriter, INFORMATION_SCHEMA, guest.
+        /// </summary>
+        internal static string IsSystem {
+            get {
+                return ResourceManager.GetString("IsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @SchemaId.
         /// </summary>
         internal static string SchemaId {
@@ -97,7 +106,8 @@ namespace DataDictionary.DataLayer.AppCatalog {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CATALOG_NAME] As [DatabaseName],
+        ///   Looks up a localized string similar to -- Remember: Resource files do not update until they are saved directly.
+        ///Select	[CATALOG_NAME] As [DatabaseName],
         ///		[SCHEMA_NAME] As [SchemaName]
         ///From	[INFORMATION_SCHEMA].[SCHEMATA].
         /// </summary>

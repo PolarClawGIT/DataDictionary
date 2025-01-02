@@ -58,7 +58,8 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingSource.Current is ICatalogValue current)
             {
-                var newModel = new DatabaseImport(BusinessData.DomainModel.Properties);
+                throw new NotImplementedException(); // TODO needs to be fixed.
+                var newModel = new DatabaseImport();
                 List<WorkItem> work = new List<WorkItem>();
                 work.AddRange(newModel.Load(BusinessData.DatabaseModel, current));
                 work.AddRange(newModel.Build(BusinessData.DomainModel));
