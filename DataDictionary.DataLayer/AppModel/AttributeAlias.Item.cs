@@ -48,8 +48,8 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(AliasNameSpace), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AliasScope), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasNameSpace), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.AppModel
 
             IEnumerable<TItem> data = this.Where(w =>
                 (definitionId is null || w.DefinitionId == definitionId));
-            command.AddParameter(WriteData.Data, Property.TableType, data);
+            command.AddParameter(WriteData.Data, Definition.TableType, data);
             return command;
         }
 
