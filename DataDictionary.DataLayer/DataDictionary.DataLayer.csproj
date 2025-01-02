@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
+    <Copyright>© 2025 William Howard, All Rights Reserved</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Authors>William Howard</Authors>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
