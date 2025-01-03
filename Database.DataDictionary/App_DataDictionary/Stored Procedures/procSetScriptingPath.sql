@@ -22,7 +22,7 @@ Begin Try
 	Declare @Values Table (
 		[TemplateId]        UniqueIdentifier NOT NULL,
 		[NameSpaceId]       UniqueIdentifier NOT NULL,
-		[PathScope]         [App_DataDictionary].[typeScopeName] NOT NULL,
+		[PathScope]         [AppModel].[typeScopeName] NOT NULL,
 		Primary Key ([TemplateId], [NameSpaceId]))
 		
 	Declare @NameSpace [AppModel].[typeNameSpace]

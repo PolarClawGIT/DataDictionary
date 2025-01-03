@@ -1,10 +1,7 @@
 ﻿CREATE SECURITY POLICY [AppSecurity].[policyModel]
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[Model],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlow],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowDefinition],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowElement],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowProperty],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DefinitionEnumeration],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[SubjectArea],
+
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelAttribute],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelCatalog],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelDataFlow],
@@ -13,18 +10,28 @@
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelProcess],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelProperty],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelRelationship],
+
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DefinitionEnumeration],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[PropertyEnumeration],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[AliasHierarchy],
+	
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[Process],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessAlias],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessDataFlow],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessDefinition],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessProperty],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessSubjectArea],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[PropertyEnumeration],
+
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[Relationship],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipAlias],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipAttribute],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipProperty],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipSubjectArea],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[SubjectArea]
+
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlow],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowDefinition],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowElement],
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowProperty]
+
 	WITH (STATE = ON, SCHEMABINDING = ON)
 GO

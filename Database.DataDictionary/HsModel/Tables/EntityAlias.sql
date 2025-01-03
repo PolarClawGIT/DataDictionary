@@ -2,7 +2,7 @@
 (
 	[AliasId]           UniqueIdentifier Not Null,
 	[EntityId]          UniqueIdentifier NOT Null,
-	[AliasScope]        [App_DataDictionary].[typeScopeName] NOT NULL,
+	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,
 	[AliasNameSpace]    [App_DataDictionary].[typeNameSpacePath] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,

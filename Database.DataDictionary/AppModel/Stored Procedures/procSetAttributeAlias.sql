@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[AliasId]			UniqueIdentifier Not Null,
 		[AttributeId]		UniqueIdentifier Not Null,
-		[AliasScope]		[App_DataDictionary].[typeScopeName] NOT NULL,
+		[AliasScope]		[AppModel].[typeScopeName] NOT NULL,
 		[AliasNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
 		--Unique ([AliasId], [AliasNameSpace]) -- Cannot Index, [AliasNameSpace] is too long
 		Primary Key([AliasId]))

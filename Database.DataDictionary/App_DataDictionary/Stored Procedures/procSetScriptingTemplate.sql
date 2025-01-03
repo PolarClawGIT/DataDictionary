@@ -24,7 +24,7 @@ Begin Try
 			[TemplateId]            UniqueIdentifier NOT NULL,
 			[TemplateTitle]			[App_DataDictionary].[typeTitle] Not Null,
 			[TemplateDescription]	[App_DataDictionary].[typeDescription] Null,
-			[BreakOnScope]			[App_DataDictionary].[typeScopeName] NULL, 
+			[BreakOnScope]			[AppModel].[typeScopeName] NULL, 
 			[TransformScript]		XML Null , 
 			[RootDirectory]         NVarChar(100) Null,
 			[DocumentDirectory]		NVarChar(250) Null,

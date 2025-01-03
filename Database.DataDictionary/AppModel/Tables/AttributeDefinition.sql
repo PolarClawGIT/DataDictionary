@@ -3,7 +3,7 @@
 	[AttributeId]       UniqueIdentifier NOT Null,
 	[DefinitionId]      UniqueIdentifier NOT NULL,
 	[DefinitionSummary] [App_DataDictionary].[typeDescription] Null, -- Plain Text summary, used where RTF cannot be used.
-	[DefinitionText]    [App_DataDictionary].[typeRichText] Null, -- Contains Rich Text Definition. Rich Text must be handled differently.
+	[DefinitionText]    [AppModel].[typeRichText] Null, -- Contains Rich Text Definition. Rich Text must be handled differently.
 		-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_AttributeDefinition_SysStart] Default (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL Constraint [DF_AttributeDefinition_SysEnd] Default ('9999-12-31 23:59:59.9999999'),

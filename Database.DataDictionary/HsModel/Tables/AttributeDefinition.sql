@@ -3,7 +3,7 @@
 	[AttributeId]       UniqueIdentifier NOT Null,
 	[DefinitionId]      UniqueIdentifier NOT NULL,
 	[DefinitionSummary] [App_DataDictionary].[typeDescription] Null,
-	[DefinitionText]    [App_DataDictionary].[typeRichText] Null,
+	[DefinitionText]    [AppModel].[typeRichText] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

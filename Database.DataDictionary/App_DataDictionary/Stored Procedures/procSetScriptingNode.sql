@@ -22,7 +22,7 @@ Begin Try
 	Declare @Values Table (
 		[NodeId]				UniqueIdentifier NOT NULL,
 		[TemplateId]            UniqueIdentifier NOT NULL,
-		[PropertyScope]         [App_DataDictionary].[typeScopeName] NOT NULL,
+		[PropertyScope]         [AppModel].[typeScopeName] NOT NULL,
 		[PropertyName]          [App_DataDictionary].[typeNameSpaceMember] NOT NULL,
 		[NodeName]				[App_DataDictionary].[typeNameSpaceMember] NOT Null,
 		[NodeValueAs]			NVarChar(50) Not Null,
