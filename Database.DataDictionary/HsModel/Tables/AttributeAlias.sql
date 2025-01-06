@@ -1,9 +1,8 @@
 ﻿CREATE TABLE [HsModel].[AttributeAlias]
 (
-	[AliasId]          UniqueIdentifier Not Null,
 	[AttributeId]      UniqueIdentifier NOT Null,
-	[AliasScope]       [AppModel].[typeScopeName] NOT NULL,
-	[AliasNameSpace]   [App_DataDictionary].[typeNameSpacePath] Null,
+	[AliasId]          UniqueIdentifier Not Null,
+    [AliasScope]       [AppModel].[typeScopeName] NOT NULL,
     [SysStart]         DateTime2 (7) NOT NULL,
     [SysEnd]           DateTime2 (7) NOT NULL,
 )
@@ -12,5 +11,5 @@ CREATE CLUSTERED INDEX [IX_AttributeAlias]
     ON [HsModel].[AttributeAlias]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_AttributeAlias]
-    ON [HsModel].[AttributeAlias]([AliasId] ASC)
+    ON [HsModel].[AttributeAlias]([AttributeId] ASC, [AliasId] ASC)
 GO

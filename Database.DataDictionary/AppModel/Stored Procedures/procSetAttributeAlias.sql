@@ -28,26 +28,25 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[AliasId]			UniqueIdentifier Not Null,
 		[AttributeId]		UniqueIdentifier Not Null,
+		[AliasId]			UniqueIdentifier Not Null,
 		[AliasScope]		[AppModel].[typeScopeName] NOT NULL,
-		[AliasNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
 		--Unique ([AliasId], [AliasNameSpace]) -- Cannot Index, [AliasNameSpace] is too long
-		Primary Key([AliasId]))
+		Primary Key([AttributeId], [AliasId]))
+
+	Declare @Alias [AppModel].[typeAlias];
+
+	Insert Into @Alias ([AliasNameSpace])
+	Select	[AliasNameSpace]
+	From	@Data
+
+	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
 
 	Insert Into @Values
-	Select	Coalesce(H.[AliasId], NewId()) As [AliasId],
-			D.[AttributeId],
-			D.[AliasScope],
-			N.[AliasNameSpace]
+	Select	D.[AttributeId],
+			[AppModel].[funcAliasId] (D.[AliasNameSpace]) As [AliasId],
+			D.[AliasScope]
 	From	@Data D
-			Cross Apply (
-				Select	[QualifiedName] As [AliasNameSpace]
-				From	[AppModel].[funcParseName](D.[AliasNameSpace])
-				Where	[IsBase] = 1) N
-			Left Join [AppModel].[AttributeAliasHs] H
-			On	D.[AttributeId] = H.[AttributeId] And
-				N.[AliasNameSpace] = H.[AliasNameSpace]
 	Where	(@AttributeId is Null Or @AttributeId = D.[AttributeId]) And
 			(@ModelId is Null Or D.[AttributeId] In (
 				Select	[AttributeId]
@@ -62,7 +61,8 @@ Begin Try
 	Delete From [AppModel].[AttributeAlias]
 	From	[AppModel].[AttributeAlias] T
 			Left Join @Values V
-			On	T.[AliasId] = V.[AliasId]
+			On	T.[AttributeId] = V.[AttributeId] And
+				T.[AliasId] = V.[AliasId] 
 			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, T.[AttributeId], 1)
 	Where	V.[AttributeId] is Null And
 			(@AttributeId is Not Null Or @ModelId is Not Null) And
@@ -74,38 +74,35 @@ Begin Try
 	Print FormatMessage ('Delete [AppModel].[AttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[AliasId],
-				[AttributeId],
-				[AliasScope],
-				[AliasNameSpace]
+		Select	[AttributeId],
+				[AliasId],
+				[AliasScope]
 		From	@Values S
 		Except
-		Select	[AliasId],
-				[AttributeId],
-				[AliasScope],
-				[AliasNameSpace]
+		Select	[AttributeId],
+				[AliasId],
+				[AliasScope]
 		From	[AppModel].[AttributeAlias])
 	Update	[AppModel].[AttributeAlias]
-	Set		[AliasScope] = S.[AliasScope],
-			[AliasNameSpace] = S.[AliasNameSpace]
+	Set		[AliasScope] = S.[AliasScope]
 	From	[Delta] S
 			Inner Join [AppModel].[AttributeAlias] T
-			On	S.[AliasId] = T.[AliasId]
+			On	S.[AttributeId] = T.[AttributeId] And
+				S.[AliasId] = T.[AliasId] 
 			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Print FormatMessage ('Update [AppModel].[AttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[AttributeAlias] (
-			[AliasId],
 			[AttributeId],
-			[AliasScope],
-			[AliasNameSpace])
-	Select	S.[AliasId],
-			S.[AttributeId],
-			S.[AliasScope],
-			S.[AliasNameSpace]
+			[AliasId],
+			[AliasScope])
+	Select	S.[AttributeId],
+			S.[AliasId],
+			S.[AliasScope]
 	From	@Values S
 			Left Join [AppModel].[AttributeAlias] T
-			On	S.[AliasId] = T.[AliasId]
+			On	S.[AttributeId] = T.[AttributeId] And
+				S.[AliasId] = T.[AliasId] 
 			Cross Apply [AppSecurity].[funcModelAttributeAuthorization](@ModelId, S.[AttributeId], 1)
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [AppModel].[AttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

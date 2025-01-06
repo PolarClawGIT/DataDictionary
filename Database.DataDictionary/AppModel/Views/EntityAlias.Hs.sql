@@ -4,7 +4,7 @@ Select	D.[EntityId],
 		D.[AliasId],
 		FA.[EntityTitle],
 		D.[AliasScope],
-		D.[AliasNameSpace],
+		FL.[AliasNameSpace],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -44,4 +44,12 @@ From	[AppModel].[EntityAlias] D
 			Where	[EntityId] = D.[EntityId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FA
+		Outer Apply (
+			Select	Top 1
+					[AliasId],
+					[AliasNameSpace]
+			From	[AppModel].[AliasHS]
+			Where	[AliasId] = D.[AliasId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FL
 GO
