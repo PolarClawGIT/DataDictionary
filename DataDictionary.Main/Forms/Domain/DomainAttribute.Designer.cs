@@ -65,8 +65,6 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
-            aliaseScopeColumn = new DataGridViewComboBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
             aliasNameData = new DataDictionary.Main.Controls.TextBoxData();
             aliasScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             aliasSelectCommand = new Button();
@@ -81,6 +79,8 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAlias = new BindingSource(components);
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -489,23 +489,6 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.Size = new Size(400, 229);
             aliasesData.TabIndex = 0;
             // 
-            // aliaseScopeColumn
-            // 
-            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "AliasScope";
-            aliaseScopeColumn.FillWeight = 50F;
-            aliaseScopeColumn.HeaderText = "Scope";
-            aliaseScopeColumn.Name = "aliaseScopeColumn";
-            aliaseScopeColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.HeaderText = "Alias Name";
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
-            // 
             // aliasNameData
             // 
             aliasNameData.AutoSize = true;
@@ -665,6 +648,23 @@ namespace DataDictionary.Main.Forms.Domain
             bindingDefinition.AddingNew += BindingDefinition_AddingNew;
             bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
             // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "AliasScope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasNameSpace";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
+            // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -743,12 +743,12 @@ namespace DataDictionary.Main.Forms.Domain
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private TableLayoutPanel aliaseLayout;
         private DataGridView aliasesData;
-        private DataGridViewComboBoxColumn aliaseScopeColumn;
-        private DataGridViewTextBoxColumn aliasNameColumn;
         private DataDictionary.Main.Controls.TextBoxData aliasNameData;
         private DataDictionary.Main.Controls.ComboBoxData aliasScopeData;
         private Button aliasSelectCommand;
         private Button aliasAddCommand;
         private CheckBox isAliasInModelData;
+        private DataGridViewComboBoxColumn aliaseScopeColumn;
+        private DataGridViewTextBoxColumn aliasNameColumn;
     }
 }
