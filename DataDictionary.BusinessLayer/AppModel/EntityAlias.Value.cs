@@ -7,18 +7,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public interface IEntityAliasValue : IEntityAliasItem,
         IEntityIndex, IAliasIndex,
-        IScopeType, ITemporalValue
+        IScopeType
     { }
 
     /// <inheritdoc/>
     public class EntityAliasValue : EntityAliasItem, IEntityAliasValue
     {
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityAlias; } }
 

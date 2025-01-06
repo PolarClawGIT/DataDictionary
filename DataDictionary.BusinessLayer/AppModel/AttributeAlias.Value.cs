@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public interface IAttributeAliasValue : IAttributeAliasItem,
         IAttributeIndex, IAliasIndex,
-        IScopeType, ITemporalValue
+        IScopeType
     {
         /// <summary>
         /// Attribute Alias Name returned as parts.
@@ -18,14 +18,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     /// <inheritdoc/>
-    public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue, IScopeType
+    public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue
     {
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
         /// <inheritdoc/>
         public List<String> AliasParts { get { return PathIndex.Parse(AliasNameSpace); } }
 

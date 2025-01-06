@@ -9,21 +9,16 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IAttributePropertyItem, IPropertyIndex,
-        IScopeType, ITemporalValue
+    public interface IAttributePropertyValue : IAttributePropertyItem,
+        IPropertyIndex, IAttributeIndex,
+        IScopeType
     { }
 
     /// <inheritdoc/>
-    public class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue, IScopeType
+    public class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeProperty; } }
-
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public AttributePropertyValue() : base() { }

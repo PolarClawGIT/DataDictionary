@@ -7,19 +7,14 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IEntityPropertyValue : IEntityPropertyItem, IPropertyIndex,
-        IScopeType, ITemporalValue
+    public interface IEntityPropertyValue : IEntityPropertyItem, 
+        IPropertyIndex, IEntityIndex,
+        IScopeType
     { }
 
     /// <inheritdoc/>
     public class EntityPropertyValue : EntityPropertyItem, IEntityPropertyValue
     {
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityProperty; } }
 

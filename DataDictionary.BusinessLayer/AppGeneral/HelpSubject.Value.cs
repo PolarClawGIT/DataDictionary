@@ -7,7 +7,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpSubjectItem, IScopeType,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
-        ITemporalValue
+        IDataValue, ITemporalValue
     { }
 
     /// <inheritdoc/>

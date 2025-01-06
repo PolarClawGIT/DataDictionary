@@ -10,21 +10,16 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributeDefinitionValue : IAttributeDefinitionItem, IDefinitionIndex, IAttributeIndex,
-        IScopeType, ITemporalValue
+    public interface IAttributeDefinitionValue : IAttributeDefinitionItem, 
+        IDefinitionIndex, IAttributeIndex,
+        IScopeType
     { }
 
     /// <inheritdoc/>
-    public class AttributeDefinitionValue : AttributeDefinitionItem, IAttributeDefinitionValue, IScopeType
+    public class AttributeDefinitionValue : AttributeDefinitionItem, IAttributeDefinitionValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeDefinition; } }
-
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public AttributeDefinitionValue() : base() { }
