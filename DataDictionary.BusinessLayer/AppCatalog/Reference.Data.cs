@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
@@ -15,10 +14,10 @@ public interface IReferenceData : IBindingData<ReferenceValue>
 class ReferenceData : ReferenceCollection<ReferenceValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, IReferenceData
+        ICatalogModel, IReferenceData
 {
     /// <inheritdoc/>
-    public required IDatabaseModel Database { get; init; }
+    public required ICatalog Model { get; init; }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>

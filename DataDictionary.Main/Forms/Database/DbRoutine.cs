@@ -28,15 +28,15 @@ namespace DataDictionary.Main.Forms.Database
             RoutineIndexName key = new RoutineIndexName(routineItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
+            bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.CatalogModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;
 
             if (bindingRoutine.Current is IRoutineValue current)
             {
                 ReferenceIndexName referenceName = new ReferenceIndexName(current);
-                bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
-                bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.DatabaseModel.DbReferences, w => referenceName.Equals(w));
+                bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+                bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));
             }
         }
 

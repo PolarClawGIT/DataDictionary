@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
@@ -16,10 +15,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class ConstraintColumnData : ConstraintColumnCollection<ConstraintColumnValue>, IConstraintColumnData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        ICatalogModel
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>

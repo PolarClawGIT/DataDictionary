@@ -38,17 +38,17 @@ namespace DataDictionary.Main.Forms.Database
         {
             TableIndexName key = new TableIndexName(tableItem);
 
-            bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
+            bindingTable.DataSource = new BindingView<TableValue>(BusinessData.CatalogModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
 
             if (bindingTable.Current is ITableValue current)
             {
                 ReferenceIndexName referenceName = new ReferenceIndexName(current);
                 PropertyIndexObject propertyKey = new PropertyIndexObject(current);
-                bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
-                bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
-                bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.DatabaseModel.DbReferences, w => referenceName.Equals(w));
+                bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
+                bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.CatalogModel.DbConstraints, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+                bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));
             }
         }
 
@@ -81,8 +81,8 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -102,7 +102,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }

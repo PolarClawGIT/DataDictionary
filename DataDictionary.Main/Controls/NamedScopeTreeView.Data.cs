@@ -122,7 +122,7 @@ namespace DataDictionary.Main.Controls
             return work;
         }
 
-        //TODO: Having performance issues building Nodes for a Database such as AdventureWorks
+        //TODO: Having performance issues building Nodes for a Model such as AdventureWorks
         // To Replicate, import the database from Information Schema.
         // Does not seem to have an impact when the database is loaded.
         // The Information Schema is being worked on so this has been put on hold.
@@ -257,7 +257,7 @@ namespace DataDictionary.Main.Controls
                 { children = childByIndex; }
 
                 // Children with Scopes to be nested
-                // Mostly Database Objects
+                // Mostly Model Objects
                 var scopeGroups = children.
                     SelectMany(s => s.Value, (children, child) => new { child.Scope, Children = children }).
                     Distinct().

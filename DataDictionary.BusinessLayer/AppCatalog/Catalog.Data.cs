@@ -1,15 +1,13 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
-using Toolbox.DbContext;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
-    /// Wrapper of Catalog Data (The Database)
+    /// Wrapper of Catalog Data (The Model)
     /// </summary>
     public interface ICatalogData : IBindingData<CatalogValue>
     { }
@@ -17,11 +15,11 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class CatalogData : CatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
-        IDatabaseModelItem, ICatalogData,
+        ICatalogModel, ICatalogData,
         INamedScopeSourceData
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>

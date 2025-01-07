@@ -25,12 +25,12 @@ namespace DataDictionary.Main.Forms.Database
             RoutineParameterIndexName key = new RoutineParameterIndexName(parameterItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
+            bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
             }
         }
 

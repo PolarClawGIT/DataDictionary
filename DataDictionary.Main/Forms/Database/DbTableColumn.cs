@@ -31,11 +31,11 @@ namespace DataDictionary.Main.Forms.Database
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
+            bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
             if (bindingColumn.Current is ITableColumnValue current)
-            { bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w)); }
+            { bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w)); }
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingColumn.Current is ITableColumnValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
 

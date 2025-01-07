@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
@@ -64,10 +63,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class PropertyData : DataLayer.AppCatalog.PropertyCollection<PropertyValue>, IPropertyData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        ICatalogModel
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>ExtendedProperty</remarks>

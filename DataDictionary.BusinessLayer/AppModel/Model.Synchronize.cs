@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     /// <summary>
-    /// Model Synchronize to compare what Models are in the Database vs the Model
+    /// Model Synchronize to compare what Models are in the Model vs the Model
     /// </summary>
     public class ModelSynchronize : SynchronizeData<ModelSynchronizeValue, ModelValue, ModelIndex>
     {
@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new ModelSynchronizeValue(data); }
 
         /// <summary>
-        /// Clears then reloads the Model List from the Database.
+        /// Clears then reloads the Model List from the Model.
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
@@ -86,7 +86,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Loads a Model from the Database (including all schema components)
+        /// Loads a Model from the Model (including all schema components)
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -102,7 +102,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Saves the Model to the Database (including all schema components)
+        /// Saves the Model to the Model (including all schema components)
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -116,7 +116,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Deletes a Model from the Database (including all schema components).
+        /// Deletes a Model from the Model (including all schema components).
         /// Copy in the Model is not removed.
         /// </summary>
         /// <param name="factory"></param>

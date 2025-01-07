@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.Library
     }
 
     /// <summary>
-    /// Library Synchronize to compare what Library's are in the Database vs the Model
+    /// Library Synchronize to compare what Library's are in the Model vs the Model
     /// </summary>
     public class LibrarySynchronize : SynchronizeData<LibrarySynchronizeValue, LibrarySourceValue, LibrarySourceIndex>
     {
@@ -77,7 +77,7 @@ namespace DataDictionary.BusinessLayer.Library
         { return new LibrarySynchronizeValue(data); }
 
         /// <summary>
-        /// Clears then reloads the Libraries List from the Database.
+        /// Clears then reloads the Libraries List from the Model.
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
@@ -90,7 +90,7 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <summary>
-        /// Loads a Library from a Database into the Model
+        /// Loads a Library from a Model into the Model
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -102,7 +102,7 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <summary>
-        /// Loads a Library from the Database
+        /// Loads a Library from the Model
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -116,7 +116,7 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <summary>
-        /// Saves the Library to the Database
+        /// Saves the Library to the Model
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -130,7 +130,7 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <summary>
-        /// Deletes a Library from the Database
+        /// Deletes a Library from the Model
         /// Copy in the Model is not removed.
         /// </summary>
         /// <param name="factory"></param>

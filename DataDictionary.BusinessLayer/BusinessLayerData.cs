@@ -24,12 +24,12 @@ namespace DataDictionary.BusinessLayer
         IBusinessLayerData
     {
         /// <summary>
-        /// Database Context for accessing the Application Db.
+        /// Model Context for accessing the Application Db.
         /// </summary>
         DbConnection DbConnection { get; init; }
 
         /// <summary>
-        /// Database Connection information
+        /// Model Connection information
         /// </summary>
         public (String ServerName, String DatabaseName) Connection
         { get { return (DbConnection.ServerName, DbConnection.DatabaseName); } }
@@ -81,14 +81,14 @@ namespace DataDictionary.BusinessLayer
             applicationValues = new AppGeneral.ApplicationData();
 
             domainValues = new Domain.DomainModel() { Models = modelValues, SubjectAreas = subjectAreaValues };
-            databaseValues = new Database.DatabaseModel();
+            catalogValue = new AppCatalog.Catalog();
             libraryValues = new Library.LibraryModel();
 
             scriptingValues = new Scripting.ScriptingEngine() { Models = modelValues };
         }
 
         /// <summary>
-        /// Returns a new Default factory Database Worker.
+        /// Returns a new Default factory Model Worker.
         /// </summary>
         public IDatabaseWork GetDbFactory()
         { return new DatabaseWork(DbConnection); }
@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(subjectAreaValues.Load(factory, key));
 
             work.AddRange(DomainModel.Load(factory, key));
-            work.AddRange(DatabaseModel.Load(factory, key));
+            work.AddRange(CatalogModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
 
             work.AddRange(ScriptingEngine.Load(factory, key));
@@ -120,7 +120,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(subjectAreaValues.Save(factory, key));
 
             work.AddRange(DomainModel.Save(factory, key));
-            work.AddRange(DatabaseModel.Save(factory, key));
+            work.AddRange(CatalogModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
 
             work.AddRange(ScriptingEngine.Save(factory, key));
@@ -137,7 +137,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(subjectAreaValues.Delete());
 
             work.AddRange(DomainModel.Delete());
-            work.AddRange(DatabaseModel.Delete());
+            work.AddRange(CatalogModel.Delete());
             work.AddRange(LibraryModel.Delete());
 
             work.AddRange(ScriptingEngine.Delete());
@@ -186,7 +186,7 @@ namespace DataDictionary.BusinessLayer
                     subjectAreaValues.Import(workSet);
 
                     domainValues.Import(workSet);
-                    databaseValues.Import(workSet);
+                    catalogValue.Import(workSet);
                     libraryValues.Import(workSet);
 
                     scriptingValues.Import(workSet);
@@ -213,7 +213,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.Add(subjectAreaValues.ToDataTable());
 
                     workSet.Tables.AddRange(domainValues.Export().ToArray());
-                    workSet.Tables.AddRange(databaseValues.Export().ToArray());
+                    workSet.Tables.AddRange(catalogValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValues.Export().ToArray());
 
                     workSet.Tables.AddRange(scriptingValues.Export().ToArray());

@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
@@ -16,10 +15,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class TableData : TableCollection<TableValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, ITableData, INamedScopeSourceData
+        ICatalogModel, ITableData, INamedScopeSourceData
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
@@ -47,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             return INamedScopeSourceData.LoadNamedScope<TableData, TableValue>
                 (this, addNamedScope,
-                (value) => Database.DbSchemta.
+                (value) => Model.DbSchemta.
                     FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
         }
 

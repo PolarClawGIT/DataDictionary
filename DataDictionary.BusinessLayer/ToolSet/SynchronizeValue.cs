@@ -23,12 +23,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         Boolean InModel { get; }
 
         /// <summary>
-        /// Is the value in the Database
+        /// Is the value in the Model
         /// </summary>
         Boolean InDatabase { get; }
 
         /// <summary>
-        /// Get the Source Item (Model or Database)
+        /// Get the Source Item (Model or Model)
         /// </summary>
         TItem Source { get; }
     }

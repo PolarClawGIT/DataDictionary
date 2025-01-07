@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Forms.Database
 {
     partial class CatalogManager : ApplicationData
     {
-        CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.DatabaseModel);
+        CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.CatalogModel);
 
         public CatalogManager() : base()
         {
@@ -145,7 +145,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 IsLocked(true);
                 CatalogIndex catalogKey = new CatalogIndex(item);
-                work.AddRange(BusinessData.DatabaseModel.Delete(catalogKey));
+                work.AddRange(BusinessData.CatalogModel.Delete(catalogKey));
 
                 DoWork(work, onCompleting);
             }

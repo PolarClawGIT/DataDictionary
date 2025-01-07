@@ -24,12 +24,12 @@ namespace DataDictionary.Main.Forms.Database
             DomainIndexName key = new DomainIndexName(domainItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
+            bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.CatalogModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
 
             if (bindingDomain.Current is IDomainValue current)
             {
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
             }
         }
 

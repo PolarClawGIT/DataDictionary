@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             ConstraintIndex key = new ConstraintIndex(constraintItem);
 
-            bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
+            bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.CatalogModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
 
             if (bindingConstraint.Current is IConstraintValue current)
@@ -31,8 +31,8 @@ namespace DataDictionary.Main.Forms.Database
                 ConstraintIndexName name = new ConstraintIndexName(current);
                 PropertyIndexObject property = new PropertyIndexObject(name);
 
-                bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.DatabaseModel.DbConstraintColumns, w => name.Equals(w));
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => property.Equals(w));
+                bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.CatalogModel.DbConstraintColumns, w => name.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => property.Equals(w));
             }
         }
 

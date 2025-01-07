@@ -1,16 +1,7 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.DataLayer;
 using DataDictionary.Resource;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
@@ -18,7 +9,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     /// <summary>
-    /// Interface for creating Database Work
+    /// Interface for creating Model Work
     /// </summary>
     public interface IDatabaseWork
     {
@@ -93,7 +84,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TData : class;
 
         /// <summary>
-        /// Creates the WorkItem that opens the Connection to the Database.
+        /// Creates the WorkItem that opens the Connection to the Model.
         /// </summary>
         /// <returns></returns>
         WorkItem OpenConnection();
@@ -106,7 +97,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     }
 
     /// <summary>
-    /// Manages the Database Work Items and the Connection used to perform the work.
+    /// Manages the Model Work Items and the Connection used to perform the work.
     /// </summary>
     /// <remarks>
     /// This is called a "factory" in a number of places.

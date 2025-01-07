@@ -24,12 +24,12 @@ namespace DataDictionary.Main.Forms.Database
             SchemaIndexName key = new SchemaIndexName(schemaItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
+            bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.CatalogModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;
 
             if (bindingSchema.Current is ISchemaValue current)
             {
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.DatabaseModel.DbProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
             }
         }
 

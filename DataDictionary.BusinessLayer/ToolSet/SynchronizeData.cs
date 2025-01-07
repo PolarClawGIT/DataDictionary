@@ -4,7 +4,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
-    /// Base Class Used to Synchronize data between the Model and the Database.
+    /// Base Class Used to Synchronize data between the Model and the Model.
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TItem"></typeparam>
@@ -41,7 +41,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         protected abstract TValue GetValue(TItem data);
 
         /// <summary>
-        /// Updates the data based on sources (Model and Database)
+        /// Updates the data based on sources (Model and Model)
         /// </summary>
         public void Refresh()
         {

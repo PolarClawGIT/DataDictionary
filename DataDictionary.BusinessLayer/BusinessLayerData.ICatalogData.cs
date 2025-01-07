@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +12,8 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Catalog (database) Data
         /// </summary>
-        public IDatabaseModel DatabaseModel { get { return databaseValues; } }
-        private readonly DatabaseModel databaseValues;
+        public ICatalog CatalogModel { get { return catalogValue; } }
+        private readonly Catalog catalogValue;
 
     }
 }

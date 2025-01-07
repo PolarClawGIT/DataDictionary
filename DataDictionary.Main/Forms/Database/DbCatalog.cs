@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             CatalogIndex key = new CatalogIndex(catalogItem);
 
-            bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
+            bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.CatalogModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
             CommandButtons[CommandImageType.Export].Text = "to Model";
@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Forms.Database
                 throw new NotImplementedException(); // TODO needs to be fixed.
                 var newModel = new DatabaseImport();
                 List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(newModel.Load(BusinessData.DatabaseModel, current));
+                work.AddRange(newModel.Load(BusinessData.CatalogModel, current));
                 work.AddRange(newModel.Build(BusinessData.DomainModel));
 
                 DoWork(work, onCompleting);
@@ -77,7 +77,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }

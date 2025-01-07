@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
@@ -16,10 +15,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class RoutineData : RoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSourceData
+        ICatalogModel, INamedScopeSourceData
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Routine</remarks>
@@ -47,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             return INamedScopeSourceData.LoadNamedScope<RoutineData, RoutineValue>
                 (this, addNamedScope,
-                (value) => Database.DbSchemta.
+                (value) => Model.DbSchemta.
                     FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
         }
 

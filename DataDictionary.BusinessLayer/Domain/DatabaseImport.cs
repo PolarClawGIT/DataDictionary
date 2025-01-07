@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
@@ -10,7 +9,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
-    /// Performs the function of Importing a Database into the Model.
+    /// Performs the function of Importing a Model into the Model.
     /// </summary>
     public class DatabaseImport
     {
@@ -38,13 +37,13 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <summary>
         /// Constructor for the DatabaseImport
-        /// Imports the Database to a work Structure without extended properties.
+        /// Imports the Model to a work Structure without extended properties.
         /// </summary>
         public DatabaseImport() { }
 
         /// <summary>
         /// Constructor for the DatabaseImport
-        /// Imports the Database to a work Structure
+        /// Imports the Model to a work Structure
         /// </summary>
         /// <param name="propertyValues"></param>
         public DatabaseImport(IEnumerable<AppCatalog.PropertyValue> propertyValues) : this()
@@ -54,11 +53,11 @@ namespace DataDictionary.BusinessLayer.Domain
         //TODO: Make something that returns the data.
 
         /// <summary>
-        /// Create work items to Loads the process with all tables/routines from the Database Model
+        /// Create work items to Loads the process with all tables/routines from the Model Model
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Load(IDatabaseModel source)
+        public IReadOnlyList<WorkItem> Load(AppCatalog.ICatalog source)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -74,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Load(IDatabaseModel source, ICatalogIndex index)
+        public IReadOnlyList<WorkItem> Load(AppCatalog.ICatalog source, ICatalogIndex index)
         {
             List<WorkItem> work = new List<WorkItem>();
             CatalogIndex key = new CatalogIndex(index);
@@ -94,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Load(IDatabaseModel source, ITableIndex index)
+        IReadOnlyList<WorkItem> Load(AppCatalog.ICatalog source, ITableIndex index)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem()
@@ -115,7 +114,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Load(IDatabaseModel source, IRoutineIndex index)
+        IReadOnlyList<WorkItem> Load(AppCatalog.ICatalog source, IRoutineIndex index)
         {
             Boolean isCanceled = false;
             List<WorkItem> work = new List<WorkItem>();
@@ -138,7 +137,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// </summary>
         /// <param name="source"></param>
         /// <param name="index"></param>
-        void AddSource(IDatabaseModel source, ITableIndex index)
+        void AddSource(AppCatalog.ICatalog source, ITableIndex index)
         {
             TableIndex key = new TableIndex(index);
 
@@ -157,7 +156,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 TableRefrences(source, tableName);
             }
 
-            void TableProperties(IDatabaseModel source, TableIndexName tableName)
+            void TableProperties(AppCatalog.ICatalog source, TableIndexName tableName)
             {
                 PropertyIndexObject tablePropertyName = new PropertyIndexObject(tableName);
 
@@ -173,7 +172,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 { tableProperties.Add(item); }
             }
 
-            void TableColumns(IDatabaseModel source, TableIndexName tableName)
+            void TableColumns(AppCatalog.ICatalog source, TableIndexName tableName)
             {
                 foreach (TableColumnValue column in
                     source.DbTableColumns.
@@ -188,7 +187,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
 
-            void ColumnProperties(IDatabaseModel source, TableColumnIndexName columnName)
+            void ColumnProperties(AppCatalog.ICatalog source, TableColumnIndexName columnName)
             {
                 PropertyIndexObject columnPropertyName = new PropertyIndexObject(columnName);
 
@@ -202,7 +201,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 { tableColumnProperties.Add(item); }
             }
 
-            void TableConstraints(IDatabaseModel source, TableIndexName tableName)
+            void TableConstraints(AppCatalog.ICatalog source, TableIndexName tableName)
             {
                 foreach (ConstraintValue item in
                     source.DbConstraints.
@@ -222,7 +221,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
 
-            void TableRefrences(IDatabaseModel source, TableIndexName tableName)
+            void TableRefrences(AppCatalog.ICatalog source, TableIndexName tableName)
             {
                 ReferenceKeyName tableRefrenceName = new ReferenceKeyName(tableName);
                 foreach (ReferenceValue item in
@@ -242,7 +241,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="index"></param>
         /// <exception cref="NotImplementedException"></exception>
-        void AddSource(IDatabaseModel source, IRoutineIndex index)
+        void AddSource(AppCatalog.ICatalog source, IRoutineIndex index)
         {
             throw new NotImplementedException();
         }
@@ -271,6 +270,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
         //void BuildAttributes(IDomainModel target)
         //{
+        // TODO: This does too much. Need to break it down.
+        //    * ConstraintColumn: GetAlias given Column, recursive
+        //    * Properties: GetProperies given column
+        //    * TableColumn: CreateAttribute
+        //
         //    attributes = target.Attributes;
         //    attributeAliases = target.Attributes.Aliases;
         //    attributeProperties = target.Attributes.Properties;

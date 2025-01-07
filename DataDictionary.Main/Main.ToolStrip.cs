@@ -35,7 +35,7 @@ namespace DataDictionary.Main
                 new DetailDataView<CatalogValue, Forms.Database.DbCatalog>
                     (ScopeType.Database, data)
                 { SelectedForm = (data) => new Forms.Database.DbCatalog(data) },
-                BusinessData.DatabaseModel.DbCatalogs);
+                BusinessData.CatalogModel.DbCatalogs);
         }
 
         private void MenuAttributes_Click(object sender, EventArgs e)
@@ -89,14 +89,14 @@ namespace DataDictionary.Main
                 new DetailDataView<ConstraintValue, Forms.Database.DbConstraint>
                     (ScopeType.DatabaseConstraint, data)
                 { SelectedForm = (data) => new Forms.Database.DbConstraint(data) },
-                BusinessData.DatabaseModel.DbConstraints);
+                BusinessData.CatalogModel.DbConstraints);
         }
 
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.DatabaseConstraintColumn, data),
-                BusinessData.DatabaseModel.DbConstraintColumns);
+                BusinessData.CatalogModel.DbConstraintColumns);
         }
 
         private void menuDataTypeItem_Click(object sender, EventArgs e)
@@ -105,7 +105,7 @@ namespace DataDictionary.Main
                 new DetailDataView<DomainValue, Forms.Database.DbDomain>
                     (ScopeType.DatabaseDomain, data)
                 { SelectedForm = (data) => new Forms.Database.DbDomain(data) },
-                BusinessData.DatabaseModel.DbDomains);
+                BusinessData.CatalogModel.DbDomains);
         }
 
         private void menuRoutineItem_Click(object sender, EventArgs e)
@@ -114,7 +114,7 @@ namespace DataDictionary.Main
                 new DetailDataView<RoutineValue, Forms.Database.DbRoutine>
                     (ScopeType.DatabaseProcedure, data)
                 { SelectedForm = (data) => new Forms.Database.DbRoutine(data) },
-                BusinessData.DatabaseModel.DbRoutines);
+                BusinessData.CatalogModel.DbRoutines);
         }
 
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
@@ -123,21 +123,21 @@ namespace DataDictionary.Main
                 new DetailDataView<RoutineParameterValue, Forms.Database.DbRoutineParameter>
                     (ScopeType.DatabaseProcedureParameter, data)
                 { SelectedForm = (data) => new Forms.Database.DbRoutineParameter(data) },
-                BusinessData.DatabaseModel.DbRoutineParameters);
+                BusinessData.CatalogModel.DbRoutineParameters);
         }
 
         private void menuRoutineColumnItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.DatabaseFunctionColumn, data),
-                BusinessData.DatabaseModel.DbRoutineColumns);
+                BusinessData.CatalogModel.DbRoutineColumns);
         }
 
         private void menuReferenceItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.DatabaseReference, data),
-                BusinessData.DatabaseModel.DbReferences);
+                BusinessData.CatalogModel.DbReferences);
         }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
@@ -146,7 +146,7 @@ namespace DataDictionary.Main
                 new DetailDataView<SchemaValue, Forms.Database.DbSchema>
                     (ScopeType.DatabaseSchema, data)
                 { SelectedForm = (data) => new Forms.Database.DbSchema(data) },
-                BusinessData.DatabaseModel.DbSchemta);
+                BusinessData.CatalogModel.DbSchemta);
         }
 
         private void menuTableItem_Click(object sender, EventArgs e)
@@ -155,7 +155,7 @@ namespace DataDictionary.Main
                 new DetailDataView<TableValue, Forms.Database.DbTable>
                     (ScopeType.DatabaseTable, data)
                 { SelectedForm = (data) => new Forms.Database.DbTable(data) },
-                BusinessData.DatabaseModel.DbTables);
+                BusinessData.CatalogModel.DbTables);
         }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
@@ -164,14 +164,14 @@ namespace DataDictionary.Main
                 new DetailDataView<TableColumnValue, Forms.Database.DbTableColumn>
                     (ScopeType.DatabaseTableColumn, data)
                 { SelectedForm = (data) => new Forms.Database.DbTableColumn(data) },
-                BusinessData.DatabaseModel.DbTableColumns);
+                BusinessData.CatalogModel.DbTableColumns);
         }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.DatabaseProperty, data),
-                BusinessData.DatabaseModel.DbProperties);
+                BusinessData.CatalogModel.DbProperties);
         }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)

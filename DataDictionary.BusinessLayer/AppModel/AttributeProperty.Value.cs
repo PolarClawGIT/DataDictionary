@@ -1,10 +1,6 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
-using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
