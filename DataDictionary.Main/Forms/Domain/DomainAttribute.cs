@@ -42,21 +42,21 @@ namespace DataDictionary.Main.Forms.Domain
             if (attributeItem is null)
             {
                 attributeItem = new AttributeValue();
-                BusinessData.DomainModel.Attributes.Add(attributeItem);
+                BusinessData.Model.Attributes.Add(attributeItem);
                 isNew = true;
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
 
-            bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
+            bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
 
             if (bindingAttribute.Current is IAttributeValue current)
             {
-                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.DomainModel.Attributes.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.DomainModel.Attributes.SubjectArea, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.Model.Attributes.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.Model.Attributes.Definitions, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.Model.Attributes.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.Model.Attributes.SubjectArea, w => key.Equals(w));
             }
         }
 
@@ -111,7 +111,7 @@ namespace DataDictionary.Main.Forms.Domain
             base.DeleteCommand_Click(sender, e);
 
             if (bindingAttribute.Current is IAttributeValue current)
-            { DoWork(BusinessData.DomainModel.Attributes.Delete(current), Complete); }
+            { DoWork(BusinessData.Model.Attributes.Delete(current), Complete); }
 
             void Complete(RunWorkerCompletedEventArgs args)
             { SendMessage(new RefreshNavigation()); }

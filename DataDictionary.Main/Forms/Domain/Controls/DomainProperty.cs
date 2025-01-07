@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         {
             if (propertyTypeData.SelectedItem is PropertyNameList selected
                 && new PropertyIndex(selected) is PropertyIndex key
-                && BusinessData.DomainModel.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
+                && BusinessData.Model.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
             {
                 // Setup the Choice check-boxes
                 List<String> selectedChoices = new List<String>();

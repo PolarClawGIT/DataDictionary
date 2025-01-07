@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.DataLayer.AppCatalog;
 using Toolbox.Threading;
 

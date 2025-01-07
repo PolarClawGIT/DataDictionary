@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
@@ -228,6 +227,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                     foreach (AttributeValue attribute in this)
                     {
+                        Boolean hasParent = false;
+
                         foreach (SubjectAreaValue subjectParent in ParentSubjects(attribute))
                         {
                             NamedScopeValue newItem = new NamedScopeValue(attribute)
@@ -237,6 +238,13 @@ namespace DataDictionary.BusinessLayer.AppModel
                                     ((IPathValue)attribute).Path)
                             };
                             addNamedScope(subjectParent, newItem);
+                            hasParent = true;
+                        }
+
+                        if (!hasParent) // No Parents found
+                        {
+                            NamedScopeValue newItem = new NamedScopeValue(attribute);
+                            addNamedScope(model, newItem);
                         }
 
                         progressChanged(completed++, total);

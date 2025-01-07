@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
         /// </summary>
-        IModel DomainModel { get; }
+        IModel Model { get; }
     }
 
     partial interface IBusinessLayerData : IDomainData
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData: IDomainData
     {
         /// <inheritdoc/>
-        public IModel DomainModel { get { return domainValues; } }
-        private readonly Model domainValues;
+        public IModel Model { get { return modelValues; } }
+        private readonly Model modelValues;
     }
 }

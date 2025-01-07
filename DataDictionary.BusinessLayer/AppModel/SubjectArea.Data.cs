@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required Model Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -69,7 +69,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return INamedScopeSourceData.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
                 data: this,
                 addNamedScope: addNamedScope,
-                getParent: (value) => Models.FirstOrDefault());
+                getParent: (value) => Model.Models.FirstOrDefault());
         }
     }
 }

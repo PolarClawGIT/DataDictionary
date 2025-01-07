@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required Model Model { get; init; }
 
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValues; } }

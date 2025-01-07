@@ -46,22 +46,22 @@ namespace DataDictionary.Main.Forms.Domain
             if (entityItem is null)
             {
                 entityItem = new EntityValue();
-                BusinessData.DomainModel.Entities.Add(entityItem);
+                BusinessData.Model.Entities.Add(entityItem);
                 SendMessage(new RefreshNavigation());
             }
 
             EntityIndex key = new EntityIndex(entityItem);
 
-            bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
+            bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
             if (bindingEntity.Current is IEntityValue current)
             {
-                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.DomainModel.Entities.Attributes, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.Model.Entities.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.Entities.Definitions, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w));
             }
         }
 
@@ -114,7 +114,7 @@ namespace DataDictionary.Main.Forms.Domain
             base.DeleteCommand_Click(sender, e);
 
             if (bindingEntity.Current is IEntityValue current)
-            { DoWork(BusinessData.DomainModel.Entities.Delete(current), Complete); }
+            { DoWork(BusinessData.Model.Entities.Delete(current), Complete); }
 
             void Complete(RunWorkerCompletedEventArgs args)
             { SendMessage(new RefreshNavigation()); }

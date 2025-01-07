@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Forms.Database
                 var newModel = new ModelImport();
                 List<WorkItem> work = new List<WorkItem>();
                 work.AddRange(newModel.Load(BusinessData.CatalogModel, current));
-                work.AddRange(newModel.Build(BusinessData.DomainModel));
+                work.AddRange(newModel.Build(BusinessData.Model));
 
                 DoWork(work, onCompleting);
             }

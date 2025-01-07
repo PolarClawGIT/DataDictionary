@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     /// <summary>
-    /// Model Synchronize to compare what Models are in the Model vs the Model
+    /// Model Synchronize to compare what Model are in the Model vs the Model
     /// </summary>
     public class ModelSynchronize : SynchronizeData<ModelSynchronizeValue, ModelValue, ModelIndex>
     {
@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { }
 
         /// <inheritdoc/>
-        protected override IBindingList<ModelValue> ModelData { get { return businessData.Models; } }
+        protected override IBindingList<ModelValue> ModelData { get { return businessData.Model.Models; } }
         BusinessLayerData businessData;
 
         /// <inheritdoc/>
@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             this.businessData = businessData;
 
-            foreach (ModelValue item in businessData.Models)
+            foreach (ModelValue item in businessData.Model.Models)
             { Add(new ModelSynchronizeValue(item) { InModel = true }); }
         }
 

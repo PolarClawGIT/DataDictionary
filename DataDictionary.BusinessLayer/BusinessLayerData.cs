@@ -39,19 +39,6 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public FileInfo? ModelFile { get; set; }
 
-        /// <summary>
-        /// The Current Model being used by the application
-        /// </summary>
-        /// <remarks>There should always be exactly one Model</remarks>
-        public ModelValue Model
-        {
-            get
-            {
-                if (modelValues.Count > 0)
-                { return modelValues.First(); }
-                else { throw new ArgumentException("No Model exists"); }
-            }
-        }
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -74,17 +61,15 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new AppModel.ModelData();
-            subjectAreaValues = new AppModel.SubjectAreaData() { Models = modelValues };
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
             applicationValues = new AppGeneral.ApplicationData();
 
-            domainValues = new Domain.Model() { Models = modelValues, SubjectAreas = subjectAreaValues };
+            modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new Library.LibraryModel();
 
-            scriptingValues = new Scripting.ScriptingEngine() { Models = modelValues };
+            scriptingValues = new Scripting.ScriptingEngine() { Model = modelValues };
         }
 
         /// <summary>
@@ -98,11 +83,8 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Delete());
-            work.AddRange(modelValues.Load(factory, key));
-            work.AddRange(subjectAreaValues.Load(factory, key));
-
-            work.AddRange(DomainModel.Load(factory, key));
+            work.AddRange(Model.Delete());
+            work.AddRange(Model.Load(factory, key));
             work.AddRange(CatalogModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
 
@@ -116,10 +98,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Save(factory, key));
-            work.AddRange(subjectAreaValues.Save(factory, key));
-
-            work.AddRange(DomainModel.Save(factory, key));
+            work.AddRange(Model.Save(factory, key));
             work.AddRange(CatalogModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
 
@@ -133,10 +112,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Delete());
-            work.AddRange(subjectAreaValues.Delete());
-
-            work.AddRange(DomainModel.Delete());
+            work.AddRange(Model.Delete());
             work.AddRange(CatalogModel.Delete());
             work.AddRange(LibraryModel.Delete());
 
@@ -159,8 +135,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(Delete());
-            work.AddRange(modelValues.Create());
-            work.AddRange(domainValues.Create(applicationValues));
+            work.AddRange(modelValues.Create(applicationValues));
             return work;
         }
 
@@ -183,9 +158,6 @@ namespace DataDictionary.BusinessLayer
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
                     modelValues.Import(workSet);
-                    subjectAreaValues.Import(workSet);
-
-                    domainValues.Import(workSet);
                     catalogValue.Import(workSet);
                     libraryValues.Import(workSet);
 
@@ -209,10 +181,7 @@ namespace DataDictionary.BusinessLayer
             {
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
-                    workSet.Tables.Add(modelValues.ToDataTable());
-                    workSet.Tables.Add(subjectAreaValues.ToDataTable());
-
-                    workSet.Tables.AddRange(domainValues.Export().ToArray());
+                    workSet.Tables.AddRange(modelValues.Export().ToArray());
                     workSet.Tables.AddRange(catalogValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValues.Export().ToArray());
 

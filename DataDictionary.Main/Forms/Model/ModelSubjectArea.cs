@@ -28,12 +28,12 @@ namespace DataDictionary.Main.Forms.Model
             if (subjectAreaItem is null)
             {
                 subjectAreaItem = new SubjectAreaValue();
-                BusinessData.SubjectAreas.Add(subjectAreaItem);
+                BusinessData.Model.SubjectAreas.Add(subjectAreaItem);
             }
 
             SubjectAreaIndex key = new SubjectAreaIndex(subjectAreaItem);
 
-            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.SubjectAreas, w => key.Equals(w));
+            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
             if (bindingSubject.Current is ISubjectAreaValue current)

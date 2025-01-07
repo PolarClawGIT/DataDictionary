@@ -44,7 +44,7 @@ namespace DataDictionary.Main
                 new DetailDataView<AttributeValue, Forms.Domain.DomainAttribute>
                     (ScopeType.ModelAttribute, data)
                 { SelectedForm = (data) => new Forms.Domain.DomainAttribute(data) },
-                BusinessData.DomainModel.Attributes);
+                BusinessData.Model.Attributes);
         }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -53,7 +53,7 @@ namespace DataDictionary.Main
                 new DetailDataView<SubjectAreaValue, Forms.Model.ModelSubjectArea>
                     (ScopeType.ModelSubjectArea, data)
                 { SelectedForm = (data) => new Forms.Model.ModelSubjectArea(data) },
-                BusinessData.SubjectAreas);
+                BusinessData.Model.SubjectAreas);
         }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
@@ -178,21 +178,21 @@ namespace DataDictionary.Main
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeProperty, data),
-                BusinessData.DomainModel.Attributes.Properties);
+                BusinessData.Model.Attributes.Properties);
         }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeAlias, data),
-                BusinessData.DomainModel.Attributes.Aliases);
+                BusinessData.Model.Attributes.Aliases);
         }
 
         private void menuAttributeDefinitions_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeDefinition, data),
-                BusinessData.DomainModel.Attributes.Definitions);
+                BusinessData.Model.Attributes.Definitions);
         }
 
         private void menuEntities_Click(object sender, EventArgs e)
@@ -201,49 +201,49 @@ namespace DataDictionary.Main
                 new DetailDataView<EntityValue, Forms.Domain.DomainEntity>
                     (ScopeType.ModelEntity, data)
                 { SelectedForm = (data) => new Forms.Domain.DomainEntity(data) },
-                BusinessData.DomainModel.Entities);
+                BusinessData.Model.Entities);
         }
 
         private void menuEntityProperties_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityProperty, data),
-                BusinessData.DomainModel.Entities.Properties);
+                BusinessData.Model.Entities.Properties);
         }
 
         private void menuEntityDefinitions_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityDefinition, data),
-                BusinessData.DomainModel.Entities.Definitions);
+                BusinessData.Model.Entities.Definitions);
         }
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityAlias, data),
-                BusinessData.DomainModel.Entities.Aliases);
+                BusinessData.Model.Entities.Aliases);
         }
 
         private void menuEntityAttributes_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityAttribute, data),
-                BusinessData.DomainModel.Entities.Attributes);
+                BusinessData.Model.Entities.Attributes);
         }
 
         private void menuModelProperty_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelProperty, data),
-                BusinessData.DomainModel.Properties);
+                BusinessData.Model.Properties);
         }
 
         private void menuModelDefinition_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelDefinition, data),
-                BusinessData.DomainModel.Definitions);
+                BusinessData.Model.Definitions);
         }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)

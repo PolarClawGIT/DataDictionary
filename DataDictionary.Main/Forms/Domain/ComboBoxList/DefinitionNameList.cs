@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<DefinitionNameList> list = new BindingList<DefinitionNameList>();
             list.Add(new DefinitionNameList() { DefinitionId = Guid.Empty, DefinitionTitle = "(select Definition Type)" });
 
-            foreach (DefinitionValue item in BusinessData.DomainModel.Definitions)
+            foreach (DefinitionValue item in BusinessData.Model.Definitions)
             {
                 if (item.DefinitionId is Guid DefinitionId && item.DefinitionTitle is String DefinitionTitle)
                 { list.Add(new DefinitionNameList() { DefinitionId = DefinitionId, DefinitionTitle = DefinitionTitle }); }
@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<DefinitionNameList> list = new BindingList<DefinitionNameList>();
             list.Add(new DefinitionNameList() { DefinitionId = Guid.Empty, DefinitionTitle = "(select Definition Type)" });
 
-            foreach (DefinitionValue item in BusinessData.DomainModel.Definitions)
+            foreach (DefinitionValue item in BusinessData.Model.Definitions)
             {
                 if (item.DefinitionId is Guid DefinitionId && item.DefinitionTitle is String DefinitionTitle)
                 { list.Add(new DefinitionNameList() { DefinitionId = DefinitionId, DefinitionTitle = DefinitionTitle }); }

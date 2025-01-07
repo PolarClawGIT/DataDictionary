@@ -153,7 +153,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <returns></returns>
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
-        { return domainValues.Attributes.GetXElement(scripting, data); }
+        { return modelValues.Attributes.GetXElement(scripting, data); }
 
     }
 }

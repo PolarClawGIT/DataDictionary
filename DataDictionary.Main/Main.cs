@@ -74,7 +74,7 @@ namespace DataDictionary.Main
                 if (args.Error is not null)
                 { Program.ShowException(args.Error); }
 
-                bindingModel.DataSource = BusinessData.Models;
+                bindingModel.DataSource = BusinessData.Model.Models;
                 SendMessage(new OnlineStatusChanged());
 
                 DoWork(BusinessData.Create());

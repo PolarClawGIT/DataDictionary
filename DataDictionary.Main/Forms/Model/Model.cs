@@ -22,12 +22,12 @@ namespace DataDictionary.Main.Forms.Model
             if (model is null)
             { // Should never occur
                 model = new ModelValue();
-                BusinessData.Models.Add(model);
+                BusinessData.Model.Models.Add(model);
             }
 
             ModelIndex key = new ModelIndex(model);
 
-            bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Models, w => key.Equals(w));
+            bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Model.Models, w => key.Equals(w));
             bindingModel.Position = 0;
         }
 

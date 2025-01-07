@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         {
             bindingSubjectArea = binding;
 
-            foreach (SubjectAreaValue item in BusinessData.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
+            foreach (SubjectAreaValue item in BusinessData.Model.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
             {
                 ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
                 value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = ((IPathValue)item).Path.MemberFullPath });

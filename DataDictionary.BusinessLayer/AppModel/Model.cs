@@ -1,27 +1,37 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
-using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Interface representing ER/DFD Model data
     /// </summary>
     public interface IModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDeleteData
+        IDeleteData, IScopeType, DataLayer.AppModel.IModel
 
     {
         /// <summary>
-        /// List of Domain Attributes within the Model.
+        /// The Model Definitions (0 or one Model expected)
+        /// </summary>
+        IModelData Models { get; }
+
+        /// <summary>
+        /// List of Subject Areas within the Model
+        /// </summary>
+        ISubjectAreaData SubjectAreas { get; }
+
+        /// <summary>
+        /// List of Attributes within the Model.
         /// </summary>
         IAttributeData Attributes { get; }
 
         /// <summary>
-        /// List of Domain Entities within the Model.
+        /// List of Entities within the Model.
         /// </summary>
         IEntityData Entities { get; }
 
@@ -40,12 +50,38 @@ namespace DataDictionary.BusinessLayer.Domain
         INamedScopeSourceData
     {
         /// <inheritdoc/>
-        public required ISubjectAreaData SubjectAreas { get; init; }
+        public IModelData Models { get { return modelValues; } }
+        private readonly ModelData modelValues;
 
-        /// <summary>
-        /// Reference to the containing Model
-        /// </summary>
-        public required IModelData Models { get; init; }
+        IModelValue emptyModel = new ModelValue();
+        protected IModelValue CurrentModel
+        {
+            get
+            {
+                if (Models.FirstOrDefault() is IModelValue value) { return value; }
+                else { return emptyModel; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? ModelTitle
+        {
+            get { return CurrentModel.ModelTitle; }
+            set { CurrentModel.ModelTitle = value; }
+        }
+
+        /// <inheritdoc/>
+        public String? ModelDescription {
+            get { return CurrentModel.ModelDescription; }
+            set { CurrentModel.ModelDescription = value; }
+        }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return CurrentModel.Scope; } }
+
+        /// <inheritdoc/>
+        public ISubjectAreaData SubjectAreas { get { return subjectValues; } }
+        private readonly SubjectAreaData subjectValues;
 
         /// <inheritdoc/>
         public IAttributeData Attributes { get { return attributeValues; } }
@@ -61,11 +97,14 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
-        private readonly DefinitionData definitionValues = new DefinitionData();
 
+
+        private readonly DefinitionData definitionValues = new DefinitionData();
 
         public Model() : base()
         {
+            modelValues = new ModelData();
+            subjectValues = new SubjectAreaData() { Model = this };
             attributeValues = new AttributeData() { Model = this };
             entityValues = new EntityData() { Model = this };
         }
@@ -90,6 +129,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Load(factory, dataKey));
+            work.AddRange(subjectValues.Load(factory, dataKey));
             work.AddRange(attributeValues.Load(factory, dataKey));
             work.AddRange(entityValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
@@ -102,6 +143,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Save(factory, dataKey));
+            work.AddRange(subjectValues.Save(factory, dataKey));
             work.AddRange(attributeValues.Save(factory, dataKey));
             work.AddRange(entityValues.Save(factory, dataKey));
             work.AddRange(propertyValues.Save(factory, dataKey));
@@ -114,6 +157,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<System.Data.DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.AddRange(modelValues.Export());
+            result.AddRange(subjectValues.Export());
             result.AddRange(attributeValues.Export());
             result.AddRange(entityValues.Export());
             result.AddRange(propertyValues.Export());
@@ -125,6 +170,8 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Domain</remarks>
         public void Import(System.Data.DataSet source)
         {
+            modelValues.Import(source);
+            subjectValues.Import(source);
             attributeValues.Import(source);
             entityValues.Import(source);
             propertyValues.Import(source);
@@ -136,6 +183,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Delete());
+            work.AddRange(subjectValues.Delete());
             work.AddRange(attributeValues.Delete());
             work.AddRange(entityValues.Delete());
             work.AddRange(propertyValues.Delete());
@@ -155,6 +204,8 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(modelValues.LoadNamedScope(addNamedScope));
+            work.AddRange(subjectValues.LoadNamedScope(addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(addNamedScope));
             work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
 
