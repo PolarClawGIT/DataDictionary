@@ -39,11 +39,11 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingSubject.Current is ISubjectAreaValue current)
             {
                 
-                //List<AttributeIndex> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
-                //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
+                //List<AttributeIndex> attributeKeys = BusinessData.Model.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
+                //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
 
-                //List<EntityIndex> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
-                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new EntityKey(w)));
+                //List<EntityIndex> entityKeys = BusinessData.Model.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
+                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.Entities, w => entityKeys.Contains(new EntityKey(w)));
             }
         }
 

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
-    /// Contains a DomainModel
+    /// Contains a Model
     /// </summary>
     public interface IDomainData
     {
         /// <summary>
         /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
         /// </summary>
-        IDomainModel DomainModel { get; }
+        IModel DomainModel { get; }
     }
 
     partial interface IBusinessLayerData : IDomainData
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData: IDomainData
     {
         /// <inheritdoc/>
-        public IDomainModel DomainModel { get { return domainValues; } }
-        private readonly DomainModel domainValues;
+        public IModel DomainModel { get { return domainValues; } }
+        private readonly Model domainValues;
     }
 }

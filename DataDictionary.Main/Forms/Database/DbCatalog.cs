@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.Main.Controls;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -59,7 +58,7 @@ namespace DataDictionary.Main.Forms.Database
             if (bindingSource.Current is ICatalogValue current)
             {
                 throw new NotImplementedException(); // TODO needs to be fixed.
-                var newModel = new DatabaseImport();
+                var newModel = new ModelImport();
                 List<WorkItem> work = new List<WorkItem>();
                 work.AddRange(newModel.Load(BusinessData.CatalogModel, current));
                 work.AddRange(newModel.Build(BusinessData.DomainModel));
@@ -77,7 +76,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -87,7 +86,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }

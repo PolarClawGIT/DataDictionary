@@ -81,8 +81,8 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -102,7 +102,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingTable.Current is ITableValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }

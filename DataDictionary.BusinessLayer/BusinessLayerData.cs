@@ -80,7 +80,7 @@ namespace DataDictionary.BusinessLayer
 
             applicationValues = new AppGeneral.ApplicationData();
 
-            domainValues = new Domain.DomainModel() { Models = modelValues, SubjectAreas = subjectAreaValues };
+            domainValues = new Domain.Model() { Models = modelValues, SubjectAreas = subjectAreaValues };
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new Library.LibraryModel();
 

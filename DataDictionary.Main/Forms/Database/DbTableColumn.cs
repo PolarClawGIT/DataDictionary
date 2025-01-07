@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Forms.Database
             throw new NotImplementedException();
             //if (bindingColumn.Current is ITableColumnValue current)
             //{
-            //    BusinessData.DomainModel.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
 

@@ -1,17 +1,14 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
     /// Performs the function of Importing a Model into the Model.
     /// </summary>
-    public class DatabaseImport
+    public class ModelImport
     {
         // Lookup Data
         IReadOnlyList<AppCatalog.PropertyValue> properties = new List<AppCatalog.PropertyValue>();
@@ -36,17 +33,17 @@ namespace DataDictionary.BusinessLayer.Domain
         IList<AttributePropertyValue> attributeProperties = new List<AttributePropertyValue>();
 
         /// <summary>
-        /// Constructor for the DatabaseImport
+        /// Constructor for the ModelImport
         /// Imports the Model to a work Structure without extended properties.
         /// </summary>
-        public DatabaseImport() { }
+        public ModelImport() { }
 
         /// <summary>
-        /// Constructor for the DatabaseImport
+        /// Constructor for the ModelImport
         /// Imports the Model to a work Structure
         /// </summary>
         /// <param name="propertyValues"></param>
-        public DatabaseImport(IEnumerable<AppCatalog.PropertyValue> propertyValues) : this()
+        public ModelImport(IEnumerable<AppCatalog.PropertyValue> propertyValues) : this()
         { properties = propertyValues.ToList(); }
 
 
@@ -250,7 +247,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// Create work items to Build the Entities and Attributes.
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Build(IDomainModel target)
+        public IReadOnlyList<WorkItem> Build(IModel target)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem()
@@ -261,14 +258,14 @@ namespace DataDictionary.BusinessLayer.Domain
             return work;
         }
 
-        void BuildModel(IDomainModel target)
+        void BuildModel(IModel target)
         {
             throw new NotImplementedException();
             //BuildAttributes(target);
             //BuildEntities(target);
         }
 
-        //void BuildAttributes(IDomainModel target)
+        //void BuildAttributes(IModel target)
         //{
         // TODO: This does too much. Need to break it down.
         //    * ConstraintColumn: GetAlias given Column, recursive
@@ -457,7 +454,7 @@ namespace DataDictionary.BusinessLayer.Domain
         //    }
         //}
 
-        //void BuildEntities(IDomainModel target)
+        //void BuildEntities(IModel target)
         //{
         //    entities = target.Entities;
         //    entityAliases = target.Entities.Aliases;

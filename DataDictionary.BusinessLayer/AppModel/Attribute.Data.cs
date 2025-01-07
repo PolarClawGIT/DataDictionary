@@ -52,7 +52,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeSourceData
     {
-        public required DomainModel Model { get; init; }
+        public required Model Model { get; init; }
 
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
