@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         //TODO: Make something that returns the data.
 
         /// <summary>
-        /// Create work items to Loads the process with all tables/routines from the Model Model
+        /// Create work items to Loads the process with all tables/routines from the Model
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
