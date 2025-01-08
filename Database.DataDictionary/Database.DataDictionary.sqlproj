@@ -485,6 +485,9 @@
     <Build Include="AppModel\Views\Alias.Hs.sql" />
     <Build Include="AppModel\Triggers\trigAliasHierarchy.sql" />
     <Build Include="AppModel\Stored Procedures\procSetAlias.sql" />
+    <Build Include="AppModel\Tables\Domain.sql" />
+    <Build Include="AppModel\Tables\DomainImplement.sql" />
+    <Build Include="AppModel\Tables\ModelDomain.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
