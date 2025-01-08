@@ -5,7 +5,8 @@
 	[AttributeAlias]    [App_DataDictionary].[typeTitle] Not Null,
 	[AttributeName]     [AppModel].[typeQualifiedName] Null,
 	[OrdinalPosition]   Int Not Null,
-	[IsNullable]		Bit Null,
+	[IsNullable]		Bit Not Null,
+	[IsPrimaryKey]		Bit Not Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

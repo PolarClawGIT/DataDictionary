@@ -4,6 +4,7 @@
 	[AttributeName]        [AppModel].[typeQualifiedName] Null,
 	[OrdinalPosition]      Int Not Null,
 	[IsNullable]		   Bit Null,
+	[IsPrimaryKey]		   Bit Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

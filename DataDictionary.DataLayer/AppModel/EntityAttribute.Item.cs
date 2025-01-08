@@ -1,6 +1,4 @@
 ﻿// Ignore Spelling: Nullable
-
-using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -22,6 +20,11 @@ namespace DataDictionary.DataLayer.AppModel
         /// Is the Attribute Nullable
         /// </summary>
         Boolean? IsNullable { get; }
+
+        /// <summary>
+        /// Is the Attribute a Primary Key element
+        /// </summary>
+        Boolean? IsPrimaryKey { get; }
 
         /// <summary>
         /// The Position/Order of the Attribute
@@ -63,6 +66,13 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
+        public Boolean? IsPrimaryKey
+        {
+            get { return GetValue<Boolean>(nameof(IsPrimaryKey), BindingItemParsers.BooleanTryParse); }
+            set { SetValue(nameof(IsPrimaryKey), value); }
+        }
+
+        /// <inheritdoc/>
         public Int32? OrdinalPosition
         {
             get { return GetValue<Int32>(nameof(OrdinalPosition)); }
@@ -73,7 +83,7 @@ namespace DataDictionary.DataLayer.AppModel
         public ITemporal Temporal { get; }
 
         /// <summary>
-        /// Constructor for DomainEntityAttribute Item
+        /// Constructor for EntityAttribute Item
         /// </summary>
         public EntityAttributeItem() : base()
         {
@@ -86,7 +96,7 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <summary>
-        /// Constructor for DomainEntityAttribute Item
+        /// Constructor for EntityAttribute Item
         /// </summary>
         /// <param name="entity"></param>
         public EntityAttributeItem(IEntityKey entity) : this()
@@ -99,6 +109,7 @@ namespace DataDictionary.DataLayer.AppModel
             new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsPrimaryKey), typeof(Boolean)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

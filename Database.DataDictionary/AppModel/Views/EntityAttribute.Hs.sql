@@ -7,6 +7,7 @@ Select	D.[EntityId], --AK
 		D.[AttributeName],
 		D.[OrdinalPosition],
 		D.[IsNullable],
+		D.[IsPrimaryKey],
 		-- Temporal Status
 		D.[SysStart], -- PK, AK
 		D.[SysEnd],

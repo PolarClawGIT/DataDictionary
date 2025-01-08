@@ -15,6 +15,7 @@ Select	[EntityId],
 		[AttributeName],
 		[OrdinalPosition],
 		[IsNullable],
+		[IsPrimaryKey],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

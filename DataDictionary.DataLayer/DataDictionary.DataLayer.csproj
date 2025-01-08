@@ -12,15 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DomainData\Definition\**" />
-    <Compile Remove="DomainData\Property\**" />
-    <EmbeddedResource Remove="DomainData\Definition\**" />
-    <EmbeddedResource Remove="DomainData\Property\**" />
-    <None Remove="DomainData\Definition\**" />
-    <None Remove="DomainData\Property\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -331,16 +322,6 @@
   <ItemGroup>
     <Folder Include="AppLibrary\" />
     <Folder Include="AppScript\" />
-    <Folder Include="DatabaseData\Catalog\" />
-    <Folder Include="DatabaseData\Constraint\" />
-    <Folder Include="DatabaseData\Domain\" />
-    <Folder Include="DatabaseData\ExtendedProperty\" />
-    <Folder Include="DatabaseData\Reference\" />
-    <Folder Include="DatabaseData\Routine\" />
-    <Folder Include="DatabaseData\Schema\" />
-    <Folder Include="DatabaseData\Table\" />
-    <Folder Include="DomainData\Entity\" />
-    <Folder Include="ModelData\" />
   </ItemGroup>
 
 </Project>

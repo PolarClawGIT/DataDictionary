@@ -61,6 +61,8 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             aliasNameData = new DataDictionary.Main.Controls.TextBoxData();
             aliasScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             aliasSelectCommand = new Button();
@@ -76,8 +78,9 @@ namespace DataDictionary.Main.Forms.Domain
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
-            aliaseScopeColumn = new DataGridViewComboBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
+            entityAttributeOptions = new GroupBox();
+            entityAttributeOptionLayout = new TableLayoutPanel();
+            attributePrimaryKey = new CheckBox();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -106,6 +109,8 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
+            entityAttributeOptions.SuspendLayout();
+            entityAttributeOptionLayout.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -185,8 +190,7 @@ namespace DataDictionary.Main.Forms.Domain
             detailsLayout.Controls.Add(attributeSelectCommand, 1, 3);
             detailsLayout.Controls.Add(attributeAliasData, 0, 1);
             detailsLayout.Controls.Add(attributeNameData, 0, 2);
-            detailsLayout.Controls.Add(attributeNullable, 1, 2);
-            detailsLayout.Controls.Add(attributeOrderData, 1, 1);
+            detailsLayout.Controls.Add(entityAttributeOptions, 0, 3);
             detailsLayout.Dock = DockStyle.Fill;
             detailsLayout.Location = new Point(3, 3);
             detailsLayout.Name = "detailsLayout";
@@ -208,7 +212,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.Location = new Point(3, 3);
             attributeData.Name = "attributeData";
             attributeData.ReadOnly = true;
-            attributeData.Size = new Size(400, 222);
+            attributeData.Size = new Size(400, 122);
             attributeData.TabIndex = 0;
             // 
             // attributeAliasColumn
@@ -245,27 +249,28 @@ namespace DataDictionary.Main.Forms.Domain
             // attributeAliasData
             // 
             attributeAliasData.AutoSize = true;
+            detailsLayout.SetColumnSpan(attributeAliasData, 2);
             attributeAliasData.Dock = DockStyle.Fill;
             attributeAliasData.HeaderText = "Attribute Name (within Entity)";
-            attributeAliasData.Location = new Point(3, 231);
+            attributeAliasData.Location = new Point(3, 131);
             attributeAliasData.Multiline = false;
             attributeAliasData.Name = "attributeAliasData";
             attributeAliasData.ReadOnly = false;
-            attributeAliasData.Size = new Size(274, 44);
+            attributeAliasData.Size = new Size(400, 44);
             attributeAliasData.TabIndex = 5;
             attributeAliasData.WordWrap = true;
             // 
             // attributeNameData
             // 
             attributeNameData.AutoSize = true;
+            detailsLayout.SetColumnSpan(attributeNameData, 2);
             attributeNameData.Dock = DockStyle.Fill;
             attributeNameData.HeaderText = "Attribute Name (base Attribute)";
-            attributeNameData.Location = new Point(3, 281);
+            attributeNameData.Location = new Point(3, 181);
             attributeNameData.Multiline = false;
             attributeNameData.Name = "attributeNameData";
             attributeNameData.ReadOnly = false;
-            detailsLayout.SetRowSpan(attributeNameData, 2);
-            attributeNameData.Size = new Size(274, 50);
+            attributeNameData.Size = new Size(400, 44);
             attributeNameData.TabIndex = 1;
             attributeNameData.WordWrap = true;
             attributeNameData.Validated += AttributeTitleData_Validated;
@@ -273,7 +278,7 @@ namespace DataDictionary.Main.Forms.Domain
             // attributeNullable
             // 
             attributeNullable.AutoSize = true;
-            attributeNullable.Location = new Point(283, 281);
+            attributeNullable.Location = new Point(3, 53);
             attributeNullable.Name = "attributeNullable";
             attributeNullable.Size = new Size(86, 19);
             attributeNullable.TabIndex = 6;
@@ -283,9 +288,8 @@ namespace DataDictionary.Main.Forms.Domain
             // attributeOrderData
             // 
             attributeOrderData.AutoSize = true;
-            attributeOrderData.Dock = DockStyle.Fill;
             attributeOrderData.HeaderText = "Order";
-            attributeOrderData.Location = new Point(283, 231);
+            attributeOrderData.Location = new Point(3, 3);
             attributeOrderData.Multiline = false;
             attributeOrderData.Name = "attributeOrderData";
             attributeOrderData.ReadOnly = false;
@@ -442,7 +446,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 340);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -462,7 +466,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             aliaseLayout.RowStyles.Add(new RowStyle());
             aliaseLayout.RowStyles.Add(new RowStyle());
-            aliaseLayout.Size = new Size(406, 334);
+            aliaseLayout.Size = new Size(186, 66);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -475,19 +479,36 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(400, 226);
+            aliasesData.Size = new Size(180, 1);
             aliasesData.TabIndex = 0;
+            // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "AliasScope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasNameSpace";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // aliasNameData
             // 
             aliasNameData.AutoSize = true;
             aliasNameData.Dock = DockStyle.Fill;
             aliasNameData.HeaderText = "Alias Name";
-            aliasNameData.Location = new Point(3, 287);
+            aliasNameData.Location = new Point(3, 19);
             aliasNameData.Multiline = false;
             aliasNameData.Name = "aliasNameData";
             aliasNameData.ReadOnly = true;
-            aliasNameData.Size = new Size(313, 44);
+            aliasNameData.Size = new Size(93, 44);
             aliasNameData.TabIndex = 2;
             aliasNameData.WordWrap = true;
             aliasNameData.Validating += AliasNameData_Validating;
@@ -499,10 +520,10 @@ namespace DataDictionary.Main.Forms.Domain
             aliasScopeData.Dock = DockStyle.Fill;
             aliasScopeData.DropDownStyle = ComboBoxStyle.DropDown;
             aliasScopeData.HeaderText = "Scope";
-            aliasScopeData.Location = new Point(3, 235);
+            aliasScopeData.Location = new Point(3, -33);
             aliasScopeData.Name = "aliasScopeData";
             aliasScopeData.ReadOnly = true;
-            aliasScopeData.Size = new Size(313, 46);
+            aliasScopeData.Size = new Size(93, 46);
             aliasScopeData.TabIndex = 1;
             // 
             // aliasCommandLayout
@@ -515,7 +536,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasCommandLayout.Controls.Add(aliasAddCommand, 0, 2);
             aliasCommandLayout.Controls.Add(isAliasInModelData, 0, 0);
             aliasCommandLayout.Dock = DockStyle.Fill;
-            aliasCommandLayout.Location = new Point(322, 235);
+            aliasCommandLayout.Location = new Point(102, -33);
             aliasCommandLayout.Name = "aliasCommandLayout";
             aliasCommandLayout.RowCount = 3;
             aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
@@ -634,22 +655,44 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAttribute.AddingNew += BindingAttribute_AddingNew;
             bindingAttribute.CurrentChanged += BindingAttribute_CurrentChanged;
             // 
-            // aliaseScopeColumn
+            // entityAttributeOptions
             // 
-            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "AliasScope";
-            aliaseScopeColumn.FillWeight = 50F;
-            aliaseScopeColumn.HeaderText = "Scope";
-            aliaseScopeColumn.Name = "aliaseScopeColumn";
-            aliaseScopeColumn.ReadOnly = true;
+            entityAttributeOptions.Controls.Add(entityAttributeOptionLayout);
+            entityAttributeOptions.Dock = DockStyle.Fill;
+            entityAttributeOptions.Location = new Point(3, 231);
+            entityAttributeOptions.Name = "entityAttributeOptions";
+            entityAttributeOptions.Size = new Size(319, 100);
+            entityAttributeOptions.TabIndex = 7;
+            entityAttributeOptions.TabStop = false;
+            entityAttributeOptions.Text = "Options";
             // 
-            // aliasNameColumn
+            // entityAttributeOptionLayout
             // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasNameSpace";
-            aliasNameColumn.HeaderText = "Alias Name";
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
+            entityAttributeOptionLayout.AutoSize = true;
+            entityAttributeOptionLayout.ColumnCount = 2;
+            entityAttributeOptionLayout.ColumnStyles.Add(new ColumnStyle());
+            entityAttributeOptionLayout.ColumnStyles.Add(new ColumnStyle());
+            entityAttributeOptionLayout.Controls.Add(attributePrimaryKey, 1, 1);
+            entityAttributeOptionLayout.Controls.Add(attributeNullable, 0, 1);
+            entityAttributeOptionLayout.Controls.Add(attributeOrderData, 0, 0);
+            entityAttributeOptionLayout.Dock = DockStyle.Fill;
+            entityAttributeOptionLayout.Location = new Point(3, 19);
+            entityAttributeOptionLayout.Name = "entityAttributeOptionLayout";
+            entityAttributeOptionLayout.RowCount = 2;
+            entityAttributeOptionLayout.RowStyles.Add(new RowStyle());
+            entityAttributeOptionLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            entityAttributeOptionLayout.Size = new Size(313, 78);
+            entityAttributeOptionLayout.TabIndex = 0;
+            // 
+            // attributePrimaryKey
+            // 
+            attributePrimaryKey.AutoSize = true;
+            attributePrimaryKey.Location = new Point(129, 53);
+            attributePrimaryKey.Name = "attributePrimaryKey";
+            attributePrimaryKey.Size = new Size(89, 19);
+            attributePrimaryKey.TabIndex = 7;
+            attributePrimaryKey.Text = "Primary Key";
+            attributePrimaryKey.UseVisualStyleBackColor = true;
             // 
             // DomainEntity
             // 
@@ -689,6 +732,10 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
+            entityAttributeOptions.ResumeLayout(false);
+            entityAttributeOptions.PerformLayout();
+            entityAttributeOptionLayout.ResumeLayout(false);
+            entityAttributeOptionLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -737,5 +784,8 @@ namespace DataDictionary.Main.Forms.Domain
         private DataGridViewTextBoxColumn attributeOrderColumn;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
+        private GroupBox entityAttributeOptions;
+        private TableLayoutPanel entityAttributeOptionLayout;
+        private CheckBox attributePrimaryKey;
     }
 }

@@ -34,6 +34,7 @@ Begin Try
 		[AttributeName]        [AppModel].[typeQualifiedName] Null,
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
+		[IsPrimaryKey]		   Bit Null,
 		Primary Key ([EntityAttributeId]),
 		Unique ([EntityId], [AttributeAlias]))
 
@@ -43,7 +44,8 @@ Begin Try
 			NullIf(Trim(D.[AttributeAlias]),'') As [AttributeAlias],
 			NullIf(Trim(D.[AttributeName]),'') As [AttributeName],
 			D.[OrdinalPosition],
-			D.[IsNullable]
+			IsNull(D.[IsNullable],0) As [IsNullable],
+			IsNull(D.[IsPrimaryKey],0) As [IsPrimaryKey]
 	From	@Data D
 			Left Join [AppModel].[EntityAttributeHs] H
 			On	D.[EntityId] = H.[EntityId] And
@@ -83,7 +85,8 @@ Begin Try
 				[AttributeAlias],
 				[AttributeName],
 				[OrdinalPosition],
-				[IsNullable]
+				[IsNullable],
+				[IsPrimaryKey]
 		From	@Values
 		Except
 		Select	[EntityAttributeId],
@@ -91,13 +94,15 @@ Begin Try
 				[AttributeAlias],
 				[AttributeName],
 				[OrdinalPosition],
-				[IsNullable]
+				[IsNullable],
+				[IsPrimaryKey]
 		From	[AppModel].[EntityAttribute])
 	Update [AppModel].[EntityAttribute]
 	Set		[AttributeAlias] = S.[AttributeAlias],
 			[AttributeName] = S.[AttributeName],
 			[OrdinalPosition] = S.[OrdinalPosition],
-			[IsNullable] = S.[IsNullable]
+			[IsNullable] = S.[IsNullable],
+			[IsPrimaryKey] = S.[IsPrimaryKey]
 	From	[AppModel].[EntityAttribute] T
 			Inner Join [Delta] S
 			On	T.[EntityAttributeId] = S.[EntityAttributeId]
@@ -110,13 +115,15 @@ Begin Try
 			[AttributeAlias],
 			[AttributeName],
 			[OrdinalPosition],
-			[IsNullable])
+			[IsNullable],
+			[IsPrimaryKey])
 	Select	S.[EntityAttributeId],
 			S.[EntityId],
 			S.[AttributeAlias],
 			S.[AttributeName],
 			S.[OrdinalPosition],
-			S.[IsNullable]
+			S.[IsNullable],
+			S.[IsPrimaryKey]
 	From	@Values S
 			Left Join [AppModel].[EntityAttribute] T
 			On	S.[EntityAttributeId] = T.[EntityAttributeId]
