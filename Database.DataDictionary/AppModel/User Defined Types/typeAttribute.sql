@@ -3,6 +3,11 @@
     [AttributeTitle]       [App_DataDictionary].[typeTitle] NULL,
     [AttributeDescription] [App_DataDictionary].[typeDescription] NULL,
     [AttributeName]        [AppModel].[typeQualifiedName] NULL,
+
+	[DataType]			    NVarChar(128) Null,
+	[DataLength]		    SmallInt Null,
+	[DataPrecision]		    TinyInt Null,
+
     [IsSingleValue]        BIT NULL,
     [IsMultiValue]         BIT NULL,
     [IsSimpleType]         BIT NULL,

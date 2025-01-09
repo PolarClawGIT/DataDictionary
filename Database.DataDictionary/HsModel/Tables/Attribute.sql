@@ -1,16 +1,19 @@
 ﻿CREATE TABLE [HsModel].[Attribute]
 (
 	[AttributeId]          UniqueIdentifier Not Null,
-	[AttributeTitle]       [App_DataDictionary].[typeTitle] Not Null,
-	[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-	[AttributeName]        [AppModel].[typeQualifiedName] Null,
-	[IsSingleValue]        Bit Null,
-	[IsSimpleType]         Bit Null,
-	[IsIntegral]           Bit Null,
-	[IsNullable]           Bit Null,
-	[IsKey]                Bit Null,
-    [SysStart]             DateTime2 (7) NOT NULL,
-    [SysEnd]               DateTime2 (7) NOT NULL,
+	[AttributeTitle]		[App_DataDictionary].[typeTitle] Not Null,
+	[AttributeDescription]	[App_DataDictionary].[typeDescription] Null,
+	[AttributeName]			[AppModel].[typeQualifiedName] Null,
+	[DataType]			    NVarChar(128) Null,
+	[DataLength]		    SmallInt Null,
+	[DataPrecision]		    TinyInt Null,
+	[IsSingleValue]			Bit Null,
+	[IsSimpleType]			Bit Null,
+	[IsIntegral]			Bit Null,
+	[IsNullable]			Bit Null,
+	[IsKey]					Bit Null,
+    [SysStart]				DateTime2 (7) NOT NULL,
+    [SysEnd]				DateTime2 (7) NOT NULL,
 )
 GO
 CREATE CLUSTERED INDEX [IX_Attribute]

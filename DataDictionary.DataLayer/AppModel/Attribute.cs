@@ -11,6 +11,21 @@
         String? AttributeDescription { get; set; }
 
         /// <summary>
+        /// Generic Data Type of the Attribute
+        /// </summary>
+        String? DataType { get; set; }
+
+        /// <summary>
+        /// Data Length of the Attribute (Null generally = max allowed)
+        /// </summary>
+        Int16? DataLength { get; set; }
+
+        /// <summary>
+        /// Data Precision of the Attribute. Generally for numerics.
+        /// </summary>
+        Byte? DataPrecision { get; set; }
+
+        /// <summary>
         /// Is Attribute Single Valued (has only one value, not multi-valued)
         /// </summary>
         Boolean IsSingleValue { get; set; }

@@ -73,6 +73,11 @@ namespace DataDictionary.Main.Forms.Domain
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
+            dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
+            dataLengthData.DataBindings.Add(new Binding(nameof(dataLengthData.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
+            dataPrecisionData.DataBindings.Add(new Binding(nameof(dataPrecisionData.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));
+
             isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(IAttributeValue.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
             isMultiValuedData.DataBindings.Add(new Binding(nameof(isMultiValuedData.Checked), bindingAttribute, nameof(IAttributeValue.IsMultiValue), false, DataSourceUpdateMode.OnPropertyChanged));
             isSimpleTypeData.DataBindings.Add(new Binding(nameof(isSimpleTypeData.Checked), bindingAttribute, nameof(IAttributeValue.IsSimpleType), false, DataSourceUpdateMode.OnPropertyChanged));
