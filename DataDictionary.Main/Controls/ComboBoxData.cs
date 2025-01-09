@@ -35,6 +35,11 @@ namespace DataDictionary.Main.Controls
                 readOnly = value;
                 comboBox.Enabled = !value;
 
+                //Issue-
+                //The base Combobox does not change appearance based on enabled & readonly options like a textbox
+                //There is no easy solution.
+                //The most direct option is to play with the margins and the background color.
+
                 if (this.Enabled && !readOnly)
                 { controlLayout.BackColor = SystemColors.ControlDarkDark; }
                 else { controlLayout.BackColor = SystemColors.Control; }
