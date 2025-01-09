@@ -117,6 +117,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Create(IApplicationData source)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork =() => { modelValues.Add(new ModelValue()); } });
             work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
             work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
 
