@@ -1,12 +1,13 @@
 ﻿CREATE TABLE [HsModel].[Attribute]
 (
-	[AttributeId]          UniqueIdentifier Not Null,
+	[AttributeId]			UniqueIdentifier Not Null,
 	[AttributeTitle]		[App_DataDictionary].[typeTitle] Not Null,
 	[AttributeDescription]	[App_DataDictionary].[typeDescription] Null,
 	[AttributeName]			[AppModel].[typeQualifiedName] Null,
 	[DataType]			    NVarChar(128) Null,
 	[DataLength]		    SmallInt Null,
 	[DataPrecision]		    TinyInt Null,
+	[DataScale]				TinyInt Null,
 	[IsSingleValue]			Bit Null,
 	[IsSimpleType]			Bit Null,
 	[IsIntegral]			Bit Null,

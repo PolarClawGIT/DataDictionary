@@ -68,6 +68,13 @@ namespace DataDictionary.DataLayer.AppModel
             set { SetValue(nameof(DataPrecision), value); }
         }
 
+        /// <inheritdoc/>
+        public Byte? DataScale
+        {
+            get { return GetValue<Byte>(nameof(DataScale)); }
+            set { SetValue(nameof(DataScale), value); }
+        }
+
 
         /// <inheritdoc/>
         public Boolean IsSingleValue
@@ -248,6 +255,7 @@ namespace DataDictionary.DataLayer.AppModel
             new DataColumn(nameof(DataType), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DataLength), typeof(Int16)){ AllowDBNull = true},
             new DataColumn(nameof(DataPrecision), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(DataScale), typeof(Byte)){ AllowDBNull = true},
             new DataColumn(nameof(IsSingleValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsMultiValue), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsSimpleType), typeof(Boolean)){ AllowDBNull = true},

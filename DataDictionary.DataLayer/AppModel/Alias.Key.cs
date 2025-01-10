@@ -25,11 +25,27 @@ namespace DataDictionary.DataLayer.AppModel
         public ScopeType AliasScope { get; init; } = ScopeType.Null;
 
         /// <summary>
-        /// Constructor for the Key used by Domain Aliases
+        /// Constructor for the Key used by Aliases
         /// </summary>
         /// <param name="source"></param>
         public AliasKey(IAliasKey source) : base(source)
         { AliasScope = source.AliasScope; }
+
+        /// <summary>
+        /// Constructor for the Key used by Aliases given a TableColumn
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="scope"></param>
+        protected AliasKey(ITableColumnKeyName source, ScopeType scope) : base(source)
+        { AliasScope = scope; }
+
+        /// <summary>
+        /// Constructor for the Key used by Aliases given a Table
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="scope"></param>
+        protected AliasKey(ITableKeyName source, ScopeType scope) : base(source)
+        { AliasScope = scope; }
 
         #region IEquatable
         /// <inheritdoc/>

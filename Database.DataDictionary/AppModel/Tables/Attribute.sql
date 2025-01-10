@@ -7,6 +7,7 @@
 	[DataType]				NVarChar(128) Null, -- Generic definition of the Data Type.
 	[DataLength]			SmallInt Null, -- The Length/Maximum Size of the Data Type. Null generally = maximum possible.
 	[DataPrecision]			TinyInt Null, -- The Precision of the Data Type. Generally only applies to numerics.
+	[DataScale]				TinyInt Null, -- The Scale of the Data Type. Generally only applies to approximate numerics (real)
 	[IsSingleValue]			Bit Null, -- A Simple Valued attribute has a distinct value (not Multi Valued)
 --	[IsMultiValue]			As (convert(bit, case when [IsSingleValue]=(0) then (1) when [IsSingleValue]=(1) then (0) end)),
 	[IsSimpleType]			Bit Null, -- A Simple attribute (not Composite)
