@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Interface for the Catalog DomainItem.
     /// </summary>
     public interface IDomainItem : IDomain, IDomainKey, ICatalogKey,
-        ITemporalItem
+        ITemporalItem, IDbType
     { }
 
     /// <summary>
@@ -61,6 +61,18 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get { return GetValue(nameof(DataType)); }
             set { SetValue(nameof(DataType), value); }
+        }
+
+        /// <inheritdoc/>
+        public DbType? DatabaseType
+        {
+            get
+            {
+                var value = GetValue(nameof(DataType));
+                if (DbTypeEnumeration.TryParse(value, null, out DbTypeEnumeration? item))
+                { return item.Value; }
+                else { return null; }
+            }
         }
 
         /// <inheritdoc/>

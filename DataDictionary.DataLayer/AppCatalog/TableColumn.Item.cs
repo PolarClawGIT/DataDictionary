@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// Interface for the Database Table Column
     /// </summary>
     public interface ITableColumnItem : ITableColumn, ITableColumnKey, ICatalogKey,
-        IDbTableType, ITemporalItem
+        IDbTableType, ITemporalItem, IDbType
     { }
 
     /// <summary>
@@ -99,6 +99,18 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get { return GetValue(nameof(DataType)); }
             set { SetValue(nameof(DataType), value); }
+        }
+
+        /// <inheritdoc/>
+        public DbType? DatabaseType
+        {
+            get
+            {
+                var value = GetValue(nameof(DataType));
+                if (DbTypeEnumeration.TryParse(value, null, out DbTypeEnumeration? item))
+                { return item.Value; }
+                else { return null; }
+            }
         }
 
         /// <inheritdoc/>
@@ -250,6 +262,8 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
+
+        
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
