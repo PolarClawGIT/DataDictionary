@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -35,7 +37,7 @@ namespace DataDictionary.Main.Forms.Database
             bindingColumn.Position = 0;
 
             if (bindingColumn.Current is ITableColumnValue current)
-            { bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w)); }
+            { bindingProperties.DataSource = new BindingView<BusinessLayer.AppCatalog.PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w)); }
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
@@ -83,13 +85,31 @@ namespace DataDictionary.Main.Forms.Database
 
         private void ExportAttributes_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //if (bindingColumn.Current is ITableColumnValue current)
-            //{
-            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    SendMessage(new RefreshNavigation());
-            //}
+            if (bindingColumn.Current is TableColumnValue current)
+            {
+                IEnumerable<ITableColumnValue> alaises = BusinessData.CatalogModel.DbTableColumns.FindAliases(current);
+                IEnumerable<IAttributeValue> attributes = alaises.SelectMany(s => BusinessData.Model.Attributes.FindAttribute(new AliasIndex(s))).ToList();
+                AttributeValue attribute;
 
+                if (attributes.FirstOrDefault() is AttributeValue value)
+                { attribute = value; }
+                else
+                {
+                    attribute = new AttributeValue(current);
+                    BusinessData.Model.Attributes.Add(attribute);
+                }
+
+                BusinessData.Model.Attributes.AddAlias(attribute, alaises);
+
+                PropertyIndexObject propertyKey = new PropertyIndexObject(current);
+                BusinessData.Model.Attributes.AddProperties(
+                    attribute, 
+                    BusinessData.CatalogModel.DbProperties.
+                        Where(w => propertyKey.Equals(w)));
+
+                Activate((data) => new Forms.Domain.DomainAttribute(attribute), attribute);
+                SendMessage(new RefreshNavigation());
+            }
         }
     }
 }

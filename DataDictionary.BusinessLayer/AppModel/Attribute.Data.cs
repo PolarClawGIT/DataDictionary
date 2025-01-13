@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
@@ -45,6 +46,16 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <returns></returns>
         /// <remarks>Not for use outside of BusinessLayer</remarks>
         XElement? GetXElement(ScriptingWork scripting, IAttributeIndex index);
+
+        /// <summary>
+        /// Finds the Attributes that match the Alias Index.
+        /// </summary>
+        /// <param name="aliasIndex"></param>
+        /// <returns></returns>
+        IEnumerable<IAttributeValue> FindAttribute(IAliasIndex aliasIndex);
+
+        void AddAlias(IAttributeIndex attribute, IEnumerable<AppCatalog.ITableColumnValue> aliases);
+        void AddProperties(IAttributeIndex attribute, IEnumerable<AppCatalog.IPropertyValue> properties);
     }
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
@@ -335,5 +346,56 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         #endregion
+
+        /// <inheritdoc/>
+        public IEnumerable<IAttributeValue> FindAttribute(IAliasIndex aliasIndex)
+        {
+            AliasIndex key = new AliasIndex(aliasIndex);
+            return
+                this.Join(
+                    Aliases.Where(w => key.Equals(w)),
+                    attribute => new AttributeIndex(attribute),
+                    alias => new AttributeIndex(alias),
+                    (attribute, alias) => attribute).
+                ToList();
+        }
+
+        /// <inheritdoc/>
+        public void AddAlias(IAttributeIndex attribute, IEnumerable<AppCatalog.ITableColumnValue> aliases)
+        {
+            AttributeIndex key = new AttributeIndex(attribute);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue value)
+            {
+                foreach (AppCatalog.ITableColumnValue alias in aliases)
+                {
+                    AliasIndex index = new AliasIndex(alias);
+                    if (Aliases.FirstOrDefault(w => key.Equals(w) && index.Equals(w)) is not AttributeAliasValue)
+                    { Aliases.Add(new AttributeAliasValue(value, index)); }
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public void AddProperties(IAttributeIndex attribute, IEnumerable<AppCatalog.IPropertyValue> properties)
+        {
+            AttributeIndex key = new AttributeIndex(attribute);
+            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue value)
+            {
+                foreach (AppCatalog.IPropertyValue databaseProperty in properties)
+                {
+                    if (Model.Properties.FirstOrDefault(w =>
+                        w.PropertyType is DomainPropertyType.MS_ExtendedProperty &&
+                        w.ExtendedPropertyName.Equals(databaseProperty.PropertyName, KeyExtension.CompareString))
+                        is PropertyValue modelProperty)
+                    {
+                        Properties.Add(new AttributePropertyValue(value, modelProperty, databaseProperty));
+
+                        if (databaseProperty.IsDescription && String.IsNullOrEmpty(value.AttributeDescription))
+                        { value.AttributeDescription = databaseProperty.PropertyValue; }
+                    }
+                }
+            }
+        }
     }
 }

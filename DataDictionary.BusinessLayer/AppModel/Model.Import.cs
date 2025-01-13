@@ -7,6 +7,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Performs the function of Importing a Model into the Model.
     /// </summary>
+    [Obsolete("Needs to be re-worked")]
     public class ModelImport
     {
         // Lookup Data

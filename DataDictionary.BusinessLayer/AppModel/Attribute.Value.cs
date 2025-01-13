@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
+using System.Data;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
@@ -47,6 +48,48 @@ namespace DataDictionary.BusinessLayer.AppModel
             };
         }
 
+        /// <summary>
+        /// Builds an Attribute from a TableColumn
+        /// </summary>
+        /// <param name="source"></param>
+        public AttributeValue(AppCatalog.ITableColumnValue source) : this()
+        {
+            AttributeTitle = source.ColumnName;
+            AttributeName = new AppCatalog.TableColumnIndexName(source).ToString();
+
+            DataType = source.DataType;
+
+            if (source.DatabaseType is DbType value)
+            {
+                DbTypeEnumeration item = DbTypeEnumeration.Cast(value);
+
+                if (item.IsAlphaNumeric
+                    && source.CharacterMaximumLength.HasValue
+                    && source.CharacterMaximumLength.Value > 0)
+                { DataLength = source.CharacterMaximumLength; }
+
+                if (item.IsNumeric)
+                {
+                    DataPrecision = source.NumericPrecision;
+
+                    if (item.IsFloatingPoint)
+                    { DataScale = source.NumericScale; }
+                }
+                if (item.IsDate)
+                { DataPrecision = source.DateTimePrecision; }
+
+            }
+            else
+            {
+                DataLength = source.CharacterMaximumLength;
+                DataPrecision = source.NumericPrecision;
+                DataScale = source.NumericScale;
+            }
+
+            IsNullable = source.IsNullable ?? false;
+            IsDerived = source.IsComputed ?? false;
+
+        }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
