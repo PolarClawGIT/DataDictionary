@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public AliasIndex(IAliasIndex source) : base(source) { }
 
         /// <summary>
-        /// Converts a Catalog TableColumn into an AliasIndex
+        /// Converts a Catalog sourceColumn into an AliasIndex
         /// </summary>
         /// <param name="tableColumn"></param>
         public AliasIndex(ITableColumnValue tableColumn) : base(tableColumn, tableColumn.Scope)

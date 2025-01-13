@@ -87,27 +87,16 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingColumn.Current is TableColumnValue current)
             {
-                IEnumerable<ITableColumnValue> alaises = BusinessData.CatalogModel.DbTableColumns.FindAliases(current);
-                IEnumerable<IAttributeValue> attributes = alaises.SelectMany(s => BusinessData.Model.Attributes.FindAttribute(new AliasIndex(s))).ToList();
-                AttributeValue attribute;
-
-                if (attributes.FirstOrDefault() is AttributeValue value)
-                { attribute = value; }
-                else
+                TableColumnAttribute columnAttribute = new TableColumnAttribute(current)
                 {
-                    attribute = new AttributeValue(current);
-                    BusinessData.Model.Attributes.Add(attribute);
-                }
+                    GetAlias = BusinessData.CatalogModel.DbTableColumns.GetAlias,
+                    GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
+                    GetModelProperty = BusinessData.Model.Properties.GetProperty
+                };
 
-                BusinessData.Model.Attributes.AddAlias(attribute, alaises);
+                IAttributeValue attribute = BusinessData.Model.Attributes.Import(columnAttribute);
 
-                PropertyIndexObject propertyKey = new PropertyIndexObject(current);
-                BusinessData.Model.Attributes.AddProperties(
-                    attribute, 
-                    BusinessData.CatalogModel.DbProperties.
-                        Where(w => propertyKey.Equals(w)));
-
-                Activate((data) => new Forms.Domain.DomainAttribute(attribute), attribute);
+                Activate(() => new Forms.Domain.DomainAttribute(attribute));
                 SendMessage(new RefreshNavigation());
             }
         }

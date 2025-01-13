@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -24,6 +26,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <returns></returns>
         /// <remarks>Not for use outside of BusinessLayer</remarks>
         IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties);
+
+        /// <summary>
+        /// Gets the Property Value from the Catalog Property
+        /// </summary>
+        /// <param name="catalogProperty"></param>
+        /// <returns></returns>
+        IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty);
     }
 
     /// <inheritdoc/>
@@ -121,6 +130,19 @@ namespace DataDictionary.BusinessLayer.AppModel
                 if (attrib is XAttribute)
                 { result.Add(attrib); }
             }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty)
+        {
+            PropertyValue? result = null;
+
+            result = this.FirstOrDefault(w =>
+                w.PropertyType is DomainPropertyType.MS_ExtendedProperty
+                && w.ExtendedPropertyName.Equals(catalogProperty.PropertyName, KeyExtension.CompareString));
 
             return result;
         }

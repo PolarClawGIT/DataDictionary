@@ -22,9 +22,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public AttributePropertyValue(IAttributeIndex attributeKey) : base(attributeKey) { }
 
-        /// <inheritdoc/>
-        public AttributePropertyValue(IAttributeKey attributeKey, DataLayer.AppModel.IPropertyKey propertyKey, DataLayer.AppCatalog.IPropertyItem value) : base(attributeKey, propertyKey, value)
+       /// <inheritdoc/>
+        public AttributePropertyValue(IAttributeKey attributeKey, IPropertyKey propertyKey) : base(attributeKey, propertyKey)
         { }
+
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

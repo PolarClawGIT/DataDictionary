@@ -270,7 +270,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         // TODO: This does too much. Need to break it down.
         //    * ConstraintColumn: GetAlias given Column, recursive
         //    * Properties: GetProperies given column
-        //    * TableColumn: CreateAttribute
+        //    * sourceColumn: CreateAttribute
         //
         //    attributes = target.Attributes;
         //    attributeAliases = target.Attributes.Aliases;
