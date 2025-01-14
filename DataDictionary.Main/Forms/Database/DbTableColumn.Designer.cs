@@ -820,14 +820,14 @@
             // 
             exportOptions.Items.AddRange(new ToolStripItem[] { exportAttributes });
             exportOptions.Name = "contextMenuStrip1";
-            exportOptions.Size = new Size(153, 26);
+            exportOptions.Size = new Size(181, 48);
             // 
             // exportAttributes
             // 
             exportAttributes.Name = "exportAttributes";
-            exportAttributes.Size = new Size(152, 22);
-            exportAttributes.Text = "Attributes only";
-            exportAttributes.ToolTipText = "Create domain Attribute from database Column";
+            exportAttributes.Size = new Size(180, 22);
+            exportAttributes.Text = "to Attribute";
+            exportAttributes.ToolTipText = "Create an Attribute from database Column";
             exportAttributes.Click += ExportAttributes_Click;
             // 
             // DbTableColumn

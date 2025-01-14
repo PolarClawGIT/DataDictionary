@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
@@ -38,6 +39,20 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// List of Subject Areas for the Entities within the Model.
         /// </summary>
         IEntitySubjectAreaData SubjectArea { get; }
+
+        /// <summary>
+        /// Finds the Entity that match the Alias Index.
+        /// </summary>
+        /// <param name="aliasIndex"></param>
+        /// <returns></returns>
+        IEnumerable<IEntityValue> FindEntity(IAliasIndex aliasIndex);
+
+        /// <summary>
+        /// Imports a TableEntity into the list of Entities
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IEntityValue Import(AppCatalog.TableEntity source);
     }
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
@@ -272,6 +287,73 @@ namespace DataDictionary.BusinessLayer.AppModel
                     ToList();
             }
 
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<IEntityValue> FindEntity(IAliasIndex aliasIndex)
+        {
+            AliasIndex key = new AliasIndex(aliasIndex);
+            return
+                this.Join(
+                    Aliases.Where(w => key.Equals(w)),
+                    entity => new EntityIndex(entity),
+                    alias => new EntityIndex(alias),
+                    (entity, alias) => entity).
+                ToList();
+        }
+
+        public IEntityValue Import(TableEntity source)
+        {
+            // Find the Entity by Alias
+            IEntityValue entity = source.Aliases.
+                SelectMany(s => FindEntity(new AliasIndex(s))).
+                FirstOrDefault() ??
+                source.Entity;
+
+            EntityIndex entityIndex = new EntityIndex(entity);
+
+            // Entity already exists, copy the source information into the existing Entity
+            if (this.FirstOrDefault(w => entityIndex.Equals(w)) is EntityValue value)
+            {
+
+                if (String.IsNullOrEmpty(value.EntityDescription))
+                { value.EntityDescription = source.Entity.EntityDescription; }
+
+                foreach (var property in source.Properties)
+                {
+                    PropertyIndex propertyIndex = new PropertyIndex(property);
+                    if (Properties.FirstOrDefault(w => entityIndex.Equals(w) && propertyIndex.Equals(w)) is not EntityPropertyValue)
+                    { Properties.Add(new EntityPropertyValue(value, property) { PropertyValue = property.PropertyValue }); };
+                }
+
+                foreach (var alias in source.Aliases)
+                {
+                    AliasIndex aliasIndex = new AliasIndex(alias);
+                    if (Aliases.FirstOrDefault(w => entityIndex.Equals(w) && aliasIndex.Equals(w)) is not EntityAliasValue)
+                    { Aliases.Add(new EntityAliasValue(value, aliasIndex)); }
+                }
+
+                // Attributes get replaced
+                attributeValues.Delete(entityIndex);
+                foreach (var item in source.Attributes)
+                { Attributes.Add(item); }
+            }
+            else // Entity does not exist, add everything
+            {
+                Add(source.Entity);
+
+                foreach (var item in source.Properties)
+                { Properties.Add(item); }
+
+                foreach (var item in source.Aliases)
+                { Aliases.Add(item); }
+
+                foreach (var item in source.Attributes)
+                { Attributes.Add(item); }
+
+            }
+
+            return entity;
         }
     }
 }

@@ -44,6 +44,8 @@
             IsNullableValue = new DataGridViewCheckBoxColumn();
             constraintTab = new TabPage();
             tableConstraintData = new DataGridView();
+            ConstraintNameValue = new DataGridViewTextBoxColumn();
+            ConstraintTypeValue = new DataGridViewTextBoxColumn();
             dependencyData = new TabPage();
             dependenciesData = new DataGridView();
             referencedSchemaColumn = new DataGridViewTextBoxColumn();
@@ -60,12 +62,8 @@
             bindingColumns = new BindingSource(components);
             bindingConstraints = new BindingSource(components);
             exportOptions = new ContextMenuStrip(components);
-            exportAll = new ToolStripMenuItem();
             exportEntites = new ToolStripMenuItem();
-            exportAttributes = new ToolStripMenuItem();
             bindingDependencies = new BindingSource(components);
-            ConstraintNameValue = new DataGridViewTextBoxColumn();
-            ConstraintTypeValue = new DataGridViewTextBoxColumn();
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
@@ -265,6 +263,23 @@
             tableConstraintData.Size = new Size(520, 162);
             tableConstraintData.TabIndex = 0;
             // 
+            // ConstraintNameValue
+            // 
+            ConstraintNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ConstraintNameValue.DataPropertyName = "ConstraintName";
+            ConstraintNameValue.HeaderText = "Constraint Name";
+            ConstraintNameValue.Name = "ConstraintNameValue";
+            ConstraintNameValue.ReadOnly = true;
+            // 
+            // ConstraintTypeValue
+            // 
+            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ConstraintTypeValue.DataPropertyName = "ConstraintType";
+            ConstraintTypeValue.FillWeight = 50F;
+            ConstraintTypeValue.HeaderText = "Type";
+            ConstraintTypeValue.Name = "ConstraintTypeValue";
+            ConstraintTypeValue.ReadOnly = true;
+            // 
             // dependencyData
             // 
             dependencyData.BackColor = SystemColors.Control;
@@ -378,50 +393,17 @@
             // 
             // exportOptions
             // 
-            exportOptions.Items.AddRange(new ToolStripItem[] { exportAll, exportEntites, exportAttributes });
+            exportOptions.Items.AddRange(new ToolStripItem[] { exportEntites });
             exportOptions.Name = "contextMenuStrip1";
-            exportOptions.Size = new Size(153, 70);
-            // 
-            // exportAll
-            // 
-            exportAll.Name = "exportAll";
-            exportAll.Size = new Size(152, 22);
-            exportAll.Text = "All items";
-            exportAll.ToolTipText = "Create all domain model items from database model";
-            exportAll.Click += ExportAll_Click;
+            exportOptions.Size = new Size(181, 48);
             // 
             // exportEntites
             // 
             exportEntites.Name = "exportEntites";
-            exportEntites.Size = new Size(152, 22);
-            exportEntites.Text = "Entity only";
+            exportEntites.Size = new Size(180, 22);
+            exportEntites.Text = "to Entity";
             exportEntites.ToolTipText = "Create domain Entity from database Tables or View";
             exportEntites.Click += ExportEntites_Click;
-            // 
-            // exportAttributes
-            // 
-            exportAttributes.Name = "exportAttributes";
-            exportAttributes.Size = new Size(152, 22);
-            exportAttributes.Text = "Attributes only";
-            exportAttributes.ToolTipText = "Create domain Attributes from database Columns";
-            exportAttributes.Click += ExportAttributes_Click;
-            // 
-            // ConstraintNameValue
-            // 
-            ConstraintNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ConstraintNameValue.DataPropertyName = "ConstraintName";
-            ConstraintNameValue.HeaderText = "Constraint Name";
-            ConstraintNameValue.Name = "ConstraintNameValue";
-            ConstraintNameValue.ReadOnly = true;
-            // 
-            // ConstraintTypeValue
-            // 
-            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ConstraintTypeValue.DataPropertyName = "ConstraintType";
-            ConstraintTypeValue.FillWeight = 50F;
-            ConstraintTypeValue.HeaderText = "Type";
-            ConstraintTypeValue.Name = "ConstraintTypeValue";
-            ConstraintTypeValue.ReadOnly = true;
             // 
             // DbTable
             // 
@@ -478,9 +460,7 @@
         private BindingSource bindingColumns;
         private BindingSource bindingConstraints;
         private ContextMenuStrip exportOptions;
-        private ToolStripMenuItem exportAll;
         private ToolStripMenuItem exportEntites;
-        private ToolStripMenuItem exportAttributes;
         private TabPage dependencyData;
         private BindingSource bindingDependencies;
         private DataGridView dependenciesData;

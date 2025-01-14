@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -29,8 +30,6 @@ namespace DataDictionary.Main.Forms.Database
             CommandButtons[CommandImageType.Export].Text = "to Model";
             CommandButtons[CommandImageType.Export].DropDown = exportOptions;
 
-            exportAll.Image = NavigationEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
-            exportAttributes.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
             exportEntites.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
         }
 
@@ -47,7 +46,7 @@ namespace DataDictionary.Main.Forms.Database
                 PropertyIndexObject propertyKey = new PropertyIndexObject(current);
                 bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
                 bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.CatalogModel.DbConstraints, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<BusinessLayer.AppCatalog.PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
                 bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));
             }
         }
@@ -76,35 +75,23 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not ITableValue);
         }
 
-        private void ExportAll_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-            //if (bindingTable.Current is ITableValue current)
-            //{
-            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    SendMessage(new RefreshNavigation());
-            //}
-        }
-
         private void ExportEntites_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //if (bindingTable.Current is ITableValue current)
-            //{
-            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    SendMessage(new RefreshNavigation());
-            //}
-        }
+            if (bindingTable.Current is TableValue current)
+            {
+                TableEntity tableEntity = new TableEntity(current)
+                {
+                    GetAlias = BusinessData.CatalogModel.DbTables.GetAlias,
+                    GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
+                    GetModelProperty = BusinessData.Model.Properties.GetProperty,
+                    GetColumns = BusinessData.CatalogModel.DbTables.GetColumns
+                };
 
-        private void ExportAttributes_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-            //if (bindingTable.Current is ITableValue current)
-            //{
-            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
-            //    SendMessage(new RefreshNavigation());
-            //}
+                IEntityValue entity = BusinessData.Model.Entities.Import(tableEntity);
+
+                Activate(() => new Forms.Domain.DomainEntity(entity));
+                SendMessage(new RefreshNavigation());
+            }
         }
     }
 }

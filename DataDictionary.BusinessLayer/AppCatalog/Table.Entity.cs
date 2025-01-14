@@ -79,6 +79,8 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                     value.AttributePath = item.CreatePath();
                     value.OrdinalPosition = item.OrdinalPosition;
                     value.IsNullable = item.IsNullable;
+
+                    result.Add(value);
                 }
 
                 return result;
