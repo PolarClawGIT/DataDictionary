@@ -17,6 +17,11 @@ namespace DataDictionary.DataLayer.AppModel
         String? AttributeTitle { get; }
 
         /// <summary>
+        /// The NameSpace of the Alias of the Attribute
+        /// </summary>
+        String? AttributePath { get; }
+
+        /// <summary>
         /// Is the Attribute Nullable
         /// </summary>
         Boolean? IsNullable { get; }

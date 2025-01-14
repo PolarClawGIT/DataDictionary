@@ -58,16 +58,16 @@ namespace DataDictionary.Main.Forms.Database
             if (bindingSource.Current is ICatalogValue current)
             {
                 throw new NotImplementedException(); // TODO needs to be fixed.
-                var newModel = new ModelImport();
-                List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(newModel.Load(BusinessData.CatalogModel, current));
-                work.AddRange(newModel.Build(BusinessData.Model));
+                //var newModel = new ModelImport();
+                //List<WorkItem> work = new List<WorkItem>();
+                //work.AddRange(newModel.Load(BusinessData.CatalogModel, current));
+                //work.AddRange(newModel.Build(BusinessData.Model));
 
-                DoWork(work, onCompleting);
+                //DoWork(work, onCompleting);
             }
 
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            //void onCompleting(RunWorkerCompletedEventArgs args)
+            //{ SendMessage(new RefreshNavigation()); }
         }
 
 

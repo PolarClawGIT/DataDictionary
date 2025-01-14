@@ -16,14 +16,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeProperty; } }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem()"/>
         public AttributePropertyValue() : base() { }
 
-        /// <inheritdoc/>
-        public AttributePropertyValue(IAttributeIndex attributeKey) : base(attributeKey) { }
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem(IAttributeKey)"/>
+        public AttributePropertyValue(IAttributeIndex attribute) : base(attribute) { }
 
-       /// <inheritdoc/>
-        public AttributePropertyValue(IAttributeKey attributeKey, IPropertyKey propertyKey) : base(attributeKey, propertyKey)
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem(IAttributeKey, IPropertyKey)"/>
+        public AttributePropertyValue(IAttributeIndex attribute, IPropertyIndex property) : base(attribute, property)
         { }
 
 

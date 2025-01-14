@@ -29,20 +29,18 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="alias"></param>
         public EntityAliasValue(IEntityIndex key, AliasIndex alias) : base(key)
         {
-            AliasNameSpace = alias.AliasNameSpace;
+            base.AliasPath = alias.AliasPath;
             AliasScope = alias.AliasScope;
         }
 
         /// <inheritdoc/>
         internal EntityAliasValue(IEntityKey key) : base(key) { }
 
-        /// <summary>
-        /// The Alias Path derived from AliasNameSpace
-        /// </summary>
-        public PathIndex AliasPath
+        /// <inheritdoc cref="EntityAliasItem.AliasPath"/>
+        public new PathIndex AliasPath
         {
-            get { return new PathIndex(PathIndex.Parse(AliasNameSpace).ToArray()); }
-            set { AliasNameSpace = value.MemberFullPath; }
+            get { return new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
+            set { base.AliasPath = value.MemberFullPath; }
         }
 
 

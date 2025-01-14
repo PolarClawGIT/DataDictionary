@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
@@ -10,7 +11,21 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// Interface representing Catalog Table data
     /// </summary>
     public interface ITableData : IBindingData<TableValue>
-    { }
+    {
+        /// <summary>
+        /// Finds all the Columns that are Aliased to the column provided (includes itself).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IEnumerable<ITableValue> GetAlias(ITableIndexName source);
+
+        /// <summary>
+        /// Finds all the Columns for the Table specified.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        BindingView<TableColumnValue> GetColumns(ITableIndexName table);
+    }
 
     class TableData : TableCollection<TableValue>,
         ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
@@ -65,5 +80,28 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
         { return new WorkItem() { WorkName = "Remove Table", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        public IEnumerable<ITableValue> GetAlias(ITableIndexName table)
+        {
+            List<TableIndexName> keys = new List<TableIndexName>();
+            TableIndexName key = new TableIndexName(table);
+
+            keys.AddRange(
+                this.Where(w => key.Equals(w)).Select(s => new TableIndexName(s))
+                );
+
+            return this.Join(keys,
+                table => new TableIndexName(table),
+                key => key,
+                (table, key) => table
+                ).ToList();
+        }
+
+        /// <inheritdoc/>
+        public BindingView<TableColumnValue> GetColumns(ITableIndexName table)
+        {
+            TableIndexName key = new TableIndexName(table);
+            return new BindingView<TableColumnValue>(Model.DbTableColumns, w => key.Equals(w));
+        }
     }
 }

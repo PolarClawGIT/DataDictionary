@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 
@@ -24,7 +25,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             get
             {
-                List< AttributeAliasValue > result = new List<AttributeAliasValue>();
+                List<AttributeAliasValue> result = new List<AttributeAliasValue>();
                 foreach (ITableColumnValue item in GetAlias(sourceColumn))
                 {
                     AliasIndex index = new AliasIndex(item);
@@ -46,7 +47,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 foreach (AppCatalog.IPropertyValue databaseProperty in GetCatalogProperty(sourceColumn))
                 {
                     if (GetModelProperty(databaseProperty) is AppModel.IPropertyValue modelProperty)
-                    {   result.Add(new AttributePropertyValue(Attribute, modelProperty) { PropertyValue = databaseProperty.PropertyValue }); }
+                    {
+                        result.Add(new AttributePropertyValue(Attribute, modelProperty)
+                        { PropertyValue = databaseProperty.PropertyValue });
+                    }
 
                     if (databaseProperty.IsDescription && String.IsNullOrEmpty(Attribute.AttributeDescription))
                     { Attribute.AttributeDescription = databaseProperty.PropertyValue; }
@@ -74,9 +78,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             Attribute = new AttributeValue()
             {
                 AttributeTitle = source.ColumnName,
-                AttributeName = new TableColumnIndexName(source).ToString(),
+                AttributePath = source.CreatePath(),
                 DataType = source.DataType
             };
+
 
             if (source.DatabaseType is DbType value)
             {
@@ -107,6 +112,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
             Attribute.IsNullable = source.IsNullable ?? false;
             Attribute.IsDerived = source.IsComputed ?? false;
-        }   
+        }
     }
 }

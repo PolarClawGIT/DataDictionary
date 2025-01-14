@@ -92,11 +92,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 }).Where(w => key.Equals(w.parentKey) || key.Equals(w.childKey)).
                 ToList();
 
-            //return this.Where(w => key.Equals(w)).Select(s => new TableColumnIndexName(s)).
-            //    Union(constraints.Select(s => s.parentKey)).
-            //    Union(constraints.Select(s => s.childKey)).
-            //    ToList();
-
             keys.AddRange(
                 this.Where(w => key.Equals(w)).Select(s => new TableColumnIndexName(s)).
                 Union(constraints.Select(s => s.parentKey)).

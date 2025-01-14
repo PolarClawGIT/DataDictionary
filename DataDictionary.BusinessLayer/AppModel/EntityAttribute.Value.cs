@@ -6,12 +6,11 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IEntityAttributeValue : IEntityAttributeItem,
-        IAttributeIndex, IEntityIndex, IEntityAttributeIndex,
-        IScopeType, ITemporalValue
+        IEntityIndex, IScopeType, ITemporalValue
     { }
 
     /// <inheritdoc/>
-    public class EntityAttributeValue : EntityAttributeItem
+    public class EntityAttributeValue : EntityAttributeItem, IEntityAttributeValue
     {
         /// <inheritdoc/>
         public DataIndex Index => throw new NotImplementedException();
@@ -22,16 +21,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityAttribute; } }
 
-        /// <summary>
-        /// Path Index version of the AttributeName
-        /// </summary>
-        public PathIndex AttributePath
+        /// <inheritdoc cref="EntityAttributeItem.AttributePath"/>
+        public new PathIndex AttributePath
         {
             get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(AttributeName).ToArray())); }
+            { return new PathIndex(new PathIndex(PathIndex.Parse(base.AttributePath).ToArray())); }
             set
             {
-                AttributeName = value.MemberFullPath;
+                base.AttributePath = value.MemberFullPath;
                 OnPropertyChanged(nameof(AttributePath));
             }
         }

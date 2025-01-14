@@ -90,7 +90,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
 
-            attributeNameData.DataBindings.Add(new Binding(nameof(attributeNameData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
+            attributePathData.DataBindings.Add(new Binding(nameof(attributePathData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributePath)));
             attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
             attributeAliasData.DataBindings.Add(new Binding(nameof(attributeAliasData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
             attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
