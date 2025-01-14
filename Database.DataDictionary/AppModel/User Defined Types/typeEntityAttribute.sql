@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeEntityAttribute] AS TABLE (
     [EntityId]             UniqueIdentifier NULL,
-	[AttributeAlias]       [App_DataDictionary].[typeTitle] Null,
-	[AttributeName]        [AppModel].[typeQualifiedName] Null,
+	[AttributeTitle]       [App_DataDictionary].[typeTitle] Null,
+	[AttributePath]        [App_DataDictionary].[typeNameSpacePath] Null,
 	[OrdinalPosition]      Int Not Null,
 	[IsNullable]		   Bit Null,
 	[IsPrimaryKey]		   Bit Null,

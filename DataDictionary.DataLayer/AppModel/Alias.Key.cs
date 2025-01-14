@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(AliasScope, AliasNameSpace); }
+        { return HashCode.Combine(AliasScope, AliasPath); }
         #endregion
     }
 }

@@ -4,7 +4,7 @@ Select	D.[AttributeId],
 		D.[AliasId],
 		FA.[AttributeTitle],
 		D.[AliasScope],
-		FL.[AliasNameSpace],
+		FL.[AliasPath],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -47,7 +47,7 @@ From	[AppModel].[AttributeAlias] D
 		Outer Apply (
 			Select	Top 1
 					[AliasId],
-					[AliasNameSpace]
+					[AliasNameSpace] As [AliasPath]
 			From	[AppModel].[AliasHS]
 			Where	[AliasId] = D.[AliasId] And
 					[SysStart] <= D.[SysEnd]

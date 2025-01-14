@@ -31,20 +31,20 @@ Begin Try
 		[EntityId]		    UniqueIdentifier Not Null,
 		[AliasId]			UniqueIdentifier Not Null,
 		[AliasScope]		[AppModel].[typeScopeName] NOT NULL,
-		--Unique ([AliasId], [AliasNameSpace]) -- Cannot Index, [AliasNameSpace] is too long
+		--Unique ([AliasId], [AliasPath]) -- Cannot Index, [AliasPath] is too long
 		Primary Key([EntityId], [AliasId]))
 
 	Declare @Alias [AppModel].[typeAlias];
 
 	Insert Into @Alias ([AliasNameSpace])
-	Select	[AliasNameSpace]
+	Select	[AliasPath]
 	From	@Data
 
 	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
 
 	Insert Into @Values
 	Select	D.[EntityId],
-			[AppModel].[funcAliasId] (D.[AliasNameSpace]) As [AliasId],
+			[AppModel].[funcAliasId] (D.[AliasPath]) As [AliasId],
 			D.[AliasScope]
 	From	@Data D
 	Where	(@EntityId is Null Or @EntityId = D.[EntityId]) And

@@ -2,10 +2,10 @@
 -- Temporal View
 Select	D.[EntityId], --AK
 		FA.[EntityTitle],
-		D.[EntityAttributeId], --PK
-		D.[AttributeAlias], -- AK
-		D.[AttributeName],
-		D.[OrdinalPosition],
+		D.[AttributeAliasId], -- PK
+		FL.[AttributePath],
+		D.[AttributeTitle],
+		D.[OrdinalPosition], -- AK
 		D.[IsNullable],
 		D.[IsPrimaryKey],
 		-- Temporal Status
@@ -24,13 +24,13 @@ From	[AppModel].[EntityAttribute] D
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[HsModel].[EntityAttribute]
 			Where	[EntityId] = D.[EntityId] And
-					[EntityAttributeId] = D.[EntityAttributeId] And
+					[AttributeAliasId] = D.[AttributeAliasId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[HsModel].[EntityAttribute]
 			Where	[EntityId] = D.[EntityId] And
-					[EntityAttributeId] = D.[EntityAttributeId] And
+					[AttributeAliasId] = D.[AttributeAliasId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -47,4 +47,12 @@ From	[AppModel].[EntityAttribute] D
 			Where	[EntityId] = D.[EntityId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FA
+		Outer Apply (
+			Select	Top 1
+					[AliasId],
+					[AliasNameSpace] As [AttributePath]
+			From	[AppModel].[AliasHS]
+			Where	[AliasId] = D.[AttributeAliasId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FL
 GO

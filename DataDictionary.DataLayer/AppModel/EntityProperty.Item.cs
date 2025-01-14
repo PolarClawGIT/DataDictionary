@@ -55,12 +55,10 @@ namespace DataDictionary.DataLayer.AppModel
         /// </summary>
         /// <param name="EntityKey"></param>
         /// <param name="propertyKey"></param>
-        /// <param name="value"></param>
-        public EntityPropertyItem(IEntityKey EntityKey, IPropertyKey propertyKey, AppCatalog.IPropertyItem value) : this()
+        public EntityPropertyItem(IEntityKey EntityKey, IPropertyKey propertyKey) : this()
         {
             EntityId = EntityKey.EntityId;
             PropertyId = propertyKey.PropertyId;
-            PropertyValue = value.PropertyValue;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =

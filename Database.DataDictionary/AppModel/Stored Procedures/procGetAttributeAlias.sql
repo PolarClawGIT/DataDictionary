@@ -10,9 +10,9 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	D.[AttributeId],
-		D.[AliasScope],
-		D.[AliasNameSpace],
+Select	[AttributeId],
+		[AliasScope],
+		[AliasPath],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

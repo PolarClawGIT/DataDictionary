@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// <summary>
         /// Name of the Alias.
         /// </summary>
-        String? AliasNameSpace { get; }
+        String? AliasPath { get; }
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.AppModel
         IKeyEquality<IAliasKeyName>, IKeyEquality<AliasKeyName>
     {
         /// <inheritdoc/>
-        public String AliasNameSpace { get; init; } = string.Empty;
+        public String AliasPath { get; init; } = string.Empty;
 
         /// <summary>
         /// Constructor for the Domain Alias Name Key
@@ -29,8 +29,8 @@ namespace DataDictionary.DataLayer.AppModel
         /// <param name="source"></param>
         public AliasKeyName(IAliasKeyName source) : base()
         {
-            if (source.AliasNameSpace is string) { AliasNameSpace = source.AliasNameSpace; }
-            else { AliasNameSpace = string.Empty; }
+            if (source.AliasPath is string) { AliasPath = source.AliasPath; }
+            else { AliasPath = string.Empty; }
         }
 
         /// <summary>
@@ -38,14 +38,14 @@ namespace DataDictionary.DataLayer.AppModel
         /// </summary>
         /// <param name="source"></param>
         public AliasKeyName(ITableColumnKeyName source) : base()
-        { AliasNameSpace = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
+        { AliasPath = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
 
         /// <summary>
         /// Constructor for the Domain Alias Name Key from Table
         /// </summary>
         /// <param name="source"></param>
         public AliasKeyName(ITableKeyName source) : base()
-        { AliasNameSpace = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName); }
+        { AliasPath = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName); }
 
         #region IEquatable
         /// <inheritdoc/>
@@ -53,9 +53,9 @@ namespace DataDictionary.DataLayer.AppModel
         {
             return
                 other is AliasKeyName &&
-                !string.IsNullOrEmpty(AliasNameSpace) &&
-                !string.IsNullOrEmpty(other.AliasNameSpace) &&
-                AliasNameSpace.Equals(other.AliasNameSpace, KeyExtension.CompareString);
+                !string.IsNullOrEmpty(AliasPath) &&
+                !string.IsNullOrEmpty(other.AliasPath) &&
+                AliasPath.Equals(other.AliasPath, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -76,7 +76,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(AliasNameSpace); }
+        { return HashCode.Combine(AliasPath); }
         #endregion
     }
 }

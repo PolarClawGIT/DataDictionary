@@ -8,13 +8,13 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Interface for Model EntityAttribute Item
     /// </summary>
-    public interface IEntityAttributeItem : IEntityKey, IAttributeSubjectAreaName,
+    public interface IEntityAttributeItem : IEntityKey,
         ITemporalItem
     {
         /// <summary>
         /// The Name of the Attribute as known to the Entity.
         /// </summary>
-        String? AttributeAlias { get; }
+        String? AttributeTitle { get; }
 
         /// <summary>
         /// Is the Attribute Nullable
@@ -45,17 +45,17 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? AttributeAlias
+        public String? AttributeTitle
         {
-            get { return GetValue(nameof(AttributeAlias)); }
-            set { SetValue(nameof(AttributeAlias), value); }
+            get { return GetValue(nameof(AttributeTitle)); }
+            set { SetValue(nameof(AttributeTitle), value); }
         }
 
         /// <inheritdoc/>
-        public String? AttributeName
+        public String? AttributePath
         {
-            get { return GetValue(nameof(AttributeName)); }
-            set { SetValue(nameof(AttributeName), value); }
+            get { return GetValue(nameof(AttributePath)); }
+            set { SetValue(nameof(AttributePath), value); }
         }
 
         /// <inheritdoc/>
@@ -105,8 +105,8 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeAlias), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeTitle), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributePath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsPrimaryKey), typeof(Boolean)){ AllowDBNull = true},
