@@ -19,5 +19,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public Boolean Equals(IAliasIndexName? other)
         { return other is IAliasIndexName key && Equals(new AliasIndexName(key)); }
+
+        /// <inheritdoc cref="AliasKeyName(IAttributeAliasItem)"/>
+        public AliasIndexName(IAttributeAliasValue alias) : base(alias)
+        { }
+
+        /// <inheritdoc cref="AliasKeyName(IEntityAliasItem)"/>
+        public AliasIndexName(IEntityAliasValue alias) : base(alias)
+        { }
+
+        /// <inheritdoc cref="AliasKeyName(IEntityAttributeItem)"/>
+        public AliasIndexName(IEntityAttributeValue alias) : base(alias)
+        { }
     }
 }

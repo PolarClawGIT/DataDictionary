@@ -39,6 +39,9 @@ namespace DataDictionary.Main.Forms.Domain
             attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+
+
+
         }
 
         public DomainEntity(IEntityValue? entityItem) : this()
@@ -106,6 +109,9 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
+            attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeDescription)));
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
@@ -253,7 +259,28 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
-        { }
+        {
+            //bindingAttributeDetail.DataSource = null;
+            attributeInModelData.Checked = false;
+
+            if (bindingAttribute.Current is IEntityAttributeValue alias)
+            {
+                AliasIndexName aliasIndex = new AliasIndexName(alias);
+
+                var attributes = BusinessData.Model.Attributes.
+                    FindAttribute(aliasIndex).
+                    Select(s => new AttributeIndex(s)).
+                    Join(BusinessData.Model.Attributes,
+                        key => key,
+                        attribute => new AttributeIndex(attribute),
+                        (key, attribute) => attribute).
+                    ToList();
+
+                bindingAttributeDetail.DataSource = attributes;
+                if (attributes.Count > 0)
+                { attributeInModelData.Checked = true; }
+            }
+        }
 
         private void AttributeTitleData_Validated(object sender, EventArgs e)
         { }
@@ -351,6 +378,14 @@ namespace DataDictionary.Main.Forms.Domain
 
         }
 
+        private void bindingAttributeDetail_CurrentChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void attributeNavigatorData_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

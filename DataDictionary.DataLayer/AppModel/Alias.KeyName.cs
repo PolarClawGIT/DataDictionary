@@ -47,6 +47,28 @@ namespace DataDictionary.DataLayer.AppModel
         public AliasKeyName(ITableKeyName source) : base()
         { AliasPath = DbObjectName.Format(source.DatabaseName, source.SchemaName, source.TableName); }
 
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Attribute Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKeyName(AppModel.IAttributeAliasItem alias) : base()
+        { AliasPath = alias.AliasPath ?? String.Empty; }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Entity Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKeyName(AppModel.IEntityAliasItem alias):base()
+        { AliasPath = alias.AliasPath ?? String.Empty; }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Entity Attribute
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKeyName(AppModel.IEntityAttributeItem alias) : base()
+        { AliasPath = alias.AttributePath ?? String.Empty; }
+
+
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AliasKeyName? other)

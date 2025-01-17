@@ -47,6 +47,20 @@ namespace DataDictionary.DataLayer.AppModel
         protected AliasKey(ITableKeyName source, ScopeType scope) : base(source)
         { AliasScope = scope; }
 
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Attribute Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKey(AppModel.IAttributeAliasItem alias) : base(alias)
+        { AliasScope = alias.AliasScope; }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Entity Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKey(AppModel.IEntityAliasItem alias) : base(alias)
+        { AliasScope = alias.AliasScope; }
+
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AliasKey? other)
