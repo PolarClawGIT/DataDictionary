@@ -263,12 +263,6 @@ namespace DataDictionary.Main.Forms.Domain
                         IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
                         IEnumerable<AttributeAliasValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.AliasPath).Count() > 0);
 
-                        foreach (AttributeAliasValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.AliasPath)).ToList())
-                        {
-                            if (inModel.Contains(removeItem)) // Only remove items that are in this model
-                            { alias.Remove(removeItem); }
-                        }
-
                         foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.AliasPath).Contains(w.Path)).ToList())
                         { // Add
                             if (bindingAlias.AddNew() is AttributeAliasValue newValue)
