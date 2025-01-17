@@ -65,6 +65,7 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
                 bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w));
+                bindingAttributeDetail.DataSource = new List<AttributeValue>();
             }
         }
 
@@ -110,6 +111,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            attributeNavigation.BindingSource = bindingAttributeDetail;
             attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
             attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeDescription)));
 
@@ -260,12 +262,15 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
         {
+            //attributeNavigation.BindingSource = null;
             //bindingAttributeDetail.DataSource = null;
             attributeInModelData.Checked = false;
 
             if (bindingAttribute.Current is IEntityAttributeValue alias)
             {
                 AliasIndexName aliasIndex = new AliasIndexName(alias);
+
+                //TODO: Include Attribute Path, not just the alias of the Attribute.
 
                 var attributes = BusinessData.Model.Attributes.
                     FindAttribute(aliasIndex).
@@ -279,6 +284,8 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingAttributeDetail.DataSource = attributes;
                 if (attributes.Count > 0)
                 { attributeInModelData.Checked = true; }
+
+                //attributeNavigation.BindingSource = bindingAttributeDetail;
             }
         }
 
