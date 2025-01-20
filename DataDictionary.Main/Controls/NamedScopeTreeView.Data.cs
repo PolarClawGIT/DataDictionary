@@ -187,6 +187,98 @@ namespace DataDictionary.Main.Controls
                     }).
                 ToDictionary(k => k.path, v => v.nodes);
 
+            totalWork = pathGroup.Sum(v => v.Value.Count) + pathGroup.Count;
+
+            BuildChildren(treeControl.Nodes, null);
+
+            void BuildChildren(TreeNodeCollection treeNodes, PathIndex? path, ScopeType? scope = null)
+            {
+                foreach (var item in pathGroup.
+                    Where(w =>
+                        ((path is null && w.Key.ParentPath is null) ||
+                         (path is not null && path.Equals(w.Key.ParentPath)))))
+                {
+                    TreeNode newNode;
+
+                    if (item.Value.Count == 0)
+                    {
+                        newNode = CreateNode(item.Key);
+                        treeNodes.Add(newNode);
+                        completedWork = completedWork + 1;
+
+                        BuildChildren(newNode.Nodes, item.Key);
+                    }
+                    else
+                    {
+                        if (scope is null)
+                        {
+                            foreach (var otherItem in item.Value)
+                            {
+                                newNode = CreateNode(otherItem);
+                                treeNodes.Add(newNode);
+                                completedWork = completedWork + 1;
+
+                                BuildChildren(newNode.Nodes, otherItem.Path);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var scopedItem in item.Value.Where(w => w.Scope == scope))
+                            {
+                                newNode = CreateNode(scopedItem);
+                                treeNodes.Add(newNode);
+                                completedWork = completedWork + 1;
+
+                                //TODO: Not working as intended.
+                                // Tables/Columns should be grouped and they are not.
+
+                                var x = pathGroup.
+                                    Where(w => scopedItem.Path.Equals(w.Key.ParentPath)).
+                                    SelectMany(s => s.Value).
+                                    GroupBy(g => g.Scope).
+                                    Select(s => s.Key);
+
+                                 foreach (var childScope in pathGroup.
+                                    Where(w => scopedItem.Path.Equals(w.Key.ParentPath)).
+                                    SelectMany(s => s.Value).
+                                    GroupBy(g => g.Scope).
+                                    Select(s => s.Key))
+                                {
+                                    newNode = CreateNode(childScope);
+                                    treeNodes.Add(newNode);
+
+                                    BuildChildren(newNode.Nodes, scopedItem.Path, childScope);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        void BuildNodes_X(NamedScopeIndex rootIndex, INamedScopeData treeData, Action<Int32, Int32> progressChanged)
+        {
+            Int32 totalWork = 0;
+            Int32 completedWork = 0;
+            NamedScopeNode rootnode = new NamedScopeNode(treeData.GetValue(rootIndex));
+            List<NamedScopeNode> values = BuildPath(rootnode, treeData).ToList();
+
+            Dictionary<PathIndex, List<NamedScopeNode>> pathGroup = values.
+                SelectMany(s => s.Path.Group()).
+                Distinct().
+                GroupJoin(values,
+                    path => path,
+                    node => node.Path,
+                    (path, nodes) => new
+                    {
+                        path,
+                        nodes = nodes.ToList(),
+                    }).
+                ToDictionary(k => k.path, v => v.nodes);
+
             totalWork = pathGroup.Sum(v => v.Value.Count);
 
 
