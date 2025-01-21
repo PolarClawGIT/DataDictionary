@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 ConstraintIndexName name = new ConstraintIndexName(current);
                 PropertyIndexObject property = new PropertyIndexObject(name);
 
-                bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.CatalogModel.DbConstraintColumns, w => name.Equals(w));
+                bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.CatalogModel.DbConstraintColumns, w => name.Equals(w), o => o.OrdinalPosition ?? 0);
                 bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => property.Equals(w));
             }
         }

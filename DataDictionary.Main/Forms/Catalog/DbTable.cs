@@ -19,10 +19,10 @@ namespace DataDictionary.Main.Forms.Catalog
             InitializeComponent();
 
             SetRowState(
-                bindingTable, 
-                bindingColumns, 
-                bindingConstraints, 
-                bindingProperties, 
+                bindingTable,
+                bindingColumns,
+                bindingConstraints,
+                bindingProperties,
                 bindingDependencies);
             SetTitle(bindingTable);
             SetCommand(ScopeType.DatabaseTable, CommandImageType.Export);
@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms.Catalog
             {
                 ReferenceIndexName referenceName = new ReferenceIndexName(current);
                 PropertyIndexObject propertyKey = new PropertyIndexObject(current);
-                bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
+                bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
                 bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.CatalogModel.DbConstraints, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<BusinessLayer.AppCatalog.PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
                 bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));

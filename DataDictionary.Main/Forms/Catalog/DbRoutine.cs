@@ -16,8 +16,8 @@ namespace DataDictionary.Main.Forms.Catalog
             InitializeComponent();
 
             SetRowState(
-                bindingRoutine, 
-                bindingParameters, 
+                bindingRoutine,
+                bindingParameters,
                 bindingProperties,
                 bindingDependencies);
             SetTitle(bindingRoutine);
@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Catalog
             if (bindingRoutine.Current is IRoutineValue current)
             {
                 ReferenceIndexName referenceName = new ReferenceIndexName(current);
-                bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w));
+                bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
                 bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
                 bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));
             }
