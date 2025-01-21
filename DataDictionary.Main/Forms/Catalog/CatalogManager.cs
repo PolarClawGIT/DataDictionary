@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -9,7 +8,7 @@ using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms.Database
+namespace DataDictionary.Main.Forms.Catalog
 {
     partial class CatalogManager : ApplicationData
     {

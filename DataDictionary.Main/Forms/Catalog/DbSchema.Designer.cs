@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Database
+﻿namespace DataDictionary.Main.Forms.Catalog
 {
     partial class DbSchema
     {

@@ -15,7 +15,7 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Library.LibraryManager()); }
 
         private void manageDatabasesCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Database.CatalogManager()); }
+        { Activate(() => new Forms.Catalog.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Domain.DomainAttribute(null)); }
@@ -32,9 +32,9 @@ namespace DataDictionary.Main
         private void MenuCatalogItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<CatalogValue, Forms.Database.DbCatalog>
+                new DetailDataView<CatalogValue, Forms.Catalog.DbCatalog>
                     (ScopeType.Database, data)
-                { SelectedForm = (data) => new Forms.Database.DbCatalog(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbCatalog(data) },
                 BusinessData.CatalogModel.DbCatalogs);
         }
 
@@ -86,9 +86,9 @@ namespace DataDictionary.Main
         private void menuConstraintItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<ConstraintValue, Forms.Database.DbConstraint>
+                new DetailDataView<ConstraintValue, Forms.Catalog.DbConstraint>
                     (ScopeType.DatabaseConstraint, data)
-                { SelectedForm = (data) => new Forms.Database.DbConstraint(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbConstraint(data) },
                 BusinessData.CatalogModel.DbConstraints);
         }
 
@@ -102,27 +102,27 @@ namespace DataDictionary.Main
         private void menuDataTypeItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<DomainValue, Forms.Database.DbDomain>
+                new DetailDataView<DomainValue, Forms.Catalog.DbDomain>
                     (ScopeType.DatabaseDomain, data)
-                { SelectedForm = (data) => new Forms.Database.DbDomain(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbDomain(data) },
                 BusinessData.CatalogModel.DbDomains);
         }
 
         private void menuRoutineItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<RoutineValue, Forms.Database.DbRoutine>
+                new DetailDataView<RoutineValue, Forms.Catalog.DbRoutine>
                     (ScopeType.DatabaseProcedure, data)
-                { SelectedForm = (data) => new Forms.Database.DbRoutine(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbRoutine(data) },
                 BusinessData.CatalogModel.DbRoutines);
         }
 
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<RoutineParameterValue, Forms.Database.DbRoutineParameter>
+                new DetailDataView<RoutineParameterValue, Forms.Catalog.DbRoutineParameter>
                     (ScopeType.DatabaseProcedureParameter, data)
-                { SelectedForm = (data) => new Forms.Database.DbRoutineParameter(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbRoutineParameter(data) },
                 BusinessData.CatalogModel.DbRoutineParameters);
         }
 
@@ -143,27 +143,27 @@ namespace DataDictionary.Main
         private void menuSchemaItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<SchemaValue, Forms.Database.DbSchema>
+                new DetailDataView<SchemaValue, Forms.Catalog.DbSchema>
                     (ScopeType.DatabaseSchema, data)
-                { SelectedForm = (data) => new Forms.Database.DbSchema(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbSchema(data) },
                 BusinessData.CatalogModel.DbSchemta);
         }
 
         private void menuTableItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<TableValue, Forms.Database.DbTable>
+                new DetailDataView<TableValue, Forms.Catalog.DbTable>
                     (ScopeType.DatabaseTable, data)
-                { SelectedForm = (data) => new Forms.Database.DbTable(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbTable(data) },
                 BusinessData.CatalogModel.DbTables);
         }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<TableColumnValue, Forms.Database.DbTableColumn>
+                new DetailDataView<TableColumnValue, Forms.Catalog.DbTableColumn>
                     (ScopeType.DatabaseTableColumn, data)
-                { SelectedForm = (data) => new Forms.Database.DbTableColumn(data) },
+                { SelectedForm = (data) => new Forms.Catalog.DbTableColumn(data) },
                 BusinessData.CatalogModel.DbTableColumns);
         }
 

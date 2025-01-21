@@ -7,7 +7,7 @@ using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Database
+namespace DataDictionary.Main.Forms.Catalog
 {
     partial class DbTable : ApplicationData, IApplicationDataForm
     {

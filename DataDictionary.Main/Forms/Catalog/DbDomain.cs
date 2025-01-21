@@ -3,7 +3,7 @@ using DataDictionary.Main.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Database
+namespace DataDictionary.Main.Forms.Catalog
 {
     partial class DbDomain : ApplicationData, IApplicationDataForm
     {
