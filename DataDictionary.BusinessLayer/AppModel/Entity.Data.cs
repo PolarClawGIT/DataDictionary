@@ -335,7 +335,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                 // Attributes get replaced
                 attributeValues.Delete(entityIndex);
-                foreach (IEntityAttributeValue item in source.Attributes.OrderBy (o => o.OrdinalPosition))
+                foreach (IEntityAttributeValue item in source.Attributes)
                 { Attributes.Add(item); }
             }
             else // Entity does not exist, add everything

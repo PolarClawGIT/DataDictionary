@@ -23,12 +23,12 @@ namespace Toolbox.BindingTable
         where TRow : class, IBindingPropertyChanged
     {
         Func<Int32> BaseCount { get; set; }
-        Action<Int32,TRow> BaseInsert { get; set; }
+        Action<Int32, TRow> BaseInsert { get; set; }
         Func<TRow, Int32> BaseIndexOf { get; set; }
         Func<TRow, Boolean> BaseRemove { get; set; }
         Action<Int32> BaseRemoveAt { get; set; }
 
-        public BindingView(IList<TRow> baseData, Func<TRow, Boolean> filter) : base()
+        public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
             BaseCount = () => baseData.Count;
             BaseInsert = baseData.Insert;
@@ -36,7 +36,10 @@ namespace Toolbox.BindingTable
             BaseRemove = baseData.Remove;
             BaseRemoveAt = baseData.RemoveAt;
 
-            foreach (TRow item in baseData.Where(filter).ToList())
+            if (filter is null) { filter = (f => 1 == 1); }
+            if (orderBy is null) { orderBy = (o => 1); }
+
+            foreach (TRow item in baseData.Where(filter).OrderBy(orderBy).ToList())
             { base.InsertItem(base.Count, item); }
 
             this.AllowEdit = true;

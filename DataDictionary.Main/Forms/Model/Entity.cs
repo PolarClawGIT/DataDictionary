@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Forms.Model
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w));
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w), o => o.OrdinalPosition??0);
                 bindingAttributeDetail.DataSource = new List<AttributeValue>();
             }
         }
