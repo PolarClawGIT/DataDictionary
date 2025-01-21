@@ -4,7 +4,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;

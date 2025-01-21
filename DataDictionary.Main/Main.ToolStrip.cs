@@ -18,10 +18,10 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Catalog.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Domain.DomainAttribute(null)); }
+        { Activate(() => new Forms.Model.Attribute(null)); }
 
         private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Domain.DomainEntity(null)); }
+        { Activate(() => new Forms.Model.Entity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Model.ModelSubjectArea(null)); }
@@ -41,9 +41,9 @@ namespace DataDictionary.Main
         private void MenuAttributes_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<AttributeValue, Forms.Domain.DomainAttribute>
+                new DetailDataView<AttributeValue, Forms.Model.Attribute>
                     (ScopeType.ModelAttribute, data)
-                { SelectedForm = (data) => new Forms.Domain.DomainAttribute(data) },
+                { SelectedForm = (data) => new Forms.Model.Attribute(data) },
                 BusinessData.Model.Attributes);
         }
 
@@ -198,9 +198,9 @@ namespace DataDictionary.Main
         private void menuEntities_Click(object sender, EventArgs e)
         {
             Activate((data) =>
-                new DetailDataView<EntityValue, Forms.Domain.DomainEntity>
+                new DetailDataView<EntityValue, Forms.Model.Entity>
                     (ScopeType.ModelEntity, data)
-                { SelectedForm = (data) => new Forms.Domain.DomainEntity(data) },
+                { SelectedForm = (data) => new Forms.Model.Entity(data) },
                 BusinessData.Model.Entities);
         }
 

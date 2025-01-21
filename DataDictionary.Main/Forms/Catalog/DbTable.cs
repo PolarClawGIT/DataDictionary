@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Forms.Catalog
 
                 IEntityValue entity = BusinessData.Model.Entities.Import(tableEntity);
 
-                Activate(() => new Forms.Domain.DomainEntity(entity));
+                Activate(() => new Forms.Model.Entity(entity));
                 SendMessage(new RefreshNavigation());
             }
         }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Forms.Domain.ComboBoxList
+namespace DataDictionary.Main.Forms.Model.ComboBoxList
 {
     record class SubjectAreaNameList : ISubjectAreaIndex, ISubjectAreaIndexName
     {

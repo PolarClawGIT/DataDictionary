@@ -30,8 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel modelManagerLayout;
-            modelTitleData = new Controls.TextBoxData();
-            modelDescriptionData = new Controls.TextBoxData();
+            modelTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            modelDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             bindingModel = new BindingSource(components);
             modelManagerLayout = new TableLayoutPanel();
             modelManagerLayout.SuspendLayout();
@@ -99,8 +99,8 @@
 
         #endregion
 
-        private Controls.TextBoxData modelTitleData;
-        private Controls.TextBoxData modelDescriptionData;
+        private DataDictionary.Main.Controls.TextBoxData modelTitleData;
+        private DataDictionary.Main.Controls.TextBoxData modelDescriptionData;
         private BindingSource bindingModel;
     }
 }

@@ -3,7 +3,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using System.Data;
 
-namespace DataDictionary.Main.Forms.Domain.Controls
+namespace DataDictionary.Main.Forms.Model.Controls
 {
     partial class SubjectArea : UserControl
     {

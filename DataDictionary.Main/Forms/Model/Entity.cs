@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -12,17 +11,18 @@ using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    partial class DomainEntity : ApplicationData, IApplicationDataForm
+    partial class Entity : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
         Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
-        protected DomainEntity() : base()
+        protected Entity() : base()
         {
             InitializeComponent();
 
@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         }
 
-        public DomainEntity(IEntityValue? entityItem) : this()
+        public Entity(IEntityValue? entityItem) : this()
         {
             if (entityItem is null)
             {

@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -10,17 +9,18 @@ using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    partial class DomainAttribute : ApplicationData, IApplicationDataForm
+    partial class Attribute : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
         Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
 
-        protected DomainAttribute() : base()
+        protected Attribute() : base()
         {
             InitializeComponent();
 
@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
 
-        public DomainAttribute(IAttributeValue? attributeItem) : this()
+        public Attribute(IAttributeValue? attributeItem) : this()
         {
             if (attributeItem is null)
             {

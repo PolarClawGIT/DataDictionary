@@ -1,9 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Domain.Controls
+namespace DataDictionary.Main.Forms.Model.Controls
 {
     partial class DomainProperty : UserControl
     {

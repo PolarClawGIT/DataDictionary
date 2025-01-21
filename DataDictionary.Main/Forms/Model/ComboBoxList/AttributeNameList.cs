@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Domain.ComboBoxList
+namespace DataDictionary.Main.Forms.Model.ComboBoxList
 {
     record AttributeNameList : IAttributeIndex, IAttributeIndexName
     {
@@ -26,8 +26,8 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             //control.DefaultCellStyle.NullValue = Guid.Empty; // This does not work
             //control.DefaultCellStyle.DataSourceNullValue = Guid.Empty; // This does not work
 
-            control.ValueMember = nameof(AttributeNameList.AttributeId);
-            control.DisplayMember = nameof(AttributeNameList.AttributeTitle);
+            control.ValueMember = nameof(AttributeId);
+            control.DisplayMember = nameof(AttributeTitle);
             control.DataSource = list;
         }
 
@@ -43,8 +43,8 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 }))
             { list.Add(item); }
 
-            control.ValueMember = nameof(AttributeNameList.AttributeId);
-            control.DisplayMember = nameof(AttributeNameList.AttributeTitle);
+            control.ValueMember = nameof(AttributeId);
+            control.DisplayMember = nameof(AttributeTitle);
             control.DataSource = list;
         }
 

@@ -1,8 +1,8 @@
 ﻿using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    partial class DomainEntity
+    partial class Entity
     {
         /// <summary>
         /// Required designer variable.

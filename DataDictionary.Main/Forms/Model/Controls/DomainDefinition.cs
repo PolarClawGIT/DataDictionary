@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.Forms.Domain.Controls
+namespace DataDictionary.Main.Forms.Model.Controls
 {
     partial class DomainDefinition : UserControl
     {

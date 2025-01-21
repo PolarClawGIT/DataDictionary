@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Domain.ComboBoxList
+namespace DataDictionary.Main.Forms.Model.ComboBoxList
 {
     record EntityNameList : IEntityIndex, IEntityIndexName
     {

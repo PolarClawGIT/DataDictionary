@@ -57,10 +57,10 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
         void Activate(AttributeValue attributeItem)
-        { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+        { Activate((data) => new Forms.Model.Attribute(attributeItem), attributeItem); }
 
         void Activate(EntityValue entityItem)
-        { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
+        { Activate((data) => new Forms.Model.Entity(entityItem), entityItem); }
 
         void Activate(SubjectAreaValue subjectItem)
         { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }

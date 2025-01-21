@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Forms.Domain.ComboBoxList
+namespace DataDictionary.Main.Forms.Model.ComboBoxList
 {
     record DataTypeList
     {
@@ -36,8 +36,8 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             foreach (String item in defaultValues.Union(appendValues).Distinct().Order())
             { list.Add(new DataTypeList() { DataType = item }); }
 
-            control.ValueMember = nameof(DataTypeList.DataType);
-            control.DisplayMember = nameof(DataTypeList.DataType);
+            control.ValueMember = nameof(DataType);
+            control.DisplayMember = nameof(DataType);
             control.DataSource = list;
         }
     }

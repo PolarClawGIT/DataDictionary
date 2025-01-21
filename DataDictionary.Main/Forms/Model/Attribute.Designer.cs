@@ -1,8 +1,8 @@
 ﻿using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    partial class DomainAttribute
+    partial class Attribute
     {
         /// <summary>
         /// Required designer variable.
@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Domain
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainAttribute));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Attribute));
             TableLayoutPanel definitionLayout;
             TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel subjectAreaLayout;

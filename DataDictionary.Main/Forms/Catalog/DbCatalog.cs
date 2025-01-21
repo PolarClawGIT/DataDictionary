@@ -1,12 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
