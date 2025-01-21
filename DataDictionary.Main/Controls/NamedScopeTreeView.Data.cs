@@ -196,7 +196,12 @@ namespace DataDictionary.Main.Controls
                 foreach (var item in pathGroup.
                     Where(w =>
                         ((path is null && w.Key.ParentPath is null) ||
-                         (path is not null && path.Equals(w.Key.ParentPath)))))
+                         (path is not null && path.Equals(w.Key.ParentPath)) &&
+                        ((scope is null || w.Value.Count == 0) ||
+                         (scope is not null &&
+                            w.Value.Count > 0 &&
+                            w.Value.Any(a => a.Scope.Equals(scope)))
+                        ))))
                 {
                     TreeNode newNode;
 
@@ -210,44 +215,29 @@ namespace DataDictionary.Main.Controls
                     }
                     else
                     {
-                        if (scope is null)
+                        foreach (var node in item.Value)
                         {
-                            foreach (var otherItem in item.Value)
+                            TreeNode groupNode = CreateNode(node);
+                            treeNodes.Add(groupNode);
+                            completedWork = completedWork + 1;
+
+                            var scopes = pathGroup.
+                               Where(w => node.Path.Equals(w.Key.ParentPath)).
+                               SelectMany(s => s.Value).
+                               GroupBy(g => g.Scope).
+                               Select(s => s.Key).
+                               ToList();
+
+                            if (scopes.Count is 0 or 1)
+                            { BuildChildren(groupNode.Nodes, node.Path); }
+                            else
                             {
-                                newNode = CreateNode(otherItem);
-                                treeNodes.Add(newNode);
-                                completedWork = completedWork + 1;
-
-                                BuildChildren(newNode.Nodes, otherItem.Path);
-                            }
-                        }
-                        else
-                        {
-                            foreach (var scopedItem in item.Value.Where(w => w.Scope == scope))
-                            {
-                                newNode = CreateNode(scopedItem);
-                                treeNodes.Add(newNode);
-                                completedWork = completedWork + 1;
-
-                                //TODO: Not working as intended.
-                                // Tables/Columns should be grouped and they are not.
-
-                                var x = pathGroup.
-                                    Where(w => scopedItem.Path.Equals(w.Key.ParentPath)).
-                                    SelectMany(s => s.Value).
-                                    GroupBy(g => g.Scope).
-                                    Select(s => s.Key);
-
-                                 foreach (var childScope in pathGroup.
-                                    Where(w => scopedItem.Path.Equals(w.Key.ParentPath)).
-                                    SelectMany(s => s.Value).
-                                    GroupBy(g => g.Scope).
-                                    Select(s => s.Key))
+                                foreach (var scopeItem in scopes)
                                 {
-                                    newNode = CreateNode(childScope);
-                                    treeNodes.Add(newNode);
+                                    TreeNode scopeNode = CreateNode(scopeItem);
+                                    groupNode.Nodes.Add(scopeNode);
 
-                                    BuildChildren(newNode.Nodes, scopedItem.Path, childScope);
+                                    BuildChildren(scopeNode.Nodes, node.Path, scopeItem);
                                 }
                             }
                         }
@@ -256,128 +246,6 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-
-
-
-        void BuildNodes_X(NamedScopeIndex rootIndex, INamedScopeData treeData, Action<Int32, Int32> progressChanged)
-        {
-            Int32 totalWork = 0;
-            Int32 completedWork = 0;
-            NamedScopeNode rootnode = new NamedScopeNode(treeData.GetValue(rootIndex));
-            List<NamedScopeNode> values = BuildPath(rootnode, treeData).ToList();
-
-            Dictionary<PathIndex, List<NamedScopeNode>> pathGroup = values.
-                SelectMany(s => s.Path.Group()).
-                Distinct().
-                GroupJoin(values,
-                    path => path,
-                    node => node.Path,
-                    (path, nodes) => new
-                    {
-                        path,
-                        nodes = nodes.ToList(),
-                    }).
-                ToDictionary(k => k.path, v => v.nodes);
-
-            totalWork = pathGroup.Sum(v => v.Value.Count);
-
-
-            foreach (var pathItem in pathGroup.Where(w => w.Key.ParentPath is null))
-            { BuildNodes(treeControl.Nodes, pathItem.Key, pathItem.Value); }
-
-            void BuildNodes(TreeNodeCollection treeNodes, PathIndex path, IReadOnlyList<NamedScopeNode> values)
-            {
-                if (values.Count == 0)
-                {   // NameSpace node
-                    // Occurs at top level and when a child node has an extra level.
-                    TreeNode newNode = CreateNode(path);
-                    treeNodes.Add(newNode);
-
-                    var children = pathGroup.
-                        Where(w => path.Equals(w.Key.ParentPath)).
-                        ToDictionary(k => k.Key, v => v.Value);
-
-                    foreach (var item in children)
-                    { BuildNodes(newNode.Nodes, item.Key, item.Value); }
-                }
-                else if (values.Count == 1)
-                {   // Single NameSpace, Single Node.
-                    // NameSpace does uniquely identify the object
-                    NamedScopeNode value = values.First();
-                    TreeNode newNode = CreateNode(values.First());
-                    treeNodes.Add(newNode);
-
-                    BuildScopeNodes(newNode, value);
-                }
-                else
-                {   // Multiple Object have the Same NameSpace
-                    // An overloaded method in .Net falls into this category.
-                    // Model Items (like Attributes) have the same NameSpace
-                    foreach (var value in values)
-                    {
-                        TreeNode newNode = CreateNode(value);
-                        treeNodes.Add(newNode);
-
-                        BuildScopeNodes(newNode, value);
-                    }
-                }
-
-                progressChanged(completedWork++, totalWork);
-            }
-
-            void BuildScopeNodes(TreeNode newNode, NamedScopeNode value)
-            {
-                // Children by Path
-                var children = pathGroup.
-                    Where(w => value.Path.Equals(w.Key.ParentPath)).
-                    ToDictionary(k => k.Key, v => v.Value);
-
-                // Children by DataIndex
-                var childByIndex = children.
-                    Select(s => new
-                    {
-                        s.Key,
-                        Value = s.Value.
-                            Where(w => w.Parent is not null
-                                && value.DataIndex.Equals(w.Parent.DataIndex)).
-                            ToList()
-                    }).
-                    Where(w => w.Value.Count > 0).
-                    ToDictionary(k => k.Key, v => v.Value);
-
-                if (childByIndex.Count > 0)
-                { children = childByIndex; }
-
-                // Children with Scopes to be nested
-                // Mostly Model Objects
-                var scopeGroups = children.
-                    SelectMany(s => s.Value, (children, child) => new { child.Scope, Children = children }).
-                    Distinct().
-                    GroupBy(g => g.Scope).
-                    ToList();
-
-                if (scopeGroups.Count == 0)
-                {   // No Scope grouping
-                    foreach (var item in children)
-                    { BuildNodes(newNode.Nodes, item.Key, item.Value); }
-                }
-
-                foreach (var scopeGroup in scopeGroups)
-                {
-                    NavigationEnumeration scopeValue = NavigationEnumeration.Cast(scopeGroup.Key);
-                    TreeNode scopeNode = newNode;
-
-                    if (scopeValue.GroupBy && scopeGroup.Count() > 1)
-                    {   // Scope is to be grouped, make that group and use it.
-                        scopeNode = CreateNode(scopeGroup.Key);
-                        newNode.Nodes.Add(scopeNode);
-                    }
-
-                    foreach (var scopeItem in scopeGroup)
-                    { BuildNodes(scopeNode.Nodes, scopeItem.Children.Key, scopeItem.Children.Value); }
-                }
-            }
-        }
 
         IReadOnlyList<NamedScopeNode> BuildPath(NamedScopeNode parent, INamedScopeData treeData)
         {
