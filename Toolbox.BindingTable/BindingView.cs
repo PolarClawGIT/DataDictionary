@@ -28,6 +28,10 @@ namespace Toolbox.BindingTable
         Func<TRow, Boolean> BaseRemove { get; set; }
         Action<Int32> BaseRemoveAt { get; set; }
 
+        //IList<TRow> SourceData;
+        Func<TRow, Boolean> FilterBy { get; set; }
+        Func<TRow, Object> OrderBy { get; set; }
+
         public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
             BaseCount = () => baseData.Count;
@@ -36,15 +40,50 @@ namespace Toolbox.BindingTable
             BaseRemove = baseData.Remove;
             BaseRemoveAt = baseData.RemoveAt;
 
-            if (filter is null) { filter = (f => 1 == 1); }
-            if (orderBy is null) { orderBy = (o => 1); }
 
-            foreach (TRow item in baseData.Where(filter).OrderBy(orderBy).ToList())
+            FilterBy = filter ?? (f => 1 == 1);
+            OrderBy = orderBy ?? (o => 1);
+
+            foreach (TRow item in baseData.Where(FilterBy).OrderBy(OrderBy).ToList())
             { base.InsertItem(base.Count, item); }
 
             this.AllowEdit = true;
             this.AllowNew = true;
             this.AllowRemove = true;
+
+            // Special handing for IBindingList
+            if (baseData is IBindingList bindingList)
+            { bindingList.ListChanged += BindingList_ListChanged; }
+
+        }
+
+        /// <summary>
+        /// Handle BindingList changes to reflect into this object.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BindingList_ListChanged(Object? sender, ListChangedEventArgs e)
+        {
+            if (sender is IList<TRow> data)
+            {
+                List<TRow> targetState = data.Where(FilterBy).OrderBy(OrderBy).ToList();
+
+                if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.Reset)
+                {
+                    List<TRow> toInsert = targetState.Except(this).ToList();
+
+                    foreach (var item in toInsert)
+                    { base.InsertItem(base.Count, item); }
+                }
+
+                if (e.ListChangedType is ListChangedType.ItemDeleted or ListChangedType.Reset)
+                {
+                    List<TRow> toDelete = this.Except(targetState).ToList();
+
+                    foreach (var item in toDelete)
+                    { base.Remove(item); }
+                }
+            }
         }
 
         TRow? addNewCoreItem = null; // Track the extra row created by DataGridView.
@@ -135,5 +174,6 @@ namespace Toolbox.BindingTable
             if (baseIndex >= 0) { BaseRemoveAt(baseIndex); }
             base.RemoveItem(index);
         }
+
     }
 }
