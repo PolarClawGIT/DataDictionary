@@ -52,6 +52,19 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData<TKey>;
 
         /// <summary>
+        /// Create a WorkItem for loading a Data Object by Key loading data as of a specified date.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="targetKey"></param>
+        /// <param name="asOfUtcDate"></param>
+        /// <returns></returns>
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+            where TKey : IKey
+            where TCollection : IBindingTable, ITemporalData<TKey>;
+
+        /// <summary>
         /// Create a WorkItem for loading a Data Object.
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
@@ -222,7 +235,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             }
         }
 
-
         /// <inheritdoc/>
         public WorkItem OpenConnection()
         {
@@ -285,6 +297,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey));
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+            where TKey : IKey
+            where TCollection : IBindingTable, ITemporalData<TKey>
+        {
+            return this.CreateWork(
+                workName: String.Format("Load {0}", target.BindingName),
+                target: target,
+                command: (conn) => target.HistoryCommand(conn, targetKey, asOfUtcDate));
         }
 
         /// <inheritdoc/>

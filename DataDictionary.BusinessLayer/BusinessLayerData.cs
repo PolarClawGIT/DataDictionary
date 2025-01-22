@@ -128,7 +128,7 @@ namespace DataDictionary.BusinessLayer
         { return Delete(); }
 
         /// <summary>
-        /// Creates a new empty Model (old model is removed).
+        /// Creates a new empty Model (old currentModel is removed).
         /// </summary>
         /// <returns></returns>
         public IReadOnlyList<WorkItem> Create()

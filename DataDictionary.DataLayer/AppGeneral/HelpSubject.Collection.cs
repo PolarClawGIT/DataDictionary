@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿// Ignore Spelling: Utc
+
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -13,24 +15,24 @@ namespace DataDictionary.DataLayer.AppGeneral
         IReadData, IWriteData,
         IReadData<IHelpSubjectKey>, IWriteData<IHelpSubjectKey>,
         IRemoveItem<IHelpSubjectKey>,
-        ITemporalData, ITemporalData<IHelpSubjectKey>
+        ITemporalData
         where TItem : HelpSubjectItem, IHelpSubjectItem, new()
     {
-        /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IHelpSubjectKey key)
-        { return LoadCommand(connection, helpId: key.HelpId); }
-
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
         { return LoadCommand(connection, helpId: null); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection)
-        { return LoadCommand(connection, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IHelpSubjectKey key)
+        { return LoadCommand(connection, helpId: key.HelpId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IHelpSubjectKey key)
-        { return LoadCommand(connection, helpId: key.HelpId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IHelpSubjectKey key, DateTime asOfUtcDate)
+        { return LoadCommand(connection, helpId: key.HelpId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection)
+        { return LoadCommand(connection, includeHistory: true); }
 
         Command LoadCommand(IConnection connection, 
             Guid? helpId = null, 

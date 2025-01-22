@@ -1,9 +1,4 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer
@@ -29,11 +24,20 @@ namespace DataDictionary.DataLayer
         where TKey: IKey
     {
         /// <summary>
-        /// Gets the Database Command for a specific key that returns data
+        /// Gets the Database Command for a specific key
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="key"></param>
         /// <returns></returns>
         Command LoadCommand(IConnection connection, TKey key);
+
+        /// <summary>
+        /// Gets the Database Command for a specific key and date
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="key"></param>
+        /// <param name="asOfUtcDate"></param>
+        /// <returns></returns>
+        Command LoadCommand(IConnection connection, TKey key, DateTime asOfUtcDate);
     }
 }

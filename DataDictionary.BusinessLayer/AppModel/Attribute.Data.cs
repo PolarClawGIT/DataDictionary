@@ -68,10 +68,9 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeSourceData
     {
-        public required Model Model { get; init; }
+        public required IModel Model { get; init; }
 
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
@@ -121,6 +120,19 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.Add(factory.CreateLoad(propertyValues, dataKey));
             work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeKey dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, dataKey, asOfUtcDate));
+            work.Add(factory.CreateLoad(aliasValues, dataKey, asOfUtcDate));
+            work.Add(factory.CreateLoad(propertyValues, dataKey, asOfUtcDate));
+            work.Add(factory.CreateLoad(definitionValues, dataKey, asOfUtcDate));
+            work.Add(factory.CreateLoad(subjectAreaValues, dataKey, asOfUtcDate));
             return work;
         }
 
