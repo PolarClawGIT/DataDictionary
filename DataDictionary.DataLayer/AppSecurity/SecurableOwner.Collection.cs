@@ -24,23 +24,31 @@ namespace DataDictionary.DataLayer.AppSecurity
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, principalId: null, securableId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPrincipalKey key)
-        { return LoadCommand(connection, (key.PrincipalId, null)); }
+        { return LoadCommand(connection, principalId: key.PrincipalId); }
+
+        /// <inheritdoc/>
+        Command IReadData<IPrincipalKey>.LoadCommand(IConnection connection, IPrincipalKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISecurableKey key)
-        { return LoadCommand(connection, (null, key.SecurableId)); }
+        { return LoadCommand(connection, securableId: key.SecurableId); }
 
-        Command LoadCommand(IConnection connection, (Guid? PrincipalId, Guid? SecurableId) parameters)
+        /// <inheritdoc/>
+        Command IReadData<ISecurableKey>.LoadCommand(IConnection connection, ISecurableKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
+
+        Command LoadCommand(IConnection connection, Guid? principalId = null, Guid? securableId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetSecurableOwner]";
-            command.AddParameter("@PrincipalId", parameters.PrincipalId);
-            command.AddParameter("@SecurableId", parameters.SecurableId);
+            command.CommandText = SecurableOwner.GetProcedure;
+            command.AddParameter(Principal.PrincipalId, principalId);
+            command.AddParameter(Securable.SecurableId, securableId);
             return command;
         }
 
@@ -61,12 +69,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetSecurableOwner]";
-            command.AddParameter("@PrincipalId", parameters.PrincipalId);
-            command.AddParameter("@SecurableId", parameters.SecurableId);
+            command.CommandText = SecurableOwner.SetProcedure;
+            command.AddParameter(Principal.PrincipalId, parameters.PrincipalId);
+            command.AddParameter(Securable.SecurableId, parameters.SecurableId);
 
             IEnumerable<TItem> data = this.Where(w => (parameters.PrincipalId is null || w.PrincipalId == parameters.PrincipalId) && (parameters.SecurableId is null || w.SecurableId == parameters.SecurableId));
-            command.AddParameter("@Data", "[AppSecurity].[typeSecurableOwner]", data);
+            command.AddParameter(WriteData.Data, SecurableOwner.TableType, data);
             return command;
         }
 
@@ -87,5 +95,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+
     }
 }

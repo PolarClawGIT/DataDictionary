@@ -1,11 +1,6 @@
 ﻿// Ignore Spelling: Securable
 
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -24,7 +19,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetAuthorizationSecurable]";
+            command.CommandText = AuthorizationSecurable.GetProcedure;
             return command;
         }
     }

@@ -1,11 +1,6 @@
 ﻿// Ignore Spelling: Securable
 
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -22,18 +17,22 @@ namespace DataDictionary.DataLayer.AppSecurity
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, securableId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISecurableKey key)
-        { return LoadCommand(connection, (key.SecurableId, null)); }
+        { return LoadCommand(connection, securableId: key.SecurableId); }
 
-        Command LoadCommand(IConnection connection, (Guid? SecurableId, String? SecurableTitle) parameters)
+        /// <inheritdoc/>
+        Command IReadData<ISecurableKey>.LoadCommand(IConnection connection, ISecurableKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
+
+        Command LoadCommand(IConnection connection, Guid? securableId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetSecurable]";
-            command.AddParameter("@SecurableId", parameters.SecurableId);
+            command.CommandText = Securable.GetProcedure;
+            command.AddParameter(Securable.SecurableId, securableId);
             return command;
         }
     }
