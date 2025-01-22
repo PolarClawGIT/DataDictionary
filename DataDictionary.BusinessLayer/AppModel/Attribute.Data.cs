@@ -67,7 +67,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttributeValue Import(AppCatalog.TableColumnAttribute source);
     }
 
-    class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
+    class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeSourceData
     {

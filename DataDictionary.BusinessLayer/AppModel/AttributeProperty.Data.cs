@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IAttributePropertyData : IBindingData<AttributePropertyValue>
     { }
 
-    class AttributePropertyData : DomainAttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
+    class AttributePropertyData : AttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
         ILoadData<IAttributeKey>, ISaveData<IAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

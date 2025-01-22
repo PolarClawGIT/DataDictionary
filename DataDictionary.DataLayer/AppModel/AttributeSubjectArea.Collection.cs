@@ -5,11 +5,11 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
-    /// Generic Base class for Domain Attribute Subject Area
+    /// Generic Base class for Model Attribute Subject Area
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributeSubjectAreaCollection<TItem> : BindingTable<TItem>,
+    public abstract class AttributeSubjectAreaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,

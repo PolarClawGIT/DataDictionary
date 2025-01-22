@@ -6,11 +6,11 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
-    /// Generic Base class for Domain Attributes
+    /// Generic Base class for Model Attributes
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributeCollection<TItem> : BindingTable<TItem>,
+    public abstract class AttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,

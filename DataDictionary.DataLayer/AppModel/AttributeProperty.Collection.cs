@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppModel
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributePropertyCollection<TItem> : BindingTable<TItem>,
+    public abstract class AttributePropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,

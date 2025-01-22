@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    class AttributeSubjectAreaData : DomainAttributeSubjectAreaCollection<AttributeSubjectAreaValue>, IAttributeSubjectAreaData,
+    class AttributeSubjectAreaData : AttributeSubjectAreaCollection<AttributeSubjectAreaValue>, IAttributeSubjectAreaData,
         ILoadData<IAttributeKey>, ISaveData<IAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

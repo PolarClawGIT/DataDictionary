@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IBindingData<AttributeAliasValue>
     { }
 
-    class AttributeAliasData : DomainAttributeAliasCollection<AttributeAliasValue>, IAttributeAliasData,
+    class AttributeAliasData : AttributeAliasCollection<AttributeAliasValue>, IAttributeAliasData,
         ILoadData<IAttributeKey>, ISaveData<IAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

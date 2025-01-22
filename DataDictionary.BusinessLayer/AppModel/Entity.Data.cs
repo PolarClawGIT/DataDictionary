@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IEntityValue Import(AppCatalog.TableEntity source);
     }
 
-    class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
+    class EntityData : EntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeSourceData
     {
