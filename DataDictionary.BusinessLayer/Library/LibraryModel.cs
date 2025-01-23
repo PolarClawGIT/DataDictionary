@@ -1,8 +1,11 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -11,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     public interface ILibraryModel :
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IDeleteData<ILibrarySourceIndex>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
         /// List of .Net Library Members within the Model
@@ -61,11 +64,33 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(sources.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(members.Load(factory, dataKey, asOfUtcDate));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Load(factory, dataKey));
             work.AddRange(members.Load(factory, dataKey));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(sources.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(members.Load(factory, dataKey, asOfUtcDate));
 
             return work;
         }
@@ -83,7 +108,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Save(factory, dataKey));
@@ -132,7 +157,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc />

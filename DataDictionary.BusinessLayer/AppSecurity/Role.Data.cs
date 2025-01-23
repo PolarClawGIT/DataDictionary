@@ -1,10 +1,7 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppSecurity
@@ -33,6 +30,9 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>RoleData</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
         { return factory.CreateLoad(this, (IRoleKey)dataKey).ToList(); }
+
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IRoleKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>

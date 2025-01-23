@@ -1,9 +1,10 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
@@ -11,8 +12,8 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// Interface representing Catalog data
     /// </summary>
     public interface ICatalog :
-        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>, IDeleteData<ICatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>, IDeleteData<ICatalogIndex>,
+        ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>
     {
         /// <summary>
         /// List of Model Catalogs within the Model.
@@ -168,7 +169,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, AppModel.IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey));
@@ -192,7 +193,80 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, AppModel.IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(schemta.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(domains.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(properties.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(tables.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(tableColumns.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(routines.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(routineParameters.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(routineColumns.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(references.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(constraints.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(constraintColumns.Load(factory, dataKey, asOfUtcDate));
+
+            return work;
+        }
+
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Load(factory, dataKey));
+            work.AddRange(schemta.Load(factory, dataKey));
+            work.AddRange(domains.Load(factory, dataKey));
+            work.AddRange(properties.Load(factory, dataKey));
+
+            work.AddRange(tables.Load(factory, dataKey));
+            work.AddRange(tableColumns.Load(factory, dataKey));
+
+            work.AddRange(routines.Load(factory, dataKey));
+            work.AddRange(routineParameters.Load(factory, dataKey));
+            work.AddRange(routineColumns.Load(factory, dataKey));
+            work.AddRange(references.Load(factory, dataKey));
+
+            work.AddRange(constraints.Load(factory, dataKey));
+            work.AddRange(constraintColumns.Load(factory, dataKey));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(schemta.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(domains.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(properties.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(tables.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(tableColumns.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(routines.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(routineParameters.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(routineColumns.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(references.Load(factory, dataKey, asOfUtcDate));
+
+            work.AddRange(constraints.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(constraintColumns.Load(factory, dataKey, asOfUtcDate));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, AppModel.IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
@@ -216,31 +290,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(catalogs.Load(factory, dataKey));
-            work.AddRange(schemta.Load(factory, dataKey));
-            work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(properties.Load(factory, dataKey));
-
-            work.AddRange(tables.Load(factory, dataKey));
-            work.AddRange(tableColumns.Load(factory, dataKey));
-
-            work.AddRange(routines.Load(factory, dataKey));
-            work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineColumns.Load(factory, dataKey));
-            work.AddRange(references.Load(factory, dataKey));
-
-            work.AddRange(constraints.Load(factory, dataKey));
-            work.AddRange(constraintColumns.Load(factory, dataKey));
-
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
@@ -310,16 +360,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        [Obsolete("Needs rework")]
         public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
             CatalogKey key = new CatalogKey(); // Dummy value
-
-            //TODO: Need to re-work loading of the Db Schema
-            //The ID's are not yet assigned so they need to be looked up.
-            // Old methods assumed that the SQL Script assigned everything.
-            // That does not work with temporal data.
 
             DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
@@ -394,7 +438,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Delete(ICatalogKey key)
+        public IReadOnlyList<WorkItem> Delete(ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Delete(key));
@@ -443,7 +487,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(AppModel.IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
@@ -474,5 +518,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
             return work;
         }
+
+
     }
 }

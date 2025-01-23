@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
@@ -46,33 +48,33 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Load(factory, (IPropertyKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Save(factory, (IPropertyKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey)
+        { return factory.CreateLoad(this, (IPropertyKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IPropertyKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyIndex dataKey)
+        { return factory.CreateSave(this, (IPropertyKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>

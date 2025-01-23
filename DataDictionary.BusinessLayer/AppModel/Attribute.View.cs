@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -59,6 +61,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>AttributeView</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
         { return attributes.Load(factory, dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeView</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey, DateTime asOfUtcDate)
+        { return attributes.Load(factory, dataKey, asOfUtcDate); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeView</remarks>

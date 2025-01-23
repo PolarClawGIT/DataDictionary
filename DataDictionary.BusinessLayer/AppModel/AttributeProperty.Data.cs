@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.AppGeneral;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
@@ -19,30 +21,40 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     class AttributePropertyData : AttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
-        ILoadData<IAttributeKey>, ISaveData<IAttributeKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         public required AttributeData Attributes { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
+        { return factory.CreateLoad(this, (IAttributeKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IAttributeKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeProperty</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeProperty</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
+        { return factory.CreateSave(this, (IAttributeKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
@@ -51,12 +63,12 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Delete(IAttributeKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IAttributeIndex dataKey)
         { return new WorkItem() { WorkName = "Remove AttributeProperty", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
     }
 }

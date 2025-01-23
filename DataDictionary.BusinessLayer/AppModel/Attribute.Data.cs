@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
@@ -68,6 +70,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDataTableFile, INamedScopeSourceData
     {
         public required IModel Model { get; init; }
@@ -96,9 +99,89 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
+        #region ILoadData, ISaveData
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public override void Remove(IAttributeKey attributeItem)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IModelKey)dataKey));
+            work.AddRange(aliasValues.Load(factory, dataKey));
+            work.AddRange(propertyValues.Load(factory, dataKey));
+            work.AddRange(definitionValues.Load(factory, dataKey));
+            work.AddRange(subjectAreaValues.Load(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(aliasValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(subjectAreaValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IAttributeKey)dataKey));
+            work.AddRange(aliasValues.Load(factory, dataKey));
+            work.AddRange(propertyValues.Load(factory, dataKey));
+            work.AddRange(definitionValues.Load(factory, dataKey));
+            work.AddRange(subjectAreaValues.Load(factory, dataKey));
+            return work;
+        }
+
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IAttributeKey)dataKey, asOfUtcDate));
+            work.AddRange(aliasValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(subjectAreaValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateSave(this, (IModelKey)dataKey));
+            work.AddRange(aliasValues.Save(factory, dataKey));
+            work.AddRange(propertyValues.Save(factory, dataKey));
+            work.AddRange(definitionValues.Save(factory, dataKey));
+            work.AddRange(subjectAreaValues.Save(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateSave(this, (IAttributeKey)dataKey));
+            work.AddRange(aliasValues.Save(factory, dataKey));
+            work.AddRange(propertyValues.Save(factory, dataKey));
+            work.AddRange(definitionValues.Save(factory, dataKey));
+            work.AddRange(subjectAreaValues.Save(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public void Remove(IAttributeIndex attributeItem)
         {
             base.Remove(attributeItem);
             AttributeKey key = new AttributeKey(attributeItem);
@@ -107,82 +190,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
             Model.Entities.Attributes.Remove(key);
-        }
-
-        #region ILoadData, ISaveData
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
-            work.Add(factory.CreateLoad(aliasValues, dataKey));
-            work.Add(factory.CreateLoad(propertyValues, dataKey));
-            work.Add(factory.CreateLoad(definitionValues, dataKey));
-            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeKey dataKey, DateTime asOfUtcDate)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey, asOfUtcDate));
-            work.Add(factory.CreateLoad(aliasValues, dataKey, asOfUtcDate));
-            work.Add(factory.CreateLoad(propertyValues, dataKey, asOfUtcDate));
-            work.Add(factory.CreateLoad(definitionValues, dataKey, asOfUtcDate));
-            work.Add(factory.CreateLoad(subjectAreaValues, dataKey, asOfUtcDate));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
-        { return Save(factory, (IAttributeKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
-            work.Add(factory.CreateLoad(aliasValues, dataKey));
-            work.Add(factory.CreateLoad(propertyValues, dataKey));
-            work.Add(factory.CreateLoad(definitionValues, dataKey));
-            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateSave(this, dataKey));
-            work.Add(factory.CreateSave(aliasValues, dataKey));
-            work.Add(factory.CreateSave(propertyValues, dataKey));
-            work.Add(factory.CreateSave(definitionValues, dataKey));
-            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
-        { return Load(factory, (IAttributeKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateSave(this, dataKey));
-            work.Add(factory.CreateSave(aliasValues, dataKey));
-            work.Add(factory.CreateSave(propertyValues, dataKey));
-            work.Add(factory.CreateSave(definitionValues, dataKey));
-            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
-            return work;
         }
 
         /// <inheritdoc/>
@@ -207,7 +214,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
         #endregion
 

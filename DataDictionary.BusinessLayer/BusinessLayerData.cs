@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
@@ -20,7 +22,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IBusinessLayerData
     {
         /// <summary>
@@ -79,7 +81,7 @@ namespace DataDictionary.BusinessLayer
         { return new DatabaseWork(DbConnection); }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey key)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -94,7 +96,22 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey key)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex key, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(Model.Delete());
+            work.AddRange(Model.Load(factory, key, asOfUtcDate));
+            work.AddRange(CatalogModel.Load(factory, key, asOfUtcDate));
+            work.AddRange(LibraryModel.Load(factory, key, asOfUtcDate));
+
+            work.AddRange(ScriptingEngine.Load(factory, key));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -124,7 +141,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <summary>

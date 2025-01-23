@@ -1,11 +1,7 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppSecurity
@@ -37,6 +33,11 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>PrincipalData</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IPrincipalKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>PrincipalData</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave(this).ToList(); }
 
@@ -54,6 +55,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>PrincipalData</remarks>
         public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Principal", DoWork = () => { this.Clear(); } }.ToList(); }
+
 
     }
 }

@@ -35,5 +35,14 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="dataKey"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey);
+
+        /// <summary>
+        /// Create WorkItems that loads data from the Model by Key and date
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="asOfUtcDate"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey, DateTime asOfUtcDate);
     }
 }

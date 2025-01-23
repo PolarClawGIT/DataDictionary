@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -16,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     /// <inheritdoc/>
     class DefinitionData : DefinitionCollection<DefinitionValue>, IDefinitionData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
@@ -25,33 +27,33 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionIndex dataKey)
-        { return Load(factory, (IDefinitionKey)dataKey); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionIndex dataKey)
+        { return factory.CreateLoad(this, (IDefinitionKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IDefinitionKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDefinitionIndex dataKey)
-        { return Save(factory, (IDefinitionKey)dataKey); }
+        { return factory.CreateSave(this, (IDefinitionKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDefinitionKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
@@ -75,7 +77,9 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
+
+
     }
 }

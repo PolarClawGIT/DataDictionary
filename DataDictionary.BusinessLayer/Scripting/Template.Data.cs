@@ -1,8 +1,10 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.ScriptingData;
-using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -16,8 +18,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, 
-        ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         INamedScopeSourceData
     {
         /// <summary>
@@ -29,18 +31,43 @@ namespace DataDictionary.BusinessLayer.Scripting
         { }
 
         /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Template</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateSave(this, (IScriptingTemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Template</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
         /// <remarks>Template</remarks>
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
-        { return Delete((IScriptingTemplateKey)dataKey); }
+        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Remove((ITemplateIndex)dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateKey dataKey)
-        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Remove((IScriptingTemplateKey)dataKey); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
@@ -69,25 +96,5 @@ namespace DataDictionary.BusinessLayer.Scripting
             return INamedScopeSourceData.LoadNamedScope<TemplateData, TemplateValue>
                 (this, addNamedScope);
         }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
     }
 }

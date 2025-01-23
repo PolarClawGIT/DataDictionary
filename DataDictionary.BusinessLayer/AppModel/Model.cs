@@ -1,7 +1,8 @@
-﻿using DataDictionary.BusinessLayer.AppGeneral;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
@@ -11,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface representing ER/DFD Model data
     /// </summary>
     public interface IModel :
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDeleteData, IScopeType, DataLayer.AppModel.IModel
 
     {
@@ -126,8 +127,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         #region ILoadData, ISaveData
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(modelValues.Load(factory, dataKey));
@@ -140,8 +141,22 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(subjectValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(modelValues.Save(factory, dataKey));
@@ -154,7 +169,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
+        /// <remarks>Model</remarks>
         public IReadOnlyList<System.Data.DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
@@ -168,7 +183,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
+        /// <remarks>Model</remarks>
         public void Import(System.Data.DataSet source)
         {
             modelValues.Import(source);
@@ -180,7 +195,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
+        /// <remarks>Model</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -194,8 +209,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         #endregion
@@ -212,5 +227,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return work;
         }
+
+
     }
 }

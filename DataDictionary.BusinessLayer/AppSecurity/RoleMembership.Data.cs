@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
@@ -32,8 +34,18 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IPrincipalKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>MembershipData</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
         { return factory.CreateLoad(this, (IRoleKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>MembershipData</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IRoleKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>MembershipData</remarks>

@@ -1,12 +1,7 @@
-﻿// Ignore Spelling: Securable
+﻿// Ignore Spelling: Securable Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppSecurity
@@ -35,6 +30,11 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>SecurableData</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey)
         { return factory.CreateLoad(this, (ISecurableKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>SecurableData</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (ISecurableKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SecurableData</remarks>

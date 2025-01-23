@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.DataLayer;
 using DataDictionary.Resource;
 using System.ComponentModel;
 using System.Data;
@@ -62,7 +64,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <returns></returns>
         public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
             where TKey : IKey
-            where TCollection : IBindingTable, ITemporalData<TKey>;
+            where TCollection : IBindingTable, IReadData<TKey>;
 
         /// <summary>
         /// Create a WorkItem for loading a Data Object.
@@ -302,12 +304,12 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <inheritdoc/>
         public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
             where TKey : IKey
-            where TCollection : IBindingTable, ITemporalData<TKey>
+            where TCollection : IBindingTable, IReadData<TKey>
         {
             return this.CreateWork(
                 workName: String.Format("Load {0}", target.BindingName),
                 target: target,
-                command: (conn) => target.HistoryCommand(conn, targetKey, asOfUtcDate));
+                command: (conn) => target.LoadCommand(conn, targetKey, asOfUtcDate));
         }
 
         /// <inheritdoc/>
