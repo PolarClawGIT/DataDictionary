@@ -38,7 +38,6 @@ namespace DataDictionary.DataLayer.AppModel
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
 
-
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? attributeId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)

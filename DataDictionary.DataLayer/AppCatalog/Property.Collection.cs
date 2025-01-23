@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.AppModel;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -14,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IPropertyKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IPropertyKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IPropertyKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<IPropertyKey>, IInfomationSchemaCollection<IProperty>
+        ITemporalData<ICatalogKey>, IInfomationSchemaCollection<IProperty>
         where TItem : PropertyItem, IPropertyItem, new()
     {
         /// <inheritdoc/>
@@ -26,21 +28,28 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPropertyKey propertyKey)
         { return LoadCommand(connection, propertyId: propertyKey.PropertyId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
-        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IPropertyKey propertyKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IPropertyKey propertyKey)
-        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, includeHistory: true); }
-
+        public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? catalogId = null, Guid? propertyId = null,

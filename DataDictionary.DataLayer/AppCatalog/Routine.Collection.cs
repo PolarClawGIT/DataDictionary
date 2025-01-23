@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.AppModel;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -14,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IRoutineKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IRoutineKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<IRoutineKeyName>,
-        ITemporalData<ICatalogKey>, ITemporalData<IRoutineKey>, IInfomationSchemaCollection<IRoutine>
+        ITemporalData<ICatalogKey>, IInfomationSchemaCollection<IRoutine>
         where TItem : RoutineItem, IRoutineItem, new()
     {
         /// <inheritdoc/>
@@ -22,16 +24,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IRoutineKey routineKey)
         { return LoadCommand(connection, routineId: routineKey.RoutineId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IRoutineKey routineKey)
-        { return LoadCommand(connection, routineId: routineKey.RoutineId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IRoutineKey routineKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, routineId: routineKey.RoutineId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)
