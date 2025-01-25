@@ -13,9 +13,16 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Class uses BindingView to provide access to the underlining sources.
     /// This is a wrapper around AttributeData.
     /// </remarks>
-    class AttributeView :
+    public class AttributeView :
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>
     {
+        //TODO: This is POC code.
+        // The idea is to have a single class that represents all the data used by a given form.
+        // The Binding Views would be created here rather then in the Form.
+        // This would result in re-thinking how most forms work.
+        // The upside is that it would be able to handle Temporal data without the UI
+        // being aware of the difference.
+
         AttributeData attributes;
         IModel currentModel;
 
@@ -42,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Loads from the current Model.
+        /// Loads from the data from the current Model.
         /// </summary>
         /// <param name="dataKey"></param>
         /// <returns></returns>
