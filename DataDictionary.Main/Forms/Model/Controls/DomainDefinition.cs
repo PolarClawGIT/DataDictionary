@@ -51,7 +51,12 @@ namespace DataDictionary.Main.Forms.Model.Controls
         public String DefinitionSummary
         {
             get { return definitionSummaryData.Text; }
-            set { definitionSummaryData.Text = value; }
+            set
+            {
+                if (IsHandleCreated)
+                { Invoke(() => { definitionSummaryData.Text = value; }); }
+                else { definitionSummaryData.Text = value; }
+            }
         }
 
         [Browsable(false)]

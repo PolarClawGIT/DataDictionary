@@ -59,10 +59,17 @@ namespace DataDictionary.Main.Controls
             set
             {
                 try
-                { richTextBox.Rtf = value; }
+                {
+                    if (this.IsHandleCreated)
+                    { Invoke(() => { richTextBox.Rtf = value; }); }
+                    else { richTextBox.Rtf = value; }
+                }
                 catch (Exception)
-                { richTextBox.Text = value; }
-
+                {
+                    if (this.IsHandleCreated)
+                    { Invoke(() => { richTextBox.Text = value; }); }
+                    else { richTextBox.Text = value; }
+                }
             }
         }
 
