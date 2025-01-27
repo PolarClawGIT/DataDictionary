@@ -3,7 +3,6 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using Toolbox.BindingTable;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
@@ -19,6 +18,7 @@ namespace DataDictionary.Main.Forms.Model
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
         Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
+        AttributeView formData = new AttributeView(BusinessData.Model);
 
         protected Attribute() : base()
         {
@@ -47,17 +47,28 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
+            formData.Load(key);
 
-            bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => key.Equals(w));
+            bindingAttribute.DataSource = formData.Attributes;
             bindingAttribute.Position = 0;
 
             if (bindingAttribute.Current is IAttributeValue current)
             {
-                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.Model.Attributes.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.Model.Attributes.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.Model.Attributes.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.Model.Attributes.SubjectArea, w => key.Equals(w));
+                bindingProperty.DataSource = formData.Properties;
+                bindingDefinition.DataSource = formData.Definitions;
+                bindingAlias.DataSource = formData.Aliases;
+                bindingSubjectArea.DataSource = formData.SubjectArea;
+
+                formData.Attributes.ListChanged += Attributes_ListChanged;
             }
+        }
+
+        private void Attributes_ListChanged(Object? sender, ListChangedEventArgs e)
+        {   // IF the Attribute goes away, the other data is also gone.
+            bindingProperty.ResetBindings(false);
+            bindingDefinition.ResetBindings(false);
+            bindingAlias.ResetBindings(false);
+            bindingSubjectArea.ResetBindings(false);
         }
 
         private void Form_Load(object sender, EventArgs e)

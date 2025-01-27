@@ -26,10 +26,29 @@ namespace DataDictionary.BusinessLayer.AppModel
         AttributeData attributes;
         IModel currentModel;
 
+        /// <summary>
+        /// Attributes of the View (zero or one expected)
+        /// </summary>
         public BindingView<AttributeValue> Attributes { get; protected set; }
+
+        /// <summary>
+        /// Attribute Alias
+        /// </summary>
         public BindingView<AttributeAliasValue> Aliases { get; protected set; }
+
+        /// <summary>
+        /// Attribute Properties
+        /// </summary>
         public BindingView<AttributePropertyValue> Properties { get; protected set; }
+
+        /// <summary>
+        /// Attribute Definitions
+        /// </summary>
         public BindingView<AttributeDefinitionValue> Definitions { get; protected set; }
+
+        /// <summary>
+        /// Attribute SubjectArea
+        /// </summary>
         public BindingView<AttributeSubjectAreaValue> SubjectArea { get; protected set; }
 
         /// <summary>

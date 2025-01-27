@@ -105,6 +105,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Delete(dataKey));
             work.Add(factory.CreateLoad(this, (IModelKey)dataKey));
             work.AddRange(aliasValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
@@ -118,6 +119,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Delete(dataKey));
             work.Add(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(aliasValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
@@ -131,6 +133,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Delete(dataKey));
             work.Add(factory.CreateLoad(this, (IAttributeKey)dataKey));
             work.AddRange(aliasValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
@@ -146,6 +149,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateLoad(this, (IAttributeKey)dataKey, asOfUtcDate));
+            work.AddRange(Delete(dataKey));
             work.AddRange(aliasValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));

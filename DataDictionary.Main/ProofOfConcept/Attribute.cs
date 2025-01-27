@@ -13,6 +13,7 @@ using DataDictionary.Main.Forms;
 
 namespace DataDictionary.Main.ProofOfConcept.Model
 {
+    [Obsolete("POC code, not used",true)]
     partial class Attribute : Forms.ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
