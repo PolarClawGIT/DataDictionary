@@ -58,7 +58,7 @@ namespace Toolbox.BindingTable
         }
 
         /// <summary>
-        /// Handle BindingList changes to reflect into this object.
+        /// Handle BindingList changes to reflect changes into this object.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -67,21 +67,19 @@ namespace Toolbox.BindingTable
             if (sender is IList<TRow> data)
             {
                 List<TRow> targetState = data.Where(FilterBy).OrderBy(OrderBy).ToList();
+                List<TRow> toInsert = targetState.Except(this, ReferenceEqualityComparer.Instance).OfType<TRow>().ToList();
+                List<TRow> toDelete = this.Except(targetState, ReferenceEqualityComparer.Instance).OfType<TRow>().ToList();
 
                 if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.Reset)
                 {
-                    List<TRow> toInsert = targetState.Except(this).ToList();
-
                     foreach (var item in toInsert)
                     { base.InsertItem(base.Count, item); }
                 }
 
                 if (e.ListChangedType is ListChangedType.ItemDeleted or ListChangedType.Reset)
                 {
-                    List<TRow> toDelete = this.Except(targetState).ToList();
-
                     foreach (var item in toDelete)
-                    { base.Remove(item); }
+                    { base.RemoveItem(this.IndexOf(item)); }
                 }
             }
         }
@@ -90,7 +88,7 @@ namespace Toolbox.BindingTable
         {
             /* FindGoodRow method of CurrencyManager does not handle empty lists.
              * If the list is empty, FindGoodRow throws an InvalidOperationException that cannot be trapped.
-             * To prevent this, the ListChanged event on a empty list is not fired.
+             * To prevent this, the ListChanged event on an empty list is not fired.
              *         
              private void FindGoodRow() {
                 int rowCount = this.list.Count;
@@ -194,17 +192,18 @@ namespace Toolbox.BindingTable
 
         protected override void InsertItem(int index, TRow item)
         {
+            // List Change event syncs the lists. Only need to deal with the base list.
+
             if (!isAddNewCore)
             { BaseInsert(BaseCount(), item); }
-
-            base.InsertItem(index, item);
         }
 
         protected override void RemoveItem(int index)
         {
+            // List Change event syncs the lists. Only need to deal with the base list.
+
             Int32 baseIndex = BaseIndexOf(this[index]);
             if (baseIndex >= 0) { BaseRemoveAt(baseIndex); }
-            base.RemoveItem(index);
         }
 
     }
