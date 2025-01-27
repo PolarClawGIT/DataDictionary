@@ -27,10 +27,10 @@ namespace DataDictionary.Main.ProofOfConcept.Model
             InitializeComponent();
 
             SetRowState(
-                bindingAttribute, 
-                bindingProperty, 
-                bindingDefinition, 
-                bindingAlias, 
+                bindingAttribute,
+                bindingProperty,
+                bindingDefinition,
+                bindingAlias,
                 bindingSubjectArea);
             SetTitle(bindingAttribute);
             SetCommand(ScopeType.ModelAttribute, CommandImageType.Delete);
@@ -252,7 +252,7 @@ namespace DataDictionary.Main.ProofOfConcept.Model
         private void AliasSelectCommand_Click(object sender, EventArgs e)
         {
             if (bindingAlias.DataSource is IList<AttributeAliasValue> alias)
-            { 
+            {
                 using (var dialog = new Dialogs.SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
@@ -292,5 +292,8 @@ namespace DataDictionary.Main.ProofOfConcept.Model
             PathIndex path = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
             aliasNameData.Text = path.MemberFullPath;
         }
+
+        private void Binding_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        { }
     }
 }

@@ -86,6 +86,38 @@ namespace Toolbox.BindingTable
             }
         }
 
+        protected override void OnListChanged(ListChangedEventArgs e)
+        {
+            /* FindGoodRow method of CurrencyManager does not handle empty lists.
+             * If the list is empty, FindGoodRow throws an InvalidOperationException that cannot be trapped.
+             * To prevent this, the ListChanged event on a empty list is not fired.
+             *         
+             private void FindGoodRow() {
+                int rowCount = this.list.Count;
+                for (int i = 0; i < rowCount; i++) {
+                    listposition = i; 
+                    try {
+                        PushData(); 
+                    } 
+                    catch (Exception ex) {
+                        OnDataError(ex); 
+                        continue;
+                    }
+                    listposition = i;
+                    return; 
+                }
+                // if we got here, the list did not contain any rows suitable for the bindings 
+                // suspend binding and throw an exception 
+                SuspendBinding();
+                throw new InvalidOperationException(SR.GetString(SR.DataBindingPushDataException)); 
+            }
+             */
+
+            if (Count <= 0 && e.ListChangedType is ListChangedType.ItemDeleted or ListChangedType.Reset)
+            { } // Do not call OnListChanged
+            else { base.OnListChanged(e); }
+        }
+
         TRow? addNewCoreItem = null; // Track the extra row created by DataGridView.
         Boolean isAddNewCore = false; // Tracks if AddNewCore is being executed. We are dealing with a fake DataGridView Row.
 

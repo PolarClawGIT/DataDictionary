@@ -48,6 +48,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             SubjectArea = new BindingView<AttributeSubjectAreaValue>(attributes.SubjectArea);
         }
 
+
         /// <summary>
         /// Loads from the data from the current Model.
         /// </summary>
