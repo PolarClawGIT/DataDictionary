@@ -49,7 +49,10 @@ namespace DataDictionary.Main.Forms.Model
 
             AttributeIndex key = new AttributeIndex(attributeItem);
 
-            bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => key.Equals(w));
+            IBindingList data = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingAttribute.DataSource = data;
             bindingAttribute.Position = 0;
 
             if (bindingAttribute.Current is IAttributeValue current)
@@ -59,7 +62,21 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.Model.Attributes.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.Model.Attributes.SubjectArea, w => key.Equals(w));
             }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (e.ListChangedType is ListChangedType.ItemDeleted && data.Count is 0)
+                {
+                    // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                    bindingAttribute.RaiseListChangedEvents = false;
+                    bindingProperty.RaiseListChangedEvents = false;
+                    bindingDefinition.RaiseListChangedEvents = false;
+                    bindingAlias.RaiseListChangedEvents = false;
+                    bindingSubjectArea.RaiseListChangedEvents = false;
+                }
+            }
         }
+
 
         private void Form_Load(object sender, EventArgs e)
         {
