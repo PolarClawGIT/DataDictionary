@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -32,8 +33,10 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             SubjectAreaIndex key = new SubjectAreaIndex(subjectAreaItem);
+            IBindingList data = new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas, w => key.Equals(w));
+            data.ListChanged += ListChanged;
 
-            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas, w => key.Equals(w));
+            bindingSubject.DataSource = data;
             bindingSubject.Position = 0;
 
             if (bindingSubject.Current is ISubjectAreaValue current)
@@ -44,6 +47,19 @@ namespace DataDictionary.Main.Forms.Model
 
                 //List<EntityIndex> entityKeys = BusinessData.Model.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
                 //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.Entities, w => entityKeys.Contains(new EntityKey(w)));
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingSubject.RaiseListChangedEvents = false;
+                    bindingAttribute.RaiseListChangedEvents = false;
+                    bindingEntity.RaiseListChangedEvents = false;
+                }
             }
         }
 

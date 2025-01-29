@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -37,7 +38,10 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             TableIndexName key = new TableIndexName(tableItem);
 
-            bindingTable.DataSource = new BindingView<TableValue>(BusinessData.CatalogModel.DbTables, w => key.Equals(w));
+            IBindingList data = new BindingView<TableValue>(BusinessData.CatalogModel.DbTables, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingTable.DataSource = data;
             bindingTable.Position = 0;
 
             if (bindingTable.Current is ITableValue current)
@@ -48,6 +52,21 @@ namespace DataDictionary.Main.Forms.Catalog
                 bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.CatalogModel.DbConstraints, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<BusinessLayer.AppCatalog.PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
                 bindingDependencies.DataSource = new BindingView<ReferenceValue>(BusinessData.CatalogModel.DbReferences, w => referenceName.Equals(w));
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingTable.RaiseListChangedEvents = false;
+                    bindingColumns.RaiseListChangedEvents = false;
+                    bindingConstraints.RaiseListChangedEvents = false;
+                    bindingProperties.RaiseListChangedEvents = false;
+                    bindingDependencies.RaiseListChangedEvents = false;
+                }
             }
         }
 

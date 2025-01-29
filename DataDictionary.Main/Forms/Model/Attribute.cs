@@ -65,9 +65,11 @@ namespace DataDictionary.Main.Forms.Model
 
             void ListChanged(Object? sender, ListChangedEventArgs e)
             {
-                if (e.ListChangedType is ListChangedType.ItemDeleted && data.Count is 0)
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
                 {
-                    // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
                     bindingAttribute.RaiseListChangedEvents = false;
                     bindingProperty.RaiseListChangedEvents = false;
                     bindingDefinition.RaiseListChangedEvents = false;

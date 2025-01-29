@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -24,12 +25,27 @@ namespace DataDictionary.Main.Forms.Catalog
             SchemaIndexName key = new SchemaIndexName(schemaItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.CatalogModel.DbSchemta, w => key.Equals(w));
+            IBindingList data = new BindingView<SchemaValue>(BusinessData.CatalogModel.DbSchemta, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingSchema.DataSource = data;
             bindingSchema.Position = 0;
 
             if (bindingSchema.Current is ISchemaValue current)
             {
                 bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingSchema.RaiseListChangedEvents = false;
+                    bindingProperties.RaiseListChangedEvents = false;
+                }
             }
         }
 

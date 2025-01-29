@@ -5,6 +5,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -33,11 +34,26 @@ namespace DataDictionary.Main.Forms.Catalog
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
+            IBindingList data = new BindingView<TableColumnValue>(BusinessData.CatalogModel.DbTableColumns, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingColumn.DataSource = data;
             bindingColumn.Position = 0;
 
             if (bindingColumn.Current is ITableColumnValue current)
             { bindingProperties.DataSource = new BindingView<BusinessLayer.AppCatalog.PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w)); }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingColumn.RaiseListChangedEvents = false;
+                    bindingProperties.RaiseListChangedEvents = false;
+                }
+            }
         }
 
         private void DbColumn_Load(object sender, EventArgs e)

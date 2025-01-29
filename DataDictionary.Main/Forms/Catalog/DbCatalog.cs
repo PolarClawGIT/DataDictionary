@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -25,7 +26,10 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             CatalogIndex key = new CatalogIndex(catalogItem);
 
-            bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.CatalogModel.DbCatalogs, w => key.Equals(w));
+            IBindingList data = new BindingView<CatalogValue>(BusinessData.CatalogModel.DbCatalogs, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingSource.DataSource = data;
             bindingSource.Position = 0;
 
             CommandButtons[CommandImageType.Export].Text = "to Model";
@@ -35,6 +39,15 @@ namespace DataDictionary.Main.Forms.Catalog
             exportEntites.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
 
             exportProcesses.Visible = false; // Disabled until processes are supported
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                { bindingSource.RaiseListChangedEvents = false; }
+            }
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)

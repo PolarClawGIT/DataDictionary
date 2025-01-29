@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.Main.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -24,12 +25,27 @@ namespace DataDictionary.Main.Forms.Catalog
             DomainIndexName key = new DomainIndexName(domainItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.CatalogModel.DbDomains, w => key.Equals(w));
+            IBindingList data = new BindingView<DomainValue>(BusinessData.CatalogModel.DbDomains, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingDomain.DataSource = data;
             bindingDomain.Position = 0;
 
             if (bindingDomain.Current is IDomainValue current)
             {
                 bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingDomain.RaiseListChangedEvents = false;
+                    bindingProperties.RaiseListChangedEvents = false;
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -24,13 +25,28 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             RoutineParameterIndexName key = new RoutineParameterIndexName(parameterItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
+            
+            IBindingList data = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w));
+            data.ListChanged += ListChanged;
 
-            bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.CatalogModel.DbRoutineParameters, w => key.Equals(w));
+            bindingParameter.DataSource = data;
             bindingParameter.Position = 0;
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {
                 bindingProperties.DataSource = new BindingView<PropertyValue>(BusinessData.CatalogModel.DbProperties, w => propertyKey.Equals(w));
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingParameter.RaiseListChangedEvents = false;
+                    bindingProperties.RaiseListChangedEvents = false;
+                }
             }
         }
 

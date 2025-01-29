@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
@@ -26,9 +27,20 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             ModelIndex key = new ModelIndex(model);
+            IBindingList data = new BindingView<ModelValue>(BusinessData.Model.Models, w => key.Equals(w));
+            data.ListChanged += ListChanged;
 
-            bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Model.Models, w => key.Equals(w));
+            bindingModel.DataSource = data;
             bindingModel.Position = 0;
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                { bindingModel.RaiseListChangedEvents = false; }
+            }
         }
 
         private void Model_Load(object sender, EventArgs e)

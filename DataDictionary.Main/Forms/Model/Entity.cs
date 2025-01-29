@@ -55,7 +55,10 @@ namespace DataDictionary.Main.Forms.Model
 
             EntityIndex key = new EntityIndex(entityItem);
 
-            bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.Entities, w => key.Equals(w));
+            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.Entities, w => key.Equals(w));
+            data.ListChanged += ListChanged;
+
+            bindingEntity.DataSource = data;
             bindingEntity.Position = 0;
 
             if (bindingEntity.Current is IEntityValue current)
@@ -64,8 +67,25 @@ namespace DataDictionary.Main.Forms.Model
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w), o => o.OrdinalPosition??0);
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
                 bindingAttributeDetail.DataSource = new List<AttributeValue>();
+            }
+
+            void ListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
+                if (e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                {
+                    bindingEntity.RaiseListChangedEvents = false;
+                    bindingProperty.RaiseListChangedEvents = false;
+                    bindingDefinition.RaiseListChangedEvents = false;
+                    bindingAlias.RaiseListChangedEvents = false;
+                    bindingSubjectArea.RaiseListChangedEvents = false;
+                    bindingAttribute.RaiseListChangedEvents = false;
+                    bindingAttributeDetail.RaiseListChangedEvents = false;
+                }
             }
         }
 
