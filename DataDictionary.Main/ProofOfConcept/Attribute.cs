@@ -47,7 +47,7 @@ namespace DataDictionary.Main.ProofOfConcept.Model
                 attributeItem = new AttributeValue();
                 formData.Attributes.Add(new AttributeValue());
 
-                //BusinessData.Model.Attributes.Add(attributeItem);
+                //BusinessData.Model.ModelAttribute.Add(attributeItem);
                 isNew = true;
             }
 
@@ -79,7 +79,7 @@ namespace DataDictionary.Main.ProofOfConcept.Model
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
+            DataTypeList.Load(dataTypeData, BusinessData.Model.ModelAttribute.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
             dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
             dataLengthData.DataBindings.Add(new Binding(nameof(dataLengthData.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
             dataPrecisionData.DataBindings.Add(new Binding(nameof(dataPrecisionData.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -122,7 +122,7 @@ namespace DataDictionary.Main.ProofOfConcept.Model
             base.DeleteCommand_Click(sender, e);
 
             if (bindingAttribute.Current is IAttributeValue current)
-            { DoWork(BusinessData.Model.Attributes.Delete(current), Complete); }
+            { DoWork(BusinessData.Model.ModelAttribute.Delete(current), Complete); }
 
             void Complete(RunWorkerCompletedEventArgs args)
             { SendMessage(new RefreshNavigation()); }

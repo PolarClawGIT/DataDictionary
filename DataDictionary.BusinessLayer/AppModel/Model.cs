@@ -27,14 +27,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         ISubjectAreaData SubjectAreas { get; }
 
         /// <summary>
-        /// List of Attributes within the Model.
+        /// Container for Attribute within the Model.
         /// </summary>
-        IAttributeData Attributes { get; }
+        IAttribute ModelAttribute { get; }
 
         /// <summary>
-        /// List of Entities within the Model.
+        /// Container for Entity within the Model.
         /// </summary>
-        IEntityData Entities { get; }
+        IEntity ModelEntity { get; }
 
         /// <summary>
         /// The Properties for the Model (includes common)
@@ -85,12 +85,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         private readonly SubjectAreaData subjectValues;
 
         /// <inheritdoc/>
-        public IAttributeData Attributes { get { return attributeValues; } }
-        private readonly AttributeData attributeValues;
+        public IAttribute ModelAttribute { get { return attributeValues; } }
+        private readonly Attribute attributeValues;
 
         /// <inheritdoc/>
-        public IEntityData Entities { get { return entityValues; } }
-        private readonly EntityData entityValues;
+        public IEntity ModelEntity { get { return entityValues; } }
+        private readonly Entity entityValues;
 
         /// <inheritdoc/>
         public IPropertyData Properties { get { return propertyValues; } }
@@ -106,8 +106,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             modelValues = new ModelData();
             subjectValues = new SubjectAreaData() { Model = this };
-            attributeValues = new AttributeData() { Model = this };
-            entityValues = new EntityData() { Model = this };
+            attributeValues = new Attribute() { Model = this };
+            entityValues = new Entity() { Model = this };
         }
 
         /// <summary>
@@ -227,7 +227,5 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return work;
         }
-
-
     }
 }

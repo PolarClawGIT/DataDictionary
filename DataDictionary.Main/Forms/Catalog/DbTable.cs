@@ -112,7 +112,7 @@ namespace DataDictionary.Main.Forms.Catalog
                     GetColumns = BusinessData.CatalogModel.DbTables.GetColumns
                 };
 
-                IEntityValue entity = BusinessData.Model.Entities.Import(tableEntity);
+                IEntityValue entity = BusinessData.Model.ModelEntity.Import(tableEntity);
 
                 Activate(() => new Forms.Model.Entity(entity));
                 SendMessage(new RefreshNavigation());

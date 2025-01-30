@@ -85,7 +85,7 @@ namespace DataDictionary.Main.Forms.Catalog
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.Model.Entities.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.ModelEntity.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }
@@ -95,7 +95,7 @@ namespace DataDictionary.Main.Forms.Catalog
             throw new NotImplementedException();
             //if (bindingSource.Current is ICatalogValue current)
             //{
-            //    BusinessData.Model.Attributes.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
+            //    BusinessData.Model.ModelAttribute.Import(BusinessData.Catalog, BusinessData.ApplicationData.Properties, current);
             //    SendMessage(new RefreshNavigation());
             //}
         }

@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Forms.Catalog
                     GetModelProperty = BusinessData.Model.Properties.GetProperty
                 };
 
-                IAttributeValue attribute = BusinessData.Model.Attributes.Import(columnAttribute);
+                IAttributeValue attribute = BusinessData.Model.ModelAttribute.Import(columnAttribute);
 
                 Activate(() => new Forms.Model.Attribute(attribute));
                 SendMessage(new RefreshNavigation());

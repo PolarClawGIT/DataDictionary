@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ITemplateNodeData TemplateNodes { get; }
 
         /// <summary>
-        /// List of Scripting Attributes for the Template
+        /// List of Scripting ModelAttribute for the Template
         /// </summary>
         ITemplateAttributeData TemplateAttributes { get; }
 

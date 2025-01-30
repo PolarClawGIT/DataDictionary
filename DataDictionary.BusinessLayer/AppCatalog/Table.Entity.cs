@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         }
 
         /// <summary>
-        /// List of Attributes of the Entity for the sourceTable
+        /// List of ModelAttribute of the Entity for the sourceTable
         /// </summary>
         public IEnumerable<IEntityAttributeValue> Attributes
         {

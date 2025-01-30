@@ -43,13 +43,13 @@ namespace DataDictionary.Main.Forms.Model
             if (attributeItem is null)
             {
                 attributeItem = new AttributeValue();
-                BusinessData.Model.Attributes.Add(attributeItem);
+                BusinessData.Model.ModelAttribute.Attributes.Add(attributeItem);
                 isNew = true;
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
 
-            IBindingList data = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => key.Equals(w));
+            IBindingList data = new BindingView<AttributeValue>(BusinessData.Model.ModelAttribute.Attributes, w => key.Equals(w));
             data.ListChanged += ListChanged;
 
             bindingAttribute.DataSource = data;
@@ -57,10 +57,10 @@ namespace DataDictionary.Main.Forms.Model
 
             if (bindingAttribute.Current is IAttributeValue current)
             {
-                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.Model.Attributes.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.Model.Attributes.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.Model.Attributes.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.Model.Attributes.SubjectArea, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.Model.ModelAttribute.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.Model.ModelAttribute.Definitions, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.Model.ModelAttribute.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.Model.ModelAttribute.SubjectArea, w => key.Equals(w));
             }
 
             void ListChanged(Object? sender, ListChangedEventArgs e)
@@ -98,7 +98,7 @@ namespace DataDictionary.Main.Forms.Model
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
+            DataTypeList.Load(dataTypeData, BusinessData.Model.ModelAttribute.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
             dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
             dataLengthData.DataBindings.Add(new Binding(nameof(dataLengthData.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
             dataPrecisionData.DataBindings.Add(new Binding(nameof(dataPrecisionData.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -141,7 +141,7 @@ namespace DataDictionary.Main.Forms.Model
             base.DeleteCommand_Click(sender, e);
 
             if (bindingAttribute.Current is IAttributeValue current)
-            { DoWork(BusinessData.Model.Attributes.Delete(current), Complete); }
+            { DoWork(BusinessData.Model.ModelAttribute.Delete(current), Complete); }
 
             void Complete(RunWorkerCompletedEventArgs args)
             { SendMessage(new RefreshNavigation()); }

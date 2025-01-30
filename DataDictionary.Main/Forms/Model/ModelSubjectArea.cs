@@ -42,11 +42,11 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingSubject.Current is ISubjectAreaValue current)
             {
                 
-                //List<AttributeIndex> attributeKeys = BusinessData.Model.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
-                //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
+                //List<AttributeIndex> attributeKeys = BusinessData.Model.ModelAttribute.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
+                //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.Model.ModelAttribute, w => attributeKeys.Contains(new AttributeIndex(w)));
 
-                //List<EntityIndex> entityKeys = BusinessData.Model.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
-                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.Entities, w => entityKeys.Contains(new EntityKey(w)));
+                //List<EntityIndex> entityKeys = BusinessData.Model.ModelEntity.SubjectAreas.Where(w => key.Equals(w)).Select(s => new EntityKey(s)).ToList();
+                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.Model.ModelEntity, w => entityKeys.Contains(new EntityKey(w)));
             }
 
             void ListChanged(Object? sender, ListChangedEventArgs e)

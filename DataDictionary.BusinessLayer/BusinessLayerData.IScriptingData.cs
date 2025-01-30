@@ -147,13 +147,13 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Build XML Element for Domain Attributes
+        /// Build XML Element for Domain ModelAttribute
         /// </summary>
         /// <param name="scripting"></param>
         /// <param name="data"></param>
         /// <returns></returns>
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
-        { return modelValues.Attributes.GetXElement(scripting, data); }
+        { return modelValues.ModelAttribute.GetXElement(scripting, data); }
 
     }
 }

@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
         public String? EntityTitle { get; private set; } = String.Empty;
 
         /// <summary>
-        /// Loads the ComboBoxData with Entities.
+        /// Loads the ComboBoxData with ModelEntity.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
