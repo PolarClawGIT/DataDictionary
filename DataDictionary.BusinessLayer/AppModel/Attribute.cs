@@ -99,7 +99,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             attributeValues = new AttributeData();
             aliasValues = new AttributeAliasData();
-            propertyValues = new AttributePropertyData() { Attributes = attributeValues };
+            propertyValues = new AttributePropertyData();
             definitionValues = new AttributeDefinitionData();
             subjectAreaValues = new AttributeSubjectAreaData();
         }

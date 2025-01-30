@@ -24,8 +24,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
-        public required AttributeData Attributes { get; init; }
-
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
