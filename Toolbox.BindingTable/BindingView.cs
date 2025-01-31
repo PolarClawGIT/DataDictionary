@@ -32,6 +32,8 @@ namespace Toolbox.BindingTable
         Func<TRow, Boolean> FilterBy { get; set; }
         Func<TRow, Object> OrderBy { get; set; }
 
+        List<TRow> directAdd = new List<TRow>(); // Contains a list of items added directly to the BindingView so they are not filterd out.
+
         public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
             BaseCount = () => baseData.Count;
@@ -66,9 +68,19 @@ namespace Toolbox.BindingTable
         {
             if (sender is IList<TRow> data)
             {
-                List<TRow> targetState = data.Where(FilterBy).OrderBy(OrderBy).ToList();
-                List<TRow> toInsert = targetState.Except(this, ReferenceEqualityComparer.Instance).OfType<TRow>().ToList();
-                List<TRow> toDelete = this.Except(targetState, ReferenceEqualityComparer.Instance).OfType<TRow>().ToList();
+                List<TRow> targetState = data.
+                    Where(FilterBy).
+                    OrderBy(OrderBy).
+                    Union(directAdd).
+                    ToList();
+                List<TRow> toInsert = targetState.
+                    Except(this, ReferenceEqualityComparer.Instance).
+                    OfType<TRow>().
+                    ToList();
+                List<TRow> toDelete = this.
+                    Except(targetState, ReferenceEqualityComparer.Instance).
+                    OfType<TRow>().
+                    ToList();
 
                 if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.Reset)
                 {
@@ -160,18 +172,24 @@ namespace Toolbox.BindingTable
 
         protected override void InsertItem(int index, TRow item)
         {
-            // List Change event syncs the lists. Only need to deal with the base list.
+            if (!directAdd.Contains(item))
+            { directAdd.Add(item); }
+
+            base.InsertItem(base.Count, item);
 
             if (!isAddNewCore)
-            { BaseInsert(BaseCount(), item); }
+            { BaseInsert(BaseCount(), item); } // Causes ListChange event to occur on base.
         }
 
         protected override void RemoveItem(int index)
         {
-            // List Change event syncs the lists. Only need to deal with the base list.
+            if (directAdd.Contains(this[index]))
+            { directAdd.Remove(this[index]); }
+
+            base.RemoveItem(index);
 
             Int32 baseIndex = BaseIndexOf(this[index]);
-            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); }
+            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
         }
 
     }
