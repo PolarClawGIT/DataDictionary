@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -20,19 +22,19 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc cref="Attribute.Attributes"/>
         /// <remarks>One or Zero values</remarks>
-        public BindingView<AttributeValue> Attributes { get; private set; }
+        public BindingView<AttributeValue> Attributes { get; private set; } = null!;
 
         /// <inheritdoc cref="Attribute.Aliases"/>
-        public BindingView<AttributeAliasValue> Aliases { get; private set; }
+        public BindingView<AttributeAliasValue> Aliases { get; private set; } = null!;
 
         /// <inheritdoc cref="Attribute.Properties"/>
-        public BindingView<AttributePropertyValue> Properties { get; private set; }
+        public BindingView<AttributePropertyValue> Properties { get; private set; } = null!;
 
         /// <inheritdoc cref="Attribute.Definitions"/>
-        public BindingView<AttributeDefinitionValue> Definitions { get; private set; }
+        public BindingView<AttributeDefinitionValue> Definitions { get; private set; } = null!;
 
         /// <inheritdoc cref="Attribute.SubjectArea"/>
-        public BindingView<AttributeSubjectAreaValue> SubjectArea { get; private set; }
+        public BindingView<AttributeSubjectAreaValue> SubjectArea { get; private set; } = null!;
 
         /// <inheritdoc cref="IModel.Properties"/>
         public BindingView<PropertyValue> ModelProperty { get; }
@@ -50,11 +52,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             AttributeIndex = new AttributeIndex();
             currentData = model.ModelAttribute;
 
-            Attributes = new BindingView<AttributeValue>(currentData.Attributes, w => 1 == 2);
-            Aliases = new BindingView<AttributeAliasValue>(currentData.Aliases, w => 1 == 2);
-            Properties = new BindingView<AttributePropertyValue>(currentData.Properties, w => 1 == 2);
-            Definitions = new BindingView<AttributeDefinitionValue>(currentData.Definitions, w => 1 == 2);
-            SubjectArea = new BindingView<AttributeSubjectAreaValue>(currentData.SubjectArea, w => 1 == 2);
+            StartBinding();
 
             ModelProperty = new BindingView<PropertyValue>(model.Properties);
             ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
@@ -114,6 +112,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
+            AttributeIndex = new AttributeIndex(attribute);
             currentData = currentModel.ModelAttribute;
 
             work.Add(new WorkItem() { DoWork = StopBinding });
