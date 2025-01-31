@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         // Second try at making an Attribute View
 
         /// <inheritdoc cref="AttributeIndex"/>
-        public AttributeIndex AttributeIndex { get; }
+        public AttributeIndex AttributeIndex { get; protected set; }
 
         IAttribute attributeValue;
         IModel currentModel;
@@ -51,32 +51,11 @@ namespace DataDictionary.BusinessLayer.AppModel
             AttributeIndex = new AttributeIndex(value);
             attributeValue = model.ModelAttribute;
 
-            Attributes = new BindingView<AttributeValue>(attributeValue.Attributes, w => AttributeIndex.Equals(w));
-            Aliases = new BindingView<AttributeAliasValue>(attributeValue.Aliases, w => AttributeIndex.Equals(w));
-            Properties = new BindingView<AttributePropertyValue>(attributeValue.Properties, w => AttributeIndex.Equals(w));
-            Definitions = new BindingView<AttributeDefinitionValue>(attributeValue.Definitions, w => AttributeIndex.Equals(w));
-            SubjectArea = new BindingView<AttributeSubjectAreaValue>(attributeValue.SubjectArea, w => AttributeIndex.Equals(w));
-
-            ModelProperty = new BindingView<PropertyValue>(model.Properties);
-            ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
-        }
-
-        /// <summary>
-        /// Creates a AttributeView tied to the Model.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="attribute"></param>
-        public AttributeView(IModel model, IAttributeIndex attribute)
-        {
-            currentModel = model;
-            AttributeIndex = new AttributeIndex(attribute);
-            attributeValue = model.ModelAttribute;
-
-            Attributes = new BindingView<AttributeValue>(attributeValue.Attributes, w => AttributeIndex.Equals(w));
-            Aliases = new BindingView<AttributeAliasValue>(attributeValue.Aliases, w => AttributeIndex.Equals(w));
-            Properties = new BindingView<AttributePropertyValue>(attributeValue.Properties, w => AttributeIndex.Equals(w));
-            Definitions = new BindingView<AttributeDefinitionValue>(attributeValue.Definitions, w => AttributeIndex.Equals(w));
-            SubjectArea = new BindingView<AttributeSubjectAreaValue>(attributeValue.SubjectArea, w => AttributeIndex.Equals(w));
+            Attributes = new BindingView<AttributeValue>(attributeValue.Attributes, w => 1 == 2);
+            Aliases = new BindingView<AttributeAliasValue>(attributeValue.Aliases, w => 1 == 2);
+            Properties = new BindingView<AttributePropertyValue>(attributeValue.Properties, w => 1 == 2);
+            Definitions = new BindingView<AttributeDefinitionValue>(attributeValue.Definitions, w => 1 == 2);
+            SubjectArea = new BindingView<AttributeSubjectAreaValue>(attributeValue.SubjectArea, w => 1 == 2);
 
             ModelProperty = new BindingView<PropertyValue>(model.Properties);
             ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
@@ -115,25 +94,33 @@ namespace DataDictionary.BusinessLayer.AppModel
             SubjectArea.RaiseListChangedEvents = false;
         }
 
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        public void Load(IAttributeIndex attribute)
+        {
+            StopBinding();
+            AttributeIndex = new AttributeIndex(attribute);
+            attributeValue = currentModel.ModelAttribute;
+            StartBinding();
+        }
+
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
             attributeValue = currentModel.ModelAttribute;
 
             work.Add(new WorkItem() { DoWork = StopBinding });
-            work.AddRange(attributeValue.Load(factory, AttributeIndex));
+            work.AddRange(attributeValue.Load(factory, attribute));
             work.Add(new WorkItem() { DoWork = StartBinding });
 
             return work;
         }
 
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute, DateTime asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             attributeValue = new Attribute() { Model = currentModel };
 
             work.Add(new WorkItem() { DoWork = StopBinding });
-            work.AddRange(attributeValue.Load(factory, AttributeIndex, asOfUtcDate));
+            work.AddRange(attributeValue.Load(factory, attribute, asOfUtcDate));
             work.Add(new WorkItem() { DoWork = StartBinding });
 
             return work;

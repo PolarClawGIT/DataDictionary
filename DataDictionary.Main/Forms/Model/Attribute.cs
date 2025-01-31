@@ -55,9 +55,11 @@ namespace DataDictionary.Main.Forms.Model
                 isNew = true;
             }
             else
-            { key = new AttributeIndex(attributeItem); }
+            {
+                key = new AttributeIndex(attributeItem);
+                formData.Load(key);
+            }
 
-            formData = new AttributeView(BusinessData.Model, key);
             formData.Attributes.ListChanged += ListChanged;
 
             bindingAttribute.DataSource = formData.Attributes;
@@ -171,24 +173,25 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            base.OpenCommand_Click(sender, e);
-            IDatabaseWork factory = BusinessData.GetDbFactory();
-            List<WorkItem> work = new List<WorkItem>();
+            if (bindingAttribute.Current is AttributeValue current)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(factory.OpenConnection());
-            work.AddRange(formData.Load(factory));
-            DoWork(work, onCompleting);
+                work.Add(factory.OpenConnection());
+                work.AddRange(formData.Load(factory, current));
+                DoWork(work, onCompleting);
+            }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                //bindingAttribute.Position = 0;
                 bindingAttribute.ResetBindings(false);
                 bindingProperty.ResetBindings(false);
                 bindingDefinition.ResetBindings(false);
                 bindingAlias.ResetBindings(false);
                 bindingSubjectArea.ResetBindings(false);
 
-                IsLocked(false);
+                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
             }
         }
 
