@@ -54,12 +54,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IModelData Models { get { return modelValues; } }
         private readonly ModelData modelValues;
 
-        IModelValue emptyModel = new ModelValue();
-        protected IModelValue CurrentModel
+        ModelValue emptyModel = new ModelValue();
+        protected ModelValue CurrentModel
         {
             get
             {
-                if (Models.FirstOrDefault() is IModelValue value) { return value; }
+                if (Models.FirstOrDefault() is ModelValue value) { return value; }
                 else { return emptyModel; }
             }
         }
