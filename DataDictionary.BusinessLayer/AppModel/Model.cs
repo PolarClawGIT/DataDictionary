@@ -1,1 +1,231 @@
-﻿namespace DataDictionary.BusinessLayer.AppModel;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.Resource.Enumerations;
+using Toolbox.Threading;
+
+namespace DataDictionary.BusinessLayer.AppModel
+{
+    /// <summary>
+    /// Interface representing ER/DFD Model data
+    /// </summary>
+    public interface IModel :
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IDeleteData, IScopeType, DataLayer.AppModel.IModel
+
+    {
+        /// <summary>
+        /// The Model Definitions (0 or one Model expected)
+        /// </summary>
+        IModelData Models { get; }
+
+        /// <summary>
+        /// List of Subject Areas within the Model
+        /// </summary>
+        ISubjectAreaData SubjectAreas { get; }
+
+        /// <summary>
+        /// Container for Attribute within the Model.
+        /// </summary>
+        IAttribute ModelAttribute { get; }
+
+        /// <summary>
+        /// Container for Entity within the Model.
+        /// </summary>
+        IEntity ModelEntity { get; }
+
+        /// <summary>
+        /// The Properties for the Model (includes common)
+        /// </summary>
+        public IPropertyData Properties { get; }
+
+        /// <summary>
+        /// The Definitions for the Model (includes common)
+        /// </summary>
+        public IDefinitionData Definitions { get; }
+    }
+
+    class Model : IModel, IDataTableFile,
+        INamedScopeSourceData
+    {
+        /// <inheritdoc/>
+        public IModelData Models { get { return modelValues; } }
+        private readonly ModelData modelValues;
+
+        ModelValue emptyModel = new ModelValue();
+        protected ModelValue CurrentModel
+        {
+            get
+            {
+                if (Models.FirstOrDefault() is ModelValue value) { return value; }
+                else { return emptyModel; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? ModelTitle
+        {
+            get { return CurrentModel.ModelTitle; }
+            set { CurrentModel.ModelTitle = value; }
+        }
+
+        /// <inheritdoc/>
+        public String? ModelDescription {
+            get { return CurrentModel.ModelDescription; }
+            set { CurrentModel.ModelDescription = value; }
+        }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return CurrentModel.Scope; } }
+
+        /// <inheritdoc/>
+        public ISubjectAreaData SubjectAreas { get { return subjectValues; } }
+        private readonly SubjectAreaData subjectValues;
+
+        /// <inheritdoc/>
+        public IAttribute ModelAttribute { get { return attributeValues; } }
+        private readonly Attribute attributeValues;
+
+        /// <inheritdoc/>
+        public IEntity ModelEntity { get { return entityValues; } }
+        private readonly Entity entityValues;
+
+        /// <inheritdoc/>
+        public IPropertyData Properties { get { return propertyValues; } }
+        private readonly PropertyData propertyValues = new PropertyData();
+
+        /// <inheritdoc/>
+        public IDefinitionData Definitions { get { return definitionValues; } }
+
+
+        private readonly DefinitionData definitionValues = new DefinitionData();
+
+        public Model() : base()
+        {
+            modelValues = new ModelData();
+            subjectValues = new SubjectAreaData() { Model = this };
+            attributeValues = new Attribute() { Model = this };
+            entityValues = new Entity() { Model = this };
+        }
+
+        /// <summary>
+        /// Sets up the Domain Model by importing application common data.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create(IApplicationData source)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork =() => { modelValues.Add(new ModelValue()); } });
+            work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
+            work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
+
+            return work;
+        }
+
+        #region ILoadData, ISaveData
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Load(factory, dataKey));
+            work.AddRange(subjectValues.Load(factory, dataKey));
+            work.AddRange(attributeValues.Load(factory, dataKey));
+            work.AddRange(entityValues.Load(factory, dataKey));
+            work.AddRange(propertyValues.Load(factory, dataKey));
+            work.AddRange(definitionValues.Load(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(subjectValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Save(factory, dataKey));
+            work.AddRange(subjectValues.Save(factory, dataKey));
+            work.AddRange(attributeValues.Save(factory, dataKey));
+            work.AddRange(entityValues.Save(factory, dataKey));
+            work.AddRange(propertyValues.Save(factory, dataKey));
+            work.AddRange(definitionValues.Save(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<System.Data.DataTable> Export()
+        {
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.AddRange(modelValues.Export());
+            result.AddRange(subjectValues.Export());
+            result.AddRange(attributeValues.Export());
+            result.AddRange(entityValues.Export());
+            result.AddRange(propertyValues.Export());
+            result.AddRange(definitionValues.Export());
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public void Import(System.Data.DataSet source)
+        {
+            modelValues.Import(source);
+            subjectValues.Import(source);
+            attributeValues.Import(source);
+            entityValues.Import(source);
+            propertyValues.Import(source);
+            definitionValues.Import(source);
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(modelValues.Delete());
+            work.AddRange(subjectValues.Delete());
+            work.AddRange(attributeValues.Delete());
+            work.AddRange(entityValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
+        { return Delete(); }
+
+        #endregion
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(modelValues.LoadNamedScope(addNamedScope));
+            work.AddRange(subjectValues.LoadNamedScope(addNamedScope));
+            work.AddRange(entityValues.LoadNamedScope(addNamedScope));
+            work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
+
+            return work;
+        }
+    }
+}

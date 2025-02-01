@@ -17,41 +17,49 @@ namespace DataDictionary.DataLayer.LibraryData
         where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceKeyName, new()
     {
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey key, DateTime asOfUtcDate)
+        { throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ILibrarySourceKey library)
-        { return LoadCommand(connection, (null, library.LibraryId)); }
+        { return LoadCommand(connection, libraryId: library.LibraryId); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? libraryId) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ILibrarySourceKey key, DateTime asOfUtcDate)
+        { throw new NotImplementedException(); }
+
+        Command LoadCommand(IConnection connection, Guid? modelId = null, Guid? libraryId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetLibraryMember]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@LibraryId", parameters.libraryId);
+            command.CommandText = LibraryMember.GetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(LibrarySource.LibraryId, libraryId);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelId)
-        { return SaveCommand(connection, (modelId.ModelId, null)); }
+        public Command SaveCommand(IConnection connection, IModelKey modelKey)
+        { return SaveCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, ILibrarySourceKey sourceKey)
-        { return SaveCommand(connection, (null, sourceKey.LibraryId)); }
+        public Command SaveCommand(IConnection connection, ILibrarySourceKey library)
+        { return SaveCommand(connection, libraryId: library.LibraryId); }
 
-        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? libraryId) parameters)
+        Command SaveCommand(IConnection connection, Guid? modelId = null, Guid? libraryId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetLibraryMember]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@LibraryId", parameters.libraryId);
+            command.CommandText = LibraryMember.SetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(LibrarySource.LibraryId, libraryId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.libraryId is null || w.LibraryId == parameters.libraryId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", data);
+            IEnumerable<TItem> data = this.Where(w => libraryId is null || w.LibraryId == libraryId);
+            command.AddParameter(WriteData.Data, LibraryMember.TableType, data);
             return command;
         }
 
@@ -68,5 +76,7 @@ namespace DataDictionary.DataLayer.LibraryData
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+
     }
 }

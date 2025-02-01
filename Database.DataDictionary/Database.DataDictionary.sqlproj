@@ -146,7 +146,6 @@
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
@@ -163,7 +162,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingPath.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingNode.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeRichText.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingAttribute.sql" />
@@ -477,6 +475,16 @@
     <Build Include="AppSecurity\Policy\policyModelEntity.sql" />
     <Build Include="AppSecurity\Functions\funcModelEntityAuthorization.sql" />
     <Build Include="AppModel\Stored Procedures\procGetEntitySubjectArea.sql" />
+    <Build Include="AppModel\Tables\AliasHierarchy.sql" />
+    <Build Include="AppModel\User Defined Types\typeRichText.sql" />
+    <Build Include="AppModel\User Defined Types\typeScopeName.sql" />
+    <Build Include="AppModel\User Defined Types\typeAlias.sql" />
+    <Build Include="AppModel\Functions\funcAliasNameSpace.sql" />
+    <Build Include="AppModel\Functions\funcAliasId.sql" />
+    <Build Include="HsModel\Tables\AliasHierarchy.sql" />
+    <Build Include="AppModel\Views\Alias.Hs.sql" />
+    <Build Include="AppModel\Triggers\trigAliasHierarchy.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetAlias.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

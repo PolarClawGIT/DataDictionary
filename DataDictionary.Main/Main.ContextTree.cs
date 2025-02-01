@@ -27,28 +27,28 @@ namespace DataDictionary.Main
         }
 
         void Activate(ICatalogValue catalogItem)
-        { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
+        { Activate((data) => new Forms.Catalog.DbCatalog(catalogItem), catalogItem); }
 
         void Activate(ISchemaValue schemaItem)
-        { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
+        { Activate((data) => new Forms.Catalog.DbSchema(schemaItem), schemaItem); }
 
         void Activate(ITableValue tableItem)
-        { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
+        { Activate((data) => new Forms.Catalog.DbTable(tableItem), tableItem); }
 
         void Activate(ITableColumnValue columnItem)
-        { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
+        { Activate((data) => new Forms.Catalog.DbTableColumn(columnItem), columnItem); }
 
         void Activate(IConstraintValue constraintItem)
-        { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
+        { Activate((data) => new Forms.Catalog.DbConstraint(constraintItem), constraintItem); }
 
         void Activate(IRoutineValue routineItem)
-        { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
+        { Activate((data) => new Forms.Catalog.DbRoutine(routineItem), routineItem); }
 
         void Activate(IRoutineParameterValue routineParameterItem)
-        { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
+        { Activate((data) => new Forms.Catalog.DbRoutineParameter(routineParameterItem), routineParameterItem); }
 
         void Activate(IDomainValue domainItem)
-        { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
+        { Activate((data) => new Forms.Catalog.DbDomain(domainItem), domainItem); }
 
         void Activate(ILibrarySourceValue sourceItem)
         { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
@@ -57,10 +57,10 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
         void Activate(AttributeValue attributeItem)
-        { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+        { Activate((data) => new Forms.Model.Attribute(attributeItem), attributeItem); }
 
         void Activate(EntityValue entityItem)
-        { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
+        { Activate((data) => new Forms.Model.Entity(entityItem), entityItem); }
 
         void Activate(SubjectAreaValue subjectItem)
         { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }

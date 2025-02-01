@@ -1,9 +1,12 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using Toolbox.Threading;
 using System.ComponentModel;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.BusinessLayer.AppModel;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -14,8 +17,8 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     class LibrarySourceData: LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         INamedScopeSourceData
     {
         /// <inheritdoc/>
@@ -23,23 +26,33 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey)
+        { return factory.CreateLoad(this, (ILibrarySourceKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (ILibrarySourceKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Source</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceIndex dataKey)
+        { return factory.CreateSave(this, (ILibrarySourceKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Source</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
@@ -51,7 +64,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
@@ -61,7 +74,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Delete(ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ILibrarySourceIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
     }

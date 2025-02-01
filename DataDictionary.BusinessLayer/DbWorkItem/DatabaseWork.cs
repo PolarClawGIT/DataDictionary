@@ -1,16 +1,9 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿// Ignore Spelling: Utc
+
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
@@ -18,7 +11,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     /// <summary>
-    /// Interface for creating Database Work
+    /// Interface for creating Model Work
     /// </summary>
     public interface IDatabaseWork
     {
@@ -61,6 +54,19 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData<TKey>;
 
         /// <summary>
+        /// Create a WorkItem for loading a Data Object by Key loading data as of a specified date.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="targetKey"></param>
+        /// <param name="asOfUtcDate"></param>
+        /// <returns></returns>
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadData<TKey>;
+
+        /// <summary>
         /// Create a WorkItem for loading a Data Object.
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
@@ -93,7 +99,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TData : class;
 
         /// <summary>
-        /// Creates the WorkItem that opens the Connection to the Database.
+        /// Creates the WorkItem that opens the Connection to the Model.
         /// </summary>
         /// <returns></returns>
         WorkItem OpenConnection();
@@ -106,7 +112,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     }
 
     /// <summary>
-    /// Manages the Database Work Items and the Connection used to perform the work.
+    /// Manages the Model Work Items and the Connection used to perform the work.
     /// </summary>
     /// <remarks>
     /// This is called a "factory" in a number of places.
@@ -231,7 +237,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             }
         }
 
-
         /// <inheritdoc/>
         public WorkItem OpenConnection()
         {
@@ -294,6 +299,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey));
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadData<TKey>
+        {
+            return this.CreateWork(
+                workName: String.Format("Load {0}", target.BindingName),
+                target: target,
+                command: (conn) => target.LoadCommand(conn, targetKey, asOfUtcDate));
         }
 
         /// <inheritdoc/>

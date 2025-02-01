@@ -28,6 +28,20 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
+        /// <summary>
+        /// Path Index version of the AttributePath
+        /// </summary>
+        public PathIndex AttributePath
+        {
+            get
+            { return new PathIndex(new PathIndex(PathIndex.Parse(AttributeName).ToArray())); }
+            set
+            {
+                AttributeName = value.MemberFullPath;
+                OnPropertyChanged(nameof(AttributePath));
+            }
+        }
+
         /// <inheritdoc/>
         public AttributeValue() : base()
         {
@@ -46,7 +60,6 @@ namespace DataDictionary.BusinessLayer.AppModel
                 IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
             };
         }
-
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

@@ -4,6 +4,12 @@ Select	D.[AttributeId], -- PK
 		D.[AttributeTitle], -- AK
 		D.[AttributeDescription],
 		D.[AttributeName],
+
+		D.[DataType],
+		D.[DataLength],
+		D.[DataPrecision],
+		D.[DataScale],
+
 		D.[IsSingleValue],
 		Convert(Bit, Case D.[IsSingleValue] When 1 Then 0 When 0 Then 1 Else Null End) As [IsMultiValue],
 		D.[IsSimpleType],

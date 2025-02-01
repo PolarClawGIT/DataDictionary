@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaIndex : SubjectAreaKey, ISubjectAreaKey,
+    public class SubjectAreaIndex : SubjectAreaKey, ISubjectAreaIndex,
         IKeyEquality<ISubjectAreaIndex>, IKeyEquality<SubjectAreaIndex>
     {
         /// <inheritdoc cref="SubjectAreaKey(ISubjectAreaKey)"/>

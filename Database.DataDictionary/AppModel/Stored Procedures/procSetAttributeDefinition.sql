@@ -31,7 +31,7 @@ Begin Try
 		[AttributeId]		UniqueIdentifier Not Null,
 		[DefinitionId]		UniqueIdentifier Not Null,
 		[DefinitionSummary]	[App_DataDictionary].[typeDescription] Null,
-		[DefinitionText]	[App_DataDictionary].[typeRichText] Null,
+		[DefinitionText]	[AppModel].[typeRichText] Null,
 		Primary Key ([AttributeId], [DefinitionId]))
 
 	Insert Into @Values

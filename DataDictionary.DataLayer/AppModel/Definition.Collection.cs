@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿// Ignore Spelling: Utc
+
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -26,8 +28,16 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, modelId : modelKey.ModelId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDefinitionKey definitionKey)
         { return LoadCommand(connection, definitionId : definitionKey.DefinitionId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDefinitionKey definitionKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, definitionId: definitionKey.DefinitionId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)

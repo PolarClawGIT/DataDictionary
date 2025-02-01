@@ -98,7 +98,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Create a Domain Property from a Database Property.
+        /// Create a Domain Property from a Model Property.
         /// </summary>
         /// <param name="source"></param>
         public PropertyValue(AppCatalog.PropertyValue source) : this()

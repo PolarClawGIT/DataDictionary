@@ -25,4 +25,4 @@ The Application is expected to be able to:
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Copywrite
-© 2023 William Howard, All Rights Reserved
+© 2025 William Howard, All Rights Reserved

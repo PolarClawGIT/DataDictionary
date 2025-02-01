@@ -3,7 +3,7 @@
 	[TemplateId]            UniqueIdentifier NULL,
 	[TemplateTitle]			[App_DataDictionary].[typeTitle] Not Null,
 	[TemplateDescription]	[App_DataDictionary].[typeDescription] Null,
-	[BreakOnScope]			[App_DataDictionary].[typeScopeName] NULL,
+	[BreakOnScope]			[AppModel].[typeScopeName] NULL,
 	[TransformScript]		NVarChar(Max) Null,
 	[RootDirectory]         NVarChar(100) Null,
 	[DocumentDirectory]		NVarChar(250) Null,

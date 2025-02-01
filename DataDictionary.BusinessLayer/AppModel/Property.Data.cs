@@ -1,6 +1,10 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -24,6 +28,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <returns></returns>
         /// <remarks>Not for use outside of BusinessLayer</remarks>
         IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties);
+
+        /// <summary>
+        /// Gets the Property Value from the Catalog Property
+        /// </summary>
+        /// <param name="catalogProperty"></param>
+        /// <returns></returns>
+        IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty);
     }
 
     /// <inheritdoc/>
@@ -37,33 +48,33 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Load(factory, (IPropertyKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyIndex dataKey)
-        { return Save(factory, (IPropertyKey)dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey)
+        { return factory.CreateLoad(this, (IPropertyKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IPropertyKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IPropertyIndex dataKey)
+        { return factory.CreateSave(this, (IPropertyKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
@@ -121,6 +132,19 @@ namespace DataDictionary.BusinessLayer.AppModel
                 if (attrib is XAttribute)
                 { result.Add(attrib); }
             }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty)
+        {
+            PropertyValue? result = null;
+
+            result = this.FirstOrDefault(w =>
+                w.PropertyType is DomainPropertyType.MS_ExtendedProperty
+                && w.ExtendedPropertyName.Equals(catalogProperty.PropertyName, KeyExtension.CompareString));
 
             return result;
         }

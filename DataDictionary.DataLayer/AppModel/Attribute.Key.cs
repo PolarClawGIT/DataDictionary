@@ -24,7 +24,14 @@ namespace DataDictionary.DataLayer.AppModel
         public Guid? AttributeId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Domain Attribute Key
+        /// Constructor for the Blank/Empty Attribute Key
+        /// </summary>
+        /// <remarks>Empty Key is never equal to anything.</remarks>
+        public AttributeKey()
+        { }
+
+        /// <summary>
+        /// Constructor for the Attribute Key
         /// </summary>
         /// <param name="source"></param>
         public AttributeKey(IAttributeKey source) : base()
@@ -36,26 +43,26 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public Boolean Equals(AttributeKey? other)
-        { return other is AttributeKey key && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
+        { return other is AttributeKey key && key.AttributeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
 
         /// <inheritdoc/>
-        public bool Equals(IAttributeKey? other)
+        public Boolean Equals(IAttributeKey? other)
         { return other is IAttributeKey key && Equals(new AttributeKey(key)); }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
+        public override Boolean Equals(object? obj)
         { return obj is IAttributeKey key && Equals(new AttributeKey(key)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(AttributeKey left, AttributeKey right)
+        public static Boolean operator ==(AttributeKey left, AttributeKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(AttributeKey left, AttributeKey right)
+        public static Boolean operator !=(AttributeKey left, AttributeKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         { return HashCode.Combine(AttributeId); }
 
 

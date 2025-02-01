@@ -1,7 +1,4 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;

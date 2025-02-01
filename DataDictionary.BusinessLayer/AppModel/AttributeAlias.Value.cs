@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public interface IAttributeAliasValue : IAttributeAliasItem,
         IAttributeIndex, IAliasIndex,
-        IScopeType, ITemporalValue
+        IScopeType
     {
         /// <summary>
         /// Attribute Alias Name returned as parts.
@@ -18,16 +18,10 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     /// <inheritdoc/>
-    public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue, IScopeType
+    public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public List<String> AliasParts { get { return PathIndex.Parse(AliasNameSpace); } }
+        public List<String> AliasParts { get { return PathIndex.Parse(base.AliasPath); } }
 
         /// <inheritdoc/>
         public AttributeAliasValue() : base() { }
@@ -45,20 +39,18 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="alias"></param>
         public AttributeAliasValue(IAttributeIndex key, IAliasIndex alias) : base(key)
         {
-            AliasNameSpace = alias.AliasNameSpace;
+            base.AliasPath = alias.AliasPath;
             AliasScope = alias.AliasScope;
         }
 
         /// <inheritdoc/>
         internal AttributeAliasValue(IAttributeKey key) : base(key) { }
 
-        /// <summary>
-        /// The Alias Path derived from AliasNameSpace
-        /// </summary>
-        public PathIndex AliasPath
+        /// <inheritdoc cref="AttributeAliasItem.AliasPath"/>
+        public new PathIndex AliasPath
         {
-            get { return new PathIndex(PathIndex.Parse(AliasNameSpace).ToArray()); }
-            set { AliasNameSpace = value.MemberFullPath; }
+            get { return new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
+            set { base.AliasPath = value.MemberFullPath; }
         }
 
 
@@ -70,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
                 new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasScope), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasNameSpace),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasPath),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
                 new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
             };
             return result;
@@ -87,7 +79,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 switch (node.PropertyName)
                 {
                     case nameof(AliasScope): AddValue(node.BuildXObject(ScopeEnumeration.Cast(AliasScope).Name)); break;
-                    case nameof(AliasNameSpace): AddValue(node.BuildXObject(AliasNameSpace)); break;
+                    case nameof(AttributeAliasItem.AliasPath): AddValue(node.BuildXObject(AliasPath)); break;
                     case nameof(AliasParts):
                         List<String> scopeParts = PathIndex.Parse(ScopeEnumeration.Cast(AliasScope).Name);
                         String levelValue = String.Empty;

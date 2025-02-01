@@ -1,36 +1,28 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppCatalog;
-using DataDictionary.DataLayer.AppModel;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IEntityPropertyValue : IEntityPropertyItem, IPropertyIndex,
-        IScopeType, ITemporalValue
+    public interface IEntityPropertyValue : IEntityPropertyItem,
+        IPropertyIndex, IEntityIndex,
+        IScopeType
     { }
 
     /// <inheritdoc/>
     public class EntityPropertyValue : EntityPropertyItem, IEntityPropertyValue
     {
         /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
-        /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityProperty; } }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="EntityPropertyItem.EntityPropertyItem()" />
         public EntityPropertyValue() : base() { }
 
-        /// <inheritdoc/>
-        public EntityPropertyValue(IEntityIndex EntityKey) : base(EntityKey) { }
+        /// <inheritdoc cref="EntityPropertyItem.EntityPropertyItem(IEntityKey)"/>
+        public EntityPropertyValue(IEntityIndex entity) : base(entity) { }
 
-        /// <inheritdoc/>
-        public EntityPropertyValue(IEntityKey EntityKey, DataLayer.AppModel.IPropertyKey propertyKey, DataLayer.AppCatalog.IPropertyItem value) : base(EntityKey, propertyKey, value)
+        /// <inheritdoc cref="EntityPropertyItem.EntityPropertyItem(IEntityKey, IPropertyKey)"/>
+        public EntityPropertyValue(IEntityIndex entity, IPropertyIndex property) : base(entity, property)
         { }
     }
 }

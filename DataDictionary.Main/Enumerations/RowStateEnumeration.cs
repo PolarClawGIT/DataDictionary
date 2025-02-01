@@ -56,6 +56,9 @@ namespace DataDictionary.Main.Enumerations
 
             foreach (BindingSource item in bindings)
             {
+                if (item.Position >= item.Count)
+                { item.Position = 0; }
+
                 if (item.Current is IBindingRowState rowState
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { result = rowState.RowState().AsBindingRowState(); }

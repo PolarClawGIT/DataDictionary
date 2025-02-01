@@ -12,7 +12,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
 Select	D.[EntityId],
 		D.[AliasScope],
-		D.[AliasNameSpace],
+		D.[AliasPath],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

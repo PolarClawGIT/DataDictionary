@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer;
+﻿// Ignore Spelling: Utc
+
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -6,15 +7,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppModel
 {
     /// <summary>
-    /// Generic Base class for Domain Attributes
+    /// Generic Base class for Model Attributes
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributeCollection<TItem> : BindingTable<TItem>,
+    public abstract class AttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,
-        ITemporalData<IModelKey>, ITemporalData<IAttributeKey>
+        ITemporalData<IModelKey>
         where TItem : AttributeItem, new()
     {
         /// <inheritdoc/>
@@ -26,12 +27,16 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, attributeId: attributeKey.AttributeId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, attributeId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IAttributeKey attributeKey)
-        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IAttributeKey attributeKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? attributeId = null,

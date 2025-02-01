@@ -3568,4 +3568,16 @@
     <Property Name="NewSchema" Value="AppModel" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="5c347816-6a42-45b8-826b-6e7a30f40f74" ChangeDateTime="01/03/2025 15:17:15">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeRichText]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="78f19755-adc6-4007-8b73-d41dc59e1d76" ChangeDateTime="01/03/2025 15:41:14">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeScopeName]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppModel" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

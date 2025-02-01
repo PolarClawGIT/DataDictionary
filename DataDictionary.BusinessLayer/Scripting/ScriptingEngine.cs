@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using System.Data;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
@@ -13,8 +15,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface representing Scripting Engine data
     /// </summary>
     public interface IScriptingEngine :
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>
     {
         /// <summary>
         /// List of Scripting Engine Templates.
@@ -27,7 +29,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ITemplateNodeData TemplateNodes { get; }
 
         /// <summary>
-        /// List of Scripting Attributes for the Template
+        /// List of Scripting ModelAttribute for the Template
         /// </summary>
         ITemplateAttributeData TemplateAttributes { get; }
 
@@ -56,7 +58,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required Model Model { get; init; }
 
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValues; } }
@@ -140,7 +142,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete(dataKey));
@@ -152,7 +154,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete(dataKey));
@@ -165,7 +167,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Save(factory, dataKey));
@@ -177,7 +179,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Save(factory, dataKey));
@@ -189,7 +191,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
@@ -201,7 +203,19 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(pathValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(nodeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
@@ -210,6 +224,19 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(attributeValues.Load(factory, dataKey));
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, DateTime asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(pathValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(nodeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            return work;
+        }
+
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {

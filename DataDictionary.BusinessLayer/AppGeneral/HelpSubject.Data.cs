@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
 using Toolbox.BindingTable;
@@ -34,6 +36,11 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey)
         { return factory.CreateLoad(this, (IHelpSubjectKey)helpKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>HelpSubject</remarks>
+        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IHelpSubjectKey)helpKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>

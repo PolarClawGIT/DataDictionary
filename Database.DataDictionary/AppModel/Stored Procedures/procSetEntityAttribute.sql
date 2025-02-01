@@ -28,30 +28,35 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[EntityAttributeId]    UniqueIdentifier Not Null,
 		[EntityId]			   UniqueIdentifier Not Null,
-		[AttributeAlias]       [App_DataDictionary].[typeTitle] Null,
-		[AttributeName]        [AppModel].[typeQualifiedName] Null,
+		[AttributeAliasId]     UniqueIdentifier Not Null,
+		[AttributeTitle]	   [App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
-		Primary Key ([EntityAttributeId]),
-		Unique ([EntityId], [AttributeAlias]))
+		[IsPrimaryKey]		   Bit Null,
+		Primary Key ([EntityId], [AttributeAliasId]),
+		Unique ([EntityId], [AttributeTitle]),
+		Unique ([EntityId], [OrdinalPosition]))
+
+	Declare @Alias [AppModel].[typeAlias];
+
+	Insert Into @Alias ([AliasNameSpace])
+	Select	[AttributePath]
+	From	@Data
+
+	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
 
 	Insert Into @Values
-	Select	Coalesce(H.[EntityAttributeId], NewId()) As [EntityAttributeId],
-			D.[EntityId],
-			NullIf(Trim(D.[AttributeAlias]),'') As [AttributeAlias],
-			NullIf(Trim(D.[AttributeName]),'') As [AttributeName],
+	Select	D.[EntityId],
+			[AppModel].[funcAliasId](D.[AttributePath]) As [AttributeAliasId],
+			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			D.[OrdinalPosition],
-			D.[IsNullable]
+			IsNull(D.[IsNullable],0) As [IsNullable],
+			IsNull(D.[IsPrimaryKey],0) As [IsPrimaryKey]
 	From	@Data D
 			Left Join [AppModel].[EntityAttributeHs] H
 			On	D.[EntityId] = H.[EntityId] And
-				D.[AttributeAlias] = H.[AttributeAlias]
-			Cross Apply (
-				Select	[QualifiedName] As [AttributeName]
-				From	[AppModel].[funcParseName](D.[AttributeName])
-				Where	[IsBase] = 1) N
+				D.[AttributePath] = H.[AttributePath]
 	Where	(@EntityId is Null Or @EntityId = D.[EntityId]) And
 			(@ModelId is Null Or D.[EntityId] In (
 				Select	[EntityId]
@@ -66,9 +71,10 @@ Begin Try
 	Delete From [AppModel].[EntityAttribute]
 	From	[AppModel].[EntityAttribute] T
 			Left Join @Values V
-			On	T.[EntityAttributeId] = V.[EntityAttributeId]
+			On	T.[EntityId] = V.[EntityId] And
+				T.[AttributeAliasId] = V.[AttributeAliasId]
 			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, T.[EntityId], 1)
-	Where	V.[EntityAttributeId] is Null And
+	Where	V.[AttributeAliasId] is Null And
 			(@EntityId is Not Null Or @ModelId is Not Null) And
 			(@EntityId is Null Or @EntityId = T.[EntityId])  And
 			(@ModelId is Null Or T.[EntityId] In (
@@ -78,52 +84,53 @@ Begin Try
 	Print FormatMessage ('Delete [AppModel].[EntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[EntityAttributeId],
-				[EntityId],
-				[AttributeAlias],
-				[AttributeName],
+		Select	[EntityId],
+				[AttributeAliasId],
+				[AttributeTitle],
 				[OrdinalPosition],
-				[IsNullable]
+				[IsNullable],
+				[IsPrimaryKey]
 		From	@Values
 		Except
-		Select	[EntityAttributeId],
-				[EntityId],
-				[AttributeAlias],
-				[AttributeName],
+		Select	[EntityId],
+				[AttributeAliasId],
+				[AttributeTitle],
 				[OrdinalPosition],
-				[IsNullable]
+				[IsNullable],
+				[IsPrimaryKey]
 		From	[AppModel].[EntityAttribute])
 	Update [AppModel].[EntityAttribute]
-	Set		[AttributeAlias] = S.[AttributeAlias],
-			[AttributeName] = S.[AttributeName],
+	Set		[AttributeTitle] = S.[AttributeTitle],
 			[OrdinalPosition] = S.[OrdinalPosition],
-			[IsNullable] = S.[IsNullable]
+			[IsNullable] = S.[IsNullable],
+			[IsPrimaryKey] = S.[IsPrimaryKey]
 	From	[AppModel].[EntityAttribute] T
 			Inner Join [Delta] S
-			On	T.[EntityAttributeId] = S.[EntityAttributeId]
+			On	T.[EntityId] = S.[EntityId] And
+				T.[AttributeAliasId] = S.[AttributeAliasId]
 			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Print FormatMessage ('Update [AppModel].[EntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[EntityAttribute] (
-			[EntityAttributeId],
 			[EntityId],
-			[AttributeAlias],
-			[AttributeName],
+			[AttributeAliasId],
+			[AttributeTitle],
 			[OrdinalPosition],
-			[IsNullable])
-	Select	S.[EntityAttributeId],
-			S.[EntityId],
-			S.[AttributeAlias],
-			S.[AttributeName],
+			[IsNullable],
+			[IsPrimaryKey])
+	Select	S.[EntityId],
+			S.[AttributeAliasId],
+			S.[AttributeTitle],
 			S.[OrdinalPosition],
-			S.[IsNullable]
+			S.[IsNullable],
+			S.[IsPrimaryKey]
 	From	@Values S
 			Left Join [AppModel].[EntityAttribute] T
-			On	S.[EntityAttributeId] = T.[EntityAttributeId]
+			On	S.[EntityId] = T.[EntityId] And
+				S.[AttributeAliasId] = T.[AttributeAliasId]
 			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
-	Where	T.[EntityAttributeId] is Null
+	Where	T.[AttributeAliasId] is Null
 	Print FormatMessage ('Insert [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

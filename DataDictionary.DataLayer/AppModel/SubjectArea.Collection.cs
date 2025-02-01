@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿// Ignore Spelling: Utc
+
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -14,7 +16,7 @@ namespace DataDictionary.DataLayer.AppModel
         IWriteData<IModelKey>, IWriteData<ISubjectAreaKey>,
         IDeleteData<IModelKey>, IDeleteData<ISubjectAreaKey>,
         IRemoveItem<ISubjectAreaKey>,
-        ITemporalData<IModelKey>, ITemporalData<ISubjectAreaKey>
+        ITemporalData<IModelKey>
         where TItem : SubjectAreaItem, new()
     {
         /// <inheritdoc/>
@@ -22,16 +24,20 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISubjectAreaKey subjectAreaKey)
         { return LoadCommand(connection, subjectAreaId: subjectAreaKey.SubjectAreaId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, ISubjectAreaKey subjectAreaKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, subjectAreaId: subjectAreaKey.SubjectAreaId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, ISubjectAreaKey subjectAreaKey)
-        { return LoadCommand(connection, subjectAreaId: subjectAreaKey.SubjectAreaId, includeHistory: true); }
+        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? subjectAreaId = null,

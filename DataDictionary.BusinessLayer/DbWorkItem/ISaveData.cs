@@ -9,12 +9,12 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     /// <summary>
-    /// Interface for Create workItems that Save Data to the Database
+    /// Interface for Create workItems that Save Data to the Model
     /// </summary>
     public interface ISaveData : ILoadData
     {
         /// <summary>
-        /// Create workItems that Save Data to the Database
+        /// Create workItems that Save Data to the Model
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
@@ -22,14 +22,14 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     }
 
     /// <summary>
-    /// Interface for Create WorkItems that Save Data to the Database by Key
+    /// Interface for Create WorkItems that Save Data to the Model by Key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     public interface ISaveData<TKey> : ILoadData<TKey>
     where TKey : IKey
     {
         /// <summary>
-        /// Create WorkItems that Save Data to the Database by Key
+        /// Create WorkItems that Save Data to the Model by Key
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="dataKey"></param>

@@ -17,52 +17,59 @@ namespace DataDictionary.DataLayer.AppSecurity
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, principalId: null, roleId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPrincipalKey key)
-        { return LoadCommand(connection, (key.PrincipalId, null)); }
+        { return LoadCommand(connection, principalId: key.PrincipalId); }
+
+        /// <inheritdoc/>
+        Command IReadData<IPrincipalKey>.LoadCommand(IConnection connection, IPrincipalKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IRoleKey key)
-        { return LoadCommand(connection, (null, key.RoleId)); }
+        { return LoadCommand(connection, roleId: key.RoleId); }
 
+        /// <inheritdoc/>
+        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
 
-        Command LoadCommand(IConnection connection, (Guid? principalId, Guid? roleId) parameters)
+        Command LoadCommand(IConnection connection, Guid? principalId = null, Guid? roleId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetRoleMembership]";
-            command.AddParameter("@PrincipalId", parameters.principalId);
-            command.AddParameter("@RoleId", parameters.roleId);
+            command.CommandText = RoleMembership.GetProcedure;
+            command.AddParameter(Principal.PrincipalId, principalId);
+            command.AddParameter(Role.RoleId, roleId);
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
+        { return SaveCommand(connection, principalId: null, roleId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IPrincipalKey key)
-        { return SaveCommand(connection, (key.PrincipalId, null)); }
+        { return SaveCommand(connection, principalId: key.PrincipalId); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IRoleKey key)
-        { return SaveCommand(connection, (null, key.RoleId)); }
+        { return SaveCommand(connection, roleId: key.RoleId); }
 
-        Command SaveCommand(IConnection connection, (Guid? principalId, Guid? roleId) parameters)
+        Command SaveCommand(IConnection connection, Guid? principalId = null, Guid? roleId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetRoleMembership]";
-            command.AddParameter("@PrincipalId", parameters.principalId);
-            command.AddParameter("@RoleId", parameters.roleId);
+            command.CommandText = RoleMembership.SetProcedure;
+            command.AddParameter(Principal.PrincipalId, principalId);
+            command.AddParameter(Role.RoleId, roleId);
 
             IEnumerable<TItem> data = this.Where(w =>
-                (parameters.principalId is null || w.PrincipalId == parameters.principalId)
-                && (parameters.roleId is null || w.RoleId == parameters.roleId)
+                (principalId is null || w.PrincipalId == principalId)
+                && (roleId is null || w.RoleId == roleId)
             );
-            command.AddParameter("@Data", "[AppSecurity].[typeRoleMembership]", data);
+            command.AddParameter(WriteData.Data, RoleMembership.TableType, data);
             return command;
         }
 
@@ -83,5 +90,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+
     }
 }

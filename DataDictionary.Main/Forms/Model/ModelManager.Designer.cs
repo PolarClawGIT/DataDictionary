@@ -35,8 +35,8 @@
             modelDescriptionColumn = new DataGridViewTextBoxColumn();
             inModelColumn = new DataGridViewCheckBoxColumn();
             inDatabaseColumn = new DataGridViewCheckBoxColumn();
-            modelTitleData = new Controls.TextBoxData();
-            modelDescriptionData = new Controls.TextBoxData();
+            modelTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            modelDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             modelBinding = new BindingSource(components);
             modelToolStrip = new ContextMenuStrip(components);
             newModelCommand = new ToolStripMenuItem();
@@ -117,6 +117,7 @@
             modelTitleData.ReadOnly = false;
             modelTitleData.Size = new Size(556, 44);
             modelTitleData.TabIndex = 1;
+            modelTitleData.WordWrap = true;
             // 
             // modelDescriptionData
             // 
@@ -129,6 +130,7 @@
             modelDescriptionData.ReadOnly = false;
             modelDescriptionData.Size = new Size(556, 99);
             modelDescriptionData.TabIndex = 2;
+            modelDescriptionData.WordWrap = true;
             // 
             // modelBinding
             // 
@@ -172,8 +174,8 @@
 
         private BindingSource modelBinding;
         private DataGridView modelNavigation;
-        private Controls.TextBoxData modelTitleData;
-        private Controls.TextBoxData modelDescriptionData;
+        private DataDictionary.Main.Controls.TextBoxData modelTitleData;
+        private DataDictionary.Main.Controls.TextBoxData modelDescriptionData;
         private DataGridViewTextBoxColumn modelTitlecolumn;
         private DataGridViewTextBoxColumn modelDescriptionColumn;
         private DataGridViewCheckBoxColumn inModelColumn;

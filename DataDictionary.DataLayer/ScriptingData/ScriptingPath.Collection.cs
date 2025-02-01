@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.AppModel;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -13,65 +15,54 @@ namespace DataDictionary.DataLayer.ScriptingData
     public abstract class ScriptingPathCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IScriptingTemplateKey>,
         IWriteData<IModelKey>, IWriteData<IScriptingTemplateKey>,
-        IDeleteData<IModelKey>, IDeleteData<IScriptingTemplateKey>,
         IRemoveItem<IScriptingTemplateKey>
         where TItem : BindingTableRow, IScriptingPathItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, (modelKey.ModelId, null)); }
+        { return LoadCommand(connection, modelId: modelKey.ModelId); }
+        
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey key, DateTime asOfUtcDate)
+        { throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IScriptingTemplateKey templateKey)
-        { return LoadCommand(connection, (null, templateKey.TemplateId)); }
+        { return LoadCommand(connection, templateId: templateKey.TemplateId); }
 
-        private Command LoadCommand(IConnection connection, (Guid? modelId, Guid? templateId) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IScriptingTemplateKey key, DateTime asOfUtcDate)
+        { throw new NotImplementedException(); }
+
+        private Command LoadCommand(IConnection connection, Guid? modelId = null, Guid? templateId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetScriptingPath]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@TemplateId", parameters.templateId);
+            command.CommandText = ScriptingPath.GetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(ScriptingTemplate.TemplateId, templateId);
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelKey)
-        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+        { return SaveCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IScriptingTemplateKey templateKey)
-        { return SaveCommand(connection, (null, templateKey.TemplateId)); }
+        { return SaveCommand(connection, templateId: templateKey.TemplateId); }
 
-        private Command SaveCommand(IConnection connection, (Guid? modelId, Guid? templateId) parameters)
+        private Command SaveCommand(IConnection connection, Guid? modelId = null, Guid? templateId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetScriptingPath]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@TemplateId", parameters.templateId);
+            command.CommandText = ScriptingPath.SetProcedure;
+            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(ScriptingTemplate.TemplateId, templateId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.templateId is null || w.TemplateId == parameters.templateId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingPath]", data);
+            IEnumerable<TItem> data = this.Where(w => templateId is null || w.TemplateId == templateId);
+            command.AddParameter(WriteData.Data, ScriptingPath.TableType, data);
 
-            return command;
-        }
-
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IScriptingTemplateKey templateKey)
-        { return DeleteCommand(connection, (null, templateKey.TemplateId)); }
-
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelKey modelKey)
-        { return DeleteCommand(connection, (modelKey.ModelId, null)); }
-
-        private Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? templateId) parameters)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetScriptingPath]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@TemplateId", parameters.templateId);
             return command;
         }
 

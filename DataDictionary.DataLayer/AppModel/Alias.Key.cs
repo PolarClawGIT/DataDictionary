@@ -25,11 +25,41 @@ namespace DataDictionary.DataLayer.AppModel
         public ScopeType AliasScope { get; init; } = ScopeType.Null;
 
         /// <summary>
-        /// Constructor for the Key used by Domain Aliases
+        /// Constructor for the Key used by Aliases
         /// </summary>
         /// <param name="source"></param>
         public AliasKey(IAliasKey source) : base(source)
         { AliasScope = source.AliasScope; }
+
+        /// <summary>
+        /// Constructor for the Key used by Aliases given a TableColumn
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="scope"></param>
+        protected AliasKey(ITableColumnKeyName source, ScopeType scope) : base(source)
+        { AliasScope = scope; }
+
+        /// <summary>
+        /// Constructor for the Key used by Aliases given a Table
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="scope"></param>
+        protected AliasKey(ITableKeyName source, ScopeType scope) : base(source)
+        { AliasScope = scope; }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Attribute Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKey(AppModel.IAttributeAliasItem alias) : base(alias)
+        { AliasScope = alias.AliasScope; }
+
+        /// <summary>
+        /// Constructor for the Domain Alias Name Key from Entity Alias
+        /// </summary>
+        /// <param name="alias"></param>
+        public AliasKey(AppModel.IEntityAliasItem alias) : base(alias)
+        { AliasScope = alias.AliasScope; }
 
         #region IEquatable
         /// <inheritdoc/>
@@ -61,7 +91,7 @@ namespace DataDictionary.DataLayer.AppModel
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(AliasScope, AliasNameSpace); }
+        { return HashCode.Combine(AliasScope, AliasPath); }
         #endregion
     }
 }

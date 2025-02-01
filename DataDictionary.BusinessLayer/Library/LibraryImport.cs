@@ -163,7 +163,7 @@ namespace DataDictionary.BusinessLayer.Library
                                 else if (parametersStart > 0 && parametersEnd > 0 && parametersStart < parametersEnd)
                                 {
                                     //TODO: Overloaded methods look identical. Need to specify the parent/child.
-                                    //Same issue in the Database.
+                                    //Same issue in the Model.
                                     LibraryMemberValue memberItem = new LibraryMemberValue()
                                     {
                                         LibraryId = sourceItem.LibraryId,

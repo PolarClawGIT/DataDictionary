@@ -1,44 +1,64 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
     /// <summary>
-    /// Interface representing Catalog TableColumn data
+    /// Interface representing Catalog sourceColumn data
     /// </summary>
     public interface ITableColumnData : IBindingData<TableColumnValue>
-    { }
+    {
+        /// <summary>
+        /// Finds all the Columns that are Aliased to the column provided (includes itself).
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IEnumerable<ITableColumnValue> GetAlias(ITableColumnIndexName source);
+    }
 
     class TableColumnData : TableColumnCollection<TableColumnValue>, ITableColumnData,
-        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeSourceData
+        ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        ICatalogModel, INamedScopeSourceData
     {
         /// <inheritdoc/>
-        public required IDatabaseModel Database { get; init; }
+        public required ICatalog Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey)
+        { return factory.CreateLoad(this, (ICatalogKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (ICatalogKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TableColumn</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogIndex dataKey)
+        { return factory.CreateSave(this, (ICatalogKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TableColumn</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
@@ -47,13 +67,13 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             return INamedScopeSourceData.LoadNamedScope<TableColumnData, TableColumnValue>
                 (this, addNamedScope,
-                (value) => Database.DbTables.
+                (value) => Model.DbTables.
                     FirstOrDefault(w => new TableKeyName(value).Equals(w)));
         }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
@@ -63,8 +83,39 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(ICatalogIndex dataKey)
         { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        public IEnumerable<ITableColumnValue> GetAlias(ITableColumnIndexName tableColumn)
+        {
+            List<TableColumnIndexName> keys = new List<TableColumnIndexName>();
+            TableColumnIndexName key = new TableColumnIndexName(tableColumn);
+
+            var constraints = Model.DbConstraints.
+                Where(w => w.ConstraintType is DbConstraintType.ForeignKey).
+                Join(Model.DbConstraintColumns,
+                constraint => new ConstraintIndexName(constraint),
+                columns => new ConstraintIndexName(columns),
+                (constraint, column) => new
+                {
+                    constraint,
+                    parentKey = new ConstraintColumnIndexReferenced(column).AsColumnName(),
+                    childKey = new TableColumnIndexName(column),
+                }).Where(w => key.Equals(w.parentKey) || key.Equals(w.childKey)).
+                ToList();
+
+            keys.AddRange(
+                this.Where(w => key.Equals(w)).Select(s => new TableColumnIndexName(s)).
+                Union(constraints.Select(s => s.parentKey)).
+                Union(constraints.Select(s => s.childKey))
+                );
+
+            return this.Join(keys,
+                column => new TableColumnIndexName(column),
+                key => key,
+                (column, key) => column
+                ).ToList();
+        }
     }
 }

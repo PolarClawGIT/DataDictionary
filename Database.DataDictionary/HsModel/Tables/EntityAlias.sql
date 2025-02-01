@@ -1,9 +1,8 @@
 ﻿CREATE TABLE [HsModel].[EntityAlias]
 (
-	[AliasId]           UniqueIdentifier Not Null,
 	[EntityId]          UniqueIdentifier NOT Null,
-	[AliasScope]        [App_DataDictionary].[typeScopeName] NOT NULL,
-	[AliasNameSpace]    [App_DataDictionary].[typeNameSpacePath] Null,
+	[AliasId]           UniqueIdentifier Not Null,
+	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeEntityAlias] AS TABLE 
 (    -- TIP: This matches the C# DataTable structure and GET procedure
     [EntityId]             UniqueIdentifier NULL,
-	[AliasScope]           [App_DataDictionary].[typeScopeName] Null,
-	[AliasNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
+	[AliasScope]           [AppModel].[typeScopeName] Null,
+	[AliasPath]            [App_DataDictionary].[typeNameSpacePath] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

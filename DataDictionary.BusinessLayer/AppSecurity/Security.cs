@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
@@ -105,6 +107,19 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey, DateTime asOfUtcDate)
+        {
+            throw new NotSupportedException();
+
+            //List<WorkItem> work = new List<WorkItem>();
+            //work.AddRange(principalValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(roleValues.Load(factory));
+            //work.AddRange(membershipValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(ownerValues.Load(factory, dataKey, asOfUtcDate));
+            //return work;
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -113,6 +128,19 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(membershipValues.Load(factory, dataKey));
             work.AddRange(permissionValues.Load(factory, dataKey));
             return work;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, DateTime asOfUtcDate)
+        {
+            throw new NotSupportedException();
+
+            //List<WorkItem> work = new List<WorkItem>();
+            //work.AddRange(principalValues.Load(factory));
+            //work.AddRange(roleValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(membershipValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(permissionValues.Load(factory, dataKey, asOfUtcDate));
+            //return work;
         }
 
         /// <inheritdoc/>
@@ -126,6 +154,21 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(permissionValues.Load(factory, dataKey));
             work.AddRange(securableValues.Load(factory, dataKey));
             return work;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, DateTime asOfUtcDate)
+        {
+            throw new NotSupportedException();
+
+            //List<WorkItem> work = new List<WorkItem>();
+            //work.AddRange(principalValues.Load(factory));
+            //work.AddRange(roleValues.Load(factory));
+            //work.AddRange(membershipValues.Load(factory));
+            //work.AddRange(ownerValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(permissionValues.Load(factory, dataKey, asOfUtcDate));
+            //work.AddRange(securableValues.Load(factory, dataKey, asOfUtcDate));
+            //return work;
         }
 
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)

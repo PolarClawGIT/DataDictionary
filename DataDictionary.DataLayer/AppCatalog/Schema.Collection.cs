@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.AppModel;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -17,18 +19,29 @@ namespace DataDictionary.DataLayer.AppCatalog
         ITemporalData<ICatalogKey>, ITemporalData<ISchemaKey>, IInfomationSchemaCollection<ISchema>
         where TItem : SchemaItem, ISchemaItem, new()
     {
-
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISchemaKey schemaKey)
         { return LoadCommand(connection, schemaId: schemaKey.SchemaId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ISchemaKey schemaKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, schemaId: schemaKey.SchemaId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)

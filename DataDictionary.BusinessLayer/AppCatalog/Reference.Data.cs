@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
@@ -13,36 +15,46 @@ public interface IReferenceData : IBindingData<ReferenceValue>
 { }
 
 class ReferenceData : ReferenceCollection<ReferenceValue>,
-        ILoadData<ICatalogKey>, ISaveData<ICatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, IReferenceData
+        ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        ICatalogModel, IReferenceData
 {
     /// <inheritdoc/>
-    public required IDatabaseModel Database { get; init; }
+    public required ICatalog Model { get; init; }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogKey dataKey)
-    { return factory.CreateLoad(this, dataKey).ToList(); }
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey)
+    { return factory.CreateLoad(this, (ICatalogKey)dataKey).ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-    { return factory.CreateLoad(this, dataKey).ToList(); }
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+    { return factory.CreateLoad(this, (ICatalogKey)dataKey, asOfUtcDate).ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogKey dataKey)
-    { return factory.CreateSave(this, dataKey).ToList(); }
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+    { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+    { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
+
+    /// <inheritdoc/>
+    /// <remarks>Reference</remarks>
+    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ICatalogIndex dataKey)
+    { return factory.CreateSave(this, (ICatalogKey)dataKey).ToList(); }
+
+    /// <inheritdoc/>
+    /// <remarks>Reference</remarks>
+    public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
     { return factory.CreateSave(this).ToList(); }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+    public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
     { return Delete(); }
 
     /// <inheritdoc/>
@@ -52,7 +64,7 @@ class ReferenceData : ReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Delete(ICatalogKey dataKey)
+    public IReadOnlyList<WorkItem> Delete(ICatalogIndex dataKey)
     { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
 }

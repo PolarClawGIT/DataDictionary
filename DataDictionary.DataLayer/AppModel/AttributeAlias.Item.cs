@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.AppModel
         { get { return GetValue<Guid>(nameof(AttributeId)); } protected set { SetValue(nameof(AttributeId), value); } }
 
         /// <inheritdoc/>
-        public String? AliasNameSpace { get { return GetValue(nameof(AliasNameSpace)); } set { SetValue(nameof(AliasNameSpace), value); } }
+        public String? AliasPath { get { return GetValue(nameof(AliasPath)); } set { SetValue(nameof(AliasPath), value); } }
 
         /// <inheritdoc/>
         public ScopeType AliasScope
@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.AppModel
         [
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(AliasScope), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(AliasNameSpace), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasPath), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -99,7 +99,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public override String ToString()
         {
-            if (AliasNameSpace is String) { return AliasNameSpace; }
+            if (AliasPath is String) { return AliasPath; }
             else { return String.Empty; }
         }
 

@@ -30,22 +30,22 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? DomainDefault { get { return GetValue(nameof(DomainDefault)); } }
 
         /// <inheritdoc/>
-        public Int32? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
+        public Int16? CharacterMaximumLength { get { return GetValue<Int16>(nameof(CharacterMaximumLength)); } }
 
         /// <inheritdoc/>
-        public Int32? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
+        public Int16? CharacterOctetLength { get { return GetValue<Int16>(nameof(CharacterOctetLength)); } }
 
         /// <inheritdoc/>
-        public Byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
+        public Byte? NumericPrecision { get { return GetValue<Byte>(nameof(NumericPrecision)); } }
 
         /// <inheritdoc/>
-        public Int16? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
+        public Byte? NumericPrecisionRadix { get { return GetValue<Byte>(nameof(NumericPrecisionRadix)); } }
 
         /// <inheritdoc/>
-        public Int32? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
+        public Byte? NumericScale { get { return GetValue<Byte>(nameof(NumericScale)); } }
 
         /// <inheritdoc/>
-        public Int16? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
+        public Byte? DateTimePrecision { get { return GetValue<Byte>(nameof(DateTimePrecision)); } }
 
         /// <inheritdoc/>
         public String? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
@@ -77,12 +77,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             new DataColumn(nameof(DomainName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(DataType), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DomainDefault), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterMaximumLength), typeof(Int32)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterOctetLength), typeof(Int32)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterMaximumLength), typeof(Int16)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterOctetLength), typeof(Int16)){ AllowDBNull = true},
             new DataColumn(nameof(NumericPrecision), typeof(Byte)){ AllowDBNull = true},
-            new DataColumn(nameof(NumericPrecisionRadix), typeof(Int16)){ AllowDBNull = true},
-            new DataColumn(nameof(NumericScale), typeof(Int32)){ AllowDBNull = true},
-            new DataColumn(nameof(DateTimePrecision), typeof(Int16)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecisionRadix), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericScale), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(DateTimePrecision), typeof(Byte)){ AllowDBNull = true},
             new DataColumn(nameof(CharacterSetCatalog), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CharacterSetSchema), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(CharacterSetName), typeof(String)){ AllowDBNull = true},

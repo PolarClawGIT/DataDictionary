@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel subjectAreaLayout;
             TabControl subjectAreaTab;
-            subjectAreaTitleData = new Controls.TextBoxData();
-            subjectAreaDescriptionData = new Controls.TextBoxData();
+            subjectAreaTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            subjectAreaDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTab = new TabPage();
             attributeData = new DataGridView();
             attributeTitleColumn = new DataGridViewTextBoxColumn();
@@ -41,7 +41,7 @@
             entityData = new DataGridView();
             entityTitleColumn = new DataGridViewTextBoxColumn();
             entityDescriptionColumn = new DataGridViewTextBoxColumn();
-            memberNameData = new Controls.TextBoxData();
+            memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);

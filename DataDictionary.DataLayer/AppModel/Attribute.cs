@@ -11,6 +11,27 @@
         String? AttributeDescription { get; set; }
 
         /// <summary>
+        /// Generic Data Type of the Attribute
+        /// </summary>
+        String? DataType { get; set; }
+
+        /// <summary>
+        /// Data Length of the Attribute. Generally for Character data. (Null generally = max allowed)
+        /// </summary>
+        /// <remarks>Unicode characters can take of more then one byte. This is the length in characters, not bytes.</remarks>
+        Int16? DataLength { get; set; }
+
+        /// <summary>
+        /// Data Precision of the Attribute. Total number of digits. Generally for numerics and Date/Time.
+        /// </summary>
+        Byte? DataPrecision { get; set; }
+
+        /// <summary>
+        /// Data Scale of the Attribute. Number of digits right of the decimal place. Generally for floating point numerics.
+        /// </summary>
+        Byte? DataScale { get; set; }
+
+        /// <summary>
         /// Is Attribute Single Valued (has only one value, not multi-valued)
         /// </summary>
         Boolean IsSingleValue { get; set; }

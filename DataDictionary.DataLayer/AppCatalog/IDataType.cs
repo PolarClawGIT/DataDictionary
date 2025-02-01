@@ -14,12 +14,12 @@
         /// <summary>
         /// If Character Field, Maximum Length allowed
         /// </summary>
-        Int32? CharacterMaximumLength { get; }
+        Int16? CharacterMaximumLength { get; }
 
         /// <summary>
         /// If Character Field, Maximum Octet Length allowed
         /// </summary>
-        Int32? CharacterOctetLength { get; }
+        Int16? CharacterOctetLength { get; }
 
         /// <summary>
         /// If Numeric, the Precision
@@ -29,17 +29,17 @@
         /// <summary>
         /// If Numeric, the Radix Precision
         /// </summary>
-        Int16? NumericPrecisionRadix { get; }
+        Byte? NumericPrecisionRadix { get; }
 
         /// <summary>
         /// If Numeric, the Scale
         /// </summary>
-        Int32? NumericScale { get; }
+        Byte? NumericScale { get; }
 
         /// <summary>
         /// If DateTime, the Precision
         /// </summary>
-        Int16? DateTimePrecision { get; }
+        Byte? DateTimePrecision { get; }
 
         /// <summary>
         /// If Character, the Catalog Name of the Character Set.

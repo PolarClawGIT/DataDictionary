@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
@@ -9,37 +11,49 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Interface component for the Model SubjectArea
     /// </summary>
-    public interface ISubjectAreaData : IBindingData<SubjectAreaValue>
+    public interface ISubjectAreaData : 
+        IBindingData<SubjectAreaValue>,
+        ILoadData<ISubjectAreaIndex>, ISaveData<ISubjectAreaIndex>
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDataTableFile, INamedScopeSourceData
     {
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required Model Model { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ISubjectAreaKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaIndex dataKey)
+        { return factory.CreateLoad(this, (ISubjectAreaKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaIndex dataKey, DateTime asOfUtcDate)
+        { return factory.CreateLoad(this, (ISubjectAreaKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ISubjectAreaIndex dataKey)
+        { return factory.CreateSave(this, (ISubjectAreaKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -58,9 +72,13 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public IReadOnlyList<WorkItem> Delete(ISubjectAreaIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -69,7 +87,8 @@ namespace DataDictionary.BusinessLayer.AppModel
             return INamedScopeSourceData.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
                 data: this,
                 addNamedScope: addNamedScope,
-                getParent: (value) => Models.FirstOrDefault());
+                getParent: (value) => Model.Models.FirstOrDefault());
         }
+
     }
 }

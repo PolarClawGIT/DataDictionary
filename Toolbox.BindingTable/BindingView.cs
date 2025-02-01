@@ -23,12 +23,18 @@ namespace Toolbox.BindingTable
         where TRow : class, IBindingPropertyChanged
     {
         Func<Int32> BaseCount { get; set; }
-        Action<Int32,TRow> BaseInsert { get; set; }
+        Action<Int32, TRow> BaseInsert { get; set; }
         Func<TRow, Int32> BaseIndexOf { get; set; }
         Func<TRow, Boolean> BaseRemove { get; set; }
         Action<Int32> BaseRemoveAt { get; set; }
 
-        public BindingView(IList<TRow> baseData, Func<TRow, Boolean> filter) : base()
+        //IList<TRow> SourceData;
+        Func<TRow, Boolean> FilterBy { get; set; }
+        Func<TRow, Object> OrderBy { get; set; }
+
+        List<TRow> directAdd = new List<TRow>(); // Contains a list of items added directly to the BindingView so they are not filterd out.
+
+        public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
             BaseCount = () => baseData.Count;
             BaseInsert = baseData.Insert;
@@ -36,12 +42,58 @@ namespace Toolbox.BindingTable
             BaseRemove = baseData.Remove;
             BaseRemoveAt = baseData.RemoveAt;
 
-            foreach (TRow item in baseData.Where(filter).ToList())
+
+            FilterBy = filter ?? (f => 1 == 1);
+            OrderBy = orderBy ?? (o => 1);
+
+            foreach (TRow item in baseData.Where(FilterBy).OrderBy(OrderBy).ToList())
             { base.InsertItem(base.Count, item); }
 
             this.AllowEdit = true;
             this.AllowNew = true;
             this.AllowRemove = true;
+
+            // Special handing for IBindingList
+            if (baseData is IBindingList bindingList)
+            { bindingList.ListChanged += BindingList_ListChanged; }
+
+        }
+
+        /// <summary>
+        /// Handle BindingList changes to reflect changes into this object.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BindingList_ListChanged(Object? sender, ListChangedEventArgs e)
+        {
+            if (sender is IList<TRow> data)
+            {
+                List<TRow> targetState = data.
+                    Where(FilterBy).
+                    OrderBy(OrderBy).
+                    Union(directAdd).
+                    ToList();
+                List<TRow> toInsert = targetState.
+                    Except(this, ReferenceEqualityComparer.Instance).
+                    OfType<TRow>().
+                    ToList();
+                List<TRow> toDelete = this.
+                    Except(targetState, ReferenceEqualityComparer.Instance).
+                    OfType<TRow>().
+                    ToList();
+
+                if (e.ListChangedType is ListChangedType.ItemAdded or ListChangedType.Reset)
+                {
+                    foreach (var item in toInsert)
+                    { base.InsertItem(base.Count, item); }
+                }
+
+                if (e.ListChangedType is ListChangedType.ItemDeleted or ListChangedType.Reset)
+                {
+                    foreach (var item in toDelete)
+                    { base.RemoveItem(this.IndexOf(item)); }
+                }
+            }
         }
 
         TRow? addNewCoreItem = null; // Track the extra row created by DataGridView.
@@ -120,17 +172,25 @@ namespace Toolbox.BindingTable
 
         protected override void InsertItem(int index, TRow item)
         {
-            if (!isAddNewCore)
-            { BaseInsert(BaseCount(), item); }
+            if (!directAdd.Contains(item))
+            { directAdd.Add(item); }
 
-            base.InsertItem(index, item);
+            base.InsertItem(base.Count, item);
+
+            if (!isAddNewCore)
+            { BaseInsert(BaseCount(), item); } // Causes ListChange event to occur on base.
         }
 
         protected override void RemoveItem(int index)
         {
-            Int32 baseIndex = BaseIndexOf(this[index]);
-            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); }
+            if (directAdd.Contains(this[index]))
+            { directAdd.Remove(this[index]); }
+
             base.RemoveItem(index);
+
+            Int32 baseIndex = BaseIndexOf(this[index]);
+            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
         }
+
     }
 }

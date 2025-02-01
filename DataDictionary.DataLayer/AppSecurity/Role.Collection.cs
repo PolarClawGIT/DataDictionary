@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -22,38 +17,42 @@ namespace DataDictionary.DataLayer.AppSecurity
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, roleId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IRoleKey key)
-        { return LoadCommand(connection, (key.RoleId, null)); }
+        { return LoadCommand(connection, roleId: key.RoleId); }
 
-        Command LoadCommand(IConnection connection, (Guid? roleId, String? nothing) parameters)
+        /// <inheritdoc/>
+        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
+
+        Command LoadCommand(IConnection connection, Guid? roleId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetRole]";
-            command.AddParameter("@RoleId", parameters.roleId);
+            command.CommandText = Role.GetProcedure;
+            command.AddParameter(Role.RoleId, roleId);
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
+        { return SaveCommand(connection, roleId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IRoleKey key)
-        { return SaveCommand(connection, (key.RoleId, null)); }
+        { return SaveCommand(connection, roleId: key.RoleId); }
 
-        Command SaveCommand(IConnection connection, (Guid? roleId, String? nothing) parameters)
+        Command SaveCommand(IConnection connection, Guid? roleId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetRole]";
-            command.AddParameter("@RoleId", parameters.roleId);
+            command.CommandText = Role.SetProcedure;
+            command.AddParameter(Role.RoleId, roleId);
 
-            IEnumerable<TItem> data = this.Where(w => parameters.roleId is null || w.RoleId == parameters.roleId);
-            command.AddParameter("@Data", "[AppSecurity].[typeRole]", data);
+            IEnumerable<TItem> data = this.Where(w => roleId is null || w.RoleId == roleId);
+            command.AddParameter(WriteData.Data, Role.TableType, data);
             return command;
         }
 
@@ -65,5 +64,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+
     }
 }

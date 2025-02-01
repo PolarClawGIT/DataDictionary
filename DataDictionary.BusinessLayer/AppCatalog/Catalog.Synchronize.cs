@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using System.ComponentModel;
@@ -12,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize value
     /// </summary>
-    public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>, ICatalog
+    public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>//, ICatalog
     {
         /// <inheritdoc cref="ICatalog.CatalogTitle"/>
         public String CatalogTitle
@@ -54,7 +53,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     }
 
     /// <summary>
-    /// Catalog Synchronize to compare what Catalogs are in the Database vs the Model
+    /// Catalog Synchronize to compare what Catalogs are in the Model vs the Model
     /// </summary>
     public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogIndex>
     {
@@ -68,7 +67,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         protected override IBindingList<CatalogValue> ModelData { get { return dbModel.DbCatalogs; } }
-        IDatabaseModel dbModel;
+        ICatalog dbModel;
 
         /// <inheritdoc/>
         protected override IBindingList<CatalogValue> DatabaseData { get { return sourceData; } }
@@ -78,7 +77,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// Constructor 
         /// </summary>
         /// <param name="dbModel"></param>
-        public CatalogSynchronize(IDatabaseModel dbModel) : base()
+        public CatalogSynchronize(ICatalog dbModel) : base()
         {
             this.dbModel = dbModel;
 
@@ -95,7 +94,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         { return new CatalogSynchronizeValue(data); }
 
         /// <summary>
-        /// Clears then reloads the Catalog List from the Database.
+        /// Clears then reloads the Catalog List from the Model.
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
@@ -108,7 +107,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         }
 
         /// <summary>
-        /// Loads a Schema from a Database into the Model
+        /// Loads a Schema from a Model into the Model
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -120,7 +119,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         }
 
         /// <summary>
-        /// Loads a Catalog from the Database (including all schema components)
+        /// Loads a Catalog from the Model (including all schema components)
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -134,7 +133,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         }
 
         /// <summary>
-        /// Saves the Catalog to the Database (including all schema components)
+        /// Saves the Catalog to the Model (including all schema components)
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="key"></param>
@@ -148,7 +147,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         }
 
         /// <summary>
-        /// Deletes a Catalog from the Database (including all schema components).
+        /// Deletes a Catalog from the Model (including all schema components).
         /// Copy in the Model is not removed.
         /// </summary>
         /// <param name="factory"></param>

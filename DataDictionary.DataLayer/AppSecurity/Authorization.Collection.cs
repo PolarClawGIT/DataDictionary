@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -23,7 +17,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetAuthorization]";
+            command.CommandText = Authorization.GetProcedure;
             return command;
         }
     }

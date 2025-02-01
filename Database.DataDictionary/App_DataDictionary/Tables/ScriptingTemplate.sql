@@ -4,7 +4,7 @@
 	[TemplateTitle]			[App_DataDictionary].[typeTitle] Not Null,
 	[TemplateDescription]	[App_DataDictionary].[typeDescription] Null,
 	-- Transform Settings, refers to the XSLT and the document produced.
-	[BreakOnScope]			[App_DataDictionary].[typeScopeName] NULL,  -- The Scope to have a document break on. Null = no break.
+	[BreakOnScope]			[AppModel].[typeScopeName] NULL,  -- The Scope to have a document break on. Null = no break.
 	[TransformScript]		XML Null , -- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	-- Document Settings, refers to the XML documents and scripting files that is built.
 	-- Concept: The database would not store the files.

@@ -2,5 +2,5 @@
 (
 	[TemplateId]        UniqueIdentifier NULL,
 	[PathName]			[App_DataDictionary].[typeNameSpacePath] NULL,
-	[PathScope]         [App_DataDictionary].[typeScopeName] NULL
+	[PathScope]         [AppModel].[typeScopeName] NULL
 )

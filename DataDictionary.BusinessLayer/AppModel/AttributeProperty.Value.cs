@@ -1,39 +1,31 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppCatalog;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
-using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IAttributePropertyItem, IPropertyIndex,
-        IScopeType, ITemporalValue
+    public interface IAttributePropertyValue : IAttributePropertyItem,
+        IPropertyIndex, IAttributeIndex,
+        IScopeType
     { }
 
     /// <inheritdoc/>
-    public class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue, IScopeType
+    public class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeProperty; } }
 
-        /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public String Title => throw new NotImplementedException();
-
-        /// <inheritdoc/>
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem()"/>
         public AttributePropertyValue() : base() { }
 
-        /// <inheritdoc/>
-        public AttributePropertyValue(IAttributeIndex attributeKey) : base(attributeKey) { }
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem(IAttributeKey)"/>
+        public AttributePropertyValue(IAttributeIndex attribute) : base(attribute) { }
 
-        /// <inheritdoc/>
-        public AttributePropertyValue(IAttributeKey attributeKey, DataLayer.AppModel.IPropertyKey propertyKey, DataLayer.AppCatalog.IPropertyItem value) : base(attributeKey, propertyKey, value)
+        /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem(IAttributeKey, IPropertyKey)"/>
+        public AttributePropertyValue(IAttributeIndex attribute, IPropertyIndex property) : base(attribute, property)
         { }
+
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

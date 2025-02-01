@@ -27,25 +27,54 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public string? AttributeTitle
+        public String? AttributeTitle
         {
             get { return GetValue(nameof(AttributeTitle)); }
             set { SetValue(nameof(AttributeTitle), value); }
         }
 
         /// <inheritdoc/>
-        public string? AttributeDescription
+        public String? AttributeDescription
         {
             get { return GetValue(nameof(AttributeDescription)); }
             set { SetValue(nameof(AttributeDescription), value); }
         }
 
         /// <inheritdoc/>
-        public string? AttributeName
+        public String? AttributeName
         {
             get { return GetValue(nameof(AttributeName)); }
             set { SetValue(nameof(AttributeName), value); }
         }
+
+        /// <inheritdoc/>
+        public String? DataType
+        {
+            get { return GetValue(nameof(DataType)); }
+            set { SetValue(nameof(DataType), value); }
+        }
+
+        /// <inheritdoc/>
+        public Int16? DataLength
+        {
+            get { return GetValue<Int16>(nameof(DataLength)); }
+            set { SetValue(nameof(DataLength), value); }
+        }
+
+        /// <inheritdoc/>
+        public Byte? DataPrecision
+        {
+            get { return GetValue<Byte>(nameof(DataPrecision)); }
+            set { SetValue(nameof(DataPrecision), value); }
+        }
+
+        /// <inheritdoc/>
+        public Byte? DataScale
+        {
+            get { return GetValue<Byte>(nameof(DataScale)); }
+            set { SetValue(nameof(DataScale), value); }
+        }
+
 
         /// <inheritdoc/>
         public Boolean IsSingleValue
@@ -220,19 +249,23 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeTitle), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeDescription), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(AttributeName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(IsSingleValue), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsMultiValue), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsSimpleType), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsCompositeType), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsIntegral), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsDerived), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsValued), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsNullable), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsKey), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(IsNonKey), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeTitle), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(AttributeDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DataType), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DataLength), typeof(Int16)){ AllowDBNull = true},
+            new DataColumn(nameof(DataPrecision), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(DataScale), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSingleValue), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsMultiValue), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSimpleType), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCompositeType), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsIntegral), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDerived), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsValued), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsKey), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNonKey), typeof(Boolean)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

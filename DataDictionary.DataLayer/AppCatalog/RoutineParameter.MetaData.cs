@@ -25,28 +25,28 @@ namespace DataDictionary.DataLayer.AppCatalog
         public String? ParameterName { get { return GetValue(nameof(ParameterName)); } }
 
         /// <inheritdoc/>
-        public Int32? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
+        public Int32? OrdinalPosition { get { return GetValue<Int32>(nameof(OrdinalPosition)); } }
 
         /// <inheritdoc/>
         public String? DataType { get { return GetValue(nameof(DataType)); } }
 
         /// <inheritdoc/>
-        public Int32? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
+        public Int16? CharacterMaximumLength { get { return GetValue<Int16>(nameof(CharacterMaximumLength)); } }
 
         /// <inheritdoc/>
-        public Int32? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
+        public Int16? CharacterOctetLength { get { return GetValue<Int16>(nameof(CharacterOctetLength)); } }
 
         /// <inheritdoc/>
-        public Byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
+        public Byte? NumericPrecision { get { return GetValue<Byte>(nameof(NumericPrecision)); } }
 
         /// <inheritdoc/>
-        public Int16? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
+        public Byte? NumericPrecisionRadix { get { return GetValue<Byte>(nameof(NumericPrecisionRadix)); } }
 
         /// <inheritdoc/>
-        public Int32? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
+        public Byte? NumericScale { get { return GetValue<Byte>(nameof(NumericScale)); } }
 
         /// <inheritdoc/>
-        public Int16? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
+        public Byte? DateTimePrecision { get { return GetValue<Byte>(nameof(DateTimePrecision)); } }
 
         /// <inheritdoc/>
         public String? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
@@ -77,28 +77,28 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(RoutineName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(RoutineType), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(ParameterName), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(OrdinalPosition), typeof(int)){ AllowDBNull = false},
-            new DataColumn(nameof(DataType), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterMaximumLength), typeof(int)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterOctetLength), typeof(int)){ AllowDBNull = true},
-            new DataColumn(nameof(NumericPrecision), typeof(byte)){ AllowDBNull = true},
-            new DataColumn(nameof(NumericPrecisionRadix), typeof(short)){ AllowDBNull = true},
-            new DataColumn(nameof(NumericScale), typeof(int)){ AllowDBNull = true},
-            new DataColumn(nameof(DateTimePrecision), typeof(short)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterSetCatalog), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterSetSchema), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CharacterSetName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CollationCatalog), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CollationSchema), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(CollationName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DomainCatalog), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DomainSchema), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DomainName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(RoutineName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(RoutineType), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(ParameterName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = false},
+            new DataColumn(nameof(DataType), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterMaximumLength), typeof(Int16)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterOctetLength), typeof(Int16)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecision), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecisionRadix), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericScale), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(DateTimePrecision), typeof(Byte)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetCatalog), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetSchema), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationCatalog), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationSchema), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainCatalog), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainSchema), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainName), typeof(String)){ AllowDBNull = true},
         };
 
         /// <summary>

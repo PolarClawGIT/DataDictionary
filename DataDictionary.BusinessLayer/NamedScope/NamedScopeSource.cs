@@ -23,17 +23,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // CS0060: Base class must be at least as accessible then inherited classes.
 
         /// <summary>
-        /// Creates WorkItems that invoke a method to add items to NamedScopes.
-        /// </summary>
-        /// <param name="addNamedScope"></param>
-        /// <returns></returns>
-        [Obsolete("Think this is the old and should not be used")]
-        IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope);
-
-        //TODO: Update all object to use this method.
-        //TODO: Remove old version
-
-        /// <summary>
         /// Creates WorkItems that invoke a method to add items to NamedScopes, generic version.
         /// </summary>
         /// <typeparam name="TData"></typeparam>

@@ -12,6 +12,9 @@ namespace DataDictionary.BusinessLayer.AppModel
     public class AttributeIndex : AttributeKey, IAttributeIndex,
         IKeyEquality<IAttributeIndex>, IKeyEquality<AttributeIndex>
     {
+        /// <inheritdoc cref="AttributeKey()"/>
+        public AttributeIndex() : base() { }
+
         /// <inheritdoc cref="AttributeKey(IAttributeKey)"/>
         public AttributeIndex(IAttributeIndex source) : base(source) { }
 

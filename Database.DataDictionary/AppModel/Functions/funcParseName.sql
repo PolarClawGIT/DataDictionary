@@ -16,7 +16,7 @@
 --      [DatabaseName].[SchemaName]
 --      [DatabaseName].[SchemaName].[TableName]
 --      [DatabaseName].[SchemaName].[TableName].[ColumnName]
-RETURNS TABLE AS RETURN (
+RETURNS TABLE With SchemaBinding AS RETURN (
 	With [Parse] As (
 		Select	@QualifiedName As [ParentName],
 				Convert(NVarChar(Max),Null) As [ChildName]

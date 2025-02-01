@@ -83,7 +83,8 @@
             comboBoxLayout.Location = new Point(0, 0);
             comboBoxLayout.Margin = new Padding(0);
             comboBoxLayout.Name = "comboBoxLayout";
-            comboBoxLayout.RowCount = 2;
+            comboBoxLayout.RowCount = 3;
+            comboBoxLayout.RowStyles.Add(new RowStyle());
             comboBoxLayout.RowStyles.Add(new RowStyle());
             comboBoxLayout.RowStyles.Add(new RowStyle());
             comboBoxLayout.Size = new Size(129, 46);

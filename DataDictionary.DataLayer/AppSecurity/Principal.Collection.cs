@@ -24,17 +24,25 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, (key.PrincipalId, null, null)); }
 
         /// <inheritdoc/>
+        Command IReadData<IPrincipalKey>.LoadCommand(IConnection connection, IPrincipalKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPrincipalKeyName key)
         { return LoadCommand(connection, (null, key.PrincipalLogin, null)); }
+
+        /// <inheritdoc/>
+        Command IReadData<IPrincipalKeyName>.LoadCommand(IConnection connection, IPrincipalKeyName key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
 
         Command LoadCommand(IConnection connection, (Guid? principalId, String? principalLogin, Boolean? isCurrent) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetPrincipal]";
-            command.AddParameter("@PrincipalId", parameters.principalId);
-            command.AddParameter("@PrincipalLogin", parameters.principalLogin);
-            command.AddParameter("@IsCurrent", parameters.isCurrent);
+            command.CommandText = Principal.GetProcedure;
+            command.AddParameter(Principal.PrincipalId, parameters.principalId);
+            command.AddParameter(Principal.PrincipalLogin, parameters.principalLogin);
+            command.AddParameter(Principal.IsCurrent, parameters.isCurrent);
             return command;
         }
 
@@ -50,11 +58,11 @@ namespace DataDictionary.DataLayer.AppSecurity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetPrincipal]";
-            command.AddParameter("@PrincipalId", parameters.principalId);
+            command.CommandText = Principal.SetProcedure;
+            command.AddParameter(Principal.PrincipalId, parameters.principalId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.principalId is null || w.PrincipalId == parameters.principalId);
-            command.AddParameter("@Data", "[AppSecurity].[typePrincipal]", data);
+            command.AddParameter(WriteData.Data, Principal.TableType, data);
             return command;
         }
 

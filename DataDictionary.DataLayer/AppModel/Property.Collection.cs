@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿// Ignore Spelling: Utc
+
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -14,7 +16,7 @@ namespace DataDictionary.DataLayer.AppModel
         IWriteData<IModelKey>, IWriteData<IPropertyKey>,
         IDeleteData<IPropertyKey>,
         IRemoveItem<IPropertyKey>,
-        ITemporalData<IModelKey>, ITemporalData<IPropertyKey>
+        ITemporalData<IModelKey>
         where TItem : PropertyItem, new()
     {
         /// <inheritdoc/>
@@ -26,16 +28,20 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPropertyKey propertyKey)
         { return LoadCommand(connection, propertyId: propertyKey.PropertyId); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+        public Command LoadCommand(IConnection connection, IPropertyKey propertyKey, DateTime asOfUtcDate)
+        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, asOfUtcDate: asOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IPropertyKey propertyKey)
-        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, includeHistory: true); }
+        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? propertyId = null,

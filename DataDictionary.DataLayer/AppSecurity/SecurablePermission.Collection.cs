@@ -1,11 +1,6 @@
-﻿// Ignore Spelling: Securable
+﻿// Ignore Spelling: Securable Utc
 
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -24,49 +19,57 @@ namespace DataDictionary.DataLayer.AppSecurity
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, roleId: null, securableId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IRoleKey key)
-        { return LoadCommand(connection, (key.RoleId, null)); }
+        { return LoadCommand(connection, roleId: key.RoleId); }
+
+        /// <inheritdoc/>
+        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ISecurableKey key)
-        { return LoadCommand(connection, (null, key.SecurableId)); }
+        { return LoadCommand(connection, securableId: key.SecurableId); }
 
-        Command LoadCommand(IConnection connection, (Guid? RoleId, Guid? SecurableId) parameters)
+        /// <inheritdoc/>
+        Command IReadData<ISecurableKey>.LoadCommand(IConnection connection, ISecurableKey key, DateTime asOfUtcDate)
+        { throw new NotSupportedException(); }
+
+        Command LoadCommand(IConnection connection, Guid? roleId = null, Guid? securableId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procGetSecurablePermission]";
-            command.AddParameter("@RoleId", parameters.RoleId);
-            command.AddParameter("@SecurableId", parameters.SecurableId);
+            command.CommandText = SecurablePermission.GetProcedure;
+            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Securable.SecurableId, securableId);
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
+        { return SaveCommand(connection, roleId: null, securableId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IRoleKey key)
-        { return SaveCommand(connection, (key.RoleId, null)); }
+        { return SaveCommand(connection, roleId : key.RoleId); }
 
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ISecurableKey key)
-        { return SaveCommand(connection, (null, key.SecurableId)); }
+        { return SaveCommand(connection, securableId: key.SecurableId); }
 
-        Command SaveCommand(IConnection connection, (Guid? RoleId, Guid? SecurableId) parameters)
+        Command SaveCommand(IConnection connection, Guid? roleId = null, Guid? securableId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[AppSecurity].[procSetSecurablePermission]";
-            command.AddParameter("@RoleId", parameters.RoleId);
-            command.AddParameter("@SecurableId", parameters.SecurableId);
+            command.CommandText = SecurablePermission.SetProcedure;
+            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Securable.SecurableId, securableId);
 
-            IEnumerable<TItem> data = this.Where(w => (parameters.RoleId is null || w.RoleId == parameters.RoleId) && (parameters.SecurableId is null || w.SecurableId == parameters.SecurableId));
-            command.AddParameter("@Data", "[AppSecurity].[typeSecurablePermission]", data);
+            IEnumerable<TItem> data = this.Where(w => (roleId is null || w.RoleId == roleId) && (securableId is null || w.SecurableId == securableId));
+            command.AddParameter(WriteData.Data, SecurablePermission.TableType, data);
             return command;
         }
 
@@ -87,5 +90,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
+
     }
 }
