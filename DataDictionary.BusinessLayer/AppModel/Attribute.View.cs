@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -80,6 +81,17 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             SubjectArea.RaiseListChangedEvents = true;
             SubjectArea.ResetBindings();
+
+            Attributes.ListChanged += Attributes_ListChanged;
+        }
+
+        private void Attributes_ListChanged(Object? sender, ListChangedEventArgs e)
+        {
+            // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list.
+            if (e.ListChangedType is ListChangedType.ItemDeleted
+                && sender is IBindingList values
+                && values.Count is 0)
+            { StopBinding(); }
         }
 
         void StopBinding()
@@ -89,6 +101,8 @@ namespace DataDictionary.BusinessLayer.AppModel
             Properties.RaiseListChangedEvents = false;
             Definitions.RaiseListChangedEvents = false;
             SubjectArea.RaiseListChangedEvents = false;
+
+            Attributes.ListChanged -= Attributes_ListChanged;
         }
 
         /// <summary>
