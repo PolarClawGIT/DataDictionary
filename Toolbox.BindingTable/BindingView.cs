@@ -187,9 +187,24 @@ namespace Toolbox.BindingTable
             { directAdd.Remove(this[index]); }
 
             base.RemoveItem(index);
-
+            
             Int32 baseIndex = BaseIndexOf(this[index]);
             if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
+        }
+
+        /// <summary>
+        /// Calls ResetBindings then forces a ListChangedType.Reset.
+        /// </summary>
+        public void ResetList()
+        {
+            // For some reason, ResetBindings does not call ListChangedType.Reset under all conditions.
+            // The documentation and source code found says otherwise.
+            // This could cause a double call to ListChangedType.Reset.
+            // The only guess I got has to do with multi-threading not raising the event as expected.
+            ResetBindings();
+
+            if(RaiseListChangedEvents)
+            { OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1)); }
         }
 
     }

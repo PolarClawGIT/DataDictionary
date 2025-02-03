@@ -163,6 +163,7 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
+
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (bindingAttribute.Current is AttributeValue current)

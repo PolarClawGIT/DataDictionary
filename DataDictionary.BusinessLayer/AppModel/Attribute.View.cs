@@ -68,19 +68,19 @@ namespace DataDictionary.BusinessLayer.AppModel
             SubjectArea = new BindingView<AttributeSubjectAreaValue>(currentData.SubjectArea, w => AttributeIndex.Equals(w));
 
             Attributes.RaiseListChangedEvents = true;
-            Attributes.ResetBindings();
+            Attributes.ResetList();
 
             Aliases.RaiseListChangedEvents = true;
-            Aliases.ResetBindings();
+            Aliases.ResetList();
 
             Properties.RaiseListChangedEvents = true;
-            Properties.ResetBindings();
+            Properties.ResetList();
 
             Definitions.RaiseListChangedEvents = true;
-            Definitions.ResetBindings();
+            Definitions.ResetList();
 
             SubjectArea.RaiseListChangedEvents = true;
-            SubjectArea.ResetBindings();
+            SubjectArea.ResetList();
 
             Attributes.ListChanged += Attributes_ListChanged;
         }
