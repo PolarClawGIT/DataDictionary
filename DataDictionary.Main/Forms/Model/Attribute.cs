@@ -70,7 +70,6 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAlias.DataSource = formData.Aliases;
                 bindingSubjectArea.DataSource = formData.SubjectArea;
             }
-
         }
 
 
@@ -128,13 +127,13 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteCommand_Click(sender, e);
 
+            bindingAttribute.RaiseListChangedEvents = false;
+            bindingProperty.RaiseListChangedEvents = false;
+            bindingDefinition.RaiseListChangedEvents = false;
+            bindingAlias.RaiseListChangedEvents = false;
+            bindingSubjectArea.RaiseListChangedEvents = false;
+
             formData.Remove();
-
-            //if (bindingAttribute.Current is IAttributeValue current)
-            //{ DoWork(formData.Delete(), Complete); }
-
-            //void Complete(RunWorkerCompletedEventArgs args)
-            //{ SendMessage(new RefreshNavigation()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
