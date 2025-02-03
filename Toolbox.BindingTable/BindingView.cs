@@ -186,9 +186,9 @@ namespace Toolbox.BindingTable
             if (directAdd.Contains(this[index]))
             { directAdd.Remove(this[index]); }
 
+            Int32 baseIndex = BaseIndexOf(this[index]);
             base.RemoveItem(index);
             
-            Int32 baseIndex = BaseIndexOf(this[index]);
             if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
         }
 
