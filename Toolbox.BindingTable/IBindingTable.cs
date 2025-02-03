@@ -38,6 +38,9 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="source"></param>
         void Load(DataSet source);
+
+        /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
+        Boolean RaiseListChangedEvents { get; set; }
     }
 
     public interface IBindingTable<T> : IBindingTable, IBindingList<T>
