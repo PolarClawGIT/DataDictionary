@@ -105,8 +105,11 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
 
+            DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
+
+            definitionControl.LoadControl(bindingDefinition, formData.ModelDefinitions);
 
             subjectArea.BindTo(bindingSubjectArea);
 
@@ -216,28 +219,28 @@ namespace DataDictionary.Main.Forms.Model
             else { bindingProperty.AddNew(); }
         }
 
-        private void DomainDefinition_OnApply(object sender, EventArgs e)
-        {
-            if (bindingDefinition.DataSource is IList<AttributeDefinitionValue> definition
-                    && definition.FirstOrDefault(
-                        w => domainDefinition.Definition is IDefinitionIndex
-                        && domainDefinition.Definition.Equals(w))
-                    is AttributeDefinitionValue value)
-            {
-                value.DefinitionSummary = domainDefinition.DefinitionSummary;
-                value.DefinitionText = domainDefinition.DefinitionText;
-                bindingDefinition.Position = definition.IndexOf(value);
-            }
-            else { bindingDefinition.AddNew(); }
-        }
+        //private void DomainDefinition_OnApply(object sender, EventArgs e)
+        //{
+        //    if (bindingDefinition.DataSource is IList<AttributeDefinitionValue> definition
+        //            && definition.FirstOrDefault(
+        //                w => domainDefinition.Definition is IDefinitionIndex
+        //                && domainDefinition.Definition.Equals(w))
+        //            is AttributeDefinitionValue value)
+        //    {
+        //        value.DefinitionSummary = domainDefinition.DefinitionSummary;
+        //        value.DefinitionText = domainDefinition.DefinitionText;
+        //        bindingDefinition.Position = definition.IndexOf(value);
+        //    }
+        //    else { bindingDefinition.AddNew(); }
+        //}
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
         {
             if (bindingDefinition.Current is AttributeDefinitionValue current)
             {
-                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
-                domainDefinition.DefinitionText = current.DefinitionText;
-                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
+                //domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
+                //domainDefinition.DefinitionText = current.DefinitionText;
+                //domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
             }
         }
 
@@ -246,9 +249,9 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributeDefinitionValue newItem = new AttributeDefinitionValue(current);
-                newItem.DefinitionId = domainDefinition.DefinitionId;
-                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
-                newItem.DefinitionText = domainDefinition.DefinitionText;
+                //newItem.DefinitionId = domainDefinition.DefinitionId;
+                //newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
+                //newItem.DefinitionText = domainDefinition.DefinitionText;
                 e.NewObject = newItem;
             }
         }
