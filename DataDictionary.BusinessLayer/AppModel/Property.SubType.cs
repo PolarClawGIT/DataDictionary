@@ -10,5 +10,13 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public interface IPropertySubType : IProperty
     {
+        Guid? IPropertyKey.PropertyId { get { return PropertyId; } }
+        String? IProperty.PropertyValue { get { return PropertyValue; } }
+
+        /// <inheritdoc cref="IPropertyKey.PropertyId"/>
+        new Guid? PropertyId { get; set; }
+
+        /// <inheritdoc cref="IProperty.PropertyValue"/>
+        new String? PropertyValue { get; set; }
     }
 }
