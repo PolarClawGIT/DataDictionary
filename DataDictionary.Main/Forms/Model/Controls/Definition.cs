@@ -18,7 +18,10 @@ namespace DataDictionary.Main.Forms.Model.Controls
         BindingSource? dataBinding; // Pointer to the BindingSource.
 
         public Definition()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            definitionTextData.AddTools(fullTextTools);
+        }
 
         /// <summary>
         /// Sets up the Control.
@@ -39,7 +42,6 @@ namespace DataDictionary.Main.Forms.Model.Controls
             {
                 definitionTextData.Enabled = true;
                 definitionSummaryData.Enabled = true;
-                syncSummaryTextCommand.Enabled = true;
 
                 if ((dataBinding is not null && dataBinding.Current is null) ||
                     (dataBinding is not null && dataBinding.Current is IDefinitionSubType current && current.DefinitionId != value))
@@ -52,7 +54,6 @@ namespace DataDictionary.Main.Forms.Model.Controls
             {
                 definitionTextData.Enabled = false;
                 definitionSummaryData.Enabled = false;
-                syncSummaryTextCommand.Enabled = false;
             }
         }
 
@@ -89,7 +90,18 @@ namespace DataDictionary.Main.Forms.Model.Controls
             return textValue;
         }
 
-        private void SyncSummaryTextCommand_Click(object sender, EventArgs e)
-        { definitionSummaryData.Text = CleanUpText(definitionTextData.Text); }
+        private void SyncTextToSummary_Click(object sender, EventArgs e)
+        {
+            // Button does not cause definitionTextData to loose focus.
+            // Thus does not post back to the data object.
+            // Values had to be forced to get it to work.
+            ActiveControl = null;
+
+            if (dataBinding is not null && dataBinding.Current is IDefinitionSubType value)
+            {
+                value.DefinitionSummary = CleanUpText(definitionTextData.Text);
+                dataBinding.ResetCurrentItem();
+            }
+        }
     }
 }
