@@ -1,7 +1,7 @@
 ﻿namespace DataDictionary.DataLayer.AppModel;
 
 /// <summary>
-/// Interface for the Model Property
+/// Interface for the Model Property Sub Type.
 /// </summary>
 public interface IProperty : IPropertyKey
 {

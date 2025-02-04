@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IAttributeDefinitionValue : IAttributeDefinitionItem, 
-        IDefinitionIndex, IAttributeIndex,
+        IDefinitionIndex, IAttributeIndex, IDefinitionSubType,
         IScopeType
     { }
 

@@ -1,7 +1,7 @@
 ﻿namespace DataDictionary.DataLayer.AppModel;
 
 /// <summary>
-/// Interface for the Model Definition
+/// Interface for the Model Definition Sub Type
 /// </summary>
 public interface IDefinition : IDefinitionKey
 {
