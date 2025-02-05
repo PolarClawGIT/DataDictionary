@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,11 +44,20 @@ namespace DataDictionary.Main.Forms.Model.Controls
                 definitionTextData.Enabled = true;
                 definitionSummaryData.Enabled = true;
 
-                if ((dataBinding is not null && dataBinding.Current is null) ||
-                    (dataBinding is not null && dataBinding.Current is IDefinitionSubType current && current.DefinitionId != value))
+                if (dataBinding is not null &&
+                    dataBinding.DataSource is IList data &&
+                    definitionData.SelectedItem is IDefinitionIndex selectedValue)
                 {
-                    if (dataBinding.AddNew() is IDefinitionSubType newItem)
-                    { newItem.DefinitionId = value; }
+                    DefinitionIndex key = new DefinitionIndex(selectedValue);
+                    var currentValues = data.OfType<IDefinitionSubType>().ToList();
+
+                    if (currentValues.FirstOrDefault(w => key.Equals(w)) is IDefinitionSubType currentValue)
+                    { dataBinding.Position = currentValues.IndexOf(currentValue); }
+                    else
+                    {
+                        if (dataBinding.AddNew() is IDefinitionSubType newItem)
+                        { newItem.DefinitionId = value; }
+                    }
                 }
             }
             else

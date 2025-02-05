@@ -102,13 +102,14 @@ namespace DataDictionary.Main.Forms.Model
             isNonKeyData.DataBindings.Add(new Binding(nameof(isNonKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsNonKey), false, DataSourceUpdateMode.OnPropertyChanged));
             isKeyData.DataBindings.Add(new Binding(nameof(isKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsKey), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            PropertyNameList.Load(propertyIdColumn, formData.ModelProperty);
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+            propertyControl.LoadControl(bindingProperty, formData.ModelProperty);
 
             DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
-
             definitionControl.LoadControl(bindingDefinition, formData.ModelDefinitions);
 
             subjectArea.BindTo(bindingSubjectArea);
@@ -165,14 +166,13 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributePropertyValue newItem = new AttributePropertyValue(current);
-                newItem.PropertyId = domainProperty.PropertyId;
-                newItem.PropertyValue = domainProperty.PropertyValue;
+                //newItem.PropertyId = propertyControl.PropertyId;
+                //newItem.PropertyValue = propertyControl.PropertyValue;
                 e.NewObject = newItem;
             }
         }
@@ -201,23 +201,23 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (bindingProperty.Current is AttributePropertyValue current)
             {
-                domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
+                //propertyControl.PropertyId = current.PropertyId ?? Guid.Empty;
+                //propertyControl.PropertyValue = current.PropertyValue ?? String.Empty;
             }
         }
 
-        private void DomainProperty_OnApply(object sender, EventArgs e)
-        {
-            if (bindingProperty.DataSource is IList<AttributePropertyValue> properties
-                && properties.FirstOrDefault(
-                    w => w.PropertyId == domainProperty.PropertyId)
-                is AttributePropertyValue value)
-            {
-                value.PropertyValue = domainProperty.PropertyValue;
-                bindingProperty.Position = properties.IndexOf(value);
-            }
-            else { bindingProperty.AddNew(); }
-        }
+        //private void DomainProperty_OnApply(object sender, EventArgs e)
+        //{
+        //    if (bindingProperty.DataSource is IList<AttributePropertyValue> properties
+        //        && properties.FirstOrDefault(
+        //            w => w.PropertyId == propertyControl.PropertyId)
+        //        is AttributePropertyValue value)
+        //    {
+        //        value.PropertyValue = propertyControl.PropertyValue;
+        //        bindingProperty.Position = properties.IndexOf(value);
+        //    }
+        //    else { bindingProperty.AddNew(); }
+        //}
 
         //private void DomainDefinition_OnApply(object sender, EventArgs e)
         //{
@@ -331,5 +331,6 @@ namespace DataDictionary.Main.Forms.Model
             PathIndex path = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
             aliasNameData.Text = path.MemberFullPath;
         }
+
     }
 }

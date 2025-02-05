@@ -34,7 +34,6 @@ namespace DataDictionary.Main.Forms.Model
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Attribute));
             TableLayoutPanel definitionLayout;
             TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel subjectAreaLayout;
@@ -59,7 +58,7 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
-            domainProperty = new Controls.DomainProperty();
+            propertyControl = new Controls.Property();
             definitionTab = new TabPage();
             definitionData = new DataGridView();
             definitionColumn = new DataGridViewComboBoxColumn();
@@ -362,7 +361,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -371,14 +370,14 @@ namespace DataDictionary.Main.Forms.Model
             propertyLayout.ColumnCount = 1;
             propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             propertyLayout.Controls.Add(propertiesData, 0, 0);
-            propertyLayout.Controls.Add(domainProperty, 0, 1);
+            propertyLayout.Controls.Add(propertyControl, 0, 1);
             propertyLayout.Dock = DockStyle.Fill;
             propertyLayout.Location = new Point(3, 3);
             propertyLayout.Name = "propertyLayout";
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -390,7 +389,8 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 13);
+            propertiesData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            propertiesData.Size = new Size(400, 95);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -411,19 +411,13 @@ namespace DataDictionary.Main.Forms.Model
             propertyValueColumn.Name = "propertyValueColumn";
             propertyValueColumn.ReadOnly = true;
             // 
-            // domainProperty
+            // propertyControl
             // 
-            domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
-            domainProperty.ApplyText = "apply";
-            domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 22);
-            domainProperty.Name = "domainProperty";
-            domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
-            domainProperty.PropertyValue = "";
-            domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 41);
-            domainProperty.TabIndex = 2;
-            domainProperty.OnApply += DomainProperty_OnApply;
+            propertyControl.Dock = DockStyle.Fill;
+            propertyControl.Location = new Point(3, 104);
+            propertyControl.Name = "propertyControl";
+            propertyControl.Size = new Size(400, 230);
+            propertyControl.TabIndex = 2;
             // 
             // definitionTab
             // 
@@ -453,11 +447,14 @@ namespace DataDictionary.Main.Forms.Model
             // 
             // definitionData
             // 
+            definitionData.AllowUserToAddRows = false;
             definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
+            definitionData.ReadOnly = true;
+            definitionData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             definitionData.Size = new Size(400, 95);
             definitionData.TabIndex = 0;
             // 
@@ -468,6 +465,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionColumn.FillWeight = 50F;
             definitionColumn.HeaderText = "Definition";
             definitionColumn.Name = "definitionColumn";
+            definitionColumn.ReadOnly = true;
             // 
             // definitionSummaryColumn
             // 
@@ -475,6 +473,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
             definitionSummaryColumn.HeaderText = "Definition Summary";
             definitionSummaryColumn.Name = "definitionSummaryColumn";
+            definitionSummaryColumn.ReadOnly = true;
             // 
             // definitionControl
             // 
@@ -767,9 +766,6 @@ namespace DataDictionary.Main.Forms.Model
         private TabPage entityTab;
         private BindingSource bindingAlias;
         private DataGridView propertiesData;
-        private DataGridViewComboBoxColumn propertyIdColumn;
-        private DataGridViewTextBoxColumn propertyValueColumn;
-        private Controls.DomainProperty domainProperty;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
         private TabPage definitionTab;
@@ -791,5 +787,8 @@ namespace DataDictionary.Main.Forms.Model
         private Controls.Definition definitionControl;
         private DataGridViewComboBoxColumn definitionColumn;
         private DataGridViewTextBoxColumn definitionSummaryColumn;
+        private Controls.Property propertyControl;
+        private DataGridViewComboBoxColumn propertyIdColumn;
+        private DataGridViewTextBoxColumn propertyValueColumn;
     }
 }
