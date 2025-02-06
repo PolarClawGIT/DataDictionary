@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, principalId: key.PrincipalId); }
 
         /// <inheritdoc/>
-        Command IReadData<IPrincipalKey>.LoadCommand(IConnection connection, IPrincipalKey key, DateTime asOfUtcDate)
+        Command IReadData<IPrincipalKey>.LoadCommand(IConnection connection, IPrincipalKey key, ITemporalKey asOfUtcDate)
         { throw new NotSupportedException(); }
 
         /// <inheritdoc/>
@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, roleId: key.RoleId); }
 
         /// <inheritdoc/>
-        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, DateTime asOfUtcDate)
+        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, ITemporalKey asOfUtcDate)
         { throw new NotSupportedException(); }
 
         Command LoadCommand(IConnection connection, Guid? principalId = null, Guid? roleId = null)

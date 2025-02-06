@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPrincipalIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             throw new NotSupportedException();
 
@@ -131,7 +132,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             throw new NotSupportedException();
 
@@ -157,7 +158,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             throw new NotSupportedException();
 

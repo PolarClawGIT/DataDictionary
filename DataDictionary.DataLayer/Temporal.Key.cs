@@ -1,26 +1,34 @@
-﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Ignore Spelling: Utc
 
 namespace DataDictionary.DataLayer
 {
     /// <summary>
+    /// Interface for a Temporal Table Key (DateTime part)
+    /// </summary>
+    public interface ITemporalKey
+    {
+        /// <summary>
+        /// As of Date expressed as a UTC date.
+        /// </summary>
+        DateTime AsOfUtcDate { get; }
+    }
+
+    /// <summary>
     /// Implementation for a Temporal Table Key (DateTime part)
     /// </summary>
-    public class TemporalKey :
+    public class TemporalKey : ITemporalKey,
         IEquatable<ITemporal>, IComparable<ITemporal>,
         IEquatable<ITemporalItem>, IComparable<ITemporalItem>, IComparable
     {
-        /// <inheritdoc cref="ITemporal.CreatedOn"/>
-        public DateTime? CreatedOn { get; } = DateTime.MaxValue;
+        /// <inheritdoc/>
+        public DateTime AsOfUtcDate { get; } = DateTime.MaxValue;
 
         /// <summary>
-        /// Constructor for a blank Temporal Key
+        /// Constructor for a blank Temporal Key 
         /// </summary>
-        protected internal TemporalKey() : base() { }
+        /// <remarks>Set to DateTime.UtcNow.</remarks>
+        public TemporalKey() : base()
+        { AsOfUtcDate = DateTime.UtcNow; }
 
         /// <summary>
         /// Constructor for the Temporal Key.
@@ -29,7 +37,17 @@ namespace DataDictionary.DataLayer
         public TemporalKey(ITemporal source) : base()
         {
             if (source.CreatedOn is DateTime value)
-            { CreatedOn = value; }
+            { AsOfUtcDate = value; }
+        }
+
+        /// <summary>
+        /// Constructor for the Temporal Key.
+        /// </summary>
+        /// <param name="source"></param>
+        public TemporalKey(ITemporalKey source) : base()
+        {
+            if (source.AsOfUtcDate is DateTime value)
+            { AsOfUtcDate = value; }
         }
 
         /// <summary>
@@ -39,7 +57,7 @@ namespace DataDictionary.DataLayer
         public TemporalKey(ITemporalItem source) : base()
         {
             if (source.Temporal.CreatedOn is DateTime value)
-            { CreatedOn = value; }
+            { AsOfUtcDate = value; }
         }
 
         #region IEquatable, IComparable
@@ -48,10 +66,7 @@ namespace DataDictionary.DataLayer
         {
             return
                 (other is TemporalKey
-                    && CreatedOn is null
-                    && other.CreatedOn is null) ||
-                (other is TemporalKey
-                    && CreatedOn is DateTime thisValue
+                    && AsOfUtcDate is DateTime thisValue
                     && other.CreatedOn is DateTime otherValue
                     && DateTime.Equals(thisValue, otherValue));
         }
@@ -61,10 +76,7 @@ namespace DataDictionary.DataLayer
         {
             return
                 (other is TemporalKey
-                    && CreatedOn is null
-                    && other.Temporal.CreatedOn is null) ||
-                (other is TemporalKey
-                    && CreatedOn is DateTime thisValue
+                    && AsOfUtcDate is DateTime thisValue
                     && other.Temporal.CreatedOn is DateTime otherValue
                     && DateTime.Equals(thisValue, otherValue));
         }
@@ -80,7 +92,7 @@ namespace DataDictionary.DataLayer
         public Int32 CompareTo(ITemporal? other)
         {
             if (other is ITemporal value &&
-                CreatedOn is DateTime thisValue &&
+                AsOfUtcDate is DateTime thisValue &&
                 other.CreatedOn is DateTime otherValue)
             { return DateTime.Compare(thisValue, otherValue); }
             else { return 1; }
@@ -90,7 +102,7 @@ namespace DataDictionary.DataLayer
         public Int32 CompareTo(ITemporalItem? other)
         {
             if (other is ITemporal value &&
-                CreatedOn is DateTime thisValue &&
+                AsOfUtcDate is DateTime thisValue &&
                 other.Temporal.CreatedOn is DateTime otherValue)
             { return DateTime.Compare(thisValue, otherValue); }
             else { return 1; }
@@ -127,13 +139,13 @@ namespace DataDictionary.DataLayer
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return CreatedOn.GetHashCode(); }
+        { return AsOfUtcDate.GetHashCode(); }
         #endregion
 
         /// <inheritdoc/>
         public override String ToString()
         {
-            if (CreatedOn is DateTime thisValue)
+            if (AsOfUtcDate is DateTime thisValue)
             { return thisValue.ToString(); }
             else { return String.Empty; }
         }

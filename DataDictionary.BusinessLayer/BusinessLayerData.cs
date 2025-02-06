@@ -9,6 +9,7 @@ using System.Security.Principal;
 using DataDictionary.DataLayer.AppSecurity;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -96,7 +97,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex key, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex key, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
 

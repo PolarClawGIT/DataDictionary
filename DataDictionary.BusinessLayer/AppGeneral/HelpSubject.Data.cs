@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey, DateTime asOfUtcDate)
+        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IHelpSubjectKey)helpKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>

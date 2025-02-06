@@ -8,6 +8,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -203,7 +204,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
@@ -227,7 +228,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));

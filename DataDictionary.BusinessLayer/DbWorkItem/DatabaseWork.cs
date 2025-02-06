@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="targetKey"></param>
         /// <param name="asOfUtcDate"></param>
         /// <returns></returns>
-        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, ITemporalKey asOfUtcDate)
             where TKey : IKey
             where TCollection : IBindingTable, IReadData<TKey>;
 
@@ -302,7 +302,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, DateTime asOfUtcDate)
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, ITemporalKey asOfUtcDate)
             where TKey : IKey
             where TCollection : IBindingTable, IReadData<TKey>
         {

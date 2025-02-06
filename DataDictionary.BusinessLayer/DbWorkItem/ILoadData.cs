@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource;
+﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="dataKey"></param>
         /// <param name="asOfUtcDate"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey, DateTime asOfUtcDate);
+        IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey, ITemporalIndex asOfUtcDate);
     }
 }

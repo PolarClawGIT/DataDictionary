@@ -28,24 +28,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IPropertyKey propertyKey)
         { return LoadCommand(connection, propertyId: propertyKey.PropertyId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IPropertyKey propertyKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IPropertyKey propertyKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, propertyId: propertyKey.PropertyId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)

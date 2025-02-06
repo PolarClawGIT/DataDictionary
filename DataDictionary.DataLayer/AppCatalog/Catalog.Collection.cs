@@ -28,16 +28,16 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, modelId: key.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey key)
         { return LoadCommand(connection, catalogId: key.CatalogId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)

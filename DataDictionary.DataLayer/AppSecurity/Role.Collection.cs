@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.AppSecurity
         { return LoadCommand(connection, roleId: key.RoleId); }
 
         /// <inheritdoc/>
-        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, DateTime asOfUtcDate)
+        Command IReadData<IRoleKey>.LoadCommand(IConnection connection, IRoleKey key, ITemporalKey asOfUtcDate)
         { throw new NotSupportedException(); }
 
         Command LoadCommand(IConnection connection, Guid? roleId = null)

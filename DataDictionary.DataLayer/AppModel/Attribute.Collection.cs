@@ -27,12 +27,12 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, attributeId: attributeKey.AttributeId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, attributeId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, attributeId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IAttributeKey attributeKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IAttributeKey attributeKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)

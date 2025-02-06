@@ -2,6 +2,7 @@
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
@@ -53,7 +54,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -63,7 +64,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IPropertyIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IPropertyKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>

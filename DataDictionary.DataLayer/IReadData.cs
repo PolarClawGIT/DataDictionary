@@ -38,6 +38,6 @@ namespace DataDictionary.DataLayer
         /// <param name="key"></param>
         /// <param name="asOfUtcDate"></param>
         /// <returns></returns>
-        Command LoadCommand(IConnection connection, TKey key, DateTime asOfUtcDate);
+        Command LoadCommand(IConnection connection, TKey key, ITemporalKey asOfUtcDate);
     }
 }

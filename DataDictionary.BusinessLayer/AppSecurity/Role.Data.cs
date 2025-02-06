@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppSecurity;
 using Toolbox.Threading;
 
@@ -31,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey)
         { return factory.CreateLoad(this, (IRoleKey)dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IRoleIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IRoleKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
