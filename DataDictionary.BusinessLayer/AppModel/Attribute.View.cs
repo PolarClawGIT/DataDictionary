@@ -1,6 +1,8 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -12,11 +14,11 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public class AttributeView
     {
-        // POC code.
-        // Second try at making an Attribute View
-
         /// <inheritdoc cref="AttributeIndex"/>
         public AttributeIndex AttributeIndex { get; protected set; }
+
+        /// <inheritdoc cref="ITemporal.CreatedOn"/>
+        public TemporalIndex AsOfUtcDate { get; protected set; } = new TemporalIndex();
 
         IAttribute currentData;
         IModel currentModel;
@@ -109,12 +111,22 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// Loads the data from the Model
         /// </summary>
         /// <param name="attribute"></param>
-        public void Load(IAttributeIndex attribute)
+        public IReadOnlyList<WorkItem> Load(IAttributeIndex attribute)
         {
-            StopBinding();
-            AttributeIndex = new AttributeIndex(attribute);
-            currentData = currentModel.ModelAttribute;
-            StartBinding();
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork = StopBinding });
+
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    AttributeIndex = new AttributeIndex(attribute);
+                    currentData = currentModel.ModelAttribute;
+                }
+            });
+
+            work.Add(new WorkItem() { DoWork = StartBinding });
+            return work;
         }
 
         /// <summary>
@@ -128,6 +140,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<WorkItem> work = new List<WorkItem>();
             AttributeIndex = new AttributeIndex(attribute);
             currentData = currentModel.ModelAttribute;
+            AsOfUtcDate = new TemporalIndex();
 
             work.Add(new WorkItem() { DoWork = StopBinding });
             work.AddRange(currentData.Load(factory, attribute));
@@ -143,10 +156,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="attribute"></param>
         /// <param name="asOfUtcDate"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             currentData = new Attribute() { Model = currentModel };
+            AsOfUtcDate = new TemporalIndex(asOfUtcDate);
 
             work.Add(new WorkItem() { DoWork = StopBinding });
             work.AddRange(currentData.Load(factory, attribute, asOfUtcDate));
