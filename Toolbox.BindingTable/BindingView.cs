@@ -34,6 +34,12 @@ namespace Toolbox.BindingTable
 
         List<TRow> directAdd = new List<TRow>(); // Contains a list of items added directly to the BindingView so they are not filterd out.
 
+        /// <summary>
+        /// Constructor for a BindingView.
+        /// </summary>
+        /// <param name="baseData"></param>
+        /// <param name="filter">default is no items</param>
+        /// <param name="orderBy">default is no order</param>
         public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
             BaseCount = () => baseData.Count;
@@ -42,8 +48,7 @@ namespace Toolbox.BindingTable
             BaseRemove = baseData.Remove;
             BaseRemoveAt = baseData.RemoveAt;
 
-
-            FilterBy = filter ?? (f => 1 == 1);
+            FilterBy = filter ?? (f => 1 == 2);
             OrderBy = orderBy ?? (o => 1);
 
             foreach (TRow item in baseData.Where(FilterBy).OrderBy(OrderBy).ToList())
