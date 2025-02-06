@@ -38,7 +38,7 @@ namespace Toolbox.BindingTable
         /// Constructor for a BindingView.
         /// </summary>
         /// <param name="baseData"></param>
-        /// <param name="filter">default is no items</param>
+        /// <param name="filter">default is all items</param>
         /// <param name="orderBy">default is no order</param>
         public BindingView(IList<TRow> baseData, Func<TRow, Boolean>? filter = null, Func<TRow, Object>? orderBy = null) : base()
         {
@@ -48,7 +48,7 @@ namespace Toolbox.BindingTable
             BaseRemove = baseData.Remove;
             BaseRemoveAt = baseData.RemoveAt;
 
-            FilterBy = filter ?? (f => 1 == 2);
+            FilterBy = filter ?? (f => 1 == 1);
             OrderBy = orderBy ?? (o => 1);
 
             foreach (TRow item in baseData.Where(FilterBy).OrderBy(OrderBy).ToList())
