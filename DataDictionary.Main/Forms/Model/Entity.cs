@@ -110,11 +110,15 @@ namespace DataDictionary.Main.Forms.Model
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            PropertyNameList.Load(propertyIdColumn, BusinessData.Model.Properties);
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+            propertyControl.LoadControl(bindingProperty, BusinessData.Model.Properties);
 
+            DefinitionNameList.Load(definitionColumn, BusinessData.Model.Definitions);
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
+            definitionControl.LoadControl(bindingDefinition, BusinessData.Model.Definitions);
 
             // Attribute Handling
             attributeData.AutoGenerateColumns = false;
@@ -157,11 +161,9 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is IEntityValue current)
+            if (bindingEntity.Current is EntityValue current)
             {
                 EntityPropertyValue newItem = new EntityPropertyValue(current);
-                newItem.PropertyId = domainProperty.PropertyId;
-                newItem.PropertyValue = domainProperty.PropertyValue;
                 e.NewObject = newItem;
             }
         }
@@ -187,26 +189,8 @@ namespace DataDictionary.Main.Forms.Model
         }
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        {
-            if (bindingProperty.Current is EntityPropertyValue current)
-            {
-                domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
-            }
-        }
+        { }
 
-        private void DomainProperty_OnApply(object sender, EventArgs e)
-        {
-            if (bindingProperty.DataSource is IList<EntityPropertyValue> properties
-                && properties.FirstOrDefault(
-                    w => w.PropertyId == domainProperty.PropertyId)
-                is EntityPropertyValue value)
-            {
-                value.PropertyValue = domainProperty.PropertyValue;
-                bindingProperty.Position = properties.IndexOf(value);
-            }
-            else { bindingProperty.AddNew(); }
-        }
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
@@ -239,37 +223,13 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingEntity.Current is EntityValue current)
             {
                 EntityDefinitionValue newItem = new EntityDefinitionValue(current);
-                newItem.DefinitionId = domainDefinition.DefinitionId;
-                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
-                newItem.DefinitionText = domainDefinition.DefinitionText;
                 e.NewObject = newItem;
             }
         }
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        {
-            if (bindingDefinition.Current is EntityDefinitionValue current)
-            {
-                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
-                domainDefinition.DefinitionText = current.DefinitionText;
-                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
-            }
-        }
+        { }
 
-        private void DomainDefinition_OnApply(object sender, EventArgs e)
-        {
-            if (bindingDefinition.DataSource is IList<EntityDefinitionValue> definition
-                && definition.FirstOrDefault(
-                    w => domainDefinition.Definition is IDefinitionIndex
-                    && domainDefinition.Definition.Equals(w))
-                is EntityDefinitionValue value)
-            {
-                value.DefinitionSummary = domainDefinition.DefinitionSummary;
-                value.DefinitionText = domainDefinition.DefinitionText;
-                bindingDefinition.Position = definition.IndexOf(value);
-            }
-            else { bindingDefinition.AddNew(); }
-        }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {

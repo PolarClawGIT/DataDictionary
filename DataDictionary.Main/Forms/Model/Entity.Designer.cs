@@ -62,12 +62,12 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
-            domainProperty = new Controls.DomainProperty();
+            propertyControl = new Controls.Property();
             definitionTab = new TabPage();
-            domainDefinition = new Controls.DomainDefinition();
             definitionData = new DataGridView();
             definitionColumn = new DataGridViewComboBoxColumn();
             definitionSummaryColumn = new DataGridViewTextBoxColumn();
+            definitionControl = new Controls.Definition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
@@ -347,7 +347,7 @@ namespace DataDictionary.Main.Forms.Model
             detailAttributePage.Location = new Point(4, 24);
             detailAttributePage.Name = "detailAttributePage";
             detailAttributePage.Padding = new Padding(3);
-            detailAttributePage.Size = new Size(456, 229);
+            detailAttributePage.Size = new Size(192, 72);
             detailAttributePage.TabIndex = 1;
             detailAttributePage.Text = "Attribute";
             // 
@@ -369,7 +369,7 @@ namespace DataDictionary.Main.Forms.Model
             detailAttributeLayout.RowStyles.Add(new RowStyle());
             detailAttributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             detailAttributeLayout.RowStyles.Add(new RowStyle());
-            detailAttributeLayout.Size = new Size(450, 223);
+            detailAttributeLayout.Size = new Size(186, 66);
             detailAttributeLayout.TabIndex = 2;
             // 
             // attributePathData
@@ -381,7 +381,7 @@ namespace DataDictionary.Main.Forms.Model
             attributePathData.Multiline = false;
             attributePathData.Name = "attributePathData";
             attributePathData.ReadOnly = false;
-            attributePathData.Size = new Size(365, 44);
+            attributePathData.Size = new Size(101, 44);
             attributePathData.TabIndex = 1;
             attributePathData.WordWrap = true;
             attributePathData.Validated += AttributeTitleData_Validated;
@@ -390,7 +390,7 @@ namespace DataDictionary.Main.Forms.Model
             // 
             attributeInModelData.AutoSize = true;
             attributeInModelData.Enabled = false;
-            attributeInModelData.Location = new Point(374, 3);
+            attributeInModelData.Location = new Point(110, 3);
             attributeInModelData.Name = "attributeInModelData";
             attributeInModelData.Size = new Size(73, 19);
             attributeInModelData.TabIndex = 2;
@@ -407,7 +407,7 @@ namespace DataDictionary.Main.Forms.Model
             attributeTitleData.Multiline = false;
             attributeTitleData.Name = "attributeTitleData";
             attributeTitleData.ReadOnly = false;
-            attributeTitleData.Size = new Size(444, 44);
+            attributeTitleData.Size = new Size(180, 44);
             attributeTitleData.TabIndex = 3;
             attributeTitleData.WordWrap = true;
             // 
@@ -421,7 +421,7 @@ namespace DataDictionary.Main.Forms.Model
             attributeDescriptionData.Multiline = true;
             attributeDescriptionData.Name = "attributeDescriptionData";
             attributeDescriptionData.ReadOnly = false;
-            attributeDescriptionData.Size = new Size(444, 86);
+            attributeDescriptionData.Size = new Size(180, 1);
             attributeDescriptionData.TabIndex = 4;
             attributeDescriptionData.WordWrap = true;
             // 
@@ -430,9 +430,9 @@ namespace DataDictionary.Main.Forms.Model
             attributeNavigation.AutoSize = true;
             attributeNavigation.BindingSource = null;
             attributeNavigation.Dock = DockStyle.Fill;
-            attributeNavigation.Location = new Point(3, 195);
+            attributeNavigation.Location = new Point(3, 38);
             attributeNavigation.Name = "attributeNavigation";
-            attributeNavigation.Size = new Size(365, 25);
+            attributeNavigation.Size = new Size(101, 25);
             attributeNavigation.TabIndex = 5;
             // 
             // propertyTab
@@ -442,7 +442,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(476, 443);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -451,14 +451,14 @@ namespace DataDictionary.Main.Forms.Model
             propertyLayout.ColumnCount = 1;
             propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             propertyLayout.Controls.Add(propertiesData, 0, 0);
-            propertyLayout.Controls.Add(domainProperty, 0, 1);
+            propertyLayout.Controls.Add(propertyControl, 0, 1);
             propertyLayout.Dock = DockStyle.Fill;
             propertyLayout.Location = new Point(3, 3);
             propertyLayout.Name = "propertyLayout";
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(470, 437);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -470,7 +470,7 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 20);
+            propertiesData.Size = new Size(464, 168);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -491,19 +491,13 @@ namespace DataDictionary.Main.Forms.Model
             propertyValueColumn.Name = "propertyValueColumn";
             propertyValueColumn.ReadOnly = true;
             // 
-            // domainProperty
+            // propertyControl
             // 
-            domainProperty.ApplyImage = null;
-            domainProperty.ApplyText = "apply";
-            domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 29);
-            domainProperty.Name = "domainProperty";
-            domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
-            domainProperty.PropertyValue = "";
-            domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 34);
-            domainProperty.TabIndex = 2;
-            domainProperty.OnApply += DomainProperty_OnApply;
+            propertyControl.Dock = DockStyle.Fill;
+            propertyControl.Location = new Point(3, 177);
+            propertyControl.Name = "propertyControl";
+            propertyControl.Size = new Size(464, 257);
+            propertyControl.TabIndex = 2;
             // 
             // definitionTab
             // 
@@ -520,8 +514,8 @@ namespace DataDictionary.Main.Forms.Model
             // 
             definitionLayout.ColumnCount = 1;
             definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            definitionLayout.Controls.Add(domainDefinition, 0, 1);
             definitionLayout.Controls.Add(definitionData, 0, 0);
+            definitionLayout.Controls.Add(definitionControl, 0, 1);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(3, 3);
             definitionLayout.Name = "definitionLayout";
@@ -531,21 +525,6 @@ namespace DataDictionary.Main.Forms.Model
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             definitionLayout.Size = new Size(186, 66);
             definitionLayout.TabIndex = 1;
-            // 
-            // domainDefinition
-            // 
-            domainDefinition.ApplyImage = Properties.Resources.NewRichTextBox;
-            domainDefinition.ApplyText = "apply";
-            domainDefinition.DefinitionId = new Guid("00000000-0000-0000-0000-000000000000");
-            domainDefinition.DefinitionSummary = "";
-            domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 24);
-            domainDefinition.Name = "domainDefinition";
-            domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(174, 36);
-            domainDefinition.TabIndex = 1;
-            domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
             // definitionData
             // 
@@ -576,6 +555,14 @@ namespace DataDictionary.Main.Forms.Model
             definitionSummaryColumn.HeaderText = "Definition Summary";
             definitionSummaryColumn.Name = "definitionSummaryColumn";
             definitionSummaryColumn.ReadOnly = true;
+            // 
+            // definitionControl
+            // 
+            definitionControl.Dock = DockStyle.Fill;
+            definitionControl.Location = new Point(6, 24);
+            definitionControl.Name = "definitionControl";
+            definitionControl.Size = new Size(174, 36);
+            definitionControl.TabIndex = 1;
             // 
             // aliasTab
             // 
@@ -797,13 +784,13 @@ namespace DataDictionary.Main.Forms.Model
             // 
             bindingAttributeDetail.AllowNew = false;
             // 
-            // DomainEntity
+            // Entity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(490, 671);
             Controls.Add(mainLayout);
-            Name = "DomainEntity";
+            Name = "Entity";
             Text = "DomainEntity";
             Load += Form_Load;
             Controls.SetChildIndex(mainLayout, 0);
@@ -856,7 +843,6 @@ namespace DataDictionary.Main.Forms.Model
         private DataGridView propertiesData;
         private DataGridViewComboBoxColumn propertyIdColumn;
         private DataGridViewTextBoxColumn propertyValueColumn;
-        private Controls.DomainProperty domainProperty;
         private TabPage aliasTab;
         private TableLayoutPanel aliaseLayout;
         private DataGridView aliasesData;
@@ -871,7 +857,6 @@ namespace DataDictionary.Main.Forms.Model
         private DataGridView definitionData;
         private DataGridViewComboBoxColumn definitionColumn;
         private DataGridViewTextBoxColumn definitionSummaryColumn;
-        private Controls.DomainDefinition domainDefinition;
         private TableLayoutPanel subjectAreaLayout;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private DataGridView attributeData;
@@ -901,5 +886,7 @@ namespace DataDictionary.Main.Forms.Model
         private DataDictionary.Main.Controls.TextBoxData attributeDescriptionData;
         private BindingSource bindingAttributeDetail;
         private DataDictionary.Main.Controls.NavigatorData attributeNavigation;
+        private Controls.Property propertyControl;
+        private Controls.Definition definitionControl;
     }
 }

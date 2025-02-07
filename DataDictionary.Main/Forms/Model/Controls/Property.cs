@@ -17,6 +17,32 @@ namespace DataDictionary.Main.Forms.Model.Controls
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
 
+        /// <summary>
+        /// The currently Selected Property.
+        /// </summary>
+        [Browsable(false)]
+        public IPropertyIndex? SelectedProperty
+        {
+            get
+            {
+                if (propertyTypeData.SelectedValue is PropertyNameList value)
+                { return value; }
+                else { return null; }
+            }
+            set
+            {
+                if (value is null) { propertyTypeData.SelectedIndex = 0; }
+                else
+                {
+                    PropertyIndex index = new PropertyIndex(value);
+                    if (propertyTypeData.Items is IEnumerable<PropertyNameList> items &&
+                        items.FirstOrDefault(w => index.Equals(w)) is PropertyNameList item)
+                    {   propertyTypeData.SelectedIndex = items.ToList().IndexOf(item); }
+                    else { propertyTypeData.SelectedIndex = 0; }
+                }
+            }
+        }
+
         public Property()
         {
             InitializeComponent();
@@ -30,11 +56,15 @@ namespace DataDictionary.Main.Forms.Model.Controls
             dataBinding = binding;
             PropertyNameList.Load(propertyTypeData, values);
 
-            propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged));
+            propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
             propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
         }
 
+
         private void PropertyTypeData_SelectedIndexChanged(object sender, EventArgs e)
+        { } // This can be called multiple times
+
+        private void PropertyTypeData_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (propertyTypeData.SelectedValue is Guid value && value != Guid.Empty)
             {
@@ -52,8 +82,12 @@ namespace DataDictionary.Main.Forms.Model.Controls
                     { dataBinding.Position = currentValues.IndexOf(currentValue); } // set focus to existing item
                     else
                     {   // create new item
+
+                        //TODO: adding a new items appears to be the source.
+
                         if (dataBinding.AddNew() is IPropertySubType newItem)
                         { newItem.PropertyId = value; }
+                        else { throw new InvalidOperationException("AddNew did not create a IPropertySubType"); }
                     }
                 }
 

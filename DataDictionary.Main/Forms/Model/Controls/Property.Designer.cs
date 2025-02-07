@@ -123,7 +123,7 @@
             propertyTypeData.AutoSize = true;
             propertyTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             propertyTypeData.Dock = DockStyle.Fill;
-            propertyTypeData.DropDownStyle = ComboBoxStyle.DropDown;
+            propertyTypeData.DropDownStyle = ComboBoxStyle.DropDownList;
             propertyTypeData.HeaderText = "Property Type";
             propertyTypeData.Location = new Point(3, 3);
             propertyTypeData.Name = "propertyTypeData";
@@ -131,6 +131,7 @@
             propertyTypeData.Size = new Size(259, 46);
             propertyTypeData.TabIndex = 0;
             propertyTypeData.SelectedIndexChanged += PropertyTypeData_SelectedIndexChanged;
+            propertyTypeData.SelectionChangeCommitted += PropertyTypeData_SelectionChangeCommitted;
             // 
             // Property
             // 

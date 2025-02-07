@@ -123,7 +123,7 @@
             definitionData.AutoSize = true;
             definitionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             definitionData.Dock = DockStyle.Fill;
-            definitionData.DropDownStyle = ComboBoxStyle.DropDown;
+            definitionData.DropDownStyle = ComboBoxStyle.DropDownList;
             definitionData.HeaderText = "Definition type";
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
@@ -131,12 +131,13 @@
             definitionData.Size = new Size(295, 46);
             definitionData.TabIndex = 0;
             definitionData.SelectedIndexChanged += DefinitionData_SelectedIndexChanged;
+            definitionData.SelectionChangeCommitted += DefinitionData_SelectionChangeCommitted;
             // 
             // fullTextTools
             // 
             fullTextTools.Items.AddRange(new ToolStripItem[] { syncTextToSummary });
             fullTextTools.Name = "fullTextTools";
-            fullTextTools.Size = new Size(191, 48);
+            fullTextTools.Size = new Size(191, 26);
             // 
             // syncTextToSummary
             // 

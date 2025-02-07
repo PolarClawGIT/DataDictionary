@@ -18,6 +18,32 @@ namespace DataDictionary.Main.Forms.Model.Controls
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
 
+        /// <summary>
+        /// The currently Selected Definition.
+        /// </summary>
+        [Browsable(false)]
+        public IDefinitionIndex? SelectedDefinition
+        {
+            get
+            {
+                if (definitionData.SelectedValue is DefinitionNameList value)
+                { return value; }
+                else { return null; }
+            }
+            set
+            {
+                if (value is null) { definitionData.SelectedIndex = 0; }
+                else
+                {
+                    DefinitionIndex index = new DefinitionIndex(value);
+                    if (definitionData.Items is IEnumerable<DefinitionNameList> items &&
+                        items.FirstOrDefault(w => index.Equals(w)) is DefinitionNameList item)
+                    { definitionData.SelectedIndex = items.ToList().IndexOf(item); }
+                    else { definitionData.SelectedIndex = 0; }
+                }
+            }
+        }
+
         public Definition()
         {
             InitializeComponent();
@@ -38,6 +64,9 @@ namespace DataDictionary.Main.Forms.Model.Controls
         }
 
         private void DefinitionData_SelectedIndexChanged(object sender, EventArgs e)
+        { } // Gets called multiple times.
+
+        private void DefinitionData_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (definitionData.SelectedValue is Guid value && value != Guid.Empty)
             {
@@ -57,6 +86,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
                     {
                         if (dataBinding.AddNew() is IDefinitionSubType newItem)
                         { newItem.DefinitionId = value; }
+                        else { throw new InvalidOperationException("AddNew did not create a IDefinitionSubType"); }
                     }
                 }
             }
@@ -113,5 +143,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
                 dataBinding.ResetCurrentItem();
             }
         }
+
+
     }
 }
