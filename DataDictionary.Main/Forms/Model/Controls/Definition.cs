@@ -53,7 +53,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
         /// <summary>
         /// Sets up the Control.
         /// </summary>
-        public void LoadControl(BindingSource binding, IEnumerable<IDefinitionValue> values)
+        public void BindTo(BindingSource binding, IEnumerable<IDefinitionValue> values)
         {
             dataBinding = binding;
             DefinitionNameList.Load(definitionData, values);

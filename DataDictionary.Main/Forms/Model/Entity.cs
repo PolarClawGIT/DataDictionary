@@ -113,12 +113,12 @@ namespace DataDictionary.Main.Forms.Model
             PropertyNameList.Load(propertyIdColumn, BusinessData.Model.Properties);
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
-            propertyControl.LoadControl(bindingProperty, BusinessData.Model.Properties);
+            propertyControl.BindTo(bindingProperty, BusinessData.Model.Properties);
 
             DefinitionNameList.Load(definitionColumn, BusinessData.Model.Definitions);
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
-            definitionControl.LoadControl(bindingDefinition, BusinessData.Model.Definitions);
+            definitionControl.BindTo(bindingDefinition, BusinessData.Model.Definitions);
 
             // Attribute Handling
             attributeData.AutoGenerateColumns = false;
@@ -129,7 +129,7 @@ namespace DataDictionary.Main.Forms.Model
             attributeAliasData.DataBindings.Add(new Binding(nameof(attributeAliasData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
             attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
             attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
-            subjectArea.BindTo(bindingSubjectArea);
+            subjectArea.BindTo(bindingSubjectArea, BusinessData.Model.SubjectAreas);
 
             // Alias Handling
             ScopeNameList.Load(aliaseScopeColumn);
@@ -194,7 +194,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (addingSubject is SubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
+            if (addingSubject is ISubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
             {
                 EntitySubjectAreaValue newItem = new EntitySubjectAreaValue(entity, subject);
                 e.NewObject = newItem;
@@ -202,14 +202,14 @@ namespace DataDictionary.Main.Forms.Model
             addingSubject = null;
         }
 
-        SubjectAreaValue? addingSubject = null;
-        private void SubjectArea_OnSubjectAdd(object sender, SubjectAreaValue e)
+        ISubjectAreaValue? addingSubject = null;
+        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
         {
             addingSubject = e;
             bindingSubjectArea.AddNew();
         }
 
-        private void SubjectArea_OnSubjectRemove(object sender, SubjectAreaValue e)
+        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
         {
             SubjectAreaIndex key = new SubjectAreaIndex(e);
 

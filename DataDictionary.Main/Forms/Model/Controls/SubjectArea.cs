@@ -7,7 +7,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
 {
     partial class SubjectArea : UserControl
     {
-        Dictionary<ListViewItem, SubjectAreaValue> subjectItems = new Dictionary<ListViewItem, SubjectAreaValue>();
+        Dictionary<ListViewItem, ISubjectAreaValue> subjectItems = new Dictionary<ListViewItem, ISubjectAreaValue>();
         BindingSource bindingSubjectArea = new BindingSource();
 
         public SubjectArea()
@@ -20,18 +20,19 @@ namespace DataDictionary.Main.Forms.Model.Controls
         /// Associates the BindingSource to the control so the control can respond to binding events.
         /// </summary>
         /// <param name="binding">IEnumerable of ISubjectAreaIndex</param>
-        public void BindTo(BindingSource binding)
+        /// <param name="values"></param>
+        public void BindTo(BindingSource binding, IEnumerable<ISubjectAreaValue> values)
         {
             bindingSubjectArea = binding;
 
-            foreach (SubjectAreaValue item in BusinessData.Model.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
+            foreach (ISubjectAreaValue item in values.OrderBy(o => o.SubjectAreaTitle))
             {
                 ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
                 value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = ((IPathValue)item).Path.MemberFullPath });
                 SubjectAreaIndex key = new SubjectAreaIndex(item);
 
-                if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> subject
-                    && subject.FirstOrDefault(w => key.Equals(w)) is ISubjectAreaIndex)
+                if (binding.DataSource is IEnumerable<ISubjectAreaIndex> selected &&
+                    selected.FirstOrDefault(w => key.Equals(w)) is ISubjectAreaIndex)
                 { value.Checked = true; }
                 else { value.Checked = false; }
 
@@ -46,12 +47,12 @@ namespace DataDictionary.Main.Forms.Model.Controls
         /// <summary>
         /// Triggered when on Checked when the SubjectArea is not in the list.
         /// </summary>
-        public event EventHandler<SubjectAreaValue>? OnSubjectAdd;
+        public event EventHandler<ISubjectAreaValue>? OnSubjectAdd;
 
         /// <summary>
         /// Triggered when on Checked when the SubjectArea is in the list.
         /// </summary>
-        public event EventHandler<SubjectAreaValue>? OnSubjectRemove;
+        public event EventHandler<ISubjectAreaValue>? OnSubjectRemove;
 
         private void SubjectAreaData_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
@@ -65,10 +66,10 @@ namespace DataDictionary.Main.Forms.Model.Controls
 
                     ISubjectAreaIndex? value = data.FirstOrDefault(w => selectedKey.Equals(w));
 
-                    if (e.Item.Checked && value is null && OnSubjectAdd is EventHandler<SubjectAreaValue> addHandler)
+                    if (e.Item.Checked && value is null && OnSubjectAdd is EventHandler<ISubjectAreaValue> addHandler)
                     { addHandler(this, subjectItems[e.Item]); }
 
-                    if (!e.Item.Checked && value is not null && OnSubjectRemove is EventHandler<SubjectAreaValue> removeHandler)
+                    if (!e.Item.Checked && value is not null && OnSubjectRemove is EventHandler<ISubjectAreaValue> removeHandler)
                     { removeHandler(this, subjectItems[e.Item]); }
                 }
             }

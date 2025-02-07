@@ -111,14 +111,14 @@ namespace DataDictionary.Main.Forms.Model
                 PropertyNameList.Load(propertyIdColumn, formData.ModelProperty);
                 propertiesData.AutoGenerateColumns = false;
                 propertiesData.DataSource = bindingProperty;
-                propertyControl.LoadControl(bindingProperty, formData.ModelProperty);
+                propertyControl.BindTo(bindingProperty, formData.ModelProperty);
 
                 DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
                 definitionData.AutoGenerateColumns = false;
                 definitionData.DataSource = bindingDefinition;
-                definitionControl.LoadControl(bindingDefinition, formData.ModelDefinitions);
+                definitionControl.BindTo(bindingDefinition, formData.ModelDefinitions);
 
-                subjectArea.BindTo(bindingSubjectArea);
+                subjectArea.BindTo(bindingSubjectArea, formData.ModelSubjectAreas);
 
                 // Alias Handling
                 ScopeNameList.Load(aliaseScopeColumn);
@@ -221,7 +221,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (addingSubject is SubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
+            if (addingSubject is ISubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
             {
                 AttributeSubjectAreaValue newItem = new AttributeSubjectAreaValue(attribute, subject);
                 e.NewObject = newItem;
@@ -229,14 +229,14 @@ namespace DataDictionary.Main.Forms.Model
             addingSubject = null;
         }
 
-        SubjectAreaValue? addingSubject = null;
-        private void SubjectArea_OnSubjectAdd(object sender, SubjectAreaValue e)
+        ISubjectAreaValue? addingSubject = null;
+        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
         {
             addingSubject = e;
             bindingSubjectArea.AddNew();
         }
 
-        private void SubjectArea_OnSubjectRemove(object sender, SubjectAreaValue e)
+        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
         {
             SubjectAreaIndex key = new SubjectAreaIndex(e);
 

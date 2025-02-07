@@ -45,6 +45,9 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="IModel.Definitions"/>
         public BindingView<DefinitionValue> ModelDefinitions { get; }
 
+        /// <inheritdoc cref="IModel.SubjectAreas"/>
+        public BindingView<SubjectAreaValue> ModelSubjectAreas { get; }
+
         /// <summary>
         /// Creates a AttributeView tied to the Model.
         /// </summary>
@@ -59,6 +62,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             ModelProperty = new BindingView<PropertyValue>(model.Properties);
             ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
+            ModelSubjectAreas = new BindingView<SubjectAreaValue>(model.SubjectAreas);
         }
 
         void StartBinding()
