@@ -44,7 +44,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         /// <remarks>EntitySubjectArea</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
-        { return factory.CreateSave(this, (IEntityKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>EntitySubjectArea</remarks>
