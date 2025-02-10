@@ -78,11 +78,11 @@ Begin Try
 				 (H.[ModelId] = @ModelId And
 				  D.[AttributeTitle] = H.[AttributeTitle]))
 			Cross Apply (
+				Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId]) X
+			Outer Apply (
 				Select	[QualifiedName] As [AttributeName]
 				From	[AppModel].[funcParseName](D.[AttributeName])
 				Where	[IsBase] = 1) N
-			Cross Apply (
-				Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId]) X
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@AttributeId is Null Or @AttributeId = X.[AttributeId])
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
