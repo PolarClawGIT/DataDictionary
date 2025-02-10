@@ -36,7 +36,9 @@ namespace DataDictionary.Main.Forms.Model
             SetTitle(bindingAttribute);
             SetCommand(ScopeType.ModelAttribute,
                 CommandImageType.Delete,
-                CommandImageType.OpenDatabase);
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
 
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
@@ -160,6 +162,60 @@ namespace DataDictionary.Main.Forms.Model
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(formData.Load(factory, current));
+                DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                bindingAttribute.ResetBindings(false);
+                bindingProperty.ResetBindings(false);
+                bindingDefinition.ResetBindings(false);
+                bindingAlias.ResetBindings(false);
+                bindingSubjectArea.ResetBindings(false);
+
+                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
+            }
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            if (bindingAttribute.Current is AttributeValue current)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                IsLocked(true);
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(formData.Delete(factory));
+                DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                bindingAttribute.ResetBindings(false);
+                bindingProperty.ResetBindings(false);
+                bindingDefinition.ResetBindings(false);
+                bindingAlias.ResetBindings(false);
+                bindingSubjectArea.ResetBindings(false);
+
+                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
+            }
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+
+            if (bindingAttribute.Current is AttributeValue current)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                IsLocked(true);
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(formData.Save(factory));
                 DoWork(work, onCompleting);
             }
 

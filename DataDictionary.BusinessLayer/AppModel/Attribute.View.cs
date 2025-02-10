@@ -182,6 +182,24 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return currentData.Save(factory, AttributeIndex); }
 
         /// <summary>
+        /// Remove the Attribute from the database.
+        /// If bound to Model, the Attribute is also removed from the Model.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Delete(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.AddRange(currentData.Delete(AttributeIndex));
+            work.AddRange(currentData.Save(factory, AttributeIndex));
+            work.Add(new WorkItem() { DoWork = StartBinding });
+
+            return work;
+        }
+
+        /// <summary>
         /// Removes the Data. If linked to a Model, the data is the Model is also removed.
         /// </summary>
         public void Remove()

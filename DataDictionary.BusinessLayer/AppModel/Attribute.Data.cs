@@ -45,12 +45,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
-        { return factory.CreateSave(this, (IAttributeKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
-        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IAttributeKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
