@@ -1,5 +1,18 @@
 ﻿CREATE VIEW [AppModel].[AttributePropertyHs] As
 -- Temporal View
+With [Dates] As (
+	Select	[AttributeId],
+			[PropertyId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[AttributeProperty]
+	Union
+	Select	[AttributeId],
+			[PropertyId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[AttributeProperty]
+	Where	[SysStart] != [SysEnd])
 Select	D.[AttributeId],
 		D.[PropertyId],
 		FA.[AttributeTitle],
@@ -13,20 +26,20 @@ Select	D.[AttributeId],
 		C.[ModifiedBy] As [CreatedBy],
 		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[AttributeProperty] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsModel].[AttributeProperty]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[PropertyId] = D.[PropertyId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsModel].[AttributeProperty]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[PropertyId] = D.[PropertyId] And
 					[SysStart] >= D.[SysEnd]) N

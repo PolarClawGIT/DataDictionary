@@ -1,5 +1,18 @@
 ﻿CREATE VIEW [AppModel].[EntitySubjectAreaHs] As
 -- Temporal View
+With [Dates] As (
+	Select	[EntityId],
+			[SubjectAreaId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[EntitySubjectArea]
+	Union
+	Select	[EntityId],
+			[SubjectAreaId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[EntitySubjectArea]
+	Where	[SysStart] != [SysEnd])
 Select	D.[EntityId], --PK
 		D.[SubjectAreaId], -- PK
 		FA.[EntityTitle],
@@ -11,20 +24,20 @@ Select	D.[EntityId], --PK
 		C.[ModifiedBy] As [CreatedBy],
 		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[EntitySubjectArea] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsModel].[EntitySubjectArea]
+			From	[Dates]
 			Where	[EntityId] = D.[EntityId] And
 					[SubjectAreaId] = D.[SubjectAreaId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsModel].[EntitySubjectArea]
+			From	[Dates]
 			Where	[EntityId] = D.[EntityId] And
 					[SubjectAreaId] = D.[SubjectAreaId] And
 					[SysStart] >= D.[SysEnd]) N

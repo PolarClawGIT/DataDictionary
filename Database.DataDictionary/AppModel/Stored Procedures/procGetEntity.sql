@@ -10,22 +10,50 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	[EntityId],
-		[EntityTitle],
-		[EntityDescription],
-		[EntityName],
+;With [Dates] As (
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntityHs] For System_Time All
+	Union
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntityAliasHs] For System_Time All
+	Union
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntityDefinitionHs] For System_Time All
+	Union
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntityPropertyHs] For System_Time All
+	Union
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntitySubjectAreaHs] For System_Time All
+	Union
+	Select	[EntityId],
+			[SysStart]
+	From	[AppModel].[EntityAttributeHs] For System_Time All)
+Select	D.[EntityId],
+		D.[EntityTitle],
+		D.[EntityDescription],
+		D.[EntityName],
 		-- Temporal Data
-		[CreatedOn],
-		[CreatedBy],
-		[RemovedOn],
-		[RemovedBy],
-		[IsInserted],
-		[IsUpdated],
-		[IsDeleted],
-		[IsCurrent]
-From	[AppModel].[EntityHs] For System_Time All D
-Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		(@EntityId is Null Or @EntityId = [EntityId]) And
+		D.[CreatedOn],
+		D.[CreatedBy],
+		D.[RemovedOn],
+		D.[RemovedBy],
+		Convert(Bit, IIF(D.[IsInserted] = 1 And T.[SysStart] = D.[SysStart], 1,0)) As [IsInserted],
+		Convert(Bit, IIF(D.[IsUpdated] = 1 Or T.[SysStart] <> D.[SysStart], 1,0)) As [IsUpdated],
+		Convert(Bit, IIF(D.[IsDeleted] = 1 And T.[SysStart] = D.[SysStart], 1,0)) As [IsDeleted],
+		D.[IsCurrent]
+From	[Dates] T
+		Inner Join [AppModel].[EntityHs] For System_Time All D
+		On	T.[EntityId] = D.[EntityId] And
+			T.[SysStart] >= D.[SysStart] And
+			T.[SysStart] < D.[SysEnd]
+Where	(@IncludeHistory = 1 Or (D.[SysStart] <= @AsOfUtcDate And D.[SysEnd] > @AsOfUtcDate)) And
+		(@EntityId is Null Or @EntityId = D.[EntityId]) And
 		(@ModelId is Null Or @ModelId In (
 			Select	[ModelId]
 			From	[AppModel].[ModelEntity] For System_Time As of @AsOfUtcDate

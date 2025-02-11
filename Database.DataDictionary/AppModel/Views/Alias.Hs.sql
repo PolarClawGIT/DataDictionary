@@ -28,7 +28,18 @@ With [Data] As (
 			On	D.[AliasId] = H.[ParentAliasId] And
 			-- Temporal, multiple rows could be returned. Do not have confidence in this.
 			((D.[SysStart] >= H.[SysStart] And D.[SysStart] < H.[SysEnd]) Or
-			 (H.[SysStart] >= D.[SysStart] And H.[SysStart] < D.[SysEnd])))
+			 (H.[SysStart] >= D.[SysStart] And H.[SysStart] < D.[SysEnd]))),
+[Dates] As (
+	Select	[AliasId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[AliasHierarchy]
+	Union
+	Select	[AliasId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[AliasHierarchy]
+	Where	[SysStart] != [SysEnd])
 Select	D.[AliasId], -- PK
 		D.[AliasMember],
 		D.[AliasNameSpace], --AK
@@ -40,19 +51,19 @@ Select	D.[AliasId], -- PK
 		C.[ModifiedBy] As [CreatedBy],
 		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[Data] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[AppModel].[AliasHierarchy]
+			From	[Dates]
 			Where	[AliasId] = D.[AliasId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[AppModel].[AliasHierarchy]
+			From	[Dates]
 			Where	[AliasId] = D.[AliasId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C

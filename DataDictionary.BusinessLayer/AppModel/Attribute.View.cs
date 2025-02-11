@@ -219,5 +219,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             foreach (AttributeSubjectAreaValue item in SubjectArea.Where(w => AttributeIndex.Equals(w)).ToList())
             { SubjectArea.Remove(item); }
         }
+
     }
 }

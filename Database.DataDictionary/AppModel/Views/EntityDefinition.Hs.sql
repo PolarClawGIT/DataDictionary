@@ -1,5 +1,18 @@
 ﻿CREATE VIEW [AppModel].[EntityDefinitionHs] As
 -- Temporal View
+With [Dates] As (
+	Select	[EntityId],
+			[DefinitionId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[EntityDefinition]
+	Union
+	Select	[EntityId],
+			[DefinitionId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[EntityDefinition]
+	Where	[SysStart] != [SysEnd])
 Select	D.[EntityId], --PK, AK
 		D.[DefinitionId], -- PK
 		FA.[EntityTitle],
@@ -13,9 +26,9 @@ Select	D.[EntityId], --PK, AK
 		C.[ModifiedBy] As [CreatedBy],
 		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[EntityDefinition] D
 		Outer Apply (

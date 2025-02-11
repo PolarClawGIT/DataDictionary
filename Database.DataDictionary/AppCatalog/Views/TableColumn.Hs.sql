@@ -1,5 +1,16 @@
 ﻿CREATE VIEW [AppCatalog].[TableColumnHs] AS
 -- Temporal View
+With [Dates] As (
+	Select	[TableColumnId],
+			[SysStart],
+			[SysEnd]
+	From	[AppCatalog].[TableColumn]
+	Union
+	Select	[TableColumnId],
+			[SysStart],
+			[SysEnd]
+	From	[HsCatalog].[TableColumn]
+	Where	[SysStart] != [SysEnd])
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
 		FT.[TableId],
@@ -40,20 +51,20 @@ Select	FC.[CatalogId], -- AK
 		C.[ModifiedBy] As [CreatedBy],
 		R.[ModifiedOn] As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppCatalog].[TableColumn] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[Dates]
+			Where	[TableColumnId] = D.[TableColumnId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[TableColumn]
-			Where	[TableId] = D.[TableId] And
+			From	[Dates]
+			Where	[TableColumnId] = D.[TableColumnId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]

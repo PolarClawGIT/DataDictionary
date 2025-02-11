@@ -1,5 +1,16 @@
 ﻿CREATE VIEW [AppCatalog].[SchemaHs] AS
 -- Temporal View
+With [Dates] As (
+	Select	[SchemaId],
+			[SysStart],
+			[SysEnd]
+	From	[AppCatalog].[Schema]
+	Union
+	Select	[SchemaId],
+			[SysStart],
+			[SysEnd]
+	From	[HsCatalog].[Schema]
+	Where	[SysStart] != [SysEnd])
 Select	FC.[CatalogId], -- AK
 		D.[SchemaId], -- PK
 		FC.[DatabaseName], -- AK
@@ -18,12 +29,12 @@ Select	FC.[CatalogId], -- AK
 From	[AppCatalog].[Schema] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[Schema]
+			From	[Dates]
 			Where	[SchemaId] = D.[SchemaId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[Schema]
+			From	[Dates]
 			Where	[SchemaId] = D.[SchemaId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
