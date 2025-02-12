@@ -52,7 +52,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 historyValuesData.Items.Clear();
                 historyValues.Clear();
 
-                foreach (var item in modificationValues.GroupBy(g => g.Index))
+                foreach (var item in modificationValues.OrderBy(o => o.Title).GroupBy(g => g.Index))
                 {
                     ITemporalValue lastValue = item.OrderBy(o => o.Temporal.CreatedOn).Last();
                     String modification = DbModificationEnumeration.Cast(lastValue.Temporal.Modification).DisplayName;
@@ -77,7 +77,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 historyModificationData.Items.Clear();
                 historyModifications.Clear();
 
-                foreach (ITemporalValue item in GetHistoryDetail(selectedValue))
+                foreach (ITemporalValue item in GetHistoryDetail(selectedValue).OrderBy(o => o.Temporal.CreatedOn))
                 {
                     String itemModification = DbModificationEnumeration.Cast(item.Temporal.Modification).DisplayName;
                     String itemModifiedOn;
