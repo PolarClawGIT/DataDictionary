@@ -568,7 +568,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
                     // TODO: Add more when they are supported
-                    // dialog.FilterScopes.Add(ScopeType.ModelEntity);
+                    // dialog.FilterScopes.Add(ScopeType.Entities);
 
                     dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.Path)));
 

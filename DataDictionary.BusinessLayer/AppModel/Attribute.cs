@@ -19,27 +19,27 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
-        /// List of ModelAttribute within the Model.
+        /// List of Attributes within the Model.
         /// </summary>
         IAttributeData Attributes { get; }
 
         /// <summary>
-        /// List of Aliases for the ModelAttribute within the Model.
+        /// List of Aliases for the Attributes within the Model.
         /// </summary>
         IAttributeAliasData Aliases { get; }
 
         /// <summary>
-        /// List of Properties for the ModelAttribute within the Model.
+        /// List of Properties for the Attributes within the Model.
         /// </summary>
         IAttributePropertyData Properties { get; }
 
         /// <summary>
-        /// List of Definitions for the ModelAttribute within the Model.
+        /// List of Definitions for the Attributes within the Model.
         /// </summary>
         IAttributeDefinitionData Definitions { get; }
 
         /// <summary>
-        /// List of Subject Areas for the ModelAttribute within the Model.
+        /// List of Subject Areas for the Attributes within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectArea { get; }
 
@@ -53,14 +53,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         XElement? GetXElement(Scripting.ScriptingWork scripting, IAttributeIndex index);
 
         /// <summary>
-        /// Finds the ModelAttribute that match the Alias Index.
+        /// Finds the Attributes that match the Alias Index.
         /// </summary>
         /// <param name="aliasIndex"></param>
         /// <returns></returns>
         IEnumerable<IAttributeValue> FindAttribute(IAliasIndexName aliasIndex);
 
         /// <summary>
-        /// Imports a TableColumnAttribute into the list of ModelAttribute
+        /// Imports a TableColumnAttribute into the list of Attributes
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>

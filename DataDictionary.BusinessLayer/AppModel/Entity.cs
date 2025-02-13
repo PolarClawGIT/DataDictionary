@@ -17,32 +17,32 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
-        /// List of ModelEntity within the Model.
+        /// List of Entities within the Model.
         /// </summary>
         IEntityData Entities { get; }
 
         /// <summary>
-        /// List of Aliases for the ModelEntity within the Model.
+        /// List of Aliases for the Entities within the Model.
         /// </summary>
         IEntityAliasData Aliases { get; }
 
         /// <summary>
-        /// List of Properties for the ModelEntity within the Model.
+        /// List of Properties for the Entities within the Model.
         /// </summary>
         IEntityPropertyData Properties { get; }
 
         /// <summary>
-        /// List of Definitions for the ModelEntity within the Model.
+        /// List of Definitions for the Entities within the Model.
         /// </summary>
         IEntityDefinitionData Definitions { get; }
 
         /// <summary>
-        /// List of Attributes for the ModelEntity within the Model.
+        /// List of Attributes for the Entities within the Model.
         /// </summary>
         IEntityAttributeData Attributes { get; }
 
         /// <summary>
-        /// List of Subject Areas for the ModelEntity within the Model.
+        /// List of Subject Areas for the Entities within the Model.
         /// </summary>
         IEntitySubjectAreaData SubjectArea { get; }
 
@@ -54,7 +54,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IEnumerable<IEntityValue> FindEntity(IAliasIndex aliasIndex);
 
         /// <summary>
-        /// Imports a TableEntity into the list of ModelEntity
+        /// Imports a TableEntity into the list of Entities
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -358,7 +358,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                     { Aliases.Add(new EntityAliasValue(value, aliasIndex)); }
                 }
 
-                // ModelAttribute get replaced
+                // Attributes get replaced
                 attributeValues.Delete(entityIndex);
                 foreach (IEntityAttributeValue item in source.Attributes)
                 { Attributes.Add(item); }

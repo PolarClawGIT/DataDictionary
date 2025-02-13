@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             currentModel = model;
             AttributeIndex = new AttributeIndex();
-            currentData = model.ModelAttribute;
+            currentData = model.Attributes;
 
             StartBinding();
 
@@ -125,7 +125,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 DoWork = () =>
                 {
                     AttributeIndex = new AttributeIndex(attribute);
-                    currentData = currentModel.ModelAttribute;
+                    currentData = currentModel.Attributes;
                 }
             });
 
@@ -143,7 +143,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
             AttributeIndex = new AttributeIndex(attribute);
-            currentData = currentModel.ModelAttribute;
+            currentData = currentModel.Attributes;
             AsOfUtcDate = new TemporalIndex();
 
             work.Add(new WorkItem() { DoWork = StopBinding });

@@ -30,22 +30,22 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Container for Attribute within the Model.
         /// </summary>
-        IAttribute ModelAttribute { get; }
+        IAttribute Attributes { get; }
 
         /// <summary>
         /// Container for Entity within the Model.
         /// </summary>
-        IEntity ModelEntity { get; }
+        IEntity Entities { get; }
 
         /// <summary>
         /// The Properties for the Model (includes common)
         /// </summary>
-        public IPropertyData Properties { get; }
+        IPropertyData Properties { get; }
 
         /// <summary>
         /// The Definitions for the Model (includes common)
         /// </summary>
-        public IDefinitionData Definitions { get; }
+        IDefinitionData Definitions { get; }
     }
 
     class Model : IModel, IDataTableFile,
@@ -86,11 +86,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         private readonly SubjectAreaData subjectValues;
 
         /// <inheritdoc/>
-        public IAttribute ModelAttribute { get { return attributeValues; } }
+        public IAttribute Attributes { get { return attributeValues; } }
         private readonly Attribute attributeValues;
 
         /// <inheritdoc/>
-        public IEntity ModelEntity { get { return entityValues; } }
+        public IEntity Entities { get { return entityValues; } }
         private readonly Entity entityValues;
 
         /// <inheritdoc/>
