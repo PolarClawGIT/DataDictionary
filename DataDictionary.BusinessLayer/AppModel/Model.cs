@@ -99,8 +99,6 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
-
-
         private readonly DefinitionData definitionValues = new DefinitionData();
 
         public Model() : base()

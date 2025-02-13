@@ -20,6 +20,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="ITemporal.CreatedOn"/>
         public TemporalIndex AsOfUtcDate { get; protected set; } = new TemporalIndex();
 
+        // TODO: How to remove dependence on IAttribute? IAttribbute is dependent on IModel.
         IAttribute currentData;
         IModel currentModel;
 
