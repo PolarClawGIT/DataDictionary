@@ -61,10 +61,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         IEntityValue Import(AppCatalog.TableEntity source);
     }
 
-    class Entity : IEntity, IDataTableFile, INamedScopeSourceData
+    class Entity : IEntity, IDataTableFile
     {
-        public required Model Model { get; init; }
-
         /// <inheritdoc/>
         public IEntityData Values { get { return entityValues; } }
         private readonly EntityData entityValues;
@@ -89,7 +87,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
 
-        public Entity () : base()
+        public Entity() : base()
         {
             entityValues = new EntityData();
             aliasValues = new EntityAliasData();
@@ -244,74 +242,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.Load(source);
             attributeValues.Load(source);
             subjectAreaValues.Load(source);
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { };
-
-            WorkItem newWork = new WorkItem(ref progressChanged)
-            {
-                WorkName = "Adding NamedScopes (Entities)",
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = entityValues.Count();
-
-                    ModelValue? model = Model.Models.FirstOrDefault();
-
-                    foreach (EntityValue entity in entityValues)
-                    {
-                        Boolean hasParent = false;
-
-                        foreach (SubjectAreaValue subjectParent in ParentSubjects(entity))
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(entity)
-                            {
-                                GetPath = () => new PathIndex(
-                                    ((IPathValue)subjectParent).Path,
-                                    ((IPathValue)entity).Path)
-                            };
-
-                            addNamedScope(subjectParent, newItem);
-                            hasParent = true;
-                        }
-
-                        if (!hasParent) // No Parents found
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(entity);
-                            addNamedScope(model, newItem);
-                        }
-
-                        progressChanged(completed++, total);
-                    }
-                }
-            };
-
-            work.Add(newWork);
-
-            return work;
-
-            IEnumerable<SubjectAreaValue> ParentSubjects(EntityValue entity)
-            {
-                EntityIndex key = new EntityIndex(entity);
-
-                return entityValues.
-                    Where(w => key.Equals(w)).
-                    Join(SubjectArea,
-                        entity => new EntityIndex(entity),
-                        subject => new EntityIndex(subject),
-                        (entity, subject) => new SubjectAreaIndex(subject)).
-                    Join(Model.SubjectAreas,
-                        subjectKey => subjectKey,
-                        subject => new SubjectAreaIndex(subject),
-                        (key, subject) => subject).
-                    ToList();
-            }
-
         }
 
         /// <inheritdoc/>

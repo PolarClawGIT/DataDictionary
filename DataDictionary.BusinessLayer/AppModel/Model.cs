@@ -73,7 +73,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? ModelDescription {
+        public String? ModelDescription
+        {
             get { return CurrentModel.ModelDescription; }
             set { CurrentModel.ModelDescription = value; }
         }
@@ -106,7 +107,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             modelValues = new ModelData();
             subjectValues = new SubjectAreaData() { Model = this };
             attributeValues = new Attribute() { Model = this };
-            entityValues = new Entity() { Model = this };
+            entityValues = new Entity();
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Create(IApplicationData source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { DoWork =() => { modelValues.Add(new ModelValue()); } });
+            work.Add(new WorkItem() { DoWork = () => { modelValues.Add(new ModelValue()); } });
             work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
             work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
 
@@ -219,10 +220,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.LoadNamedScope(addNamedScope));
-            work.AddRange(subjectValues.LoadNamedScope(addNamedScope));
-            work.AddRange(entityValues.LoadNamedScope(addNamedScope));
-            work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
+            work.AddRange(modelValues.LoadNamedScope(CurrentModel, addNamedScope));
+            work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
+            work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
+            work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
 
             return work;
         }

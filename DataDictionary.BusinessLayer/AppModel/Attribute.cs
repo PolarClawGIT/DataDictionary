@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttributeValue Import(AppCatalog.TableColumnAttribute source);
     }
 
-    class Attribute: IAttribute, IDataTableFile, INamedScopeSourceData
+    class Attribute: IAttribute, IDataTableFile
     {
         public required IModel Model { get; init; }
 
@@ -313,73 +313,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         #endregion
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { };
-
-            WorkItem newWork = new WorkItem(ref progressChanged)
-            {
-                WorkName = "Adding NamedScopes (Attribute)",
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = attributeValues.Count();
-
-                    ModelValue? model = Model.Models.FirstOrDefault();
-
-                    foreach (AttributeValue attribute in attributeValues)
-                    {
-                        Boolean hasParent = false;
-
-                        foreach (SubjectAreaValue subjectParent in ParentSubjects(attribute))
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(attribute)
-                            {
-                                GetPath = () => new PathIndex(
-                                    ((IPathValue)subjectParent).Path,
-                                    ((IPathValue)attribute).Path)
-                            };
-                            addNamedScope(subjectParent, newItem);
-                            hasParent = true;
-                        }
-
-                        if (!hasParent) // No Parents found
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(attribute);
-                            addNamedScope(model, newItem);
-                        }
-
-                        progressChanged(completed++, total);
-                    }
-                }
-            };
-
-            work.Add(newWork);
-
-            return work;
-
-            IEnumerable<SubjectAreaValue> ParentSubjects(AttributeValue attribute)
-            {
-
-                AttributeIndex key = new AttributeIndex(attribute);
-
-                return attributeValues.
-                    Where(w => key.Equals(w)).
-                    Join(SubjectArea,
-                        attribute => new AttributeIndex(attribute),
-                        subject => new AttributeIndex(subject),
-                        (attribute, subject) => new SubjectAreaIndex(subject)).
-                    Join(Model.SubjectAreas,
-                        subjectKey => subjectKey,
-                        subject => new SubjectAreaIndex(subject),
-                        (key, subject) => subject).
-                    ToList();
-            }
-        }
 
         /// <inheritdoc/>
         public IEnumerable<IAttributeValue> FindAttribute(IAliasIndexName aliasIndex)

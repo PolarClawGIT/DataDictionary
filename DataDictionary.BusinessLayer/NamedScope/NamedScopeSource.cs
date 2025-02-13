@@ -43,27 +43,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
             where TData : IList<TValue>, INamedScopeSourceData
         {
             List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { }; // Progress function.
+            String workName = String.Format("Adding NamedScopes ({0})", typeof(TData).Name);
 
-            work.Add(new WorkItem(ref progressChanged)
+            foreach (TValue item in data)
             {
-                WorkName = String.Format("Adding NamedScopes ({0})", typeof(TData).Name),
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = data.Count();
-                    foreach (TValue item in data)
-                    {
-                        INamedScopeSourceValue? parent = null;
-                        if (getParent is not null) { parent = getParent(item); }
+                INamedScopeSourceValue? parent = null;
+                if (getParent is not null) { parent = getParent(item); }
 
-                        NamedScopeValue newItem = new NamedScopeValue(item);
-                        addNamedScope(parent, newItem);
-
-                        progressChanged(completed++, total);
-                    }
-                }
-            });
+                NamedScopeValue newItem = new NamedScopeValue(item);
+                work.Add(new WorkItem()
+                { WorkName = workName, DoWork = () => addNamedScope(parent, newItem) });
+                addNamedScope(parent, newItem);
+            }
 
             return work;
         }
