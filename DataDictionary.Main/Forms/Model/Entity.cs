@@ -49,13 +49,13 @@ namespace DataDictionary.Main.Forms.Model
             if (entityItem is null)
             {
                 entityItem = new EntityValue();
-                BusinessData.Model.Entities.Entities.Add(entityItem);
+                BusinessData.Model.Entities.Values.Add(entityItem);
                 SendMessage(new RefreshNavigation());
             }
 
             EntityIndex key = new EntityIndex(entityItem);
 
-            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.Entities.Entities, w => key.Equals(w));
+            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.Entities.Values, w => key.Equals(w));
             data.ListChanged += ListChanged;
 
             bindingEntity.DataSource = data;
@@ -261,7 +261,7 @@ namespace DataDictionary.Main.Forms.Model
                 var attributes = BusinessData.Model.Attributes.
                     FindAttribute(aliasIndex).
                     Select(s => new AttributeIndex(s)).
-                    Join(BusinessData.Model.Attributes.Attributes,
+                    Join(BusinessData.Model.Attributes.Values,
                         key => key,
                         attribute => new AttributeIndex(attribute),
                         (key, attribute) => attribute).

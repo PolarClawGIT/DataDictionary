@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// List of Entities within the Model.
         /// </summary>
-        IEntityData Entities { get; }
+        IEntityData Values { get; }
 
         /// <summary>
         /// List of Aliases for the Entities within the Model.
@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public required Model Model { get; init; }
 
         /// <inheritdoc/>
-        public IEntityData Entities { get { return entityValues; } }
+        public IEntityData Values { get { return entityValues; } }
         private readonly EntityData entityValues;
 
         /// <inheritdoc/>

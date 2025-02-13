@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttribute currentData;
         IModel currentModel;
 
-        /// <inheritdoc cref="Attribute.Attributes"/>
+        /// <inheritdoc cref="Attribute.Values"/>
         /// <remarks>One or Zero values</remarks>
         public BindingView<AttributeValue> Attributes { get; private set; } = null!;
 
@@ -68,7 +68,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         void StartBinding()
         {
-            Attributes = new BindingView<AttributeValue>(currentData.Attributes, w => AttributeIndex.Equals(w));
+            Attributes = new BindingView<AttributeValue>(currentData.Values, w => AttributeIndex.Equals(w));
             Aliases = new BindingView<AttributeAliasValue>(currentData.Aliases, w => AttributeIndex.Equals(w));
             Properties = new BindingView<AttributePropertyValue>(currentData.Properties, w => AttributeIndex.Equals(w));
             Definitions = new BindingView<AttributeDefinitionValue>(currentData.Definitions, w => AttributeIndex.Equals(w));

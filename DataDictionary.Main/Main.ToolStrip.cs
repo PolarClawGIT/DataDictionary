@@ -44,7 +44,7 @@ namespace DataDictionary.Main
                 new DetailDataView<AttributeValue, Forms.Model.Attribute>
                     (ScopeType.ModelAttribute, data)
                 { SelectedForm = (data) => new Forms.Model.Attribute(data) },
-                BusinessData.Model.Attributes.Attributes);
+                BusinessData.Model.Attributes.Values);
         }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -201,7 +201,7 @@ namespace DataDictionary.Main
                 new DetailDataView<EntityValue, Forms.Model.Entity>
                     (ScopeType.ModelEntity, data)
                 { SelectedForm = (data) => new Forms.Model.Entity(data) },
-                BusinessData.Model.Entities.Entities);
+                BusinessData.Model.Entities.Values);
         }
 
         private void menuEntityProperties_Click(object sender, EventArgs e)

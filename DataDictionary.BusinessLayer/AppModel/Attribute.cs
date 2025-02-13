@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// List of Attributes within the Model.
         /// </summary>
-        IAttributeData Attributes { get; }
+        IAttributeData Values { get; }
 
         /// <summary>
         /// List of Aliases for the Attributes within the Model.
@@ -78,7 +78,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public required IModel Model { get; init; }
 
         /// <inheritdoc/>
-        public IAttributeData Attributes { get { return attributeValues; } }
+        public IAttributeData Values { get { return attributeValues; } }
         private readonly AttributeData attributeValues;
 
         /// <inheritdoc/>
@@ -386,7 +386,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             AliasIndexName key = new AliasIndexName(aliasIndex);
             return
-                Attributes.Join(
+                Values.Join(
                     Aliases.Where(w => key.Equals(w)),
                     attribute => new AttributeIndex(attribute),
                     alias => new AttributeIndex(alias),
