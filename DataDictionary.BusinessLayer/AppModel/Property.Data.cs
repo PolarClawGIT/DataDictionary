@@ -21,16 +21,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData, ILoadData<IPropertyIndex>, ISaveData<IPropertyIndex>
     {
         /// <summary>
-        /// Gets the a list of XAttributes from the Properties
-        /// </summary>
-        /// <param name="scripting"></param>
-        /// <param name="node"></param>
-        /// <param name="properties"></param>
-        /// <returns></returns>
-        /// <remarks>Not for use outside of BusinessLayer</remarks>
-        IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties);
-
-        /// <summary>
         /// Gets the Property Value from the Catalog Property
         /// </summary>
         /// <param name="catalogProperty"></param>
@@ -101,41 +91,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<XAttribute> GetXAttributes(ScriptingWork scripting, TemplateNodeValue node, IEnumerable<IProperty> properties)
-        {
-            List<XAttribute> result = new List<XAttribute>();
-
-            TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
-            foreach (TemplateAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
-            {
-                XAttribute? attrib = null;
-                PropertyIndex propertyKey = new PropertyIndex(templateAttrib);
-                PropertyValue? propertyValue = this.FirstOrDefault(w => propertyKey.Equals(w));
-                IProperty? property = properties.FirstOrDefault(w => propertyKey.Equals(w));
-
-                String newTitle = String.Empty;
-                String newValue = String.Empty;
-
-                if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeName))
-                { newTitle = templateAttrib.AttributeName; }
-                else if (propertyValue is PropertyValue && !String.IsNullOrWhiteSpace(propertyValue.PropertyTitle))
-                { { newTitle = propertyValue.PropertyTitle; } }
-
-                if (property is IProperty && !String.IsNullOrWhiteSpace(property.PropertyValue))
-                { newValue = property.PropertyValue; }
-                else if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeValue))
-                { newValue = templateAttrib.AttributeValue; }
-
-                attrib = templateAttrib.BuildXAttribute(newTitle, newValue);
-
-                if (attrib is XAttribute)
-                { result.Add(attrib); }
-            }
-
-            return result;
-        }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>

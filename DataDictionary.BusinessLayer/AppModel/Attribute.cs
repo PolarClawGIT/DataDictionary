@@ -44,15 +44,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttributeSubjectAreaData SubjectArea { get; }
 
         /// <summary>
-        /// Generates the XElement using the ScriptingData
-        /// </summary>
-        /// <param name="scripting"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        /// <remarks>Not for use outside of BusinessLayer</remarks>
-        XElement? GetXElement(Scripting.ScriptingWork scripting, IAttributeIndex index);
-
-        /// <summary>
         /// Finds the Attributes that match the Alias Index.
         /// </summary>
         /// <param name="aliasIndex"></param>
@@ -250,67 +241,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Load(source);
         }
 
-
-        #endregion
-
-        #region XML Scripting
-
-        /// <inheritdoc/>
-        public XElement? GetXElement(Scripting.ScriptingWork scripting, IAttributeIndex index)
-        {
-            XElement? result = null;
-            AttributeIndex key = new AttributeIndex(index);
-            if (attributeValues.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
-            {
-                foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
-                {
-                    XObject? value = null;
-
-                    switch (node.PropertyName)
-                    {
-                        case nameof(attribute.AttributeTitle): value = node.BuildXObject(attribute.AttributeTitle); break;
-                        case nameof(attribute.AttributeDescription): value = node.BuildXObject(attribute.AttributeDescription); break;
-                        case nameof(attribute.IsCompositeType): value = node.BuildXObject(attribute.IsCompositeType); break;
-                        case nameof(attribute.IsDerived): value = node.BuildXObject(attribute.IsDerived); break; ;
-                        case nameof(attribute.IsIntegral): value = node.BuildXObject(attribute.IsIntegral); break; ;
-                        case nameof(attribute.IsKey): value = node.BuildXObject(attribute.IsKey); break; ;
-                        case nameof(attribute.IsMultiValue): value = node.BuildXObject(attribute.IsMultiValue); break; ;
-                        case nameof(attribute.IsNonKey): value = node.BuildXObject(attribute.IsNonKey); break; ;
-                        case nameof(attribute.IsNullable): value = node.BuildXObject(attribute.IsNullable); break; ;
-                        case nameof(attribute.IsSimpleType): value = node.BuildXObject(attribute.IsSimpleType); break; ;
-                        case nameof(attribute.IsSingleValue): value = node.BuildXObject(attribute.IsSingleValue); break; ;
-                        case nameof(attribute.IsValued): value = node.BuildXObject(attribute.IsValued); break; ;
-                        default:
-                            break;
-                    }
-
-                    if (value is XObject)
-                    {
-                        if (result is null) { result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name); }
-                        result.Add(value);
-
-                        IReadOnlyList<XAttribute> attributes = Model.Properties.GetXAttributes(scripting, node, Properties);
-
-                        if (value is XElement element) { element.Add(attributes.ToArray()); }
-                        else if (value.Parent is XElement) { value.Parent.Add(attributes.ToArray()); }
-                    }
-                }
-
-                foreach (AttributeAliasValue alias in Aliases.Where(w => key.Equals(w)))
-                {
-                    XElement? aliasNode = alias.GetXElement(scripting, (node) => Model.Properties.GetXAttributes(scripting, node, Properties));
-                    if (aliasNode is not null && result is null)
-                    {
-                        result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name);
-                        result.Add(aliasNode);
-                    }
-                    else if (aliasNode is not null && result is XElement)
-                    { result.Add(aliasNode); }
-                }
-            }
-
-            return result;
-        }
 
         #endregion
 
