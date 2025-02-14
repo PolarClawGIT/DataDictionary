@@ -19,8 +19,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibrarySourceData: LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -54,14 +53,6 @@ namespace DataDictionary.BusinessLayer.Library
         /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<LibrarySourceData, LibrarySourceValue>
-                (this, addNamedScope);
-        }
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>

@@ -19,8 +19,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class CatalogData : CatalogCollection<CatalogValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, ICatalogData,
-        INamedScopeSourceData
+        ICatalogModel, ICatalogData
     {
         /// <inheritdoc/>
         public required ICatalog Model { get; init; }
@@ -54,14 +53,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Catalog</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<CatalogData, CatalogValue>
-                (this, addNamedScope, null);
-        }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>

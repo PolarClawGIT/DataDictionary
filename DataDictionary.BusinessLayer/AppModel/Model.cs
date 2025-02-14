@@ -48,8 +48,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IDefinitionData Definitions { get; }
     }
 
-    class Model : IModel, IDataTableFile,
-        INamedScopeSourceData
+    class Model : IModel, IDataTableFile
     {
         /// <inheritdoc/>
         public IModelData Models { get { return modelValues; } }
@@ -220,7 +219,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.LoadNamedScope(CurrentModel, addNamedScope));
+            work.AddRange(NameSpaceSource.Load<ModelData, ModelValue>(modelValues, addNamedScope));
             work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
             work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));

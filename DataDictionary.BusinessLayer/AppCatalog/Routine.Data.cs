@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class RoutineData : RoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, INamedScopeSourceData
+        ICatalogModel
     {
         /// <inheritdoc/>
         public required ICatalog Model { get; init; }
@@ -53,16 +53,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Routine</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Routine</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<RoutineData, RoutineValue>
-                (this, addNamedScope,
-                (value) => Model.DbSchemta.
-                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
-        }
 
         /// <inheritdoc/>
         /// <remarks>Routine</remarks>

@@ -20,8 +20,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, 
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -89,13 +88,5 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Template</remarks>
         public IReadOnlyList<DataTable> Export()
         { return this.ToDataTable().ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<TemplateData, TemplateValue>
-                (this, addNamedScope);
-        }
     }
 }

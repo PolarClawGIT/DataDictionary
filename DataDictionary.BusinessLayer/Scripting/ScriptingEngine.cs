@@ -53,8 +53,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile,
-        INamedScopeSourceData
+    class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -243,7 +242,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(templateValues.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
 
             return work;
         }

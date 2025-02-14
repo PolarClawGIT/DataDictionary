@@ -35,8 +35,7 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile,
-        INamedScopeSourceData
+    class LibraryModel : ILibraryModel, IDataTableFile
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }
@@ -194,8 +193,19 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(sources.LoadNamedScope(addNamedScope));
-            work.AddRange(members.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<LibrarySourceData, LibrarySourceValue>(sources, addNamedScope));
+            work.AddRange(NameSpaceSource.Load<LibraryMemberData, LibraryMemberValue>(members, addNamedScope,
+                (parent) =>
+                {
+                    LibrarySourceIndex libraryKey = new LibrarySourceIndex(parent);
+                    LibraryMemberIndex parentKey = new LibraryMemberIndex(new LibraryMemberIndexParent(parent));
+
+                    if (members.FirstOrDefault(w => parentKey.Equals(w)) is LibraryMemberValue memberParent)
+                    { return memberParent; }
+                    else if (sources.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceValue sourceParent)
+                    { return sourceParent; }
+                    else { return null; }
+                }));
 
             return work;
         }

@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class ConstraintData : ConstraintCollection<ConstraintValue>, IConstraintData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, INamedScopeSourceData
+        ICatalogModel
     {
         /// <inheritdoc/>
         public required ICatalog Model { get; init; }
@@ -53,16 +53,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Constraint</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<ConstraintData, ConstraintValue>
-                (this, addNamedScope,
-                (value) => Model.DbTables.
-                    FirstOrDefault(w => new TableKeyName(value).Equals(w)));
-        }
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>

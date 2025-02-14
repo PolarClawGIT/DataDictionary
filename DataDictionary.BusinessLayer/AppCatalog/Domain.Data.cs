@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class DomainData : DomainCollection<DomainValue>, IDomainData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, INamedScopeSourceData
+        ICatalogModel
     {
         /// <inheritdoc/>
         public required ICatalog Model { get; init; }
@@ -53,16 +53,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<DomainData, DomainValue>
-                (this, addNamedScope,
-                (value) => Model.DbSchemta.
-                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
-        }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>

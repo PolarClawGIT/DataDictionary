@@ -19,8 +19,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibraryMemberData : LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -55,25 +54,6 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
-
-        /// <inheritdoc/>
-        /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<LibraryMemberData, LibraryMemberValue>
-                (this, addNamedScope,
-                (value) =>
-                {
-                    LibrarySourceIndex libraryKey = new LibrarySourceIndex(value);
-                    LibraryMemberIndex parentKey = new LibraryMemberIndex(new LibraryMemberIndexParent(value));
-
-                    if (this.FirstOrDefault(w => parentKey.Equals(w)) is LibraryMemberValue memberParent)
-                    { return memberParent; }
-                    else if (Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceValue sourceParent)
-                    { return sourceParent; }
-                    else { return null; }
-                });
-        }
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
