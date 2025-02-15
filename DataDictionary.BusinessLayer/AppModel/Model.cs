@@ -104,8 +104,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         public Model() : base()
         {
             modelValues = new ModelData();
-            subjectValues = new SubjectAreaData() { Model = this };
-            attributeValues = new Attribute() { Model = this };
+            subjectValues = new SubjectAreaData();
+            attributeValues = new Attribute();
             entityValues = new Entity();
         }
 
@@ -219,7 +219,16 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(NameSpaceSource.Load<ModelData, ModelValue>(modelValues, addNamedScope));
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    NamedScopeValue newItem = new NamedScopeValue(CurrentModel)
+                    { GetPath = () => new PathIndex(((IPathValue)CurrentModel).Path) };
+
+                    addNamedScope(null, newItem);
+                }});
+
             work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
             work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));

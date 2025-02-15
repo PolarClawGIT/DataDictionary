@@ -66,8 +66,6 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     class Attribute: IAttribute, IDataTableFile
     {
-        public required IModel Model { get; init; }
-
         /// <inheritdoc/>
         public IAttributeData Values { get { return attributeValues; } }
         private readonly AttributeData attributeValues;

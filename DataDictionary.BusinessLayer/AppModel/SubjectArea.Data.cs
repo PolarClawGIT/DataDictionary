@@ -21,11 +21,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDataTableFile
     {
-        /// <summary>
-        /// Reference to the containing Model
-        /// </summary>
-        public required Model Model { get; init; }
-
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
