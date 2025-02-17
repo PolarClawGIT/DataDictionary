@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
 
             formData = new AttributeView(BusinessData.Model);
-            formIndex = formData.AttributeIndex;
+            formIndex = formData.Index;
         }
 
         public Attribute(IAttributeIndex? attribute) : this()

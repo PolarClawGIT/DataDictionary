@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.AppModel
             else { AttributeId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AttributeKey? other)
         { return other is AttributeKey key && key.AttributeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
