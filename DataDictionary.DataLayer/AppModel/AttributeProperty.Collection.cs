@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,
-        ITemporalData<IModelKey>
+        IReadTemporal<IModelKey>
         where TItem : AttributePropertyItem, new()
     {
         /// <inheritdoc/>

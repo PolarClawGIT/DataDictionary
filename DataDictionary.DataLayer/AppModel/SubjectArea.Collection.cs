@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppModel
         IWriteData<IModelKey>, IWriteData<ISubjectAreaKey>,
         IDeleteData<IModelKey>, IDeleteData<ISubjectAreaKey>,
         IRemoveItem<ISubjectAreaKey>,
-        ITemporalData<IModelKey>
+        IReadTemporal<IModelKey>
         where TItem : SubjectAreaItem, new()
     {
         /// <inheritdoc/>

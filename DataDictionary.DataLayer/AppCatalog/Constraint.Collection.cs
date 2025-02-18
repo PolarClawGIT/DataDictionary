@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IConstraintKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IConstraintKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<IConstraintKeyName>,
-        ITemporalData<ICatalogKey>, 
+        IReadTemporal<ICatalogKey>, 
         IInfomationSchemaCollection<IConstraint>
         where TItem : ConstraintItem, IConstraintItem, new()
     {

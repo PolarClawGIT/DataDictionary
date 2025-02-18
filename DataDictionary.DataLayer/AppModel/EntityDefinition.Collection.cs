@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IReadData<IModelKey>, IReadData<IEntityKey>,
         IWriteData<IModelKey>, IWriteData<IEntityKey>,
         IRemoveItem<IEntityKey>,
-        ITemporalData<IModelKey>
+        IReadTemporal<IModelKey>
         where TItem : EntityDefinitionItem, new()
     {
         /// <inheritdoc/>

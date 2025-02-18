@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         IReadData, IWriteData,
         IReadData<IHelpSubjectKey>, IWriteData<IHelpSubjectKey>,
         IRemoveItem<IHelpSubjectKey>,
-        ITemporalData
+        IReadTemporal
         where TItem : HelpSubjectItem, IHelpSubjectItem, new()
     {
         /// <inheritdoc/>

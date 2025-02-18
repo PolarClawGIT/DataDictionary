@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<ITableKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<ITableKey>,
         IRemoveItem<ICatalogKey>, IRemoveItem<ISchemaKeyName>, IRemoveItem<ITableKeyName>,
-        ITemporalData<ICatalogKey>, IInfomationSchemaCollection<ITable>
+        IReadTemporal<ICatalogKey>, IInfomationSchemaCollection<ITable>
         where TItem : TableItem, ITableItem, new()
     {
         /// <inheritdoc/>
