@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Wrapper class that returns the BindingViews for the Attribute
     /// </summary>
-    public class AttributeView: IView<AttributeIndex, AttributeValue>
+    public class AttributeView : IView<AttributeIndex, AttributeValue>
     {
         /// <inheritdoc/>
         public AttributeIndex Index { get; protected set; } = new AttributeIndex();
@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttribute currentData = new Attribute();
 
         /// <inheritdoc/>
-        AttributeValue IView<AttributeIndex, AttributeValue>.Value 
+        AttributeValue IView<AttributeIndex, AttributeValue>.Value
         { get { return Attributes.FirstOrDefault() ?? new AttributeValue(); } }
 
         /// <inheritdoc/>
@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc cref="Attribute.Values"/>
         /// <remarks>One or Zero values</remarks>
-        public BindingView<AttributeValue> Attributes { get; private set; } 
+        public BindingView<AttributeValue> Attributes { get; private set; }
             = new BindingView<AttributeValue>(new BindingList<AttributeValue>());
 
         /// <inheritdoc cref="Attribute.Aliases"/>
@@ -59,27 +59,42 @@ namespace DataDictionary.BusinessLayer.AppModel
             = new BindingView<PropertyValue>(new BindingList<PropertyValue>());
 
         /// <inheritdoc cref="IModel.Definitions"/>
-        public IReadOnlyList<DefinitionValue> ModelDefinitions { get; } 
+        public IReadOnlyList<DefinitionValue> ModelDefinitions { get; }
             = new BindingView<DefinitionValue>(new BindingList<DefinitionValue>());
 
         /// <inheritdoc cref="IModel.SubjectAreas"/>
-        public IReadOnlyList<SubjectAreaValue> ModelSubjectAreas { get; } 
+        public IReadOnlyList<SubjectAreaValue> ModelSubjectAreas { get; }
             = new BindingView<SubjectAreaValue>(new BindingList<SubjectAreaValue>());
 
+        /// <summary>
+        /// Creates a instance of AttributeView that is empty.
+        /// </summary>
+        protected AttributeView() : base() { }
+
+        /// <summary>
+        /// Creates a instance of AttributeView that is empty with Model data.
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <param name="definitions"></param>
+        /// <param name="subjectAreas"></param>
+        protected AttributeView(
+            IPropertyData properties,
+            IDefinitionData definitions,
+            ISubjectAreaData subjectAreas) : this()
+        {
+            ModelProperty = new BindingView<PropertyValue>(properties);
+            ModelDefinitions = new BindingView<DefinitionValue>(definitions);
+            ModelSubjectAreas = new BindingView<SubjectAreaValue>(subjectAreas);
+        }
 
         /// <summary>
         /// Creates a instance of AttributeView that is bound to the Model.
         /// </summary>
         /// <param name="model"></param>
-        public AttributeView(IModel model) : base()
+        public AttributeView(IModel model) : this(model.Properties, model.Definitions, model.SubjectAreas)
         {
             Index = new AttributeIndex();
-
-            ModelProperty = new BindingView<PropertyValue>(model.Properties);
-            ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
-            ModelSubjectAreas = new BindingView<SubjectAreaValue>(model.SubjectAreas);
-
-            currentData = model.Attributes;
+            currentData = model.Attributes; //TODO: need to make this a Load.
 
             StartBinding();
         }
@@ -89,15 +104,15 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         /// <param name="attribute"></param>
         /// <param name="model"></param>
-        public AttributeView(IAttributeIndex attribute, IModel model) : this(model)
+        public AttributeView(IAttributeIndex attribute, IModel model) : this(model.Properties, model.Definitions, model.SubjectAreas)
         {
-            Index = new AttributeIndex(attribute);
+            Index = new AttributeIndex(attribute);//TODO: need to make this a Load.
 
             ModelProperty = new BindingView<PropertyValue>(model.Properties);
             ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
             ModelSubjectAreas = new BindingView<SubjectAreaValue>(model.SubjectAreas);
 
-            currentData = model.Attributes;
+            currentData = model.Attributes;//TODO: need to make this a Load.
 
             StartBinding();
         }

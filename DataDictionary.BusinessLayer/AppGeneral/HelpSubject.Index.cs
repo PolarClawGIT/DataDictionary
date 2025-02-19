@@ -13,6 +13,10 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     public class HelpSubjectIndex : HelpSubjectKey, IHelpSubjectIndex,
         IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>
     {
+        /// <inheritdoc cref="HelpSubjectKey.HelpSubjectKey()"/>
+        public HelpSubjectIndex() : base()
+        { }
+
         /// <inheritdoc cref="HelpSubjectKey.HelpSubjectKey(IHelpSubjectKey)"/>
         public HelpSubjectIndex(IHelpSubjectIndex source) : base(source)
         { }

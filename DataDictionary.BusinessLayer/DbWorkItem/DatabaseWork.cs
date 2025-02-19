@@ -62,9 +62,30 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="targetKey"></param>
         /// <param name="asOfUtcDate"></param>
         /// <returns></returns>
-        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, ITemporalKey asOfUtcDate)
+        WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey, ITemporalKey asOfUtcDate)
             where TKey : IKey
             where TCollection : IBindingTable, IReadData<TKey>;
+
+        /// <summary>
+        /// Create a workItem for loading a Data Object with History
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        WorkItem CreateLHistory<TCollection>(TCollection target)
+            where TCollection : IBindingTable, IReadTemporal;
+
+        /// <summary>
+        /// Create a workItem for loading a Data Object with History for a specific key
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="targetKey"></param>
+        /// <returns></returns>
+        WorkItem CreateLHistory<TCollection, TKey>(TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadTemporal<TKey>;
 
         /// <summary>
         /// Create a WorkItem for loading a Data Object.
@@ -310,6 +331,27 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey, asOfUtcDate));
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLHistory<TCollection>(TCollection target)
+            where TCollection : IBindingTable, IReadTemporal
+        {
+            return this.CreateWork(
+                workName: String.Format("Load {0}", target.BindingName),
+                target: target,
+                command: (conn) => target.HistoryCommand(conn));
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLHistory<TCollection, TKey>(TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadTemporal<TKey>
+        {
+            return this.CreateWork(
+                workName: String.Format("Load {0}", target.BindingName),
+                target: target,
+                command: (conn) => target.HistoryCommand(conn, targetKey));
         }
 
         /// <inheritdoc/>

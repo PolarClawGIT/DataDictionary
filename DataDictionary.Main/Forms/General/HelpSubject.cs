@@ -51,6 +51,9 @@ namespace DataDictionary.Main.Forms.General
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
 
+        IHelpSubjectIndex formIndex;
+        HelpSubjectView formData;
+
         public Boolean IsOpenItem(object? item)
         { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
 
@@ -69,6 +72,15 @@ namespace DataDictionary.Main.Forms.General
 
             // Store and recompute column sizes for List views
             controlData.ResizeColumns();
+        }
+
+        public HelpSubject (IHelpSubjectIndex helpSubject) : this()
+        {
+
+        }
+
+        public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this (helpSubject)
+        {
         }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
