@@ -20,7 +20,6 @@ namespace DataDictionary.Main.Forms.Model
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
-        AttributeIndex formIndex;
         AttributeView formData;
 
         protected Attribute() : base()
@@ -43,8 +42,10 @@ namespace DataDictionary.Main.Forms.Model
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
 
-            formData = new AttributeView(BusinessData.Model);
-            formIndex = formData.Index;
+            formData = new AttributeView(
+                BusinessData.Model.Properties,
+                BusinessData.Model.Definitions,
+                BusinessData.Model.SubjectAreas);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()
@@ -52,13 +53,15 @@ namespace DataDictionary.Main.Forms.Model
             if (attribute is null)
             {
                 AttributeValue attributeItem = new AttributeValue();
-                formData.Attributes.Add(attributeItem);
+                BusinessData.Model.Attributes.Values.Add(attributeItem);
+                attribute = new AttributeIndex(attributeItem);
             }
-            else
-            {
-                formIndex = new AttributeIndex(attribute);
-                formData = new AttributeView(formIndex, BusinessData.Model);
-            }
+
+            formData = new AttributeView(
+                attribute,
+                BusinessData.Model.Properties,
+                BusinessData.Model.Definitions,
+                BusinessData.Model.SubjectAreas);
         }
 
 
@@ -68,65 +71,68 @@ namespace DataDictionary.Main.Forms.Model
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            SendMessage(new RefreshNavigation());
+            DoWork(formData.Load(BusinessData.Model.Attributes), OnComplete);
 
-            bindingAttribute.DataSource = formData.Attributes;
-            bindingAttribute.Position = 0;
-
-            if (bindingAttribute.Current is IAttributeValue current)
+            void OnComplete(RunWorkerCompletedEventArgs args)
             {
-                bindingProperty.DataSource = formData.Properties;
-                bindingDefinition.DataSource = formData.Definitions;
-                bindingAlias.DataSource = formData.Aliases;
-                bindingSubjectArea.DataSource = formData.SubjectArea;
+                SendMessage(new RefreshNavigation());
+                bindingAttribute.DataSource = formData.Attributes;
+                bindingAttribute.Position = 0;
+
+                if (bindingAttribute.Current is IAttributeValue current)
+                {
+                    bindingProperty.DataSource = formData.Properties;
+                    bindingDefinition.DataSource = formData.Definitions;
+                    bindingAlias.DataSource = formData.Aliases;
+                    bindingSubjectArea.DataSource = formData.SubjectArea;
+                }
+
+                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
+                descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Values.Select(s => s.DataType).OfType<String>().Distinct());
+                dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
+                dataLengthData.DataBindings.Add(new Binding(nameof(dataLengthData.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
+                dataPrecisionData.DataBindings.Add(new Binding(nameof(dataPrecisionData.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(IAttributeValue.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
+                isMultiValuedData.DataBindings.Add(new Binding(nameof(isMultiValuedData.Checked), bindingAttribute, nameof(IAttributeValue.IsMultiValue), false, DataSourceUpdateMode.OnPropertyChanged));
+                isSimpleTypeData.DataBindings.Add(new Binding(nameof(isSimpleTypeData.Checked), bindingAttribute, nameof(IAttributeValue.IsSimpleType), false, DataSourceUpdateMode.OnPropertyChanged));
+                isCompositeTypeData.DataBindings.Add(new Binding(nameof(isCompositeTypeData.Checked), bindingAttribute, nameof(IAttributeValue.IsCompositeType), false, DataSourceUpdateMode.OnPropertyChanged));
+                isIntegralData.DataBindings.Add(new Binding(nameof(isIntegralData.Checked), bindingAttribute, nameof(IAttributeValue.IsIntegral), false, DataSourceUpdateMode.OnPropertyChanged));
+                isDerivedData.DataBindings.Add(new Binding(nameof(isDerivedData.Checked), bindingAttribute, nameof(IAttributeValue.IsDerived), false, DataSourceUpdateMode.OnPropertyChanged));
+                isValuedData.DataBindings.Add(new Binding(nameof(isValuedData.Checked), bindingAttribute, nameof(IAttributeValue.IsValued), false, DataSourceUpdateMode.OnPropertyChanged));
+                isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), bindingAttribute, nameof(IAttributeValue.IsNullable), false, DataSourceUpdateMode.OnPropertyChanged));
+                isNonKeyData.DataBindings.Add(new Binding(nameof(isNonKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsNonKey), false, DataSourceUpdateMode.OnPropertyChanged));
+                isKeyData.DataBindings.Add(new Binding(nameof(isKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsKey), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                PropertyNameList.Load(propertyIdColumn, formData.ModelProperty);
+                propertiesData.AutoGenerateColumns = false;
+                propertiesData.DataSource = bindingProperty;
+                propertyControl.BindTo(bindingProperty, formData.ModelProperty);
+
+                DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
+                definitionData.AutoGenerateColumns = false;
+                definitionData.DataSource = bindingDefinition;
+                definitionControl.BindTo(bindingDefinition, formData.ModelDefinitions);
+
+                subjectArea.BindTo(bindingSubjectArea, formData.ModelSubjectAreas);
+
+                // Alias Handling
+                ScopeNameList.Load(aliaseScopeColumn);
+                ScopeNameList.Load(aliasScopeData);
+
+                aliasesData.AutoGenerateColumns = false;
+                aliasesData.DataSource = bindingAlias;
+
+                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
             }
-
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Values.Select(s => s.DataType).OfType<String>().Distinct());
-            dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
-            dataLengthData.DataBindings.Add(new Binding(nameof(dataLengthData.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
-            dataPrecisionData.DataBindings.Add(new Binding(nameof(dataPrecisionData.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(IAttributeValue.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
-            isMultiValuedData.DataBindings.Add(new Binding(nameof(isMultiValuedData.Checked), bindingAttribute, nameof(IAttributeValue.IsMultiValue), false, DataSourceUpdateMode.OnPropertyChanged));
-            isSimpleTypeData.DataBindings.Add(new Binding(nameof(isSimpleTypeData.Checked), bindingAttribute, nameof(IAttributeValue.IsSimpleType), false, DataSourceUpdateMode.OnPropertyChanged));
-            isCompositeTypeData.DataBindings.Add(new Binding(nameof(isCompositeTypeData.Checked), bindingAttribute, nameof(IAttributeValue.IsCompositeType), false, DataSourceUpdateMode.OnPropertyChanged));
-            isIntegralData.DataBindings.Add(new Binding(nameof(isIntegralData.Checked), bindingAttribute, nameof(IAttributeValue.IsIntegral), false, DataSourceUpdateMode.OnPropertyChanged));
-            isDerivedData.DataBindings.Add(new Binding(nameof(isDerivedData.Checked), bindingAttribute, nameof(IAttributeValue.IsDerived), false, DataSourceUpdateMode.OnPropertyChanged));
-            isValuedData.DataBindings.Add(new Binding(nameof(isValuedData.Checked), bindingAttribute, nameof(IAttributeValue.IsValued), false, DataSourceUpdateMode.OnPropertyChanged));
-            isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), bindingAttribute, nameof(IAttributeValue.IsNullable), false, DataSourceUpdateMode.OnPropertyChanged));
-            isNonKeyData.DataBindings.Add(new Binding(nameof(isNonKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsNonKey), false, DataSourceUpdateMode.OnPropertyChanged));
-            isKeyData.DataBindings.Add(new Binding(nameof(isKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsKey), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            PropertyNameList.Load(propertyIdColumn, formData.ModelProperty);
-            propertiesData.AutoGenerateColumns = false;
-            propertiesData.DataSource = bindingProperty;
-            propertyControl.BindTo(bindingProperty, formData.ModelProperty);
-
-            DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
-            definitionData.AutoGenerateColumns = false;
-            definitionData.DataSource = bindingDefinition;
-            definitionControl.BindTo(bindingDefinition, formData.ModelDefinitions);
-
-            subjectArea.BindTo(bindingSubjectArea, formData.ModelSubjectAreas);
-
-            // Alias Handling
-            ScopeNameList.Load(aliaseScopeColumn);
-            ScopeNameList.Load(aliasScopeData);
-
-            aliasesData.AutoGenerateColumns = false;
-            aliasesData.DataSource = bindingAlias;
-
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
-
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {

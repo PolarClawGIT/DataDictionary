@@ -36,23 +36,28 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="Attribute.Values"/>
         /// <remarks>One or Zero values</remarks>
         public BindingView<AttributeValue> Attributes { get; private set; }
-            = new BindingView<AttributeValue>(new BindingList<AttributeValue>());
+            = new BindingView<AttributeValue>(new BindingList<AttributeValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <inheritdoc cref="Attribute.Aliases"/>
         public BindingView<AttributeAliasValue> Aliases { get; private set; }
-            = new BindingView<AttributeAliasValue>(new BindingList<AttributeAliasValue>());
+            = new BindingView<AttributeAliasValue>(new BindingList<AttributeAliasValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <inheritdoc cref="Attribute.Properties"/>
         public BindingView<AttributePropertyValue> Properties { get; private set; }
-            = new BindingView<AttributePropertyValue>(new BindingList<AttributePropertyValue>());
+            = new BindingView<AttributePropertyValue>(new BindingList<AttributePropertyValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <inheritdoc cref="Attribute.Definitions"/>
         public BindingView<AttributeDefinitionValue> Definitions { get; private set; }
-            = new BindingView<AttributeDefinitionValue>(new BindingList<AttributeDefinitionValue>());
+            = new BindingView<AttributeDefinitionValue>(new BindingList<AttributeDefinitionValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <inheritdoc cref="Attribute.SubjectArea"/>
         public BindingView<AttributeSubjectAreaValue> SubjectArea { get; private set; }
-            = new BindingView<AttributeSubjectAreaValue>(new List<AttributeSubjectAreaValue>());
+            = new BindingView<AttributeSubjectAreaValue>(new List<AttributeSubjectAreaValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <inheritdoc cref="IModel.Properties"/>
         public IReadOnlyList<PropertyValue> ModelProperty { get; }
@@ -68,16 +73,17 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <summary>
         /// Creates a instance of AttributeView that is empty.
+        /// Gets rid of IDE290.
         /// </summary>
         protected AttributeView() : base() { }
 
         /// <summary>
-        /// Creates a instance of AttributeView that is empty with Model data.
+        /// Creates a instance of AttributeView with the static Model data.
         /// </summary>
         /// <param name="properties"></param>
         /// <param name="definitions"></param>
         /// <param name="subjectAreas"></param>
-        protected AttributeView(
+        public AttributeView(
             IPropertyData properties,
             IDefinitionData definitions,
             ISubjectAreaData subjectAreas) : this()
@@ -88,34 +94,19 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <summary>
-        /// Creates a instance of AttributeView that is bound to the Model.
-        /// </summary>
-        /// <param name="model"></param>
-        public AttributeView(IModel model) : this(model.Properties, model.Definitions, model.SubjectAreas)
-        {
-            Index = new AttributeIndex();
-            currentData = model.Attributes; //TODO: need to make this a Load.
-
-            StartBinding();
-        }
-
-        /// <summary>
-        /// Creates a instance of AttributeView that is bound to the Model.
+        /// Creates a instance of AttributeView with the static Model data and assigns the Index.
         /// </summary>
         /// <param name="attribute"></param>
-        /// <param name="model"></param>
-        public AttributeView(IAttributeIndex attribute, IModel model) : this(model.Properties, model.Definitions, model.SubjectAreas)
-        {
-            Index = new AttributeIndex(attribute);//TODO: need to make this a Load.
-
-            ModelProperty = new BindingView<PropertyValue>(model.Properties);
-            ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
-            ModelSubjectAreas = new BindingView<SubjectAreaValue>(model.SubjectAreas);
-
-            currentData = model.Attributes;//TODO: need to make this a Load.
-
-            StartBinding();
-        }
+        /// <param name="properties"></param>
+        /// <param name="definitions"></param>
+        /// <param name="subjectAreas"></param>
+        /// <remarks>Preferred constructor</remarks>
+        public AttributeView(
+            IAttributeIndex attribute,
+            IPropertyData properties,
+            IDefinitionData definitions,
+            ISubjectAreaData subjectAreas) : this(properties, definitions, subjectAreas)
+        { Index = new AttributeIndex(attribute); }
 
         void StartBinding()
         {
@@ -140,22 +131,20 @@ namespace DataDictionary.BusinessLayer.AppModel
             SubjectArea.RaiseListChangedEvents = true;
             SubjectArea.ResetList();
 
+            if (Attributes.FirstOrDefault() is AttributeValue value)
+            { AsOfUtcDate = new TemporalIndex(value); }
+            else { AsOfUtcDate = new TemporalIndex(); }
+
             Attributes.ListChanged += Attributes_ListChanged;
         }
 
-        private void Attributes_ListChanged(Object? sender, ListChangedEventArgs e)
+        void Attributes_ListChanged(Object? sender, ListChangedEventArgs e)
         {
             // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list.
             if (e.ListChangedType is ListChangedType.ItemDeleted
                 && sender is IBindingList values
                 && values.Count is 0)
             { StopBinding(); }
-
-            if (e.ListChangedType is ListChangedType.ItemAdded
-                 && sender is IEnumerable<IAttributeValue> list
-                 && list.FirstOrDefault() is IAttributeValue value
-                 && Index.AttributeId == Guid.Empty)
-            { Index = new AttributeIndex(value); }
         }
 
         void StopBinding()
@@ -169,11 +158,52 @@ namespace DataDictionary.BusinessLayer.AppModel
             Attributes.ListChanged -= Attributes_ListChanged;
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        /// <summary>
+        /// Rebinds the instance to an empty Attribute.
+        /// </summary>
+        public void Bind()
+        {
+            StopBinding();
+            Index = new AttributeIndex();
+            AsOfUtcDate = new TemporalIndex();
+            currentData = new Attribute();
+            StartBinding();
+        }
+
+        /// <summary>
+        /// Rebinds the instance to the Model Attribute.
+        /// </summary>
+        /// <param name="values"></param>
+        public void Bind(IAttribute values)
+        {
+            StopBinding();
+            currentData = values;
+            StartBinding();
+        }
+
+        /// <summary>
+        /// Loads and Binds to the Model Attributes
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        /// <remarks>Existing Attribute data is lost.</remarks>
+        public IReadOnlyList<WorkItem> Load(IAttribute values)
         {
             List<WorkItem> work = new List<WorkItem>();
             AsOfUtcDate = new TemporalIndex();
+
+            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = () => currentData = values });
+            work.Add(new WorkItem() { DoWork = StartBinding });
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Existing Attribute data is overwritten.</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem() { DoWork = StopBinding });
             work.AddRange(currentData.Load(factory, Index));
@@ -183,10 +213,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
+        /// <remarks>Existing Attribute data is overwritten.</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
-            AsOfUtcDate = new TemporalIndex(asOfUtcDate);
 
             work.Add(new WorkItem() { DoWork = StopBinding });
             work.AddRange(currentData.Load(factory, Index, asOfUtcDate));
