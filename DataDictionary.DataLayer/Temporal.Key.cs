@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer
         /// Constructor for the Temporal Key.
         /// </summary>
         /// <param name="source"></param>
-        public TemporalKey(ITemporal source) : base()
+        public TemporalKey(ITemporal source) : this()
         {
             if (source.CreatedOn is DateTime value)
             { AsOfUtcDate = value; }
@@ -44,7 +44,7 @@ namespace DataDictionary.DataLayer
         /// Constructor for the Temporal Key.
         /// </summary>
         /// <param name="source"></param>
-        public TemporalKey(ITemporalKey source) : base()
+        public TemporalKey(ITemporalKey source) : this()
         {
             if (source.AsOfUtcDate is DateTime value)
             { AsOfUtcDate = value; }
@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer
         /// Constructor for the Temporal Key.
         /// </summary>
         /// <param name="source"></param>
-        public TemporalKey(ITemporalItem source) : base()
+        public TemporalKey(ITemporalItem source) : this()
         {
             if (source.Temporal.CreatedOn is DateTime value)
             { AsOfUtcDate = value; }
