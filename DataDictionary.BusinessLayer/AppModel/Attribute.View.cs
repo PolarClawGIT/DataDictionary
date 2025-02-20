@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.AppModel;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -179,6 +180,19 @@ namespace DataDictionary.BusinessLayer.AppModel
             StopBinding();
             currentData = values;
             StartBinding();
+        }
+
+        /// <summary>
+        /// Returns the Temporal Data object for the Attribute
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ITemporalData GetTemporal(IModelIndex model)
+        {
+            IModelKey key = new ModelIndex(model);
+
+            return new TemporalData<AttributeData, AttributeValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, key) };
         }
 
         /// <summary>

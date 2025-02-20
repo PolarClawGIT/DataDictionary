@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <typeparam name="TCollection"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        WorkItem CreateLHistory<TCollection>(TCollection target)
+        WorkItem CreateHistory<TCollection>(TCollection target)
             where TCollection : IBindingTable, IReadTemporal;
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="target"></param>
         /// <param name="targetKey"></param>
         /// <returns></returns>
-        WorkItem CreateLHistory<TCollection, TKey>(TCollection target, TKey targetKey)
+        WorkItem CreateHistory<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IReadTemporal<TKey>;
 
@@ -334,7 +334,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateLHistory<TCollection>(TCollection target)
+        public WorkItem CreateHistory<TCollection>(TCollection target)
             where TCollection : IBindingTable, IReadTemporal
         {
             return this.CreateWork(
@@ -344,7 +344,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateLHistory<TCollection, TKey>(TCollection target, TKey targetKey)
+        public WorkItem CreateHistory<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IReadTemporal<TKey>
         {

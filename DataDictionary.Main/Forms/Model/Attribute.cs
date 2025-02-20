@@ -37,7 +37,8 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandImageType.DeleteDatabase,
+                CommandImageType.HistoryDatabase);
 
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
@@ -63,7 +64,6 @@ namespace DataDictionary.Main.Forms.Model
                 BusinessData.Model.Definitions,
                 BusinessData.Model.SubjectAreas);
         }
-
 
         private void Form_Load(object sender, EventArgs e)
         {
@@ -226,6 +226,14 @@ namespace DataDictionary.Main.Forms.Model
 
                 IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
             }
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+
+            Form form = Activate(() => new ApplicationWide.HistoryView(
+                formData.GetTemporal(BusinessData.Model.ModelIndex)));
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)

@@ -15,8 +15,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IModel :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDeleteData, IScopeType, DataLayer.AppModel.IModel
-
     {
+        /// <summary>
+        /// Index of the Model currently loaded.
+        /// </summary>
+        IModelIndex ModelIndex { get; }
+
         /// <summary>
         /// The Model Definitions (0 or one Model expected)
         /// </summary>
@@ -77,6 +81,10 @@ namespace DataDictionary.BusinessLayer.AppModel
             get { return CurrentModel.ModelDescription; }
             set { CurrentModel.ModelDescription = value; }
         }
+
+        /// <inheritdoc/>
+        public IModelIndex ModelIndex
+        { get { return new ModelIndex(CurrentModel); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return CurrentModel.Scope; } }
@@ -227,7 +235,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                     { GetPath = () => new PathIndex(((IPathValue)CurrentModel).Path) };
 
                     addNamedScope(null, newItem);
-                }});
+                }
+            });
 
             work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));

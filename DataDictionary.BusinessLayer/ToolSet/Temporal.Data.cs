@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,15 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
     }
 
-    public abstract class TemporalData<TData, TValue> : ITemporalData
+    public class TemporalData<TData, TValue> : ITemporalData
         where TValue : class, IDataValue, IBindingRowState, IBindingPropertyChanged, ITemporalValue
-        where TData : class, IReadTemporal, IBindingData<TValue>, IEnumerable<TValue>, IBindingTable, new ()
+        where TData : class, IBindingData<TValue>, IEnumerable<TValue>, IBindingTable, new ()
     {
         TData currentData = new TData();
 
         //Func<TValue,TIndex> ToIndex { get; init; }
+
+        public Func<IDatabaseWork, TData, WorkItem> CreateLoad { get; init; }
 
         public TemporalData()
         { }
@@ -52,11 +55,14 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 ToList();
         }
 
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLHistory(currentData));
+            work.Add(CreateLoad(factory, currentData));
             return work;
         }
     }
+
+
+
 }
