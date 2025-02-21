@@ -151,6 +151,8 @@ namespace DataDictionary.Main.Forms.General
             helpBinding.DataSource = bindingData;
             helpBinding.Position = 0;
 
+            // TODO: Testing
+            var x = new View_Test(key, BusinessData.ApplicationData.HelpSubjects);
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)
