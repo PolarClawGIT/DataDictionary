@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public HistoryView(ILoadHistoryData loader) : this()
         { this.loader = loader; }
 
-        public HistoryView(ITemporalData data) : this()
+        public HistoryView(ITemporalView data) : this()
         {
             // TODO: Re-factor to use ITemporalData instead of ILoadHistoryData
             // The generic version of the form will likely not be needed.

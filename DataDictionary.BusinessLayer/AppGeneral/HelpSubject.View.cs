@@ -15,10 +15,11 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppGeneral
 {
+
     /// <summary>
     /// Wrapper class that returns the BindingViews for the HelpSubjects
     /// </summary>
-    public class HelpSubjectView : IView<HelpSubjectIndex, HelpSubjectValue>
+    public class HelpSubjectView : IView<HelpSubjectValue, HelpSubjectIndex>
     {
         /// <inheritdoc/>
         public HelpSubjectIndex Index { get; protected set; } = new HelpSubjectIndex();
@@ -32,11 +33,11 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             = new BindingView<HelpSubjectValue>(new BindingList<HelpSubjectValue>());
 
         /// <inheritdoc/>
-        HelpSubjectValue IView<HelpSubjectIndex, HelpSubjectValue>.Value 
+        HelpSubjectValue IView<HelpSubjectValue, HelpSubjectIndex>.Value 
         { get { return HelpSubjects.FirstOrDefault() ?? new HelpSubjectValue(); } }
 
         /// <inheritdoc/>
-        BindingView<HelpSubjectValue> IView<HelpSubjectIndex, HelpSubjectValue>.Values 
+        BindingView<HelpSubjectValue> IView<HelpSubjectValue>.Values 
         { get { return HelpSubjects; } }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public HelpSubjectView(IHelpSubjectIndex helpSubject) : base()
         {
             Index = new HelpSubjectIndex(helpSubject);
-            StopBinding();
+            StopChangedEvents();
         }
 
         /// <summary>
@@ -62,10 +63,10 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public HelpSubjectView(IHelpSubjectIndex helpSubject, IHelpSubjectData values) : this(helpSubject)
         {
             currentData = values;
-            StartBinding();
+            StartChangedEvents();
         }
 
-        void StartBinding()
+        void StartChangedEvents()
         {
             HelpSubjects = new BindingView<HelpSubjectValue>(currentData, w => Index.Equals(w));
 
@@ -81,7 +82,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             if (e.ListChangedType is ListChangedType.ItemDeleted
                 && sender is IBindingList values
                 && values.Count is 0)
-            { StopBinding(); }
+            { StopChangedEvents(); }
 
             if (e.ListChangedType is ListChangedType.ItemAdded
                  && sender is IEnumerable<IHelpSubjectValue> list
@@ -90,7 +91,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             { Index = new HelpSubjectIndex(value); }
         }
 
-        void StopBinding()
+        void StopChangedEvents()
         {
             HelpSubjects.RaiseListChangedEvents = false;
 
@@ -103,9 +104,9 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             List<WorkItem> work = new List<WorkItem>();
             AsOfUtcDate = new TemporalIndex();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Load(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
@@ -116,9 +117,9 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             List<WorkItem> work = new List<WorkItem>();
             AsOfUtcDate = new TemporalIndex(asOfUtcDate);
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Load(factory, Index, asOfUtcDate));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
@@ -132,12 +133,22 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Delete(Index));
             work.AddRange(currentData.Save(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
+        }
+
+        /// <summary>
+        /// Returns the Temporal Data object for the HelpSubjects
+        /// </summary>
+        /// <returns></returns>
+        public ITemporalView GetTemporal()
+        {
+            return new TemporalData<HelpSubjectData, HelpSubjectValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data) };
         }
 
         /// <inheritdoc/>

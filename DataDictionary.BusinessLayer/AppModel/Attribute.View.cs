@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Wrapper class that returns the BindingViews for the Attribute
     /// </summary>
-    public class AttributeView : IView<AttributeIndex, AttributeValue>
+    public class AttributeView : IView<AttributeValue, AttributeIndex>
     {
         /// <inheritdoc/>
         public AttributeIndex Index { get; protected set; } = new AttributeIndex();
@@ -27,11 +27,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttribute currentData = new Attribute();
 
         /// <inheritdoc/>
-        AttributeValue IView<AttributeIndex, AttributeValue>.Value
+        AttributeValue IView<AttributeValue, AttributeIndex>.Value
         { get { return Attributes.FirstOrDefault() ?? new AttributeValue(); } }
 
         /// <inheritdoc/>
-        BindingView<AttributeValue> IView<AttributeIndex, AttributeValue>.Values
+        BindingView<AttributeValue> IView<AttributeValue>.Values
         { get { return Attributes; } }
 
         /// <inheritdoc cref="Attribute.Values"/>
@@ -109,7 +109,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             ISubjectAreaData subjectAreas) : this(properties, definitions, subjectAreas)
         { Index = new AttributeIndex(attribute); }
 
-        void StartBinding()
+        void StartChangedEvents()
         {
             Attributes = new BindingView<AttributeValue>(currentData.Values, w => Index.Equals(w));
             Aliases = new BindingView<AttributeAliasValue>(currentData.Aliases, w => Index.Equals(w));
@@ -145,10 +145,10 @@ namespace DataDictionary.BusinessLayer.AppModel
             if (e.ListChangedType is ListChangedType.ItemDeleted
                 && sender is IBindingList values
                 && values.Count is 0)
-            { StopBinding(); }
+            { StopChangedEvents(); }
         }
 
-        void StopBinding()
+        void StopChangedEvents()
         {
             Attributes.RaiseListChangedEvents = false;
             Aliases.RaiseListChangedEvents = false;
@@ -163,12 +163,12 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// Rebinds the instance to an empty Attribute.
         /// </summary>
         public void Bind()
-        {
-            StopBinding();
+        {   // TODO: Is this needed?
+            StopChangedEvents();
             Index = new AttributeIndex();
             AsOfUtcDate = new TemporalIndex();
             currentData = new Attribute();
-            StartBinding();
+            StartChangedEvents();
         }
 
         /// <summary>
@@ -176,10 +176,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         /// <param name="values"></param>
         public void Bind(IAttribute values)
-        {
-            StopBinding();
+        {   // TODO: Is this needed?
+            StopChangedEvents();
             currentData = values;
-            StartBinding();
+            StartChangedEvents();
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ITemporalData GetTemporal(IModelIndex model)
+        public ITemporalView GetTemporal(IModelIndex model)
         {
             IModelKey key = new ModelIndex(model);
 
@@ -206,9 +206,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<WorkItem> work = new List<WorkItem>();
             AsOfUtcDate = new TemporalIndex();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.Add(new WorkItem() { DoWork = () => currentData = values });
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
@@ -219,9 +219,9 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Load(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
@@ -232,9 +232,9 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Load(factory, Index, asOfUtcDate));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
@@ -248,10 +248,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork = StopBinding });
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
             work.AddRange(currentData.Delete(Index));
             work.AddRange(currentData.Save(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartBinding });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }

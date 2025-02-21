@@ -11,28 +11,48 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.ToolSet
 {
-    //TODO: POC code
-
-    public interface ITemporalData
+    /// <summary>
+    /// Interface for the Temporal view
+    /// </summary>
+    public interface ITemporalView
     {
-
+        /// <summary>
+        /// Gets the list of values taking the last item for each Index.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<ITemporalValue> Items();
+
+        /// <summary>
+        /// Get the list of values for a given index.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         IEnumerable<ITemporalValue> Values(IDataIndex data);
 
+        /// <summary>
+        /// Loads the Temporal Data
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Load(IDatabaseWork factory);
     }
 
-    public class TemporalData<TData, TValue> : ITemporalData
+    /// <summary>
+    /// Wrapper class that returns the BindingViews for the Temporal values
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    class TemporalData<TData, TValue> : ITemporalView
         where TValue : class, IDataValue, IBindingRowState, IBindingPropertyChanged, ITemporalValue
-        where TData : class, IBindingData<TValue>, IEnumerable<TValue>, IBindingTable, new ()
+        where TData : class, IBindingData<TValue>, IEnumerable<TValue>, IBindingTable, new()
     {
         TData currentData = new TData();
 
         //Func<TValue,TIndex> ToIndex { get; init; }
 
-        public Func<IDatabaseWork, TData, WorkItem> CreateLoad { get; init; }
+        public required Func<IDatabaseWork, TData, WorkItem> CreateLoad { get; init; }
 
-        public TemporalData()
-        { }
+        public TemporalData() { }
 
         public IEnumerable<ITemporalValue> Items()
         {
@@ -55,7 +75,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 ToList();
         }
 
-        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(CreateLoad(factory, currentData));
