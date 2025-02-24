@@ -20,7 +20,8 @@ namespace DataDictionary.Main.Forms.Model
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
-        AttributeView formData;
+        AttributeIndex formKey = new AttributeIndex();
+        AttributeView formData = new AttributeView(BusinessData.Model);
 
         protected Attribute() : base()
         {
@@ -43,10 +44,16 @@ namespace DataDictionary.Main.Forms.Model
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
 
-            formData = new AttributeView(
-                BusinessData.Model.Properties,
-                BusinessData.Model.Definitions,
-                BusinessData.Model.SubjectAreas);
+            formData.ListEmpty += FormData_ListEmpty;
+        }
+
+        private void FormData_ListEmpty(Object? sender, EventArgs e)
+        {
+            bindingAttribute.RaiseListChangedEvents = false;
+            bindingProperty.RaiseListChangedEvents = false;
+            bindingDefinition.RaiseListChangedEvents = false;
+            bindingAlias.RaiseListChangedEvents = false;
+            bindingSubjectArea.RaiseListChangedEvents = false;
         }
 
         public Attribute(IAttributeIndex? attribute) : this()
@@ -54,15 +61,11 @@ namespace DataDictionary.Main.Forms.Model
             if (attribute is null)
             {
                 AttributeValue attributeItem = new AttributeValue();
-                BusinessData.Model.Attributes.Values.Add(attributeItem);
-                attribute = new AttributeIndex(attributeItem);
+                formData.Attributes.Add(attributeItem);
+                formKey = new AttributeIndex(attributeItem);
             }
-
-            formData = new AttributeView(
-                attribute,
-                BusinessData.Model.Properties,
-                BusinessData.Model.Definitions,
-                BusinessData.Model.SubjectAreas);
+            else
+            { formKey = new AttributeIndex(attribute); }
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -71,7 +74,7 @@ namespace DataDictionary.Main.Forms.Model
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            DoWork(formData.Load(BusinessData.Model.Attributes), OnComplete);
+            DoWork(formData.Load(formKey), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {

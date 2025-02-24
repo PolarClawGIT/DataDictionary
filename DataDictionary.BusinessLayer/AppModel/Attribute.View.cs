@@ -13,26 +13,25 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Wrapper class that returns the BindingViews for the Attribute
     /// </summary>
-    public class AttributeView : IView<AttributeValue, AttributeIndex>
+    public class AttributeView
     {
-        /// <inheritdoc/>
-        public AttributeIndex Index { get; protected set; } = new AttributeIndex();
-
-        /// <inheritdoc/>
-        public TemporalIndex AsOfUtcDate { get; protected set; } = new TemporalIndex();
-
         /// <summary>
         /// The current set of data being worked with.
         /// </summary>
-        IAttribute currentData = new Attribute();
+        IAttribute currentData;
+
+        /// <summary>
+        /// Connection to the Model Data
+        /// </summary>
+        IAttribute modelData;
 
         /// <inheritdoc/>
-        AttributeValue IView<AttributeValue, AttributeIndex>.Value
-        { get { return Attributes.FirstOrDefault() ?? new AttributeValue(); } }
+        //AttributeValue IView<AttributeValue, AttributeIndex>.Value
+        //{ get { return Attributes.FirstOrDefault() ?? new AttributeValue(); } }
 
         /// <inheritdoc/>
-        BindingView<AttributeValue> IView<AttributeValue>.Values
-        { get { return Attributes; } }
+        //BindingView<AttributeValue> IView<AttributeValue>.Values
+        //{ get { return Attributes; } }
 
         /// <inheritdoc cref="Attribute.Values"/>
         /// <remarks>One or Zero values</remarks>
@@ -73,50 +72,58 @@ namespace DataDictionary.BusinessLayer.AppModel
             = new BindingView<SubjectAreaValue>(new BindingList<SubjectAreaValue>());
 
         /// <summary>
-        /// Creates a instance of AttributeView that is empty.
-        /// Gets rid of IDE290.
+        /// Creates an instance of the AttributeView
         /// </summary>
-        protected AttributeView() : base() { }
-
-        /// <summary>
-        /// Creates a instance of AttributeView with the static Model data.
-        /// </summary>
-        /// <param name="properties"></param>
-        /// <param name="definitions"></param>
-        /// <param name="subjectAreas"></param>
-        public AttributeView(
-            IPropertyData properties,
-            IDefinitionData definitions,
-            ISubjectAreaData subjectAreas) : this()
+        /// <param name="model"></param>
+        public AttributeView(IModel model) : base()
         {
-            ModelProperty = new BindingView<PropertyValue>(properties);
-            ModelDefinitions = new BindingView<DefinitionValue>(definitions);
-            ModelSubjectAreas = new BindingView<SubjectAreaValue>(subjectAreas);
+            ModelProperty = new BindingView<PropertyValue>(model.Properties);
+            ModelDefinitions = new BindingView<DefinitionValue>(model.Definitions);
+            ModelSubjectAreas = new BindingView<SubjectAreaValue>(model.SubjectAreas);
+            currentData = model.Attributes;
+            modelData = model.Attributes;
+
+            CreateViews(new AttributeIndex());
+            StartChangedEvents();
         }
 
         /// <summary>
-        /// Creates a instance of AttributeView with the static Model data and assigns the Index.
+        /// Event is raised when the Attribute list becomes empty.
         /// </summary>
-        /// <param name="attribute"></param>
-        /// <param name="properties"></param>
-        /// <param name="definitions"></param>
-        /// <param name="subjectAreas"></param>
-        /// <remarks>Preferred constructor</remarks>
-        public AttributeView(
-            IAttributeIndex attribute,
-            IPropertyData properties,
-            IDefinitionData definitions,
-            ISubjectAreaData subjectAreas) : this(properties, definitions, subjectAreas)
-        { Index = new AttributeIndex(attribute); }
+        /// <remarks>
+        /// This addresses invalid operation exception fired by CurrencyManager.FindGoodRow.
+        /// The exception occurs on empty list and is triggered by the ListChanged Event.
+        /// When this event occurs, all BindingSources need to set RaiseListChangedEvents to false.
+        /// A related error can occur with DataGridViews when the BindingList has an empty list.
+        /// The code in this class handles RaiseListChangedEvents on the BindingLists.
+        /// </remarks>
+        public event EventHandler? ListEmpty;
+
+        void CreateViews(IAttributeIndex attribute)
+        {
+            AttributeIndex key = new AttributeIndex(attribute);
+            Attributes.ListChanged -= OnListChanged;
+
+            Attributes = new BindingView<AttributeValue>(currentData.Values, w => key.Equals(w));
+            Aliases = new BindingView<AttributeAliasValue>(currentData.Aliases, w => key.Equals(w));
+            Properties = new BindingView<AttributePropertyValue>(currentData.Properties, w => key.Equals(w));
+            Definitions = new BindingView<AttributeDefinitionValue>(currentData.Definitions, w => key.Equals(w));
+            SubjectArea = new BindingView<AttributeSubjectAreaValue>(currentData.SubjectArea, w => key.Equals(w));
+
+            Attributes.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListEmpty is EventHandler handler
+                    && e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                { handler(sender, new EventArgs()); }
+            }
+        }
 
         void StartChangedEvents()
         {
-            Attributes = new BindingView<AttributeValue>(currentData.Values, w => Index.Equals(w));
-            Aliases = new BindingView<AttributeAliasValue>(currentData.Aliases, w => Index.Equals(w));
-            Properties = new BindingView<AttributePropertyValue>(currentData.Properties, w => Index.Equals(w));
-            Definitions = new BindingView<AttributeDefinitionValue>(currentData.Definitions, w => Index.Equals(w));
-            SubjectArea = new BindingView<AttributeSubjectAreaValue>(currentData.SubjectArea, w => Index.Equals(w));
-
             Attributes.RaiseListChangedEvents = true;
             Attributes.ResetList();
 
@@ -131,21 +138,6 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             SubjectArea.RaiseListChangedEvents = true;
             SubjectArea.ResetList();
-
-            if (Attributes.FirstOrDefault() is AttributeValue value)
-            { AsOfUtcDate = new TemporalIndex(value); }
-            else { AsOfUtcDate = new TemporalIndex(); }
-
-            Attributes.ListChanged += Attributes_ListChanged;
-        }
-
-        void Attributes_ListChanged(Object? sender, ListChangedEventArgs e)
-        {
-            // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list.
-            if (e.ListChangedType is ListChangedType.ItemDeleted
-                && sender is IBindingList values
-                && values.Count is 0)
-            { StopChangedEvents(); }
         }
 
         void StopChangedEvents()
@@ -155,31 +147,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             Properties.RaiseListChangedEvents = false;
             Definitions.RaiseListChangedEvents = false;
             SubjectArea.RaiseListChangedEvents = false;
-
-            Attributes.ListChanged -= Attributes_ListChanged;
-        }
-
-        /// <summary>
-        /// Rebinds the instance to an empty Attribute.
-        /// </summary>
-        public void Bind()
-        {   // TODO: Is this needed?
-            StopChangedEvents();
-            Index = new AttributeIndex();
-            AsOfUtcDate = new TemporalIndex();
-            currentData = new Attribute();
-            StartChangedEvents();
-        }
-
-        /// <summary>
-        /// Rebinds the instance to the Model Attribute.
-        /// </summary>
-        /// <param name="values"></param>
-        public void Bind(IAttribute values)
-        {   // TODO: Is this needed?
-            StopChangedEvents();
-            currentData = values;
-            StartChangedEvents();
         }
 
         /// <summary>
@@ -195,63 +162,94 @@ namespace DataDictionary.BusinessLayer.AppModel
             { CreateLoad = (factory, data) => factory.CreateHistory(data, key) };
         }
 
-        /// <summary>
-        /// Loads and Binds to the Model Attributes
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        /// <remarks>Existing Attribute data is lost.</remarks>
-        public IReadOnlyList<WorkItem> Load(IAttribute values)
+        public IReadOnlyList<WorkItem> Load()
+        {
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            { return Load(attribute); }
+            else { return new List<WorkItem>(); }
+        }
+
+        public IReadOnlyList<WorkItem> Load(IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
-            AsOfUtcDate = new TemporalIndex();
+            AttributeIndex key = new AttributeIndex(attribute);
 
             work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.Add(new WorkItem() { DoWork = () => currentData = values });
+            work.Add(new WorkItem() { DoWork = () => currentData = modelData });
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
             work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
 
-        /// <inheritdoc/>
-        /// <remarks>Existing Attribute data is overwritten.</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Load(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartChangedEvents });
-
-            return work;
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            { return Load(factory, attribute); }
+            else { throw new InvalidOperationException("No Attribute found"); }
         }
 
-        /// <inheritdoc/>
-        /// <remarks>Existing Attribute data is overwritten.</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
+            AttributeIndex key = new AttributeIndex(attribute);
 
             work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Load(factory, Index, asOfUtcDate));
+            work.Add(new WorkItem() { DoWork = () => currentData = new Attribute() });
+            work.AddRange(currentData.Load(factory, key));
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
             work.Add(new WorkItem() { DoWork = StartChangedEvents });
 
             return work;
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        { return currentData.Save(factory, Index); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
+        {
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            { return Load(factory, attribute, asOfUtcDate); }
+            else { throw new InvalidOperationException("No Attribute found"); }
+        }
 
-        /// <inheritdoc/>
+
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute, ITemporalIndex asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            AttributeIndex key = new AttributeIndex(attribute);
+
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
+            work.Add(new WorkItem() { DoWork = () => currentData = new Attribute() });
+            work.AddRange(currentData.Load(factory, key, asOfUtcDate));
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
+
+            return work;
+        }
+
+
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
+        {
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            { return currentData.Save(factory, new AttributeIndex(attribute)); }
+            else { throw new InvalidOperationException("No Attribute found"); }
+        }
+
+
         public IReadOnlyList<WorkItem> Delete(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Delete(Index));
-            work.AddRange(currentData.Save(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartChangedEvents });
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            {
+                AttributeIndex key = new AttributeIndex(attribute);
+
+                work.Add(new WorkItem() { DoWork = StopChangedEvents });
+                work.AddRange(currentData.Delete(key));
+                work.AddRange(currentData.Save(factory, key));
+
+                work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+                work.Add(new WorkItem() { DoWork = StartChangedEvents });
+            }
+            else { throw new InvalidOperationException("No Attribute found"); }
 
             return work;
         }
@@ -259,20 +257,25 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public void Remove()
         {
-            foreach (AttributeValue item in Attributes.Where(w => Index.Equals(w)).ToList())
-            { Attributes.Remove(item); }
+            if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
+            {
+                AttributeIndex key = new AttributeIndex(attribute);
 
-            foreach (AttributeAliasValue item in Aliases.Where(w => Index.Equals(w)).ToList())
-            { Aliases.Remove(item); }
+                foreach (AttributeValue item in Attributes.Where(w => key.Equals(w)).ToList())
+                { Attributes.Remove(item); }
 
-            foreach (AttributePropertyValue item in Properties.Where(w => Index.Equals(w)).ToList())
-            { Properties.Remove(item); }
+                foreach (AttributeAliasValue item in Aliases.Where(w => key.Equals(w)).ToList())
+                { Aliases.Remove(item); }
 
-            foreach (AttributeDefinitionValue item in Definitions.Where(w => Index.Equals(w)).ToList())
-            { Definitions.Remove(item); }
+                foreach (AttributePropertyValue item in Properties.Where(w => key.Equals(w)).ToList())
+                { Properties.Remove(item); }
 
-            foreach (AttributeSubjectAreaValue item in SubjectArea.Where(w => Index.Equals(w)).ToList())
-            { SubjectArea.Remove(item); }
+                foreach (AttributeDefinitionValue item in Definitions.Where(w => key.Equals(w)).ToList())
+                { Definitions.Remove(item); }
+
+                foreach (AttributeSubjectAreaValue item in SubjectArea.Where(w => key.Equals(w)).ToList())
+                { SubjectArea.Remove(item); }
+            }
         }
 
     }
