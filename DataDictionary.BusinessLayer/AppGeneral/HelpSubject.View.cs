@@ -1,15 +1,9 @@
 ﻿// Ignore Spelling: Utc
 
-using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -19,127 +13,70 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <summary>
     /// Wrapper class that returns the BindingViews for the HelpSubjects
     /// </summary>
-    public class HelpSubjectView : IView<HelpSubjectValue, HelpSubjectIndex>
+    public class HelpSubjectView
     {
-        /// <inheritdoc/>
-        public HelpSubjectIndex Index { get; protected set; } = new HelpSubjectIndex();
-
-        /// <inheritdoc/>
-        public TemporalIndex AsOfUtcDate { get; protected set; } = new TemporalIndex();
-
         /// <inheritdoc cref="ApplicationData.HelpSubjects"/>
         /// <remarks>One or Zero values</remarks>
-        public BindingView<HelpSubjectValue> HelpSubjects { get; private set; } 
-            = new BindingView<HelpSubjectValue>(new BindingList<HelpSubjectValue>());
-
-        /// <inheritdoc/>
-        HelpSubjectValue IView<HelpSubjectValue, HelpSubjectIndex>.Value 
-        { get { return HelpSubjects.FirstOrDefault() ?? new HelpSubjectValue(); } }
-
-        /// <inheritdoc/>
-        BindingView<HelpSubjectValue> IView<HelpSubjectValue>.Values 
-        { get { return HelpSubjects; } }
+        public BindingView<HelpSubjectValue> HelpSubjects { get; private set; }
+            = new BindingView<HelpSubjectValue>(new BindingList<HelpSubjectValue>())
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         /// <summary>
         /// The current set of data being worked with.
         /// </summary>
         IHelpSubjectData currentData = new HelpSubjectData();
+        IHelpSubjectData modelData = new HelpSubjectData();
 
         /// <summary>
-        /// Creates a blank instance of HelpSubjectView that is not bound to the Application Data.
+        /// Create an instance of the HelpSubjectView
         /// </summary>
-        /// <param name="helpSubject"></param>
-        public HelpSubjectView(IHelpSubjectIndex helpSubject) : base()
+        /// <param name="helpSubjects"></param>
+        public HelpSubjectView(IHelpSubjectData helpSubjects)
         {
-            Index = new HelpSubjectIndex(helpSubject);
-            StopChangedEvents();
+            currentData = helpSubjects;
+            modelData = helpSubjects;
+
+            CreateViews(new HelpSubjectIndex());
+            StartChangedEvents();
         }
 
         /// <summary>
-        /// Creates a instance of HelpSubjectView that is bound to the Application data.
+        /// Event is raised when the Attribute list becomes empty.
         /// </summary>
-        /// <param name="helpSubject"></param>
-        /// <param name="values"></param>
-        public HelpSubjectView(IHelpSubjectIndex helpSubject, IHelpSubjectData values) : this(helpSubject)
+        /// <remarks>
+        /// This addresses invalid operation exception fired by CurrencyManager.FindGoodRow.
+        /// The exception occurs on empty list and is triggered by the ListChanged Event.
+        /// When this event occurs, all BindingSources need to set RaiseListChangedEvents to false.
+        /// A related error can occur with DataGridViews when the BindingList has an empty list.
+        /// The code in this class handles RaiseListChangedEvents on the BindingLists.
+        /// </remarks>
+        public event EventHandler? ListEmpty;
+
+        void CreateViews(IHelpSubjectIndex helpSubject)
         {
-            currentData = values;
-            StartChangedEvents();
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+            HelpSubjects = new BindingView<HelpSubjectValue>(currentData, w => key.Equals(w));
+
+            HelpSubjects.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListEmpty is EventHandler handler
+                    && e.ListChangedType is ListChangedType.ItemDeleted
+                    && sender is IBindingList values
+                    && values.Count is 0)
+                { handler(sender, new EventArgs()); }
+            }
         }
 
         void StartChangedEvents()
         {
-            HelpSubjects = new BindingView<HelpSubjectValue>(currentData, w => Index.Equals(w));
-
             HelpSubjects.RaiseListChangedEvents = true;
             HelpSubjects.ResetList();
-
-            HelpSubjects.ListChanged += HelpSubjects_ListChanged;
-        }
-
-        private void HelpSubjects_ListChanged(Object? sender, ListChangedEventArgs e)
-        {
-            // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list.
-            if (e.ListChangedType is ListChangedType.ItemDeleted
-                && sender is IBindingList values
-                && values.Count is 0)
-            { StopChangedEvents(); }
-
-            if (e.ListChangedType is ListChangedType.ItemAdded
-                 && sender is IEnumerable<IHelpSubjectValue> list
-                 && list.FirstOrDefault() is IHelpSubjectValue value
-                 && Index.HelpId == Guid.Empty)
-            { Index = new HelpSubjectIndex(value); }
         }
 
         void StopChangedEvents()
-        {
-            HelpSubjects.RaiseListChangedEvents = false;
-
-            HelpSubjects.ListChanged -= HelpSubjects_ListChanged;
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            AsOfUtcDate = new TemporalIndex();
-
-            work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Load(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartChangedEvents });
-
-            return work;
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            AsOfUtcDate = new TemporalIndex(asOfUtcDate);
-
-            work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Load(factory, Index, asOfUtcDate));
-            work.Add(new WorkItem() { DoWork = StartChangedEvents });
-
-            return work;
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        { return currentData.Save(factory, Index); }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Delete(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { DoWork = StopChangedEvents });
-            work.AddRange(currentData.Delete(Index));
-            work.AddRange(currentData.Save(factory, Index));
-            work.Add(new WorkItem() { DoWork = StartChangedEvents });
-
-            return work;
-        }
+        { HelpSubjects.RaiseListChangedEvents = false; }
 
         /// <summary>
         /// Returns the Temporal Data object for the HelpSubjects
@@ -151,11 +88,113 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             { CreateLoad = (factory, data) => factory.CreateHistory(data) };
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ILoadData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load()
+        {
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            { return Load(helpSubject); }
+            else { throw new InvalidOperationException("No HelpSubject found"); }
+        }
+
+        /// <inheritdoc cref="ILoadData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load(IHelpSubjectIndex helpSubject)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
+            work.Add(new WorkItem() { DoWork = () => currentData = modelData });
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
+
+            return work;
+        }
+
+        /// <inheritdoc cref="ILoadData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        {
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            { return Load(factory, helpSubject); }
+            else { throw new InvalidOperationException("No Attribute found"); }
+        }
+
+        /// <inheritdoc cref="ILoadData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpSubject)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
+            work.Add(new WorkItem() { DoWork = () => currentData = new HelpSubjectData() });
+            work.AddRange(currentData.Load(factory, key));
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
+
+            return work;
+        }
+
+        /// <inheritdoc cref="ILoadHistoryData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
+        {
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            { return Load(factory, helpSubject, asOfUtcDate); }
+            else { throw new InvalidOperationException("No HelpSubject found"); }
+        }
+
+        /// <inheritdoc cref="ILoadHistoryData{TKey}"/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpSubject, ITemporalIndex asOfUtcDate)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+            work.Add(new WorkItem() { DoWork = StopChangedEvents });
+            work.Add(new WorkItem() { DoWork = () => currentData = new HelpSubjectData() });
+            work.AddRange(currentData.Load(factory, key, asOfUtcDate));
+            work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+            work.Add(new WorkItem() { DoWork = StartChangedEvents });
+
+            return work;
+        }
+
+        /// <inheritdoc cref="ISaveData{TKey}"/>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
+        {
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            { return currentData.Save(factory, new HelpSubjectIndex(helpSubject)); }
+            else { throw new InvalidOperationException("No HelpSubject found"); }
+        }
+
+        /// <inheritdoc cref="IDeleteData"/>
+        public IReadOnlyList<WorkItem> Delete(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            {
+                HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+                work.Add(new WorkItem() { DoWork = StopChangedEvents });
+                work.AddRange(currentData.Delete(key));
+                work.AddRange(currentData.Save(factory, key));
+
+                work.Add(new WorkItem() { DoWork = () => CreateViews(key) });
+                work.Add(new WorkItem() { DoWork = StartChangedEvents });
+            }
+            else { throw new InvalidOperationException("No HelpSubject found"); }
+
+            return work;
+        }
+
+        /// <inheritdoc cref="IRemoveItem{TKey}"/>
         public void Remove()
         {
-            foreach (HelpSubjectValue item in HelpSubjects.Where(w => Index.Equals(w)).ToList())
-            { HelpSubjects.Remove(item); }
+            if (HelpSubjects.FirstOrDefault() is IHelpSubjectIndex helpSubject)
+            {
+                HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+                foreach (HelpSubjectValue item in HelpSubjects.Where(w => key.Equals(w)).ToList())
+                { HelpSubjects.Remove(item); }
+            }
         }
     }
 }

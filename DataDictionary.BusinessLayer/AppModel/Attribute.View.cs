@@ -25,14 +25,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         IAttribute modelData;
 
-        /// <inheritdoc/>
-        //AttributeValue IView<AttributeValue, AttributeIndex>.Value
-        //{ get { return Attributes.FirstOrDefault() ?? new AttributeValue(); } }
-
-        /// <inheritdoc/>
-        //BindingView<AttributeValue> IView<AttributeValue>.Values
-        //{ get { return Attributes; } }
-
         /// <inheritdoc cref="Attribute.Values"/>
         /// <remarks>One or Zero values</remarks>
         public BindingView<AttributeValue> Attributes { get; private set; }
@@ -162,13 +154,15 @@ namespace DataDictionary.BusinessLayer.AppModel
             { CreateLoad = (factory, data) => factory.CreateHistory(data, key) };
         }
 
+        /// <inheritdoc cref="ILoadData{TKey}"/>
         public IReadOnlyList<WorkItem> Load()
         {
             if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
             { return Load(attribute); }
-            else { return new List<WorkItem>(); }
+            else { throw new InvalidOperationException("No Attribute found"); }
         }
 
+        /// <inheritdoc cref="ILoadData{TKey}"/>
         public IReadOnlyList<WorkItem> Load(IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -182,6 +176,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
+        /// <inheritdoc cref="ILoadData{TKey}"/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
@@ -189,6 +184,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             else { throw new InvalidOperationException("No Attribute found"); }
         }
 
+        /// <inheritdoc cref="ILoadData{TKey}"/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -203,6 +199,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
+        /// <inheritdoc cref="ILoadHistoryData{TKey}"/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemporalIndex asOfUtcDate)
         {
             if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
@@ -210,7 +207,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             else { throw new InvalidOperationException("No Attribute found"); }
         }
 
-
+        /// <inheritdoc cref="ILoadHistoryData{TKey}"/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex attribute, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -225,7 +222,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
-
+        /// <inheritdoc cref="ISaveData{TKey}"/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         {
             if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
@@ -233,7 +230,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             else { throw new InvalidOperationException("No Attribute found"); }
         }
 
-
+        /// <inheritdoc cref="IDeleteData"/>
         public IReadOnlyList<WorkItem> Delete(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -254,7 +251,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRemoveItem{TKey}"/>
         public void Remove()
         {
             if (Attributes.FirstOrDefault() is IAttributeIndex attribute)
