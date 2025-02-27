@@ -292,7 +292,6 @@ namespace DataDictionary.Main.Forms
         {
             General.HelpContent helpForm = Activate(() => new General.HelpContent(this));
             helpForm.OpenSubject(this);
-
         }
 
         protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)

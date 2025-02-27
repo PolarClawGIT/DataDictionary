@@ -67,6 +67,7 @@ namespace DataDictionary.Main.Forms.General
         public void OpenSubject(Form targetForm)
         {
             HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
+            HelpSubjectIndexPath defaultKey = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
 
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
@@ -79,15 +80,16 @@ namespace DataDictionary.Main.Forms.General
             if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
                 if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                {
-                    helpBinding.Position = subjects.IndexOf(subject);
+                { helpBinding.Position = subjects.IndexOf(subject); }
+                else if (subjects.FirstOrDefault(w => defaultKey.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue defaultSubject)
+                { helpBinding.Position = subjects.IndexOf(defaultSubject); }
+                else { helpBinding.Position = 0; }
 
+                if(helpBinding.Current is HelpSubjectValue current
+                    && helpContentNodes.FirstOrDefault(w => w.Value.Equals(current)).Key is TreeNode selectedNode)
+                { selectedNode.TreeView.SelectedNode = selectedNode; }
 
-                    if (helpContentNodes.FirstOrDefault(w => w.Value.Equals(subject)).Key is TreeNode selectedNode)
-                    { selectedNode.TreeView.SelectedNode = selectedNode; }
-                }
                 helpForForm = targetForm;
-
                 CommandButtons[CommandImageType.Import].IsEnabled = true;
             }
         }
