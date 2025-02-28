@@ -17,10 +17,8 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         IBindingData<HelpSubjectValue>,
         ILoadData, ILoadData<IHelpSubjectIndex>,
         ISaveData, ISaveData<IHelpSubjectIndex>,
-        ILoadHistoryData
-    {
-
-    }
+        ITemporalData
+    { }
 
     /// <summary>
     /// Wrapper Class for Application Help.
@@ -44,24 +42,6 @@ namespace DataDictionary.BusinessLayer.AppGeneral
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public IReadOnlyList<WorkItem> LoadHistory(IDatabaseWork factory, List<ITemporalValue> target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            HelpSubjectData data = new HelpSubjectData();
-
-            work.Add(factory.CreateWork(
-                workName: "Load HelpSubject History",
-                target: data,
-                command: (conn) => HistoryCommand(conn)));
-
-            work.Add(new WorkItem()
-            { DoWork = () => target.AddRange(data.OfType<ITemporalValue>()) });
-
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave(this).ToList(); }
 
@@ -80,5 +60,12 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove HelpSubject", DoWork = () => { this.Clear(); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>HelpSubject</remarks>
+        public ITemporalView GetTemporal()
+        {
+            return new TemporalData<HelpSubjectData, HelpSubjectValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data) };
+        }
     }
 }

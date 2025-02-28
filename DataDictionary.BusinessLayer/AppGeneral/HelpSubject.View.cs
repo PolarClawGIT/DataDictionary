@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <summary>
     /// Wrapper class that returns the BindingViews for the HelpSubjects
     /// </summary>
-    public class HelpSubjectView
+    public class HelpSubjectView 
     {
         /// <inheritdoc cref="ApplicationData.HelpSubjects"/>
         /// <remarks>One or Zero values</remarks>

@@ -11,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData :
-        IBindingData<AttributeValue>
+        IBindingData<AttributeValue>,
+        ITemporalData
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
@@ -66,6 +67,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
+
         #endregion
+
+        public ITemporalView GetTemporal(IModelIndex model)
+        {
+            return new TemporalData<AttributeData, AttributeValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
+        }
     }
 }

@@ -48,11 +48,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     {
         TData currentData = new TData();
 
-        //Func<TValue,TIndex> ToIndex { get; init; }
-
         public required Func<IDatabaseWork, TData, WorkItem> CreateLoad { get; init; }
 
-        public TemporalData() { }
+        public TemporalData() : base()
+        { }
 
         public IEnumerable<ITemporalValue> Items()
         {
@@ -82,7 +81,4 @@ namespace DataDictionary.BusinessLayer.ToolSet
             return work;
         }
     }
-
-
-
 }
