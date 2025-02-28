@@ -11,8 +11,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData :
-        IBindingData<AttributeValue>,
-        ITemporalData
+        IBindingData<AttributeValue>
+        //,ITemporalData
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
