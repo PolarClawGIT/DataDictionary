@@ -15,44 +15,12 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpSubject : ApplicationData, IApplicationDataForm
     {
-        class ControlItem
-        {
-            public ListViewItem? ListItem { get; set; }
-            public String ControlType { get; private set; }
-            public HelpSubjectIndexPath ControlName { get; private set; }
-            public Boolean IsForm { get; private set; }
-
-            public ControlItem(Control source)
-            {
-                ControlName = source.ToNameSpaceKey();
-
-                if (source is Form)
-                {
-                    if (source.GetType().BaseType is Type baseType)
-                    { ControlType = baseType.Name; }
-                    else { ControlType = source.GetType().Name; }
-
-                    IsForm = true;
-                }
-                else
-                {
-                    Control root = source;
-                    while (root is not Form && root.Parent is not null)
-                    { root = root.Parent; }
-
-                    ControlType = source.GetType().Name;
-                    IsForm = false;
-                }
-            }
-
-            public override string ToString()
-            { return ControlName.MemberFullPath; }
-        }
-
+        HelpSubjectIndex helpSubjectIndex = new HelpSubjectIndex();
+        TemporalIndex? temporalIndex;
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
 
-        IHelpSubjectIndex formIndex;
-        HelpSubjectView formData;
+        //IHelpSubjectIndex formIndex;
+        //HelpSubjectView formData;
 
         public Boolean IsOpenItem(object? item)
         { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
@@ -72,15 +40,22 @@ namespace DataDictionary.Main.Forms.General
 
             // Store and recompute column sizes for List views
             controlData.ResizeColumns();
+            controlData.Enabled = false;
         }
 
         public HelpSubject (IHelpSubjectIndex helpSubject) : this()
         {
-
+            helpSubjectIndex = new HelpSubjectIndex(helpSubject);
         }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this (helpSubject)
         {
+            temporalIndex = new TemporalIndex(temporal);
+        }
+
+        public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject)
+        {
+            controlData.Enabled = true;
         }
 
         public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
@@ -151,17 +126,26 @@ namespace DataDictionary.Main.Forms.General
             helpBinding.DataSource = bindingData;
             helpBinding.Position = 0;
 
-            // TODO: Testing
-            var x = new View_Test(key, BusinessData.ApplicationData.HelpSubjects);
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)
         {
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
-            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
-            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
+            IDatabaseWork factory = BusinessData.GetDbFactory();
+            List<WorkItem> work = new List<WorkItem>();
 
-            BindRtfHelpText();
+
+
+            DoWork(work, onCompleting);
+
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
+                helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
+                helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
+
+                BindRtfHelpText();
+            }
         }
 
         private void BindRtfHelpText()
