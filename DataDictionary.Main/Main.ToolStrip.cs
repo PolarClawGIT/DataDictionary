@@ -44,7 +44,7 @@ namespace DataDictionary.Main
                 new DetailDataView<AttributeValue, Forms.Model.Attribute>
                     (ScopeType.ModelAttribute, data)
                 { SelectedForm = (data) => new Forms.Model.Attribute(data) },
-                BusinessData.Model.ModelAttribute.Attributes);
+                BusinessData.Model.Attributes.Values);
         }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -178,21 +178,21 @@ namespace DataDictionary.Main
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeProperty, data),
-                BusinessData.Model.ModelAttribute.Properties);
+                BusinessData.Model.Attributes.Properties);
         }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeAlias, data),
-                BusinessData.Model.ModelAttribute.Aliases);
+                BusinessData.Model.Attributes.Aliases);
         }
 
         private void menuAttributeDefinitions_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelAttributeDefinition, data),
-                BusinessData.Model.ModelAttribute.Definitions);
+                BusinessData.Model.Attributes.Definitions);
         }
 
         private void menuEntities_Click(object sender, EventArgs e)
@@ -201,35 +201,35 @@ namespace DataDictionary.Main
                 new DetailDataView<EntityValue, Forms.Model.Entity>
                     (ScopeType.ModelEntity, data)
                 { SelectedForm = (data) => new Forms.Model.Entity(data) },
-                BusinessData.Model.ModelEntity.Entities);
+                BusinessData.Model.Entities.Values);
         }
 
         private void menuEntityProperties_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityProperty, data),
-                BusinessData.Model.ModelEntity.Properties);
+                BusinessData.Model.Entities.Properties);
         }
 
         private void menuEntityDefinitions_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityDefinition, data),
-                BusinessData.Model.ModelEntity.Definitions);
+                BusinessData.Model.Entities.Definitions);
         }
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityAlias, data),
-                BusinessData.Model.ModelEntity.Aliases);
+                BusinessData.Model.Entities.Aliases);
         }
 
         private void menuEntityAttributes_Click(object sender, EventArgs e)
         {
             Activate((data) =>
                 new DetailDataView(ScopeType.ModelEntityAttribute, data),
-                BusinessData.Model.ModelEntity.Attributes);
+                BusinessData.Model.Entities.Attributes);
         }
 
         private void menuModelProperty_Click(object sender, EventArgs e)

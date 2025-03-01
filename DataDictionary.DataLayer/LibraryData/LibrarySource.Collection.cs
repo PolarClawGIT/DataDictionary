@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.LibraryData
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey key, DateTime asOfUtcDate)
+        public Command LoadCommand(IConnection connection, IModelKey key, ITemporalKey asOfUtcDate)
         { throw new NotImplementedException(); }
 
         /// <inheritdoc/>
@@ -33,7 +33,7 @@ namespace DataDictionary.DataLayer.LibraryData
         { return LoadCommand(connection, libraryId: library.LibraryId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ILibrarySourceKey key, DateTime asOfUtcDate)
+        public Command LoadCommand(IConnection connection, ILibrarySourceKey key, ITemporalKey asOfUtcDate)
         { throw new NotImplementedException(); }
 
         Command LoadCommand(IConnection connection, Guid? modelId = null, Guid? libraryId = null)

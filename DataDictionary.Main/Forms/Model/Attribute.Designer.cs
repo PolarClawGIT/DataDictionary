@@ -34,7 +34,6 @@ namespace DataDictionary.Main.Forms.Model
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Attribute));
             TableLayoutPanel definitionLayout;
             TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel subjectAreaLayout;
@@ -59,12 +58,12 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
-            domainProperty = new Controls.DomainProperty();
+            propertyControl = new Controls.Property();
             definitionTab = new TabPage();
             definitionData = new DataGridView();
             definitionColumn = new DataGridViewComboBoxColumn();
             definitionSummaryColumn = new DataGridViewTextBoxColumn();
-            domainDefinition = new Controls.DomainDefinition();
+            definitionControl = new Controls.Definition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
@@ -371,7 +370,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyLayout.ColumnCount = 1;
             propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             propertyLayout.Controls.Add(propertiesData, 0, 0);
-            propertyLayout.Controls.Add(domainProperty, 0, 1);
+            propertyLayout.Controls.Add(propertyControl, 0, 1);
             propertyLayout.Dock = DockStyle.Fill;
             propertyLayout.Location = new Point(3, 3);
             propertyLayout.Name = "propertyLayout";
@@ -390,6 +389,7 @@ namespace DataDictionary.Main.Forms.Model
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
+            propertiesData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             propertiesData.Size = new Size(400, 95);
             propertiesData.TabIndex = 1;
             // 
@@ -411,19 +411,13 @@ namespace DataDictionary.Main.Forms.Model
             propertyValueColumn.Name = "propertyValueColumn";
             propertyValueColumn.ReadOnly = true;
             // 
-            // domainProperty
+            // propertyControl
             // 
-            domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
-            domainProperty.ApplyText = "apply";
-            domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 104);
-            domainProperty.Name = "domainProperty";
-            domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
-            domainProperty.PropertyValue = "";
-            domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(400, 230);
-            domainProperty.TabIndex = 2;
-            domainProperty.OnApply += DomainProperty_OnApply;
+            propertyControl.Dock = DockStyle.Fill;
+            propertyControl.Location = new Point(3, 104);
+            propertyControl.Name = "propertyControl";
+            propertyControl.Size = new Size(400, 230);
+            propertyControl.TabIndex = 2;
             // 
             // definitionTab
             // 
@@ -431,7 +425,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Controls.Add(definitionLayout);
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(412, 343);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
@@ -440,7 +434,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionLayout.ColumnCount = 1;
             definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             definitionLayout.Controls.Add(definitionData, 0, 0);
-            definitionLayout.Controls.Add(domainDefinition, 0, 1);
+            definitionLayout.Controls.Add(definitionControl, 0, 1);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(0, 0);
             definitionLayout.Name = "definitionLayout";
@@ -448,7 +442,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(192, 72);
+            definitionLayout.Size = new Size(412, 343);
             definitionLayout.TabIndex = 0;
             // 
             // definitionData
@@ -460,7 +454,8 @@ namespace DataDictionary.Main.Forms.Model
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(180, 13);
+            definitionData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            definitionData.Size = new Size(400, 95);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -480,20 +475,13 @@ namespace DataDictionary.Main.Forms.Model
             definitionSummaryColumn.Name = "definitionSummaryColumn";
             definitionSummaryColumn.ReadOnly = true;
             // 
-            // domainDefinition
+            // definitionControl
             // 
-            domainDefinition.ApplyImage = Properties.Resources.NewRichTextBox;
-            domainDefinition.ApplyText = "apply";
-            domainDefinition.DefinitionId = new Guid("00000000-0000-0000-0000-000000000000");
-            domainDefinition.DefinitionSummary = "";
-            domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 25);
-            domainDefinition.Name = "domainDefinition";
-            domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(180, 41);
-            domainDefinition.TabIndex = 1;
-            domainDefinition.OnApply += DomainDefinition_OnApply;
+            definitionControl.Dock = DockStyle.Fill;
+            definitionControl.Location = new Point(6, 107);
+            definitionControl.Name = "definitionControl";
+            definitionControl.Size = new Size(400, 230);
+            definitionControl.TabIndex = 1;
             // 
             // aliasTab
             // 
@@ -778,17 +766,11 @@ namespace DataDictionary.Main.Forms.Model
         private TabPage entityTab;
         private BindingSource bindingAlias;
         private DataGridView propertiesData;
-        private DataGridViewComboBoxColumn propertyIdColumn;
-        private DataGridViewTextBoxColumn propertyValueColumn;
-        private Controls.DomainProperty domainProperty;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
         private TabPage definitionTab;
         private DataGridView definitionData;
         private BindingSource bindingDefinition;
-        private DataGridViewComboBoxColumn definitionColumn;
-        private DataGridViewTextBoxColumn definitionSummaryColumn;
-        private Controls.DomainDefinition domainDefinition;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private TableLayoutPanel aliaseLayout;
         private DataGridView aliasesData;
@@ -802,5 +784,11 @@ namespace DataDictionary.Main.Forms.Model
         private DataDictionary.Main.Controls.ComboBoxData dataTypeData;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
+        private Controls.Definition definitionControl;
+        private DataGridViewComboBoxColumn definitionColumn;
+        private DataGridViewTextBoxColumn definitionSummaryColumn;
+        private Controls.Property propertyControl;
+        private DataGridViewComboBoxColumn propertyIdColumn;
+        private DataGridViewTextBoxColumn propertyValueColumn;
     }
 }

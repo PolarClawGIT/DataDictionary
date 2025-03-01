@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Securable Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppSecurity;
 using Toolbox.Threading;
 
@@ -33,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
 
         /// <inheritdoc/>
         /// <remarks>SecurableData</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISecurableIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (ISecurableKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>

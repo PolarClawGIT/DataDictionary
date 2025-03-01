@@ -5,10 +5,13 @@ namespace DataDictionary.DataLayer
     /// <summary>
     /// Base Temporal Interface (data elements only)
     /// </summary>
-    public interface ITemporal
+    public interface ITemporal: ITemporalKey
     {
+        /// <inheritdoc/>
+        DateTime ITemporalKey.AsOfUtcDate { get { return CreatedOn ?? DateTime.UtcNow; } }
+
         /// <summary>
-        /// Date on which the record was removed (Update/Delete)
+        /// Date on which the record was Created (Update/Update)
         /// </summary>
         DateTime? CreatedOn { get; }
 

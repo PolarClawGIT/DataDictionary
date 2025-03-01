@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
 
@@ -23,7 +24,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -33,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IAttributeKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>

@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IEntityKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
-        { return factory.CreateSave(this, (IEntityKey)dataKey).ToList(); }
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>

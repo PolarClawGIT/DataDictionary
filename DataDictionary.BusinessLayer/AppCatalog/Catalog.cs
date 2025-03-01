@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
@@ -97,7 +98,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class Catalog : ICatalog, IDataTableFile, INamedScopeSourceData
+    class Catalog : ICatalog, IDataTableFile
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -193,7 +194,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, AppModel.IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, AppModel.IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
@@ -242,7 +243,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
@@ -502,19 +503,27 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
+            
+            work.AddRange(NameSpaceSource.Load<CatalogData, CatalogValue>(catalogs, addNamedScope));
+            work.AddRange(NameSpaceSource.Load<SchemaData, SchemaValue>(schemta, addNamedScope,
+                (parent) => catalogs.FirstOrDefault(w => new CatalogKeyName(parent).Equals(w))));
 
-            work.AddRange(catalogs.LoadNamedScope(addNamedScope));
-            work.AddRange(schemta.LoadNamedScope(addNamedScope));
-            work.AddRange(domains.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<DomainData, DomainValue>(domains, addNamedScope,
+                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
 
-            work.AddRange(tables.LoadNamedScope(addNamedScope));
-            work.AddRange(tableColumns.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<TableData, TableValue>(tables, addNamedScope,
+                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
+            work.AddRange(NameSpaceSource.Load<TableColumnData, TableColumnValue>(tableColumns, addNamedScope,
+                (parent) => tables.FirstOrDefault(w => new TableKeyName(parent).Equals(w))));
+            work.AddRange(NameSpaceSource.Load<ConstraintData, ConstraintValue>(constraints, addNamedScope,
+                (parent) => tables.FirstOrDefault(w => new TableKeyName(parent).Equals(w))));
 
-            work.AddRange(routines.LoadNamedScope(addNamedScope));
-            work.AddRange(routineParameters.LoadNamedScope(addNamedScope));
-            work.AddRange(routineColumns.LoadNamedScope(addNamedScope));
-
-            work.AddRange(constraints.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<RoutineData, RoutineValue>(routines, addNamedScope,
+                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
+            work.AddRange(NameSpaceSource.Load<RoutineParameterData, RoutineParameterValue>(routineParameters, addNamedScope,
+                (parent) => routines.FirstOrDefault(w => new RoutineKeyName(parent).Equals(w))));
+            work.AddRange(NameSpaceSource.Load<RoutineColumnData, RoutineColumnValue>(routineColumns, addNamedScope,
+                (parent) => routines.FirstOrDefault(w => new RoutineKeyName(parent).Equals(w))));
 
             return work;
         }

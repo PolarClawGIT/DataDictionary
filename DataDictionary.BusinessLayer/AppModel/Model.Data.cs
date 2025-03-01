@@ -1,7 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -22,8 +22,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     class ModelData : ModelCollection<ModelValue>, IModelData,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>, IDataTableFile,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -32,7 +31,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -64,13 +63,5 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Model</remarks>
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<ModelData, ModelValue>
-                (data: this, addNamedScope: addNamedScope);
-        }
     }
 }

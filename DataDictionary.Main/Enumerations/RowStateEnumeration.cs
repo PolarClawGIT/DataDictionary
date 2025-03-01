@@ -156,6 +156,7 @@ namespace DataDictionary.Main.Enumerations
                 if (primary.Current is IBindingRowState value)
                 {
                     value.RowStateChanged += Primary_RowStateChanged;
+                    setRowState(value.RowState());
                     primaryRowState = value;
                 }
             }

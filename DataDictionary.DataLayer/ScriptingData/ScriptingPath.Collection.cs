@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
         
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey key, DateTime asOfUtcDate)
+        public Command LoadCommand(IConnection connection, IModelKey key, ITemporalKey asOfUtcDate)
         { throw new NotImplementedException(); }
 
         /// <inheritdoc/>
@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         { return LoadCommand(connection, templateId: templateKey.TemplateId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IScriptingTemplateKey key, DateTime asOfUtcDate)
+        public Command LoadCommand(IConnection connection, IScriptingTemplateKey key, ITemporalKey asOfUtcDate)
         { throw new NotImplementedException(); }
 
         private Command LoadCommand(IConnection connection, Guid? modelId = null, Guid? templateId = null)

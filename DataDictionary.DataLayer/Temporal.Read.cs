@@ -6,7 +6,7 @@ namespace DataDictionary.DataLayer;
 /// <summary>
 /// A data object capable of Reading History (Modification) Data
 /// </summary>
-public interface ITemporalData
+public interface IReadTemporal
 {
     /// <summary>
     /// Gets the Database Command that returns History data
@@ -20,7 +20,7 @@ public interface ITemporalData
 /// A data object capable of Reading History (Modification) Data by Key
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
-public interface ITemporalData<TKey>
+public interface IReadTemporal<TKey>
     where TKey : IKey
 {
     /// <summary>

@@ -49,13 +49,13 @@ namespace DataDictionary.Main.Forms.Model
             if (entityItem is null)
             {
                 entityItem = new EntityValue();
-                BusinessData.Model.ModelEntity.Entities.Add(entityItem);
+                BusinessData.Model.Entities.Values.Add(entityItem);
                 SendMessage(new RefreshNavigation());
             }
 
             EntityIndex key = new EntityIndex(entityItem);
 
-            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.ModelEntity.Entities, w => key.Equals(w));
+            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.Entities.Values, w => key.Equals(w));
             data.ListChanged += ListChanged;
 
             bindingEntity.DataSource = data;
@@ -63,11 +63,11 @@ namespace DataDictionary.Main.Forms.Model
 
             if (bindingEntity.Current is IEntityValue current)
             {
-                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.Model.ModelEntity.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.ModelEntity.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.ModelEntity.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.ModelEntity.SubjectArea, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.ModelEntity.Attributes, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
+                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.Model.Entities.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.Entities.Definitions, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
                 bindingAttributeDetail.DataSource = new List<AttributeValue>();
             }
 
@@ -110,11 +110,15 @@ namespace DataDictionary.Main.Forms.Model
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            PropertyNameList.Load(propertyIdColumn, BusinessData.Model.Properties);
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+            propertyControl.BindTo(bindingProperty, BusinessData.Model.Properties);
 
+            DefinitionNameList.Load(definitionColumn, BusinessData.Model.Definitions);
             definitionData.AutoGenerateColumns = false;
             definitionData.DataSource = bindingDefinition;
+            definitionControl.BindTo(bindingDefinition, BusinessData.Model.Definitions);
 
             // Attribute Handling
             attributeData.AutoGenerateColumns = false;
@@ -125,7 +129,7 @@ namespace DataDictionary.Main.Forms.Model
             attributeAliasData.DataBindings.Add(new Binding(nameof(attributeAliasData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
             attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
             attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
-            subjectArea.BindTo(bindingSubjectArea);
+            subjectArea.BindTo(bindingSubjectArea, BusinessData.Model.SubjectAreas);
 
             // Alias Handling
             ScopeNameList.Load(aliaseScopeColumn);
@@ -149,7 +153,7 @@ namespace DataDictionary.Main.Forms.Model
             base.DeleteCommand_Click(sender, e);
 
             if (bindingEntity.Current is IEntityValue current)
-            { DoWork(BusinessData.Model.ModelEntity.Delete(current), Complete); }
+            { DoWork(BusinessData.Model.Entities.Delete(current), Complete); }
 
             void Complete(RunWorkerCompletedEventArgs args)
             { SendMessage(new RefreshNavigation()); }
@@ -157,11 +161,9 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is IEntityValue current)
+            if (bindingEntity.Current is EntityValue current)
             {
                 EntityPropertyValue newItem = new EntityPropertyValue(current);
-                newItem.PropertyId = domainProperty.PropertyId;
-                newItem.PropertyValue = domainProperty.PropertyValue;
                 e.NewObject = newItem;
             }
         }
@@ -187,30 +189,12 @@ namespace DataDictionary.Main.Forms.Model
         }
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        {
-            if (bindingProperty.Current is EntityPropertyValue current)
-            {
-                domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
-            }
-        }
+        { }
 
-        private void DomainProperty_OnApply(object sender, EventArgs e)
-        {
-            if (bindingProperty.DataSource is IList<EntityPropertyValue> properties
-                && properties.FirstOrDefault(
-                    w => w.PropertyId == domainProperty.PropertyId)
-                is EntityPropertyValue value)
-            {
-                value.PropertyValue = domainProperty.PropertyValue;
-                bindingProperty.Position = properties.IndexOf(value);
-            }
-            else { bindingProperty.AddNew(); }
-        }
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (addingSubject is SubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
+            if (addingSubject is ISubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
             {
                 EntitySubjectAreaValue newItem = new EntitySubjectAreaValue(entity, subject);
                 e.NewObject = newItem;
@@ -218,14 +202,14 @@ namespace DataDictionary.Main.Forms.Model
             addingSubject = null;
         }
 
-        SubjectAreaValue? addingSubject = null;
-        private void SubjectArea_OnSubjectAdd(object sender, SubjectAreaValue e)
+        ISubjectAreaValue? addingSubject = null;
+        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
         {
             addingSubject = e;
             bindingSubjectArea.AddNew();
         }
 
-        private void SubjectArea_OnSubjectRemove(object sender, SubjectAreaValue e)
+        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
         {
             SubjectAreaIndex key = new SubjectAreaIndex(e);
 
@@ -239,37 +223,13 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingEntity.Current is EntityValue current)
             {
                 EntityDefinitionValue newItem = new EntityDefinitionValue(current);
-                newItem.DefinitionId = domainDefinition.DefinitionId;
-                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
-                newItem.DefinitionText = domainDefinition.DefinitionText;
                 e.NewObject = newItem;
             }
         }
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        {
-            if (bindingDefinition.Current is EntityDefinitionValue current)
-            {
-                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
-                domainDefinition.DefinitionText = current.DefinitionText;
-                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
-            }
-        }
+        { }
 
-        private void DomainDefinition_OnApply(object sender, EventArgs e)
-        {
-            if (bindingDefinition.DataSource is IList<EntityDefinitionValue> definition
-                && definition.FirstOrDefault(
-                    w => domainDefinition.Definition is IDefinitionIndex
-                    && domainDefinition.Definition.Equals(w))
-                is EntityDefinitionValue value)
-            {
-                value.DefinitionSummary = domainDefinition.DefinitionSummary;
-                value.DefinitionText = domainDefinition.DefinitionText;
-                bindingDefinition.Position = definition.IndexOf(value);
-            }
-            else { bindingDefinition.AddNew(); }
-        }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
@@ -298,10 +258,10 @@ namespace DataDictionary.Main.Forms.Model
 
                 //TODO: Include Attribute Path, not just the alias of the Attribute.
 
-                var attributes = BusinessData.Model.ModelAttribute.
+                var attributes = BusinessData.Model.Attributes.
                     FindAttribute(aliasIndex).
                     Select(s => new AttributeIndex(s)).
-                    Join(BusinessData.Model.ModelAttribute.Attributes,
+                    Join(BusinessData.Model.Attributes.Values,
                         key => key,
                         attribute => new AttributeIndex(attribute),
                         (key, attribute) => attribute).

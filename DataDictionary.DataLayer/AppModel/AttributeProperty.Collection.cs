@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿// Ignore Spelling: Utc
+
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -13,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,
-        ITemporalData<IModelKey>
+        IReadTemporal<IModelKey>
         where TItem : AttributePropertyItem, new()
     {
         /// <inheritdoc/>
@@ -21,16 +23,16 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, modelId: modelId.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IAttributeKey attributeKey)
         { return LoadCommand(connection, attributeId: attributeKey.AttributeId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IAttributeKey attributeKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IAttributeKey attributeKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, attributeId: attributeKey.AttributeId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)

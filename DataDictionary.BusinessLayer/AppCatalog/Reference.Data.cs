@@ -2,6 +2,7 @@
 
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
@@ -29,7 +30,7 @@ class ReferenceData : ReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, ITemporalIndex asOfUtcDate)
     { return factory.CreateLoad(this, (ICatalogKey)dataKey, asOfUtcDate).ToList(); }
 
     /// <inheritdoc/>
@@ -39,7 +40,7 @@ class ReferenceData : ReferenceCollection<ReferenceValue>,
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>
-    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+    public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
     { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
     /// <inheritdoc/>

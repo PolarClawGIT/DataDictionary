@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         IReadData<IModelKey>, IReadData<ICatalogKey>, IReadData<IReferenceKey>,
         IWriteData, IWriteData<ICatalogKey>, IWriteData<IReferenceKey>,
         IRemoveItem<ICatalogKey>,
-        ITemporalData<ICatalogKey>, IInfomationSchemaCollection<IReference>
+        IReadTemporal<ICatalogKey>, IInfomationSchemaCollection<IReference>
         where TItem : ReferenceItem, IReferenceItem, new()
     {
         /// <inheritdoc/>
@@ -24,24 +24,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         { return LoadCommand(connection, modelId : modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ICatalogKey catalogKey)
         { return LoadCommand(connection, catalogId: catalogKey.CatalogId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, ICatalogKey catalogKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, catalogId: catalogKey.CatalogId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IReferenceKey referenceKey)
         { return LoadCommand(connection, referenceId: referenceKey.ReferenceId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IReferenceKey referenceKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, referenceId: referenceKey.ReferenceId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IReferenceKey referenceKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, referenceId: referenceKey.ReferenceId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ICatalogKey catalogKey)

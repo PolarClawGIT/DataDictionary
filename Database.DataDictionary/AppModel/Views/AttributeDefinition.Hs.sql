@@ -1,5 +1,18 @@
 ﻿CREATE VIEW [AppModel].[AttributeDefinitionHs] As
 -- Temporal View
+With [Dates] As (
+	Select	[AttributeId],
+			[DefinitionId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[AttributeDefinition]
+	Union
+	Select	[AttributeId],
+			[DefinitionId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[AttributeDefinition]
+	Where	[SysStart] != [SysEnd])
 Select	D.[AttributeId], --PK, AK
 		D.[DefinitionId], -- PK
 		FA.[AttributeTitle],
@@ -9,24 +22,24 @@ Select	D.[AttributeId], --PK, AK
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		C.[ModifiedOn] As [CreatedOn],
+		IsNull(C.[ModifiedOn], D.[SysStart]) As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
-		R.[ModifiedOn] As [RemovedOn],
+		IsNull(R.[ModifiedOn], NullIf(D.[SysEnd],'9999-12-31 23:59:59.9999999')) As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[AttributeDefinition] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsModel].[AttributeDefinition]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[DefinitionId] = D.[DefinitionId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsModel].[AttributeDefinition]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[DefinitionId] = D.[DefinitionId] And
 					[SysStart] >= D.[SysEnd]) N

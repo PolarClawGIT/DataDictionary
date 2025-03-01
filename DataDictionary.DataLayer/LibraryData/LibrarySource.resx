@@ -125,9 +125,9 @@
     <comment>GUID</comment>
   </data>
   <data name="SetProcedure" xml:space="preserve">
-    <value>[App_DataDictionary].[procSetScriptingAttribute]</value>
+    <value>[App_DataDictionary].[procSetLibrarySource]</value>
   </data>
   <data name="TableType" xml:space="preserve">
-    <value>[App_DataDictionary].[typeScriptingAttribute]</value>
+    <value>[App_DataDictionary].[typeLibrarySource]</value>
   </data>
 </root>

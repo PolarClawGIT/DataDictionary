@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.AppCatalog;
+﻿// Ignore Spelling: Utc
+
+using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
@@ -15,32 +17,32 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
-        /// List of ModelEntity within the Model.
+        /// List of Entities within the Model.
         /// </summary>
-        IEntityData Entities { get; }
+        IEntityData Values { get; }
 
         /// <summary>
-        /// List of Aliases for the ModelEntity within the Model.
+        /// List of Aliases for the Entities within the Model.
         /// </summary>
         IEntityAliasData Aliases { get; }
 
         /// <summary>
-        /// List of Properties for the ModelEntity within the Model.
+        /// List of Properties for the Entities within the Model.
         /// </summary>
         IEntityPropertyData Properties { get; }
 
         /// <summary>
-        /// List of Definitions for the ModelEntity within the Model.
+        /// List of Definitions for the Entities within the Model.
         /// </summary>
         IEntityDefinitionData Definitions { get; }
 
         /// <summary>
-        /// List of Attributes for the ModelEntity within the Model.
+        /// List of Attributes for the Entities within the Model.
         /// </summary>
         IEntityAttributeData Attributes { get; }
 
         /// <summary>
-        /// List of Subject Areas for the ModelEntity within the Model.
+        /// List of Subject Areas for the Entities within the Model.
         /// </summary>
         IEntitySubjectAreaData SubjectArea { get; }
 
@@ -52,19 +54,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         IEnumerable<IEntityValue> FindEntity(IAliasIndex aliasIndex);
 
         /// <summary>
-        /// Imports a TableEntity into the list of ModelEntity
+        /// Imports a TableEntity into the list of Entities
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         IEntityValue Import(AppCatalog.TableEntity source);
     }
 
-    class Entity : IEntity, IDataTableFile, INamedScopeSourceData
+    class Entity : IEntity, IDataTableFile
     {
-        public required Model Model { get; init; }
-
         /// <inheritdoc/>
-        public IEntityData Entities { get { return entityValues; } }
+        public IEntityData Values { get { return entityValues; } }
         private readonly EntityData entityValues;
 
         /// <inheritdoc/>
@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
 
-        public Entity () : base()
+        public Entity() : base()
         {
             entityValues = new EntityData();
             aliasValues = new EntityAliasData();
@@ -113,7 +113,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
@@ -141,7 +141,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
@@ -245,74 +245,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progressChanged = (completed, total) => { };
-
-            WorkItem newWork = new WorkItem(ref progressChanged)
-            {
-                WorkName = "Adding NamedScopes (Entities)",
-                DoWork = () =>
-                {
-                    Int32 completed = 0;
-                    Int32 total = entityValues.Count();
-
-                    ModelValue? model = Model.Models.FirstOrDefault();
-
-                    foreach (EntityValue entity in entityValues)
-                    {
-                        Boolean hasParent = false;
-
-                        foreach (SubjectAreaValue subjectParent in ParentSubjects(entity))
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(entity)
-                            {
-                                GetPath = () => new PathIndex(
-                                    ((IPathValue)subjectParent).Path,
-                                    ((IPathValue)entity).Path)
-                            };
-
-                            addNamedScope(subjectParent, newItem);
-                            hasParent = true;
-                        }
-
-                        if (!hasParent) // No Parents found
-                        {
-                            NamedScopeValue newItem = new NamedScopeValue(entity);
-                            addNamedScope(model, newItem);
-                        }
-
-                        progressChanged(completed++, total);
-                    }
-                }
-            };
-
-            work.Add(newWork);
-
-            return work;
-
-            IEnumerable<SubjectAreaValue> ParentSubjects(EntityValue entity)
-            {
-                EntityIndex key = new EntityIndex(entity);
-
-                return entityValues.
-                    Where(w => key.Equals(w)).
-                    Join(SubjectArea,
-                        entity => new EntityIndex(entity),
-                        subject => new EntityIndex(subject),
-                        (entity, subject) => new SubjectAreaIndex(subject)).
-                    Join(Model.SubjectAreas,
-                        subjectKey => subjectKey,
-                        subject => new SubjectAreaIndex(subject),
-                        (key, subject) => subject).
-                    ToList();
-            }
-
-        }
-
-        /// <inheritdoc/>
         public IEnumerable<IEntityValue> FindEntity(IAliasIndex aliasIndex)
         {
             AliasIndex key = new AliasIndex(aliasIndex);
@@ -356,7 +288,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                     { Aliases.Add(new EntityAliasValue(value, aliasIndex)); }
                 }
 
-                // ModelAttribute get replaced
+                // Attributes get replaced
                 attributeValues.Delete(entityIndex);
                 foreach (IEntityAttributeValue item in source.Attributes)
                 { Attributes.Add(item); }

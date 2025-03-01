@@ -13,17 +13,17 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         ILoadData, ISaveData
     {
         /// <summary>
-        /// Wrapper for Application Help.
+        /// List of Application Help.
         /// </summary>
         IHelpSubjectData HelpSubjects { get; }
 
         /// <summary>
-        /// Wrapper for Application (Common) Properties.
+        /// List of Application (Common) Properties.
         /// </summary>
         IPropertyData Properties { get; }
 
         /// <summary>
-        /// Wrapper for Application (Common) Definitions.
+        /// List of Application (Common) Definitions.
         /// </summary>
         IDefinitionData Definitions { get; }
 

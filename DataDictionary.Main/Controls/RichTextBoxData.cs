@@ -85,7 +85,7 @@ namespace DataDictionary.Main.Controls
         public RichTextBoxData()
         { InitializeComponent(); }
 
-        private void richTextBox_ReadOnlyChanged(object sender, EventArgs e)
+        private void RichTextBox_ReadOnlyChanged(object sender, EventArgs e)
         {
             toolStripBold.Enabled = !richTextBox.ReadOnly;
             toolStripItalic.Enabled = !richTextBox.ReadOnly;
@@ -107,7 +107,7 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        private void toolStripItalic_Click(object sender, EventArgs e)
+        private void ToolStripItalic_Click(object sender, EventArgs e)
         {
             if (richTextBox.SelectionFont is Font value)
             {
@@ -117,7 +117,7 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        private void toolStripUnderline_Click(object sender, EventArgs e)
+        private void ToolStripUnderline_Click(object sender, EventArgs e)
         {
             if (richTextBox.SelectionFont is Font value)
             {
@@ -127,8 +127,7 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-
-        private void toolStripStrikeThrough_Click(object sender, EventArgs e)
+        private void ToolStripStrikeThrough_Click(object sender, EventArgs e)
         {
             if (richTextBox.SelectionFont is Font value)
             {
@@ -138,12 +137,12 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        private void toolStripBulletList_Click(object sender, EventArgs e)
+        private void ToolStripBulletList_Click(object sender, EventArgs e)
         {
             richTextBox.SelectionBullet = !richTextBox.SelectionBullet;
         }
 
-        private void toolStripClearFormating_Click(object sender, EventArgs e)
+        private void ToolStripClearFormating_Click(object sender, EventArgs e)
         {
             // Stupid Cheat way of clearing selected text.
             using (RichTextBox temp = new RichTextBox())
@@ -155,6 +154,9 @@ namespace DataDictionary.Main.Controls
             }
         }
 
+        public void AddTools(ToolStrip tools)
+        { ToolStripManager.Merge(tools, toolStrip); }
+
         public void Cut() { richTextBox.Cut(); }
 
         public void Copy() { richTextBox.Copy(); }
@@ -165,11 +167,11 @@ namespace DataDictionary.Main.Controls
 
         public void Undo() { richTextBox.Undo(); }
 
-        private void toolStripCut_Click(object sender, EventArgs e) { Cut(); }
+        private void ToolStripCut_Click(object sender, EventArgs e) { Cut(); }
 
-        private void toolStripCopy_Click(object sender, EventArgs e) { Copy(); }
+        private void ToolStripCopy_Click(object sender, EventArgs e) { Copy(); }
 
-        private void toolStripPaste_Click(object sender, EventArgs e) { Paste(); }
+        private void ToolStripPaste_Click(object sender, EventArgs e) { Paste(); }
 
         public new event EventHandler? Validated;
         private void richTextBox_Validated(object sender, EventArgs e)

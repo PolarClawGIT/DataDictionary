@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.LibraryData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [App_DataDictionary].[procSetScriptingAttribute].
+        ///   Looks up a localized string similar to [App_DataDictionary].[procSetLibrarySource].
         /// </summary>
         internal static string SetProcedure {
             get {
@@ -88,7 +88,7 @@ namespace DataDictionary.DataLayer.LibraryData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [App_DataDictionary].[typeScriptingAttribute].
+        ///   Looks up a localized string similar to [App_DataDictionary].[typeLibrarySource].
         /// </summary>
         internal static string TableType {
             get {

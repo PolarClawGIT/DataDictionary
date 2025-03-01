@@ -1,5 +1,16 @@
 ﻿CREATE VIEW [AppCatalog].[RoutineColumnHs] AS
 -- Temporal View
+With [Dates] As (
+	Select	[RoutineColumnId],
+			[SysStart],
+			[SysEnd]
+	From	[AppCatalog].[RoutineColumn]
+	Union
+	Select	[RoutineColumnId],
+			[SysStart],
+			[SysEnd]
+	From	[HsCatalog].[RoutineColumn]
+	Where	[SysStart] != [SysEnd])
 Select	FC.[CatalogId], -- AK
 		FS.[SchemaId],
 		FR.[RoutineId],
@@ -36,23 +47,23 @@ Select	FC.[CatalogId], -- AK
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		C.[ModifiedOn] As [CreatedOn],
+		IsNull(C.[ModifiedOn], D.[SysStart]) As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
-		R.[ModifiedOn] As [RemovedOn],
+		IsNull(R.[ModifiedOn], NullIf(D.[SysEnd],'9999-12-31 23:59:59.9999999')) As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppCatalog].[RoutineColumn] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[RoutineColumn]
+			From	[Dates]
 			Where	[RoutineColumnId] = D.[RoutineColumnId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[RoutineColumn]
+			From	[Dates]
 			Where	[RoutineColumnId] = D.[RoutineColumnId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C

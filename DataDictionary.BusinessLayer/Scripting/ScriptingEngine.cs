@@ -8,6 +8,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -29,7 +30,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ITemplateNodeData TemplateNodes { get; }
 
         /// <summary>
-        /// List of Scripting ModelAttribute for the Template
+        /// List of Scripting Attributes for the Template
         /// </summary>
         ITemplateAttributeData TemplateAttributes { get; }
 
@@ -52,8 +53,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile,
-        INamedScopeSourceData
+    class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -203,7 +203,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
@@ -227,7 +227,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
@@ -242,7 +242,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(templateValues.LoadNamedScope(addNamedScope));
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
 
             return work;
         }

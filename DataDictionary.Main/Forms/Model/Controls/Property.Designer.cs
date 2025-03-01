@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class DomainProperty
+    partial class Property
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,30 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
+            propertyLayout = new TableLayoutPanel();
             propertyTabs = new TabControl();
             propertyValueTab = new TabPage();
             propertyValueData = new DataDictionary.Main.Controls.TextBoxData();
             propertyChoiceTab = new TabPage();
             propertyChoiceData = new DataDictionary.Main.Controls.CheckedListBoxData();
             propertyTypeData = new DataDictionary.Main.Controls.ComboBoxData();
-            propertyLayout = new TableLayoutPanel();
-            applyCommand = new Button();
+            propertyLayout.SuspendLayout();
             propertyTabs.SuspendLayout();
             propertyValueTab.SuspendLayout();
             propertyChoiceTab.SuspendLayout();
-            propertyLayout.SuspendLayout();
             SuspendLayout();
+            // 
+            // propertyLayout
+            // 
+            propertyLayout.ColumnCount = 1;
+            propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            propertyLayout.Controls.Add(propertyTabs, 0, 1);
+            propertyLayout.Controls.Add(propertyTypeData, 0, 0);
+            propertyLayout.Dock = DockStyle.Fill;
+            propertyLayout.Location = new Point(0, 0);
+            propertyLayout.Name = "propertyLayout";
+            propertyLayout.RowCount = 2;
+            propertyLayout.RowStyles.Add(new RowStyle());
+            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            propertyLayout.Size = new Size(265, 198);
+            propertyLayout.TabIndex = 4;
             // 
             // propertyTabs
             // 
-            propertyLayout.SetColumnSpan(propertyTabs, 2);
             propertyTabs.Controls.Add(propertyValueTab);
             propertyTabs.Controls.Add(propertyChoiceTab);
             propertyTabs.Dock = DockStyle.Fill;
-            propertyTabs.Location = new Point(3, 53);
+            propertyTabs.Location = new Point(3, 55);
             propertyTabs.Name = "propertyTabs";
             propertyTabs.SelectedIndex = 0;
-            propertyTabs.Size = new Size(309, 212);
+            propertyTabs.Size = new Size(259, 140);
             propertyTabs.TabIndex = 2;
             // 
             // propertyValueTab
@@ -61,7 +74,7 @@
             propertyValueTab.Location = new Point(4, 24);
             propertyValueTab.Name = "propertyValueTab";
             propertyValueTab.Padding = new Padding(3);
-            propertyValueTab.Size = new Size(301, 184);
+            propertyValueTab.Size = new Size(251, 112);
             propertyValueTab.TabIndex = 0;
             propertyValueTab.Text = "Value";
             // 
@@ -74,8 +87,9 @@
             propertyValueData.Multiline = true;
             propertyValueData.Name = "propertyValueData";
             propertyValueData.ReadOnly = false;
-            propertyValueData.Size = new Size(295, 178);
+            propertyValueData.Size = new Size(245, 106);
             propertyValueData.TabIndex = 1;
+            propertyValueData.WordWrap = true;
             // 
             // propertyChoiceTab
             // 
@@ -84,7 +98,7 @@
             propertyChoiceTab.Location = new Point(4, 24);
             propertyChoiceTab.Name = "propertyChoiceTab";
             propertyChoiceTab.Padding = new Padding(3);
-            propertyChoiceTab.Size = new Size(301, 184);
+            propertyChoiceTab.Size = new Size(192, 72);
             propertyChoiceTab.TabIndex = 2;
             propertyChoiceTab.Text = "Choice";
             // 
@@ -99,7 +113,7 @@
             propertyChoiceData.HeaderText = "Property Choice";
             propertyChoiceData.Location = new Point(3, 3);
             propertyChoiceData.Name = "propertyChoiceData";
-            propertyChoiceData.Size = new Size(295, 178);
+            propertyChoiceData.Size = new Size(186, 66);
             propertyChoiceData.TabIndex = 2;
             propertyChoiceData.ItemCheck += PropertyChoiceData_ItemCheck;
             propertyChoiceData.EnabledChanged += PropertyChoiceData_EnabledChanged;
@@ -109,73 +123,41 @@
             propertyTypeData.AutoSize = true;
             propertyTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             propertyTypeData.Dock = DockStyle.Fill;
-            propertyTypeData.DropDownStyle = ComboBoxStyle.DropDown;
+            propertyTypeData.DropDownStyle = ComboBoxStyle.DropDownList;
             propertyTypeData.HeaderText = "Property Type";
             propertyTypeData.Location = new Point(3, 3);
             propertyTypeData.Name = "propertyTypeData";
             propertyTypeData.ReadOnly = false;
-            propertyTypeData.Size = new Size(241, 44);
+            propertyTypeData.Size = new Size(259, 46);
             propertyTypeData.TabIndex = 0;
-            propertyTypeData.SelectedIndexChanged += propertyTypeData_SelectedIndexChanged;
+            propertyTypeData.SelectedIndexChanged += PropertyTypeData_SelectedIndexChanged;
+            propertyTypeData.SelectionChangeCommitted += PropertyTypeData_SelectionChangeCommitted;
             // 
-            // propertyLayout
-            // 
-            propertyLayout.ColumnCount = 2;
-            propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            propertyLayout.ColumnStyles.Add(new ColumnStyle());
-            propertyLayout.Controls.Add(applyCommand, 1, 0);
-            propertyLayout.Controls.Add(propertyTabs, 0, 1);
-            propertyLayout.Controls.Add(propertyTypeData, 0, 0);
-            propertyLayout.Dock = DockStyle.Fill;
-            propertyLayout.Location = new Point(0, 0);
-            propertyLayout.Name = "propertyLayout";
-            propertyLayout.RowCount = 2;
-            propertyLayout.RowStyles.Add(new RowStyle());
-            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            propertyLayout.Size = new Size(315, 268);
-            propertyLayout.TabIndex = 3;
-            // 
-            // applyCommand
-            // 
-            applyCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            applyCommand.AutoSize = true;
-            applyCommand.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            applyCommand.Image = Properties.Resources.NewProperty;
-            applyCommand.Location = new Point(250, 22);
-            applyCommand.Name = "applyCommand";
-            applyCommand.Size = new Size(62, 25);
-            applyCommand.TabIndex = 4;
-            applyCommand.Text = "apply";
-            applyCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            applyCommand.UseVisualStyleBackColor = true;
-            applyCommand.Click += ApplyCommand_Click;
-            // 
-            // DomainProperty
+            // Property
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(propertyLayout);
-            Name = "DomainProperty";
-            Size = new Size(315, 268);
+            Name = "Property";
+            Size = new Size(265, 198);
+            propertyLayout.ResumeLayout(false);
+            propertyLayout.PerformLayout();
             propertyTabs.ResumeLayout(false);
             propertyValueTab.ResumeLayout(false);
             propertyValueTab.PerformLayout();
             propertyChoiceTab.ResumeLayout(false);
             propertyChoiceTab.PerformLayout();
-            propertyLayout.ResumeLayout(false);
-            propertyLayout.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TabPage propertyValueTab;
-        private DataDictionary.Main.Controls.ComboBoxData propertyTypeData;
-        private DataDictionary.Main.Controls.TextBoxData propertyValueData;
-        private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
-        private TabControl propertyTabs;
-        private TabPage propertyChoiceTab;
         private TableLayoutPanel propertyLayout;
-        private Button applyCommand;
+        private TabControl propertyTabs;
+        private TabPage propertyValueTab;
+        private DataDictionary.Main.Controls.TextBoxData propertyValueData;
+        private TabPage propertyChoiceTab;
+        private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
+        private DataDictionary.Main.Controls.ComboBoxData propertyTypeData;
     }
 }

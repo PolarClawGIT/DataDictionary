@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         IReadData, IWriteData,
         IReadData<IHelpSubjectKey>, IWriteData<IHelpSubjectKey>,
         IRemoveItem<IHelpSubjectKey>,
-        ITemporalData
+        IReadTemporal
         where TItem : HelpSubjectItem, IHelpSubjectItem, new()
     {
         /// <inheritdoc/>
@@ -27,8 +27,8 @@ namespace DataDictionary.DataLayer.AppGeneral
         { return LoadCommand(connection, helpId: key.HelpId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IHelpSubjectKey key, DateTime asOfUtcDate)
-        { return LoadCommand(connection, helpId: key.HelpId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IHelpSubjectKey key, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, helpId: key.HelpId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection)

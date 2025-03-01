@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.AppModel
         IWriteData<IModelKey>, IWriteData<IDefinitionKey>,
         IDeleteData<IDefinitionKey>,
         IRemoveItem<IDefinitionKey>,
-        ITemporalData<IModelKey>, ITemporalData<IDefinitionKey>
+        IReadTemporal<IModelKey>, IReadTemporal<IDefinitionKey>
         where TItem : DefinitionItem, new()
     {
         /// <inheritdoc/>
@@ -28,16 +28,16 @@ namespace DataDictionary.DataLayer.AppModel
         { return LoadCommand(connection, modelId : modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDefinitionKey definitionKey)
         { return LoadCommand(connection, definitionId : definitionKey.DefinitionId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDefinitionKey definitionKey, DateTime asOfUtcDate)
-        { return LoadCommand(connection, definitionId: definitionKey.DefinitionId, asOfUtcDate: asOfUtcDate); }
+        public Command LoadCommand(IConnection connection, IDefinitionKey definitionKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, definitionId: definitionKey.DefinitionId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)

@@ -7,6 +7,7 @@ using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
@@ -33,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class TableData : TableCollection<TableValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, ITableData, INamedScopeSourceData
+        ICatalogModel, ITableData
     {
         /// <inheritdoc/>
         public required ICatalog Model { get; init; }
@@ -45,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (ICatalogKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -55,7 +56,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -67,16 +68,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<TableData, TableValue>
-                (this, addNamedScope,
-                (value) => Model.DbSchemta.
-                    FirstOrDefault(w => new SchemaKeyName(value).Equals(w)));
-        }
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>

@@ -2,6 +2,7 @@
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -18,13 +19,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IDataTableFile, INamedScopeSourceData
+        IDataTableFile
     {
-        /// <summary>
-        /// Reference to the containing Model
-        /// </summary>
-        public required Model Model { get; init; }
-
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
@@ -32,7 +28,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -42,7 +38,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISubjectAreaIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (ISubjectAreaKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -79,16 +75,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> Delete(ISubjectAreaIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Remove(dataKey); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<SubjectAreaData, SubjectAreaValue>(
-                data: this,
-                addNamedScope: addNamedScope,
-                getParent: (value) => Model.Models.FirstOrDefault());
-        }
 
     }
 }

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -18,8 +19,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibrarySourceData: LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -31,8 +31,8 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey, DateTime asOfUtcDate)
-        { return factory.CreateLoad(this, (ILibrarySourceKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (ILibrarySourceKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
@@ -41,8 +41,8 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
-        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
@@ -53,14 +53,6 @@ namespace DataDictionary.BusinessLayer.Library
         /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<LibrarySourceData, LibrarySourceValue>
-                (this, addNamedScope);
-        }
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>

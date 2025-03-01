@@ -12,10 +12,10 @@
                 <xs:element name="HelpToolTip" type="xs:string" minOccurs="0" />
                 <xs:element name="HelpText" type="xs:string" minOccurs="0" />
                 <xs:element name="NameSpace" type="xs:string" minOccurs="0" />
-                <xs:element name="CreatedBy" type="xs:string" minOccurs="0" />
                 <xs:element name="CreatedOn" type="xs:dateTime" minOccurs="0" />
-                <xs:element name="RemovedBy" type="xs:string" minOccurs="0" />
+                <xs:element name="CreatedBy" type="xs:string" minOccurs="0" />
                 <xs:element name="RemovedOn" type="xs:dateTime" minOccurs="0" />
+                <xs:element name="RemovedBy" type="xs:string" minOccurs="0" />
                 <xs:element name="IsInserted" type="xs:boolean" minOccurs="0" />
                 <xs:element name="IsUpdated" type="xs:boolean" minOccurs="0" />
                 <xs:element name="IsDeleted" type="xs:boolean" minOccurs="0" />
@@ -74,9 +74,9 @@
 \pard\f0\fs18 Is the Attribute is used as a Key (part of a PK, FK, or AK)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isKeyData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isKeyData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -92,8 +92,8 @@
 }
 </HelpText>
     <NameSpace>[Unit Test]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -153,8 +153,8 @@ If the database is empty, this can be addressed by using the application. Under 
 }
 </HelpText>
     <NameSpace>[Setup]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -177,8 +177,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
 }
 </HelpText>
     <NameSpace>[About]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -190,8 +190,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Describes various errors known errors that the application generates and any additional information that can be provided.</HelpToolTip>
     <HelpText>{\rtf1\ansi Describes various errors known errors that the application generates and any addtional information that can be provided.}</HelpText>
     <NameSpace>[Errors]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-12-09T17:22:13.6594637-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -203,8 +203,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>@Data passed contains Catalogs not specified by @CatalogId.</HelpToolTip>
     <HelpText>{\rtf1\ansi The Catalog passed to the method does not match the Catalog belonging to the Model}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[601010]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-12-09T17:22:13.6594637-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -212,14 +212,53 @@ This tool is intended to fill the gap. Something easy enough for Business to use
   </HelpSubjectValue>
   <HelpSubjectValue>
     <HelpId>00000000-0000-0020-1010-100000000000</HelpId>
-    <HelpSubject>Error: @Data contains other modles then @ModelId</HelpSubject>
+    <HelpSubject>Error: @Data contains other Models then @ModelId</HelpSubject>
     <HelpToolTip>@Data passed contains Models not specified by @ModelId.</HelpToolTip>
     <HelpText>{\rtf1\ansi @Data passed contains Models not specified by @ModelId.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppModel].[601010]</NameSpace>
+    <CreatedOn>2024-12-27T18:30:04.809243-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-12-09T17:22:57.8078446-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0000-1020-100000000000</HelpId>
+    <HelpSubject>Error: Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes}</HelpText>
+    <NameSpace>[Errors].[SqlException].[601020]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0010-1020-100000000000</HelpId>
+    <HelpSubject>Error: Catalog Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes to the Catalog</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes to the Catalog}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[601020]</NameSpace>
+    <CreatedOn>2024-12-27T18:32:18.234185-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0020-1020-100000000000</HelpId>
+    <HelpSubject>Error: Model Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes to the Model</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes to the Model}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppModel].[601020]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>
@@ -229,8 +268,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Duplicate CatalogId in @Data are not allowed.</HelpToolTip>
     <HelpText>{\rtf1\ansi Duplicate CatalogId in @Data are not allowed.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602010]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-20T16:26:17.1232408-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>true</IsInserted>
     <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -242,8 +281,60 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Duplicate Database Name are not allowed for a Model.</HelpToolTip>
     <HelpText>{\rtf1\ansi Duplicate Database Name are not allowed for a Model.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602020]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-20T16:26:17.1232408-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0010-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Help Subjects other then @HelpId</HelpSubject>
+    <HelpToolTip>@Data passed contains Help Subjects not specified by @HelpId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Help Subjects not specified by @HelpId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppGeneral].[procSetHelpSubject].[602030]</NameSpace>
+    <CreatedOn>2024-12-30T15:21:26.4322459-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0020-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Schemata other then @SchemaId</HelpSubject>
+    <HelpToolTip>@Data passed contains Schemata not specified by @SchemaId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetSchema].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0030-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Tables other then @TableId</HelpSubject>
+    <HelpToolTip>@Data passed contains Tables not specified by @TableId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetTable].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0031-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Tables other then @TableId</HelpSubject>
+    <HelpToolTip>@Data passed contains Tables not specified by @TableId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetTableColumn].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>true</IsInserted>
     <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -263,8 +354,8 @@ Correcting this exception requires the Application Security Admin to adjust the 
 }
 </HelpText>
     <NameSpace>[Errors].[SqlException].[33504]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-21T15:58:06.0391325-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -279,8 +370,8 @@ Correcting this exception requires the Application Security Admin to adjust the 
 }
 </HelpText>
     <NameSpace>[DataDictionary].[Main].[Forms]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -297,9 +388,9 @@ Correcting this exception requires the Application Security Admin to adjust the 
 \f1 Not a Simple Type.\f0\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isCompositeTypeData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isCompositeTypeData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -317,9 +408,9 @@ AKA: Calcualted Value\par
 Not an Integral value\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isDerivedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isDerivedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -334,9 +425,9 @@ Not an Integral value\par
 \pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isValuedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isValuedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -358,8 +449,8 @@ The application can also save data to its own installation folder (AppData.XML).
 }
 </HelpText>
     <NameSpace>[Errors].[FileNoteFound]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -374,9 +465,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isMultiValuedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isMultiValuedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -391,9 +482,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSingleValueData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isSingleValueData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -408,9 +499,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -425,9 +516,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isIntegralData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isIntegralData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -442,9 +533,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSimpleTypeData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isSimpleTypeData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -459,9 +550,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNonKeyData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isNonKeyData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -476,9 +567,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNullableData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isNullableData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -493,9 +584,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute is used as a Key (part of a PK, FK, or AK)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isKeyData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isKeyData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -511,8 +602,8 @@ The application can also save data to its own installation folder (AppData.XML).
 }
 </HelpText>
     <NameSpace>[Unit Test]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -572,8 +663,8 @@ If the database is empty, this can be addressed by using the application. Under 
 }
 </HelpText>
     <NameSpace>[Setup]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -596,8 +687,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
 }
 </HelpText>
     <NameSpace>[About]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -609,8 +700,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Describes various errors known errors that the application generates and any additional information that can be provided.</HelpToolTip>
     <HelpText>{\rtf1\ansi Describes various errors known errors that the application generates and any addtional information that can be provided.}</HelpText>
     <NameSpace>[Errors]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-12-09T17:22:13.6594637-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -622,8 +713,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>@Data passed contains Catalogs not specified by @CatalogId.</HelpToolTip>
     <HelpText>{\rtf1\ansi The Catalog passed to the method does not match the Catalog belonging to the Model}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[601010]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-12-09T17:22:13.6594637-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -631,14 +722,53 @@ This tool is intended to fill the gap. Something easy enough for Business to use
   </HelpSubjectValue>
   <HelpSubjectValue>
     <HelpId>00000000-0000-0020-1010-100000000000</HelpId>
-    <HelpSubject>Error: @Data contains other modles then @ModelId</HelpSubject>
+    <HelpSubject>Error: @Data contains other Models then @ModelId</HelpSubject>
     <HelpToolTip>@Data passed contains Models not specified by @ModelId.</HelpToolTip>
     <HelpText>{\rtf1\ansi @Data passed contains Models not specified by @ModelId.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppModel].[601010]</NameSpace>
+    <CreatedOn>2024-12-27T18:30:04.809243-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-12-09T17:22:57.8078446-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0000-1020-100000000000</HelpId>
+    <HelpSubject>Error: Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes}</HelpText>
+    <NameSpace>[Errors].[SqlException].[601020]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0010-1020-100000000000</HelpId>
+    <HelpSubject>Error: Catalog Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes to the Catalog</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes to the Catalog}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[601020]</NameSpace>
+    <CreatedOn>2024-12-27T18:32:18.234185-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0020-1020-100000000000</HelpId>
+    <HelpSubject>Error: Model Not Authorized</HelpSubject>
+    <HelpToolTip>The user is not Authorized to make changes to the Model</HelpToolTip>
+    <HelpText>{\rtf1\ansi The user is not Authorized to make changes to the Model}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppModel].[601020]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </HelpSubjectValue>
@@ -648,8 +778,8 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Duplicate CatalogId in @Data are not allowed.</HelpToolTip>
     <HelpText>{\rtf1\ansi Duplicate CatalogId in @Data are not allowed.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602010]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-20T16:26:17.1232408-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>true</IsInserted>
     <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -661,8 +791,60 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <HelpToolTip>Duplicate Database Name are not allowed for a Model.</HelpToolTip>
     <HelpText>{\rtf1\ansi Duplicate Database Name are not allowed for a Model.}</HelpText>
     <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetCatalog].[602020]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-20T16:26:17.1232408-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0010-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Help Subjects other then @HelpId</HelpSubject>
+    <HelpToolTip>@Data passed contains Help Subjects not specified by @HelpId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Help Subjects not specified by @HelpId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppGeneral].[procSetHelpSubject].[602030]</NameSpace>
+    <CreatedOn>2024-12-30T15:21:26.4322459-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0020-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Schemata other then @SchemaId</HelpSubject>
+    <HelpToolTip>@Data passed contains Schemata not specified by @SchemaId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetSchema].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0030-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Tables other then @TableId</HelpSubject>
+    <HelpToolTip>@Data passed contains Tables not specified by @TableId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetTable].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
+    <IsInserted>true</IsInserted>
+    <IsUpdated>false</IsUpdated>
+    <IsDeleted>false</IsDeleted>
+    <IsCurrent>true</IsCurrent>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>00000000-0000-0031-2030-100000000000</HelpId>
+    <HelpSubject>Error: @Data contains other Tables other then @TableId</HelpSubject>
+    <HelpToolTip>@Data passed contains Tables not specified by @TableId.</HelpToolTip>
+    <HelpText>{\rtf1\ansi @Data passed contains Tables not specified by @TableId.}</HelpText>
+    <NameSpace>[Errors].[SqlException].[AppCatalog].[procSetTableColumn].[602030]</NameSpace>
+    <CreatedOn>2024-12-31T16:36:49.2600364-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>true</IsInserted>
     <IsUpdated>false</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -682,8 +864,8 @@ Correcting this exception requires the Application Security Admin to adjust the 
 }
 </HelpText>
     <NameSpace>[Errors].[SqlException].[33504]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-21T15:58:06.0391325-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -698,8 +880,8 @@ Correcting this exception requires the Application Security Admin to adjust the 
 }
 </HelpText>
     <NameSpace>[DataDictionary].[Main].[Forms]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -716,9 +898,9 @@ Correcting this exception requires the Application Security Admin to adjust the 
 \f1 Not a Simple Type.\f0\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isCompositeTypeData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isCompositeTypeData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -736,9 +918,9 @@ AKA: Calcualted Value\par
 Not an Integral value\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isDerivedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isDerivedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -753,9 +935,9 @@ Not an Integral value\par
 \pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isValuedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isValuedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -777,8 +959,8 @@ The application can also save data to its own installation folder (AppData.XML).
 }
 </HelpText>
     <NameSpace>[Errors].[FileNoteFound]</NameSpace>
-    <CreatedBy>PRIME\Billy</CreatedBy>
     <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
+    <CreatedBy>PRIME\Billy</CreatedBy>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -793,9 +975,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isMultiValuedData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isMultiValuedData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -810,9 +992,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSingleValueData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isSingleValueData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -827,9 +1009,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -844,9 +1026,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isIntegralData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isIntegralData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -861,9 +1043,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSimpleTypeData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isSimpleTypeData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -878,9 +1060,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNonKeyData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isNonKeyData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -895,9 +1077,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
 }
 </HelpText>
-    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNullableData]</NameSpace>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Model].[Attribute].[isNullableData]</NameSpace>
+    <CreatedOn>2025-02-27T16:08:58.5001052-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <CreatedOn>2024-11-19T21:43:20.0500057-08:00</CreatedOn>
     <IsInserted>false</IsInserted>
     <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
@@ -936,11 +1118,11 @@ The application can also save data to its own installation folder (AppData.XML).
     <PropertyDescription>The types for .Net Framework Code. (This is an incomplete sub-set of the most commonly used types based on the list compatible with TSQL)</PropertyDescription>
     <IsCommon>true</IsCommon>
     <DataType>List</DataType>
-    <PropertyData>Byte, Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Boolean</PropertyData>
-    <CreatedOn>2024-06-01T16:23:06.6639129-07:00</CreatedOn>
+    <PropertyData>Boolean, Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Byte</PropertyData>
+    <CreatedOn>2025-02-10T17:02:46.9480862-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <IsInserted>true</IsInserted>
-    <IsUpdated>false</IsUpdated>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </PropertyValue>
@@ -950,11 +1132,11 @@ The application can also save data to its own installation folder (AppData.XML).
     <PropertyDescription>The types for MS SQL</PropertyDescription>
     <IsCommon>true</IsCommon>
     <DataType>List</DataType>
-    <PropertyData>binary, bit, char, date, datetime, datetime2, datetimeoffset, decimal, float, geography, geometry, hierarchyid, image, int, money, nchar, ntext, numeric, nvarchar, real, smalldatetime, smallint, smallmoney, sql_variant, sysname, text, time, timestamp, tinyint, uniqueidentifier, varbinary, varchar, xml, bigint</PropertyData>
-    <CreatedOn>2024-06-01T16:23:06.6639129-07:00</CreatedOn>
+    <PropertyData>bigint, bit, char, date, datetime, datetime2, datetimeoffset, decimal, float, geography, geometry, hierarchyid, image, int, money, nchar, ntext, numeric, nvarchar, real, smalldatetime, smallint, smallmoney, sql_variant, sysname, text, time, timestamp, tinyint, uniqueidentifier, varbinary, varchar, xml, binary</PropertyData>
+    <CreatedOn>2025-02-10T17:02:46.9480862-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <IsInserted>true</IsInserted>
-    <IsUpdated>false</IsUpdated>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </PropertyValue>
@@ -1004,11 +1186,11 @@ The application can also save data to its own installation folder (AppData.XML).
     <PropertyDescription>The types for .Net Framework Code. (This is an incomplete sub-set of the most commonly used types based on the list compatible with TSQL)</PropertyDescription>
     <IsCommon>true</IsCommon>
     <DataType>List</DataType>
-    <PropertyData>Byte, Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Boolean</PropertyData>
-    <CreatedOn>2024-06-01T16:23:06.6639129-07:00</CreatedOn>
+    <PropertyData>Boolean, Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Byte</PropertyData>
+    <CreatedOn>2025-02-10T17:02:46.9480862-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <IsInserted>true</IsInserted>
-    <IsUpdated>false</IsUpdated>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </PropertyValue>
@@ -1018,11 +1200,11 @@ The application can also save data to its own installation folder (AppData.XML).
     <PropertyDescription>The types for MS SQL</PropertyDescription>
     <IsCommon>true</IsCommon>
     <DataType>List</DataType>
-    <PropertyData>binary, bit, char, date, datetime, datetime2, datetimeoffset, decimal, float, geography, geometry, hierarchyid, image, int, money, nchar, ntext, numeric, nvarchar, real, smalldatetime, smallint, smallmoney, sql_variant, sysname, text, time, timestamp, tinyint, uniqueidentifier, varbinary, varchar, xml, bigint</PropertyData>
-    <CreatedOn>2024-06-01T16:23:06.6639129-07:00</CreatedOn>
+    <PropertyData>bigint, bit, char, date, datetime, datetime2, datetimeoffset, decimal, float, geography, geometry, hierarchyid, image, int, money, nchar, ntext, numeric, nvarchar, real, smalldatetime, smallint, smallmoney, sql_variant, sysname, text, time, timestamp, tinyint, uniqueidentifier, varbinary, varchar, xml, binary</PropertyData>
+    <CreatedOn>2025-02-10T17:02:46.9480862-08:00</CreatedOn>
     <CreatedBy>PRIME\Billy</CreatedBy>
-    <IsInserted>true</IsInserted>
-    <IsUpdated>false</IsUpdated>
+    <IsInserted>false</IsInserted>
+    <IsUpdated>true</IsUpdated>
     <IsDeleted>false</IsDeleted>
     <IsCurrent>true</IsCurrent>
   </PropertyValue>

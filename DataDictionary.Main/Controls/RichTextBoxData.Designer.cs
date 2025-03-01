@@ -88,7 +88,7 @@
             richTextBox.Size = new Size(245, 87);
             richTextBox.TabIndex = 1;
             richTextBox.Text = "";
-            richTextBox.ReadOnlyChanged += richTextBox_ReadOnlyChanged;
+            richTextBox.ReadOnlyChanged += RichTextBox_ReadOnlyChanged;
             richTextBox.Validating += richTextBox_Validating;
             richTextBox.Validated += richTextBox_Validated;
             // 
@@ -122,7 +122,7 @@
             toolStripItalic.Size = new Size(23, 22);
             toolStripItalic.Text = "Italic";
             toolStripItalic.ToolTipText = "Italic";
-            toolStripItalic.Click += toolStripItalic_Click;
+            toolStripItalic.Click += ToolStripItalic_Click;
             // 
             // toolStripUnderline
             // 
@@ -133,7 +133,7 @@
             toolStripUnderline.Size = new Size(23, 22);
             toolStripUnderline.Text = "Underline";
             toolStripUnderline.ToolTipText = "Underline";
-            toolStripUnderline.Click += toolStripUnderline_Click;
+            toolStripUnderline.Click += ToolStripUnderline_Click;
             // 
             // toolStripBulletList
             // 
@@ -144,7 +144,7 @@
             toolStripBulletList.Size = new Size(23, 22);
             toolStripBulletList.Text = "Bullet List";
             toolStripBulletList.ToolTipText = "Bullet List";
-            toolStripBulletList.Click += toolStripBulletList_Click;
+            toolStripBulletList.Click += ToolStripBulletList_Click;
             // 
             // toolStripStrikeThrough
             // 
@@ -155,7 +155,7 @@
             toolStripStrikeThrough.Size = new Size(23, 22);
             toolStripStrikeThrough.Text = "Strike Through";
             toolStripStrikeThrough.ToolTipText = "Strike Through";
-            toolStripStrikeThrough.Click += toolStripStrikeThrough_Click;
+            toolStripStrikeThrough.Click += ToolStripStrikeThrough_Click;
             // 
             // toolStripClearFormating
             // 
@@ -166,7 +166,7 @@
             toolStripClearFormating.Size = new Size(23, 22);
             toolStripClearFormating.Text = "Clear Formating";
             toolStripClearFormating.ToolTipText = "Clear Formating";
-            toolStripClearFormating.Click += toolStripClearFormating_Click;
+            toolStripClearFormating.Click += ToolStripClearFormating_Click;
             // 
             // toolStripSeparator
             // 
@@ -181,7 +181,7 @@
             toolStripCut.Name = "toolStripCut";
             toolStripCut.Size = new Size(23, 22);
             toolStripCut.Text = "Cut";
-            toolStripCut.Click += toolStripCut_Click;
+            toolStripCut.Click += ToolStripCut_Click;
             // 
             // toolStripCopy
             // 
@@ -191,7 +191,7 @@
             toolStripCopy.Name = "toolStripCopy";
             toolStripCopy.Size = new Size(23, 22);
             toolStripCopy.Text = "Copy";
-            toolStripCopy.Click += toolStripCopy_Click;
+            toolStripCopy.Click += ToolStripCopy_Click;
             // 
             // toolStripPaste
             // 
@@ -201,7 +201,7 @@
             toolStripPaste.Name = "toolStripPaste";
             toolStripPaste.Size = new Size(23, 22);
             toolStripPaste.Text = "Paste";
-            toolStripPaste.Click += toolStripPaste_Click;
+            toolStripPaste.Click += ToolStripPaste_Click;
             // 
             // errorLocation
             // 

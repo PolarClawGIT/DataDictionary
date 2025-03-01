@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// <summary>
     /// Interface for Create WorkItems that load Modification History into a target.
     /// </summary>
+    [Obsolete("Replace with ITemporalView")]
     public interface ILoadHistoryData
     {
         /// <summary>
@@ -28,6 +29,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// Interface for Create WorkItems that load Modification History into a target by Key.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
+    [Obsolete("Replace with ITemporalView")]
     public interface ILoadHistoryData<TKey>
         where TKey : IKey
     {

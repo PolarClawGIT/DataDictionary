@@ -39,7 +39,7 @@ namespace DataDictionary.Main
             //manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
             //viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
 
-            //menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.ModelAttribute);
+            //menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.Attributes);
         }
 
         #region Form

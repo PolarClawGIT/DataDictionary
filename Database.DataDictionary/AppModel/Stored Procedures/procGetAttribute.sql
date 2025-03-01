@@ -10,36 +10,72 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
-Select	[AttributeId],
-		[AttributeTitle],
-		[AttributeDescription],
-		[AttributeName],
-		[DataType],
-		[DataLength],
-		[DataPrecision],
-		[DataScale],
-		[IsSingleValue],
-		[IsMultiValue],
-		[IsSimpleType],
-		[IsCompositeType],
-		[IsIntegral],
-		[IsDerived],
-		[IsValued],
-		[IsNullable],
-		[IsKey],
-		[IsNonKey],
+;With [Events] As (
+	Select	[AttributeId],
+			[SysStart]
+	From	[AppModel].[AttributeHs] For System_Time All
+	Union
+	Select	[AttributeId],
+			[SysStart]
+	From	[AppModel].[AttributeAliasHs] For System_Time All
+	Union
+	Select	[AttributeId],
+			[SysStart]
+	From	[AppModel].[AttributeDefinitionHs] For System_Time All
+	Union
+	Select	[AttributeId],
+			[SysStart]
+	From	[AppModel].[AttributePropertyHs] For System_Time All
+	Union
+	Select	[AttributeId],
+			[SysStart]
+	From	[AppModel].[AttributeSubjectAreaHs] For System_Time All),
+[Dates] As (
+	Select	[AttributeId],
+			[SysStart],
+			IsNull(Min([SysStart]) Over (
+				Partition By [AttributeId]
+				Order By [SysStart]
+				Rows Between 1 Following and 1 Following),
+				'9999-12-31 23:59:59.9999999')
+			As [SysEnd]
+	From	[Events])
+Select	D.[AttributeId],
+		D.[AttributeTitle],
+		D.[AttributeDescription],
+		D.[AttributeName],
+		D.[DataType],
+		D.[DataLength],
+		D.[DataPrecision],
+		D.[DataScale],
+		D.[IsSingleValue],
+		D.[IsMultiValue],
+		D.[IsSimpleType],
+		D.[IsCompositeType],
+		D.[IsIntegral],
+		D.[IsDerived],
+		D.[IsValued],
+		D.[IsNullable],
+		D.[IsKey],
+		D.[IsNonKey],
 		-- Temporal Data
-		[CreatedOn],
-		[CreatedBy],
-		[RemovedOn],
-		[RemovedBy],
-		[IsInserted],
-		[IsUpdated],
-		[IsDeleted],
-		[IsCurrent]
-From	[AppModel].[AttributeHs] For System_Time All D
-Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		(@AttributeId is Null Or @AttributeId = [AttributeId]) And
+		--T.[SysStart],
+		--Least(T.[SysEnd], D.[SysEnd]) As [SysEnd],
+		D.[CreatedOn],
+		D.[CreatedBy],
+		D.[RemovedOn],
+		D.[RemovedBy],
+		Convert(Bit, IIF(D.[IsInserted] = 1 And T.[SysStart] = D.[SysStart], 1,0)) As [IsInserted],
+		Convert(Bit, IIF(D.[IsUpdated] = 1 Or T.[SysStart] <> D.[SysStart], 1,0)) As [IsUpdated],
+		Convert(Bit, IIF(D.[IsDeleted] = 1 And T.[SysStart] = D.[SysStart], 1,0)) As [IsDeleted],
+		Convert(Bit, IIF(SysUtcDateTime() >= T.[SysStart] And SysUtcDateTime() < Least(T.[SysEnd], D.[SysEnd]), 1, 0)) As [IsCurrent]
+From	[Dates] T
+		Inner Join [AppModel].[AttributeHs] For System_Time All D
+		On	T.[AttributeId] = D.[AttributeId] And
+			T.[SysStart] >= D.[SysStart] And
+			T.[SysStart] < D.[SysEnd]
+Where	(@IncludeHistory = 1 Or (T.[SysStart] <= @AsOfUtcDate And Least(T.[SysEnd], D.[SysEnd]) > @AsOfUtcDate)) And
+		(@AttributeId is Null Or @AttributeId = D.[AttributeId]) And
 		(@ModelId is Null Or @ModelId In (
 			Select	[ModelId]
 			From	[AppModel].[ModelAttribute] For System_Time As of @AsOfUtcDate

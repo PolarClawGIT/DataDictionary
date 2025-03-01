@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
+    /// <summary>
+    /// Generic version of IBindingList incorporating generic ICollection and IList.
+    /// </summary>
+    /// <typeparam name="TRow"></typeparam>
     public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
         where TRow : IBindingPropertyChanged
     {
@@ -31,5 +35,8 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="IList{T}.RemoveAt"/>
         /// <remarks>Resolves ambiguity between IList and generic list</remarks>
         new void RemoveAt(int index) { ((IList<TRow>)this).RemoveAt(index); }
+
+        /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
+        Boolean RaiseListChangedEvents { get; set; } // Missing in IBindingList
     }
 }

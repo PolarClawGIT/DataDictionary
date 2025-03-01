@@ -47,15 +47,16 @@ namespace DataDictionary.Main.Forms.General
 
         public HelpContent(String targetSubject) : this()
         {
+            HelpSubjectIndexPath key = new HelpSubjectIndexPath(targetSubject);
+            HelpSubjectIndexPath defaultKey = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
+
             if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
-                if (subjects.FirstOrDefault(w => w.HelpSubject is String
-                    && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase))
-                    is HelpSubjectValue subject)
+                if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
-                else if (subjects.FirstOrDefault(w => w.NameSpace is not null
-                    && w.NameSpace == targetSubject) is HelpSubjectValue nameSpaceSubject)
-                { helpBinding.Position = subjects.IndexOf(nameSpaceSubject); }
+                else if (subjects.FirstOrDefault(w => defaultKey.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue defaultSubject)
+                { helpBinding.Position = subjects.IndexOf(defaultSubject); }
+                else { helpBinding.Position = 0; }
             }
         }
 
@@ -67,6 +68,7 @@ namespace DataDictionary.Main.Forms.General
         public void OpenSubject(Form targetForm)
         {
             HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
+            HelpSubjectIndexPath defaultKey = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
 
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
@@ -79,15 +81,16 @@ namespace DataDictionary.Main.Forms.General
             if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
                 if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                {
-                    helpBinding.Position = subjects.IndexOf(subject);
+                { helpBinding.Position = subjects.IndexOf(subject); }
+                else if (subjects.FirstOrDefault(w => defaultKey.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue defaultSubject)
+                { helpBinding.Position = subjects.IndexOf(defaultSubject); }
+                else { helpBinding.Position = 0; }
 
+                if (helpBinding.Current is HelpSubjectValue current
+                    && helpContentNodes.FirstOrDefault(w => w.Value.Equals(current)).Key is TreeNode selectedNode)
+                { selectedNode.TreeView.SelectedNode = selectedNode; }
 
-                    if (helpContentNodes.FirstOrDefault(w => w.Value.Equals(subject)).Key is TreeNode selectedNode)
-                    { selectedNode.TreeView.SelectedNode = selectedNode; }
-                }
                 helpForForm = targetForm;
-
                 CommandButtons[CommandImageType.Import].IsEnabled = true;
             }
         }
@@ -163,8 +166,8 @@ namespace DataDictionary.Main.Forms.General
                     && new HelpSubjectIndexPath(current).
                         Group().
                         Any(w => targetForm.ToNameSpaceKey().Equals(w)))
-                { Activate((data) => new HelpSubject(current, targetForm), current); }
-                else { Activate((data) => new HelpSubject(current), current); }
+                { Activate((data) => new HelpSubject(new HelpSubjectIndex(current), targetForm), current); }
+                else { Activate((data) => new HelpSubject(new HelpSubjectIndex(current)), current); }
             }
         }
 

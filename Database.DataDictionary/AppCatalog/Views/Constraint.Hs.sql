@@ -1,5 +1,16 @@
 ﻿CREATE VIEW [AppCatalog].[ConstraintHs] AS
 -- Temporal View
+With [Dates] As (
+	Select	[ConstraintId],
+			[SysStart],
+			[SysEnd]
+	From	[AppCatalog].[Constraint]
+	Union
+	Select	[ConstraintId],
+			[SysStart],
+			[SysEnd]
+	From	[HsCatalog].[Constraint]
+	Where	[SysStart] != [SysEnd])
 Select	FC.[CatalogId],  -- AK
 		FS.[SchemaId],
 		D.[ConstraintId], -- PK
@@ -12,23 +23,23 @@ Select	FC.[CatalogId],  -- AK
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
-		C.[ModifiedOn] As [CreatedOn],
+		IsNull(C.[ModifiedOn], D.[SysStart]) As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
-		R.[ModifiedOn] As [RemovedOn],
+		IsNull(R.[ModifiedOn], NullIf(D.[SysEnd],'9999-12-31 23:59:59.9999999')) As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppCatalog].[Constraint]  D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsCatalog].[Constraint]
+			From	[Dates]
 			Where	[ConstraintId] = D.[ConstraintId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsCatalog].[Constraint]
+			From	[Dates]
 			Where	[ConstraintId] = D.[ConstraintId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C

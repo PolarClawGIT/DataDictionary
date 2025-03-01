@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.ScriptingData;
 using System.Data;
@@ -19,8 +20,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, 
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        INamedScopeSourceData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -88,13 +88,5 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Template</remarks>
         public IReadOnlyList<DataTable> Export()
         { return this.ToDataTable().ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            return INamedScopeSourceData.LoadNamedScope<TemplateData, TemplateValue>
-                (this, addNamedScope);
-        }
     }
 }

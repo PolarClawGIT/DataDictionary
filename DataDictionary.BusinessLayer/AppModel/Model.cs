@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
@@ -14,8 +15,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IModel :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDeleteData, IScopeType, DataLayer.AppModel.IModel
-
     {
+        /// <summary>
+        /// Index of the Model currently loaded.
+        /// </summary>
+        IModelIndex ModelIndex { get; }
+
         /// <summary>
         /// The Model Definitions (0 or one Model expected)
         /// </summary>
@@ -29,26 +34,25 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Container for Attribute within the Model.
         /// </summary>
-        IAttribute ModelAttribute { get; }
+        IAttribute Attributes { get; }
 
         /// <summary>
         /// Container for Entity within the Model.
         /// </summary>
-        IEntity ModelEntity { get; }
+        IEntity Entities { get; }
 
         /// <summary>
         /// The Properties for the Model (includes common)
         /// </summary>
-        public IPropertyData Properties { get; }
+        IPropertyData Properties { get; }
 
         /// <summary>
         /// The Definitions for the Model (includes common)
         /// </summary>
-        public IDefinitionData Definitions { get; }
+        IDefinitionData Definitions { get; }
     }
 
-    class Model : IModel, IDataTableFile,
-        INamedScopeSourceData
+    class Model : IModel, IDataTableFile
     {
         /// <inheritdoc/>
         public IModelData Models { get { return modelValues; } }
@@ -72,10 +76,15 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? ModelDescription {
+        public String? ModelDescription
+        {
             get { return CurrentModel.ModelDescription; }
             set { CurrentModel.ModelDescription = value; }
         }
+
+        /// <inheritdoc/>
+        public IModelIndex ModelIndex
+        { get { return new ModelIndex(CurrentModel); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return CurrentModel.Scope; } }
@@ -85,11 +94,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         private readonly SubjectAreaData subjectValues;
 
         /// <inheritdoc/>
-        public IAttribute ModelAttribute { get { return attributeValues; } }
+        public IAttribute Attributes { get { return attributeValues; } }
         private readonly Attribute attributeValues;
 
         /// <inheritdoc/>
-        public IEntity ModelEntity { get { return entityValues; } }
+        public IEntity Entities { get { return entityValues; } }
         private readonly Entity entityValues;
 
         /// <inheritdoc/>
@@ -98,16 +107,14 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
-
-
         private readonly DefinitionData definitionValues = new DefinitionData();
 
         public Model() : base()
         {
             modelValues = new ModelData();
-            subjectValues = new SubjectAreaData() { Model = this };
-            attributeValues = new Attribute() { Model = this };
-            entityValues = new Entity() { Model = this };
+            subjectValues = new SubjectAreaData();
+            attributeValues = new Attribute();
+            entityValues = new Entity();
         }
 
         /// <summary>
@@ -118,7 +125,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Create(IApplicationData source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { DoWork =() => { modelValues.Add(new ModelValue()); } });
+            work.Add(new WorkItem() { DoWork = () => { modelValues.Add(new ModelValue()); } });
             work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
             work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
 
@@ -142,7 +149,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(modelValues.Load(factory, dataKey, asOfUtcDate));
@@ -220,10 +227,20 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.LoadNamedScope(addNamedScope));
-            work.AddRange(subjectValues.LoadNamedScope(addNamedScope));
-            work.AddRange(entityValues.LoadNamedScope(addNamedScope));
-            work.AddRange(attributeValues.LoadNamedScope(addNamedScope));
+            work.Add(new WorkItem()
+            {
+                DoWork = () =>
+                {
+                    NamedScopeValue newItem = new NamedScopeValue(CurrentModel)
+                    { GetPath = () => new PathIndex(((IPathValue)CurrentModel).Path) };
+
+                    addNamedScope(null, newItem);
+                }
+            });
+
+            work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
+            work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
+            work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
 
             return work;
         }

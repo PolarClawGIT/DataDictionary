@@ -1,5 +1,18 @@
 ﻿CREATE VIEW [AppModel].[AttributeSubjectAreaHs] As
 -- Temporal View
+With [Dates] As (
+	Select	[AttributeId],
+			[SubjectAreaId],
+			[SysStart],
+			[SysEnd]
+	From	[AppModel].[AttributeSubjectArea]
+	Union
+	Select	[AttributeId],
+			[SubjectAreaId],
+			[SysStart],
+			[SysEnd]
+	From	[HsModel].[AttributeSubjectArea]
+	Where	[SysStart] != [SysEnd])
 Select	D.[AttributeId], --PK
 		D.[SubjectAreaId], -- PK
 		FA.[AttributeTitle],
@@ -7,24 +20,24 @@ Select	D.[AttributeId], --PK
 		-- Temporal Status
 		D.[SysStart], -- PK
 		D.[SysEnd],
-		C.[ModifiedOn] As [CreatedOn],
+		IsNull(C.[ModifiedOn], D.[SysStart]) As [CreatedOn],
 		C.[ModifiedBy] As [CreatedBy],
-		R.[ModifiedOn] As [RemovedOn],
+		IsNull(R.[ModifiedOn], NullIf(D.[SysEnd],'9999-12-31 23:59:59.9999999')) As [RemovedOn],
 		R.[ModifiedBy] As [RemovedBy],
-		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] <> D.[SysStart],1,0)) As [IsInserted],
+		Convert(Bit, IIF([PriorDate] is Null Or [PriorDate] != D.[SysStart],1,0)) As [IsInserted],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
-		Convert(Bit, IIF([NextDate] <> D.[SysEnd], 1, 0)) As [IsDeleted],
+		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppModel].[AttributeSubjectArea] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
-			From	[HsModel].[AttributeSubjectArea]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[SubjectAreaId] = D.[SubjectAreaId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
-			From	[HsModel].[AttributeSubjectArea]
+			From	[Dates]
 			Where	[AttributeId] = D.[AttributeId] And
 					[SubjectAreaId] = D.[SubjectAreaId] And
 					[SysStart] >= D.[SysEnd]) N
@@ -51,3 +64,4 @@ From	[AppModel].[AttributeSubjectArea] D
 			Where	[SubjectAreaId] = D.[SubjectAreaId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FS
+Go

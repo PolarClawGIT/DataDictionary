@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.DataLayer.AppModel;
 using Toolbox.Threading;
@@ -30,7 +31,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ICatalogIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (ICatalogKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
@@ -40,7 +41,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, DateTime asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
