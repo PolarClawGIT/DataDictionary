@@ -462,6 +462,22 @@ namespace DataDictionary.BusinessLayer.ToolSet
             return new PathIndex(parts.ToArray());
         }
 
+        /// <summary>
+        /// True if the path of the Parent is contained in this path.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public Boolean ChildOf(PathIndex parent)
+        { return pathParts.Take(parent.pathParts.Count).SequenceEqual(parent.pathParts); }
+
+        /// <summary>
+        /// True if this path is contained in the child path.
+        /// </summary>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public Boolean ParentOf(PathIndex child)
+        { return child.pathParts.Take(pathParts.Count).SequenceEqual(pathParts); }
+
         /// <inheritdoc/>
         public override String ToString()
         { return MemberFullPath; }

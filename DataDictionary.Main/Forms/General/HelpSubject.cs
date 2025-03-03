@@ -133,7 +133,7 @@ namespace DataDictionary.Main.Forms.General
             IDatabaseWork factory = BusinessData.GetDbFactory();
             List<WorkItem> work = new List<WorkItem>();
 
-
+            work.Add(new WorkItem() { DoWork = () => { } });
 
             DoWork(work, onCompleting);
 

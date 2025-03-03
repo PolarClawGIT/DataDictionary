@@ -30,13 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             SplitContainer helpSplitLayout;
-            TableLayoutPanel helpDetailLayout;
             helpContentNavigation = new TreeView();
-            helpSubjectData = new Controls.TextBoxData();
+            helpDetailLayout = new TableLayoutPanel();
+            helpSubjectData = new DataDictionary.Main.Controls.TextBoxData();
             helpTextData = new RichTextBox();
             helpBinding = new BindingSource(components);
             helpSplitLayout = new SplitContainer();
-            helpDetailLayout = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
             helpSplitLayout.Panel1.SuspendLayout();
             helpSplitLayout.Panel2.SuspendLayout();
@@ -68,7 +67,7 @@
             helpContentNavigation.Location = new Point(0, 0);
             helpContentNavigation.Name = "helpContentNavigation";
             helpContentNavigation.Size = new Size(266, 425);
-            helpContentNavigation.TabIndex = 1;
+            helpContentNavigation.TabIndex = 0;
             helpContentNavigation.NodeMouseClick += HelpContentNavigation_NodeMouseClick;
             helpContentNavigation.MouseDoubleClick += HelpContentNavigation_MouseDoubleClick;
             // 
@@ -97,7 +96,7 @@
             helpSubjectData.Name = "helpSubjectData";
             helpSubjectData.ReadOnly = true;
             helpSubjectData.Size = new Size(524, 44);
-            helpSubjectData.TabIndex = 1;
+            helpSubjectData.TabIndex = 0;
             helpSubjectData.WordWrap = true;
             // 
             // helpTextData
@@ -108,12 +107,11 @@
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = true;
             helpTextData.Size = new Size(524, 369);
-            helpTextData.TabIndex = 2;
+            helpTextData.TabIndex = 1;
             helpTextData.Text = "";
             // 
             // helpBinding
             // 
-            helpBinding.AddingNew += HelpBinding_AddingNew;
             helpBinding.ListChanged += HelpBinding_ListChanged;
             // 
             // HelpContent
@@ -143,5 +141,6 @@
         private Controls.TextBoxData helpSubjectData;
         private BindingSource helpBinding;
         private RichTextBox helpTextData;
+        private TableLayoutPanel helpDetailLayout;
     }
 }

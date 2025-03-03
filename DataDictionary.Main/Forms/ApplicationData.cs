@@ -190,7 +190,7 @@ namespace DataDictionary.Main.Forms
             void rowStateChanged(DataRowState state)
             {
                 RowState = state;
-                if(state is DataRowState.Detached or DataRowState.Deleted)
+                if (state is DataRowState.Detached or DataRowState.Deleted)
                 { IsLocked(true); }
             }
         }
@@ -289,10 +289,7 @@ namespace DataDictionary.Main.Forms
         }
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
-        {
-            General.HelpContent helpForm = Activate(() => new General.HelpContent(this));
-            helpForm.OpenSubject(this);
-        }
+        { General.HelpContent helpForm = Activate(() => new General.HelpContent(this)); }
 
         protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }

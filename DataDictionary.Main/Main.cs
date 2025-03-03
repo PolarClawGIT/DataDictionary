@@ -117,11 +117,7 @@ namespace DataDictionary.Main
 
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
-            { Activate(() => new Forms.General.HelpContent(currentForm)); }
-            else { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
-        }
+        { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         { throw new NotImplementedException(); } // Not Used.
@@ -132,10 +128,7 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            {
-                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm));
-                helpForm.OpenSubject(currentForm);
-            }
+            { Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm)); }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
