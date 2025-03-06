@@ -14,120 +14,123 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpContent
     {
+        class BindingSubject : INotifyPropertyChanged
+        {
+            public HelpSubjectIndexPath Path { get; }
+            public String Title { get; }
+            public String Description { get; } = String.Empty;
+            public String ToolTip { get; } = String.Empty;
+            public HelpSubjectIndex? SubjectIndex { get; } = null;
+            public Form? SubjectForm { get; set; } = null;
+
+            public BindingSubject(Form form)
+            {
+                Path = form.ToNameSpaceKey();
+                Title = String.Format("(new Subject: {0})", Path.Member);
+                SubjectForm = form;
+            }
+
+            public BindingSubject(HelpSubjectValue helpSubject)
+            {
+                Path = new HelpSubjectIndexPath(helpSubject);
+                Title = helpSubject.HelpSubject ?? Path.Member;
+                Description = helpSubject.HelpText ?? String.Empty;
+                ToolTip = helpSubject.HelpToolTip ?? String.Empty;
+                SubjectIndex = new HelpSubjectIndex(helpSubject);
+
+                helpSubject.PropertyChanged += PropertyChanged;
+                //helpSubject.RowStateChanged += RowStateChanged;
+
+                void PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    switch (e.PropertyName)
+                    {
+                        case nameof(helpSubject.HelpSubject):
+                            OnPropertyChanged(nameof(Title)); break;
+                        case nameof(helpSubject.NameSpace):
+                            OnPropertyChanged(nameof(Path)); break;
+                        case nameof(helpSubject.HelpText):
+                            OnPropertyChanged(nameof(Path)); break;
+                        case nameof(helpSubject.HelpToolTip):
+                            OnPropertyChanged(nameof(ToolTip)); break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            void OnPropertyChanged(String property)
+            {
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(this, new PropertyChangedEventArgs(property)); }
+            }
+        }
+
         /// <summary>
         ///  Helper class that helps manage the binding class and associated data.
         /// </summary>
         class FormBinding
         {
             BindingSource bindingHelpSubject;
-            HelpSubjectIndexPath intendedSubject = new HelpSubjectIndexPath();
-            public BindingView<HelpSubjectValue> HelpSubjects { get; private set; } =
-                // Blank List
-                new BindingView<HelpSubjectValue>(new BindingList<HelpSubjectValue>())
-                { AllowNew = false, AllowEdit = false, AllowRemove = false };
+            HelpSubjectIndexPath initialSubject = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
 
-            public Form? CurrentForm
-            {
-                get { return subjectForm; }
-                set
-                {
-                    if (subjectForm is null && value is Form newForm)
-                    {
-                        subjectForm = newForm;
-                        intendedSubject = newForm.ToNameSpaceKey();
-                    }
-                    else
-                    { throw new InvalidOperationException("Once set, the target FormHelpSubject cannot change"); }
-                }
-            }
-            Form? subjectForm;
+            public IEnumerable<BindingSubject> HelpSubjects { get { return subjects; } }
+            BindingList<BindingSubject> subjects = new BindingList<BindingSubject>();
+            IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
 
             public FormBinding(ref BindingSource helpBinding)
-            { bindingHelpSubject = helpBinding; }
-
-            public void Bind(IHelpSubjectData source)
             {
-                bindingHelpSubject.ListChanged -= ListChanged;
-                bindingHelpSubject.AddingNew -= AddingNew;
+                bindingHelpSubject = helpBinding;
+                subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
+                bindingHelpSubject.DataSource = subjects;
 
-                HelpSubjects = new BindingView<HelpSubjectValue>(source);
-
-                bindingHelpSubject.DataSource = HelpSubjects;
-
-                bindingHelpSubject.ListChanged += ListChanged;
-                bindingHelpSubject.AddingNew += AddingNew;
-                bindingHelpSubject.DataSourceChanged += DataSourceChanged;
-
-                void ListChanged(Object? sender, ListChangedEventArgs e)
-                {   // Deals with Invalid operation exception fired by CurrencyManager.FindGoodRow.
-                    if (e.ListChangedType is ListChangedType.ItemDeleted
-                        && sender is IBindingList values
-                        && values.Count is 0)
-                    {
-                        bindingHelpSubject.RaiseListChangedEvents = false;
-                        HelpSubjects.ListChanged -= ListChanged;
-                        HelpSubjects.AddingNew -= AddingNew;
-                    }
-                }
-
-                void AddingNew(Object? sender, AddingNewEventArgs e)
-                { e.NewObject = new HelpSubjectValue(); }
-
-                void DataSourceChanged(Object? sender, EventArgs e)
-                { throw new InvalidOperationException("Do not change the DataSource once set"); }
+                SetPosition(initialSubject);
             }
 
-            public Boolean FindSubject(String targetSubject, out HelpSubjectValue? value)
-            { return FindSubject(new HelpSubjectIndexPath(targetSubject), out value); }
-
-            public Boolean FindSubject(Form targetForm, [NotNullWhen(true)] out HelpSubjectValue? value)
-            { return FindSubject(targetForm.ToNameSpaceKey(), out value); }
-
-            public Boolean FindSubject(HelpSubjectIndexPath targetSubject, [NotNullWhen(true)] out HelpSubjectValue? value)
+            public void AddForm(Form form)
             {
-                if (HelpSubjects.FirstOrDefault(w => targetSubject.Equals(new HelpSubjectIndexPath(w)))
-                    is HelpSubjectValue target)
-                { value = target; return true; }
-                else { value = null; return false; }
+                HelpSubjectIndexPath helpSubject = form.ToNameSpaceKey();
+
+                if (!subjects.Any(w => helpSubject.Equals(w.Path)))
+                { subjects.Add(new BindingSubject(form)); }
+
+                foreach (BindingSubject item in subjects.Where(w => helpSubject.ChildOf(helpSubject)))
+                { item.SubjectForm = form; }
             }
 
-            public void SetSubject(String targetSubject)
-            { SetSubject(new HelpSubjectIndexPath(targetSubject)); }
-
-            public void SetSubject(Form targetForm)
-            { SetSubject(targetForm.ToNameSpaceKey()); }
-
-            public void SetSubject(HelpSubjectValue helpSubject)
-            { SetSubject(new HelpSubjectIndexPath(helpSubject)); }
-
-            public void SetSubject(HelpSubjectIndexPath targetSubject)
-            { intendedSubject = targetSubject; }
-
-            public void SetForm(Form targetForm)
-            { subjectForm = targetForm; }
-
-            public Boolean SetPosition()
+            public void SetPosition(HelpSubjectIndexPath helpSubject)
             {
-                if (FindSubject(intendedSubject, out HelpSubjectValue? value))
-                { return SetPosition(value); }
-                else { return false; }
+                initialSubject = helpSubject;
 
+                if (subjects.FirstOrDefault(w => helpSubject.Equals(w)) is BindingSubject value)
+                { bindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
-            public Boolean SetPosition(HelpSubjectValue helpSubject)
+            public void SetPosition(String helpSubject)
+            { SetPosition(new HelpSubjectIndexPath(helpSubject)); }
+
+            public void SetPosition(Form helpSubject)
+            { SetPosition(helpSubject.ToNameSpaceKey()); }
+
+            public Boolean TryCurrent([NotNullWhen(true)] out BindingSubject? result)
             {
-                if (FindSubject(new HelpSubjectIndexPath(helpSubject), out HelpSubjectValue? value))
-                { bindingHelpSubject.Position = HelpSubjects.IndexOf(value);  return true; }
-                else { return false; }
+                if (bindingHelpSubject.Position >= 0
+                    && bindingHelpSubject.Current is BindingSubject value)
+                { result = value; return true; }
+                else { result = null; return false; }
             }
 
-
-            public Boolean TryGetCurrent([NotNullWhen(true)] out HelpSubjectValue? value)
+            public Boolean TryCurrent([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (bindingHelpSubject.Position >= 0 
-                    && bindingHelpSubject.Current is HelpSubjectValue result)
-                { value = result; return true; }
-                else { value = null; return false; }
+                if (TryCurrent(out BindingSubject? subject)
+                    && subjectData.FirstOrDefault(w =>
+                        subject.SubjectIndex is not null
+                        && subject.SubjectIndex.Equals(w))
+                        is HelpSubjectValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
             }
         }
     }

@@ -121,6 +121,7 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Default, Resources.StatusHelp),
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp)),
                 new NavigationEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpIndexFile),
+                new NavigationEnumeration(ScopeType.ApplicationHelpForm,        Resources.HelpApplication),
                 new NavigationEnumeration(ScopeType.ApplicationOption,          Resources.Icon_Settings, Resources.Settings),
 
                 new NavigationEnumeration(ScopeType.Library,                    Resources.Icon_Library,

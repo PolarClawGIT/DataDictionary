@@ -29,6 +29,11 @@
         ApplicationHelpPage,
 
         /// <summary>
+        /// Application Help Page of a Form
+        /// </summary>
+        ApplicationHelpForm,
+
+        /// <summary>
         /// Application Help Group
         /// </summary>
         ApplicationHelpGroup,

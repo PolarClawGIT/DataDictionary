@@ -1,20 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
@@ -22,6 +14,7 @@ namespace DataDictionary.Main.Forms.General
     partial class HelpContent : ApplicationData
     {
         FormBinding formData;
+        ContentTree formTree;
 
         //TODO: Continue removing references to helpBinding DataSource.
 
@@ -30,7 +23,7 @@ namespace DataDictionary.Main.Forms.General
             InitializeComponent();
             helpToolStripButton.Enabled = false;
             formData = new FormBinding(ref helpBinding);
-            formData.SetSubject(Settings.Default.DefaultSubject);
+            formTree = new ContentTree(helpContentNavigation);
 
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
@@ -40,7 +33,7 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.Import,
                 CommandImageType.HistoryDatabase);
 
-            SetImages(helpContentNavigation);
+            formTree.SetImages();
 
             CommandButtons[CommandImageType.Add].Text = "Add new Help Subject (blank)";
             CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
@@ -51,42 +44,18 @@ namespace DataDictionary.Main.Forms.General
         }
 
         public HelpContent(String targetSubject) : this()
-        { formData.SetSubject(targetSubject); }
+        { formData.SetPosition(targetSubject); }
 
         public HelpContent(Form targetForm) : this()
         {
-            formData.SetSubject(targetForm);
-            formData.SetForm(targetForm);
+            formData.AddForm(targetForm);
+            formData.SetPosition(targetForm);
         }
 
         private void HelpContent_Load(object sender, EventArgs e)
         {
-            CommandButtons[CommandImageType.Import].IsEnabled = formData.CurrentForm is not null;
-
-            formData.Bind(BusinessData.ApplicationData.HelpSubjects);
-
-            if (formData.SetPosition() &&
-                formData.TryGetCurrent(out HelpSubjectValue? value))
-            {
-                SetNode(value);
-                //helpContentNavigation.HideSelection = false;
-                helpBinding.ResumeBinding();
-            }
-            else
-            {
-                //TODO: Control keeps focus so HideSelection does not work as desired.
-                // Node shows as selected even when SelectedNode is null.
-                //helpContentNavigation.SelectedNode = null;
-                //helpContentNavigation.HideSelection = true;
-
-                helpBinding.SuspendBinding();
-                helpDetailLayout.Enabled = false;
-
-                if (formData.CurrentForm is Form currentForm)
-                { helpSubjectData.Text = String.Format("(new Subject: {0})", currentForm.ToNameSpaceKey().Member); }
-            }
-
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
+            formTree.BuildTree(formData.HelpSubjects);
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
 
             BindRtfHelpText();
         }
@@ -94,7 +63,7 @@ namespace DataDictionary.Main.Forms.General
         private void BindRtfHelpText()
         {
             try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation)); }
+            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation)); }
             catch (Exception) // Else it is not RTF, bind to the property 
             {
                 if (helpBinding.Current is HelpSubjectValue subject)
@@ -104,7 +73,7 @@ namespace DataDictionary.Main.Forms.General
                     subject.AcceptChanges();
                 }
 
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
             }
         }
 
@@ -120,34 +89,34 @@ namespace DataDictionary.Main.Forms.General
         {
             base.ImportCommand_Click(sender, e);
 
-            if (helpBinding.AddNew() is HelpSubjectValue newValue &&
-                formData.CurrentForm is Form targetForm)
-            {
-                HelpSubjectIndexPath newNameSpace = targetForm.ToNameSpaceKey();
-                newValue.HelpSubject = String.Format("(new Subject: {0})", newNameSpace.Member);
-                newValue.NameSpace = newNameSpace.MemberFullPath;
+            //if (helpBinding.AddNew() is HelpSubjectValue newValue &&
+            //    formData.CurrentForm is Form targetForm)
+            //{
+            //    HelpSubjectIndexPath newNameSpace = targetForm.ToNameSpaceKey();
+            //    newValue.HelpSubject = String.Format("(new Subject: {0})", newNameSpace.Member);
+            //    newValue.NameSpace = newNameSpace.MemberFullPath;
 
-                Activate((data) => new HelpSubject(newValue, targetForm), newValue);
-            }
+            //    Activate((data) => new HelpSubject(newValue, targetForm), newValue);
+            //}
         }
 
 
         private void HelpBinding_ListChanged(object sender, ListChangedEventArgs e)
         { // ISSUE: this fires multiple times. Be careful and remember prior state.
-            BuildHelpTree();
+            //BuildHelpTree();
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formData.TryGetCurrent(out HelpSubjectValue? current))
-            {
-                if (formData.CurrentForm is Form targetForm
-                    && targetForm.ToNameSpaceKey().ParentOf(new HelpSubjectIndexPath(current)))
-                { Activate((data) => new HelpSubject(current, targetForm), current); }
-                else { Activate((data) => new HelpSubject(current), current); }
-            }
+            //if (formData.TryGetCurrent(out HelpSubjectValue? current))
+            //{
+            //    if (formData.CurrentForm is Form targetForm
+            //        && targetForm.ToNameSpaceKey().ParentOf(new HelpSubjectIndexPath(current)))
+            //    { Activate((data) => new HelpSubject(current, targetForm), current); }
+            //    else { Activate((data) => new HelpSubject(current), current); }
+            //}
         }
 
 
@@ -180,6 +149,7 @@ namespace DataDictionary.Main.Forms.General
             {helpContentImageIndex.HelpGroup, NavigationEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
         };
 
+        [Obsolete]
         void BuildHelpTree()
         {
             List<HelpSubjectIndex> expanded = new List<HelpSubjectIndex>();
@@ -264,6 +234,7 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        [Obsolete]
         private TreeNode CreateNode(HelpSubjectValue source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(source.HelpSubject);
@@ -281,6 +252,7 @@ namespace DataDictionary.Main.Forms.General
             return result;
         }
 
+        [Obsolete]
         private TreeNode CreateNode(String nodeText, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(nodeText);
@@ -329,6 +301,7 @@ namespace DataDictionary.Main.Forms.General
             { helpBinding.Position = subjects.IndexOf(subject); }
         }
 
+        [Obsolete]
         private void SetNode(HelpSubjectValue target)
         {
             if (helpContentNodes.Where(w => w.Value.Equals(target)).Select(s => s.Key).FirstOrDefault() is TreeNode node)
@@ -340,6 +313,7 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        [Obsolete]
         private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is HelpSubjectValue item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
@@ -353,6 +327,7 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
+        [Obsolete]
         void SetImages(TreeView tree)
         {
             if (tree.ImageList is null)
@@ -364,25 +339,26 @@ namespace DataDictionary.Main.Forms.General
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (helpContentNodes.ContainsKey(e.Node)
-                && helpContentNodes[e.Node] is HelpSubjectValue target)
-            {
-                if (formData.SetPosition(target))
-                {
-                    helpBinding.ResumeBinding();
-                    helpDetailLayout.Enabled = true;
-                }
-                else
-                {
-                    helpBinding.SuspendBinding();
-                    helpDetailLayout.Enabled = false;
-                }
+            //if (helpContentNodes.ContainsKey(e.Node)
+            //    && helpContentNodes[e.Node] is HelpSubjectValue target)
+            //{
 
-                if (formData.CurrentForm is Form targetForm
-                    && targetForm.ToNameSpaceKey().ParentOf(new HelpSubjectIndexPath(target)))
-                { CommandButtons[CommandImageType.Import].IsEnabled = true; }
-                else { CommandButtons[CommandImageType.Import].IsEnabled = false; }
-            }
+            //    if (formData.SetPosition(target))
+            //    {
+            //        helpBinding.ResumeBinding();
+            //        helpDetailLayout.Enabled = true;
+            //    }
+            //    else
+            //    {
+            //        helpBinding.SuspendBinding();
+            //        helpDetailLayout.Enabled = false;
+            //    }
+
+            //    if (formData.CurrentForm is Form targetForm
+            //        && targetForm.ToNameSpaceKey().ParentOf(new HelpSubjectIndexPath(target)))
+            //    { CommandButtons[CommandImageType.Import].IsEnabled = true; }
+            //    else { CommandButtons[CommandImageType.Import].IsEnabled = false; }
+            //}
         }
 
         private void HelpContentNavigation_MouseDoubleClick(object sender, MouseEventArgs e)
