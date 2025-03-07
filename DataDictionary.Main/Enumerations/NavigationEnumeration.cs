@@ -118,9 +118,9 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp),
                     new(CommandImageType.Import, Resources.ImportStatusHelp)),
                 new NavigationEnumeration(ScopeType.ApplicationHelpPage,       Resources.Icon_HelpIndexFile,
-                    new(CommandImageType.Default, Resources.StatusHelp),
+                    new(CommandImageType.Default, Resources.HelpIndexFile),
                     new(CommandImageType.Delete, Resources.DeleteStatusHelp)),
-                new NavigationEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpIndexFile),
+                new NavigationEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpTableOfContents),
                 new NavigationEnumeration(ScopeType.ApplicationHelpForm,        Resources.HelpApplication),
                 new NavigationEnumeration(ScopeType.ApplicationOption,          Resources.Icon_Settings, Resources.Settings),
 

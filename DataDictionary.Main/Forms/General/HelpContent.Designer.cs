@@ -110,10 +110,6 @@
             helpTextData.TabIndex = 1;
             helpTextData.Text = "";
             // 
-            // helpBinding
-            // 
-            helpBinding.ListChanged += HelpBinding_ListChanged;
-            // 
             // HelpContent
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);

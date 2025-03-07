@@ -85,8 +85,6 @@ namespace DataDictionary.Main.Forms.General
                 bindingHelpSubject = helpBinding;
                 subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
                 bindingHelpSubject.DataSource = subjects;
-
-                SetPosition(initialSubject);
             }
 
             public void AddForm(Form form)
@@ -96,7 +94,9 @@ namespace DataDictionary.Main.Forms.General
                 if (!subjects.Any(w => helpSubject.Equals(w.Path)))
                 { subjects.Add(new BindingSubject(form)); }
 
-                foreach (BindingSubject item in subjects.Where(w => helpSubject.ChildOf(helpSubject)))
+                var x = subjects.Where(w => w.Path.ChildOf(helpSubject));
+
+                foreach (BindingSubject item in subjects.Where(w => w.Path.ChildOf(helpSubject)))
                 { item.SubjectForm = form; }
             }
 
@@ -104,7 +104,7 @@ namespace DataDictionary.Main.Forms.General
             {
                 initialSubject = helpSubject;
 
-                if (subjects.FirstOrDefault(w => helpSubject.Equals(w)) is BindingSubject value)
+                if (subjects.FirstOrDefault(w => helpSubject.Equals(w.Path)) is BindingSubject value)
                 { bindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
