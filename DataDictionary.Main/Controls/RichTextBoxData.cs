@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
-    [DefaultBindingProperty("Rtf")]
+
     partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
 
@@ -45,30 +45,39 @@ namespace DataDictionary.Main.Controls
         public Boolean HeaderVisible { get { return label.Visible; } set { label.Visible = value; } }
 
         /// <summary>
+        /// Makes the Tool Strip Visible or hidden
+        /// </summary>
+        public Boolean ToolStripVisible { get { return toolStrip.Visible; } set { toolStrip.Visible = value; } }
+
+        /// <summary>
         /// Exposes the Rich Text attribute.
         /// </summary>
         /// <remarks>
-        /// The name appears to be very touchy. Changing it to "RichText" causes an error during binding while "Rtf" does not.
-        /// ListChange and PropertyChange Events during threading can cause issues with this control where other controls don't have that issue.
+        /// ISSUE: Binding does not actual connect to this property.
+        /// It connects to the RTF of the RichTextBox control directly.
+        /// As such, the logic in the property is never called.
+        /// This causes problems with Threading and cleaning the value before it is used.
+        /// The root RTF property can also throw errors if the text is
+        /// not Rich Text.
         /// </remarks>
-        [Browsable(false), RefreshProperties(RefreshProperties.All), SettingsBindable(true), DefaultValue(""), Category("Appearance")]
+        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes)]
         public String? Rtf
         {
             get
             { return richTextBox.Rtf; }
             set
-            {
+            {   // This is never called with Binding.
                 try
                 {
                     if (this.IsHandleCreated)
-                    { Invoke(() => { richTextBox.Rtf = value; }); }
-                    else { richTextBox.Rtf = value; }
+                    { Invoke(() => { richTextBox.Clear(); richTextBox.Rtf = value; }); }
+                    else { richTextBox.Clear(); richTextBox.Rtf = value; }
                 }
                 catch (Exception)
                 {
                     if (this.IsHandleCreated)
-                    { Invoke(() => { richTextBox.Text = value; }); }
-                    else { richTextBox.Text = value; }
+                    { Invoke(() => { richTextBox.Clear(); richTextBox.Text = value; }); }
+                    else { richTextBox.Clear(); richTextBox.Text = value; }
                 }
             }
         }

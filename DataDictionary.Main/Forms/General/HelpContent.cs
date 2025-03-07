@@ -58,27 +58,9 @@ namespace DataDictionary.Main.Forms.General
 
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
-            //BindRtfHelpText();
 
             if (formData.TryCurrent(out BindingSubject? current))
             { formTree.SetNode(current); }
-        }
-
-        private void BindRtfHelpText()
-        {
-            try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation)); }
-            catch (Exception) // Else it is not RTF convert to RTF and bind.
-            {
-                if (helpBinding.Current is HelpSubjectValue subject)
-                {
-                    helpTextData.Text = subject.HelpText ?? String.Empty;
-                    subject.HelpText = helpTextData.Rtf;
-                    subject.AcceptChanges();
-                }
-
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
-            }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)

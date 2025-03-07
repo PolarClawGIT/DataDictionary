@@ -33,7 +33,7 @@
             helpContentNavigation = new TreeView();
             helpDetailLayout = new TableLayoutPanel();
             helpSubjectData = new DataDictionary.Main.Controls.TextBoxData();
-            helpTextData = new RichTextBox();
+            helpTextData = new DataDictionary.Main.Controls.RichTextBoxData();
             helpBinding = new BindingSource(components);
             helpSplitLayout = new SplitContainer();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
@@ -101,14 +101,16 @@
             // 
             // helpTextData
             // 
-            helpTextData.BackColor = SystemColors.Window;
+            helpTextData.AutoSize = true;
             helpTextData.Dock = DockStyle.Fill;
+            helpTextData.HeaderText = "Description";
+            helpTextData.HeaderVisible = true;
             helpTextData.Location = new Point(3, 53);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = true;
             helpTextData.Size = new Size(524, 369);
             helpTextData.TabIndex = 1;
-            helpTextData.Text = "";
+            helpTextData.ToolStripVisible = false;
             // 
             // HelpContent
             // 
@@ -136,7 +138,7 @@
         private TreeView helpContentNavigation;
         private Controls.TextBoxData helpSubjectData;
         private BindingSource helpBinding;
-        private RichTextBox helpTextData;
         private TableLayoutPanel helpDetailLayout;
+        private Controls.RichTextBoxData helpTextData;
     }
 }
