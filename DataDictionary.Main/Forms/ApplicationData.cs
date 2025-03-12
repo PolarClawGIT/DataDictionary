@@ -216,7 +216,7 @@ namespace DataDictionary.Main.Forms
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                if (data.Current is IDataValue dataValue)
+                if (data.Position >= 0 && data.Current is IDataValue dataValue)
                 {
                     Text = dataValue.Title;
                     SetIcon(dataValue.Scope);

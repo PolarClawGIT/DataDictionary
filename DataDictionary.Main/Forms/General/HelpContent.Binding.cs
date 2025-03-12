@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.General
             public String Title { get; }
             public String Description { get; } = String.Empty;
             public String ToolTip { get; } = String.Empty;
-            public HelpSubjectIndex? SubjectIndex { get; } = null;
+            public HelpSubjectIndex? SubjectIndex { get; set; } = null;
             public Form? SubjectForm { get; set; } = null;
 
             public BindingSubject(Form form)
@@ -100,6 +100,12 @@ namespace DataDictionary.Main.Forms.General
                 { item.SubjectForm = form; }
             }
 
+            public void SetPosition(IHelpSubjectIndex helpSubject)
+            {
+                if (subjects.FirstOrDefault(w => helpSubject.Equals(w.SubjectIndex)) is BindingSubject value)
+                { bindingHelpSubject.Position = subjects.IndexOf(value); }
+            }
+
             public void SetPosition(HelpSubjectIndexPath helpSubject)
             {
                 initialSubject = helpSubject;
@@ -113,6 +119,26 @@ namespace DataDictionary.Main.Forms.General
 
             public void SetPosition(Form helpSubject)
             { SetPosition(helpSubject.ToNameSpaceKey()); }
+
+            public HelpSubjectValue NewSubject(BindingSubject source)
+            {
+                if (source.SubjectIndex is not null && subjectData.FirstOrDefault(w => source.SubjectIndex.Equals(w)) is HelpSubjectValue value)
+                { return value; } // Subject already exists, return it.
+
+                HelpSubjectValue result = new HelpSubjectValue();
+
+                if(source.SubjectForm is Form)
+                {
+                    result.HelpSubject = String.Format("(new Help Subject: {0})", source.Path.Member);
+                    result.Path = source.Path;
+                    source.SubjectIndex = new HelpSubjectIndex(result);
+                }
+
+                subjectData.Add(result);
+                SetPosition(result);
+
+                return result;
+            }
 
             public Boolean TryCurrent([NotNullWhen(true)] out BindingSubject? result)
             {

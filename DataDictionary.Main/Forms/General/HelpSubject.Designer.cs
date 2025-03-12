@@ -84,7 +84,6 @@
             helpTextData.Location = new Point(3, 3);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
-            helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             helpTextData.Size = new Size(492, 382);
             helpTextData.TabIndex = 2;
             helpTextData.Load += HelpTextData_Load;

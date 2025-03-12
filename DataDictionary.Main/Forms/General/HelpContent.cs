@@ -95,13 +95,32 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenCommand_Click(sender, e);
 
-            //if (formData.TryGetCurrent(out HelpSubjectValue? current))
-            //{
-            //    if (formData.CurrentForm is Form targetForm
-            //        && targetForm.ToNameSpaceKey().ParentOf(new HelpSubjectIndexPath(current)))
-            //    { Activate((data) => new HelpSubject(current, targetForm), current); }
-            //    else { Activate((data) => new HelpSubject(current), current); }
-            //}
+
+            if (formData.TryCurrent(out BindingSubject? current))
+            {
+                if (current.SubjectIndex is null && current.SubjectForm is not null)
+                {
+                    HelpSubjectValue newValue = formData.NewSubject(current);
+
+                    Activate(
+                        () => new HelpSubject(newValue, current.SubjectForm),
+                        (form) => form.IsOpenItem(newValue));
+                }
+                else if (current.SubjectIndex is not null && current.SubjectForm is null)
+                {
+                    Activate(
+                    () => new HelpSubject(current.SubjectIndex),
+                    (form) => form.IsOpenItem(current.SubjectIndex));
+                }
+                else if (current.SubjectIndex is not null && current.SubjectForm is not null)
+                {
+                    Activate(
+                    () => new HelpSubject(current.SubjectIndex, current.SubjectForm),
+                    (form) => form.IsOpenItem(current.SubjectIndex));
+                }
+                else
+                { throw new InvalidOperationException("Could not determine correct way to open Help Subject form"); }
+            }
         }
 
 
@@ -109,15 +128,15 @@ namespace DataDictionary.Main.Forms.General
         {
             base.HistoryCommand_Click(sender, e);
 
-            if (helpBinding.DataSource is ILoadHistoryData history)
-            {
-                Form form = Activate(() =>
-                new HistoryView<HelpSubjectValue, HelpSubject>(ScopeType.ApplicationHelp, history)
-                { SelectedForm = (subject) => new HelpSubject(subject) });
+            //if (helpBinding.DataSource is ILoadHistoryData history)
+            //{
+            //    Form form = Activate(() =>
+            //    new HistoryView<HelpSubjectValue, HelpSubject>(ScopeType.ApplicationHelp, history)
+            //    { SelectedForm = (subject) => new HelpSubject(subject) });
 
-                if (history is IBindingTable table)
-                { form.Text = String.Format("History: {0}", table.BindingName); }
-            }
+            //    if (history is IBindingTable table)
+            //    { form.Text = String.Format("History: {0}", table.BindingName); }
+            //}
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

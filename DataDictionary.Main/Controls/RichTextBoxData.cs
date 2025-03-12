@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Controls
                     else { richTextBox.Clear(); richTextBox.Text = value; }
                 }
 
-                throw new InvalidOperationException("Debug: Demonstrates that this is never called");
+                //throw new InvalidOperationException("Debug: Demonstrates that this is never called");
             }
         }
 

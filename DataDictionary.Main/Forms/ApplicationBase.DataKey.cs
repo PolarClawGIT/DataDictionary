@@ -26,6 +26,7 @@ namespace DataDictionary.Main.Forms
         /// By default the function always returns true.
         /// Override this if the from is specific to data item.
         /// </remarks>
+        [Obsolete("Define function specific to each form instead")]
         Boolean IsOpenItem(Object? item) { return true; }
 
         /// <summary>

@@ -77,7 +77,6 @@
             definitionTextData.Location = new Point(3, 3);
             definitionTextData.Name = "definitionTextData";
             definitionTextData.ReadOnly = false;
-            definitionTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             definitionTextData.Size = new Size(281, 124);
             definitionTextData.TabIndex = 0;
             definitionTextData.Validated += DefinitionTextData_Validated;

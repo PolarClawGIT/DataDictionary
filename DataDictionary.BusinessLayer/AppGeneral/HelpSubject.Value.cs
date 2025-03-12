@@ -27,7 +27,11 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public ScopeType Scope { get; } = ScopeType.ApplicationHelpPage;
 
         /// <inheritdoc cref="HelpSubjectItem.NameSpace"/>
-        public HelpSubjectIndexPath Path { get { return pathValue; } }
+        public HelpSubjectIndexPath Path
+        {
+            get { return pathValue; }
+            set { pathValue = value; this.NameSpace = value.MemberFullPath; }
+        }
 
         /// <inheritdoc/>
         public HelpSubjectValue() : base()
@@ -40,7 +44,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
                 IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
             };
 
-            pathValue = new HelpSubjectIndexPath(this);
+            pathValue = new HelpSubjectIndexPath(this.NameSpace);
 
             this.PropertyChanged += PropertyChanged;
 
@@ -49,7 +53,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
                 if (e.PropertyName is nameof(this.NameSpace))
                 {
                     pathValue = new HelpSubjectIndexPath(this);
-                    OnPropertyChanged(nameof(Path)); 
+                    OnPropertyChanged(nameof(Path));
                 }
             }
         }

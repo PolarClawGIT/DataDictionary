@@ -115,6 +115,30 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
+        /// Looks for the Target Form already open that return true for the condition passed.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <param name="isOpen"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<TForm> constructor, Func<TForm, Boolean> isOpen)
+            where TForm : ApplicationBase
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.OfType<TForm>().FirstOrDefault(w => isOpen(w)) is TForm existingForm)
+            { existingForm.Activate(); return existingForm; }
+            else
+            { // else
+                TForm newForm = constructor();
+                newForm.MdiParent = parent;
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        /// <summary>
         /// Looks for the Target Form already open with the specified BindingTable.
         /// If it is open, just activate it. Otherwise, show/activate the form.
         /// </summary>
@@ -122,6 +146,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="constructor"></param>
         /// <param name="data"></param>
         /// <returns></returns>
+        [Obsolete("Use Activate(constructor, isOpen)")]
         protected virtual TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
             where TForm : ApplicationBase
         {
@@ -152,6 +177,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="constructor"></param>
         /// <param name="data"></param>
         /// <returns></returns>
+        [Obsolete("Use Activate(constructor, isOpen)")]
         protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
             where TForm : ApplicationBase
         {
@@ -174,6 +200,7 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        [Obsolete("Use Activate(constructor, isOpen)")]
         protected virtual TForm Activate<TForm>(Func<IBindingData, TForm> constructor, IBindingData data)
             where TForm : ApplicationBase
         {
@@ -196,6 +223,7 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        [Obsolete("Use Activate(constructor, isOpen)")]
         protected virtual TForm Activate<TForm>(Func<IBindingList, TForm> constructor, IBindingList data)
             where TForm : ApplicationBase
         {

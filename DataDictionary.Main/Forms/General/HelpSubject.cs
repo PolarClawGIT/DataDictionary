@@ -15,19 +15,20 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpSubject : ApplicationData, IApplicationDataForm
     {
-        HelpSubjectIndex helpSubjectIndex = new HelpSubjectIndex();
-        TemporalIndex? temporalIndex;
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
+        FormBinding formData;
+        Boolean needsData = false;
 
-        //IHelpSubjectIndex formIndex;
-        //HelpSubjectView formData;
-
-        public Boolean IsOpenItem(object? item)
-        { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
+        public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
+        {
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+            return key.Equals(helpBinding.Current);
+        }
 
         public HelpSubject() : base()
         {
             InitializeComponent();
+            formData = new FormBinding(ref helpBinding) { DoWork = base.DoWork };
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
@@ -43,28 +44,14 @@ namespace DataDictionary.Main.Forms.General
             controlData.Enabled = false;
         }
 
-        public HelpSubject (IHelpSubjectIndex helpSubject) : this()
-        {
-            helpSubjectIndex = new HelpSubjectIndex(helpSubject);
-        }
+        public HelpSubject(IHelpSubjectIndex helpSubject) : this()
+        { formData.SetIndex(helpSubject); }
 
-        public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this (helpSubject)
-        {
-            temporalIndex = new TemporalIndex(temporal);
-        }
+        public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
+        { formData.SetIndex(helpSubject, temporal); needsData = true; }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject)
         {
-            controlData.Enabled = true;
-        }
-
-        public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
-        { HelpSubject_Binding(helpSubjectItem); }
-
-        public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
-        {
-            HelpSubject_Binding(helpSubjectItem);
-
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
                             && w is not Form
@@ -106,48 +93,26 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
-        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
-        {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
-            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
-
-            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
-
-            if (bindingData.Count == 0)
-            {
-                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
-                CommandButtons[CommandImageType.Delete].IsEnabled = false;
-                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
-                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
-
-
-            }
-
-            helpBinding.DataSource = bindingData;
-            helpBinding.Position = 0;
-
-        }
-
         private void HelpTextData_Load(object sender, EventArgs e)
         {
-            IDatabaseWork factory = BusinessData.GetDbFactory();
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { DoWork = () => { } });
-
-            DoWork(work, onCompleting);
-
+            if (needsData)
+            { formData.Load(onCompleting); }
+            else
+            { DoBinding(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
+            { if (args.Error is null) { DoBinding(); } }
+
+            void DoBinding()
             {
                 helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
                 helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
                 helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
-
-                BindRtfHelpText();
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
 
+        [Obsolete()]
         private void BindRtfHelpText()
         {
             try // If RTF, bind to the RTF property
@@ -164,6 +129,7 @@ namespace DataDictionary.Main.Forms.General
                 helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
+        //TODO: Continue switching to HelpSubject Binding class.
 
         private void ControlData_Resize(object sender, EventArgs e)
         { controlData.ResizeColumns(); }
@@ -222,7 +188,7 @@ namespace DataDictionary.Main.Forms.General
             if (helpBinding.Current is HelpSubjectValue current)
             {
                 SecurableIndex key = new HelpSubjectIndex(current);
-                Activate(() => new Security.SecurableManager(key,() => BusinessData.Authorization.IsHelpAdmin));
+                Activate(() => new Security.SecurableManager(key, () => BusinessData.Authorization.IsHelpAdmin));
             }
         }
 

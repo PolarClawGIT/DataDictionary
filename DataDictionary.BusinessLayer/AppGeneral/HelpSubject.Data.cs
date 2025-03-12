@@ -18,7 +18,14 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         ILoadData, ILoadData<IHelpSubjectIndex>,
         ISaveData, ISaveData<IHelpSubjectIndex>,
         ITemporalData
-    { }
+    {
+        /// <summary>
+        /// Returns a new IHelpSubjectData.
+        /// </summary>
+        /// <returns></returns>
+        public static IHelpSubjectData Create()
+        { return new HelpSubjectData(); }
+    }
 
     /// <summary>
     /// Wrapper Class for Application Help.
