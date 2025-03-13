@@ -16,12 +16,13 @@ namespace DataDictionary.Main.Forms.General
         {
             public ListViewItem? ListItem { get; set; }
             public String ControlType { get; private set; }
-            public HelpSubjectIndexPath ControlName { get; private set; }
+            public HelpSubjectIndexPath Path { get; private set; }
+            public String ControlName { get { return Path.Member; } }
             public Boolean IsForm { get; private set; }
 
             public ControlItem(Control source)
             {
-                ControlName = source.ToNameSpaceKey();
+                Path = source.ToHelpSubjectPath();
 
                 if (source is Form)
                 {
@@ -43,7 +44,7 @@ namespace DataDictionary.Main.Forms.General
             }
 
             public override string ToString()
-            { return ControlName.MemberFullPath; }
+            { return Path.MemberFullPath; }
            
         }
     }

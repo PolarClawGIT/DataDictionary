@@ -272,7 +272,7 @@ namespace DataDictionary.Main.Forms
 
             String ToToolTipText(Control source)
             {
-                HelpSubjectIndexPath key = source.ToNameSpaceKey();
+                HelpSubjectIndexPath key = source.ToHelpSubjectPath();
                 if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue item
                     && item.HelpToolTip is String toolTip)
                 { return toolTip; }

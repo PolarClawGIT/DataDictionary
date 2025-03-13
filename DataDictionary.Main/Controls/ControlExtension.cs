@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static HelpSubjectIndexPath ToNameSpaceKey(this Control source)
+        public static HelpSubjectIndexPath ToHelpSubjectPath(this Control source)
         {
             List<String> parts = new List<String>();
             Control? current = source;

@@ -40,20 +40,37 @@ namespace DataDictionary.Main.Forms.General
             CommandButtons[CommandImageType.Import].IsEnabled = false;
             CommandButtons[CommandImageType.Import].Text = "Add new Help Subject using Form Data";
 
-            helpSubjectData.Focus();
+            OpenSubject(Settings.Default.DefaultSubject);
         }
 
-        public HelpContent(String targetSubject) : this()
-        { formData.SetPosition(targetSubject); }
+        public void OpenSubject(String targetSubject)
+        {
+            formData.SetPosition(targetSubject);
 
-        public HelpContent(Form targetForm) : this()
+            if (formData.TryCurrent(out BindingSubject? current))
+            { formTree.SetNode(current); }
+        }
+
+        public void OpenSubject(IHelpSubjectIndex helpSubject)
+        {
+            formData.SetPosition(helpSubject);
+
+            if (formData.TryCurrent(out BindingSubject? current))
+            { formTree.SetNode(current); }
+        }
+
+        public void OpenSubject(Form targetForm)
         {
             formData.AddForm(targetForm);
             formData.SetPosition(targetForm);
+
+            if (formData.TryCurrent(out BindingSubject? current))
+            { formTree.SetNode(current); }
         }
 
         private void HelpContent_Load(object sender, EventArgs e)
         {
+            formData.SubjectsChanged += FormData_SubjectsChanged;
             formTree.BuildTree(formData.HelpSubjects);
 
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -61,52 +78,54 @@ namespace DataDictionary.Main.Forms.General
 
             if (formData.TryCurrent(out BindingSubject? current))
             { formTree.SetNode(current); }
+
+            void FormData_SubjectsChanged(Object? sender, EventArgs e)
+            {
+                formTree.BuildTree(formData.HelpSubjects);
+
+                if (formData.TryCurrent(out BindingSubject? current))
+                { formTree.SetNode(current); }
+            }
         }
+
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
 
-            if (helpBinding.AddNew() is HelpSubjectValue newValue)
-            { Activate((data) => new HelpSubject(newValue), newValue); }
+            HelpSubjectValue newValue = formData.NewSubject();
+            OpenSubjectForm();
         }
 
         protected override void ImportCommand_Click(Object? sender, EventArgs e)
         {
             base.ImportCommand_Click(sender, e);
 
-            //if (helpBinding.AddNew() is HelpSubjectValue newValue &&
-            //    formData.CurrentForm is Form targetForm)
-            //{
-            //    HelpSubjectIndexPath newNameSpace = targetForm.ToNameSpaceKey();
-            //    newValue.HelpSubject = String.Format("(new Subject: {0})", newNameSpace.Member);
-            //    newValue.NameSpace = newNameSpace.MemberFullPath;
+            if (formData.TryCurrent(out BindingSubject? current)
+                && current.SubjectForm is not null)
+            { HelpSubjectValue newValue = formData.NewSubject(current); }
 
-            //    Activate((data) => new HelpSubject(newValue, targetForm), newValue);
-            //}
-        }
-
-        private void HelpBinding_ListChanged(object sender, ListChangedEventArgs e)
-        {   // ISSUE: this fires multiple times. Be careful and remember prior state.
-            // ISSUE: This can fire during InitializeComponent before formData or formTree is constructed.
+            OpenSubjectForm();
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
 
-
             if (formData.TryCurrent(out BindingSubject? current))
             {
                 if (current.SubjectIndex is null && current.SubjectForm is not null)
-                {
-                    HelpSubjectValue newValue = formData.NewSubject(current);
+                { HelpSubjectValue newValue = formData.NewSubject(current); }
+            }
 
-                    Activate(
-                        () => new HelpSubject(newValue, current.SubjectForm),
-                        (form) => form.IsOpenItem(newValue));
-                }
-                else if (current.SubjectIndex is not null && current.SubjectForm is null)
+            OpenSubjectForm();
+        }
+
+        private void OpenSubjectForm()
+        {
+            if (formData.TryCurrent(out BindingSubject? current))
+            {
+                if (current.SubjectIndex is not null && current.SubjectForm is null)
                 {
                     Activate(
                     () => new HelpSubject(current.SubjectIndex),
@@ -121,8 +140,8 @@ namespace DataDictionary.Main.Forms.General
                 else
                 { throw new InvalidOperationException("Could not determine correct way to open Help Subject form"); }
             }
-        }
 
+        }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {

@@ -143,6 +143,7 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
+
             public Boolean SetNode(BindingSubject helpSubject)
             {
                 var node = nodes.FirstOrDefault(w => helpSubject.Path.Equals(w.Value.Path));

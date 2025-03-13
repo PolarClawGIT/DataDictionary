@@ -59,6 +59,15 @@ namespace DataDictionary.Main.Forms.General
                 temporalIndex = new TemporalIndex(temporal);
             }
 
+            public HelpSubjectValue NewSubject()
+            {
+                HelpSubjectValue newValue = new HelpSubjectValue();
+                subjectData.Add(newValue);
+                SetIndex(newValue);
+
+                return newValue;
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();

@@ -117,7 +117,7 @@ namespace DataDictionary.Main
 
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
+        {   Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent()); }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         { throw new NotImplementedException(); } // Not Used.
@@ -128,7 +128,10 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm)); }
+            {
+                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent());
+                helpForm.OpenSubject(currentForm);
+            }
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)

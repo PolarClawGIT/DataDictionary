@@ -33,6 +33,7 @@ namespace DataDictionary.Main.Forms.General
             SetRowState(helpBinding);
             SetTitle(helpBinding);
             SetCommand(ScopeType.ApplicationHelpPage,
+                CommandImageType.Add,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
@@ -57,24 +58,24 @@ namespace DataDictionary.Main.Forms.General
                             && w is not Form
                             && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
                 .OrderBy(o => o is not Form)
-                .ThenBy(o => o.ToNameSpaceKey())
+                .ThenBy(o => o.ToHelpSubjectPath())
                 .ToList();
 
             // Add Group level for form to ListView
             ControlItem baseForm = new ControlItem(targetForm);
-            ListViewItem baseItem = new ListViewItem(baseForm.ControlName.Member);
+            ListViewItem baseItem = new ListViewItem(baseForm.Path.Member);
 
             baseForm.ListItem = baseItem;
             controlList.Add(baseForm);
             controlData.Items.Add(baseItem);
-            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName.Format("{0}"));
+            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.Path.Format("{0}"));
 
             // Add all the forms controls to ListView
             foreach (Control item in values)
             {
                 ControlItem newControl = new ControlItem(item);
-                String itemName = newControl.ControlName.Format("{0}")
-                    .Replace(String.Format("{0}.", baseForm.ControlName.Format("{0}")), String.Empty);
+                String itemName = newControl.Path.Format("{0}")
+                    .Replace(String.Format("{0}.", baseForm.Path.Format("{0}")), String.Empty);
                 ListViewItem newItem = new ListViewItem(itemName);
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
@@ -84,13 +85,15 @@ namespace DataDictionary.Main.Forms.General
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
 
-                    if (helpPath.Equals(newControl.ControlName))
+                    if (helpPath.Equals(newControl.Path))
                     { newItem.Checked = true; }
                 }
 
                 controlList.Add(newControl);
                 controlData.Items.Add(newItem);
             }
+
+            controlData.Enabled = true;
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)
@@ -154,13 +157,12 @@ namespace DataDictionary.Main.Forms.General
                     { viewItem.Checked = false; }
                 }
 
-                if (helpBinding.Current is HelpSubjectValue current)
+                if (formData.TryCurrent(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
                     if (controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
-                        && !key.Equals(selected.ControlName))
-                    { current.NameSpace = selected.ControlName.MemberFullPath; }
-
+                        && !key.Equals(selected.Path))
+                    { current.NameSpace = selected.Path.MemberFullPath; }
                 }
 
                 currentItem = null;
@@ -170,7 +172,14 @@ namespace DataDictionary.Main.Forms.General
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            helpBinding.AddNew();
+
+            HelpSubjectValue newSubject = formData.NewSubject();
+            if(controlList.Count > 0 && controlList.FirstOrDefault(w => w.IsForm) is ControlItem item)
+            {
+                newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
+                newSubject.Path = item.Path;
+                controlData.SelectedItems.Clear();
+            }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
