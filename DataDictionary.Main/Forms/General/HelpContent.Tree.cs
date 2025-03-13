@@ -32,7 +32,8 @@ namespace DataDictionary.Main.Forms.General
                 {ImageKey.HelpForm, NavigationEnumeration.GetImage(ScopeType.ApplicationHelpForm) },
             };
 
-            Dictionary<TreeNode, BindingSubject> nodes = new Dictionary<TreeNode, BindingSubject>();
+            Dictionary<TreeNode, BindingSubject> subjectNodes = new Dictionary<TreeNode, BindingSubject>();
+            Dictionary<TreeNode, PathIndex> pathNodes = new Dictionary<TreeNode, PathIndex>();
 
             public ContentTree(TreeView target)
             { treeControl = target; }
@@ -52,19 +53,26 @@ namespace DataDictionary.Main.Forms.General
             {
                 // Existing State
                 BindingSubject? selectedNode = null;
-                if (treeControl.SelectedNode is TreeNode selected && nodes.TryGetValue(selected, out BindingSubject? value))
+                if (treeControl.SelectedNode is TreeNode selected && subjectNodes.TryGetValue(selected, out BindingSubject? value))
                 { selectedNode = value; }
 
-                List<BindingSubject> expendedNodes = new List<BindingSubject>();
-                expendedNodes.AddRange(nodes.Where(w =>
-                (w.Key.IsExpanded
-                || (w.Key.Nodes.Count == 0
-                    && w.Key.Parent is not null
-                    && w.Key.Parent.IsExpanded))).
-                    Select(s => s.Value).
-                    Distinct());
+                List<BindingSubject> expandedSubjects = new List<BindingSubject>();
+                List<PathIndex> expandedPaths = new List<PathIndex>();
+                foreach (TreeNode item in treeControl.Nodes.GetNodes(w => w.IsExpanded))
+                {
+                    if (subjectNodes.TryGetValue(item, out BindingSubject? subject)
+                        && !expandedSubjects.Contains(subject))
+                    { expandedSubjects.Add(subject); }
 
-                nodes.Clear();
+                    if (pathNodes.TryGetValue(item, out PathIndex? path)
+                        && !expandedPaths.Contains(path))
+                    { expandedPaths.Add(path); }
+                }
+
+                // Clear the Tree
+                treeControl.BeginUpdate();
+                subjectNodes.Clear();
+                pathNodes.Clear();
                 treeControl.Nodes.Clear();
 
                 // Build Nodes
@@ -84,18 +92,27 @@ namespace DataDictionary.Main.Forms.General
                 { BuildNodes(rootNodes, root); }
 
                 // Restore State
-                foreach (TreeNode item in nodes.
+                foreach (TreeNode item in subjectNodes.
                         Where(w =>
-                            selectedNode is not null 
+                            selectedNode is not null
                             && selectedNode.Equals(w.Value)).
                         Select(s => s.Key))
                 { treeControl.SelectedNode = item; }
 
-                foreach (BindingSubject item in expendedNodes)
-                {
-                    foreach (TreeNode node in nodes.Where(w => item.Equals(w.Value)).Select(s => s.Key))
+                foreach (BindingSubject item in expandedSubjects)
+                {   // Normally only one but multiples are possible
+                    foreach (TreeNode node in subjectNodes.Where(w => item.Equals(w.Value)).Select(s => s.Key))
                     { if (!node.IsExpanded) { node.ExpandParent(); } }
                 }
+
+                foreach (PathIndex item in expandedPaths)
+                {   // Normally only one but multiples are possible
+                    foreach (TreeNode node in pathNodes.Where(w => item.Equals(w.Value)).Select(s => s.Key))
+                    { if (!node.IsExpanded) { node.ExpandParent(); } }
+                }
+
+                // Done
+                treeControl.EndUpdate();
 
                 void BuildNodes(TreeNodeCollection treeNodes, PathIndex path)
                 {
@@ -111,6 +128,7 @@ namespace DataDictionary.Main.Forms.General
                         TreeNode groupNode = new TreeNode(path.Member);
                         groupNode.ImageKey = nameof(ImageKey.HelpGroup);
                         groupNode.SelectedImageKey = nameof(ImageKey.HelpGroup);
+                        pathNodes.Add(groupNode, path);
                         currentNodes.Add(groupNode);
                         currentNodes = groupNode.Nodes;
 
@@ -136,7 +154,7 @@ namespace DataDictionary.Main.Forms.General
                         newNode.SelectedImageKey = nameof(ImageKey.HelpForm);
                     }
 
-                    nodes.Add(newNode, subject);
+                    subjectNodes.Add(newNode, subject);
                     currentNodes.Add(newNode);
                     currentNodes = newNode.Nodes;
                     return currentNodes;
@@ -146,7 +164,7 @@ namespace DataDictionary.Main.Forms.General
 
             public Boolean SetNode(BindingSubject helpSubject)
             {
-                var node = nodes.FirstOrDefault(w => helpSubject.Path.Equals(w.Value.Path));
+                var node = subjectNodes.FirstOrDefault(w => helpSubject.Path.Equals(w.Value.Path));
                 if (node.Key is not null)
                 { treeControl.SelectedNode = node.Key; return true; }
                 else { return false; }
@@ -154,16 +172,14 @@ namespace DataDictionary.Main.Forms.General
 
             public Boolean GetSubject(TreeNode treeNode, [NotNullWhen(true)] out BindingSubject? value)
             {
-                if (nodes.TryGetValue(treeNode, out BindingSubject? result))
+                if (subjectNodes.TryGetValue(treeNode, out BindingSubject? result))
                 { value = result; return true; }
                 else { value = null; return false; }
             }
 
             public Boolean GetSubject([NotNullWhen(true)] out BindingSubject? value)
             {
-                var x = treeControl.Nodes.OfType<TreeNode>().Where(w => w.IsSelected);
-
-                if (nodes.TryGetValue(treeControl.SelectedNode, out BindingSubject? result))
+                if (subjectNodes.TryGetValue(treeControl.SelectedNode, out BindingSubject? result))
                 { value = result; return true; }
                 else { value = null; return false; }
             }

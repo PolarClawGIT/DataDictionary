@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpContent
     {
-        class BindingSubject : INotifyPropertyChanged
+        class BindingSubject : INotifyPropertyChanged, IEquatable<BindingSubject>
         {
             public HelpSubjectIndexPath Path { get; }
             public String Title { get; }
@@ -65,6 +65,18 @@ namespace DataDictionary.Main.Forms.General
             {
                 if (PropertyChanged is PropertyChangedEventHandler handler)
                 { handler(this, new PropertyChangedEventArgs(property)); }
+            }
+
+            public Boolean Equals(BindingSubject? other)
+            {
+                if(other is null) { return false; }
+                
+                if(SubjectIndex is not null
+                    && other.SubjectIndex is not null
+                    && SubjectIndex.Equals(other.SubjectIndex))
+                { return true; }
+
+                return Path.Equals(other.Path);
             }
         }
 

@@ -42,5 +42,24 @@ namespace DataDictionary.Main.Controls
                 item.Remove();
             }
         }
+
+        /// <summary>
+        /// Returns all nodes in the tree that meet the condition.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IEnumerable<TreeNode> GetNodes(this TreeNodeCollection nodes, Func<TreeNode, Boolean> condition)
+        {
+            List<TreeNode> result = new List<TreeNode>();
+
+            foreach (var item in nodes.OfType<TreeNode>())
+            {
+                if (condition(item)) { result.Add(item); }
+                if(item.Nodes.Count > 0) { result.AddRange(GetNodes(item.Nodes, condition)); }
+            }
+
+            return result;
+        }
     }
 }
