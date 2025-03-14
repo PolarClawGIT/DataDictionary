@@ -198,7 +198,9 @@ namespace Toolbox.BindingTable
             List<TBindingItem> modified = this.Where(w => w.RowState() == DataRowState.Modified).ToList();
             List<TBindingItem> detached = this.Where(w => w.RowState() == DataRowState.Detached).ToList();
 
-            OnListChangedEnabled = false;
+            Boolean raiseEvent = RaiseListChangedEvents;
+
+            RaiseListChangedEvents = false;
 
             if (deleted is DataTable)
             {
@@ -223,8 +225,8 @@ namespace Toolbox.BindingTable
             if (this.isSorted && this.SortPropertyCore is PropertyDescriptor)
             { this.ApplySortCore(this.SortPropertyCore, this.SortDirectionCore); }
 
-            OnListChangedEnabled = true;
-            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            RaiseListChangedEvents = raiseEvent;
+            ResetBindings();
         }
         #endregion
 
@@ -286,7 +288,7 @@ namespace Toolbox.BindingTable
         /// </remarks>
         public override void EndNew(Int32 itemIndex)
         {
-            if (this.Count > 0 && itemIndex >= (this.Count-1) && this[itemIndex] == addNewCoreItem && !isAddNewCore)
+            if (this.Count > 0 && itemIndex >= (this.Count - 1) && this[itemIndex] == addNewCoreItem && !isAddNewCore)
             { // Item is not being canceled or executing AddNewCore, finish adding the item.
                 try
                 {
@@ -345,13 +347,6 @@ namespace Toolbox.BindingTable
 
         protected override Boolean SupportsChangeNotificationCore => true;
 
-        /// <summary>
-        /// Used to temporary disable or enable the Change List event.
-        /// This allows a set of changes to be made before calling OnListChanged
-        /// so that they are treated as a single logical change.
-        /// </summary>
-        protected virtual Boolean OnListChangedEnabled { get; set; } = true;
-
 
         /// <inheritdoc/>
         /// <remarks>
@@ -359,7 +354,7 @@ namespace Toolbox.BindingTable
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
         /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)
-        { if (OnListChangedEnabled) { base.OnListChanged(e); } }
+        { if (RaiseListChangedEvents) { base.OnListChanged(e); } }
 
         /// <summary>
         // Removes a specific items from the Binding List and Data Table
