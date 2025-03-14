@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System;
@@ -69,9 +70,9 @@ namespace DataDictionary.Main.Forms.General
 
             public Boolean Equals(BindingSubject? other)
             {
-                if(other is null) { return false; }
-                
-                if(SubjectIndex is not null
+                if (other is null) { return false; }
+
+                if (SubjectIndex is not null
                     && other.SubjectIndex is not null
                     && SubjectIndex.Equals(other.SubjectIndex))
                 { return true; }
@@ -180,7 +181,7 @@ namespace DataDictionary.Main.Forms.General
                 return result;
             }
 
-            public Boolean TryCurrent([NotNullWhen(true)] out BindingSubject? result)
+            public Boolean TryGetSubject([NotNullWhen(true)] out BindingSubject? result)
             {
                 if (bindingHelpSubject.Position >= 0
                     && bindingHelpSubject.Current is BindingSubject value)
@@ -188,9 +189,9 @@ namespace DataDictionary.Main.Forms.General
                 else { result = null; return false; }
             }
 
-            public Boolean TryCurrent([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (TryCurrent(out BindingSubject? subject)
+                if (TryGetSubject(out BindingSubject? subject)
                     && subjectData.FirstOrDefault(w =>
                         subject.SubjectIndex is not null
                         && subject.SubjectIndex.Equals(w))
@@ -198,6 +199,9 @@ namespace DataDictionary.Main.Forms.General
                 { result = value; return true; }
                 else { result = null; return false; }
             }
+
+            public ITemporalView GetTemporal()
+            { return subjectData.GetTemporal(); }
         }
     }
 }

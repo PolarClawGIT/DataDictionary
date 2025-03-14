@@ -47,7 +47,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(targetSubject);
 
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(helpSubject);
 
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Forms.General
             formData.AddForm(targetForm);
             formData.SetPosition(targetForm);
 
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -76,18 +76,17 @@ namespace DataDictionary.Main.Forms.General
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             { formTree.SetNode(current); }
 
             void FormData_SubjectsChanged(Object? sender, EventArgs e)
             {
                 formTree.BuildTree(formData.HelpSubjects);
 
-                if (formData.TryCurrent(out BindingSubject? current))
+                if (formData.TryGetSubject(out BindingSubject? current))
                 { formTree.SetNode(current); }
             }
         }
-
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
@@ -101,7 +100,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.ImportCommand_Click(sender, e);
 
-            if (formData.TryCurrent(out BindingSubject? current)
+            if (formData.TryGetSubject(out BindingSubject? current)
                 && current.SubjectForm is not null)
             { HelpSubjectValue newValue = formData.NewSubject(current); }
 
@@ -112,7 +111,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             {
                 if (current.SubjectIndex is null && current.SubjectForm is not null)
                 { HelpSubjectValue newValue = formData.NewSubject(current); }
@@ -123,7 +122,7 @@ namespace DataDictionary.Main.Forms.General
 
         private void OpenSubjectForm()
         {
-            if (formData.TryCurrent(out BindingSubject? current))
+            if (formData.TryGetSubject(out BindingSubject? current))
             {
                 if (current.SubjectIndex is not null && current.SubjectForm is null)
                 {
@@ -147,15 +146,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.HistoryCommand_Click(sender, e);
 
-            //if (helpBinding.DataSource is ILoadHistoryData history)
-            //{
-            //    Form form = Activate(() =>
-            //    new HistoryView<HelpSubjectValue, HelpSubject>(ScopeType.ApplicationHelp, history)
-            //    { SelectedForm = (subject) => new HelpSubject(subject) });
-
-            //    if (history is IBindingTable table)
-            //    { form.Text = String.Format("History: {0}", table.BindingName); }
-            //}
+            Activate(() => new HistoryView(formData.GetTemporal()));
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

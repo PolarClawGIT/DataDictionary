@@ -77,24 +77,27 @@ namespace DataDictionary.Main.Forms.General
                 work.Add(new WorkItem() { DoWork = StopBinding, IsCanceling = () => factory.IsCanceling });
 
                 if (temporalIndex is null)
-                { work.AddRange(subjectData.Load(factory, subjectIndex)); }
+                {
+                    work.AddRange(subjectData.Delete(subjectIndex));
+                    work.AddRange(subjectData.Load(factory, subjectIndex));
+                }
                 else
-                { work.AddRange(subjectData.Load(factory, subjectIndex, temporalIndex)); }
+                {
+                    work.Add(new WorkItem() { DoWork = () => { subjectData = IHelpSubjectData.Create(); } });
+                    work.AddRange(subjectData.Load(factory, subjectIndex, temporalIndex));
+                }
 
-                work.Add(new WorkItem() { DoWork = StartBinding, IsCanceling = () => factory.IsCanceling });
-
-                DoWork(work, onComplete);
+                DoWork(work, StartBinding);
 
                 void StopBinding()
                 {
                     HelpSubjects.ListChanged -= OnListChanged;
                     HelpSubjects.RaiseListChangedEvents = false;
                     bindingHelpSubject.RaiseListChangedEvents = false;
-
-                    subjectData = IHelpSubjectData.Create();
+                    subjectData.RaiseListChangedEvents = false;
                 }
 
-                void StartBinding()
+                void StartBinding(RunWorkerCompletedEventArgs args)
                 {
                     HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
                     bindingHelpSubject.DataSource = HelpSubjects;
@@ -103,9 +106,13 @@ namespace DataDictionary.Main.Forms.General
 
                     HelpSubjects.RaiseListChangedEvents = true;
                     bindingHelpSubject.RaiseListChangedEvents = true;
+                    subjectData.RaiseListChangedEvents = true;
                     HelpSubjects.ResetList();
+
+                    if (onComplete is not null) { onComplete(args); }
                 }
             }
+
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
@@ -117,9 +124,8 @@ namespace DataDictionary.Main.Forms.General
 
                 work.Add(new WorkItem() { DoWork = StopBinding, IsCanceling = () => factory.IsCanceling });
                 work.AddRange(subjectData.Load(factory, subjectIndex));
-                work.Add(new WorkItem() { DoWork = StartBinding, IsCanceling = () => factory.IsCanceling });
 
-                DoWork(work, onComplete);
+                DoWork(work, StartBinding);
 
                 void StopBinding()
                 {
@@ -131,7 +137,7 @@ namespace DataDictionary.Main.Forms.General
                     subjectData = BusinessData.ApplicationData.HelpSubjects;
                 }
 
-                void StartBinding()
+                void StartBinding(RunWorkerCompletedEventArgs args)
                 {
                     HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
                     bindingHelpSubject.Position = 0;
@@ -140,6 +146,8 @@ namespace DataDictionary.Main.Forms.General
                     HelpSubjects.RaiseListChangedEvents = true;
                     bindingHelpSubject.RaiseListChangedEvents = true;
                     HelpSubjects.ResetList();
+
+                    if (onComplete is not null) { onComplete(args); }
                 }
             }
 
@@ -159,7 +167,7 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
-            public Boolean TryCurrent([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
             {
                 if (bindingHelpSubject.Position >= 0
                     && bindingHelpSubject.Current is HelpSubjectValue value)
@@ -167,6 +175,11 @@ namespace DataDictionary.Main.Forms.General
                 else { result = null; return false; }
             }
 
+            public void RemoveSubject()
+            {
+                if (TryGetSubject(out HelpSubjectValue? value))
+                { HelpSubjects.Remove(value); }
+            }
         }
     }
 }
