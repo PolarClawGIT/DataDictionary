@@ -16,8 +16,12 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         ILoadHistoryData? loader;
         List<ITemporalValue> modificationValues = new List<ITemporalValue>();
 
+
         // Crosswalk Item in List View back to source.
+        [Obsolete()]
         Dictionary<ListViewItem, ITemporalValue> historyValues = new Dictionary<ListViewItem, ITemporalValue>();
+
+        [Obsolete()]
         Dictionary<ListViewItem, ITemporalValue> historyModifications = new Dictionary<ListViewItem, ITemporalValue>();
 
         public ITemporalValue? SelectedValue { get; protected set; }

@@ -73,12 +73,13 @@ namespace DataDictionary.Main.Forms.General
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
+                StopBinding();
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = StopBinding, IsCanceling = () => factory.IsCanceling });
 
                 if (temporalIndex is null)
                 {
                     work.AddRange(subjectData.Delete(subjectIndex));
+                    //work.Add(new WorkItem() { DoWork = () => { subjectData = IHelpSubjectData.Create(); } });
                     work.AddRange(subjectData.Load(factory, subjectIndex));
                 }
                 else
@@ -91,23 +92,24 @@ namespace DataDictionary.Main.Forms.General
 
                 void StopBinding()
                 {
+                    bindingHelpSubject.SuspendBinding();
                     HelpSubjects.ListChanged -= OnListChanged;
                     HelpSubjects.RaiseListChangedEvents = false;
                     bindingHelpSubject.RaiseListChangedEvents = false;
-                    subjectData.RaiseListChangedEvents = false;
                 }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                    bindingHelpSubject.DataSource = HelpSubjects;
-                    bindingHelpSubject.Position = 0;
+                    //HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
+                    //bindingHelpSubject.DataSource = HelpSubjects;
+                    
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
+                    HelpSubjects.ResetBindings();
                     bindingHelpSubject.RaiseListChangedEvents = true;
-                    subjectData.RaiseListChangedEvents = true;
-                    HelpSubjects.ResetList();
+                    bindingHelpSubject.ResumeBinding();
+                    bindingHelpSubject.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -119,16 +121,15 @@ namespace DataDictionary.Main.Forms.General
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
+                StopBinding();
                 work.Add(factory.OpenConnection());
-                work.AddRange(subjectData.Save(factory));
-
-                work.Add(new WorkItem() { DoWork = StopBinding, IsCanceling = () => factory.IsCanceling });
-                work.AddRange(subjectData.Load(factory, subjectIndex));
+                work.AddRange(subjectData.Save(factory, subjectIndex));
 
                 DoWork(work, StartBinding);
 
                 void StopBinding()
                 {
+                    bindingHelpSubject.SuspendBinding();
                     HelpSubjects.ListChanged -= OnListChanged;
                     HelpSubjects.RaiseListChangedEvents = false;
                     bindingHelpSubject.RaiseListChangedEvents = false;
@@ -139,13 +140,13 @@ namespace DataDictionary.Main.Forms.General
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
                     bindingHelpSubject.Position = 0;
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
                     bindingHelpSubject.RaiseListChangedEvents = true;
-                    HelpSubjects.ResetList();
+                    bindingHelpSubject.ResumeBinding();
+                    bindingHelpSubject.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -153,16 +154,16 @@ namespace DataDictionary.Main.Forms.General
 
             private void OnListChanged(Object? sender, ListChangedEventArgs e)
             {
-                // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow.
-                // The exception occurs on empty list and is triggered by the ListChanged Event.
-                // When this event occurs, all BindingSources need to set RaiseListChangedEvents to false.
-                // A related error can occur with DataGridViews when the BindingList has an empty list.
-
                 if (e.ListChangedType is ListChangedType.ItemDeleted
                     && sender is IBindingList values
                     && values.Count is 0)
                 {
-                    HelpSubjects.RaiseListChangedEvents = false;
+                    // This addresses invalid operation exception fired by CurrencyManager.FindGoodRow.
+                    // The exception occurs on empty list and is triggered by the ListChanged Event.
+                    // When this event occurs, all BindingSources need to set RaiseListChangedEvents to false.
+                    // A related error can occur with DataGridViews when the BindingList has an empty list.
+
+                    //HelpSubjects.RaiseListChangedEvents = false;
                     bindingHelpSubject.RaiseListChangedEvents = false;
                 }
             }
@@ -178,7 +179,14 @@ namespace DataDictionary.Main.Forms.General
             public void RemoveSubject()
             {
                 if (TryGetSubject(out HelpSubjectValue? value))
-                { HelpSubjects.Remove(value); }
+                {
+                    bindingHelpSubject.SuspendBinding();
+                    HelpSubjects.ListChanged -= OnListChanged;
+                    HelpSubjects.RaiseListChangedEvents = false;
+                    bindingHelpSubject.RaiseListChangedEvents = false;
+
+                    HelpSubjects.Remove(value); 
+                }
             }
         }
     }

@@ -354,7 +354,7 @@ namespace Toolbox.BindingTable
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
         /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)
-        { if (RaiseListChangedEvents) { base.OnListChanged(e); } }
+        {  base.OnListChanged(e);  }
 
         /// <summary>
         // Removes a specific items from the Binding List and Data Table

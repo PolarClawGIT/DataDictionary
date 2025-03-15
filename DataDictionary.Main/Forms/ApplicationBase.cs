@@ -288,10 +288,16 @@ namespace DataDictionary.Main.Forms
         /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
         protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
+            Boolean isLocked = IsLocked();
+            Boolean isWait = IsWaitCursor();
+            IsLocked(true);
+            IsWaitCursor(true);
             Worker.Enqueue(work, completing);
 
             void completing(RunWorkerCompletedEventArgs result)
             {
+                if(result.Error is null) { IsLocked(isLocked); }
+                IsWaitCursor(isWait);
                 if (result.Error is not null) { Program.ShowException(result.Error); }
                 if (onCompleting is not null) { onCompleting(result); }
             }
@@ -303,15 +309,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="work"></param>
         /// <param name="onCompleting"></param>
         protected void DoWork(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
-        {
-            Worker.Enqueue(work, completing);
-
-            void completing(RunWorkerCompletedEventArgs result)
-            {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result); }
-            }
-        }
+        { DoWork(new List<WorkItem>() { work }, onCompleting); }
 
         /// <summary>
         /// Set and returns the Locked state of the form.
@@ -331,7 +329,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            return this.Controls.Cast<Control>().Any(w => w.Enabled);
+            return !this.Controls.Cast<Control>().Any(w => w.Enabled);
         }
 
         /// <summary>
@@ -351,7 +349,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
+            return !this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
         /// <summary>

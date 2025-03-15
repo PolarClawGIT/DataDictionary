@@ -173,7 +173,7 @@ namespace DataDictionary.Main.Forms.General
             base.AddCommand_Click(sender, e);
 
             HelpSubjectValue newSubject = formData.NewSubject();
-            if(controlList.Count > 0 && controlList.FirstOrDefault(w => w.IsForm) is ControlItem item)
+            if (controlList.Count > 0 && controlList.FirstOrDefault(w => w.IsForm) is ControlItem item)
             {
                 newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
                 newSubject.Path = item.Path;
@@ -290,23 +290,23 @@ namespace DataDictionary.Main.Forms.General
             //}
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-
-            }
+            { }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            IsLocked(true);
             formData.RemoveSubject();
             formData.Save(OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            {
+            { }
+        }
 
-            }
+        private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        {
+
         }
     }
 

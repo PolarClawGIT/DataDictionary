@@ -31,18 +31,18 @@
             components = new System.ComponentModel.Container();
             TabControl helpTabs;
             helpDescriptionLayout = new TabPage();
-            helpTextData = new Controls.RichTextBoxData();
+            helpTextData = new DataDictionary.Main.Controls.RichTextBoxData();
             helpNameSpaceLayout = new TabPage();
             nameSpaceGroupLayout = new TableLayoutPanel();
-            helpNameSpaceData = new Controls.TextBoxData();
-            helpToolTipData = new Controls.TextBoxData();
+            helpNameSpaceData = new DataDictionary.Main.Controls.TextBoxData();
+            helpToolTipData = new DataDictionary.Main.Controls.TextBoxData();
             controlsGroup = new GroupBox();
             controlData = new ListView();
             controlNameColumn = new ColumnHeader();
             controlTypeColumn = new ColumnHeader();
             helpBinding = new BindingSource(components);
             helpDetailLayout = new TableLayoutPanel();
-            helpSubjectData = new Controls.TextBoxData();
+            helpSubjectData = new DataDictionary.Main.Controls.TextBoxData();
             helpTabs = new TabControl();
             helpTabs.SuspendLayout();
             helpDescriptionLayout.SuspendLayout();
@@ -84,8 +84,10 @@
             helpTextData.Location = new Point(3, 3);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
+            helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             helpTextData.Size = new Size(492, 382);
             helpTextData.TabIndex = 2;
+            helpTextData.ToolStripVisible = true;
             helpTextData.Load += HelpTextData_Load;
             // 
             // helpNameSpaceLayout
@@ -95,7 +97,7 @@
             helpNameSpaceLayout.Location = new Point(4, 24);
             helpNameSpaceLayout.Name = "helpNameSpaceLayout";
             helpNameSpaceLayout.Padding = new Padding(3);
-            helpNameSpaceLayout.Size = new Size(498, 388);
+            helpNameSpaceLayout.Size = new Size(192, 72);
             helpNameSpaceLayout.TabIndex = 1;
             helpNameSpaceLayout.Text = "Programmability";
             // 
@@ -113,7 +115,7 @@
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle());
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            nameSpaceGroupLayout.Size = new Size(492, 382);
+            nameSpaceGroupLayout.Size = new Size(186, 66);
             nameSpaceGroupLayout.TabIndex = 1;
             // 
             // helpNameSpaceData
@@ -125,7 +127,7 @@
             helpNameSpaceData.Multiline = false;
             helpNameSpaceData.Name = "helpNameSpaceData";
             helpNameSpaceData.ReadOnly = false;
-            helpNameSpaceData.Size = new Size(486, 44);
+            helpNameSpaceData.Size = new Size(180, 44);
             helpNameSpaceData.TabIndex = 1;
             helpNameSpaceData.WordWrap = true;
             // 
@@ -138,7 +140,7 @@
             helpToolTipData.Multiline = true;
             helpToolTipData.Name = "helpToolTipData";
             helpToolTipData.ReadOnly = false;
-            helpToolTipData.Size = new Size(486, 93);
+            helpToolTipData.Size = new Size(180, 1);
             helpToolTipData.TabIndex = 4;
             helpToolTipData.WordWrap = true;
             // 
@@ -146,9 +148,9 @@
             // 
             controlsGroup.Controls.Add(controlData);
             controlsGroup.Dock = DockStyle.Fill;
-            controlsGroup.Location = new Point(3, 152);
+            controlsGroup.Location = new Point(3, 57);
             controlsGroup.Name = "controlsGroup";
-            controlsGroup.Size = new Size(486, 227);
+            controlsGroup.Size = new Size(180, 6);
             controlsGroup.TabIndex = 6;
             controlsGroup.TabStop = false;
             controlsGroup.Text = "Controls for: ";
@@ -160,7 +162,7 @@
             controlData.Dock = DockStyle.Fill;
             controlData.Location = new Point(3, 19);
             controlData.Name = "controlData";
-            controlData.Size = new Size(480, 205);
+            controlData.Size = new Size(174, 0);
             controlData.TabIndex = 5;
             controlData.UseCompatibleStateImageBehavior = false;
             controlData.View = View.Details;
@@ -176,6 +178,10 @@
             // 
             controlTypeColumn.Text = "Control Type";
             controlTypeColumn.Width = 150;
+            // 
+            // helpBinding
+            // 
+            helpBinding.DataError += helpBinding_DataError;
             // 
             // helpDetailLayout
             // 
