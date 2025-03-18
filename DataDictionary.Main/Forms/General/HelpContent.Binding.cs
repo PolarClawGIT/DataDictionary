@@ -102,6 +102,8 @@ namespace DataDictionary.Main.Forms.General
 
                 void SubjectData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
+                    TryGetSubject(out BindingSubject? current);
+
                     if (e.ListChangedType is ListChangedType.Reset
                         or ListChangedType.ItemAdded
                         or ListChangedType.ItemDeleted
@@ -113,6 +115,9 @@ namespace DataDictionary.Main.Forms.General
 
                         if (e.NewIndex >= 0)
                         { SetPosition(subjectData[e.NewIndex]); }
+                        else if (current is BindingSubject subject)
+                        { SetPosition(subject); }
+                        else { SetPosition(Settings.Default.DefaultSubject); }
 
                         handler(sender, new EventArgs());
                     }
@@ -137,7 +142,9 @@ namespace DataDictionary.Main.Forms.General
                 HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
 
                 if (subjects.FirstOrDefault(w => key.Equals(w.SubjectIndex)) is BindingSubject value)
-                { bindingHelpSubject.Position = subjects.IndexOf(value); }
+                {
+                    var x = subjects.IndexOf(value);
+                    bindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(HelpSubjectIndexPath helpSubject)
@@ -151,6 +158,14 @@ namespace DataDictionary.Main.Forms.General
 
             public void SetPosition(Form helpSubject)
             { SetPosition(helpSubject.ToHelpSubjectPath()); }
+
+            public void SetPosition(BindingSubject subject)
+            {
+                if (subject.SubjectIndex is HelpSubjectIndex index)
+                { SetPosition(index); }
+                else if (subject.SubjectForm is Form form)
+                { SetPosition(form); }
+            }
 
             public HelpSubjectValue NewSubject()
             {

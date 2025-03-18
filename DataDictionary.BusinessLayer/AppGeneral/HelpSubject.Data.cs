@@ -3,8 +3,6 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
-using Toolbox.BindingTable;
-using Toolbox.DbContext;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppGeneral

@@ -95,7 +95,11 @@ namespace DataDictionary.Main.Forms.General
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    HelpSubjects.ResetList();
+                    subjectData.ResetBindings();
+
+                    HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
+                    bindingHelpSubject.DataSource = HelpSubjects;
+                    bindingHelpSubject.Position = 0;
                     bindingHelpSubject.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }

@@ -16,8 +16,6 @@ namespace DataDictionary.Main.Forms.General
         FormBinding formData;
         ContentTree formTree;
 
-        //TODO: Continue removing references to helpBinding DataSource.
-
         public HelpContent() : base()
         {
             InitializeComponent();
