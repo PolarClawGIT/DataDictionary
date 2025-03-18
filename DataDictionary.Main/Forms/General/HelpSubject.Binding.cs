@@ -91,25 +91,12 @@ namespace DataDictionary.Main.Forms.General
                 DoWork(work, StartBinding);
 
                 void StopBinding()
-                {
-                    bindingHelpSubject.SuspendBinding();
-                    HelpSubjects.ListChanged -= OnListChanged;
-                    HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
-                }
+                { bindingHelpSubject.SuspendBinding(); }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    //HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                    //bindingHelpSubject.DataSource = HelpSubjects;
-                    
-                    HelpSubjects.ListChanged += OnListChanged;
-
-                    HelpSubjects.RaiseListChangedEvents = true;
-                    HelpSubjects.ResetBindings();
-                    bindingHelpSubject.RaiseListChangedEvents = true;
+                    HelpSubjects.ResetList();
                     bindingHelpSubject.ResumeBinding();
-                    bindingHelpSubject.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -185,7 +172,7 @@ namespace DataDictionary.Main.Forms.General
                     HelpSubjects.RaiseListChangedEvents = false;
                     bindingHelpSubject.RaiseListChangedEvents = false;
 
-                    HelpSubjects.Remove(value); 
+                    HelpSubjects.Remove(value);
                 }
             }
         }

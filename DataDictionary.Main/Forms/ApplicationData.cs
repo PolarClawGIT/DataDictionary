@@ -94,12 +94,6 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            void Test()
-            {
-                if (Control is ToolStripDropDownButton x) { x.DropDown = null; }
-                if (Control is ToolStripSplitButton y) { y.DropDown = null; }
-            }
-
             private void Control_VisibleChanged(Object? sender, EventArgs e)
             {
                 // Detects if there is anything before the separator and if not, do not show the separator.

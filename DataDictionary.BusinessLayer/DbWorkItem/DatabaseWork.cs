@@ -148,6 +148,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         {
             public Boolean IsComplete { get; set; }
             public Exception? Ex { get; set; }
+            public IBindingTable? Target { get; set; }
         }
 
         /// <summary>
@@ -206,7 +207,8 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 IsCanceling = () => Connection.HasException
             };
 
-            workItems.Add(result, new WorkState() { IsComplete = false, Ex = null }); ;
+            target.RaiseListChangedEvents = false; // Stop ListChange events;
+            workItems.Add(result, new WorkState() { IsComplete = false, Ex = null, Target = target }); ;
             result.Completing += WorkItem_Completing;
 
             return result;
@@ -280,6 +282,10 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             {
                 workItems[item].IsComplete = true;
                 workItems[item].Ex = e.Error;
+
+                if (workItems[item].Target is IBindingTable target)
+                { target.RaiseListChangedEvents = true; } // Restart ListChanged
+
                 item.Completing -= WorkItem_Completing;
             }
 
