@@ -21,8 +21,8 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
-
-    partial class RichTextBoxData : UserControl, ISupportEditMenu
+    [DefaultBindingProperty("RichText")]
+    partial class RichTextBoxData : UserControl, ISupportEditMenu, INotifyPropertyChanged
     {
 
         /// <summary>
@@ -60,18 +60,50 @@ namespace DataDictionary.Main.Controls
         /// The root RTF property can also throw errors if the text is
         /// not Rich Text.
         /// </remarks>
-        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes)]
+        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
         public String? Rtf
         {
+            get { return RichText; }
+            set
+            {
+                RichText = value;
+
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(this, new PropertyChangedEventArgs(nameof(Rtf))); }
+
+                if (RtfChanged is EventHandler eventHandler)
+                { eventHandler(this, new EventArgs()); }
+
+                // This is never called with Binding. It may be called in the designer.
+                throw new InvalidOperationException("Debug: This does not occur.");
+            }
+        }
+        // Based on: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/change-notification-in-windows-forms-data-binding?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
+        // This does not work either.
+        public event EventHandler? RtfChanged;
+        public event EventHandler? RichTextChanged;
+
+
+        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
+        public String? RichText
+        {   // This is the intended Property for Data Binding.
+            // It does not work.
+            // A runtime Invalid Augment exception occurs when creating the Binding.
             get
             { return richTextBox.Rtf; }
             set
-            {   // This is never called with Binding.
+            {
                 try
                 {
                     if (this.IsHandleCreated)
                     { Invoke(() => { richTextBox.Clear(); richTextBox.Rtf = value; }); }
                     else { richTextBox.Clear(); richTextBox.Rtf = value; }
+
+                    if (PropertyChanged is PropertyChangedEventHandler handler)
+                    { handler(this, new PropertyChangedEventArgs(nameof(RichText))); }
+
+                    if (RichTextChanged is EventHandler eventHandler)
+                    { eventHandler(this, new EventArgs()); }
                 }
                 catch (Exception)
                 {
@@ -80,7 +112,7 @@ namespace DataDictionary.Main.Controls
                     else { richTextBox.Clear(); richTextBox.Text = value; }
                 }
 
-                //throw new InvalidOperationException("Debug: Demonstrates that this is never called");
+
             }
         }
 
@@ -93,8 +125,19 @@ namespace DataDictionary.Main.Controls
         [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
+        //public EventHandler TextChanged;
+
         public RichTextBoxData()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.TextChanged += RichTextBoxData_TextChanged;
+        }
+
+        private void RichTextBoxData_TextChanged(Object? sender, EventArgs e)
+        {   // Nope, does not bind to the Text property of the User Control either.
+            var x = this.Text;
+            //throw new NotImplementedException();
+        }
 
         private void RichTextBox_ReadOnlyChanged(object sender, EventArgs e)
         {
@@ -189,7 +232,10 @@ namespace DataDictionary.Main.Controls
         { if (Validated is EventHandler handler) { handler(sender, e); } }
 
         public new event CancelEventHandler? Validating;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         private void richTextBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
+
     }
 }
