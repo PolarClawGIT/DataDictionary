@@ -50,11 +50,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             {
                 BindingList<TValue> values = new BindingList<TValue>(GetHistoryDetail(SelectedValue).OfType<TValue>().ToList());
 
-                Activate((data) =>
-                    new DetailDataView<TValue, TForm>
-                        (formScope, data)
-                    { SelectedForm = (data) => SelectedForm(data) },
-                    values);
+                Activate(() => new DetailDataView<TValue, TForm>
+                    (formScope, values)
+                    { SelectedForm = (data) => SelectedForm(data) });
             }
 
         }

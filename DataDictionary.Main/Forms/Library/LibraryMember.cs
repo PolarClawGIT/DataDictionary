@@ -48,7 +48,11 @@ namespace DataDictionary.Main.Forms.Library
         private void childMemberData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (bindingChild.Current is ILibraryMemberValue child)
-            { Activate((data) => new LibraryMember(child), child); }
+            {
+                Activate(
+                    () => new LibraryMember(child),
+                    (form) => form.IsOpenItem(child));
+            }
         }
 
     }

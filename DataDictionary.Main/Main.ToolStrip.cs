@@ -12,278 +12,246 @@ namespace DataDictionary.Main
     {
 
         private void manageLibrariesCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Library.LibraryManager()); }
+        { Activate(static () => new Forms.Library.LibraryManager()); }
 
         private void manageDatabasesCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Catalog.CatalogManager()); }
+        { Activate(static () => new Forms.Catalog.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Model.Attribute(null)); }
+        { Activate(static () => new Forms.Model.Attribute(null)); }
 
         private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Model.Entity(null)); }
+        { Activate(static () => new Forms.Model.Entity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Model.ModelSubjectArea(null)); }
+        { Activate(static () => new Forms.Model.ModelSubjectArea(null)); }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(() => new Forms.Model.ModelManager()); }
+        { Activate(static () => new Forms.Model.ModelManager()); }
 
         private void MenuCatalogItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<CatalogValue, Forms.Catalog.DbCatalog>
-                    (ScopeType.Database, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbCatalog(data) },
-                BusinessData.CatalogModel.DbCatalogs);
+            Activate(static () => new DetailDataView
+                <CatalogValue, Forms.Catalog.DbCatalog>
+                (ScopeType.Database, BusinessData.CatalogModel.DbCatalogs)
+            { SelectedForm = (data) => new Forms.Catalog.DbCatalog(data) });
         }
 
         private void MenuAttributes_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<AttributeValue, Forms.Model.Attribute>
-                    (ScopeType.ModelAttribute, data)
-                { SelectedForm = (data) => new Forms.Model.Attribute(data) },
-                BusinessData.Model.Attributes.Values);
+            Activate(static () => new DetailDataView
+                <AttributeValue, Forms.Model.Attribute>
+                (ScopeType.ModelAttribute, BusinessData.Model.Attributes.Values)
+            { SelectedForm = (data) => new Forms.Model.Attribute(data) });
         }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<SubjectAreaValue, Forms.Model.ModelSubjectArea>
-                    (ScopeType.ModelSubjectArea, data)
-                { SelectedForm = (data) => new Forms.Model.ModelSubjectArea(data) },
-                BusinessData.Model.SubjectAreas);
+            Activate(static () => new DetailDataView
+                <SubjectAreaValue, Forms.Model.ModelSubjectArea>
+                (ScopeType.ModelSubjectArea, BusinessData.Model.SubjectAreas)
+            { SelectedForm = (data) => new Forms.Model.ModelSubjectArea(data) });
         }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<HelpSubjectValue, Forms.General.HelpSubject>
-                    (ScopeType.ApplicationHelp, data)
-                { SelectedForm = (data) => new Forms.General.HelpSubject(data) },
-                BusinessData.ApplicationData.HelpSubjects);
+            Activate(static () => new DetailDataView
+                <HelpSubjectValue, Forms.General.HelpSubject>
+                (ScopeType.ApplicationHelp, BusinessData.ApplicationData.HelpSubjects)
+            { SelectedForm = (data) => new Forms.General.HelpSubject(data) });
         }
 
         private void viewLibrarySourceCommand_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<LibrarySourceValue, Forms.Library.LibrarySource>
-                    (ScopeType.Library, data)
-                { SelectedForm = (data) => new Forms.Library.LibrarySource(data) },
-                BusinessData.LibraryModel.LibrarySources);
+            Activate(static () => new DetailDataView
+                <LibrarySourceValue, Forms.Library.LibrarySource>
+                (ScopeType.Library, BusinessData.LibraryModel.LibrarySources)
+            { SelectedForm = (data) => new Forms.Library.LibrarySource(data) });
         }
 
         private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<LibraryMemberValue, Forms.Library.LibraryMember>
-                    (ScopeType.LibraryType, data)
-                { SelectedForm = (data) => new Forms.Library.LibraryMember(data) },
-                BusinessData.LibraryModel.LibraryMembers);
+            Activate(static () => new DetailDataView
+                <LibraryMemberValue, Forms.Library.LibraryMember>
+                (ScopeType.LibraryType, BusinessData.LibraryModel.LibraryMembers)
+            { SelectedForm = (data) => new Forms.Library.LibraryMember(data) });
         }
 
         private void menuConstraintItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<ConstraintValue, Forms.Catalog.DbConstraint>
-                    (ScopeType.DatabaseConstraint, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbConstraint(data) },
-                BusinessData.CatalogModel.DbConstraints);
+            Activate(static () => new DetailDataView
+                <ConstraintValue, Forms.Catalog.DbConstraint>
+                (ScopeType.DatabaseConstraint, BusinessData.CatalogModel.DbConstraints)
+            { SelectedForm = (data) => new Forms.Catalog.DbConstraint(data) });
         }
 
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.DatabaseConstraintColumn, data),
-                BusinessData.CatalogModel.DbConstraintColumns);
+            Activate(static () => new DetailDataView
+                (ScopeType.DatabaseConstraintColumn, BusinessData.CatalogModel.DbConstraintColumns));
         }
 
         private void menuDataTypeItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<DomainValue, Forms.Catalog.DbDomain>
-                    (ScopeType.DatabaseDomain, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbDomain(data) },
-                BusinessData.CatalogModel.DbDomains);
+            Activate(static () => new DetailDataView
+                <DomainValue, Forms.Catalog.DbDomain>
+                (ScopeType.DatabaseDomain, BusinessData.CatalogModel.DbDomains)
+            { SelectedForm = (data) => new Forms.Catalog.DbDomain(data) });
         }
 
         private void menuRoutineItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<RoutineValue, Forms.Catalog.DbRoutine>
-                    (ScopeType.DatabaseProcedure, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbRoutine(data) },
-                BusinessData.CatalogModel.DbRoutines);
+            Activate(static () => new DetailDataView
+                <RoutineValue, Forms.Catalog.DbRoutine>
+                (ScopeType.DatabaseProcedure, BusinessData.CatalogModel.DbRoutines)
+            { SelectedForm = (data) => new Forms.Catalog.DbRoutine(data) });
         }
 
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<RoutineParameterValue, Forms.Catalog.DbRoutineParameter>
-                    (ScopeType.DatabaseProcedureParameter, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbRoutineParameter(data) },
-                BusinessData.CatalogModel.DbRoutineParameters);
+            Activate(static () => new DetailDataView
+                <RoutineParameterValue, Forms.Catalog.DbRoutineParameter>
+                (ScopeType.DatabaseProcedureParameter, BusinessData.CatalogModel.DbRoutineParameters)
+            { SelectedForm = (data) => new Forms.Catalog.DbRoutineParameter(data) });
         }
 
         private void menuRoutineColumnItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.DatabaseFunctionColumn, data),
-                BusinessData.CatalogModel.DbRoutineColumns);
+            Activate(static () => new DetailDataView
+                (ScopeType.DatabaseFunctionColumn, BusinessData.CatalogModel.DbRoutineColumns));
         }
 
         private void menuReferenceItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.DatabaseReference, data),
-                BusinessData.CatalogModel.DbReferences);
+            Activate(static () => new DetailDataView
+                (ScopeType.DatabaseReference, BusinessData.CatalogModel.DbReferences));
         }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<SchemaValue, Forms.Catalog.DbSchema>
-                    (ScopeType.DatabaseSchema, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbSchema(data) },
-                BusinessData.CatalogModel.DbSchemta);
+            Activate(static () => new DetailDataView
+                <SchemaValue, Forms.Catalog.DbSchema>
+                (ScopeType.DatabaseSchema, BusinessData.CatalogModel.DbSchemta)
+            { SelectedForm = (data) => new Forms.Catalog.DbSchema(data) });
         }
 
         private void menuTableItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<TableValue, Forms.Catalog.DbTable>
-                    (ScopeType.DatabaseTable, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbTable(data) },
-                BusinessData.CatalogModel.DbTables);
+            Activate(static () => new DetailDataView
+                <TableValue, Forms.Catalog.DbTable>
+                (ScopeType.DatabaseTable, BusinessData.CatalogModel.DbTables)
+            { SelectedForm = (data) => new Forms.Catalog.DbTable(data) });
         }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<TableColumnValue, Forms.Catalog.DbTableColumn>
-                    (ScopeType.DatabaseTableColumn, data)
-                { SelectedForm = (data) => new Forms.Catalog.DbTableColumn(data) },
-                BusinessData.CatalogModel.DbTableColumns);
+            Activate(static () => new DetailDataView
+                <TableColumnValue, Forms.Catalog.DbTableColumn>
+                (ScopeType.DatabaseTableColumn, BusinessData.CatalogModel.DbTableColumns)
+            { SelectedForm = (data) => new Forms.Catalog.DbTableColumn(data) });
         }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.DatabaseProperty, data),
-                BusinessData.CatalogModel.DbProperties);
+            Activate(static () => new DetailDataView
+                (ScopeType.DatabaseProperty, BusinessData.CatalogModel.DbProperties));
         }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelAttributeProperty, data),
-                BusinessData.Model.Attributes.Properties);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelAttributeProperty, BusinessData.Model.Attributes.Properties));
         }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelAttributeAlias, data),
-                BusinessData.Model.Attributes.Aliases);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelAttributeAlias, BusinessData.Model.Attributes.Aliases));
         }
 
         private void menuAttributeDefinitions_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelAttributeDefinition, data),
-                BusinessData.Model.Attributes.Definitions);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelAttributeDefinition, BusinessData.Model.Attributes.Definitions));
         }
 
         private void menuEntities_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<EntityValue, Forms.Model.Entity>
-                    (ScopeType.ModelEntity, data)
-                { SelectedForm = (data) => new Forms.Model.Entity(data) },
-                BusinessData.Model.Entities.Values);
+            Activate(static () => new DetailDataView
+                <EntityValue, Forms.Model.Entity>
+                (ScopeType.ModelEntity, BusinessData.Model.Entities.Values)
+            { SelectedForm = (data) => new Forms.Model.Entity(data) });
         }
 
         private void menuEntityProperties_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelEntityProperty, data),
-                BusinessData.Model.Entities.Properties);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelEntityProperty, BusinessData.Model.Entities.Properties));
         }
 
         private void menuEntityDefinitions_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelEntityDefinition, data),
-                BusinessData.Model.Entities.Definitions);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelEntityDefinition, BusinessData.Model.Entities.Definitions));
         }
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelEntityAlias, data),
-                BusinessData.Model.Entities.Aliases);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelEntityAlias, BusinessData.Model.Entities.Aliases));
         }
 
         private void menuEntityAttributes_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelEntityAttribute, data),
-                BusinessData.Model.Entities.Attributes);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelEntityAttribute, BusinessData.Model.Entities.Attributes));
         }
 
         private void menuModelProperty_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelProperty, data),
-                BusinessData.Model.Properties);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelProperty, BusinessData.Model.Properties));
         }
 
         private void menuModelDefinition_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ModelDefinition, data),
-                BusinessData.Model.Definitions);
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelDefinition, BusinessData.Model.Definitions));
         }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.ScriptingTemplate(null)); }
+        { Activate(static () => new Forms.Scripting.ScriptingTemplate(null)); }
 
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView<TemplateValue, Forms.Scripting.ScriptingTemplate>
-                    (ScopeType.ScriptingTemplate, data)
-                { SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) },
-                BusinessData.ScriptingEngine.Templates);
+            Activate(static () => new DetailDataView
+                <TemplateValue, Forms.Scripting.ScriptingTemplate>
+                (ScopeType.ScriptingTemplate, BusinessData.ScriptingEngine.Templates)
+            { SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) });
         }
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ScriptingTemplatePath, data),
-                BusinessData.ScriptingEngine.TemplatePaths);
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
         }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ScriptingTemplateDocument, data),
-                BusinessData.ScriptingEngine.TemplateDocuments);
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateDocument, BusinessData.ScriptingEngine.TemplateDocuments));
         }
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ScriptingTemplateNode, data),
-                BusinessData.ScriptingEngine.TemplateNodes);
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
         }
 
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
         {
-            Activate((data) =>
-                new DetailDataView(ScopeType.ScriptingTemplateAttribute, data),
-                BusinessData.ScriptingEngine.TemplateAttributes);
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
         }
 
         private void SecurityPrincipal_Click(object sender, EventArgs e)
