@@ -159,6 +159,11 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
+            /// <summary>
+            /// Try/Get the current Help Subject.
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
             public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
             {
                 if (bindingHelpSubject.Position >= 0

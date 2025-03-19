@@ -1,15 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -22,7 +18,7 @@ namespace DataDictionary.Main.Forms.General
         public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
         {
             HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
-            return key.Equals(helpBinding.Current);
+            return formData.TryGetSubject(out HelpSubjectValue? subject) && key.Equals(subject);
         }
 
         public HelpSubject() : base()
@@ -80,7 +76,7 @@ namespace DataDictionary.Main.Forms.General
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
 
-                if (helpBinding.Current is IHelpSubjectValue helpValue
+                if (formData.TryGetSubject(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
@@ -193,7 +189,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.SecurityCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
+            if (formData.TryGetSubject(out HelpSubjectValue? current))
             {
                 SecurableIndex key = new HelpSubjectIndex(current);
                 Activate(() => new Security.SecurableManager(key, () => BusinessData.Authorization.IsHelpAdmin));
