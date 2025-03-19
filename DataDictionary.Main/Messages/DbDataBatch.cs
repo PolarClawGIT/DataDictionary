@@ -13,6 +13,7 @@ namespace DataDictionary.Main.Messages
     /// This is general done when the application data is about to be changed
     /// and the current bindings will no longer be valid.
     /// </summary>
+    [Obsolete("Not Used", true)]
     class DoUnbindData: MessageEventArgs { }
 
     /// <summary>
@@ -23,6 +24,7 @@ namespace DataDictionary.Main.Messages
     /// <remarks>
     /// Because this event calls this.BindData(), do not repeat the call or errors will occur.
     /// </remarks>
+    [Obsolete("Not Used", true)]
     class DoBindData : MessageEventArgs { }
 
     /// <summary>

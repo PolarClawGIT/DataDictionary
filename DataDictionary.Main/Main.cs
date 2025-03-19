@@ -58,7 +58,6 @@ namespace DataDictionary.Main
             splashTimer.Enabled = true; // Start
             splashScreen.Show();
 
-            SendMessage(new DoUnbindData());
             IsLocked(true);
             Program.SetupApplicationData(DataLoadComplete);
 
@@ -88,7 +87,6 @@ namespace DataDictionary.Main
                 if (splashDone)
                 { this.Invoke(() => { splashScreen.Close(); }); }
 
-                SendMessage(new DoBindData());
             }
 
             // Handle Splash timer timed out.
@@ -172,13 +170,6 @@ namespace DataDictionary.Main
             { message.ChildForm.MdiParent = this; }
         }
 
-        protected override void HandleMessage(DoUnbindData message)
-        {
-            //TODO: can a different event handle this?
-            this.Controls[0].Focus();
-            base.HandleMessage(message);
-        }
-
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             toolStripStatusUser.Text = BusinessData.Authorization.PrincipalName;
@@ -220,7 +211,6 @@ namespace DataDictionary.Main
             {
                 FileInfo openFile = new FileInfo(openFileDialog.FileName);
 
-                SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
                 work.AddRange(BusinessData.ImportModel(openFile));
 
@@ -228,21 +218,20 @@ namespace DataDictionary.Main
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            {  }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (BusinessData.ModelFile is FileInfo file)
             {
-                SendMessage(new Messages.DoUnbindData());
                 DoWork(BusinessData.ExportModel(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            {  }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -268,12 +257,11 @@ namespace DataDictionary.Main
                 BusinessData.ModelFile = openFile;
                 saveToolStripMenuItem.Enabled = true;
 
-                SendMessage(new Messages.DoUnbindData());
                 DoWork(BusinessData.ExportModel(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            { }
 
         }
 

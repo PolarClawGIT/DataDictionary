@@ -39,17 +39,20 @@ namespace DataDictionary.Main.Forms
     /// <summary>
     /// Contains the Binding Methods
     /// </summary>
+    [Obsolete("Not Used", true)]
     interface IApplicationDataBind : IApplicationDataForm
     {
         /// <summary>
         /// Perform the Binding of the Data for the form. Called by BindData.
         /// </summary>
         /// <returns>True if the binding was successful.</returns>
+        [Obsolete("Not Used", true)]
         public Boolean BindDataCore();
 
         /// <summary>
         /// Performs the Unbinding of the Data for the Form. Called by UnbindData.
         /// </summary>
+        [Obsolete("Not Used", true)]
         public void UnbindDataCore();
 
     }
@@ -65,6 +68,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Calls BindDataCore() and locks or unlocks the form accordingly.
         /// </summary>
+        [Obsolete("Not Used", true)]
         public static void BindData(this IApplicationDataBind dataForm)
         {
             if (dataForm.BindDataCore())
@@ -85,6 +89,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Class UnbindDataCore and locks the form.
         /// </summary>
+        [Obsolete("Not Used", true)]
         public static void UnbindData(this IApplicationDataBind dataForm)
         {
             dataForm.IsLocked(true);
@@ -97,6 +102,7 @@ namespace DataDictionary.Main.Forms
     /// Interface for Application Data Forms.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
+    [Obsolete("Not Used", true)]
     interface IApplicationDataForm<TKey> : IApplicationDataBind
         where TKey : class, IKey
     {

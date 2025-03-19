@@ -291,6 +291,7 @@ namespace DataDictionary.Main.Forms
         /// This method call the UnbindData of all forms EXCEPT the form that sent the message.
         /// </summary>
         /// <param name="message"></param>
+        [Obsolete("Not Used", true)]
         protected virtual void HandleMessage(DoUnbindData message)
         { if (this is IApplicationDataBind form) { form.UnbindData(); } }
 
@@ -299,6 +300,7 @@ namespace DataDictionary.Main.Forms
         /// This method calls the BindData of all forms EXCEPT the form that sent the message.
         /// </summary>
         /// <param name="message"></param>
+        [Obsolete("Not Used", true)]
         protected virtual void HandleMessage(DoBindData message)
         { if (this is IApplicationDataBind form) { form.BindData(); } }
 
