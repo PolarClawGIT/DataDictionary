@@ -28,13 +28,17 @@ namespace Toolbox.BindingTable
             set { ((IList<TRow>)this)[index] = value; }
         }
 
-        /// <inheritdoc cref="IList{T}.Count"/>
+        /// <inheritdoc cref="IBindingList.Count"/>
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
-        new Int32 Count { get { return ((IList<TRow>)this).Count; } }
+        new Int32 Count { get { return ((IBindingList)this).Count; } }
 
-        /// <inheritdoc cref="IList{T}.RemoveAt"/>
+        /// <inheritdoc cref="IBindingList.RemoveAt"/>
         /// <remarks>Resolves ambiguity between IList and generic list</remarks>
-        new void RemoveAt(int index) { ((IList<TRow>)this).RemoveAt(index); }
+        new void RemoveAt(int index) { ((IBindingList)this).RemoveAt(index); }
+
+        /// <inheritdoc cref="IBindingList.Clear"/>
+        /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
+        new void Clear() { ((IBindingList)this).Clear(); }
 
         /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; } // Missing in IBindingList

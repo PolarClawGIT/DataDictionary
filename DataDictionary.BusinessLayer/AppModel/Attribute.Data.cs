@@ -11,8 +11,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData :
-        IBindingData<AttributeValue>
-        //,ITemporalData
+        IBindingData<AttributeValue>,
+        IGetTemporal<IModelIndex>
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
@@ -70,7 +70,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         #endregion
 
-        public ITemporalView GetTemporal(IModelIndex model)
+        public ITemporalData GetTemporal(IModelIndex model)
         {
             return new TemporalData<AttributeData, AttributeValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };

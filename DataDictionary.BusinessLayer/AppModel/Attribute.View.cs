@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Wrapper class that returns the BindingViews for the Attribute
     /// </summary>
+    [Obsolete("To be moved to the UI layer")]
     public class AttributeView
     {
         /// <summary>
@@ -146,7 +147,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ITemporalView GetTemporal(IModelIndex model)
+        public ITemporalData GetTemporal(IModelIndex model)
         {
             IModelKey key = new ModelIndex(model);
 

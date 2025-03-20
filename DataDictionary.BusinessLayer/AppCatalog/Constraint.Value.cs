@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     public interface IConstraintValue : IConstraintItem,
         IConstraintIndex, IConstraintIndexName, ICatalogIndex, ITableIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

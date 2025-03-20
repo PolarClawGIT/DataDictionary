@@ -13,20 +13,15 @@ namespace DataDictionary.Main.Forms.ApplicationWide
     /// </summary>
     partial class HistoryView : ApplicationData
     {
-        ILoadHistoryData? loader;
-        List<ITemporalValue> modificationValues = new List<ITemporalValue>();
-
+        ITemporalData formData = null!;
 
         // Crosswalk Item in List View back to source.
-        [Obsolete()]
-        Dictionary<ListViewItem, ITemporalValue> historyValues = new Dictionary<ListViewItem, ITemporalValue>();
+        Dictionary<ListViewItem, IDataValue> historyValues = new Dictionary<ListViewItem, IDataValue>();
+        Dictionary<ListViewItem, TemporalValue> historyModifications = new Dictionary<ListViewItem, TemporalValue>();
 
-        [Obsolete()]
-        Dictionary<ListViewItem, ITemporalValue> historyModifications = new Dictionary<ListViewItem, ITemporalValue>();
+        public ITemporal? SelectedValue { get; protected set; }
 
-        public ITemporalValue? SelectedValue { get; protected set; }
-
-        public HistoryView() : base()
+        protected HistoryView() : base()
         {
             InitializeComponent();
             historyValuesData.ResizeColumns();
@@ -36,15 +31,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HistoryModificationData_Resize(historyModificationData, EventArgs.Empty);
         }
 
-        public HistoryView(ILoadHistoryData loader) : this()
-        { this.loader = loader; }
-
-        public HistoryView(ITemporalView data) : this()
-        {
-            // TODO: Re-factor to use ITemporalData instead of ILoadHistoryData
-            // The generic version of the form will likely not be needed.
-            throw new NotImplementedException("Work in progress");
-        }
+        public HistoryView(ITemporalData data) : this()
+        { formData = data; }
 
         protected virtual void HistoryView_Load(object sender, EventArgs e)
         {
@@ -52,78 +40,96 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             List<WorkItem> work = new List<WorkItem>();
             IDatabaseWork factory = BusinessData.GetDbFactory();
             work.Add(factory.OpenConnection());
-
-            if (loader is not null)
-            { work.AddRange(loader.LoadHistory(factory, modificationValues)); }
+            work.AddRange(formData.Load(factory));
 
             DoWork(work, onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             {
-                historyValuesData.Items.Clear();
-                historyValues.Clear();
+                bindingHistory.DataSource = formData;
+                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingHistory, nameof(ITemporalValue.Title)));
+                isInsertedData.DataBindings.Add(new Binding(nameof(isInsertedData.Checked), bindingHistory, nameof(ITemporalValue.IsInserted)));
+                isDeleteData.DataBindings.Add(new Binding(nameof(isDeleteData.Checked), bindingHistory, nameof(ITemporalValue.IsDeleted)));
+                isUpdatedData.DataBindings.Add(new Binding(nameof(isUpdatedData.Checked), bindingHistory, nameof(ITemporalValue.IsUpdated)));
+                isCurrentData.DataBindings.Add(new Binding(nameof(isCurrentData.Checked), bindingHistory, nameof(ITemporalValue.IsCurrent)));
+                createdByData.DataBindings.Add(new Binding(nameof(createdByData.Text), bindingHistory, nameof(ITemporalValue.CreatedBy)));
+                createdOnDate.DataBindings.Add(new Binding(nameof(createdOnDate.Text), bindingHistory, nameof(ITemporalValue.CreatedOn)));
+                removedByData.DataBindings.Add(new Binding(nameof(removedByData.Text), bindingHistory, nameof(ITemporalValue.RemovedBy)));
+                removedOnData.DataBindings.Add(new Binding(nameof(removedOnData.Text), bindingHistory, nameof(ITemporalValue.RemovedOn)));
 
-                foreach (var item in modificationValues.OrderBy(o => o.Title).GroupBy(g => g.Index))
+                historyValues.Clear();
+                historyValuesData.Items.Clear();
+                IReadOnlyList<IDataValue> groups = formData.GetGroups();
+
+                foreach (IDataValue item in groups)
                 {
-                    ITemporalValue lastValue = item.OrderBy(o => o.Temporal.CreatedOn).Last();
-                    String modification = DbModificationEnumeration.Cast(lastValue.Temporal.Modification).DisplayName;
+                    TemporalValue lastValue = formData.GetDetails(item).Last();
+                    String modification = DbModificationEnumeration.Cast(lastValue.Modification).DisplayName;
                     ListViewItem newItem = new ListViewItem([lastValue.Title, modification]);
+
                     historyValuesData.Items.Add(newItem);
-                    historyValues.Add(newItem, lastValue);
+                    historyValues.Add(newItem, item);
+
+                    var x = newItem.SubItems;
+                    var y = historyValuesData.Columns.Count;
                 }
+
+                if (groups.FirstOrDefault() is IDataValue group &&
+                    formData.GetDetails(group).LastOrDefault() is TemporalValue value)
+                { bindingHistory.Position = formData.IndexOf(value); }
+                else { throw new IndexOutOfRangeException("Current Value could not be found"); }
             }
         }
 
         private void HistoryValuesData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (historyValuesData.
-                    SelectedItems.
-                    OfType<ListViewItem>().
-                    FirstOrDefault() is ListViewItem selectedItem
-                && historyValues.
-                    TryGetValue(selectedItem, out ITemporalValue? selectedValue))
+            historyModifications.Clear();
+            historyModificationData.Items.Clear();
+
+            foreach (ListViewItem listItem in historyValuesData.SelectedItems)
             {
-                SetSummary(selectedValue);
-
-                historyModificationData.Items.Clear();
-                historyModifications.Clear();
-
-                foreach (ITemporalValue item in GetHistoryDetail(selectedValue).OrderBy(o => o.Temporal.CreatedOn))
+                if (historyValues.TryGetValue(listItem, out IDataValue? item))
                 {
-                    String itemModification = DbModificationEnumeration.Cast(item.Temporal.Modification).DisplayName;
-                    String itemModifiedOn;
-                    if (item.Temporal.CreatedOn is DateTime modifiedOnvalue)
-                    { itemModifiedOn = modifiedOnvalue.ToString(); }
-                    else { itemModifiedOn = String.Empty; }
+                    IReadOnlyList<TemporalValue> temporalValues = formData.GetDetails(item);
+                    foreach (TemporalValue temporalItem in temporalValues)
+                    {
+                        String itemModification = DbModificationEnumeration.Cast(temporalItem.Modification).DisplayName;
+                        String itemModifiedOn;
+                        if (temporalItem.CreatedOn is DateTime modifiedOnvalue)
+                        { itemModifiedOn = modifiedOnvalue.ToString(); }
+                        else { itemModifiedOn = String.Empty; }
 
-                    ListViewItem newItem = new ListViewItem([itemModification, itemModifiedOn]);
-                    historyModificationData.Items.Add(newItem);
-                    historyModifications.Add(newItem, item);
+                        ListViewItem newItem = new ListViewItem([itemModification, itemModifiedOn]);
+
+                        historyModificationData.Items.Add(newItem);
+                        historyModifications.Add(newItem, temporalItem);
+                    }
+
+                    if (temporalValues.LastOrDefault() is TemporalValue value)
+                    { bindingHistory.Position = formData.IndexOf(value); }
+                    else { throw new IndexOutOfRangeException("Current Value could not be found"); }
                 }
             }
-        }
 
-        protected IEnumerable<ITemporalValue> GetHistoryDetail(ITemporalValue selectedValue)
-        { return modificationValues.Where(w => selectedValue.Index.Equals(w.Index)); }
+        }
 
         void HistoryValuesData_Resize(object sender, EventArgs e)
         { historyValuesData.ResizeColumns(); }
 
         private void HistoryModificationData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (historyModificationData.
-                    SelectedItems.
-                    OfType<ListViewItem>().
-                    FirstOrDefault() is ListViewItem selectedItem
-                && historyModifications.
-                    TryGetValue(selectedItem, out ITemporalValue? selectedValue))
-            { SetSummary(selectedValue); }
+            foreach (ListViewItem listItem in historyModificationData.SelectedItems)
+            {
+                if (historyModifications.TryGetValue(listItem, out TemporalValue? value))
+                { bindingHistory.Position = formData.IndexOf(value); }
+                else { throw new IndexOutOfRangeException("Current Value could not be found"); }
+            }
         }
 
         void HistoryModificationData_Resize(object sender, EventArgs e)
         { historyModificationData.ResizeColumns(); }
 
-        void SetSummary(ITemporalValue value)
+        void SetSummary(ITemporal value)
         {
             SelectedValue = value;
 

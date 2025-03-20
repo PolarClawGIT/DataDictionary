@@ -63,7 +63,7 @@ namespace DataDictionary.Main.Enumerations
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { result = rowState.RowState().AsBindingRowState(); }
 
-                if (item.Current is ITemporalValue temporal
+                if (item.Current is ITemporal temporal
                     && temporal.Temporal.IsCurrent == false
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { return BindingRowState.Historic; }
@@ -94,7 +94,7 @@ namespace DataDictionary.Main.Enumerations
                 }
                 else { stateValue = String.Empty; }
 
-                if (item.Current is ITemporalValue temporal)
+                if (item.Current is ITemporal temporal)
                 { temporalValue = temporal.Temporal.ToString() ?? String.Empty; }
                 else
                 { temporalValue = String.Empty; }

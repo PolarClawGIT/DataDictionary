@@ -215,7 +215,7 @@ namespace DataDictionary.Main.Forms.General
                 else { result = null; return false; }
             }
 
-            public ITemporalView GetTemporal()
+            public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
         }
     }

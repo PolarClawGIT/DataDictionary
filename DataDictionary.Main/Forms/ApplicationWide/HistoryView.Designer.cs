@@ -28,25 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel historyLayout;
             GroupBox historySummaryGroup;
             TableLayoutPanel historyDetailLayout;
             GroupBox modificationsGroup;
-            titleData = new Controls.TextBoxData();
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
             isInsertedData = new CheckBox();
             isDeleteData = new CheckBox();
             isUpdatedData = new CheckBox();
             isCurrentData = new CheckBox();
-            createdByData = new Controls.TextBoxData();
-            removedOnData = new Controls.TextBoxData();
-            createdOnDate = new Controls.TextBoxData();
-            removedByData = new Controls.TextBoxData();
+            createdByData = new DataDictionary.Main.Controls.TextBoxData();
+            removedOnData = new DataDictionary.Main.Controls.TextBoxData();
+            createdOnDate = new DataDictionary.Main.Controls.TextBoxData();
+            removedByData = new DataDictionary.Main.Controls.TextBoxData();
             historyModificationData = new ListView();
             historyModificationColumn = new ColumnHeader();
             historyCreatedOnColumn = new ColumnHeader();
             historyValuesData = new ListView();
             historyTitleColumn = new ColumnHeader();
             historyLastModificationColumn = new ColumnHeader();
+            bindingHistory = new BindingSource(components);
             historyLayout = new TableLayoutPanel();
             historySummaryGroup = new GroupBox();
             historyDetailLayout = new TableLayoutPanel();
@@ -55,6 +57,7 @@
             historySummaryGroup.SuspendLayout();
             historyDetailLayout.SuspendLayout();
             modificationsGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingHistory).BeginInit();
             SuspendLayout();
             // 
             // historyLayout
@@ -304,6 +307,7 @@
             historyDetailLayout.ResumeLayout(false);
             historyDetailLayout.PerformLayout();
             modificationsGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingHistory).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -324,5 +328,6 @@
         private Controls.TextBoxData createdOnDate;
         private Controls.TextBoxData removedOnData;
         private Controls.TextBoxData removedByData;
+        private BindingSource bindingHistory;
     }
 }
