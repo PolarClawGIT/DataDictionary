@@ -41,6 +41,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
     {
         TData data = new TData();
 
+        public Func<TValue, DataIndex> ToDataIndex { get; init; } = (value) => ((IDataValue)value).Index;
+
+        public Func<TValue, TemporalIndex> ToTemporalIndex { get; init; } = (value) => new TemporalIndex(value);
+
         /// <summary>
         /// Function that returns the HistoryCommand WorkItem for the base.
         /// </summary>
@@ -97,5 +101,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 OrderBy(o => o.AsOfUtcDate).
                 ToList();
         }
+
+
     }
 }
