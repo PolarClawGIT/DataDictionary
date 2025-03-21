@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer;
 /// <summary>
 /// Interface describes a Temporal Table
 /// </summary>
-public interface ITemporalItem 
+public interface ITemporalItem
 {
     /// <summary>
     /// Temporal Data Elements
@@ -19,11 +19,11 @@ public interface ITemporalItem
 /// <summary>
 /// Temporal sub-class for common functionality of Temporal data.
 /// </summary>
-class TemporalItem: ITemporal
+class TemporalItem : ITemporal
 {
     /// <inheritdoc cref="BindingTableRow.GetValue(string)"/>
     /// <remarks>Pass: BindingTableRow.GetValue</remarks>
-    public required Func<String,String?> GetString { get; init; }
+    public required Func<String, String?> GetString { get; init; }
 
     /// <inheritdoc cref="BindingTableRow.GetValue{T}(string)"/>
     /// <remarks><![CDATA[Pass: BindingTableRow.GetValue<DateTime>]]></remarks>

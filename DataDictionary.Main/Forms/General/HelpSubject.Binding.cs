@@ -3,13 +3,8 @@
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -79,12 +74,11 @@ namespace DataDictionary.Main.Forms.General
                 if (temporalIndex is null)
                 {
                     work.AddRange(subjectData.Delete(subjectIndex));
-                    //work.Add(new WorkItem() { DoWork = () => { subjectData = IHelpSubjectData.Create(); } });
                     work.AddRange(subjectData.Load(factory, subjectIndex));
                 }
                 else
                 {
-                    work.Add(new WorkItem() { DoWork = () => { subjectData = IHelpSubjectData.Create(); } });
+                    subjectData = IHelpSubjectData.Create();
                     work.AddRange(subjectData.Load(factory, subjectIndex, temporalIndex));
                 }
 

@@ -88,21 +88,49 @@ namespace DataDictionary.Main.Forms
         /// <param name="constructor"></param>
         /// <param name="isOpen"></param>
         /// <returns></returns>
-        protected virtual TForm Activate<TForm>(Func<TForm> constructor, Func<TForm, Boolean>? isOpen = null)
+        protected virtual TForm Activate<TForm>(Func<TForm> constructor, Func<TForm, Boolean>? isOpen)
             where TForm : Form
         {
             Form parent = MdiParent ?? this;
 
             if (parent.MdiChildren.OfType<TForm>().FirstOrDefault(w => isOpen is null || isOpen(w)) is TForm existingForm)
             { existingForm.Activate(); return existingForm; }
-            else
-            { 
-                TForm newForm = constructor();
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
+            { return Activate(constructor()); }
         }
+
+        /// <summary>
+        /// Looks for the Target Form already open.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<TForm> constructor)
+            where TForm : Form
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.OfType<TForm>().FirstOrDefault() is TForm existingForm)
+            { existingForm.Activate(); return existingForm; }
+            else { return Activate(constructor()); }
+        }
+
+        /// <summary>
+        /// Activates the Form directly.
+        /// Does not check if it already exists.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(TForm constructor)
+            where TForm : Form
+        {
+            Form parent = MdiParent ?? this;
+            constructor.MdiParent = parent;
+            constructor.Show();
+            return constructor;
+        }
+
         #endregion
 
         /// <summary>
@@ -154,7 +182,7 @@ namespace DataDictionary.Main.Forms
 
             void completing(RunWorkerCompletedEventArgs result)
             {
-                if(result.Error is null) { IsLocked(isLocked); }
+                if (result.Error is null) { IsLocked(isLocked); }
                 IsWaitCursor(isWait);
                 if (result.Error is not null) { Program.ShowException(result.Error); }
                 if (onCompleting is not null) { onCompleting(result); }

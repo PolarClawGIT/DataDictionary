@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -19,11 +20,19 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         Dictionary<ListViewItem, IDataValue> historyValues = new Dictionary<ListViewItem, IDataValue>();
         Dictionary<ListViewItem, TemporalValue> historyModifications = new Dictionary<ListViewItem, TemporalValue>();
 
-        public ITemporal? SelectedValue { get; protected set; }
+        /// <summary>
+        /// Function to open the detail form.
+        /// </summary>
+        public Func<TemporalValue, Form>? OpenForm { get; init; }
 
         protected HistoryView() : base()
         {
             InitializeComponent();
+            SetIcon(ScopeType.ApplicationHelp);
+            SetCommand(
+                ScopeType.ApplicationHelp,
+                CommandImageType.Open);
+
             historyValuesData.ResizeColumns();
             historyModificationData.ResizeColumns();
 
@@ -53,9 +62,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 isUpdatedData.DataBindings.Add(new Binding(nameof(isUpdatedData.Checked), bindingHistory, nameof(ITemporalValue.IsUpdated)));
                 isCurrentData.DataBindings.Add(new Binding(nameof(isCurrentData.Checked), bindingHistory, nameof(ITemporalValue.IsCurrent)));
                 createdByData.DataBindings.Add(new Binding(nameof(createdByData.Text), bindingHistory, nameof(ITemporalValue.CreatedBy)));
-                createdOnDate.DataBindings.Add(new Binding(nameof(createdOnDate.Text), bindingHistory, nameof(ITemporalValue.CreatedOn)));
+                createdOnDate.DataBindings.Add(new Binding(nameof(createdOnDate.Text), bindingHistory, nameof(ITemporalValue.CreatedOn),true, DataSourceUpdateMode.OnPropertyChanged,String.Empty, "MM'/'dd'/'yyyy HH':'mm':'ss zzz"));
                 removedByData.DataBindings.Add(new Binding(nameof(removedByData.Text), bindingHistory, nameof(ITemporalValue.RemovedBy)));
-                removedOnData.DataBindings.Add(new Binding(nameof(removedOnData.Text), bindingHistory, nameof(ITemporalValue.RemovedOn)));
+                removedOnData.DataBindings.Add(new Binding(nameof(removedOnData.Text), bindingHistory, nameof(ITemporalValue.RemovedOn), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty, "MM'/'dd'/'yyyy HH':'mm':'ss zzz"));
 
                 historyValues.Clear();
                 historyValuesData.Items.Clear();
@@ -69,15 +78,14 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                     historyValuesData.Items.Add(newItem);
                     historyValues.Add(newItem, item);
-
-                    var x = newItem.SubItems;
-                    var y = historyValuesData.Columns.Count;
                 }
 
                 if (groups.FirstOrDefault() is IDataValue group &&
                     formData.GetDetails(group).LastOrDefault() is TemporalValue value)
                 { bindingHistory.Position = formData.IndexOf(value); }
                 else { throw new IndexOutOfRangeException("Current Value could not be found"); }
+
+                CommandButtons[CommandImageType.Open].IsEnabled = (OpenForm is not null);
             }
         }
 
@@ -129,32 +137,18 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         void HistoryModificationData_Resize(object sender, EventArgs e)
         { historyModificationData.ResizeColumns(); }
 
-        void SetSummary(ITemporal value)
-        {
-            SelectedValue = value;
-
-            titleData.Text = value.Title;
-
-            isInsertedData.Checked = (value.Temporal.IsInserted is true);
-            isUpdatedData.Checked = (value.Temporal.IsUpdated is true);
-            isDeleteData.Checked = (value.Temporal.IsDeleted is true);
-            isCurrentData.Checked = (value.Temporal.IsCurrent is true);
-            createdByData.Text = value.Temporal.CreatedBy ?? String.Empty;
-            removedByData.Text = value.Temporal.RemovedBy ?? String.Empty;
-
-            if (value.Temporal.CreatedOn is DateTime createdOn)
-            { createdOnDate.Text = createdOn.ToString(); }
-            else { createdOnDate.Text = String.Empty; }
-
-            if (value.Temporal.RemovedOn is DateTime removedOn)
-            { removedOnData.Text = removedOn.ToString(); }
-            else { removedOnData.Text = String.Empty; }
-        }
-
         private void HistoryModificationData_DoubleClick(object sender, EventArgs e)
         { OpenCommand_Click(sender, e); }
 
         private void HistoryValuesData_DoubleClick(object sender, EventArgs e)
         { BrowseCommand_Click(sender, e); }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+
+            if (bindingHistory.Current is TemporalValue value && OpenForm is not null)
+            { Activate(OpenForm(value)); }
+        }
     }
 }

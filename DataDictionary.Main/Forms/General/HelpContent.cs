@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
@@ -139,7 +140,15 @@ namespace DataDictionary.Main.Forms.General
         {
             base.HistoryCommand_Click(sender, e);
 
-            Activate(() => new HistoryView(formData.GetTemporal()));
+            Activate(() => new HistoryView(formData.GetTemporal())
+            {
+                OpenForm = (temoral) =>
+                {
+                    if (temoral.TryGetValue(out HelpSubjectValue? subjectValue))
+                    { return new HelpSubject(subjectValue, new TemporalIndex(temoral)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                }
+            });
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

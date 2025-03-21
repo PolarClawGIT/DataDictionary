@@ -37,7 +37,12 @@ namespace DataDictionary.DataLayer
         public TemporalKey(ITemporal source) : this()
         {
             if (source.CreatedOn is DateTime value)
-            { AsOfUtcDate = value; }
+            {   // Because somewhere along the line the Millisecond got lost.
+                // SQL needs an DateTime2 that is between the SysStart and SysEnd.
+                if (value.Millisecond == 0)
+                { AsOfUtcDate = value.ToUniversalTime().AddSeconds(1).AddMilliseconds(-1); }
+                else { AsOfUtcDate = value.ToUniversalTime(); }
+            }
         }
 
         /// <summary>
