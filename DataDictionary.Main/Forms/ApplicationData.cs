@@ -94,12 +94,6 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            void Test()
-            {
-                if (Control is ToolStripDropDownButton x) { x.DropDown = null; }
-                if (Control is ToolStripSplitButton y) { y.DropDown = null; }
-            }
-
             private void Control_VisibleChanged(Object? sender, EventArgs e)
             {
                 // Detects if there is anything before the separator and if not, do not show the separator.
@@ -190,7 +184,7 @@ namespace DataDictionary.Main.Forms
             void rowStateChanged(DataRowState state)
             {
                 RowState = state;
-                if(state is DataRowState.Detached or DataRowState.Deleted)
+                if (state is DataRowState.Detached or DataRowState.Deleted)
                 { IsLocked(true); }
             }
         }
@@ -216,7 +210,7 @@ namespace DataDictionary.Main.Forms
 
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
-                if (data.Current is IDataValue dataValue)
+                if (data.Position >= 0 && data.Current is IDataValue dataValue)
                 {
                     Text = dataValue.Title;
                     SetIcon(dataValue.Scope);
@@ -290,7 +284,7 @@ namespace DataDictionary.Main.Forms
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
         {
-            General.HelpContent helpForm = Activate(() => new General.HelpContent(this));
+            General.HelpContent helpForm = Activate(() => new General.HelpContent());
             helpForm.OpenSubject(this);
         }
 

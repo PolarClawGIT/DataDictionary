@@ -91,7 +91,11 @@ namespace DataDictionary.Main.Forms.Catalog
                     }
                 }
 
-                dialog.OpenHelp = () => Activate(() => new General.HelpContent(dialog));
+                dialog.OpenHelp = () =>
+                {
+                    General.HelpContent helpForm = Activate(() => new General.HelpContent());
+                    helpForm.OpenSubject(dialog);
+                };
 
                 DialogResult result = dialog.ShowDialog();
 
@@ -254,7 +258,7 @@ namespace DataDictionary.Main.Forms.Catalog
         private void CatalogBinding_CurrentChanged(object sender, EventArgs e)
         {
             CommandButtons[CommandImageType.Delete].IsEnabled = GetInModel();
-            
+
             CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
             CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
             CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();

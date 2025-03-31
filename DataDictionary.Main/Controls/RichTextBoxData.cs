@@ -21,8 +21,8 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
-    [DefaultBindingProperty("Rtf")]
-    partial class RichTextBoxData : UserControl, ISupportEditMenu
+    [DefaultBindingProperty("RichText")]
+    partial class RichTextBoxData : UserControl, ISupportEditMenu, INotifyPropertyChanged
     {
 
         /// <summary>
@@ -45,15 +45,50 @@ namespace DataDictionary.Main.Controls
         public Boolean HeaderVisible { get { return label.Visible; } set { label.Visible = value; } }
 
         /// <summary>
+        /// Makes the Tool Strip Visible or hidden
+        /// </summary>
+        public Boolean ToolStripVisible { get { return toolStrip.Visible; } set { toolStrip.Visible = value; } }
+
+        /// <summary>
         /// Exposes the Rich Text attribute.
         /// </summary>
         /// <remarks>
-        /// The name appears to be very touchy. Changing it to "RichText" causes an error during binding while "Rtf" does not.
-        /// ListChange and PropertyChange Events during threading can cause issues with this control where other controls don't have that issue.
+        /// ISSUE: Binding does not actual connect to this property.
+        /// It connects to the RTF of the RichTextBox control directly.
+        /// As such, the logic in the property is never called.
+        /// This causes problems with Threading and cleaning the value before it is used.
+        /// The root RTF property can also throw errors if the text is
+        /// not Rich Text.
         /// </remarks>
-        [Browsable(false), RefreshProperties(RefreshProperties.All), SettingsBindable(true), DefaultValue(""), Category("Appearance")]
+        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
         public String? Rtf
         {
+            get { return RichText; }
+            set
+            {
+                RichText = value;
+
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(this, new PropertyChangedEventArgs(nameof(Rtf))); }
+
+                if (RtfChanged is EventHandler eventHandler)
+                { eventHandler(this, new EventArgs()); }
+
+                // This is never called with Binding. It may be called in the designer.
+                throw new InvalidOperationException("Debug: This does not occur.");
+            }
+        }
+        // Based on: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/change-notification-in-windows-forms-data-binding?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
+        // This does not work either.
+        public event EventHandler? RtfChanged;
+        public event EventHandler? RichTextChanged;
+
+
+        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
+        public String? RichText
+        {   // This is the intended Property for Data Binding.
+            // It does not work.
+            // A runtime Invalid Augment exception occurs when creating the Binding.
             get
             { return richTextBox.Rtf; }
             set
@@ -61,15 +96,23 @@ namespace DataDictionary.Main.Controls
                 try
                 {
                     if (this.IsHandleCreated)
-                    { Invoke(() => { richTextBox.Rtf = value; }); }
-                    else { richTextBox.Rtf = value; }
+                    { Invoke(() => { richTextBox.Clear(); richTextBox.Rtf = value; }); }
+                    else { richTextBox.Clear(); richTextBox.Rtf = value; }
+
+                    if (PropertyChanged is PropertyChangedEventHandler handler)
+                    { handler(this, new PropertyChangedEventArgs(nameof(RichText))); }
+
+                    if (RichTextChanged is EventHandler eventHandler)
+                    { eventHandler(this, new EventArgs()); }
                 }
                 catch (Exception)
                 {
                     if (this.IsHandleCreated)
-                    { Invoke(() => { richTextBox.Text = value; }); }
-                    else { richTextBox.Text = value; }
+                    { Invoke(() => { richTextBox.Clear(); richTextBox.Text = value; }); }
+                    else { richTextBox.Clear(); richTextBox.Text = value; }
                 }
+
+
             }
         }
 
@@ -82,8 +125,19 @@ namespace DataDictionary.Main.Controls
         [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
+        //public EventHandler TextChanged;
+
         public RichTextBoxData()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.TextChanged += RichTextBoxData_TextChanged;
+        }
+
+        private void RichTextBoxData_TextChanged(Object? sender, EventArgs e)
+        {   // Nope, does not bind to the Text property of the User Control either.
+            var x = this.Text;
+            //throw new NotImplementedException();
+        }
 
         private void RichTextBox_ReadOnlyChanged(object sender, EventArgs e)
         {
@@ -178,7 +232,10 @@ namespace DataDictionary.Main.Controls
         { if (Validated is EventHandler handler) { handler(sender, e); } }
 
         public new event CancelEventHandler? Validating;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         private void richTextBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
+
     }
 }

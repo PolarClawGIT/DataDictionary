@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <inheritdoc/>
     public interface IRoutineParameterValue : IRoutineParameterItem, IRoutineParameterIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

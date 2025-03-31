@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 
 namespace Toolbox.BindingTable
 {
@@ -33,7 +34,9 @@ namespace Toolbox.BindingTable
                 DataRowState currentState = sender.RowState();
                 if (currentState != priorState)
                 {
-                    handler(sender, new RowStateEventArgs(currentState));
+                    if(sender is IRaiseItemChangedEvents raise && raise.RaisesItemChangedEvents)
+                    { handler(sender, new RowStateEventArgs(currentState)); }
+                    
                     priorState = currentState;
                 }
             }

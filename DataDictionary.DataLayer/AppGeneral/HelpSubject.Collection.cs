@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.AppGeneral
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, helpId: null); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IHelpSubjectKey key)

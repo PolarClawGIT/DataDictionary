@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     public interface IPropertyValue : IPropertyItem,
         IPropertyIndex, IPropertyIndexObject, ICatalogIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

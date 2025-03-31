@@ -1,19 +1,21 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.AppGeneral
 {
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpSubjectItem, IScopeType,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
-        IDataValue, ITemporalValue
+        IDataValue, ITemporal
     { }
 
     /// <inheritdoc/>
     public class HelpSubjectValue : HelpSubjectItem, IHelpSubjectValue
     {
         IDataValue dataValue; // Backing field for IDataValue
+        HelpSubjectIndexPath pathValue; // Backing field for Help Subject Path/NameSpace
 
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return dataValue.Index; } }
@@ -23,6 +25,13 @@ namespace DataDictionary.BusinessLayer.AppGeneral
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ApplicationHelpPage;
+
+        /// <inheritdoc cref="HelpSubjectItem.NameSpace"/>
+        public HelpSubjectIndexPath Path
+        {
+            get { return pathValue; }
+            set { pathValue = value; this.NameSpace = value.MemberFullPath; }
+        }
 
         /// <inheritdoc/>
         public HelpSubjectValue() : base()
@@ -34,6 +43,21 @@ namespace DataDictionary.BusinessLayer.AppGeneral
                 GetScope = () => Scope,
                 IsTitleChanged = (e) => e.PropertyName is nameof(HelpSubject)
             };
+
+            pathValue = new HelpSubjectIndexPath(this.NameSpace);
+
+            this.PropertyChanged += PropertyChanged;
+
+            void PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName is nameof(this.NameSpace))
+                {
+                    pathValue = new HelpSubjectIndexPath(this);
+                    OnPropertyChanged(nameof(Path));
+                }
+            }
         }
+
+
     }
 }

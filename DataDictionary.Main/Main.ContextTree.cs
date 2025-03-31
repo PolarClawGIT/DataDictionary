@@ -22,54 +22,114 @@ namespace DataDictionary.Main
             if (e.Value is INamedScopeSourceValue target)
             {
                 dynamic dataNode = target;
-                Activate(dataNode);
+                OpenForm(dataNode);
             }
         }
 
-        void Activate(ICatalogValue catalogItem)
-        { Activate((data) => new Forms.Catalog.DbCatalog(catalogItem), catalogItem); }
+        void OpenForm(ICatalogValue catalogItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbCatalog(catalogItem),
+                (form) => form.IsOpenItem(catalogItem));
+        }
 
-        void Activate(ISchemaValue schemaItem)
-        { Activate((data) => new Forms.Catalog.DbSchema(schemaItem), schemaItem); }
 
-        void Activate(ITableValue tableItem)
-        { Activate((data) => new Forms.Catalog.DbTable(tableItem), tableItem); }
+        void OpenForm(ISchemaValue schemaItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbSchema(schemaItem),
+                (form) => form.IsOpenItem(schemaItem));
+        }
 
-        void Activate(ITableColumnValue columnItem)
-        { Activate((data) => new Forms.Catalog.DbTableColumn(columnItem), columnItem); }
+        void OpenForm(ITableValue tableItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbTable(tableItem),
+                (form) => form.IsOpenItem(tableItem));
+        }
 
-        void Activate(IConstraintValue constraintItem)
-        { Activate((data) => new Forms.Catalog.DbConstraint(constraintItem), constraintItem); }
+        void OpenForm(ITableColumnValue columnItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbTableColumn(columnItem),
+                (form) => form.IsOpenItem(columnItem));
+        }
 
-        void Activate(IRoutineValue routineItem)
-        { Activate((data) => new Forms.Catalog.DbRoutine(routineItem), routineItem); }
+        void OpenForm(IConstraintValue constraintItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbConstraint(constraintItem),
+                (form) => form.IsOpenItem(constraintItem));
+        }
 
-        void Activate(IRoutineParameterValue routineParameterItem)
-        { Activate((data) => new Forms.Catalog.DbRoutineParameter(routineParameterItem), routineParameterItem); }
+        void OpenForm(IRoutineValue routineItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbRoutine(routineItem),
+                (form) => form.IsOpenItem(routineItem));
+        }
 
-        void Activate(IDomainValue domainItem)
-        { Activate((data) => new Forms.Catalog.DbDomain(domainItem), domainItem); }
+        void OpenForm(IRoutineParameterValue routineParameterItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbRoutineParameter(routineParameterItem),
+                (form) => form.IsOpenItem(routineParameterItem));
+        }
 
-        void Activate(ILibrarySourceValue sourceItem)
-        { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
+        void OpenForm(IDomainValue domainItem)
+        {
+            Activate(
+                () => new Forms.Catalog.DbDomain(domainItem),
+                (form) => form.IsOpenItem(domainItem));
+        }
 
-        void Activate(ILibraryMemberValue memberItem)
-        { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
+        void OpenForm(ILibrarySourceValue sourceItem)
+        {
+            Activate(
+                () => new Forms.Library.LibrarySource(sourceItem),
+                (form) => form.IsOpenItem(sourceItem));
+        }
 
-        void Activate(AttributeValue attributeItem)
-        { Activate((data) => new Forms.Model.Attribute(attributeItem), attributeItem); }
+        void OpenForm(ILibraryMemberValue memberItem)
+        {
+            Activate(
+                () => new Forms.Library.LibraryMember(memberItem),
+                (form) => form.IsOpenItem(memberItem));
+        }
 
-        void Activate(EntityValue entityItem)
-        { Activate((data) => new Forms.Model.Entity(entityItem), entityItem); }
+        void OpenForm(AttributeValue attributeItem)
+        {
+            Activate(
+                () => new Forms.Model.Attribute(attributeItem),
+                (form) => form.IsOpenItem(attributeItem));
+        }
 
-        void Activate(SubjectAreaValue subjectItem)
-        { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }
+        void OpenForm(EntityValue entityItem)
+        {
+            Activate(
+                () => new Forms.Model.Entity(entityItem),
+                (form) => form.IsOpenItem(entityItem));
+        }
 
-        void Activate(ModelValue modelItem)
-        { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
+        void OpenForm(SubjectAreaValue subjectItem)
+        {
+            Activate(
+                () => new Forms.Model.ModelSubjectArea(subjectItem),
+                (form) => form.IsOpenItem(subjectItem));
+        }
 
-        void Activate(TemplateValue templateValue)
-        { Activate((data) => new Forms.Scripting.ScriptingTemplate(templateValue), templateValue); }
+        void OpenForm(ModelValue modelItem)
+        {
+            Activate(
+                () => new Forms.Model.Model(modelItem),
+                (form) => form.IsOpenItem(modelItem));
+        }
 
+        void OpenForm(TemplateValue templateValue)
+        {
+            Activate(
+                () => new Forms.Scripting.ScriptingTemplate(templateValue),
+                (form) => form.IsOpenItem(templateValue));
+        }
     }
 }

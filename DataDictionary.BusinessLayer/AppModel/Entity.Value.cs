@@ -8,7 +8,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IEntityValue : IEntityItem, IEntityIndex, IEntityIndexName,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

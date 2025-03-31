@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <inheritdoc/>
     public interface ICatalogValue : ICatalogItem, ICatalogIndex, ICatalogIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

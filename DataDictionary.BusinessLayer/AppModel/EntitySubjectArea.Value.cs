@@ -6,7 +6,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IEntitySubjectAreaValue : IEntitySubjectAreaItem, IEntityIndex, ISubjectAreaIndex,
-        IScopeType, ITemporalValue
+        IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>

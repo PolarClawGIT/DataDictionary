@@ -18,13 +18,13 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc cref="TemporalKey()"/>
         public TemporalIndex() : base() { }
 
-        /// <inheritdoc cref="TemporalKey(ITemporal)"/>
-        public TemporalIndex(ITemporal source) : base(source) { }
+        /// <inheritdoc cref="TemporalKey(DataLayer.ITemporal)"/>
+        public TemporalIndex(DataLayer.ITemporal source) : base(source) { }
 
         /// <inheritdoc cref="TemporalKey(ITemporalKey)"/>
         public TemporalIndex(ITemporalIndex source) : base(source) { }
 
         /// <inheritdoc cref="TemporalKey(ITemporalItem)"/>
-        public TemporalIndex(ITemporalValue source) : base(source) { }
+        public TemporalIndex(ITemporal source) : base(source) { }
     }
 }

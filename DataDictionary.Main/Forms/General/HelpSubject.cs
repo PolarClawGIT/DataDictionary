@@ -1,37 +1,35 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.General
 {
     partial class HelpSubject : ApplicationData, IApplicationDataForm
     {
-        HelpSubjectIndex helpSubjectIndex = new HelpSubjectIndex();
-        TemporalIndex? temporalIndex;
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
+        FormBinding formData;
+        Boolean needsData = false;
 
-        //IHelpSubjectIndex formIndex;
-        //HelpSubjectView formData;
-
-        public Boolean IsOpenItem(object? item)
-        { return helpBinding.Current is IHelpSubjectValue current && ReferenceEquals(current, item); }
+        public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
+        {
+            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+            return formData.TryGetSubject(out HelpSubjectValue? subject) && key.Equals(subject);
+        }
 
         public HelpSubject() : base()
         {
             InitializeComponent();
+            formData = new FormBinding(ref helpBinding) { DoWork = base.DoWork };
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
             SetCommand(ScopeType.ApplicationHelpPage,
+                CommandImageType.Add,
                 CommandImageType.Delete,
                 CommandImageType.OpenDatabase,
                 CommandImageType.SaveDatabase,
@@ -43,111 +41,79 @@ namespace DataDictionary.Main.Forms.General
             controlData.Enabled = false;
         }
 
-        public HelpSubject (IHelpSubjectIndex helpSubject) : this()
-        {
-            helpSubjectIndex = new HelpSubjectIndex(helpSubject);
-        }
+        public HelpSubject(IHelpSubjectIndex helpSubject) : this()
+        { formData.SetIndex(helpSubject); }
 
-        public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this (helpSubject)
-        {
-            temporalIndex = new TemporalIndex(temporal);
-        }
+        public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
+        { formData.SetIndex(helpSubject, temporal); needsData = true; }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject)
         {
-            controlData.Enabled = true;
-        }
-
-        public HelpSubject(HelpSubjectValue helpSubjectItem) : this()
-        { HelpSubject_Binding(helpSubjectItem); }
-
-        public HelpSubject(HelpSubjectValue helpSubjectItem, Form targetForm) : this()
-        {
-            HelpSubject_Binding(helpSubjectItem);
-
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
                             && w is not Form
                             && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
                 .OrderBy(o => o is not Form)
-                .ThenBy(o => o.ToNameSpaceKey())
+                .ThenBy(o => o.ToHelpSubjectPath())
                 .ToList();
 
             // Add Group level for form to ListView
             ControlItem baseForm = new ControlItem(targetForm);
-            ListViewItem baseItem = new ListViewItem(baseForm.ControlName.Member);
+            ListViewItem baseItem = new ListViewItem(baseForm.Path.Member);
 
             baseForm.ListItem = baseItem;
             controlList.Add(baseForm);
             controlData.Items.Add(baseItem);
-            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName.Format("{0}"));
+            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.Path.Format("{0}"));
 
             // Add all the forms controls to ListView
             foreach (Control item in values)
             {
                 ControlItem newControl = new ControlItem(item);
-                String itemName = newControl.ControlName.Format("{0}")
-                    .Replace(String.Format("{0}.", baseForm.ControlName.Format("{0}")), String.Empty);
+                String itemName = newControl.Path.Format("{0}")
+                    .Replace(String.Format("{0}.", baseForm.Path.Format("{0}")), String.Empty);
                 ListViewItem newItem = new ListViewItem(itemName);
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
 
-                if (helpBinding.Current is IHelpSubjectValue helpValue
+                if (formData.TryGetSubject(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
 
-                    if (helpPath.Equals(newControl.ControlName))
+                    if (helpPath.Equals(newControl.Path))
                     { newItem.Checked = true; }
                 }
 
                 controlList.Add(newControl);
                 controlData.Items.Add(newItem);
             }
-        }
 
-        private void HelpSubject_Binding(HelpSubjectValue helpSubjectItem)
-        {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubjectItem);
-            TemporalIndex temporalKey = new TemporalIndex(helpSubjectItem);
-
-            BindingView<HelpSubjectValue> bindingData = new BindingView<HelpSubjectValue>(BusinessData.ApplicationData.HelpSubjects, w => key.Equals(w) && temporalKey.Equals(w));
-
-            if (bindingData.Count == 0)
-            {
-                bindingData = new BindingView<HelpSubjectValue>(new List<HelpSubjectValue>() { helpSubjectItem }, w => true);
-                CommandButtons[CommandImageType.Delete].IsEnabled = false;
-                CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
-                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
-
-
-            }
-
-            helpBinding.DataSource = bindingData;
-            helpBinding.Position = 0;
-
+            controlData.Enabled = true;
         }
 
         private void HelpTextData_Load(object sender, EventArgs e)
         {
-            IDatabaseWork factory = BusinessData.GetDbFactory();
-            List<WorkItem> work = new List<WorkItem>();
-
-
-
-            DoWork(work, onCompleting);
-
+            if (needsData)
+            { formData.Load(onCompleting); }
+            else
+            { DoBinding(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
+            { if (args.Error is null) { DoBinding(); } }
+
+            void DoBinding()
             {
+                var x = formData.HelpSubjects;
+
                 helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
                 helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
                 helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
-
-                BindRtfHelpText();
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
 
+        [Obsolete()]
         private void BindRtfHelpText()
         {
             try // If RTF, bind to the RTF property
@@ -188,13 +154,12 @@ namespace DataDictionary.Main.Forms.General
                     { viewItem.Checked = false; }
                 }
 
-                if (helpBinding.Current is HelpSubjectValue current)
+                if (formData.TryGetSubject(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
                     if (controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
-                        && !key.Equals(selected.ControlName))
-                    { current.NameSpace = selected.ControlName.MemberFullPath; }
-
+                        && !key.Equals(selected.Path))
+                    { current.NameSpace = selected.Path.MemberFullPath; }
                 }
 
                 currentItem = null;
@@ -204,25 +169,32 @@ namespace DataDictionary.Main.Forms.General
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            helpBinding.AddNew();
+
+            HelpSubjectValue newSubject = formData.NewSubject();
+            if (controlList.Count > 0 && controlList.FirstOrDefault(w => w.IsForm) is ControlItem item)
+            {
+                newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
+                newSubject.Path = item.Path;
+                controlData.SelectedItems.Clear();
+            }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
-            { helpBinding.RemoveCurrent(); }
+            IsLocked(true);
+            formData.RemoveSubject();
         }
 
         protected override void SecurityCommand_Click(Object sender, EventArgs e)
         {
             base.SecurityCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
+            if (formData.TryGetSubject(out HelpSubjectValue? current))
             {
                 SecurableIndex key = new HelpSubjectIndex(current);
-                Activate(() => new Security.SecurableManager(key,() => BusinessData.Authorization.IsHelpAdmin));
+                Activate(() => new Security.SecurableManager(key, () => BusinessData.Authorization.IsHelpAdmin));
             }
         }
 
@@ -230,40 +202,46 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
+            formData.Load(OnComplete);
+
+            //if (helpBinding.Current is HelpSubjectValue current)
+            //{
+            //    IDatabaseWork factory = BusinessData.GetDbFactory();
+            //    List<WorkItem> work = new List<WorkItem>();
+            //    HelpSubjectIndex key = new HelpSubjectIndex(current);
+            //    current.Remove();
+
+            //    work.Add(factory.OpenConnection());
+            //    work.AddRange(BusinessData.ApplicationData.HelpSubjects.Load(factory, current));
+
+            //    // Unbind the RTF control to avoid errors generated by background thread
+            //    helpTextData.DataBindings.Clear();
+
+            //    IsLocked(true);
+            //    IsWaitCursor(true);
+            //    DoWork(work, onCompleting);
+
+            //    void onCompleting(RunWorkerCompletedEventArgs args)
+            //    {
+            //        IsWaitCursor(false);
+
+            //        if (args.Error is null)
+            //        { IsLocked(false); }
+
+            //        if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
+            //        {
+            //            if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpSubjectValue subject)
+            //            {
+            //                BindRtfHelpText();
+
+            //                helpBinding.Position = subjects.IndexOf(subject);
+            //            }
+            //        }
+            //    }
+            //}
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
             {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-                HelpSubjectIndex key = new HelpSubjectIndex(current);
-                current.Remove();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.ApplicationData.HelpSubjects.Load(factory, current));
-
-                // Unbind the RTF control to avoid errors generated by background thread
-                helpTextData.DataBindings.Clear();
-
-                IsLocked(true);
-                IsWaitCursor(true);
-                DoWork(work, onCompleting);
-
-                void onCompleting(RunWorkerCompletedEventArgs args)
-                {
-                    IsWaitCursor(false);
-
-                    if (args.Error is null)
-                    { IsLocked(false); }
-
-                    if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
-                    {
-                        if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpSubjectValue subject)
-                        {
-                            BindRtfHelpText();
-
-                            helpBinding.Position = subjects.IndexOf(subject);
-                        }
-                    }
-                }
             }
         }
 
@@ -271,71 +249,62 @@ namespace DataDictionary.Main.Forms.General
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
-            {
-                HelpSubjectIndex key = new HelpSubjectIndex(current);
-                TemporalIndex temporalKey = new TemporalIndex(current);
+            formData.Save(OnComplete);
 
-                // Remove anything for same subject that is not this subject
-                foreach (HelpSubjectValue oldValue in BusinessData.ApplicationData.HelpSubjects.Where(w => key.Equals(w) && !ReferenceEquals(current, w)))
-                { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
+            //if (helpBinding.Current is HelpSubjectValue current)
+            //{
+            //    HelpSubjectIndex key = new HelpSubjectIndex(current);
+            //    TemporalIndex temporalKey = new TemporalIndex(current);
 
-                // If there is nothing left, add the current subject
-                if (!BusinessData.ApplicationData.HelpSubjects.Any(w => key.Equals(w)))
-                { BusinessData.ApplicationData.HelpSubjects.Add(current); }
-                else { } // If there is something left, it must be this subject and it should not be altered.
+            //    // Remove anything for same subject that is not this subject
+            //    foreach (HelpSubjectValue oldValue in BusinessData.ApplicationData.HelpSubjects.Where(w => key.Equals(w) && !ReferenceEquals(current, w)))
+            //    { BusinessData.ApplicationData.HelpSubjects.Remove(oldValue); }
 
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
+            //    // If there is nothing left, add the current subject
+            //    if (!BusinessData.ApplicationData.HelpSubjects.Any(w => key.Equals(w)))
+            //    { BusinessData.ApplicationData.HelpSubjects.Add(current); }
+            //    else { } // If there is something left, it must be this subject and it should not be altered.
 
-                work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.ApplicationData.HelpSubjects.Save(factory, current));
+            //    IDatabaseWork factory = BusinessData.GetDbFactory();
+            //    List<WorkItem> work = new List<WorkItem>();
 
-                IsLocked(true);
-                IsWaitCursor(true);
-                DoWork(work, onCompleting);
+            //    work.Add(factory.OpenConnection());
+            //    work.AddRange(BusinessData.ApplicationData.HelpSubjects.Save(factory, current));
 
-                void onCompleting(RunWorkerCompletedEventArgs args)
-                {
-                    IsWaitCursor(false);
+            //    IsLocked(true);
+            //    IsWaitCursor(true);
+            //    DoWork(work, onCompleting);
 
-                    if (args.Error is null)
-                    {
-                        current.AcceptChanges();
-                        IsLocked(false);
-                    }
-                }
-            }
+            //    void onCompleting(RunWorkerCompletedEventArgs args)
+            //    {
+            //        IsWaitCursor(false);
+
+            //        if (args.Error is null)
+            //        {
+            //            current.AcceptChanges();
+            //            IsLocked(false);
+            //        }
+            //    }
+            //}
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current
-                && current.NameSpace is String
-                && current.NameSpace != Settings.Default.DefaultSubject) // Cannot Delete the Default Subject
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
+            formData.RemoveSubject();
+            formData.Save(OnComplete);
 
-                current.Remove();
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
 
-                work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.ApplicationData.HelpSubjects.Save(factory, current));
+        private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        {
 
-                IsLocked(true);
-                IsWaitCursor(true);
-                DoWork(work, onCompleting);
-
-                void onCompleting(RunWorkerCompletedEventArgs args)
-                {
-                    IsWaitCursor(false);
-
-                    if (args.Error is null)
-                    { IsLocked(false); }
-                }
-            }
         }
     }
 

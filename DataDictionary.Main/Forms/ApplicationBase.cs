@@ -80,143 +80,57 @@ namespace DataDictionary.Main.Forms
         }
 
         #region Open Form
-
         /// <summary>
-        /// Default Activate, does not open any forms.
+        /// Looks for the Target Form already open that return true for the condition passed.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
         /// </summary>
-        /// <param name="data"></param>
-        protected void Activate(Object data)
-        { }
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <param name="isOpen"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<TForm> constructor, Func<TForm, Boolean>? isOpen)
+            where TForm : Form
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.OfType<TForm>().FirstOrDefault(w => isOpen is null || isOpen(w)) is TForm existingForm)
+            { existingForm.Activate(); return existingForm; }
+            { return Activate(constructor()); }
+        }
 
         /// <summary>
-        /// Looks for the Target Form already open. If it is open, just activate it. Otherwise, show/activate the form.
+        /// Looks for the Target Form already open.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <param name="constructor"></param>
         /// <returns></returns>
         protected virtual TForm Activate<TForm>(Func<TForm> constructor)
-            where TForm : ApplicationBase
+            where TForm : Form
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w =>
-                w is TForm targetForm) is ApplicationBase existingForm)
-            {
-                existingForm.Activate();
-                return (TForm)existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor();
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
+            if (parent.MdiChildren.OfType<TForm>().FirstOrDefault() is TForm existingForm)
+            { existingForm.Activate(); return existingForm; }
+            else { return Activate(constructor()); }
         }
 
         /// <summary>
-        /// Looks for the Target Form already open with the specified BindingTable.
-        /// If it is open, just activate it. Otherwise, show/activate the form.
+        /// Activates the Form directly.
+        /// Does not check if it already exists.
         /// </summary>
         /// <typeparam name="TForm"></typeparam>
         /// <param name="constructor"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
-        protected virtual TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
-            where TForm : ApplicationBase
+        protected virtual TForm Activate<TForm>(TForm constructor)
+            where TForm : Form
         {
             Form parent = MdiParent ?? this;
-
-            if (parent.MdiChildren.FirstOrDefault(w =>
-                w is TForm targetForm &&
-                targetForm is IApplicationDataForm dataForm &&
-                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
-            {
-                existingForm.Activate();
-                return (TForm)existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
+            constructor.MdiParent = parent;
+            constructor.Show();
+            return constructor;
         }
 
-        /// <summary>
-        /// Looks for the Target Form already open with the specified BindingTableRow.
-        /// If it is open, just activate it. Otherwise, show/activate the form.
-        /// </summary>
-        /// <typeparam name="TForm"></typeparam>
-        /// <param name="constructor"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
-            where TForm : ApplicationBase
-        {
-            Form parent = MdiParent ?? this;
-
-            if (parent.MdiChildren.FirstOrDefault(w =>
-                w is TForm targetForm &&
-                targetForm is IApplicationDataForm dataForm &&
-                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
-            {
-                existingForm.Activate();
-                return (TForm)existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
-        }
-
-        protected virtual TForm Activate<TForm>(Func<IBindingData, TForm> constructor, IBindingData data)
-            where TForm : ApplicationBase
-        {
-            Form parent = MdiParent ?? this;
-
-            if (parent.MdiChildren.FirstOrDefault(w =>
-                w is TForm targetForm &&
-                targetForm is IApplicationDataForm dataForm &&
-                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
-            {
-                existingForm.Activate();
-                return (TForm)existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
-        }
-
-        protected virtual TForm Activate<TForm>(Func<IBindingList, TForm> constructor, IBindingList data)
-            where TForm : ApplicationBase
-        {
-            Form parent = MdiParent ?? this;
-
-            if (parent.MdiChildren.FirstOrDefault(w =>
-                w is TForm targetForm &&
-                targetForm is IApplicationDataForm dataForm &&
-                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
-            {
-                existingForm.Activate();
-                return (TForm)existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.MdiParent = parent;
-                newForm.Show();
-                return newForm;
-            }
-        }
         #endregion
 
         /// <summary>
@@ -244,7 +158,7 @@ namespace DataDictionary.Main.Forms
 
             String ToToolTipText(Control source)
             {
-                HelpSubjectIndexPath key = source.ToNameSpaceKey();
+                HelpSubjectIndexPath key = source.ToHelpSubjectPath();
                 if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue item
                     && item.HelpToolTip is String toolTip)
                 { return toolTip; }
@@ -260,10 +174,16 @@ namespace DataDictionary.Main.Forms
         /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
         protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
+            Boolean isLocked = IsLocked();
+            Boolean isWait = IsWaitCursor();
+            IsLocked(true);
+            IsWaitCursor(true);
             Worker.Enqueue(work, completing);
 
             void completing(RunWorkerCompletedEventArgs result)
             {
+                if (result.Error is null) { IsLocked(isLocked); }
+                IsWaitCursor(isWait);
                 if (result.Error is not null) { Program.ShowException(result.Error); }
                 if (onCompleting is not null) { onCompleting(result); }
             }
@@ -275,15 +195,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="work"></param>
         /// <param name="onCompleting"></param>
         protected void DoWork(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
-        {
-            Worker.Enqueue(work, completing);
-
-            void completing(RunWorkerCompletedEventArgs result)
-            {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result); }
-            }
-        }
+        { DoWork(new List<WorkItem>() { work }, onCompleting); }
 
         /// <summary>
         /// Set and returns the Locked state of the form.
@@ -303,7 +215,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            return this.Controls.Cast<Control>().Any(w => w.Enabled);
+            return !this.Controls.Cast<Control>().Any(w => w.Enabled);
         }
 
         /// <summary>
@@ -323,7 +235,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
+            return !this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
         /// <summary>
@@ -407,6 +319,7 @@ namespace DataDictionary.Main.Forms
         /// This method call the UnbindData of all forms EXCEPT the form that sent the message.
         /// </summary>
         /// <param name="message"></param>
+        [Obsolete("Not Used", true)]
         protected virtual void HandleMessage(DoUnbindData message)
         { if (this is IApplicationDataBind form) { form.UnbindData(); } }
 
@@ -415,6 +328,7 @@ namespace DataDictionary.Main.Forms
         /// This method calls the BindData of all forms EXCEPT the form that sent the message.
         /// </summary>
         /// <param name="message"></param>
+        [Obsolete("Not Used", true)]
         protected virtual void HandleMessage(DoBindData message)
         { if (this is IApplicationDataBind form) { form.BindData(); } }
 

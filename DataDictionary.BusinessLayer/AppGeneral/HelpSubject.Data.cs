@@ -4,7 +4,6 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppGeneral
@@ -17,8 +16,15 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         IBindingData<HelpSubjectValue>,
         ILoadData, ILoadData<IHelpSubjectIndex>,
         ISaveData, ISaveData<IHelpSubjectIndex>,
-        ITemporalData
-    { }
+        IGetTemporal
+    {
+        /// <summary>
+        /// Returns a new IHelpSubjectData.
+        /// </summary>
+        /// <returns></returns>
+        public static IHelpSubjectData Create()
+        { return new HelpSubjectData(); }
+    }
 
     /// <summary>
     /// Wrapper Class for Application Help.
@@ -62,7 +68,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public ITemporalView GetTemporal()
+        public ITemporalData GetTemporal()
         {
             return new TemporalData<HelpSubjectData, HelpSubjectValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data) };

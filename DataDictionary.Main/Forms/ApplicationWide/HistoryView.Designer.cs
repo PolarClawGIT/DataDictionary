@@ -28,25 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel historyLayout;
             GroupBox historySummaryGroup;
             TableLayoutPanel historyDetailLayout;
             GroupBox modificationsGroup;
-            titleData = new Controls.TextBoxData();
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
             isInsertedData = new CheckBox();
             isDeleteData = new CheckBox();
             isUpdatedData = new CheckBox();
             isCurrentData = new CheckBox();
-            createdByData = new Controls.TextBoxData();
-            removedOnData = new Controls.TextBoxData();
-            createdOnDate = new Controls.TextBoxData();
-            removedByData = new Controls.TextBoxData();
+            createdByData = new DataDictionary.Main.Controls.TextBoxData();
+            removedOnData = new DataDictionary.Main.Controls.TextBoxData();
+            createdOnDate = new DataDictionary.Main.Controls.TextBoxData();
+            removedByData = new DataDictionary.Main.Controls.TextBoxData();
             historyModificationData = new ListView();
             historyModificationColumn = new ColumnHeader();
             historyCreatedOnColumn = new ColumnHeader();
             historyValuesData = new ListView();
             historyTitleColumn = new ColumnHeader();
             historyLastModificationColumn = new ColumnHeader();
+            bindingHistory = new BindingSource(components);
             historyLayout = new TableLayoutPanel();
             historySummaryGroup = new GroupBox();
             historyDetailLayout = new TableLayoutPanel();
@@ -55,6 +57,7 @@
             historySummaryGroup.SuspendLayout();
             historyDetailLayout.SuspendLayout();
             modificationsGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingHistory).BeginInit();
             SuspendLayout();
             // 
             // historyLayout
@@ -71,7 +74,7 @@
             historyLayout.RowCount = 2;
             historyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             historyLayout.RowStyles.Add(new RowStyle());
-            historyLayout.Size = new Size(623, 515);
+            historyLayout.Size = new Size(730, 515);
             historyLayout.TabIndex = 4;
             // 
             // historySummaryGroup
@@ -80,9 +83,9 @@
             historySummaryGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             historySummaryGroup.Controls.Add(historyDetailLayout);
             historySummaryGroup.Dock = DockStyle.Fill;
-            historySummaryGroup.Location = new Point(314, 290);
+            historySummaryGroup.Location = new Point(368, 290);
             historySummaryGroup.Name = "historySummaryGroup";
-            historySummaryGroup.Size = new Size(306, 222);
+            historySummaryGroup.Size = new Size(359, 222);
             historySummaryGroup.TabIndex = 2;
             historySummaryGroup.TabStop = false;
             historySummaryGroup.Text = "Summary";
@@ -93,7 +96,7 @@
             historyDetailLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             historyDetailLayout.ColumnCount = 2;
             historyDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            historyDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
+            historyDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170F));
             historyDetailLayout.Controls.Add(titleData, 0, 0);
             historyDetailLayout.Controls.Add(isInsertedData, 0, 1);
             historyDetailLayout.Controls.Add(isDeleteData, 1, 1);
@@ -112,7 +115,7 @@
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
             historyDetailLayout.RowStyles.Add(new RowStyle());
-            historyDetailLayout.Size = new Size(300, 200);
+            historyDetailLayout.Size = new Size(353, 200);
             historyDetailLayout.TabIndex = 0;
             // 
             // titleData
@@ -125,7 +128,7 @@
             titleData.Multiline = false;
             titleData.Name = "titleData";
             titleData.ReadOnly = true;
-            titleData.Size = new Size(294, 44);
+            titleData.Size = new Size(347, 44);
             titleData.TabIndex = 0;
             titleData.WordWrap = true;
             // 
@@ -144,7 +147,7 @@
             // 
             isDeleteData.AutoSize = true;
             isDeleteData.Enabled = false;
-            isDeleteData.Location = new Point(153, 53);
+            isDeleteData.Location = new Point(186, 53);
             isDeleteData.Name = "isDeleteData";
             isDeleteData.Size = new Size(77, 19);
             isDeleteData.TabIndex = 7;
@@ -166,7 +169,7 @@
             // 
             isCurrentData.AutoSize = true;
             isCurrentData.Enabled = false;
-            isCurrentData.Location = new Point(153, 78);
+            isCurrentData.Location = new Point(186, 78);
             isCurrentData.Name = "isCurrentData";
             isCurrentData.Size = new Size(77, 19);
             isCurrentData.TabIndex = 8;
@@ -182,7 +185,7 @@
             createdByData.Multiline = false;
             createdByData.Name = "createdByData";
             createdByData.ReadOnly = true;
-            createdByData.Size = new Size(144, 44);
+            createdByData.Size = new Size(177, 44);
             createdByData.TabIndex = 3;
             createdByData.WordWrap = true;
             // 
@@ -191,11 +194,11 @@
             removedOnData.AutoSize = true;
             removedOnData.Dock = DockStyle.Fill;
             removedOnData.HeaderText = "Removed On";
-            removedOnData.Location = new Point(153, 153);
+            removedOnData.Location = new Point(186, 153);
             removedOnData.Multiline = false;
             removedOnData.Name = "removedOnData";
             removedOnData.ReadOnly = true;
-            removedOnData.Size = new Size(144, 44);
+            removedOnData.Size = new Size(164, 44);
             removedOnData.TabIndex = 9;
             removedOnData.WordWrap = true;
             // 
@@ -204,11 +207,11 @@
             createdOnDate.AutoSize = true;
             createdOnDate.Dock = DockStyle.Fill;
             createdOnDate.HeaderText = "Created On";
-            createdOnDate.Location = new Point(153, 103);
+            createdOnDate.Location = new Point(186, 103);
             createdOnDate.Multiline = false;
             createdOnDate.Name = "createdOnDate";
             createdOnDate.ReadOnly = true;
-            createdOnDate.Size = new Size(144, 44);
+            createdOnDate.Size = new Size(164, 44);
             createdOnDate.TabIndex = 4;
             createdOnDate.WordWrap = true;
             // 
@@ -221,7 +224,7 @@
             removedByData.Multiline = false;
             removedByData.Name = "removedByData";
             removedByData.ReadOnly = true;
-            removedByData.Size = new Size(144, 44);
+            removedByData.Size = new Size(177, 44);
             removedByData.TabIndex = 10;
             removedByData.WordWrap = true;
             // 
@@ -229,9 +232,9 @@
             // 
             modificationsGroup.Controls.Add(historyModificationData);
             modificationsGroup.Dock = DockStyle.Fill;
-            modificationsGroup.Location = new Point(314, 3);
+            modificationsGroup.Location = new Point(368, 3);
             modificationsGroup.Name = "modificationsGroup";
-            modificationsGroup.Size = new Size(306, 281);
+            modificationsGroup.Size = new Size(359, 281);
             modificationsGroup.TabIndex = 0;
             modificationsGroup.TabStop = false;
             modificationsGroup.Text = "Modifications";
@@ -243,7 +246,7 @@
             historyModificationData.Location = new Point(3, 19);
             historyModificationData.MultiSelect = false;
             historyModificationData.Name = "historyModificationData";
-            historyModificationData.Size = new Size(300, 259);
+            historyModificationData.Size = new Size(353, 259);
             historyModificationData.TabIndex = 0;
             historyModificationData.UseCompatibleStateImageBehavior = false;
             historyModificationData.View = View.Details;
@@ -259,7 +262,7 @@
             // historyCreatedOnColumn
             // 
             historyCreatedOnColumn.Text = "Created On";
-            historyCreatedOnColumn.Width = 150;
+            historyCreatedOnColumn.Width = 200;
             // 
             // historyValuesData
             // 
@@ -269,7 +272,7 @@
             historyValuesData.MultiSelect = false;
             historyValuesData.Name = "historyValuesData";
             historyLayout.SetRowSpan(historyValuesData, 2);
-            historyValuesData.Size = new Size(305, 509);
+            historyValuesData.Size = new Size(359, 509);
             historyValuesData.TabIndex = 0;
             historyValuesData.UseCompatibleStateImageBehavior = false;
             historyValuesData.View = View.Details;
@@ -280,7 +283,7 @@
             // historyTitleColumn
             // 
             historyTitleColumn.Text = "Title/Name";
-            historyTitleColumn.Width = 175;
+            historyTitleColumn.Width = 220;
             // 
             // historyLastModificationColumn
             // 
@@ -291,7 +294,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 540);
+            ClientSize = new Size(730, 540);
             Controls.Add(historyLayout);
             Name = "HistoryView";
             Text = "HistoryView";
@@ -304,6 +307,7 @@
             historyDetailLayout.ResumeLayout(false);
             historyDetailLayout.PerformLayout();
             modificationsGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingHistory).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -324,5 +328,6 @@
         private Controls.TextBoxData createdOnDate;
         private Controls.TextBoxData removedOnData;
         private Controls.TextBoxData removedByData;
+        private BindingSource bindingHistory;
     }
 }

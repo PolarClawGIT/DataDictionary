@@ -1,33 +1,23 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
-using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
 {
     partial class HelpContent : ApplicationData
     {
-        Form? helpForForm; // Form that requested the Help on
+        FormBinding formData;
+        ContentTree formTree;
 
         public HelpContent() : base()
         {
             InitializeComponent();
             helpToolStripButton.Enabled = false;
-            helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
+            formData = new FormBinding(ref helpBinding);
+            formTree = new ContentTree(helpContentNavigation);
 
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
@@ -37,88 +27,58 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.Import,
                 CommandImageType.HistoryDatabase);
 
-            SetImages(helpContentNavigation);
+            formTree.SetImages();
 
             CommandButtons[CommandImageType.Add].Text = "Add new Help Subject (blank)";
             CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
             CommandButtons[CommandImageType.Import].IsEnabled = false;
             CommandButtons[CommandImageType.Import].Text = "Add new Help Subject using Form Data";
+
+            OpenSubject(Settings.Default.DefaultSubject);
         }
 
-        public HelpContent(String targetSubject) : this()
+        public void OpenSubject(String targetSubject)
         {
-            HelpSubjectIndexPath key = new HelpSubjectIndexPath(targetSubject);
-            HelpSubjectIndexPath defaultKey = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
+            formData.SetPosition(targetSubject);
 
-            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
-            {
-                if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                { helpBinding.Position = subjects.IndexOf(subject); }
-                else if (subjects.FirstOrDefault(w => defaultKey.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue defaultSubject)
-                { helpBinding.Position = subjects.IndexOf(defaultSubject); }
-                else { helpBinding.Position = 0; }
-            }
+            if (formData.TryGetSubject(out BindingSubject? current))
+            { formTree.SetNode(current); }
         }
 
-        public HelpContent(Form targetForm) : this()
+        public void OpenSubject(IHelpSubjectIndex helpSubject)
         {
-            OpenSubject(targetForm);
+            formData.SetPosition(helpSubject);
+
+            if (formData.TryGetSubject(out BindingSubject? current))
+            { formTree.SetNode(current); }
         }
 
         public void OpenSubject(Form targetForm)
         {
-            HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
-            HelpSubjectIndexPath defaultKey = new HelpSubjectIndexPath(Settings.Default.DefaultSubject);
+            formData.AddForm(targetForm);
+            formData.SetPosition(targetForm);
 
-            List<Control> values = targetForm.ToControlList()
-                .Where(w => !String.IsNullOrWhiteSpace(w.Name)
-                            && w is not Form
-                            && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
-                .OrderBy(o => o is not Form)
-                .ThenBy(o => o.ToNameSpaceKey())
-                .ToList();
-
-            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
-            {
-                if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
-                { helpBinding.Position = subjects.IndexOf(subject); }
-                else if (subjects.FirstOrDefault(w => defaultKey.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue defaultSubject)
-                { helpBinding.Position = subjects.IndexOf(defaultSubject); }
-                else { helpBinding.Position = 0; }
-
-                if (helpBinding.Current is HelpSubjectValue current
-                    && helpContentNodes.FirstOrDefault(w => w.Value.Equals(current)).Key is TreeNode selectedNode)
-                { selectedNode.TreeView.SelectedNode = selectedNode; }
-
-                helpForForm = targetForm;
-                CommandButtons[CommandImageType.Import].IsEnabled = true;
-            }
+            if (formData.TryGetSubject(out BindingSubject? current))
+            { formTree.SetNode(current); }
         }
 
         private void HelpContent_Load(object sender, EventArgs e)
         {
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
-            //helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
+            formData.SubjectsChanged += FormData_SubjectsChanged;
+            formTree.BuildTree(formData.HelpSubjects);
 
-            BindRtfHelpText();
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
-            BuildHelpTree();
-        }
+            if (formData.TryGetSubject(out BindingSubject? current))
+            { formTree.SetNode(current); }
 
-        private void BindRtfHelpText()
-        {
-            try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation)); }
-            catch (Exception) // Else it is not RTF, bind to the property 
+            void FormData_SubjectsChanged(Object? sender, EventArgs e)
             {
-                if (helpBinding.Current is HelpSubjectValue subject)
-                {
-                    helpTextData.Text = subject.HelpText ?? String.Empty;
-                    subject.HelpText = helpTextData.Rtf;
-                    subject.AcceptChanges();
-                }
+                formTree.BuildTree(formData.HelpSubjects);
 
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
+                if (formData.TryGetSubject(out BindingSubject? current))
+                { formTree.SetNode(current); }
             }
         }
 
@@ -126,268 +86,78 @@ namespace DataDictionary.Main.Forms.General
         {
             base.AddCommand_Click(sender, e);
 
-            if (helpBinding.AddNew() is HelpSubjectValue newValue)
-            { Activate((data) => new HelpSubject(newValue), newValue); }
+            HelpSubjectValue newValue = formData.NewSubject();
+            OpenSubjectForm();
         }
 
         protected override void ImportCommand_Click(Object? sender, EventArgs e)
         {
-            if (helpBinding.AddNew() is HelpSubjectValue newValue)
-            {
-                if (helpForForm is Form targetForm)
-                {
-                    newValue.HelpSubject = targetForm.ToNameSpaceKey().Member;
-                    newValue.NameSpace = targetForm.ToNameSpaceKey().MemberFullPath;
+            base.ImportCommand_Click(sender, e);
 
-                    Activate((data) => new HelpSubject(newValue, targetForm), newValue);
-                }
-                else { Activate((data) => new HelpSubject(newValue), newValue); }
-            }
-        }
+            if (formData.TryGetSubject(out BindingSubject? current)
+                && current.SubjectForm is not null)
+            { HelpSubjectValue newValue = formData.NewSubject(current); }
 
-        private void HelpBinding_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            HelpSubjectValue newItem = new HelpSubjectValue();
-            e.NewObject = newItem;
-        }
-
-        private void HelpBinding_ListChanged(object sender, ListChangedEventArgs e)
-        { // this fires many times.
-            BuildHelpTree();
+            OpenSubjectForm();
         }
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpSubjectValue current)
+            if (formData.TryGetSubject(out BindingSubject? current))
             {
-                if (helpForForm is Form targetForm
-                    && new HelpSubjectIndexPath(current).
-                        Group().
-                        Any(w => targetForm.ToNameSpaceKey().Equals(w)))
-                { Activate((data) => new HelpSubject(new HelpSubjectIndex(current), targetForm), current); }
-                else { Activate((data) => new HelpSubject(new HelpSubjectIndex(current)), current); }
+                if (current.SubjectIndex is null && current.SubjectForm is not null)
+                { HelpSubjectValue newValue = formData.NewSubject(current); }
             }
+
+            OpenSubjectForm();
         }
 
+        private void OpenSubjectForm()
+        {
+            if (formData.TryGetSubject(out BindingSubject? current))
+            {
+                if (current.SubjectIndex is not null && current.SubjectForm is null)
+                {
+                    Activate(
+                    () => new HelpSubject(current.SubjectIndex),
+                    (form) => form.IsOpenItem(current.SubjectIndex));
+                }
+                else if (current.SubjectIndex is not null && current.SubjectForm is not null)
+                {
+                    Activate(
+                    () => new HelpSubject(current.SubjectIndex, current.SubjectForm),
+                    (form) => form.IsOpenItem(current.SubjectIndex));
+                }
+                else
+                { throw new InvalidOperationException("Could not determine correct way to open Help Subject form"); }
+            }
+
+        }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
 
-            if (helpBinding.DataSource is ILoadHistoryData history)
+            Activate(() => new HistoryView(formData.GetTemporal())
             {
-                Form form = Activate(() =>
-                new HistoryView<HelpSubjectValue, HelpSubject>(ScopeType.ApplicationHelp, history)
-                { SelectedForm = (subject) => new HelpSubject(subject) });
-
-                if (history is IBindingTable table)
-                { form.Text = String.Format("History: {0}", table.BindingName); }
-            }
-        }
-
-        #region Help Content Tree
-        Dictionary<TreeNode, HelpSubjectValue> helpContentNodes = new Dictionary<TreeNode, HelpSubjectValue>();
-        enum helpContentImageIndex
-        {
-            HelpPage,
-            HelpGroup
-        }
-
-        static Dictionary<helpContentImageIndex, NavigationEnumeration> helpContentImageItems = new Dictionary<helpContentImageIndex, NavigationEnumeration>()
-        {
-            {helpContentImageIndex.HelpPage, NavigationEnumeration.Cast(ScopeType.ApplicationHelpPage) },
-            {helpContentImageIndex.HelpGroup, NavigationEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
-        };
-
-        void BuildHelpTree()
-        {
-            List<HelpSubjectIndex> expanded = new List<HelpSubjectIndex>();
-
-            expanded.AddRange(helpContentNodes.Where(w =>
-            (w.Key.IsExpanded
-            || (w.Key.Nodes.Count == 0
-                && w.Key.Parent is not null
-                && w.Key.Parent.IsExpanded))).
-                Select(s => new HelpSubjectIndex(s.Value)). // Get the HelpSubjectIndex
-                Distinct());
-
-            helpContentNavigation.Nodes.Clear();
-            helpContentNodes.Clear();
-
-            if (helpBinding.DataSource is IEnumerable<HelpSubjectValue> items)
-            { TreeGroup(helpContentNavigation.Nodes, items); }
-
-            void TreeGroup(TreeNodeCollection target, IEnumerable<HelpSubjectValue> source, String? groupLevel = null)
-            {
-                List<IGrouping<String, HelpSubjectValue>> grouping = source.
-                    OrderBy(o => o.NameSpace != Settings.Default.DefaultSubject). // Make About first in the list
-                    ThenBy(o => new HelpSubjectIndexPath(o)).
-                    GroupBy(g =>
-                    {
-                        if (String.IsNullOrWhiteSpace(g.NameSpace)) { return String.Empty; }
-                        else
-                        {
-                            String remaining;
-                            if (g.NameSpace is null) { remaining = string.Empty; }
-                            else if (String.IsNullOrWhiteSpace(groupLevel)) { remaining = g.NameSpace; }
-                            else { remaining = g.NameSpace.Replace(String.Format("{0}.", groupLevel), String.Empty); }
-
-                            if (remaining.IndexOf('.') > 0)
-                            { return remaining.Substring(0, remaining.IndexOf('.')); }
-                            else { return remaining; }
-                        }
-                    }).ToList();
-
-                TreeNodeCollection parent = target;
-
-                foreach (IGrouping<String, HelpSubjectValue> group in grouping)
+                OpenForm = (temoral) =>
                 {
-                    List<HelpSubjectValue> items = group.Where(w => w.NameSpace == groupLevel)
-                                                .OrderBy(o => o.NameSpace)
-                                                .ThenBy(o => o.HelpSubject)
-                                                .ToList();
-                    List<HelpSubjectValue> subItems = group.Except(items).ToList();
-
-                    if (items.Count == 1)
-                    {
-                        TreeNode newNode = CreateNode(items[0], helpContentImageIndex.HelpPage, parent);
-                        parent = newNode.Nodes;
-
-                        if (expanded.Any(w => w.Equals(items[0])))
-                        { newNode.ExpandParent(); }
-                    }
-                    else if (items.Count > 1)
-                    {
-                        TreeNode newNode = CreateNode(group.Key, helpContentImageIndex.HelpGroup, parent);
-
-                        foreach (HelpSubjectValue item in items)
-                        {
-                            TreeNode newChild = CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes);
-                            if (expanded.Any(w => w.Equals(item)))
-                            { newChild.ExpandParent(); }
-                        }
-                    }
-
-                    String level;
-                    if (String.IsNullOrWhiteSpace(groupLevel)) { level = group.Key; }
-                    else { level = String.Format("{0}.{1}", groupLevel, group.Key); }
-
-                    TreeGroup(parent, subItems, level);
+                    if (temoral.TryGetValue(out HelpSubjectValue? subjectValue))
+                    { return new HelpSubject(subjectValue, new TemporalIndex(temoral)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
                 }
-
-            }
-        }
-
-        private TreeNode CreateNode(HelpSubjectValue source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
-        {
-            TreeNode result = new TreeNode(source.HelpSubject);
-            result.ImageKey = helpContentImageItems[imageIndex].Name;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
-
-            if (parentNode is null)
-            { helpContentNavigation.Nodes.Add(result); }
-            else { parentNode.Add(result); }
-
-            helpContentNodes.Add(result, source);
-
-            if (helpBinding.Current is HelpSubjectValue current && current == source)
-            { helpContentNavigation.SelectedNode = result; }
-
-            source.PropertyChanged += Source_PropertyChanged;
-
-            return result;
-        }
-
-        private TreeNode CreateNode(String nodeText, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
-        {
-            TreeNode result = new TreeNode(nodeText);
-            result.ImageKey = helpContentImageItems[imageIndex].Name;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
-
-            if (parentNode is null)
-            { helpContentNavigation.Nodes.Add(result); }
-            else { parentNode.Add(result); }
-
-            return result;
-        }
-
-        private void RemoveNode(HelpSubjectValue source)
-        {
-            HelpSubjectIndex key = new HelpSubjectIndex(source);
-
-            KeyValuePair<TreeNode, HelpSubjectValue> currentValue = helpContentNodes.FirstOrDefault(w => key.Equals(w.Value));
-
-            if (currentValue.Key is TreeNode && currentValue.Key.Nodes.Count == 0)
-            {
-                helpContentNodes.Remove(currentValue.Key);
-                helpContentNavigation.Nodes.Remove(currentValue.Key);
-            }
-
-            if (currentValue.Key is TreeNode && currentValue.Key.Nodes.Count > 0)
-            {
-                TreeNodeCollection? parent = null;
-                if (currentValue.Key.Parent is not null)
-                { parent = currentValue.Key.Parent.Nodes; }
-
-                String nodeText = "(unknown)";
-                if (source.NameSpace is String)
-                { nodeText = source.NameSpace.Split('.').Last(); }
-
-                TreeNode newNode = CreateNode(nodeText, helpContentImageIndex.HelpGroup, parent);
-                helpContentNavigation.Nodes.Remove(currentValue.Key);
-                helpContentNodes.Remove(currentValue.Key);
-
-                foreach (TreeNode item in currentValue.Key.Nodes)
-                { newNode.Nodes.Add(item); }
-            }
-
-            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects && subjects.Where(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpSubjectValue subject)
-            { helpBinding.Position = subjects.IndexOf(subject); }
-        }
-
-        private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (sender is HelpSubjectValue item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
-            {
-                //TODO: Currently only updates the Subject title.
-                // Can it update the tree based on NameSpace?
-                // How do I delta the tree vs the NameSpace?
-
-                if (node.Text != item.HelpSubject)
-                { node.Text = item.HelpSubject; }
-            }
-        }
-
-        void SetImages(TreeView tree)
-        {
-            if (tree.ImageList is null)
-            { tree.ImageList = new ImageList(); }
-
-            foreach (var image in helpContentImageItems.Values)
-            { tree.ImageList.Images.Add(image.Name, image.GetImage()); }
+            });
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (helpContentNodes.ContainsKey(e.Node))
-            {
-                if (helpBinding.DataSource is IList<HelpSubjectValue> items && helpContentNodes[e.Node] is HelpSubjectValue target)
-                {
-                    if (items.Contains(target))
-                    { helpBinding.Position = items.IndexOf(target); }
-                }
-            }
+            if (formTree.GetSubject(e.Node, out BindingSubject? subject))
+            { formData.SetPosition(subject.Path); }
         }
 
         private void HelpContentNavigation_MouseDoubleClick(object sender, MouseEventArgs e)
         { OpenCommand_Click(sender, EventArgs.Empty); }
-
-        #endregion
-
-
-
-
     }
 }

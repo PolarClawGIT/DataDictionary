@@ -58,7 +58,6 @@ namespace DataDictionary.Main
             splashTimer.Enabled = true; // Start
             splashScreen.Show();
 
-            SendMessage(new DoUnbindData());
             IsLocked(true);
             Program.SetupApplicationData(DataLoadComplete);
 
@@ -88,7 +87,6 @@ namespace DataDictionary.Main
                 if (splashDone)
                 { this.Invoke(() => { splashScreen.Close(); }); }
 
-                SendMessage(new DoBindData());
             }
 
             // Handle Splash timer timed out.
@@ -117,11 +115,7 @@ namespace DataDictionary.Main
 
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
-            { Activate(() => new Forms.General.HelpContent(currentForm)); }
-            else { Activate(() => new Forms.General.HelpContent(Settings.Default.DefaultSubject)); }
-        }
+        {   Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent()); }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         { throw new NotImplementedException(); } // Not Used.
@@ -133,7 +127,7 @@ namespace DataDictionary.Main
         {
             if (ActiveMdiChild is Form currentForm)
             {
-                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent(currentForm));
+                Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent());
                 helpForm.OpenSubject(currentForm);
             }
         }
@@ -174,13 +168,6 @@ namespace DataDictionary.Main
         {
             if (!ReferenceEquals(this, message.ChildForm) && message.ChildForm.MdiParent is null)
             { message.ChildForm.MdiParent = this; }
-        }
-
-        protected override void HandleMessage(DoUnbindData message)
-        {
-            //TODO: can a different event handle this?
-            this.Controls[0].Focus();
-            base.HandleMessage(message);
         }
 
         protected override void HandleMessage(OnlineStatusChanged message)
@@ -224,7 +211,6 @@ namespace DataDictionary.Main
             {
                 FileInfo openFile = new FileInfo(openFileDialog.FileName);
 
-                SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
                 work.AddRange(BusinessData.ImportModel(openFile));
 
@@ -232,21 +218,20 @@ namespace DataDictionary.Main
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            {  }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (BusinessData.ModelFile is FileInfo file)
             {
-                SendMessage(new Messages.DoUnbindData());
                 DoWork(BusinessData.ExportModel(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            {  }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -272,12 +257,11 @@ namespace DataDictionary.Main
                 BusinessData.ModelFile = openFile;
                 saveToolStripMenuItem.Enabled = true;
 
-                SendMessage(new Messages.DoUnbindData());
                 DoWork(BusinessData.ExportModel(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            { }
 
         }
 
