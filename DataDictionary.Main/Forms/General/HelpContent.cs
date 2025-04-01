@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
@@ -24,15 +25,12 @@ namespace DataDictionary.Main.Forms.General
                 ScopeType.ApplicationHelp,
                 CommandImageType.Add,
                 CommandImageType.Open,
-                CommandImageType.Import,
                 CommandImageType.HistoryDatabase);
 
             formTree.SetImages();
 
-            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject (blank)";
+            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject";
             CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
-            CommandButtons[CommandImageType.Import].IsEnabled = false;
-            CommandButtons[CommandImageType.Import].Text = "Add new Help Subject using Form Data";
 
             OpenSubject(Settings.Default.DefaultSubject);
         }
@@ -56,10 +54,14 @@ namespace DataDictionary.Main.Forms.General
         public void OpenSubject(Form targetForm)
         {
             formData.AddForm(targetForm);
+            formData.SetForm(targetForm.ToHelpSubjectPath(), targetForm);
             formData.SetPosition(targetForm);
 
             if (formData.TryGetSubject(out BindingSubject? current))
-            { formTree.SetNode(current); }
+            {
+                formTree.BuildTree(formData.HelpSubjects);
+                formTree.SetNode(current);
+            }
         }
 
         private void HelpContent_Load(object sender, EventArgs e)
@@ -79,24 +81,20 @@ namespace DataDictionary.Main.Forms.General
 
                 if (formData.TryGetSubject(out BindingSubject? current))
                 { formTree.SetNode(current); }
+
+                CommandButtons[CommandImageType.Add].IsEnabled = formData.GetAuthorization();
             }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-
-            HelpSubjectValue newValue = formData.NewSubject();
-            OpenSubjectForm();
-        }
-
-        protected override void ImportCommand_Click(Object? sender, EventArgs e)
-        {
-            base.ImportCommand_Click(sender, e);
+            HelpSubjectValue newValue;
 
             if (formData.TryGetSubject(out BindingSubject? current)
                 && current.SubjectForm is not null)
-            { HelpSubjectValue newValue = formData.NewSubject(current); }
+            { newValue = formData.NewSubject(current); }
+            else { newValue = formData.NewSubject(); }
 
             OpenSubjectForm();
         }

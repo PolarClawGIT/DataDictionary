@@ -28,6 +28,13 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public HelpSubjectIndexPath(params String?[] source) : base(source)
         { }
 
+        /// <summary>
+        /// Constructor that build from the base PathIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public HelpSubjectIndexPath(PathIndex source) : base(source)
+        { }
+
         /// <inheritdoc/>
         public Boolean Equals(HelpSubjectIndexPath? other)
         { return other is IPathItem value && Equals(new PathIndex(value)); }
@@ -35,5 +42,6 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectIndexPath? other)
         { return other is IPathItem value && Equals(new PathIndex(value)); }
+
     }
 }

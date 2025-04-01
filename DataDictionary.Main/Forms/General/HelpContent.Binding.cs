@@ -81,9 +81,6 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
-        /// <summary>
-        ///  Helper class that helps manage the binding class and associated data.
-        /// </summary>
         class FormBinding
         {
             BindingSource bindingHelpSubject;
@@ -110,6 +107,7 @@ namespace DataDictionary.Main.Forms.General
                         or ListChangedType.ItemChanged
                         && SubjectsChanged is EventHandler handler)
                     {
+
                         subjects.Clear();
                         subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
 
@@ -128,12 +126,25 @@ namespace DataDictionary.Main.Forms.General
 
             public void AddForm(Form form)
             {
-                HelpSubjectIndexPath helpSubject = form.ToHelpSubjectPath();
+                HelpSubjectIndexPath key = form.ToHelpSubjectPath();
 
-                if (!subjects.Any(w => helpSubject.Equals(w.Path)))
+                if (!subjects.Any(w => key.Equals(w.Path)))
                 { subjects.Add(new BindingSubject(form)); }
+            }
 
-                foreach (BindingSubject item in subjects.Where(w => w.Path.ChildOf(helpSubject)))
+            public void SetForm(IHelpSubjectIndexPath helpPath, Form form)
+            {
+                HelpSubjectIndexPath key = new HelpSubjectIndexPath(helpPath);
+
+                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.Path) || w.Path.ChildOf(key)))
+                { item.SubjectForm = form; }
+            }
+
+            public void SetForm(IHelpSubjectIndex helpSubject, Form form)
+            {
+                HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.SubjectIndex)))
                 { item.SubjectForm = form; }
             }
 
@@ -144,7 +155,8 @@ namespace DataDictionary.Main.Forms.General
                 if (subjects.FirstOrDefault(w => key.Equals(w.SubjectIndex)) is BindingSubject value)
                 {
                     var x = subjects.IndexOf(value);
-                    bindingHelpSubject.Position = subjects.IndexOf(value); }
+                    bindingHelpSubject.Position = subjects.IndexOf(value);
+                }
             }
 
             public void SetPosition(HelpSubjectIndexPath helpSubject)
@@ -178,21 +190,27 @@ namespace DataDictionary.Main.Forms.General
 
             public HelpSubjectValue NewSubject(BindingSubject source)
             {
-                if (source.SubjectIndex is not null && subjectData.FirstOrDefault(w => source.SubjectIndex.Equals(w)) is HelpSubjectValue value)
-                { return value; } // Subject already exists, return it.
-
                 HelpSubjectValue result = new HelpSubjectValue();
 
                 if (source.SubjectForm is Form)
                 {
                     result.HelpSubject = String.Format("(new Help Subject: {0})", source.Path.Member);
-                    result.Path = source.Path;
+
+                    if (source.SubjectIndex is not null
+                        && subjectData.FirstOrDefault(
+                            w => source.SubjectIndex.Equals(w))
+                            is HelpSubjectValue value)
+                    { result.Path = new HelpSubjectIndexPath(value.Path.Merge(source.Path)); }
+                    else { result.Path = source.Path; }
+
                     source.SubjectIndex = new HelpSubjectIndex(result);
+
+                    subjectData.Add(result);
+                    SetForm(result, source.SubjectForm);
                 }
+                else { subjectData.Add(result); }
 
-                subjectData.Add(result);
                 SetPosition(result);
-
                 return result;
             }
 
@@ -217,6 +235,12 @@ namespace DataDictionary.Main.Forms.General
 
             public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
+
+            public Boolean GetAuthorization()
+            {
+                return BusinessData.Authorization.IsHelpAdmin
+                    || BusinessData.Authorization.IsHelpOwner;
+            }
         }
     }
 }
