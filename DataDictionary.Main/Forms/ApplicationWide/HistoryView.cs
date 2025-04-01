@@ -9,9 +9,6 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
-    /// <summary>
-    /// Layout of the History View form
-    /// </summary>
     partial class HistoryView : ApplicationData
     {
         ITemporalData formData = null!;
