@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -236,10 +237,24 @@ namespace DataDictionary.Main.Forms.General
             public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
 
-            public Boolean GetAuthorization()
+            public Boolean GetAuthorization(CommandImageType command)
             {
-                return BusinessData.Authorization.IsHelpAdmin
-                    || BusinessData.Authorization.IsHelpOwner;
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Browse: return true;
+                    case CommandImageType.Select: return true;
+                    case CommandImageType.Add:
+                        return BusinessData.Authorization.IsHelpAdmin
+                            || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.OpenDatabase: return true;
+                    case CommandImageType.SaveDatabase:
+                        return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.SecurityDatabase:
+                        return BusinessData.Authorization.IsSecurityAdmin;
+                    default:
+                        return false;
+                }
             }
         }
     }

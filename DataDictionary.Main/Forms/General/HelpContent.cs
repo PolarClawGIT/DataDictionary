@@ -25,6 +25,8 @@ namespace DataDictionary.Main.Forms.General
                 ScopeType.ApplicationHelp,
                 CommandImageType.Add,
                 CommandImageType.Open,
+                CommandImageType.OpenDatabase,
+                //CommandImageType.SaveDatabase,
                 CommandImageType.HistoryDatabase);
 
             formTree.SetImages();
@@ -82,7 +84,7 @@ namespace DataDictionary.Main.Forms.General
                 if (formData.TryGetSubject(out BindingSubject? current))
                 { formTree.SetNode(current); }
 
-                CommandButtons[CommandImageType.Add].IsEnabled = formData.GetAuthorization();
+                SetAuthorization(formData.GetAuthorization);
             }
         }
 
@@ -110,6 +112,13 @@ namespace DataDictionary.Main.Forms.General
             }
 
             OpenSubjectForm();
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+
+            throw new NotImplementedException();
         }
 
         private void OpenSubjectForm()
