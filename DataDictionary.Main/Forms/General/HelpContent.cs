@@ -5,6 +5,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -17,7 +18,7 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
             helpToolStripButton.Enabled = false;
-            formData = new FormBinding(ref helpBinding);
+            formData = new FormBinding(ref helpBinding) { DoWork = base.DoWork };
             formTree = new ContentTree(helpContentNavigation);
 
             SetIcon(ScopeType.ApplicationHelp);
@@ -118,8 +119,12 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            throw new NotImplementedException();
+            formData.Load(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { formTree.BuildTree(formData.HelpSubjects); }
         }
+
 
         private void OpenSubjectForm()
         {

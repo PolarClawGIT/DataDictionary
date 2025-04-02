@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -90,11 +92,19 @@ namespace DataDictionary.Main.Forms.General
             BindingList<BindingSubject> subjects = new BindingList<BindingSubject>();
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
 
+            static Dictionary<HelpSubjectIndexPath, Form> subjectForms = new Dictionary<HelpSubjectIndexPath, Form>();
+
+            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+
             public FormBinding(ref BindingSource helpBinding)
             {
                 bindingHelpSubject = helpBinding;
                 subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
                 bindingHelpSubject.DataSource = subjects;
+
+                // restore the subject forms already known.
+                foreach (var item in subjectForms)
+                { SetForm(item.Key, item.Value); }
 
                 subjectData.ListChanged += SubjectData_ListChanged;
 
@@ -108,9 +118,12 @@ namespace DataDictionary.Main.Forms.General
                         or ListChangedType.ItemChanged
                         && SubjectsChanged is EventHandler handler)
                     {
-
                         subjects.Clear();
                         subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
+
+                        // restore the subject forms already known.
+                        foreach (var item in subjectForms)
+                        { SetForm(item.Key, item.Value); }
 
                         if (e.NewIndex >= 0)
                         { SetPosition(subjectData[e.NewIndex]); }
@@ -128,6 +141,10 @@ namespace DataDictionary.Main.Forms.General
             public void AddForm(Form form)
             {
                 HelpSubjectIndexPath key = form.ToHelpSubjectPath();
+
+                if (subjectForms.ContainsKey(key))
+                { subjectForms[key] = form; }
+                else { subjectForms.Add(key, form); }
 
                 if (!subjects.Any(w => key.Equals(w.Path)))
                 { subjects.Add(new BindingSubject(form)); }
@@ -255,6 +272,21 @@ namespace DataDictionary.Main.Forms.General
                     default:
                         return false;
                 }
+            }
+
+            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(subjectData.Delete());
+                work.AddRange(subjectData.Load(factory));
+
+                DoWork(work, onCompleteing);
+
+                void onCompleteing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
             }
         }
     }
