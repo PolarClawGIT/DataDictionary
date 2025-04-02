@@ -17,6 +17,8 @@ namespace DataDictionary.Main.Forms.General
             BindingSource bindingHelpSubject;
 
             public BindingView<HelpSubjectValue> HelpSubjects { get; private set; }
+            public BindingList<ControlItem> HelpControls { get; } = new BindingList<ControlItem>();
+
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
             HelpSubjectIndex subjectIndex = new HelpSubjectIndex();
             TemporalIndex? temporalIndex = null;
@@ -99,7 +101,6 @@ namespace DataDictionary.Main.Forms.General
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
-
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {

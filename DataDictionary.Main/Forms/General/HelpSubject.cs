@@ -11,7 +11,6 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpSubject : ApplicationData, IApplicationDataForm
     {
-        BindingList<ControlItem> controlList = new BindingList<ControlItem>();
         FormBinding formData;
         Boolean needsData = false;
 
@@ -49,43 +48,27 @@ namespace DataDictionary.Main.Forms.General
 
         public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject)
         {
-            List<Control> values = targetForm.ToControlList()
-                .Where(w => !String.IsNullOrWhiteSpace(w.Name)
-                            && w is not Form
-                            && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
-                .OrderBy(o => o is not Form)
-                .ThenBy(o => o.ToHelpSubjectPath())
-                .ToList();
-
-            // Add Group level for form to ListView
-            ControlItem baseForm = new ControlItem(targetForm);
-            ListViewItem baseItem = new ListViewItem(baseForm.Path.Member);
-
-            baseForm.ListItem = baseItem;
-            controlList.Add(baseForm);
-            controlData.Items.Add(baseItem);
-            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.Path.Format("{0}"));
+            formData.HelpControls.Load(targetForm, (control) => new ControlItem(control));
 
             // Add all the forms controls to ListView
-            foreach (Control item in values)
+            foreach (var item in formData.HelpControls)
             {
-                ControlItem newControl = new ControlItem(item);
-                String itemName = newControl.Path.Format("{0}")
-                    .Replace(String.Format("{0}.", baseForm.Path.Format("{0}")), String.Empty);
-                ListViewItem newItem = new ListViewItem(itemName);
-                newItem.SubItems.Add(newControl.ControlType);
-                newControl.ListItem = newItem;
+                if (item.IsForm)
+                { controlsGroup.Text = String.Format("Controls for: {0}", item.Path.Format("{0}")); }
+
+                ListViewItem newItem = new ListViewItem(item.ControlName);
+                newItem.SubItems.Add(item.ControlType);
+                item.ListItem = newItem;
 
                 if (formData.TryGetSubject(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
 
-                    if (helpPath.Equals(newControl.Path))
+                    if (helpPath.Equals(item.Path))
                     { newItem.Checked = true; }
                 }
 
-                controlList.Add(newControl);
                 controlData.Items.Add(newItem);
             }
 
@@ -145,7 +128,7 @@ namespace DataDictionary.Main.Forms.General
                 currentItem = e.Item;
 
                 foreach (ControlItem item in
-                controlList.Where(w => w.ListItem != e.Item
+                formData.HelpControls.Where(w => w.ListItem != e.Item
                     && w.ListItem is not null
                     && w.ListItem.Index >= 0
                     && w.ListItem.Checked))
@@ -157,7 +140,7 @@ namespace DataDictionary.Main.Forms.General
                 if (formData.TryGetSubject(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
-                    if (controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
+                    if (formData.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
                         && !key.Equals(selected.Path))
                     { current.NameSpace = selected.Path.MemberFullPath; }
                 }
@@ -171,7 +154,7 @@ namespace DataDictionary.Main.Forms.General
             base.AddCommand_Click(sender, e);
 
             HelpSubjectValue newSubject = formData.NewSubject();
-            if (controlList.Count > 0 && controlList.FirstOrDefault(w => w.IsForm) is ControlItem item)
+            if (formData.HelpControls.Count > 0 && formData.HelpControls.FirstOrDefault(w => w.IsForm) is ControlItem item)
             {
                 newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
                 newSubject.Path = item.Path;
