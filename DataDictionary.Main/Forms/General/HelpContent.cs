@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.General
                 CommandImageType.Add,
                 CommandImageType.Open,
                 CommandImageType.OpenDatabase,
-                //CommandImageType.SaveDatabase,
+                CommandImageType.SaveDatabase,
                 CommandImageType.HistoryDatabase);
 
             formTree.SetImages();
@@ -125,6 +125,15 @@ namespace DataDictionary.Main.Forms.General
             { formTree.BuildTree(formData.HelpSubjects); }
         }
 
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+
+            formData.Save(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { formTree.BuildTree(formData.HelpSubjects); }
+        }
 
         private void OpenSubjectForm()
         {

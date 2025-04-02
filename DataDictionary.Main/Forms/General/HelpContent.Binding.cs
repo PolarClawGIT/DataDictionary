@@ -286,6 +286,29 @@ namespace DataDictionary.Main.Forms.General
                 DoWork(work, onCompleteing);
 
                 void onCompleteing(RunWorkerCompletedEventArgs args)
+                {
+                    subjects.Clear();
+                    subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
+
+                    // restore the subject forms already known.
+                    foreach (var item in subjectForms)
+                    { SetForm(item.Key, item.Value); }
+
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(subjectData.Save(factory));
+
+                DoWork(work, onCompleteing);
+
+                void onCompleteing(RunWorkerCompletedEventArgs args)
                 { if (onComplete is not null) { onComplete(args); } }
             }
         }
