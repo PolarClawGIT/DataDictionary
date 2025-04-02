@@ -38,15 +38,17 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
-        public override string ToString()
-        { return Path.MemberFullPath; }
-    }
-
-    static class HelpControlExtension
-    {
-        public static void Load<THelpControl>(this IList<THelpControl> target, Form source, Func<Control, THelpControl> constructor)
-            where THelpControl: HelpControlValue
+        public HelpControlValue(HelpControlValue source)
         {
+            ControlType = source.ControlType;
+            Path = source.Path;
+            IsForm = source.IsForm;
+        }
+
+        public static IEnumerable<HelpControlValue> Create(Form source)
+        {
+            List<HelpControlValue> result = new List<HelpControlValue>();
+
             List<Control> values = source.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
                             && w is not Form
@@ -60,14 +62,19 @@ namespace DataDictionary.Main.Forms.General
             { controlType = baseType.Name; }
             else { controlType = source.GetType().Name; }
 
-            THelpControl baseForm = constructor(source);
-            target.Add(baseForm);
+            HelpControlValue baseForm = new HelpControlValue(source);
+            result.Add(baseForm);
 
             foreach (Control item in values)
             {
-                THelpControl newControl = constructor(item);
-                target.Add(newControl);
+                HelpControlValue newControl = new HelpControlValue(item);
+                result.Add(newControl);
             }
+
+            return result;
         }
+
+        public override string ToString()
+        { return Path.MemberFullPath; }
     }
 }

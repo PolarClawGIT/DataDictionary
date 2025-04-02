@@ -58,7 +58,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.AddForm(targetForm);
             formData.SetForm(targetForm.ToHelpSubjectPath(), targetForm);
-            formData.SetPosition(targetForm);
+            formData.SetPosition(targetForm.ToHelpSubjectPath());
 
             if (formData.TryGetSubject(out BindingSubject? current))
             {
@@ -148,7 +148,7 @@ namespace DataDictionary.Main.Forms.General
                 else if (current.SubjectIndex is not null && current.SubjectForm is not null)
                 {
                     Activate(
-                    () => new HelpSubject(current.SubjectIndex, current.SubjectForm),
+                    () => new HelpSubject(current.SubjectIndex, current.SubjectControls),
                     (form) => form.IsOpenItem(current.SubjectIndex));
                 }
                 else

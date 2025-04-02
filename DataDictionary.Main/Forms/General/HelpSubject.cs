@@ -6,6 +6,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -46,9 +47,9 @@ namespace DataDictionary.Main.Forms.General
         public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
         { formData.SetIndex(helpSubject, temporal); needsData = true; }
 
-        public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject)
+        public HelpSubject(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> source) : this(helpSubject)
         {
-            formData.HelpControls.Load(targetForm, (control) => new ControlItem(control));
+            formData.HelpControls.AddRange(ControlValue.Create(source));
 
             // Add all the forms controls to ListView
             foreach (var item in formData.HelpControls)
@@ -74,6 +75,9 @@ namespace DataDictionary.Main.Forms.General
 
             controlData.Enabled = true;
         }
+
+        public HelpSubject(IHelpSubjectIndex helpSubject, Form targetForm) : this(helpSubject, HelpControlValue.Create(targetForm))
+        { }
 
         private void HelpTextData_Load(object sender, EventArgs e)
         {
@@ -127,7 +131,7 @@ namespace DataDictionary.Main.Forms.General
                 // This prevents the recursive call fired when the Check state is set by the following loop.
                 currentItem = e.Item;
 
-                foreach (ControlItem item in
+                foreach (ControlValue item in
                 formData.HelpControls.Where(w => w.ListItem != e.Item
                     && w.ListItem is not null
                     && w.ListItem.Index >= 0
@@ -140,7 +144,7 @@ namespace DataDictionary.Main.Forms.General
                 if (formData.TryGetSubject(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
-                    if (formData.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
+                    if (formData.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlValue selected
                         && !key.Equals(selected.Path))
                     { current.NameSpace = selected.Path.MemberFullPath; }
                 }
@@ -154,7 +158,7 @@ namespace DataDictionary.Main.Forms.General
             base.AddCommand_Click(sender, e);
 
             HelpSubjectValue newSubject = formData.NewSubject();
-            if (formData.HelpControls.Count > 0 && formData.HelpControls.FirstOrDefault(w => w.IsForm) is ControlItem item)
+            if (formData.HelpControls.Count > 0 && formData.HelpControls.FirstOrDefault(w => w.IsForm) is ControlValue item)
             {
                 newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
                 newSubject.Path = item.Path;

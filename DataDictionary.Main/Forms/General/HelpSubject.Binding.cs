@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.General
             BindingSource bindingHelpSubject;
 
             public BindingView<HelpSubjectValue> HelpSubjects { get; private set; }
-            public BindingList<ControlItem> HelpControls { get; } = new BindingList<ControlItem>();
+            public BindingList<ControlValue> HelpControls { get; } = new BindingList<ControlValue>();
 
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
             HelpSubjectIndex subjectIndex = new HelpSubjectIndex();

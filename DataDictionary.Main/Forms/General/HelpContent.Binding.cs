@@ -25,13 +25,23 @@ namespace DataDictionary.Main.Forms.General
             public String Description { get; } = String.Empty;
             public String ToolTip { get; } = String.Empty;
             public HelpSubjectIndex? SubjectIndex { get; set; } = null;
-            public Form? SubjectForm { get; set; } = null;
+
+            public List<HelpControlValue> SubjectControls { get; } = new List<HelpControlValue>();
+            public HelpControlValue? SubjectForm
+            {
+                get
+                {
+                    if (SubjectControls.FirstOrDefault(w => w.IsForm) is HelpControlValue value)
+                    { return value; }
+                    else { return null; }
+                }
+            }
 
             public BindingSubject(Form form)
             {
                 Path = form.ToHelpSubjectPath();
                 Title = String.Format("(new Subject: {0})", Path.Member);
-                SubjectForm = form;
+                SubjectControls = HelpControlValue.Create(form).ToList();
             }
 
             public BindingSubject(HelpSubjectValue helpSubject)
@@ -41,6 +51,7 @@ namespace DataDictionary.Main.Forms.General
                 Description = helpSubject.HelpText ?? String.Empty;
                 ToolTip = helpSubject.HelpToolTip ?? String.Empty;
                 SubjectIndex = new HelpSubjectIndex(helpSubject);
+                SubjectControls = new List<HelpControlValue>();
 
                 helpSubject.PropertyChanged += PropertyChanged;
                 //helpSubject.RowStateChanged += RowStateChanged;
@@ -92,7 +103,7 @@ namespace DataDictionary.Main.Forms.General
             BindingList<BindingSubject> subjects = new BindingList<BindingSubject>();
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
 
-            static Dictionary<HelpSubjectIndexPath, Form> subjectForms = new Dictionary<HelpSubjectIndexPath, Form>();
+            static Dictionary<HelpSubjectIndexPath, List<HelpControlValue>> subjectForms = new Dictionary<HelpSubjectIndexPath, List<HelpControlValue>>();
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
@@ -143,27 +154,42 @@ namespace DataDictionary.Main.Forms.General
                 HelpSubjectIndexPath key = form.ToHelpSubjectPath();
 
                 if (subjectForms.ContainsKey(key))
-                { subjectForms[key] = form; }
-                else { subjectForms.Add(key, form); }
+                {
+                    subjectForms[key].Clear();
+                    subjectForms[key].AddRange(HelpControlValue.Create(form));
+                }
+                else { subjectForms.Add(key, HelpControlValue.Create(form).ToList()); }
 
                 if (!subjects.Any(w => key.Equals(w.Path)))
                 { subjects.Add(new BindingSubject(form)); }
             }
 
             public void SetForm(IHelpSubjectIndexPath helpPath, Form form)
+            { SetForm(helpPath, HelpControlValue.Create(form)); }
+
+            public void SetForm(IHelpSubjectIndex helpSubject, Form form)
+            {   SetForm(helpSubject, HelpControlValue.Create(form)); }
+
+            void SetForm(IHelpSubjectIndexPath helpPath, IEnumerable<HelpControlValue> controls)
             {
                 HelpSubjectIndexPath key = new HelpSubjectIndexPath(helpPath);
 
                 foreach (BindingSubject item in subjects.Where(w => key.Equals(w.Path) || w.Path.ChildOf(key)))
-                { item.SubjectForm = form; }
+                {
+                    item.SubjectControls.Clear();
+                    item.SubjectControls.AddRange(controls);
+                }
             }
 
-            public void SetForm(IHelpSubjectIndex helpSubject, Form form)
+            void SetForm(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> controls)
             {
                 HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
 
-                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.SubjectIndex)))
-                { item.SubjectForm = form; }
+                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.Path)))
+                {
+                    item.SubjectControls.Clear();
+                    item.SubjectControls.AddRange(controls);
+                }
             }
 
             public void SetPosition(IHelpSubjectIndex helpSubject)
@@ -171,10 +197,7 @@ namespace DataDictionary.Main.Forms.General
                 HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
 
                 if (subjects.FirstOrDefault(w => key.Equals(w.SubjectIndex)) is BindingSubject value)
-                {
-                    var x = subjects.IndexOf(value);
-                    bindingHelpSubject.Position = subjects.IndexOf(value);
-                }
+                { bindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(HelpSubjectIndexPath helpSubject)
@@ -186,15 +209,12 @@ namespace DataDictionary.Main.Forms.General
             public void SetPosition(String helpSubject)
             { SetPosition(new HelpSubjectIndexPath(helpSubject)); }
 
-            public void SetPosition(Form helpSubject)
-            { SetPosition(helpSubject.ToHelpSubjectPath()); }
-
             public void SetPosition(BindingSubject subject)
             {
                 if (subject.SubjectIndex is HelpSubjectIndex index)
                 { SetPosition(index); }
-                else if (subject.SubjectForm is Form form)
-                { SetPosition(form); }
+                else if (subject.SubjectForm is HelpControlValue form)
+                { SetPosition(form.Path); }
             }
 
             public HelpSubjectValue NewSubject()
@@ -210,7 +230,7 @@ namespace DataDictionary.Main.Forms.General
             {
                 HelpSubjectValue result = new HelpSubjectValue();
 
-                if (source.SubjectForm is Form)
+                if (source.SubjectForm is HelpControlValue)
                 {
                     result.HelpSubject = String.Format("(new Help Subject: {0})", source.Path.Member);
 
@@ -224,7 +244,7 @@ namespace DataDictionary.Main.Forms.General
                     source.SubjectIndex = new HelpSubjectIndex(result);
 
                     subjectData.Add(result);
-                    SetForm(result, source.SubjectForm);
+                    SetForm(result, source.SubjectControls);
                 }
                 else { subjectData.Add(result); }
 
