@@ -73,7 +73,7 @@ namespace DataDictionary.Main.Forms.General
             formTree.BuildTree(formData.HelpSubjects);
 
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
+            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
             if (formData.TryGetSubject(out BindingSubject? current))
             { formTree.SetNode(current); }

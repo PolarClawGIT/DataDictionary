@@ -52,7 +52,7 @@ namespace DataDictionary.Main.ProofOfConcept
 
         private void TextEditor_Load(object sender, EventArgs e)
         {
-            richTextBoxData.DataBindings.Add(new Binding(nameof(richTextBoxData.Rtf), richText, nameof(richText.DataValue), true, DataSourceUpdateMode.OnPropertyChanged));
+            richTextBoxData.DataBindings.Add(new Binding(nameof(richTextBoxData.RichText), richText, nameof(richText.DataValue), true, DataSourceUpdateMode.OnPropertyChanged));
             asRichTextCode.DataBindings.Add(new Binding(nameof(asRichTextCode.Text), richTextCode, nameof(richTextCode.DataValue)));
             asPlainText.DataBindings.Add(new Binding(nameof(asPlainText.Text), plainText, nameof(plainText.DataValue)));
             asHtml.DataBindings.Add(new Binding(nameof(asHtml.Text), htmlText, nameof(htmlText.DataValue)));
@@ -62,9 +62,9 @@ namespace DataDictionary.Main.ProofOfConcept
 
         private void RichTextControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            richTextCode.DataValue = richTextBoxData.Rtf??String.Empty;
+            richTextCode.DataValue = richTextBoxData.RichText??String.Empty;
             plainText.DataValue = richTextBoxData.Text;
-            htmlText.DataValue = ToHtml(richTextBoxData.Rtf??String.Empty);
+            htmlText.DataValue = ToHtml(richTextBoxData.RichText ?? String.Empty);
 
             htmlTextBoxData.DocumentText = htmlText.DataValue;
 

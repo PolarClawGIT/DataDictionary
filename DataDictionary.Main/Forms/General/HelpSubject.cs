@@ -94,27 +94,9 @@ namespace DataDictionary.Main.Forms.General
                 helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
                 helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
                 helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
 
                 SetAuthorization(formData.GetAuthorization);
-            }
-        }
-
-        [Obsolete()]
-        private void BindRtfHelpText()
-        {
-            try // If RTF, bind to the RTF property
-            { helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation)); }
-            catch (Exception) // Else it is not RTF, bind to the property 
-            {
-                if (helpBinding.Current is HelpSubjectValue subject)
-                {
-                    helpTextData.Text = subject.HelpText ?? String.Empty;
-                    subject.HelpText = helpTextData.Rtf;
-                    subject.AcceptChanges();
-                }
-
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
             }
         }
 

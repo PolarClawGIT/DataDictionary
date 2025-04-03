@@ -52,7 +52,6 @@
             richTextBoxData.Name = "richTextBoxData";
             richTextBoxData.ReadOnly = false;
             tableLayoutPanel1.SetRowSpan(richTextBoxData, 4);
-            richTextBoxData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             richTextBoxData.Size = new Size(314, 657);
             richTextBoxData.TabIndex = 0;
             // 

@@ -59,8 +59,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
             DefinitionNameList.Load(definitionData, values);
 
             definitionData.DataBindings.Add(new Binding(nameof(definitionData.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.Rtf), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionTextData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionSummaryData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
         }
 
         private void DefinitionData_SelectedIndexChanged(object sender, EventArgs e)
