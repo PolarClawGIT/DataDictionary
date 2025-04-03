@@ -284,6 +284,7 @@ namespace DataDictionary.Main.Forms.General
                     case CommandImageType.Add:
                         return BusinessData.Authorization.IsHelpAdmin
                             || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.Open: return true;
                     case CommandImageType.OpenDatabase: return true;
                     case CommandImageType.SaveDatabase:
                         return BusinessData.Authorization.IsHelpAdmin;
