@@ -1,8 +1,10 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -177,6 +179,29 @@ namespace DataDictionary.Main.Forms.General
                     bindingHelpSubject.RaiseListChangedEvents = false;
 
                     HelpSubjects.Remove(value);
+                }
+            }
+
+            public Boolean GetAuthorization(CommandImageType command)
+            {
+                Boolean isGrant = false;
+
+                if (TryGetSubject(out HelpSubjectValue? helpSubject))
+                {
+                    SecurableIndex securable = new HelpSubjectIndex(helpSubject);
+                    isGrant = BusinessData.Authorization.IsGrant(securable);
+                }
+
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.Delete: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
+                    default: return false;
                 }
             }
         }
