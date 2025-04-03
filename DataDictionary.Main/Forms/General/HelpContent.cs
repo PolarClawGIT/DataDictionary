@@ -118,11 +118,21 @@ namespace DataDictionary.Main.Forms.General
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            HelpSubjectValue? current = null;
+
+            if (formData.TryGetSubject(out HelpSubjectValue? helpSubject))
+            { current = helpSubject; }
 
             formData.Load(onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { formTree.BuildTree(formData.HelpSubjects); }
+            {
+                formTree.BuildTree(formData.HelpSubjects);
+
+                if (current is HelpSubjectValue)
+                { OpenSubject(current); }
+                else { OpenSubject(Settings.Default.DefaultSubject); }
+            }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
