@@ -310,5 +310,35 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return entity;
         }
+
+        public void Remove(IEntityIndex dataKey)
+        {
+            entityValues.Remove(dataKey);
+            aliasValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            subjectAreaValues.Remove(dataKey);
+        }
+
+        public void Remove(IModelIndex dataKey)
+        {
+            entityValues.Remove(dataKey);
+            aliasValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            subjectAreaValues.Remove(dataKey);
+        }
+
+        public void Clear()
+        {
+            entityValues.Clear();
+            aliasValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+            attributeValues.Clear();
+            subjectAreaValues.Clear();
+        }
     }
 }

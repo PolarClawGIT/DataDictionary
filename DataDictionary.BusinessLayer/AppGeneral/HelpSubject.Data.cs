@@ -73,5 +73,12 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             return new TemporalData<HelpSubjectData, HelpSubjectValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data) };
         }
+
+        /// <inheritdoc/>
+        /// <remarks>HelpSubject</remarks>
+        public void Remove(IHelpSubjectIndex dataKey)
+        { base.Remove(dataKey); }
+
+
     }
 }

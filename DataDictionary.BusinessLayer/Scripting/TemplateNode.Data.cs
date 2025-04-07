@@ -52,16 +52,26 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>TempateNode</remarks>
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Template Node", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Template Node", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TempateNode</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Template Node", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Template Node", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TempateNode</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

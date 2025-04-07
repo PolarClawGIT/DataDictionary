@@ -50,13 +50,16 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>PrincipalData</remarks>
         public IReadOnlyList<WorkItem> Delete(IPrincipalIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Principal", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Principal", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>PrincipalData</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Principal", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Principal", DoWork = () => { Clear(); } }.ToList(); }
 
-
+        /// <inheritdoc/>
+        /// <remarks>PrincipalData</remarks>
+        public void Remove(IPrincipalIndex dataKey)
+        { base.Remove(dataKey); }
     }
 }

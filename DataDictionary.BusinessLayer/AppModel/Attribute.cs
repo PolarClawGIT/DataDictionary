@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface representing Model Attribute data
     /// </summary>
     public interface IAttribute :
-        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>, IDeleteData<IAttributeIndex>,
+        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
@@ -69,8 +69,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <returns></returns>
         public static IAttribute Create()
         { return new Attribute(); }
-
-        void Remove(IAttributeIndex attribute);
     }
 
     class Attribute : IAttribute, IDataTableFile
@@ -319,6 +317,27 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues.Remove(key);
             definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            ModelIndex key = new ModelIndex(dataKey);
+            attributeValues.Remove(key);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
+            definitionValues.Remove(key);
+            subjectAreaValues.Remove(key);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            attributeValues.Clear();
+            aliasValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+            subjectAreaValues.Clear();
         }
     }
 }

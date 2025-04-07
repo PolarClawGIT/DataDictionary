@@ -48,12 +48,16 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>
         public IReadOnlyList<WorkItem> Delete(IRoleIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Role", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Role", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>RoleData</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Role", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Role", DoWork = () => { Clear(); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>RoleData</remarks>
+        public void Remove(IRoleIndex dataKey)
+        { base.Remove(dataKey); }
     }
 }

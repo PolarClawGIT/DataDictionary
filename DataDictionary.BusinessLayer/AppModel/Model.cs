@@ -244,5 +244,25 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return work;
         }
+
+        public void Remove(IModelIndex dataKey)
+        {
+            modelValues.Remove(dataKey);
+            subjectValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            entityValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+        }
+
+        public void Clear()
+        {
+            modelValues.Clear();
+            subjectValues.Clear();
+            attributeValues.Clear();
+            entityValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+        }
     }
 }

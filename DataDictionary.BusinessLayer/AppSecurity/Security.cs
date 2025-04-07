@@ -251,5 +251,36 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(permissionValues.Delete(dataKey));
             return work;
         }
+
+        /// <inheritdoc/>
+        public void Remove(IPrincipalIndex dataKey)
+        {
+            principalValues.Remove(dataKey);
+            membershipValues.Remove(dataKey);
+            ownerValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IRoleIndex dataKey)
+        {
+            membershipValues.Remove(dataKey);
+            permissionValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ISecurableIndex dataKey)
+        {
+            ownerValues.Remove(dataKey);
+            permissionValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            principalValues.Clear();
+            roleValues.Clear();
+            ownerValues.Clear();
+            membershipValues.Clear();
+        }
     }
 }

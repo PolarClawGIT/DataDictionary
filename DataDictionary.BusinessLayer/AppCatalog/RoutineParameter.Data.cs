@@ -70,5 +70,14 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogIndex dataKey)
         { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>RoutineParameter</remarks>
+        public void Remove(ICatalogIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>RoutineParameter</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

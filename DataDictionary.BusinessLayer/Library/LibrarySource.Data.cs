@@ -62,12 +62,21 @@ namespace DataDictionary.BusinessLayer.Library
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Delete(ILibrarySourceIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public void Remove(ILibrarySourceIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

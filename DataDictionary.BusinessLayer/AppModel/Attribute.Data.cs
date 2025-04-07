@@ -75,5 +75,15 @@ namespace DataDictionary.BusinessLayer.AppModel
             return new TemporalData<AttributeData, AttributeValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public void Remove(IAttributeIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

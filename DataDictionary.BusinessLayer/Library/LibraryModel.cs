@@ -210,6 +210,23 @@ namespace DataDictionary.BusinessLayer.Library
             return work;
         }
 
+        public void Remove(ILibrarySourceIndex dataKey)
+        {
+            sources.Remove(dataKey);
+            members.Remove(dataKey);
+        }
+
+        public void Remove(IModelIndex dataKey)
+        {
+            sources.Remove(dataKey);
+            members.Remove(dataKey);
+        }
+
+        public void Clear()
+        {
+            sources.Clear();
+            members.Clear();
+        }
     }
 }
 

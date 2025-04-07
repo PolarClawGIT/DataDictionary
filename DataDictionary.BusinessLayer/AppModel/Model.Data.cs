@@ -63,5 +63,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Model</remarks>
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public void Remove(IModelIndex dataKey)
+        { base.Remove(dataKey); }
     }
 }

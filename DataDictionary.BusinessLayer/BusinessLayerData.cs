@@ -211,5 +211,26 @@ namespace DataDictionary.BusinessLayer
                 ModelFile = file;
             }
         }
+
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            Model.Remove(dataKey);
+            CatalogModel.Remove(dataKey);
+            LibraryModel.Remove(dataKey);
+
+            ScriptingEngine.Remove(dataKey);
+
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            Model.Clear();
+            CatalogModel.Clear();
+            LibraryModel.Clear();
+
+            ScriptingEngine.Clear();
+        }
     }
 }

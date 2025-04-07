@@ -172,6 +172,14 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             return this.Where(w => key.Equals(w));
         }
 
+        /// <inheritdoc/>
+        /// <remarks>ExtendedProperty</remarks>
+        public void Remove(ICatalogIndex dataKey)
+        { base.Remove(dataKey); }
 
+        /// <inheritdoc/>
+        /// <remarks>ExtendedProperty</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

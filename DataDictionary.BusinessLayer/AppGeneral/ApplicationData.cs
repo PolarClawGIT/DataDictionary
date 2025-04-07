@@ -128,5 +128,13 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             work.AddRange(Definitions.Delete());
             return work;
         }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            helpSubjectValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+        }
     }
 }

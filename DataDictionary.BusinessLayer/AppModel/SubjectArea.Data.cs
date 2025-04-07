@@ -76,5 +76,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IReadOnlyList<WorkItem> Delete(ISubjectAreaIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public void Remove(ISubjectAreaIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

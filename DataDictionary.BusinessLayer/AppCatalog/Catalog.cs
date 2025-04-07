@@ -528,6 +528,67 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             return work;
         }
 
+        /// <inheritdoc/>
+        public void Remove(ICatalogIndex dataKey)
+        {
+            catalogs.Remove(dataKey);
+            schemta.Remove(dataKey);
+            domains.Remove(dataKey);
 
+            tables.Remove(dataKey);
+            tableColumns.Remove(dataKey);
+
+            routines.Remove(dataKey);
+            routineParameters.Remove(dataKey);
+            routineColumns.Remove(dataKey);
+            references.Remove(dataKey);
+
+            constraints.Remove(dataKey);
+            constraintColumns.Remove(dataKey);
+
+            properties.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(AppModel.IModelIndex dataKey)
+        {
+            catalogs.Remove(dataKey);
+            schemta.Remove(dataKey);
+            domains.Remove(dataKey);
+
+            tables.Remove(dataKey);
+            tableColumns.Remove(dataKey);
+
+            routines.Remove(dataKey);
+            routineParameters.Remove(dataKey);
+            routineColumns.Remove(dataKey);
+            references.Remove(dataKey);
+
+            constraints.Remove(dataKey);
+            constraintColumns.Remove(dataKey);
+
+            properties.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            catalogs.Clear();
+            schemta.Clear();
+            domains.Clear();
+
+            tables.Clear();
+            tableColumns.Clear();
+
+            routines.Clear();
+            routineParameters.Clear();
+            routineColumns.Clear();
+            references.Clear();
+
+            constraints.Clear();
+            constraintColumns.Clear();
+
+            properties.Clear();
+        }
     }
 }

@@ -77,5 +77,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>OwnerData</remarks>
         public IReadOnlyList<WorkItem> Delete(IPrincipalIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Owner", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>OwnerData</remarks>
+        public void Remove(ISecurableIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>OwnerData</remarks>
+        public void Remove(IPrincipalIndex dataKey)
+        { base.Remove(dataKey); }
     }
 }

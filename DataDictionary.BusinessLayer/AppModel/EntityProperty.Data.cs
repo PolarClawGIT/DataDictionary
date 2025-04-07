@@ -12,9 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IEntityPropertyData :
         IBindingData<EntityPropertyValue>
-    {
-
-    }
+    { }
 
     class EntityPropertyData : EntityPropertyCollection<EntityPropertyValue>, IEntityPropertyData,
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
@@ -64,5 +62,15 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>EntityProperty</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityProperty</remarks>
+        public void Remove(IEntityIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityProperty</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

@@ -247,5 +247,31 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            templateValues.Remove(dataKey);
+            pathValues.Remove(dataKey);
+            nodeValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ITemplateIndex dataKey)
+        {
+            templateValues.Remove(dataKey);
+            pathValues.Remove(dataKey);
+            nodeValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            templateValues.Clear();
+            pathValues.Clear();
+            nodeValues.Clear();
+            attributeValues.Clear();
+        }
     }
 }
