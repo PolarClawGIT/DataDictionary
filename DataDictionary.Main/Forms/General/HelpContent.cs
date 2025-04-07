@@ -42,7 +42,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(targetSubject);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -50,7 +50,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(helpSubject);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -60,7 +60,7 @@ namespace DataDictionary.Main.Forms.General
             formData.SetForm(targetForm.ToHelpSubjectPath(), targetForm);
             formData.SetPosition(targetForm.ToHelpSubjectPath());
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             {
                 formTree.BuildTree(formData.HelpSubjects);
                 formTree.SetNode(current);
@@ -75,14 +75,14 @@ namespace DataDictionary.Main.Forms.General
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
 
             void FormData_SubjectsChanged(Object? sender, EventArgs e)
             {
                 formTree.BuildTree(formData.HelpSubjects);
 
-                if (formData.TryGetSubject(out BindingSubject? current))
+                if (formData.TryGetValue(out BindingSubject? current))
                 { formTree.SetNode(current); }
 
                 SetAuthorization(formData.GetAuthorization);
@@ -94,10 +94,10 @@ namespace DataDictionary.Main.Forms.General
             base.AddCommand_Click(sender, e);
             HelpSubjectValue newValue;
 
-            if (formData.TryGetSubject(out BindingSubject? current)
+            if (formData.TryGetValue(out BindingSubject? current)
                 && current.SubjectForm is not null)
-            { newValue = formData.NewSubject(current); }
-            else { newValue = formData.NewSubject(); }
+            { newValue = formData.NewValue(current); }
+            else { newValue = formData.NewValue(); }
 
             OpenSubjectForm();
         }
@@ -106,10 +106,10 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             {
                 if (current.SubjectIndex is null && current.SubjectForm is not null)
-                { HelpSubjectValue newValue = formData.NewSubject(current); }
+                { HelpSubjectValue newValue = formData.NewValue(current); }
             }
 
             OpenSubjectForm();
@@ -120,7 +120,7 @@ namespace DataDictionary.Main.Forms.General
             base.OpenFromDatabaseCommand_Click(sender, e);
             HelpSubjectValue? current = null;
 
-            if (formData.TryGetSubject(out HelpSubjectValue? helpSubject))
+            if (formData.TryGetValue(out HelpSubjectValue? helpSubject))
             { current = helpSubject; }
 
             formData.Load(onComplete);
@@ -147,7 +147,7 @@ namespace DataDictionary.Main.Forms.General
 
         private void OpenSubjectForm()
         {
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             {
                 if (current.SubjectIndex is not null && current.SubjectForm is null)
                 {

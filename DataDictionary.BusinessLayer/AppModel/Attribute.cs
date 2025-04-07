@@ -62,9 +62,18 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// Both cases return the Attribute that was added or updated.
         /// </remarks>
         IAttributeValue Import(AppCatalog.TableColumnAttribute source);
+
+        /// <summary>
+        /// Returns a new IAttribute.
+        /// </summary>
+        /// <returns></returns>
+        public static IAttribute Create()
+        { return new Attribute(); }
+
+        void Remove(IAttributeIndex attribute);
     }
 
-    class Attribute: IAttribute, IDataTableFile
+    class Attribute : IAttribute, IDataTableFile
     {
         /// <inheritdoc/>
         public IAttributeData Values { get { return attributeValues; } }
@@ -86,7 +95,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
 
-        public Attribute() : base ()
+        public Attribute() : base()
         {
             attributeValues = new AttributeData();
             aliasValues = new AttributeAliasData();
@@ -276,7 +285,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     PropertyIndex propertyIndex = new PropertyIndex(property);
                     if (Properties.FirstOrDefault(w => attributeIndex.Equals(w) && propertyIndex.Equals(w)) is not AttributePropertyValue)
-                    { Properties.Add(new AttributePropertyValue(value, property) { PropertyValue = property.PropertyValue }); };
+                    { Properties.Add(new AttributePropertyValue(value, property) { PropertyValue = property.PropertyValue }); }
+                    ;
                 }
 
                 foreach (var alias in source.Aliases)
@@ -298,6 +308,17 @@ namespace DataDictionary.BusinessLayer.AppModel
             }
 
             return attribute;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IAttributeIndex attribute)
+        {
+            AttributeIndex key = new AttributeIndex(attribute);
+            attributeValues.Remove(key);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
+            definitionValues.Remove(key);
+            subjectAreaValues.Remove(key);
         }
     }
 }

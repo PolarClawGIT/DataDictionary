@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.General
         public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
         {
             HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
-            return formData.TryGetSubject(out HelpSubjectValue? subject) && key.Equals(subject);
+            return formData.TryGetValue(out HelpSubjectValue? subject) && key.Equals(subject);
         }
 
         public HelpSubject() : base()
@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Forms.General
                 newItem.SubItems.Add(item.ControlType);
                 item.ListItem = newItem;
 
-                if (formData.TryGetSubject(out HelpSubjectValue? helpValue)
+                if (formData.TryGetValue(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Forms.General
                     { viewItem.Checked = false; }
                 }
 
-                if (formData.TryGetSubject(out HelpSubjectValue? current))
+                if (formData.TryGetValue(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
                     if (formData.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlValue selected
@@ -139,7 +139,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.AddCommand_Click(sender, e);
 
-            HelpSubjectValue newSubject = formData.NewSubject();
+            HelpSubjectValue newSubject = formData.NewValue();
             if (formData.HelpControls.Count > 0 && formData.HelpControls.FirstOrDefault(w => w.IsForm) is ControlValue item)
             {
                 newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
@@ -153,14 +153,14 @@ namespace DataDictionary.Main.Forms.General
             base.DeleteCommand_Click(sender, e);
 
             IsLocked(true);
-            formData.RemoveSubject();
+            formData.RemoveValue();
         }
 
         protected override void SecurityCommand_Click(Object sender, EventArgs e)
         {
             base.SecurityCommand_Click(sender, e);
 
-            if (formData.TryGetSubject(out HelpSubjectValue? current))
+            if (formData.TryGetValue(out HelpSubjectValue? current))
             {
                 SecurableIndex key = new HelpSubjectIndex(current);
                 Activate(() => new Security.SecurableManager(key, () => BusinessData.Authorization.IsHelpAdmin));
@@ -264,7 +264,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            formData.RemoveSubject();
+            formData.RemoveValue();
             formData.Save(OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)

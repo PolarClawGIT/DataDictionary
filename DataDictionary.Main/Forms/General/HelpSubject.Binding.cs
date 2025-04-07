@@ -43,13 +43,17 @@ namespace DataDictionary.Main.Forms.General
                 bindingHelpSubject.RaiseListChangedEvents = false;
 
                 HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                bindingHelpSubject.DataSource = HelpSubjects;
-                bindingHelpSubject.Position = 0;
-                HelpSubjects.ListChanged += OnListChanged;
 
-                HelpSubjects.RaiseListChangedEvents = true;
-                bindingHelpSubject.RaiseListChangedEvents = true;
-                HelpSubjects.ResetList();
+                if (HelpSubjects.Count > 0)
+                {
+                    bindingHelpSubject.DataSource = HelpSubjects;
+                    bindingHelpSubject.Position = 0;
+                    HelpSubjects.ListChanged += OnListChanged;
+
+                    HelpSubjects.RaiseListChangedEvents = true;
+                    bindingHelpSubject.RaiseListChangedEvents = true;
+                    HelpSubjects.ResetList();
+                }
             }
 
             public void SetIndex(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
@@ -58,7 +62,7 @@ namespace DataDictionary.Main.Forms.General
                 temporalIndex = new TemporalIndex(temporal);
             }
 
-            public HelpSubjectValue NewSubject()
+            public HelpSubjectValue NewValue()
             {
                 HelpSubjectValue newValue = new HelpSubjectValue();
                 subjectData.Add(newValue);
@@ -161,7 +165,7 @@ namespace DataDictionary.Main.Forms.General
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out HelpSubjectValue? result)
             {
                 if (bindingHelpSubject.Position >= 0
                     && bindingHelpSubject.Current is HelpSubjectValue value)
@@ -169,16 +173,12 @@ namespace DataDictionary.Main.Forms.General
                 else { result = null; return false; }
             }
 
-            public void RemoveSubject()
+            public void RemoveValue()
             {
-                if (TryGetSubject(out HelpSubjectValue? value))
+                if (TryGetValue(out HelpSubjectValue? value))
                 {
-                    bindingHelpSubject.SuspendBinding();
-                    HelpSubjects.ListChanged -= OnListChanged;
-                    HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
-
                     HelpSubjects.Remove(value);
+                    SetIndex(value);
                 }
             }
 
@@ -186,7 +186,7 @@ namespace DataDictionary.Main.Forms.General
             {
                 Boolean isGrant = false;
 
-                if (TryGetSubject(out HelpSubjectValue? helpSubject))
+                if (TryGetValue(out HelpSubjectValue? helpSubject))
                 {
                     SecurableIndex securable = new HelpSubjectIndex(helpSubject);
                     isGrant = BusinessData.Authorization.IsGrant(securable);

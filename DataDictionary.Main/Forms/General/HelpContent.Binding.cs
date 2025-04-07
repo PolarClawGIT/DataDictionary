@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Forms.General
 
                 void SubjectData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    TryGetSubject(out BindingSubject? current);
+                    TryGetValue(out BindingSubject? current);
 
                     if (e.ListChangedType is ListChangedType.Reset
                         or ListChangedType.ItemAdded
@@ -217,7 +217,7 @@ namespace DataDictionary.Main.Forms.General
                 { SetPosition(form.Path); }
             }
 
-            public HelpSubjectValue NewSubject()
+            public HelpSubjectValue NewValue()
             {
                 HelpSubjectValue result = new HelpSubjectValue();
                 subjectData.Add(result);
@@ -226,7 +226,7 @@ namespace DataDictionary.Main.Forms.General
                 return result;
             }
 
-            public HelpSubjectValue NewSubject(BindingSubject source)
+            public HelpSubjectValue NewValue(BindingSubject source)
             {
                 HelpSubjectValue result = new HelpSubjectValue();
 
@@ -252,7 +252,7 @@ namespace DataDictionary.Main.Forms.General
                 return result;
             }
 
-            public Boolean TryGetSubject([NotNullWhen(true)] out BindingSubject? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out BindingSubject? result)
             {
                 if (bindingHelpSubject.Position >= 0
                     && bindingHelpSubject.Current is BindingSubject value)
@@ -260,9 +260,9 @@ namespace DataDictionary.Main.Forms.General
                 else { result = null; return false; }
             }
 
-            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (TryGetSubject(out BindingSubject? subject)
+                if (TryGetValue(out BindingSubject? subject)
                     && subjectData.FirstOrDefault(w =>
                         subject.SubjectIndex is not null
                         && subject.SubjectIndex.Equals(w))
