@@ -1,11 +1,7 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource.Enumerations;
-using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -16,7 +12,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IAttribute :
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IBindData
     {
         /// <summary>
         /// List of Attributes within the Model.
@@ -92,6 +89,27 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return attributeValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                attributeValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public Attribute() : base()
         {
@@ -338,6 +356,16 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues.Clear();
             definitionValues.Clear();
             subjectAreaValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            attributeValues.ResetBindings();
+            aliasValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
+            subjectAreaValues.ResetBindings();
         }
     }
 }

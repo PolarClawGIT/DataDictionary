@@ -10,7 +10,8 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// Interface representing Application data
     /// </summary>
     public interface IApplicationData :
-        ILoadData, ISaveData
+        ILoadData, ISaveData,
+        IBindData
     {
         /// <summary>
         /// List of Application Help.
@@ -59,6 +60,23 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues = new DefinitionData();
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return helpSubjectValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                helpSubjectValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+            }
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -135,6 +153,14 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             helpSubjectValues.Clear();
             propertyValues.Clear();
             definitionValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            helpSubjectValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
         }
     }
 }

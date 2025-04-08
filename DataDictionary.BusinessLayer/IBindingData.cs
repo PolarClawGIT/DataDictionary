@@ -10,13 +10,22 @@ namespace DataDictionary.BusinessLayer
 {
 
     /// <summary>
-    /// Interface for Data BindingList objects
+    /// Additional interface that BindingList implements but is not in IBindingList.
     /// </summary>
-    public interface IBindingData: IBindingList, IBindingName, IBindingDataReader
+    public interface IBindData
     {
-        /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
+        /// <inheritdoc cref="IBindingList{T}.RaiseListChangedEvents"/>
+        Boolean RaiseListChangedEvents { get; set; }
+
+        /// <inheritdoc cref="IBindingList{T}.ResetBindings"/>
         void ResetBindings();
     }
+
+    /// <summary>
+    /// Interface for Data BindingList objects
+    /// </summary>
+    public interface IBindingData: IBindingList, IBindingName, IBindingDataReader, IBindData
+    { }
 
     /// <summary>
     /// Interface for Data BindingList objects

@@ -14,7 +14,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IModel :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IDeleteData, IScopeType, DataLayer.AppModel.IModel
+        IDeleteData, IScopeType, DataLayer.AppModel.IModel,
+        IBindData
     {
         /// <summary>
         /// Index of the Model currently loaded.
@@ -108,6 +109,27 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues = new DefinitionData();
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return attributeValues.RaiseListChangedEvents
+                    && entityValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && subjectValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                attributeValues.RaiseListChangedEvents = value;
+                entityValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                subjectValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public Model() : base()
         {
@@ -245,6 +267,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return work;
         }
 
+        /// <inheritdoc/>
         public void Remove(IModelIndex dataKey)
         {
             modelValues.Remove(dataKey);
@@ -255,6 +278,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.Remove(dataKey);
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             modelValues.Clear();
@@ -263,6 +287,17 @@ namespace DataDictionary.BusinessLayer.AppModel
             entityValues.Clear();
             propertyValues.Clear();
             definitionValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            modelValues.ResetBindings();
+            subjectValues.ResetBindings();
+            attributeValues.ResetBindings();
+            entityValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
         }
     }
 }

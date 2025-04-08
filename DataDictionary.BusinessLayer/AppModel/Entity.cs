@@ -14,7 +14,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IEntity :
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>, IDeleteData<IEntityIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IBindData
     {
         /// <summary>
         /// List of Entities within the Model.
@@ -86,6 +87,29 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return entityValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && attributeValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                entityValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                attributeValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public Entity() : base()
         {
@@ -321,6 +345,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Remove(dataKey);
         }
 
+        /// <inheritdoc/>
         public void Remove(IModelIndex dataKey)
         {
             entityValues.Remove(dataKey);
@@ -331,6 +356,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Remove(dataKey);
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             entityValues.Clear();
@@ -339,6 +365,17 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.Clear();
             attributeValues.Clear();
             subjectAreaValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            entityValues.ResetBindings();
+            aliasValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
+            attributeValues.ResetBindings();
+            subjectAreaValues.ResetBindings();
         }
     }
 }

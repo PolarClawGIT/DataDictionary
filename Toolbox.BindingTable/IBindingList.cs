@@ -40,7 +40,10 @@ namespace Toolbox.BindingTable
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
         new void Clear() { ((IBindingList)this).Clear(); }
 
-        /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
+        /// <inheritdoc cref="BindingList{T}.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; } // Missing in IBindingList
+
+        /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
+        void ResetBindings(); // Missing in IBindingList
     }
 }

@@ -18,7 +18,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// </summary>
     public interface ISecurity :
         ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>, ILoadData<ISecurableIndex>,
-        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>
+        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>,
+        IBindData
     {
         /// <summary>
         /// Security Principals (user/logins)
@@ -83,6 +84,29 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         public ISecurableData Securables { get { return securableValues; } }
         SecurableData securableValues = new SecurableData();
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return principalValues.RaiseListChangedEvents
+                    && roleValues.RaiseListChangedEvents
+                    && membershipValues.RaiseListChangedEvents
+                    && ownerValues.RaiseListChangedEvents
+                    && permissionValues.RaiseListChangedEvents
+                    && securableValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                principalValues.RaiseListChangedEvents = value;
+                roleValues.RaiseListChangedEvents = value;
+                membershipValues.RaiseListChangedEvents = value;
+                ownerValues.RaiseListChangedEvents = value;
+                permissionValues.RaiseListChangedEvents = value;
+                securableValues.RaiseListChangedEvents = value;
+            }
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -280,7 +304,20 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             principalValues.Clear();
             roleValues.Clear();
             ownerValues.Clear();
+            permissionValues.Clear();
             membershipValues.Clear();
+            securableValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            principalValues.ResetBindings();
+            roleValues.ResetBindings();
+            ownerValues.ResetBindings();
+            membershipValues.ResetBindings();
+            permissionValues.ResetBindings();
+            securableValues.ResetBindings();
         }
     }
 }
