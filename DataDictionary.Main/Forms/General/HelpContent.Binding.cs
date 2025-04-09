@@ -97,7 +97,7 @@ namespace DataDictionary.Main.Forms.General
 
         class FormBinding
         {
-            BindingSource bindingHelpSubject;
+            public required BindingSource BindingHelpSubject { private get; init ; }
 
             public IEnumerable<BindingSubject> HelpSubjects { get { return subjects; } }
             BindingList<BindingSubject> subjects = new BindingList<BindingSubject>();
@@ -107,11 +107,18 @@ namespace DataDictionary.Main.Forms.General
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public FormBinding(ref BindingSource helpBinding)
+            public FormBinding()
+            { }
+
+            public void Init()
             {
-                bindingHelpSubject = helpBinding;
+                // Note: C# 13 adds "field".
+                // This code could then be moved to the BindingHelpSubject init.
+
+                subjectData = BusinessData.ApplicationData.HelpSubjects;
+                subjects.Clear();
                 subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
-                bindingHelpSubject.DataSource = subjects;
+                BindingHelpSubject.DataSource = subjects;
 
                 // restore the subject forms already known.
                 foreach (var item in subjectForms)
@@ -197,13 +204,13 @@ namespace DataDictionary.Main.Forms.General
                 HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
 
                 if (subjects.FirstOrDefault(w => key.Equals(w.SubjectIndex)) is BindingSubject value)
-                { bindingHelpSubject.Position = subjects.IndexOf(value); }
+                { BindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(HelpSubjectIndexPath helpSubject)
             {
                 if (subjects.FirstOrDefault(w => helpSubject.Equals(w.Path)) is BindingSubject value)
-                { bindingHelpSubject.Position = subjects.IndexOf(value); }
+                { BindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(String helpSubject)
@@ -254,8 +261,8 @@ namespace DataDictionary.Main.Forms.General
 
             public Boolean TryGetValue([NotNullWhen(true)] out BindingSubject? result)
             {
-                if (bindingHelpSubject.Position >= 0
-                    && bindingHelpSubject.Current is BindingSubject value)
+                if (BindingHelpSubject.Position >= 0
+                    && BindingHelpSubject.Current is BindingSubject value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }

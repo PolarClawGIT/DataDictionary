@@ -18,7 +18,9 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
             helpToolStripButton.Enabled = false;
-            formData = new FormBinding(ref helpBinding) { DoWork = base.DoWork };
+            formData = new FormBinding()  { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
+            formData.Init();
+
             formTree = new ContentTree(helpContentNavigation);
 
             SetIcon(ScopeType.ApplicationHelp);

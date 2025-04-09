@@ -16,9 +16,10 @@ namespace DataDictionary.Main.Forms.General
     {
         class FormBinding
         {
-            BindingSource bindingHelpSubject;
-
-            public BindingView<HelpSubjectValue> HelpSubjects { get; private set; }
+            public required BindingSource BindingHelpSubject { private get; init; }
+            public BindingView<HelpSubjectValue> HelpSubjects { get; private set; } =
+                new BindingView<HelpSubjectValue>([]) 
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
             public BindingList<ControlValue> HelpControls { get; } = new BindingList<ControlValue>();
 
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
@@ -27,38 +28,54 @@ namespace DataDictionary.Main.Forms.General
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public FormBinding(ref BindingSource helpBinding) : base()
+            public FormBinding() : base()
+            { }
+
+            public void Init()
             {
-                bindingHelpSubject = helpBinding;
+                // Note: C# 13 adds "field".
+                // This code could then be moved to the BindingHelpSubject init.
+
+                subjectData = BusinessData.ApplicationData.HelpSubjects;
                 HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                bindingHelpSubject.DataSource = HelpSubjects;
+
+                if (HelpSubjects.Count > 0)
+                {
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    BindingHelpSubject.Position = 0;
+                    HelpSubjects.ListChanged += OnListChanged;
+
+                    HelpSubjects.RaiseListChangedEvents = true;
+                    BindingHelpSubject.RaiseListChangedEvents = true;
+                    HelpSubjects.ResetList();
+                }
             }
 
-            public void SetIndex(IHelpSubjectIndex helpSubject)
+            public void SetPosition(IHelpSubjectIndex helpSubject)
             {
                 subjectIndex = new HelpSubjectIndex(helpSubject);
                 HelpSubjects.ListChanged -= OnListChanged;
 
                 HelpSubjects.RaiseListChangedEvents = false;
-                bindingHelpSubject.RaiseListChangedEvents = false;
+                BindingHelpSubject.RaiseListChangedEvents = false;
 
                 HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
 
                 if (HelpSubjects.Count > 0)
                 {
-                    bindingHelpSubject.DataSource = HelpSubjects;
-                    bindingHelpSubject.Position = 0;
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    BindingHelpSubject.Position = 0;
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
-                    bindingHelpSubject.RaiseListChangedEvents = true;
+                    BindingHelpSubject.RaiseListChangedEvents = true;
                     HelpSubjects.ResetList();
                 }
             }
 
-            public void SetIndex(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
+            public void SetPosition(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
             {
-                SetIndex(helpSubject);
+                SetPosition(helpSubject);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -66,7 +83,7 @@ namespace DataDictionary.Main.Forms.General
             {
                 HelpSubjectValue newValue = new HelpSubjectValue();
                 subjectData.Add(newValue);
-                SetIndex(newValue);
+                SetPosition(newValue);
 
                 return newValue;
             }
@@ -93,16 +110,16 @@ namespace DataDictionary.Main.Forms.General
                 DoWork(work, StartBinding);
 
                 void StopBinding()
-                { bindingHelpSubject.SuspendBinding(); }
+                { BindingHelpSubject.SuspendBinding(); }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
                     subjectData.ResetBindings();
 
                     HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                    bindingHelpSubject.DataSource = HelpSubjects;
-                    bindingHelpSubject.Position = 0;
-                    bindingHelpSubject.ResumeBinding();
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    BindingHelpSubject.Position = 0;
+                    BindingHelpSubject.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -121,10 +138,10 @@ namespace DataDictionary.Main.Forms.General
 
                 void StopBinding()
                 {
-                    bindingHelpSubject.SuspendBinding();
+                    BindingHelpSubject.SuspendBinding();
                     HelpSubjects.ListChanged -= OnListChanged;
                     HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
+                    BindingHelpSubject.RaiseListChangedEvents = false;
 
                     temporalIndex = null;
                     subjectData = BusinessData.ApplicationData.HelpSubjects;
@@ -132,13 +149,13 @@ namespace DataDictionary.Main.Forms.General
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    bindingHelpSubject.Position = 0;
+                    BindingHelpSubject.Position = 0;
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
-                    bindingHelpSubject.RaiseListChangedEvents = true;
-                    bindingHelpSubject.ResumeBinding();
-                    bindingHelpSubject.ResetBindings(false);
+                    BindingHelpSubject.RaiseListChangedEvents = true;
+                    BindingHelpSubject.ResumeBinding();
+                    BindingHelpSubject.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -156,7 +173,7 @@ namespace DataDictionary.Main.Forms.General
                     // A related error can occur with DataGridViews when the BindingList has an empty list.
 
                     //HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
+                    BindingHelpSubject.RaiseListChangedEvents = false;
                 }
             }
 
@@ -167,8 +184,8 @@ namespace DataDictionary.Main.Forms.General
             /// <returns></returns>
             public Boolean TryGetValue([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (bindingHelpSubject.Position >= 0
-                    && bindingHelpSubject.Current is HelpSubjectValue value)
+                if (BindingHelpSubject.Position >= 0
+                    && BindingHelpSubject.Current is HelpSubjectValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
@@ -178,7 +195,7 @@ namespace DataDictionary.Main.Forms.General
                 if (TryGetValue(out HelpSubjectValue? value))
                 {
                     HelpSubjects.Remove(value);
-                    SetIndex(value);
+                    SetPosition(value);
                 }
             }
 

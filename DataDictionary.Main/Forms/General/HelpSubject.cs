@@ -24,7 +24,8 @@ namespace DataDictionary.Main.Forms.General
         public HelpSubject() : base()
         {
             InitializeComponent();
-            formData = new FormBinding(ref helpBinding) { DoWork = base.DoWork };
+            formData = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
+            formData.Init();
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
@@ -42,10 +43,10 @@ namespace DataDictionary.Main.Forms.General
         }
 
         public HelpSubject(IHelpSubjectIndex helpSubject) : this()
-        { formData.SetIndex(helpSubject); }
+        { formData.SetPosition(helpSubject); }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
-        { formData.SetIndex(helpSubject, temporal); needsData = true; }
+        { formData.SetPosition(helpSubject, temporal); needsData = true; }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> source) : this(helpSubject)
         {
