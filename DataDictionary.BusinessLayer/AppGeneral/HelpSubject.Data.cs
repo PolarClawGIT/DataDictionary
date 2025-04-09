@@ -24,6 +24,8 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <returns></returns>
         public static IHelpSubjectData Create()
         { return new HelpSubjectData(); }
+
+        
     }
 
     /// <summary>

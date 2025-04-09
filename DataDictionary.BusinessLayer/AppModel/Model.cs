@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -15,7 +16,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IModel :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IDeleteData, IScopeType, DataLayer.AppModel.IModel,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// Index of the Model currently loaded.

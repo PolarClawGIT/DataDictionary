@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     public interface ICatalog :
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>, IDeleteData<ICatalogIndex>,
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of Model Catalogs within the Model.

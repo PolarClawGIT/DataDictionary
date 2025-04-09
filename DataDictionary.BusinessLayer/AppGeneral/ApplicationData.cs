@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// </summary>
     public interface IApplicationData :
         ILoadData, ISaveData,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of Application Help.

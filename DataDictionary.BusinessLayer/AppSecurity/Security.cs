@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppSecurity
@@ -19,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     public interface ISecurity :
         ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>, ILoadData<ISecurableIndex>,
         ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// Security Principals (user/logins)

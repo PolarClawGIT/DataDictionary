@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     public interface IScriptingEngine :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of Scripting Engine Templates.

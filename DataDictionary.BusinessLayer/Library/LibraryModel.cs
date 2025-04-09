@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Library
     public interface ILibraryModel :
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IDeleteData<ILibrarySourceIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of .Net Library Members within the Model

@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IEntity :
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>, IDeleteData<IEntityIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of Entities within the Model.

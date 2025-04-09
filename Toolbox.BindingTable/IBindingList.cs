@@ -8,10 +8,26 @@ using System.Threading.Tasks;
 namespace Toolbox.BindingTable
 {
     /// <summary>
+    /// Missing Changed Event in BindingList{T} but not in IBindingList.
+    /// </summary>
+    public interface IBindListChanged
+    {
+
+        /// <inheritdoc cref="ComponentModel.IBindingList{T}.RaiseListChangedEvents"/>
+        Boolean RaiseListChangedEvents { get; set; }
+
+        /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
+        void ResetBindings();
+    }
+
+    /// <summary>
     /// Generic version of IBindingList incorporating generic ICollection and IList.
     /// </summary>
     /// <typeparam name="TRow"></typeparam>
-    public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
+    public interface IBindingList<TRow> : IBindingList,
+        ICollection<TRow>, IList<TRow>,
+        ICancelAddNew, IRaiseItemChangedEvents,
+        IBindListChanged
         where TRow : IBindingPropertyChanged
     {
         // This works but attempts to do the same thing with my own interfaces fails. I don't know why.
@@ -39,11 +55,5 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="IBindingList.Clear"/>
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
         new void Clear() { ((IBindingList)this).Clear(); }
-
-        /// <inheritdoc cref="BindingList{T}.RaiseListChangedEvents"/>
-        Boolean RaiseListChangedEvents { get; set; } // Missing in IBindingList
-
-        /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
-        void ResetBindings(); // Missing in IBindingList
     }
 }

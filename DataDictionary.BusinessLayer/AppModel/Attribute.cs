@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IAttribute :
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBindData
+        IBindListChanged
     {
         /// <summary>
         /// List of Attributes within the Model.
