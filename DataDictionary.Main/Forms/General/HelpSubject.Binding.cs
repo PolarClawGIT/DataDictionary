@@ -64,13 +64,14 @@ namespace DataDictionary.Main.Forms.General
                 if (HelpSubjects.Count > 0)
                 {
                     BindingHelpSubject.DataSource = HelpSubjects;
-                    BindingHelpSubject.Position = 0;
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
                     BindingHelpSubject.RaiseListChangedEvents = true;
-                    HelpSubjects.ResetList();
                 }
+
+                HelpSubjects.ResetList();
+                BindingHelpSubject.MoveFirst();  // For some reason this must be done last or it does not work.
             }
 
             public void SetPosition(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)

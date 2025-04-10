@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Index of the Model currently loaded.
         /// </summary>
-        IModelIndex ModelIndex { get; }
+        ModelIndex ModelIndex { get; }
 
         /// <summary>
         /// The Model Definitions (0 or one Model expected)
@@ -85,7 +85,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public IModelIndex ModelIndex
+        public ModelIndex ModelIndex
         { get { return new ModelIndex(CurrentModel); } }
 
         /// <inheritdoc/>

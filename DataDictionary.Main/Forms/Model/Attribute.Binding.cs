@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -15,23 +17,28 @@ namespace DataDictionary.Main.Forms.Model
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource BindingAttribute { private get; init; }
-            public BindingView<AttributeValue> Attribute { get; private set; } = 
-                new BindingView<AttributeValue>([]) 
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public required BindingSource BindingProperty { private get; init; }
-            public BindingView<AttributePropertyValue> Properties { get; private set; } = 
-                new BindingView<AttributePropertyValue>([]) 
+            public BindingView<AttributeValue> Attribute { get; private set; } =
+                new BindingView<AttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAlias { private get; init; }
-            public BindingView<AttributeAliasValue> Aliases { get; private set; } = 
-                new BindingView<AttributeAliasValue>([]) 
+            public BindingView<AttributeAliasValue> Aliases { get; private set; } =
+                new BindingView<AttributeAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingSubjectArea { private get; init; }
             public BindingView<AttributeSubjectAreaValue> SubjectAreas { get; private set; } =
-                new BindingView<AttributeSubjectAreaValue>([]) 
+                new BindingView<AttributeSubjectAreaValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource BindingProperty { private get; init; }
+            public BindingView<AttributePropertyValue> Properties { get; private set; } =
+                new BindingView<AttributePropertyValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource BindingDefinition { private get; init; }
+            public BindingView<AttributeDefinitionValue> Definitions { get; private set; } =
+                new BindingView<AttributeDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             AttributeIndex attributeIndex = new AttributeIndex();
@@ -50,14 +57,16 @@ namespace DataDictionary.Main.Forms.Model
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
                 Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
                 SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
+                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
 
                 BindingAttribute.DataSource = Attribute;
                 BindingProperty.DataSource = Properties;
                 BindingAlias.DataSource = Aliases;
                 BindingSubjectArea.DataSource = SubjectAreas;
+                BindingDefinition.DataSource = Definitions;
             }
 
-            public void SetIndex(IAttributeIndex attribute)
+            public void SetPosition(IAttributeIndex attribute)
             {
                 attributeIndex = new AttributeIndex(attribute);
 
@@ -66,16 +75,19 @@ namespace DataDictionary.Main.Forms.Model
                 BindingProperty.RaiseListChangedEvents = false;
                 BindingAlias.RaiseListChangedEvents = false;
                 BindingSubjectArea.RaiseListChangedEvents = false;
+                BindingDefinition.RaiseListChangedEvents = false;
 
                 Attribute.RaiseListChangedEvents = false;
                 Properties.RaiseListChangedEvents = false;
                 Aliases.RaiseListChangedEvents = false;
                 SubjectAreas.RaiseListChangedEvents = false;
+                BindingDefinition.RaiseListChangedEvents = false;
 
                 Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
                 Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
                 SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
+                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
 
                 if (Attribute.Count > 0)
                 {
@@ -83,29 +95,33 @@ namespace DataDictionary.Main.Forms.Model
                     BindingProperty.DataSource = Properties;
                     BindingAlias.DataSource = Aliases;
                     BindingSubjectArea.DataSource = SubjectAreas;
-                    BindingAttribute.Position = 0;
-                    Attribute.ListChanged += OnListChanged;
+                    BindingDefinition.DataSource = Definitions;
 
                     BindingAttribute.RaiseListChangedEvents = true;
                     BindingProperty.RaiseListChangedEvents = true;
                     BindingAlias.RaiseListChangedEvents = true;
                     BindingSubjectArea.RaiseListChangedEvents = true;
+                    BindingDefinition.RaiseListChangedEvents = true;
 
                     Attribute.RaiseListChangedEvents = true;
                     Properties.RaiseListChangedEvents = true;
                     Aliases.RaiseListChangedEvents = true;
                     SubjectAreas.RaiseListChangedEvents = true;
+                    Definitions.RaiseListChangedEvents = true;
                 }
 
                 Attribute.ResetList();
                 Properties.ResetList();
                 Aliases.ResetList();
                 SubjectAreas.ResetList();
+                Definitions.ResetList();
+
+                BindingAttribute.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetIndex(IAttributeIndex attribute, ITemporalIndex temporal)
+            public void SetPosition(IAttributeIndex attribute, ITemporalIndex temporal)
             {
-                SetIndex(attribute);
+                SetPosition(attribute);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -128,7 +144,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 AttributeValue newValue = new AttributeValue();
                 attributeData.Values.Add(newValue);
-                SetIndex(newValue);
+                SetPosition(newValue);
 
                 return newValue;
             }
@@ -160,15 +176,17 @@ namespace DataDictionary.Main.Forms.Model
                     BindingProperty.SuspendBinding();
                     BindingAlias.SuspendBinding();
                     BindingSubjectArea.SuspendBinding();
+                    BindingDefinition.SuspendBinding();
                 }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetIndex(attributeIndex);
+                    SetPosition(attributeIndex);
                     BindingAttribute.ResumeBinding();
                     BindingProperty.ResumeBinding();
                     BindingAlias.ResumeBinding();
                     BindingSubjectArea.ResumeBinding();
+                    BindingDefinition.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -191,6 +209,7 @@ namespace DataDictionary.Main.Forms.Model
                     BindingProperty.SuspendBinding();
                     BindingAlias.SuspendBinding();
                     BindingSubjectArea.SuspendBinding();
+                    BindingDefinition.ResumeBinding();
 
                     temporalIndex = null;
                     attributeData = BusinessData.Model.Attributes;
@@ -198,15 +217,19 @@ namespace DataDictionary.Main.Forms.Model
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetIndex(attributeIndex);
+                    SetPosition(attributeIndex);
                     BindingAttribute.ResumeBinding();
                     BindingProperty.ResumeBinding();
                     BindingAlias.ResumeBinding();
                     BindingSubjectArea.ResumeBinding();
+                    BindingDefinition.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
+
+            public ITemporalData GetTemporal()
+            { return attributeData.GetTemporal(attributeIndex); }
 
             public Boolean TryGetValue([NotNullWhen(true)] out AttributeValue? result)
             {
@@ -221,9 +244,46 @@ namespace DataDictionary.Main.Forms.Model
                 if (TryGetValue(out AttributeValue? value))
                 {
                     attributeData.Remove(value);
-                    SetIndex(value);
+                    SetPosition(value);
                 }
             }
+
+            public Boolean GetAuthorization(CommandImageType command)
+            {
+                Boolean isGrant = false;
+                SecurableIndex securable = BusinessData.Model.ModelIndex;
+                isGrant = BusinessData.Authorization.IsGrant(securable);
+
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Delete: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case CommandImageType.OpenDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case CommandImageType.SaveDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case CommandImageType.HistoryDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    default: return false;
+                }
+            }
+        }
+
+        class FixedBinding
+        {
+            //public required BindingSource BindingSubjectArea { private get; init; }
+            public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
+                new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            //public required BindingSource BindingProperty { private get; init; }
+            public BindingView<PropertyValue> Properties { get; private set; } =
+                new BindingView<PropertyValue>(BusinessData.Model.Properties)
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            //public required BindingSource BindingDefinition { private get; init; }
+            public BindingView<DefinitionValue> Definitions { get; private set; } =
+                new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
         }
     }
 }

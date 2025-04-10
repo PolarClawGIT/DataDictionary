@@ -13,7 +13,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IAttribute :
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBindListChanged
+        IBindListChanged,
+        IGetTemporal<IModelIndex>, IGetTemporal<IAttributeIndex>
     {
         /// <summary>
         /// List of Attributes within the Model.
@@ -367,5 +368,13 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.ResetBindings();
             subjectAreaValues.ResetBindings();
         }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(IAttributeIndex key)
+        { return attributeValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(IModelIndex key)
+        { return attributeValues.GetTemporal(key); }
     }
 }

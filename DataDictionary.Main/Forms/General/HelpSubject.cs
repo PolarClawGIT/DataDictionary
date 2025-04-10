@@ -12,20 +12,20 @@ namespace DataDictionary.Main.Forms.General
 {
     partial class HelpSubject : ApplicationData, IApplicationDataForm
     {
-        FormBinding formData;
+        FormBinding formBinding;
         Boolean needsData = false;
 
         public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
         {
             HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
-            return formData.TryGetValue(out HelpSubjectValue? subject) && key.Equals(subject);
+            return formBinding.TryGetValue(out HelpSubjectValue? subject) && key.Equals(subject);
         }
 
         public HelpSubject() : base()
         {
             InitializeComponent();
-            formData = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
-            formData.Init();
+            formBinding = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
+            formBinding.Init();
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
@@ -43,17 +43,17 @@ namespace DataDictionary.Main.Forms.General
         }
 
         public HelpSubject(IHelpSubjectIndex helpSubject) : this()
-        { formData.SetPosition(helpSubject); }
+        { formBinding.SetPosition(helpSubject); }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
-        { formData.SetPosition(helpSubject, temporal); needsData = true; }
+        { formBinding.SetPosition(helpSubject, temporal); needsData = true; }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> source) : this(helpSubject)
         {
-            formData.HelpControls.AddRange(ControlValue.Create(source));
+            formBinding.HelpControls.AddRange(ControlValue.Create(source));
 
             // Add all the forms controls to ListView
-            foreach (var item in formData.HelpControls)
+            foreach (var item in formBinding.HelpControls)
             {
                 if (item.IsForm)
                 { controlsGroup.Text = String.Format("Controls for: {0}", item.Path.Format("{0}")); }
@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.General
                 newItem.SubItems.Add(item.ControlType);
                 item.ListItem = newItem;
 
-                if (formData.TryGetValue(out HelpSubjectValue? helpValue)
+                if (formBinding.TryGetValue(out HelpSubjectValue? helpValue)
                     && helpValue.NameSpace is not null)
                 {
                     PathIndex helpPath = new PathIndex(PathIndex.Parse(helpValue.NameSpace).ToArray());
@@ -83,7 +83,7 @@ namespace DataDictionary.Main.Forms.General
         private void HelpTextData_Load(object sender, EventArgs e)
         {
             if (needsData)
-            { formData.Load(onCompleting); }
+            { formBinding.Load(onCompleting); }
             else
             { DoBinding(); }
 
@@ -97,7 +97,7 @@ namespace DataDictionary.Main.Forms.General
                 helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
                 helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
 
-                SetAuthorization(formData.GetAuthorization);
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -115,7 +115,7 @@ namespace DataDictionary.Main.Forms.General
                 currentItem = e.Item;
 
                 foreach (ControlValue item in
-                formData.HelpControls.Where(w => w.ListItem != e.Item
+                formBinding.HelpControls.Where(w => w.ListItem != e.Item
                     && w.ListItem is not null
                     && w.ListItem.Index >= 0
                     && w.ListItem.Checked))
@@ -124,10 +124,10 @@ namespace DataDictionary.Main.Forms.General
                     { viewItem.Checked = false; }
                 }
 
-                if (formData.TryGetValue(out HelpSubjectValue? current))
+                if (formBinding.TryGetValue(out HelpSubjectValue? current))
                 {
                     HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
-                    if (formData.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlValue selected
+                    if (formBinding.HelpControls.FirstOrDefault(w => w.ListItem == e.Item) is ControlValue selected
                         && !key.Equals(selected.Path))
                     { current.NameSpace = selected.Path.MemberFullPath; }
                 }
@@ -140,8 +140,8 @@ namespace DataDictionary.Main.Forms.General
         {
             base.AddCommand_Click(sender, e);
 
-            HelpSubjectValue newSubject = formData.NewValue();
-            if (formData.HelpControls.Count > 0 && formData.HelpControls.FirstOrDefault(w => w.IsForm) is ControlValue item)
+            HelpSubjectValue newSubject = formBinding.NewValue();
+            if (formBinding.HelpControls.Count > 0 && formBinding.HelpControls.FirstOrDefault(w => w.IsForm) is ControlValue item)
             {
                 newSubject.HelpSubject = String.Format("(new Help Subject: {0})", item.Path.Member);
                 newSubject.Path = item.Path;
@@ -154,14 +154,14 @@ namespace DataDictionary.Main.Forms.General
             base.DeleteCommand_Click(sender, e);
 
             IsLocked(true);
-            formData.RemoveValue();
+            formBinding.RemoveValue();
         }
 
         protected override void SecurityCommand_Click(Object sender, EventArgs e)
         {
             base.SecurityCommand_Click(sender, e);
 
-            if (formData.TryGetValue(out HelpSubjectValue? current))
+            if (formBinding.TryGetValue(out HelpSubjectValue? current))
             {
                 SecurableIndex key = new HelpSubjectIndex(current);
                 Activate(() => new Security.SecurableManager(key, () => BusinessData.Authorization.IsHelpAdmin));
@@ -172,7 +172,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            formData.Load(OnComplete);
+            formBinding.Load(OnComplete);
 
             //if (helpBinding.Current is HelpSubjectValue current)
             //{
@@ -219,7 +219,7 @@ namespace DataDictionary.Main.Forms.General
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            formData.Save(OnComplete);
+            formBinding.Save(OnComplete);
 
             //if (helpBinding.Current is HelpSubjectValue current)
             //{
@@ -265,8 +265,8 @@ namespace DataDictionary.Main.Forms.General
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            formData.RemoveValue();
-            formData.Save(OnComplete);
+            formBinding.RemoveValue();
+            formBinding.Save(OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { }

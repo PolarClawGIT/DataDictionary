@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IAttributeData :
         IBindingData<AttributeValue>,
-        IGetTemporal<IModelIndex>
+        IGetTemporal<IModelIndex>, IGetTemporal<IAttributeIndex>
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
@@ -70,12 +70,21 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         #endregion
 
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
         public ITemporalData GetTemporal(IModelIndex model)
         {
             return new TemporalData<AttributeData, AttributeValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public ITemporalData GetTemporal(IAttributeIndex attribute)
+        {
+            return new TemporalData<AttributeData, AttributeValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IAttributeKey)attribute) };
+        }
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public void Remove(IAttributeIndex dataKey)

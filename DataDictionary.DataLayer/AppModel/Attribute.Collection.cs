@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IReadData<IModelKey>, IReadData<IAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IAttributeKey>,
         IRemoveItem<IAttributeKey>,
-        IReadTemporal<IModelKey>
+        IReadTemporal<IModelKey>, IReadTemporal<IAttributeKey>
         where TItem : AttributeItem, new()
     {
         /// <inheritdoc/>
@@ -37,6 +37,10 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IAttributeKey key)
+        { return LoadCommand(connection, attributeId: key.AttributeId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? attributeId = null,
@@ -82,5 +86,6 @@ namespace DataDictionary.DataLayer.AppModel
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
     }
 }
