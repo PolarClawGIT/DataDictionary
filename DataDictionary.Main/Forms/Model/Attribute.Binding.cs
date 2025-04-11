@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -265,21 +266,28 @@ namespace DataDictionary.Main.Forms.Model
                     default: return false;
                 }
             }
+
+            public Boolean GetLocked()
+            {
+                if (TryGetValue(out AttributeValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
+            }
         }
 
         class FixedBinding
         {
-            //public required BindingSource BindingSubjectArea { private get; init; }
             public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            //public required BindingSource BindingProperty { private get; init; }
             public BindingView<PropertyValue> Properties { get; private set; } =
                 new BindingView<PropertyValue>(BusinessData.Model.Properties)
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            //public required BindingSource BindingDefinition { private get; init; }
             public BindingView<DefinitionValue> Definitions { get; private set; } =
                 new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };

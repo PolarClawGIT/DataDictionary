@@ -56,7 +56,6 @@ namespace DataDictionary.Main.Forms.Model
 
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
-
         }
 
         public Attribute(IAttributeIndex? attribute) : this()
@@ -77,8 +76,7 @@ namespace DataDictionary.Main.Forms.Model
 
             if (needsData)
             { formBinding.Load(onCompleting); }
-            else
-            { DoBinding(); }
+            else { DoBinding(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -134,6 +132,8 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
+                var x = formBinding.GetLocked();
+                IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
             }
         }
@@ -149,6 +149,7 @@ namespace DataDictionary.Main.Forms.Model
             bindingSubjectArea.RaiseListChangedEvents = false;
 
             formBinding.RemoveValue();
+            IsLocked(formBinding.GetLocked());
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -158,7 +159,7 @@ namespace DataDictionary.Main.Forms.Model
             formBinding.Load(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue); }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -169,7 +170,7 @@ namespace DataDictionary.Main.Forms.Model
             formBinding.Save(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue); }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -179,7 +180,7 @@ namespace DataDictionary.Main.Forms.Model
             formBinding.Save(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue); }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
