@@ -20,13 +20,17 @@ namespace DataDictionary.Main.Controls
     partial class ComboBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return comboBox.DataBindings; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new String Text { get { return comboBox.Text; } set { comboBox.Text = value; } }
 
         // Expose Control Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly
         {
             get { return readOnly; }
@@ -47,7 +51,7 @@ namespace DataDictionary.Main.Controls
         }
         Boolean readOnly;
 
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public ComboBoxStyle DropDownStyle { get { return comboBox.DropDownStyle; } set { comboBox.DropDownStyle = value; } }
 
         [Browsable(false)]

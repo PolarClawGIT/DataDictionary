@@ -22,6 +22,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
         /// The currently Selected Definition.
         /// </summary>
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IDefinitionIndex? SelectedDefinition
         {
             get

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.ProofOfConcept
 {
@@ -15,14 +16,18 @@ namespace DataDictionary.Main.ProofOfConcept
             where TValue : class, IScopeType
             where TResult : class, IEquatable<TResult>
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEnumerable<TValue> DataSource { get; init; }
 
         public IList<TResult> Selected = new List<TResult>();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TValue, TResult?> GetResult { get; init; } = (value) => null;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TValue, String> GetDescription { get; init; } = (value) => String.Empty;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TValue, String> GetTitle { get; init; } = (value) =>
         {
             switch (value)
@@ -33,6 +38,7 @@ namespace DataDictionary.Main.ProofOfConcept
             }
         };
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TValue, PathIndex> GetPath { get; init; } = (value) =>
         {
             switch (value)

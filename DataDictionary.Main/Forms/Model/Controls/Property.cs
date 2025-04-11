@@ -21,6 +21,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
         /// The currently Selected Property.
         /// </summary>
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IPropertyIndex? SelectedProperty
         {
             get

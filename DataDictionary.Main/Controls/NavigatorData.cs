@@ -22,6 +22,7 @@ namespace DataDictionary.Main.Controls
         //   This is intended to fulfill similar functionality
 
         /// <inheritdoc cref="BindingNavigator.BindingSource"/>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BindingSource? BindingSource
         {
             get { return bindingSource; }

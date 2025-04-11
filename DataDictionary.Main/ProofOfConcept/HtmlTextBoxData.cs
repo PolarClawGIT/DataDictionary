@@ -14,8 +14,10 @@ namespace DataDictionary.Main.Controls
     partial class HtmlTextBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String DocumentText
         {
             get { return webBrowser.DocumentText; }

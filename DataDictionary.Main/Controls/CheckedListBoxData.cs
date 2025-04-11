@@ -23,6 +23,7 @@ namespace DataDictionary.Main.Controls
     partial class CheckedListBoxData : UserControl
     {
         // Expose Header Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
@@ -33,9 +34,10 @@ namespace DataDictionary.Main.Controls
         public new String Text { get { return checkedListBox.Text; } set { checkedListBox.Text = value; } }
 
         [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Object? DataSource { get { return checkedListBox.DataSource; } set { checkedListBox.DataSource = value; } }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public string DisplayMember { get { return checkedListBox.DisplayMember; } set { checkedListBox.DisplayMember = value; } }
 
         [Browsable(false)]
@@ -59,7 +61,8 @@ namespace DataDictionary.Main.Controls
         public CheckedItemCollection CheckedItems { get { return checkedListBox.CheckedItems; } }
 
         /// <inheritdoc cref="CheckedListBox.CheckOnClick"/>
-        public bool CheckOnClick { get { return checkedListBox.CheckOnClick; } set { checkedListBox.CheckOnClick = value; } }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public Boolean CheckOnClick { get { return checkedListBox.CheckOnClick; } set { checkedListBox.CheckOnClick = value; } }
 
         public ObjectCollection Items { get { return checkedListBox.Items; } }
 

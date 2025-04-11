@@ -25,11 +25,13 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?>? DoWork { get; set; } = null;
 
         /// <summary>
         /// Text that appears at the top of the control
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText
         {
             get { return headerTitle.Text ?? String.Empty; }

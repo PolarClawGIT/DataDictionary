@@ -20,6 +20,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         /// <summary>
         /// Function to open the detail form.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TemporalValue, Form>? OpenForm { get; init; }
 
         protected HistoryView() : base()

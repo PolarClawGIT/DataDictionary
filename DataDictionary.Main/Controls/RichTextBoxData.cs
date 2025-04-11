@@ -11,7 +11,7 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// </remarks>
     [DefaultBindingProperty("RichText")]
-    partial class RichTextBoxData : UserControl, ISupportEditMenu, INotifyPropertyChanged
+    partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
         // This control uses two-way binding using the base RichText control as the base.
         // Additional handling on the Rtf property of the RichText control is needed.
@@ -39,24 +39,29 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// Gets/Sets the Text for the Header.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
 
         /// <summary>
         /// Makes the control ReadOnly or Read/Write. Changes the color of the control.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
         /// <summary>
         /// Makes the Header Visible or hidden
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean HeaderVisible { get { return label.Visible; } set { label.Visible = value; } }
 
         /// <summary>
         /// Makes the Tool Strip Visible or hidden
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ToolStripVisible { get { return toolStrip.Visible; } set { toolStrip.Visible = value; } }
 
         /// <summary>
@@ -219,7 +224,6 @@ namespace DataDictionary.Main.Controls
         { if (Validated is EventHandler handler) { handler(sender, e); } }
 
         public new event CancelEventHandler? Validating;
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void richTextBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
