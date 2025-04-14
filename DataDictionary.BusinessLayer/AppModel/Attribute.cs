@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttributeValue Import(AppCatalog.TableColumnAttribute source);
 
         /// <summary>
-        /// Returns a new IAttribute.
+        /// Returns an empty IAttribute.
         /// </summary>
         /// <returns></returns>
         public static IAttribute Create()

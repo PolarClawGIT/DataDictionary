@@ -15,7 +15,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IEntity :
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>, IDeleteData<IEntityIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBindListChanged
+        IBindListChanged,
+        IGetTemporal<IModelIndex>, IGetTemporal<IEntityIndex>
     {
         /// <summary>
         /// List of Entities within the Model.
@@ -60,6 +61,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="source"></param>
         /// <returns></returns>
         IEntityValue Import(AppCatalog.TableEntity source);
+
+        /// <summary>
+        /// Returns an empty IEntity.
+        /// </summary>
+        /// <returns></returns>
+        public static IEntity Create()
+        { return new Entity(); }
     }
 
     class Entity : IEntity, IDataTableFile
@@ -377,5 +385,11 @@ namespace DataDictionary.BusinessLayer.AppModel
             attributeValues.ResetBindings();
             subjectAreaValues.ResetBindings();
         }
+
+        public ITemporalData GetTemporal(IModelIndex key)
+        { return entityValues.GetTemporal(key); }
+
+        public ITemporalData GetTemporal(IEntityIndex key)
+        { return entityValues.GetTemporal(key); }
     }
 }

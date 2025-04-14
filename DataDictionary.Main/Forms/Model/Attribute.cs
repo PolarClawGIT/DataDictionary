@@ -132,7 +132,6 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                var x = formBinding.GetLocked();
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
             }
@@ -141,12 +140,6 @@ namespace DataDictionary.Main.Forms.Model
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
-
-            bindingAttribute.RaiseListChangedEvents = false;
-            bindingProperty.RaiseListChangedEvents = false;
-            bindingDefinition.RaiseListChangedEvents = false;
-            bindingAlias.RaiseListChangedEvents = false;
-            bindingSubjectArea.RaiseListChangedEvents = false;
 
             formBinding.RemoveValue();
             IsLocked(formBinding.GetLocked());
@@ -189,10 +182,10 @@ namespace DataDictionary.Main.Forms.Model
 
             Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
             {
-                OpenForm = (temoral) =>
+                OpenForm = (temporal) =>
                 {
-                    if (temoral.TryGetValue(out AttributeValue? attribute))
-                    { return new Attribute(attribute, new TemporalIndex(temoral)); }
+                    if (temporal.TryGetValue(out AttributeValue? attribute))
+                    { return new Attribute(attribute, new TemporalIndex(temporal)); }
                     else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
                 }
             });

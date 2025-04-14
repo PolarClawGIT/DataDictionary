@@ -11,40 +11,51 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Attribute
+    partial class Entity
     {
         class FormBinding
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingAttribute { private get; init; }
-            public BindingView<AttributeValue> Attribute { get; private set; } =
-                new BindingView<AttributeValue>([])
+            public required BindingSource BindingEntity { private get; init; }
+            public BindingView<EntityValue> Entity { get; private set; } =
+                new BindingView<EntityValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAlias { private get; init; }
-            public BindingView<AttributeAliasValue> Aliases { get; private set; } =
-                new BindingView<AttributeAliasValue>([])
+            public BindingView<EntityAliasValue> Aliases { get; private set; } =
+                new BindingView<EntityAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingSubjectArea { private get; init; }
-            public BindingView<AttributeSubjectAreaValue> SubjectAreas { get; private set; } =
-                new BindingView<AttributeSubjectAreaValue>([])
+            public BindingView<EntitySubjectAreaValue> SubjectAreas { get; private set; } =
+                new BindingView<EntitySubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingProperty { private get; init; }
-            public BindingView<AttributePropertyValue> Properties { get; private set; } =
-                new BindingView<AttributePropertyValue>([])
+            public BindingView<EntityPropertyValue> Properties { get; private set; } =
+                new BindingView<EntityPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingDefinition { private get; init; }
-            public BindingView<AttributeDefinitionValue> Definitions { get; private set; } =
-                new BindingView<AttributeDefinitionValue>([])
+            public BindingView<EntityDefinitionValue> Definitions { get; private set; } =
+                new BindingView<EntityDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            AttributeIndex attributeIndex = new AttributeIndex();
+
+            public required BindingSource BindingAttribute { private get; init; }
+            public BindingView<EntityAttributeValue> Attributes { get; private set; } =
+                new BindingView<EntityAttributeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource BindingAttributeDetail { private get; init; }
+            public BindingView<AttributeValue> AttributeDetails { get; private set; } =
+                new BindingView<AttributeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            EntityIndex entityIndex = new EntityIndex();
             TemporalIndex? temporalIndex = null;
-            IAttribute attributeData = BusinessData.Model.Attributes;
+            IEntity entityData = BusinessData.Model.Entities;
 
             public FormBinding()
             { }
@@ -54,75 +65,83 @@ namespace DataDictionary.Main.Forms.Model
                 // Note: C# 13 adds "field".
                 // This code could then be moved to the BindingHelpSubject init.
 
-                Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
-                Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
-                Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
-                SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
-                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
+                Entity = new BindingView<EntityValue>(entityData.Values, w => entityIndex.Equals(w));
+                Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
+                Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
+                SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
+                Definitions = new BindingView<EntityDefinitionValue>(entityData.Definitions, w => entityIndex.Equals(w));
+                Attributes = new BindingView<EntityAttributeValue>(entityData.Attributes, w => entityIndex.Equals(w));
 
-                BindingAttribute.DataSource = Attribute;
+                BindingEntity.DataSource = Entity;
                 BindingProperty.DataSource = Properties;
                 BindingAlias.DataSource = Aliases;
                 BindingSubjectArea.DataSource = SubjectAreas;
                 BindingDefinition.DataSource = Definitions;
+                BindingAttribute.DataSource = Attributes;
             }
 
-            public void SetPosition(IAttributeIndex attribute)
+            public void SetPosition(IEntityIndex entity)
             {
-                attributeIndex = new AttributeIndex(attribute);
+                entityIndex = new EntityIndex(entity);
 
-                Attribute.ListChanged -= OnListChanged;
-                BindingAttribute.RaiseListChangedEvents = false;
+                Entity.ListChanged -= OnListChanged;
+                BindingEntity.RaiseListChangedEvents = false;
                 BindingProperty.RaiseListChangedEvents = false;
                 BindingAlias.RaiseListChangedEvents = false;
                 BindingSubjectArea.RaiseListChangedEvents = false;
                 BindingDefinition.RaiseListChangedEvents = false;
+                BindingAttribute.RaiseListChangedEvents = false;
 
-                Attribute.RaiseListChangedEvents = false;
+                Entity.RaiseListChangedEvents = false;
                 Properties.RaiseListChangedEvents = false;
                 Aliases.RaiseListChangedEvents = false;
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
-                Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
-                Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
-                SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
-                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
+                Entity = new BindingView<EntityValue>(entityData.Values, w => entityIndex.Equals(w));
+                Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
+                Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
+                SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
+                Definitions = new BindingView<EntityDefinitionValue>(entityData.Definitions, w => entityIndex.Equals(w));
+                Attributes = new BindingView<EntityAttributeValue>(entityData.Attributes, w => entityIndex.Equals(w));
 
-                if (Attribute.Count > 0)
+                if (Entity.Count > 0)
                 {
-                    BindingAttribute.DataSource = Attribute;
+                    BindingEntity.DataSource = Entity;
                     BindingProperty.DataSource = Properties;
                     BindingAlias.DataSource = Aliases;
                     BindingSubjectArea.DataSource = SubjectAreas;
                     BindingDefinition.DataSource = Definitions;
+                    BindingAttribute.DataSource = Attributes;
 
-                    BindingAttribute.RaiseListChangedEvents = true;
+                    BindingEntity.RaiseListChangedEvents = true;
                     BindingProperty.RaiseListChangedEvents = true;
                     BindingAlias.RaiseListChangedEvents = true;
                     BindingSubjectArea.RaiseListChangedEvents = true;
                     BindingDefinition.RaiseListChangedEvents = true;
+                    BindingAttribute.RaiseListChangedEvents = true;
 
-                    Attribute.RaiseListChangedEvents = true;
+                    Entity.RaiseListChangedEvents = true;
                     Properties.RaiseListChangedEvents = true;
                     Aliases.RaiseListChangedEvents = true;
                     SubjectAreas.RaiseListChangedEvents = true;
                     Definitions.RaiseListChangedEvents = true;
+                    Attributes.RaiseListChangedEvents = true;
                 }
 
-                Attribute.ResetBindings();
+                Entity.ResetBindings();
                 Properties.ResetBindings();
                 Aliases.ResetBindings();
                 SubjectAreas.ResetBindings();
                 Definitions.ResetBindings();
+                Attributes.ResetBindings();
 
-                BindingAttribute.MoveFirst(); // For some reason this must be done last or it does not work.
+                BindingEntity.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IAttributeIndex attribute, ITemporalIndex temporal)
+            public void SetPosition(IEntityIndex Entity, ITemporalIndex temporal)
             {
-                SetPosition(attribute);
+                SetPosition(Entity);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -137,14 +156,14 @@ namespace DataDictionary.Main.Forms.Model
                     // When this event occurs, all BindingSources need to set RaiseListChangedEvents to false.
                     // A related error can occur with DataGridViews when the BindingList has an empty list.
 
-                    BindingAttribute.RaiseListChangedEvents = false;
+                    BindingEntity.RaiseListChangedEvents = false;
                 }
             }
 
-            public AttributeValue NewValue()
+            public EntityValue NewValue()
             {
-                AttributeValue newValue = new AttributeValue();
-                attributeData.Values.Add(newValue);
+                EntityValue newValue = new EntityValue();
+                entityData.Values.Add(newValue);
                 SetPosition(newValue);
 
                 return newValue;
@@ -160,34 +179,36 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
-                    work.AddRange(attributeData.Delete(attributeIndex));
-                    work.AddRange(attributeData.Load(factory, attributeIndex));
+                    work.AddRange(entityData.Delete(entityIndex));
+                    work.AddRange(entityData.Load(factory, entityIndex));
                 }
                 else
                 {
-                    attributeData = IAttribute.Create();
-                    work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
+                    entityData = IEntity.Create();
+                    work.AddRange(entityData.Load(factory, entityIndex, temporalIndex));
                 }
 
                 DoWork(work, StartBinding);
 
                 void StopBinding()
                 {
-                    BindingAttribute.SuspendBinding();
+                    BindingEntity.SuspendBinding();
                     BindingProperty.SuspendBinding();
                     BindingAlias.SuspendBinding();
                     BindingSubjectArea.SuspendBinding();
                     BindingDefinition.SuspendBinding();
+                    BindingAttribute.SuspendBinding();
                 }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
+                    SetPosition(entityIndex);
+                    BindingEntity.ResumeBinding();
                     BindingProperty.ResumeBinding();
                     BindingAlias.ResumeBinding();
                     BindingSubjectArea.ResumeBinding();
                     BindingDefinition.ResumeBinding();
+                    BindingAttribute.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -200,52 +221,54 @@ namespace DataDictionary.Main.Forms.Model
 
                 StopBinding();
                 work.Add(factory.OpenConnection());
-                work.AddRange(attributeData.Save(factory, attributeIndex));
+                work.AddRange(entityData.Save(factory, entityIndex));
 
                 DoWork(work, StartBinding);
 
                 void StopBinding()
                 {
-                    BindingAttribute.SuspendBinding();
+                    BindingEntity.SuspendBinding();
                     BindingProperty.SuspendBinding();
                     BindingAlias.SuspendBinding();
                     BindingSubjectArea.SuspendBinding();
                     BindingDefinition.ResumeBinding();
+                    BindingAttribute.SuspendBinding();
 
                     temporalIndex = null;
-                    attributeData = BusinessData.Model.Attributes;
+                    entityData = BusinessData.Model.Entities;
                 }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
+                    SetPosition(entityIndex);
+                    BindingEntity.ResumeBinding();
                     BindingProperty.ResumeBinding();
                     BindingAlias.ResumeBinding();
                     BindingSubjectArea.ResumeBinding();
                     BindingDefinition.ResumeBinding();
+                    BindingAttribute.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
 
             public ITemporalData GetTemporal()
-            { return attributeData.GetTemporal(attributeIndex); }
+            { return entityData.GetTemporal(entityIndex); }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out AttributeValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out EntityValue? result)
             {
-                if (BindingAttribute.Position >= 0
-                    && BindingAttribute.Current is AttributeValue value)
+                if (BindingEntity.Position >= 0
+                    && BindingEntity.Current is EntityValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
             public void RemoveValue()
             {
-                if (TryGetValue(out AttributeValue? value))
+                if (TryGetValue(out EntityValue? value))
                 {
-                    attributeData.RaiseListChangedEvents = false;
-                    attributeData.Remove(value);
+                    entityData.RaiseListChangedEvents = false;
+                    entityData.Remove(value);
                     SetPosition(value);
                 }
             }
@@ -270,7 +293,7 @@ namespace DataDictionary.Main.Forms.Model
 
             public Boolean GetLocked()
             {
-                if (TryGetValue(out AttributeValue? value))
+                if (TryGetValue(out EntityValue? value))
                 {
                     return value.RowState() is DataRowState.Detached
                         or DataRowState.Deleted;

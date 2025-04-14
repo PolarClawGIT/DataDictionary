@@ -13,7 +13,9 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Interface component for the Model Entity
     /// </summary>
-    public interface IEntityData : IBindingData<EntityValue>
+    public interface IEntityData :
+        IBindingData<EntityValue>,
+        IGetTemporal<IModelIndex>, IGetTemporal<IEntityIndex>
     { }
 
     class EntityData : EntityCollection<EntityValue>, IEntityData,
@@ -77,5 +79,21 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Entity</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public ITemporalData GetTemporal(IModelIndex key)
+        {
+            return new TemporalData<EntityData, EntityValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)key) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public ITemporalData GetTemporal(IEntityIndex key)
+        {
+            return new TemporalData<EntityData, EntityValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IEntityKey)key) };
+        }
     }
 }

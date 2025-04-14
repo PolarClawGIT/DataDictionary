@@ -23,6 +23,13 @@ namespace DataDictionary.DataLayer.AppModel
         public Guid? EntityId { get; init; } = Guid.Empty;
 
         /// <summary>
+        /// Constructor for the Blank/Empty Entity Key
+        /// </summary>
+        /// <remarks>Empty Key is never equal to anything.</remarks>
+        public EntityKey()
+        { }
+
+        /// <summary>
         /// Constructor for the Domain Entity Key
         /// </summary>
         /// <param name="source"></param>
@@ -35,7 +42,7 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public Boolean Equals(EntityKey? other)
-        { return other is EntityKey key && EqualityComparer<Guid?>.Default.Equals(EntityId, key.EntityId); }
+        { return other is EntityKey key && key.EntityId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(EntityId, key.EntityId); }
 
         /// <inheritdoc/>
         public Boolean Equals(IEntityKey? other)
