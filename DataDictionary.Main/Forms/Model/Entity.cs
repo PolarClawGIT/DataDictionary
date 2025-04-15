@@ -331,7 +331,7 @@ namespace DataDictionary.Main.Forms.Model
                         {
                             if (bindingAttribute.AddNew() is EntityAttributeValue newItem)
                             {
-                                newItem.AttributeTitle = addItem.Title;
+                                newItem.AttributeKnownAs = addItem.Title;
                                 newItem.AttributePath = addItem.Path;
                             }
                         }

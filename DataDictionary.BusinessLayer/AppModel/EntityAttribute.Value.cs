@@ -3,12 +3,7 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -19,9 +14,6 @@ namespace DataDictionary.BusinessLayer.AppModel
     {
         /// <inheritdoc cref="IEntityAttributeItem.IsNullable"/>
         new Boolean? IsNullable { get; set; }
-
-        /// <inheritdoc cref="IEntityAttributeItem.AttributeTitle"/>
-        new String? AttributeTitle { get; set; }
 
         /// <summary>
         /// Is the Attribute associated with this Entity in the Model.
@@ -87,6 +79,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
+        public String? AttributeTitle
+        {
+            get
+            {
+                if (Attribute is not null)
+                { return Attribute.AttributeTitle; }
+                else { return null; }
+            }
+        }
+
+        /// <inheritdoc/>
         public String? AttributeDescription
         {
             get
@@ -100,19 +103,6 @@ namespace DataDictionary.BusinessLayer.AppModel
                 if (Attribute is not null)
                 { Attribute.AttributeDescription = value; }
             }
-        }
-
-        /// <inheritdoc/>
-        public new String? AttributeTitle
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(base.AttributeTitle) && Attribute is not null)
-                { return Attribute.AttributeTitle; }
-                else { return base.AttributeTitle; }
-            }
-            set
-            { base.AttributeTitle = value; }
         }
 
         /// <inheritdoc/>
@@ -373,6 +363,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             }
             set { base.AttributePath = value.MemberFullPath; }
         }
+
 
         /// <inheritdoc/>
         public EntityAttributeValue() : base() { }

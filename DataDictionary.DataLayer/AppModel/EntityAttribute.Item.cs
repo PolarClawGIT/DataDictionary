@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// <summary>
         /// The Name of the Attribute as known to the Entity.
         /// </summary>
-        String? AttributeTitle { get; }
+        String? AttributeKnownAs { get; }
 
         /// <summary>
         /// The NameSpace of the Alias of the Attribute
@@ -50,10 +50,10 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? AttributeTitle
+        public String? AttributeKnownAs
         {
-            get { return GetValue(nameof(AttributeTitle)); }
-            set { SetValue(nameof(AttributeTitle), value); }
+            get { return GetValue(nameof(AttributeKnownAs)); }
+            set { SetValue(nameof(AttributeKnownAs), value); }
         }
 
         /// <inheritdoc/>
@@ -110,7 +110,7 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeTitle), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeKnownAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AttributePath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
