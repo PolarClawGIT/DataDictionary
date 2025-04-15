@@ -92,6 +92,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IEntityAttributeData Attributes { get { return attributeValues; } }
         private readonly EntityAttributeData attributeValues;
 
+        // TODO: Need to get a combined object EntityAttribute & Attribute. How?
+
         /// <inheritdoc/>
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
@@ -128,6 +130,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             attributeValues = new EntityAttributeData();
             subjectAreaValues = new EntitySubjectAreaData();
         }
+
+        public void SetEntityAttribute(IAttributeData attributes)
+        { attributeValues.Attributes = attributes; }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
@@ -310,7 +315,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     PropertyIndex propertyIndex = new PropertyIndex(property);
                     if (Properties.FirstOrDefault(w => entityIndex.Equals(w) && propertyIndex.Equals(w)) is not EntityPropertyValue)
-                    { Properties.Add(new EntityPropertyValue(value, property) { PropertyValue = property.PropertyValue }); };
+                    { Properties.Add(new EntityPropertyValue(value, property) { PropertyValue = property.PropertyValue }); }
+                    ;
                 }
 
                 foreach (var alias in source.Aliases)
@@ -322,7 +328,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                 // Attributes get replaced
                 attributeValues.Delete(entityIndex);
-                foreach (IEntityAttributeValue item in source.Attributes)
+                foreach (IEntityAttributeValue_Old item in source.Attributes)
                 { Attributes.Add(item); }
             }
             else // Entity does not exist, add everything

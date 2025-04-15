@@ -167,6 +167,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
             work.AddRange(definitionValues.Load(factory, dataKey));
+            work.Add(new WorkItem() { DoWork = () => entityValues.SetEntityAttribute(attributeValues.Values) });
             return work;
         }
 
@@ -181,6 +182,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            work.Add(new WorkItem() { DoWork = () => entityValues.SetEntityAttribute(attributeValues.Values) });
             return work;
         }
 
@@ -222,6 +224,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             entityValues.Import(source);
             propertyValues.Import(source);
             definitionValues.Import(source);
+            entityValues.SetEntityAttribute(attributeValues.Values);
         }
 
         /// <inheritdoc/>

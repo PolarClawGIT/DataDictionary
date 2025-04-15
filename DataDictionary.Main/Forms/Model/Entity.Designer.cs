@@ -57,7 +57,6 @@ namespace DataDictionary.Main.Forms.Model
             attributeInModelData = new CheckBox();
             attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
             attributeDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeNavigation = new DataDictionary.Main.Controls.NavigatorData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -360,15 +359,13 @@ namespace DataDictionary.Main.Forms.Model
             detailAttributeLayout.Controls.Add(attributeInModelData, 1, 0);
             detailAttributeLayout.Controls.Add(attributeTitleData, 0, 1);
             detailAttributeLayout.Controls.Add(attributeDescriptionData, 0, 2);
-            detailAttributeLayout.Controls.Add(attributeNavigation, 0, 3);
             detailAttributeLayout.Dock = DockStyle.Fill;
             detailAttributeLayout.Location = new Point(3, 3);
             detailAttributeLayout.Name = "detailAttributeLayout";
-            detailAttributeLayout.RowCount = 4;
+            detailAttributeLayout.RowCount = 3;
             detailAttributeLayout.RowStyles.Add(new RowStyle());
             detailAttributeLayout.RowStyles.Add(new RowStyle());
             detailAttributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            detailAttributeLayout.RowStyles.Add(new RowStyle());
             detailAttributeLayout.Size = new Size(450, 223);
             detailAttributeLayout.TabIndex = 2;
             // 
@@ -420,19 +417,10 @@ namespace DataDictionary.Main.Forms.Model
             attributeDescriptionData.Location = new Point(3, 103);
             attributeDescriptionData.Multiline = true;
             attributeDescriptionData.Name = "attributeDescriptionData";
-            attributeDescriptionData.ReadOnly = false;
-            attributeDescriptionData.Size = new Size(444, 86);
+            attributeDescriptionData.ReadOnly = true;
+            attributeDescriptionData.Size = new Size(444, 117);
             attributeDescriptionData.TabIndex = 4;
             attributeDescriptionData.WordWrap = true;
-            // 
-            // attributeNavigation
-            // 
-            attributeNavigation.AutoSize = true;
-            attributeNavigation.Dock = DockStyle.Fill;
-            attributeNavigation.Location = new Point(3, 195);
-            attributeNavigation.Name = "attributeNavigation";
-            attributeNavigation.Size = new Size(365, 25);
-            attributeNavigation.TabIndex = 5;
             // 
             // propertyTab
             // 
@@ -884,7 +872,6 @@ namespace DataDictionary.Main.Forms.Model
         private DataDictionary.Main.Controls.TextBoxData attributeTitleData;
         private DataDictionary.Main.Controls.TextBoxData attributeDescriptionData;
         private BindingSource bindingAttributeDetail;
-        private DataDictionary.Main.Controls.NavigatorData attributeNavigation;
         private Controls.Property propertyControl;
         private Controls.Definition definitionControl;
     }

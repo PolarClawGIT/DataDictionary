@@ -124,9 +124,9 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                attributeNavigation.BindingSource = bindingAttributeDetail;
-//                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
-//                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeDescription)));
+                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
+                attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
@@ -281,24 +281,26 @@ namespace DataDictionary.Main.Forms.Model
 
             if (bindingAttribute.Current is IEntityAttributeValue alias)
             {
-                AliasIndexName aliasIndex = new AliasIndexName(alias);
 
-                //TODO: Include Attribute Path, not just the alias of the Attribute.
 
-                var attributes = BusinessData.Model.Attributes.
-                    FindAttribute(aliasIndex).
-                    Select(s => new AttributeIndex(s)).
-                    Join(BusinessData.Model.Attributes.Values,
-                        key => key,
-                        attribute => new AttributeIndex(attribute),
-                        (key, attribute) => attribute).
-                    ToList();
+                //AliasIndexName aliasIndex = new AliasIndexName(alias);
 
-                bindingAttributeDetail.DataSource = attributes;
-                if (attributes.Count > 0)
-                { attributeInModelData.Checked = true; }
+                ////TODO: Include Attribute Path, not just the alias of the Attribute.
 
-                //attributeNavigation.BindingSource = bindingAttributeDetail;
+                //var attributes = BusinessData.Model.Attributes.
+                //    FindAttribute(aliasIndex).
+                //    Select(s => new AttributeIndex(s)).
+                //    Join(BusinessData.Model.Attributes.Values,
+                //        key => key,
+                //        attribute => new AttributeIndex(attribute),
+                //        (key, attribute) => attribute).
+                //    ToList();
+
+                //bindingAttributeDetail.DataSource = attributes;
+                //if (attributes.Count > 0)
+                //{ attributeInModelData.Checked = true; }
+
+                ////attributeNavigation.BindingSource = bindingAttributeDetail;
             }
         }
 
