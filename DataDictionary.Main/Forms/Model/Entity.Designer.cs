@@ -40,23 +40,18 @@ namespace DataDictionary.Main.Forms.Model
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
+            detailEntityLayout = new TableLayoutPanel();
+            attributeDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeInModelData = new CheckBox();
+            attributePathData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeKnownAsData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeNullable = new CheckBox();
+            attributePrimaryKey = new CheckBox();
+            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             attributeData = new DataGridView();
             attributeAliasColumn = new DataGridViewTextBoxColumn();
             attributeOrderColumn = new DataGridViewTextBoxColumn();
-            detailDataTab = new TabControl();
-            detailEntityPage = new TabPage();
-            detailEntityLayout = new TableLayoutPanel();
-            attributeAliasData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeSelectCommand = new Button();
-            attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeNullable = new CheckBox();
-            attributePrimaryKey = new CheckBox();
-            detailAttributePage = new TabPage();
-            detailAttributeLayout = new TableLayoutPanel();
-            attributePathData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeInModelData = new CheckBox();
-            attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            attributeDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -88,6 +83,8 @@ namespace DataDictionary.Main.Forms.Model
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingAttributeDetail = new BindingSource(components);
+            attributeOptionsLayout = new TableLayoutPanel();
+            attributeSelectCommand = new Button();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -97,12 +94,8 @@ namespace DataDictionary.Main.Forms.Model
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
             detailsLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
-            detailDataTab.SuspendLayout();
-            detailEntityPage.SuspendLayout();
             detailEntityLayout.SuspendLayout();
-            detailAttributePage.SuspendLayout();
-            detailAttributeLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
@@ -122,6 +115,7 @@ namespace DataDictionary.Main.Forms.Model
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttributeDetail).BeginInit();
+            attributeOptionsLayout.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -196,16 +190,137 @@ namespace DataDictionary.Main.Forms.Model
             // 
             detailsLayout.ColumnCount = 1;
             detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailsLayout.Controls.Add(detailEntityLayout, 0, 1);
             detailsLayout.Controls.Add(attributeData, 0, 0);
-            detailsLayout.Controls.Add(detailDataTab, 0, 1);
             detailsLayout.Dock = DockStyle.Fill;
             detailsLayout.Location = new Point(3, 3);
             detailsLayout.Name = "detailsLayout";
             detailsLayout.RowCount = 2;
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 26.666666F));
             detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
             detailsLayout.Size = new Size(470, 437);
             detailsLayout.TabIndex = 0;
+            // 
+            // detailEntityLayout
+            // 
+            detailEntityLayout.ColumnCount = 2;
+            detailEntityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailEntityLayout.ColumnStyles.Add(new ColumnStyle());
+            detailEntityLayout.Controls.Add(attributeDescriptionData, 0, 3);
+            detailEntityLayout.Controls.Add(attributeTitleData, 0, 2);
+            detailEntityLayout.Controls.Add(attributePathData, 0, 1);
+            detailEntityLayout.Controls.Add(attributeKnownAsData, 0, 0);
+            detailEntityLayout.Controls.Add(attributeOptionsLayout, 1, 0);
+            detailEntityLayout.Controls.Add(attributeInModelData, 1, 2);
+            detailEntityLayout.Controls.Add(attributeSelectCommand, 1, 4);
+            detailEntityLayout.Dock = DockStyle.Fill;
+            detailEntityLayout.Location = new Point(3, 177);
+            detailEntityLayout.Name = "detailEntityLayout";
+            detailEntityLayout.RowCount = 5;
+            detailEntityLayout.RowStyles.Add(new RowStyle());
+            detailEntityLayout.RowStyles.Add(new RowStyle());
+            detailEntityLayout.RowStyles.Add(new RowStyle());
+            detailEntityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            detailEntityLayout.RowStyles.Add(new RowStyle());
+            detailEntityLayout.Size = new Size(464, 257);
+            detailEntityLayout.TabIndex = 0;
+            // 
+            // attributeDescriptionData
+            // 
+            attributeDescriptionData.AutoSize = true;
+            attributeDescriptionData.Dock = DockStyle.Fill;
+            attributeDescriptionData.HeaderText = "Attribute Description";
+            attributeDescriptionData.Location = new Point(3, 159);
+            attributeDescriptionData.Multiline = true;
+            attributeDescriptionData.Name = "attributeDescriptionData";
+            attributeDescriptionData.ReadOnly = true;
+            detailEntityLayout.SetRowSpan(attributeDescriptionData, 2);
+            attributeDescriptionData.Size = new Size(326, 95);
+            attributeDescriptionData.TabIndex = 4;
+            attributeDescriptionData.WordWrap = true;
+            // 
+            // attributeTitleData
+            // 
+            attributeTitleData.AutoSize = true;
+            attributeTitleData.Dock = DockStyle.Fill;
+            attributeTitleData.HeaderText = "Attribute Title";
+            attributeTitleData.Location = new Point(3, 109);
+            attributeTitleData.Multiline = false;
+            attributeTitleData.Name = "attributeTitleData";
+            attributeTitleData.ReadOnly = true;
+            attributeTitleData.Size = new Size(326, 44);
+            attributeTitleData.TabIndex = 3;
+            attributeTitleData.WordWrap = true;
+            // 
+            // attributeInModelData
+            // 
+            attributeInModelData.AutoSize = true;
+            attributeInModelData.Enabled = false;
+            attributeInModelData.Location = new Point(335, 109);
+            attributeInModelData.Name = "attributeInModelData";
+            attributeInModelData.Size = new Size(73, 19);
+            attributeInModelData.TabIndex = 2;
+            attributeInModelData.Text = "in Model";
+            attributeInModelData.UseVisualStyleBackColor = true;
+            // 
+            // attributePathData
+            // 
+            attributePathData.AutoSize = true;
+            attributePathData.Dock = DockStyle.Fill;
+            attributePathData.HeaderText = "Attribute Alias";
+            attributePathData.Location = new Point(3, 53);
+            attributePathData.Multiline = false;
+            attributePathData.Name = "attributePathData";
+            attributePathData.ReadOnly = false;
+            attributePathData.Size = new Size(326, 50);
+            attributePathData.TabIndex = 1;
+            attributePathData.WordWrap = true;
+            attributePathData.Validated += AttributeTitleData_Validated;
+            // 
+            // attributeKnownAsData
+            // 
+            attributeKnownAsData.AutoSize = true;
+            attributeKnownAsData.Dock = DockStyle.Fill;
+            attributeKnownAsData.HeaderText = "Attribute Known As";
+            attributeKnownAsData.Location = new Point(3, 3);
+            attributeKnownAsData.Multiline = false;
+            attributeKnownAsData.Name = "attributeKnownAsData";
+            attributeKnownAsData.ReadOnly = false;
+            attributeKnownAsData.Size = new Size(326, 44);
+            attributeKnownAsData.TabIndex = 5;
+            attributeKnownAsData.WordWrap = true;
+            // 
+            // attributeNullable
+            // 
+            attributeNullable.AutoSize = true;
+            attributeNullable.Location = new Point(3, 3);
+            attributeNullable.Name = "attributeNullable";
+            attributeNullable.Size = new Size(86, 19);
+            attributeNullable.TabIndex = 6;
+            attributeNullable.Text = "Allow Nulls";
+            attributeNullable.UseVisualStyleBackColor = true;
+            // 
+            // attributePrimaryKey
+            // 
+            attributePrimaryKey.AutoSize = true;
+            attributePrimaryKey.Location = new Point(3, 28);
+            attributePrimaryKey.Name = "attributePrimaryKey";
+            attributePrimaryKey.Size = new Size(89, 19);
+            attributePrimaryKey.TabIndex = 7;
+            attributePrimaryKey.Text = "Primary Key";
+            attributePrimaryKey.UseVisualStyleBackColor = true;
+            // 
+            // attributeOrderData
+            // 
+            attributeOrderData.AutoSize = true;
+            attributeOrderData.HeaderText = "Order";
+            attributeOrderData.Location = new Point(3, 53);
+            attributeOrderData.Multiline = false;
+            attributeOrderData.Name = "attributeOrderData";
+            attributeOrderData.ReadOnly = false;
+            attributeOrderData.Size = new Size(120, 44);
+            attributeOrderData.TabIndex = 3;
+            attributeOrderData.WordWrap = true;
             // 
             // attributeData
             // 
@@ -236,191 +351,6 @@ namespace DataDictionary.Main.Forms.Model
             attributeOrderColumn.HeaderText = "Order";
             attributeOrderColumn.Name = "attributeOrderColumn";
             attributeOrderColumn.ReadOnly = true;
-            // 
-            // detailDataTab
-            // 
-            detailDataTab.Controls.Add(detailEntityPage);
-            detailDataTab.Controls.Add(detailAttributePage);
-            detailDataTab.Dock = DockStyle.Fill;
-            detailDataTab.Location = new Point(3, 177);
-            detailDataTab.Name = "detailDataTab";
-            detailDataTab.SelectedIndex = 0;
-            detailDataTab.Size = new Size(464, 257);
-            detailDataTab.TabIndex = 8;
-            // 
-            // detailEntityPage
-            // 
-            detailEntityPage.BackColor = SystemColors.Control;
-            detailEntityPage.Controls.Add(detailEntityLayout);
-            detailEntityPage.Location = new Point(4, 24);
-            detailEntityPage.Name = "detailEntityPage";
-            detailEntityPage.Padding = new Padding(3);
-            detailEntityPage.Size = new Size(456, 229);
-            detailEntityPage.TabIndex = 0;
-            detailEntityPage.Text = "Entity";
-            // 
-            // detailEntityLayout
-            // 
-            detailEntityLayout.ColumnCount = 3;
-            detailEntityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            detailEntityLayout.ColumnStyles.Add(new ColumnStyle());
-            detailEntityLayout.ColumnStyles.Add(new ColumnStyle());
-            detailEntityLayout.Controls.Add(attributeAliasData, 0, 0);
-            detailEntityLayout.Controls.Add(attributeSelectCommand, 2, 2);
-            detailEntityLayout.Controls.Add(attributeOrderData, 2, 0);
-            detailEntityLayout.Controls.Add(attributeNullable, 1, 1);
-            detailEntityLayout.Controls.Add(attributePrimaryKey, 2, 1);
-            detailEntityLayout.Dock = DockStyle.Fill;
-            detailEntityLayout.Location = new Point(3, 3);
-            detailEntityLayout.Name = "detailEntityLayout";
-            detailEntityLayout.RowCount = 3;
-            detailEntityLayout.RowStyles.Add(new RowStyle());
-            detailEntityLayout.RowStyles.Add(new RowStyle());
-            detailEntityLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            detailEntityLayout.Size = new Size(450, 223);
-            detailEntityLayout.TabIndex = 0;
-            // 
-            // attributeAliasData
-            // 
-            attributeAliasData.AutoSize = true;
-            detailEntityLayout.SetColumnSpan(attributeAliasData, 2);
-            attributeAliasData.Dock = DockStyle.Fill;
-            attributeAliasData.HeaderText = "Attribute Name (within Entity)";
-            attributeAliasData.Location = new Point(3, 3);
-            attributeAliasData.Multiline = false;
-            attributeAliasData.Name = "attributeAliasData";
-            attributeAliasData.ReadOnly = false;
-            attributeAliasData.Size = new Size(318, 44);
-            attributeAliasData.TabIndex = 5;
-            attributeAliasData.WordWrap = true;
-            // 
-            // attributeSelectCommand
-            // 
-            attributeSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            attributeSelectCommand.AutoSize = true;
-            attributeSelectCommand.Location = new Point(372, 195);
-            attributeSelectCommand.Name = "attributeSelectCommand";
-            attributeSelectCommand.Size = new Size(75, 25);
-            attributeSelectCommand.TabIndex = 4;
-            attributeSelectCommand.Text = "Select";
-            attributeSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            attributeSelectCommand.UseVisualStyleBackColor = true;
-            attributeSelectCommand.Click += AttributeSelect_Click;
-            // 
-            // attributeOrderData
-            // 
-            attributeOrderData.AutoSize = true;
-            attributeOrderData.HeaderText = "Order";
-            attributeOrderData.Location = new Point(327, 3);
-            attributeOrderData.Multiline = false;
-            attributeOrderData.Name = "attributeOrderData";
-            attributeOrderData.ReadOnly = false;
-            attributeOrderData.Size = new Size(120, 44);
-            attributeOrderData.TabIndex = 3;
-            attributeOrderData.WordWrap = true;
-            // 
-            // attributeNullable
-            // 
-            attributeNullable.AutoSize = true;
-            attributeNullable.Location = new Point(235, 53);
-            attributeNullable.Name = "attributeNullable";
-            attributeNullable.Size = new Size(86, 19);
-            attributeNullable.TabIndex = 6;
-            attributeNullable.Text = "Allow Nulls";
-            attributeNullable.UseVisualStyleBackColor = true;
-            // 
-            // attributePrimaryKey
-            // 
-            attributePrimaryKey.AutoSize = true;
-            attributePrimaryKey.Location = new Point(327, 53);
-            attributePrimaryKey.Name = "attributePrimaryKey";
-            attributePrimaryKey.Size = new Size(89, 19);
-            attributePrimaryKey.TabIndex = 7;
-            attributePrimaryKey.Text = "Primary Key";
-            attributePrimaryKey.UseVisualStyleBackColor = true;
-            // 
-            // detailAttributePage
-            // 
-            detailAttributePage.BackColor = SystemColors.Control;
-            detailAttributePage.Controls.Add(detailAttributeLayout);
-            detailAttributePage.Location = new Point(4, 24);
-            detailAttributePage.Name = "detailAttributePage";
-            detailAttributePage.Padding = new Padding(3);
-            detailAttributePage.Size = new Size(456, 229);
-            detailAttributePage.TabIndex = 1;
-            detailAttributePage.Text = "Attribute";
-            // 
-            // detailAttributeLayout
-            // 
-            detailAttributeLayout.ColumnCount = 2;
-            detailAttributeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            detailAttributeLayout.ColumnStyles.Add(new ColumnStyle());
-            detailAttributeLayout.Controls.Add(attributePathData, 0, 0);
-            detailAttributeLayout.Controls.Add(attributeInModelData, 1, 0);
-            detailAttributeLayout.Controls.Add(attributeTitleData, 0, 1);
-            detailAttributeLayout.Controls.Add(attributeDescriptionData, 0, 2);
-            detailAttributeLayout.Dock = DockStyle.Fill;
-            detailAttributeLayout.Location = new Point(3, 3);
-            detailAttributeLayout.Name = "detailAttributeLayout";
-            detailAttributeLayout.RowCount = 3;
-            detailAttributeLayout.RowStyles.Add(new RowStyle());
-            detailAttributeLayout.RowStyles.Add(new RowStyle());
-            detailAttributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            detailAttributeLayout.Size = new Size(450, 223);
-            detailAttributeLayout.TabIndex = 2;
-            // 
-            // attributePathData
-            // 
-            attributePathData.AutoSize = true;
-            attributePathData.Dock = DockStyle.Fill;
-            attributePathData.HeaderText = "Attribute Alias";
-            attributePathData.Location = new Point(3, 3);
-            attributePathData.Multiline = false;
-            attributePathData.Name = "attributePathData";
-            attributePathData.ReadOnly = false;
-            attributePathData.Size = new Size(365, 44);
-            attributePathData.TabIndex = 1;
-            attributePathData.WordWrap = true;
-            attributePathData.Validated += AttributeTitleData_Validated;
-            // 
-            // attributeInModelData
-            // 
-            attributeInModelData.AutoSize = true;
-            attributeInModelData.Enabled = false;
-            attributeInModelData.Location = new Point(374, 3);
-            attributeInModelData.Name = "attributeInModelData";
-            attributeInModelData.Size = new Size(73, 19);
-            attributeInModelData.TabIndex = 2;
-            attributeInModelData.Text = "in Model";
-            attributeInModelData.UseVisualStyleBackColor = true;
-            // 
-            // attributeTitleData
-            // 
-            attributeTitleData.AutoSize = true;
-            detailAttributeLayout.SetColumnSpan(attributeTitleData, 2);
-            attributeTitleData.Dock = DockStyle.Fill;
-            attributeTitleData.HeaderText = "Attribute Title";
-            attributeTitleData.Location = new Point(3, 53);
-            attributeTitleData.Multiline = false;
-            attributeTitleData.Name = "attributeTitleData";
-            attributeTitleData.ReadOnly = false;
-            attributeTitleData.Size = new Size(444, 44);
-            attributeTitleData.TabIndex = 3;
-            attributeTitleData.WordWrap = true;
-            // 
-            // attributeDescriptionData
-            // 
-            attributeDescriptionData.AutoSize = true;
-            detailAttributeLayout.SetColumnSpan(attributeDescriptionData, 2);
-            attributeDescriptionData.Dock = DockStyle.Fill;
-            attributeDescriptionData.HeaderText = "Attribute Description";
-            attributeDescriptionData.Location = new Point(3, 103);
-            attributeDescriptionData.Multiline = true;
-            attributeDescriptionData.Name = "attributeDescriptionData";
-            attributeDescriptionData.ReadOnly = true;
-            attributeDescriptionData.Size = new Size(444, 117);
-            attributeDescriptionData.TabIndex = 4;
-            attributeDescriptionData.WordWrap = true;
             // 
             // propertyTab
             // 
@@ -771,6 +701,37 @@ namespace DataDictionary.Main.Forms.Model
             // 
             bindingAttributeDetail.AllowNew = false;
             // 
+            // attributeOptionsLayout
+            // 
+            attributeOptionsLayout.AutoSize = true;
+            attributeOptionsLayout.ColumnCount = 1;
+            attributeOptionsLayout.ColumnStyles.Add(new ColumnStyle());
+            attributeOptionsLayout.Controls.Add(attributeNullable, 0, 0);
+            attributeOptionsLayout.Controls.Add(attributePrimaryKey, 0, 1);
+            attributeOptionsLayout.Controls.Add(attributeOrderData, 0, 2);
+            attributeOptionsLayout.Location = new Point(335, 3);
+            attributeOptionsLayout.Name = "attributeOptionsLayout";
+            attributeOptionsLayout.RowCount = 3;
+            detailEntityLayout.SetRowSpan(attributeOptionsLayout, 2);
+            attributeOptionsLayout.RowStyles.Add(new RowStyle());
+            attributeOptionsLayout.RowStyles.Add(new RowStyle());
+            attributeOptionsLayout.RowStyles.Add(new RowStyle());
+            attributeOptionsLayout.Size = new Size(126, 100);
+            attributeOptionsLayout.TabIndex = 8;
+            // 
+            // attributeSelectCommand
+            // 
+            attributeSelectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            attributeSelectCommand.AutoSize = true;
+            attributeSelectCommand.Location = new Point(386, 229);
+            attributeSelectCommand.Name = "attributeSelectCommand";
+            attributeSelectCommand.Size = new Size(75, 25);
+            attributeSelectCommand.TabIndex = 4;
+            attributeSelectCommand.Text = "Select";
+            attributeSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            attributeSelectCommand.UseVisualStyleBackColor = true;
+            attributeSelectCommand.Click += AttributeSelect_Click;
+            // 
             // Entity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -786,14 +747,9 @@ namespace DataDictionary.Main.Forms.Model
             detailTabLayout.ResumeLayout(false);
             detailTab.ResumeLayout(false);
             detailsLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
-            detailDataTab.ResumeLayout(false);
-            detailEntityPage.ResumeLayout(false);
             detailEntityLayout.ResumeLayout(false);
             detailEntityLayout.PerformLayout();
-            detailAttributePage.ResumeLayout(false);
-            detailAttributeLayout.ResumeLayout(false);
-            detailAttributeLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
@@ -816,6 +772,8 @@ namespace DataDictionary.Main.Forms.Model
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttributeDetail).EndInit();
+            attributeOptionsLayout.ResumeLayout(false);
+            attributeOptionsLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -855,24 +813,21 @@ namespace DataDictionary.Main.Forms.Model
         private Button aliasSelectCommand;
         private CheckBox isAliasInModelData;
         private Button aliasAddCommand;
-        private Button attributeSelectCommand;
-        private DataDictionary.Main.Controls.TextBoxData attributeAliasData;
+        private DataDictionary.Main.Controls.TextBoxData attributeKnownAsData;
         private CheckBox attributeNullable;
         private CheckBox attributePrimaryKey;
         private DataGridViewTextBoxColumn attributeAliasColumn;
         private DataGridViewTextBoxColumn attributeOrderColumn;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
-        private TabControl detailDataTab;
-        private TabPage detailEntityPage;
         private TableLayoutPanel detailEntityLayout;
-        private TabPage detailAttributePage;
-        private TableLayoutPanel detailAttributeLayout;
         private CheckBox attributeInModelData;
         private DataDictionary.Main.Controls.TextBoxData attributeTitleData;
         private DataDictionary.Main.Controls.TextBoxData attributeDescriptionData;
         private BindingSource bindingAttributeDetail;
         private Controls.Property propertyControl;
         private Controls.Definition definitionControl;
+        private TableLayoutPanel attributeOptionsLayout;
+        private Button attributeSelectCommand;
     }
 }
