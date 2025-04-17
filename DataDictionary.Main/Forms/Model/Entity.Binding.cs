@@ -1,8 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -263,6 +265,14 @@ namespace DataDictionary.Main.Forms.Model
                 else { result = null; return false; }
             }
 
+            public Boolean TryGetAlias([NotNullWhen(true)] out EntityAliasValue? result)
+            {
+                if (BindingAlias.Position >= 0
+                    && BindingAlias.Current is EntityAliasValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
             public void RemoveValue()
             {
                 if (TryGetValue(out EntityValue? value))
@@ -300,6 +310,64 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else return true;
             }
+
+            public void SetAttributes(IEnumerable<AttributeValue> attributes)
+            {
+                if (TryGetValue(out EntityValue? entity))
+                {
+                    foreach (AttributeValue attribute in attributes)
+                    {
+                        if (!Attributes.Any(w => attribute.AttributePath.Equals(w.AttributePath)))
+                        {
+                            Attributes.Add(
+                                new EntityAttributeValue(entity, attribute)
+                                { OrdinalPosition = Attributes.Count + 1 });
+                        }
+                    }
+                }
+            }
+
+            public void AddAlias()
+            {
+                if (TryGetValue(out EntityValue? entity))
+                {
+                    Aliases.Add(new EntityAliasValue(entity)
+                    { AliasScope = ScopeType.Null });
+                }
+            }
+
+            public void AddAlias(IEnumerable<INamedScopeValue> namedScopes)
+            {
+                if (TryGetValue(out EntityValue? entity))
+                {
+                    foreach (INamedScopeValue namedScope in namedScopes)
+                    {
+                        if (!Aliases.Any(w => namedScope.Path.Equals(w.AliasPath)))
+                        {
+                            Aliases.Add(new EntityAliasValue(entity)
+                            {
+                                AliasPath = namedScope.Path,
+                                AliasScope = namedScope.Scope
+                            });
+                        }
+                    }
+                }
+            }
+
+            public void AddSubjectArea(ISubjectAreaIndex subject)
+            {
+                if (TryGetValue(out EntityValue? entity))
+                { SubjectAreas.Add(new EntitySubjectAreaValue(entity, subject)); }
+            }
+
+            public void RemoveSubjectArea(ISubjectAreaIndex subject)
+            {
+                SubjectAreaIndex key = new SubjectAreaIndex(subject);
+
+                while (SubjectAreas.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue item)
+                { SubjectAreas.Remove(item); }
+            }
+
         }
 
         class FixedBinding

@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Nullable
 
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
@@ -24,6 +25,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public class EntityAttributeValue : EntityAttributeItem, IEntityAttributeValue
     {
+        IDataValue dataValue; // Backing field for IDataValue
+
         /// <summary>
         /// The Attribute, if any, that is associated with the Entity.
         /// </summary>
@@ -56,10 +59,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         //public Int32? OrdinalPosition => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public DataIndex Index => throw new NotImplementedException();
+        public DataIndex Index { get { return dataValue.Index; } }
 
         /// <inheritdoc/>
-        public String Title { get { return AttributeTitle ?? String.Empty; } }
+        public String Title { get { return dataValue.Title; } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityAttribute; } }
@@ -364,11 +367,40 @@ namespace DataDictionary.BusinessLayer.AppModel
             set { base.AttributePath = value.MemberFullPath; }
         }
 
-
         /// <inheritdoc/>
-        public EntityAttributeValue() : base() { }
+        public EntityAttributeValue() : base()
+        {
+            dataValue = new DataValue(this)
+            {
+                GetIndex = () => new EntityIndex(this),
+                GetTitle = () => AttributeKnownAs ?? String.Empty,
+                GetScope = () => Scope,
+                IsTitleChanged = (e) => e.PropertyName is nameof(AttributeKnownAs)
+            };
+        }
 
         /// <inheritdoc cref="EntityAttributeItem(IEntityKey)"/>
-        public EntityAttributeValue(IEntityIndex entity) : base(entity) { }
+        public EntityAttributeValue(IEntityIndex entity) : base(entity)
+        {
+            dataValue = new DataValue(this)
+            {
+                GetIndex = () => new EntityIndex(this),
+                GetTitle = () => AttributeKnownAs ?? String.Empty,
+                GetScope = () => Scope,
+                IsTitleChanged = (e) => e.PropertyName is nameof(AttributeKnownAs)
+            };
+        }
+
+        /// <summary>
+        /// Constructor for EntityAttributeValue
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="attribute"></param>
+        public EntityAttributeValue(IEntityIndex entity, AttributeValue attribute) : this(entity)
+        {   
+            Attribute = attribute;
+            AttributeKnownAs = attribute.AttributeTitle;
+            AttributePath = attribute.AttributePath;
+        }
     }
 }

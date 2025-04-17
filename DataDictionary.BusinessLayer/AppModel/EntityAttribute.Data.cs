@@ -65,16 +65,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             else { return null; }
         }
 
-        protected override Object? AddNewCore()
-        {
-            var newValue = base.AddNewCore();
-
-            if (newValue is EntityAttributeValue value)
-            { value.Attribute = FindAttribute(value); }
-
-            return newValue;
-        }
-
         #region ILoadData,ISaveData
         /// <inheritdoc/>
         /// <remarks>EntityAttribute</remarks>
