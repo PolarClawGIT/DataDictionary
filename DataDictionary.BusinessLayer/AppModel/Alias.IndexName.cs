@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { }
 
         /// <inheritdoc cref="AliasKeyName(IEntityAttributeItem)"/>
-        public AliasIndexName(IEntityAttributeValue_Old alias) : base(alias)
+        public AliasIndexName(IEntityAttributeValue alias) : base(alias)
         { }
     }
 }
