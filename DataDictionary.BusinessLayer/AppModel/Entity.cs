@@ -4,6 +4,8 @@ using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -131,8 +133,27 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues = new EntitySubjectAreaData();
         }
 
-        public void SetEntityAttribute(IAttributeData attributes)
-        { attributeValues.Attributes = attributes; }
+        public FindAttribute FindAttribute
+        {
+            get { return findAttribute; }
+            set
+            {
+                attributeValues.ListChanged -= AttributeValues_ListChanged;
+
+                findAttribute = value;
+                foreach (EntityAttributeValue item in attributeValues)
+                { item.FindAttribute = value; }
+
+                attributeValues.ListChanged += AttributeValues_ListChanged;
+
+                void AttributeValues_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.NewIndex >= 0)
+                    { attributeValues[e.NewIndex].FindAttribute = value; }
+                }
+            }
+        }
+        FindAttribute findAttribute = (path) => null;
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>

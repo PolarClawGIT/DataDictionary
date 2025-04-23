@@ -320,8 +320,13 @@ namespace DataDictionary.Main.Forms.Model
                         if (!Attributes.Any(w => attribute.AttributePath.Equals(w.AttributePath)))
                         {
                             Attributes.Add(
-                                new EntityAttributeValue(entity, attribute)
-                                { OrdinalPosition = Attributes.Count + 1 });
+                                new EntityAttributeValue(entity)
+                                { 
+                                    AttributeKnownAs = attribute.AttributeTitle,
+                                    AttributePath = attribute.AttributePath,
+                                    IsNullable = attribute.IsNullable,
+                                    OrdinalPosition = Attributes.Count + 1,
+                                });
                         }
                     }
                 }

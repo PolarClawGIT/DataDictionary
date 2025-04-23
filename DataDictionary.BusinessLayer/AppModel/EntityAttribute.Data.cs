@@ -22,48 +22,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
-        /// Reference to the AttributeData that is used to get the Attribute Details.
+        /// TryGet Function to find an Attribute;
         /// </summary>
-        internal IAttributeData? Attributes
-        {
-            get { return attributeValues; }
-            set
-            {
-                if (attributeValues is not null)
-                { attributeValues.ListChanged -= AttributeValues_ListChanged; }
-
-                attributeValues = value;
-
-                if (attributeValues is not null)
-                { attributeValues.ListChanged += AttributeValues_ListChanged; }
-
-                SetAttribute();
-
-                void AttributeValues_ListChanged(Object? sender, ListChangedEventArgs e)
-                {   // Brute Force, do them all.
-                    SetAttribute();
-                }
-            }
-        }
-        IAttributeData? attributeValues;
-
-        void SetAttribute()
-        {
-            foreach (EntityAttributeValue item in this)
-            { item.Attribute = FindAttribute(item); }
-        }
-
-        IAttributeValue? FindAttribute(IEntityAttributeItem entity)
-        {
-            if (attributeValues is not null)
-            {
-                PathIndex path = new PathIndex(entity.AttributePath);
-                if (attributeValues.FirstOrDefault(w => path.Equals(w.AttributePath)) is IAttributeValue value)
-                { return value; }
-                else { return null; }
-            }
-            else { return null; }
-        }
+        public FindAttribute FindAttribute
+        { get; internal set; } = (path) => null;
 
         #region ILoadData,ISaveData
         /// <inheritdoc/>
