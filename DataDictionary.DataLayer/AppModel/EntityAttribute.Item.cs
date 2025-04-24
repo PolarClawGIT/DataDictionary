@@ -92,6 +92,8 @@ namespace DataDictionary.DataLayer.AppModel
         /// </summary>
         public EntityAttributeItem() : base()
         {
+            AttributeKnownAs = "{new Attribute}";
+
             Temporal = new TemporalItem()
             {
                 GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),

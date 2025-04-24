@@ -273,6 +273,14 @@ namespace DataDictionary.Main.Forms.Model
                 else { result = null; return false; }
             }
 
+            public Boolean TryGetAttribute([NotNullWhen(true)] out EntityAttributeValue? result)
+            {
+                if (BindingAttribute.Position >= 0
+                    && BindingAttribute.Current is EntityAttributeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
             public void RemoveValue()
             {
                 if (TryGetValue(out EntityValue? value))
@@ -311,7 +319,7 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
-            public void SetAttributes(IEnumerable<AttributeValue> attributes)
+            public void AddAttributes(IEnumerable<AttributeValue> attributes)
             {
                 if (TryGetValue(out EntityValue? entity))
                 {
@@ -321,7 +329,7 @@ namespace DataDictionary.Main.Forms.Model
                         {
                             Attributes.Add(
                                 new EntityAttributeValue(entity)
-                                { 
+                                {
                                     AttributeKnownAs = attribute.AttributeTitle,
                                     AttributePath = attribute.AttributePath,
                                     IsNullable = attribute.IsNullable,
@@ -329,6 +337,18 @@ namespace DataDictionary.Main.Forms.Model
                                 });
                         }
                     }
+                }
+            }
+
+            public void AddAttribute()
+            {
+                if (TryGetValue(out EntityValue? entity))
+                {
+                    Attributes.Add(new EntityAttributeValue(entity)
+                    {
+                        AttributeKnownAs = "{new attribute}",
+                        OrdinalPosition = Attributes.Count + 1
+                    });
                 }
             }
 

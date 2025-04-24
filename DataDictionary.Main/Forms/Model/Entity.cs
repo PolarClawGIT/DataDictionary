@@ -58,6 +58,7 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.HistoryDatabase);
 
             attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
+            attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
@@ -118,6 +119,7 @@ namespace DataDictionary.Main.Forms.Model
                 attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
                 attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
                 subjectArea.BindTo(bindingSubjectArea, BusinessData.Model.SubjectAreas);
+                attributeLayout.Enabled = false;
 
                 // Alias Handling
                 ScopeNameList.Load(aliaseScopeColumn);
@@ -252,37 +254,10 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
         {
-            //attributeNavigation.BindingSource = null;
-            //bindingAttributeDetail.DataSource = null;
-            //attributeInModelData.Checked = false;
-
-            if (bindingAttribute.Current is IEntityAttributeValue alias)
-            {
-
-
-                //AliasIndexName aliasIndex = new AliasIndexName(alias);
-
-                ////TODO: Include Attribute Path, not just the alias of the Attribute.
-
-                //var attributes = BusinessData.Model.Attributes.
-                //    FindAttribute(aliasIndex).
-                //    Select(s => new AttributeIndex(s)).
-                //    Join(BusinessData.Model.Attributes.Values,
-                //        key => key,
-                //        attribute => new AttributeIndex(attribute),
-                //        (key, attribute) => attribute).
-                //    ToList();
-
-                //bindingAttributeDetail.DataSource = attributes;
-                //if (attributes.Count > 0)
-                //{ attributeInModelData.Checked = true; }
-
-                ////attributeNavigation.BindingSource = bindingAttributeDetail;
-            }
+            if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
+            { attributeLayout.Enabled = true; }
+            else { attributeLayout.Enabled = false; }
         }
-
-        private void AttributeTitleData_Validated(object sender, EventArgs e)
-        { }
 
         private void AttributeSelect_Click(object sender, EventArgs e)
         {
@@ -296,8 +271,8 @@ namespace DataDictionary.Main.Forms.Model
                     dialog.BuildData(selected, GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
-                    { 
-                        formBinding.SetAttributes(dialog.SelectedByValue<AttributeValue>());
+                    {
+                        formBinding.AddAttributes(dialog.SelectedByValue<AttributeValue>());
                         bindingAttribute.ResetCurrentItem();
                     }
                 }
@@ -312,6 +287,10 @@ namespace DataDictionary.Main.Forms.Model
                 else { return String.Empty; }
             }
         }
+
+        private void AttributeNewCommand_Click(object sender, EventArgs e)
+        { formBinding.AddAttribute(); }
+
 
         private void AliasAddCommand_Click(object sender, EventArgs e)
         { formBinding.AddAlias(); }
@@ -335,10 +314,20 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
+
+
         private void AliasNameData_Validating(object sender, CancelEventArgs e)
         {
             if (formBinding.TryGetAlias(out EntityAliasValue? value))
             { value.AliasPath = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray()); }
         }
+
+        private void AttributePathData_Validating(object sender, CancelEventArgs e)
+        {
+            if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
+            { value.AttributePath = new PathIndex(PathIndex.Parse(attributePathData.Text).ToArray()); }
+        }
+
+
     }
 }
