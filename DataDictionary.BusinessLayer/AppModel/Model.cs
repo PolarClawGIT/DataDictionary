@@ -167,17 +167,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
             work.AddRange(definitionValues.Load(factory, dataKey));
-            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttribute = InjectAttribute; } });
+            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
+
             return work;
-        }
-
-        IAttributeValue? InjectAttribute(PathIndex path)
-        {
-            PathIndex key = new PathIndex(path);
-
-            if (attributeValues.Values.FirstOrDefault(w => key.Equals(w.AttributePath)) is IAttributeValue value)
-            { return value; }
-            else { return null; }
         }
 
         /// <inheritdoc/>
@@ -191,8 +183,23 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
-            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttribute = InjectAttribute; } });
+            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
             return work;
+        }
+
+        IEnumerable<IAttributeValue> FindAttributes(PathIndex path)
+        {
+            List<IAttributeValue> result = new List<IAttributeValue>();
+            PathIndex key = new PathIndex(path);
+
+            result.AddRange(attributeValues.Values.Where(w => key.Equals(w.AttributePath)));
+
+            result.AddRange(
+                attributeValues.Values.
+                Where(w => attributeValues.Values.
+                    Any(a => key.Equals(w.AttributePath))));
+
+            return result.DistinctBy(d => new AttributeIndex(d));
         }
 
         /// <inheritdoc/>
@@ -233,7 +240,6 @@ namespace DataDictionary.BusinessLayer.AppModel
             entityValues.Import(source);
             propertyValues.Import(source);
             definitionValues.Import(source);
-            entityValues.FindAttribute = InjectAttribute;
         }
 
         /// <inheritdoc/>

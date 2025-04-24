@@ -133,27 +133,32 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues = new EntitySubjectAreaData();
         }
 
-        public FindAttribute FindAttribute
+        public FindAttributes FindAttributes
         {
-            get { return findAttribute; }
+            get { return findAttributes; }
             set
             {
                 attributeValues.ListChanged -= AttributeValues_ListChanged;
+                findAttributes = value;
 
-                findAttribute = value;
                 foreach (EntityAttributeValue item in attributeValues)
-                { item.FindAttribute = value; }
+                { item.FindAttributes = value; }
 
                 attributeValues.ListChanged += AttributeValues_ListChanged;
 
                 void AttributeValues_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    if (e.NewIndex >= 0)
-                    { attributeValues[e.NewIndex].FindAttribute = value; }
+                    if (e.ListChangedType is ListChangedType.Reset)
+                    {
+                        foreach (EntityAttributeValue item in attributeValues)
+                        { item.FindAttributes = value; }
+                    }
+                    else if (e.ListChangedType is ListChangedType.ItemAdded && e.NewIndex >= 0)
+                    { attributeValues[e.NewIndex].FindAttributes = value; }
                 }
             }
         }
-        FindAttribute findAttribute = (path) => null;
+        FindAttributes findAttributes = (path) => new List<IAttributeValue>();
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>

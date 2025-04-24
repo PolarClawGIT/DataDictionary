@@ -41,7 +41,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// The Attribute, if any, that is associated with the Entity.
         /// </summary>
-        public IAttributeValue? Attribute { get { return FindAttribute(AttributePath); } }
+        public IAttributeValue? Attribute { get { return FindAttributes(AttributePath).FirstOrDefault(); } }
 
         //public Guid? EntityId => throw new NotImplementedException();
         //public String? AttributePath => throw new NotImplementedException();
@@ -61,8 +61,8 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Function that finds the Attribute for the EntityAttribute
         /// </summary>
-        internal FindAttribute FindAttribute
-        { get; set; } = (path) => null;
+        internal FindAttributes FindAttributes
+        { get; set; } = (path) => new List<IAttributeValue>();
 
         /// <inheritdoc/>
         public Boolean InModel

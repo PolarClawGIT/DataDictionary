@@ -2,4 +2,9 @@
 
 namespace DataDictionary.BusinessLayer.AppModel;
 
-delegate IAttributeValue? FindAttribute(PathIndex path);
+/// <summary>
+/// Delegate for the Function that returns the list of Attributes that match the path provided.
+/// </summary>
+/// <param name="path"></param>
+/// <returns></returns>
+delegate IEnumerable<IAttributeValue> FindAttributes(PathIndex path);

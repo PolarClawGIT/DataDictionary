@@ -296,7 +296,10 @@ namespace DataDictionary.Main.Forms.Model
                     dialog.BuildData(selected, GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
-                    { formBinding.SetAttributes(dialog.SelectedByValue<AttributeValue>()); }
+                    { 
+                        formBinding.SetAttributes(dialog.SelectedByValue<AttributeValue>());
+                        bindingAttribute.ResetCurrentItem();
+                    }
                 }
             }
 

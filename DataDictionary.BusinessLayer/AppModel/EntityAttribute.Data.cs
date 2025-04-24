@@ -21,12 +21,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
-        /// <summary>
-        /// TryGet Function to find an Attribute;
-        /// </summary>
-        public FindAttribute FindAttribute
-        { get; internal set; } = (path) => null;
-
         #region ILoadData,ISaveData
         /// <inheritdoc/>
         /// <remarks>EntityAttribute</remarks>
