@@ -379,6 +379,18 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
 
+            public void AddDefinition()
+            {
+                if (TryGetValue(out EntityValue? entity))
+                { Definitions.Add(new EntityDefinitionValue(entity)); }
+            }
+
+            public void AddProperty()
+            {
+                if (TryGetValue(out EntityValue? entity))
+                { Properties.Add(new EntityPropertyValue(entity)); }
+            }
+
             public void AddSubjectArea(ISubjectAreaIndex subject)
             {
                 if (TryGetValue(out EntityValue? entity))

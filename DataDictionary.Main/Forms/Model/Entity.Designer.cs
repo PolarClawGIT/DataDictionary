@@ -485,7 +485,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(476, 443);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -502,7 +502,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(186, 66);
+            definitionLayout.Size = new Size(470, 437);
             definitionLayout.TabIndex = 1;
             // 
             // definitionData
@@ -515,7 +515,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionData.Margin = new Padding(0);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(180, 18);
+            definitionData.Size = new Size(464, 129);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -538,9 +538,9 @@ namespace DataDictionary.Main.Forms.Model
             // definitionControl
             // 
             definitionControl.Dock = DockStyle.Fill;
-            definitionControl.Location = new Point(6, 24);
+            definitionControl.Location = new Point(6, 135);
             definitionControl.Name = "definitionControl";
-            definitionControl.Size = new Size(174, 36);
+            definitionControl.Size = new Size(458, 296);
             definitionControl.TabIndex = 1;
             // 
             // aliasTab
@@ -741,12 +741,10 @@ namespace DataDictionary.Main.Forms.Model
             // bindingProperty
             // 
             bindingProperty.AddingNew += BindingProperty_AddingNew;
-            bindingProperty.CurrentChanged += BindingProperty_CurrentChanged;
             // 
             // bindingDefinition
             // 
             bindingDefinition.AddingNew += BindingDefinition_AddingNew;
-            bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
             // 
             // bindingAttribute
             // 

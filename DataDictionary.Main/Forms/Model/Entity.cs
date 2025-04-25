@@ -195,13 +195,7 @@ namespace DataDictionary.Main.Forms.Model
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                EntityPropertyValue newItem = new EntityPropertyValue(current);
-                e.NewObject = newItem;
-            }
-        }
+        { formBinding.AddProperty(); }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
@@ -214,10 +208,6 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        { }
-
-        ISubjectAreaValue? addingSubject = null;
         private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
         { formBinding.AddSubjectArea(e); }
 
@@ -225,17 +215,7 @@ namespace DataDictionary.Main.Forms.Model
         { formBinding.RemoveSubjectArea(e); }
 
         private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                EntityDefinitionValue newItem = new EntityDefinitionValue(current);
-                e.NewObject = newItem;
-            }
-        }
-
-        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        { }
-
+        { formBinding.AddDefinition(); }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
@@ -291,7 +271,6 @@ namespace DataDictionary.Main.Forms.Model
         private void AttributeNewCommand_Click(object sender, EventArgs e)
         { formBinding.AddAttribute(); }
 
-
         private void AliasAddCommand_Click(object sender, EventArgs e)
         { formBinding.AddAlias(); }
 
@@ -313,8 +292,6 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
         }
-
-
 
         private void AliasNameData_Validating(object sender, CancelEventArgs e)
         {
