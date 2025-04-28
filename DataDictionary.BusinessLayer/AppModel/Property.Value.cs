@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             get
             {
                 if (PropertyType is DomainPropertyType.List && PropertyData is String)
-                { return PropertyData.Split(',').ToList(); }
+                { return PropertyData.Split(',').Select(s => s.Trim()).ToList(); }
                 else return new List<String>();
             }
             set

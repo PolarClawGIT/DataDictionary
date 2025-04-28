@@ -70,7 +70,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
-            PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
@@ -120,12 +119,8 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-
                 //Fixed Binding
-                PropertyNameList.Load(propertyIdColumn, fixedBinding.Properties);
-                propertiesData.AutoGenerateColumns = false;
-                propertiesData.DataSource = bindingProperty;
-                propertyControl.BindTo(bindingProperty, fixedBinding.Properties);
+                propertyData.BindTo(bindingProperty, formBinding.NewProperty);
 
                 DefinitionNameList.Load(definitionColumn, fixedBinding.Definitions);
                 definitionData.AutoGenerateColumns = false;
@@ -194,15 +189,6 @@ namespace DataDictionary.Main.Forms.Model
             });
         }
 
-        private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                AttributePropertyValue newItem = new AttributePropertyValue(current);
-                e.NewObject = newItem;
-            }
-        }
-
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (bindingAttribute.Current is AttributeValue current)
@@ -222,9 +208,6 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.ReadOnly = inModel;
             }
         }
-
-        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        { }
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
         { }

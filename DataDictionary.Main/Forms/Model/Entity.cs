@@ -3,11 +3,8 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using Toolbox.BindingTable;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
-using System.Linq;
-using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
@@ -75,7 +72,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
-            PropertyNameList.Load(propertyIdColumn);
+            //PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
@@ -126,10 +123,7 @@ namespace DataDictionary.Main.Forms.Model
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 //Fixed Binding
-                PropertyNameList.Load(propertyIdColumn, fixedBinding.Properties);
-                propertiesData.AutoGenerateColumns = false;
-                propertiesData.DataSource = bindingProperty;
-                propertyControl.BindTo(bindingProperty, fixedBinding.Properties);
+                propertyData.BindTo(bindingProperty, formBinding.NewProperty);
 
                 DefinitionNameList.Load(definitionColumn, fixedBinding.Definitions);
                 definitionData.AutoGenerateColumns = false;
@@ -197,9 +191,6 @@ namespace DataDictionary.Main.Forms.Model
                 }
             });
         }
-
-        private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
-        { formBinding.AddProperty(); }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {

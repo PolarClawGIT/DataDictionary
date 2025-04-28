@@ -385,10 +385,11 @@ namespace DataDictionary.Main.Forms.Model
                 { Definitions.Add(new EntityDefinitionValue(entity)); }
             }
 
-            public void AddProperty()
+            public EntityPropertyValue NewProperty()
             {
-                if (TryGetValue(out EntityValue? entity))
-                { Properties.Add(new EntityPropertyValue(entity)); }
+                if (TryGetValue(out EntityValue? value))
+                { return new EntityPropertyValue(value); }
+                else { throw new InvalidOperationException("Current EntityValue not defined"); }
             }
 
             public void AddSubjectArea(ISubjectAreaIndex subject)
@@ -411,10 +412,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public BindingView<PropertyValue> Properties { get; private set; } =
-                new BindingView<PropertyValue>(BusinessData.Model.Properties)
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public BindingView<DefinitionValue> Definitions { get; private set; } =

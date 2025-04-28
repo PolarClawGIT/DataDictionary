@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
-    public interface IPropertySubType : IProperty
+    public interface IPropertySubType : IProperty, IPropertyIndex
     {
         Guid? IPropertyKey.PropertyId { get { return PropertyId; } }
         String? IProperty.PropertyValue { get { return PropertyValue; } }

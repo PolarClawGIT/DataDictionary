@@ -150,6 +150,13 @@ namespace DataDictionary.Main.Forms.Model
                 return newValue;
             }
 
+            public AttributePropertyValue NewProperty()
+            {
+                if (TryGetValue(out AttributeValue? value))
+                { return new AttributePropertyValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -283,10 +290,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public BindingView<PropertyValue> Properties { get; private set; } =
-                new BindingView<PropertyValue>(BusinessData.Model.Properties)
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public BindingView<DefinitionValue> Definitions { get; private set; } =
