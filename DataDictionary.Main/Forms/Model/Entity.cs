@@ -99,16 +99,6 @@ namespace DataDictionary.Main.Forms.Model
 
                 memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                PropertyNameList.Load(propertyIdColumn, BusinessData.Model.Properties);
-                propertiesData.AutoGenerateColumns = false;
-                propertiesData.DataSource = bindingProperty;
-                propertyControl.BindTo(bindingProperty, BusinessData.Model.Properties);
-
-                DefinitionNameList.Load(definitionColumn, BusinessData.Model.Definitions);
-                definitionData.AutoGenerateColumns = false;
-                definitionData.DataSource = bindingDefinition;
-                definitionControl.BindTo(bindingDefinition, BusinessData.Model.Definitions);
-
                 // Attribute Handling
                 attributeData.AutoGenerateColumns = false;
                 attributeData.DataSource = bindingAttribute;
@@ -118,7 +108,11 @@ namespace DataDictionary.Main.Forms.Model
                 attributeKnownAsData.DataBindings.Add(new Binding(nameof(attributeKnownAsData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
                 attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
                 attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
-                subjectArea.BindTo(bindingSubjectArea, BusinessData.Model.SubjectAreas);
+
+                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
+                attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
+
                 attributeLayout.Enabled = false;
 
                 // Alias Handling
@@ -131,10 +125,20 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
-                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
-                attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
+                //Fixed Binding
+                PropertyNameList.Load(propertyIdColumn, fixedBinding.Properties);
+                propertiesData.AutoGenerateColumns = false;
+                propertiesData.DataSource = bindingProperty;
+                propertyControl.BindTo(bindingProperty, fixedBinding.Properties);
 
+                DefinitionNameList.Load(definitionColumn, fixedBinding.Definitions);
+                definitionData.AutoGenerateColumns = false;
+                definitionData.DataSource = bindingDefinition;
+                definitionControl.BindTo(bindingDefinition, fixedBinding.Definitions);
+
+                subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
+
+                // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
             }
@@ -199,6 +203,8 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
+            //TODO: Figure out how do this using the Binding class.
+
             if (formBinding.TryGetAlias(out EntityAliasValue? current))
             {
                 Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;

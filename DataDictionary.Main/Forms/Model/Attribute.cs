@@ -110,6 +110,18 @@ namespace DataDictionary.Main.Forms.Model
                 isNonKeyData.DataBindings.Add(new Binding(nameof(isNonKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsNonKey), false, DataSourceUpdateMode.OnPropertyChanged));
                 isKeyData.DataBindings.Add(new Binding(nameof(isKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsKey), false, DataSourceUpdateMode.OnPropertyChanged));
 
+                // Alias Handling
+                ScopeNameList.Load(aliaseScopeColumn);
+                ScopeNameList.Load(aliasScopeData);
+
+                aliasesData.AutoGenerateColumns = false;
+                aliasesData.DataSource = bindingAlias;
+
+                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
+
+
+                //Fixed Binding
                 PropertyNameList.Load(propertyIdColumn, fixedBinding.Properties);
                 propertiesData.AutoGenerateColumns = false;
                 propertiesData.DataSource = bindingProperty;
@@ -122,16 +134,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
 
-                // Alias Handling
-                ScopeNameList.Load(aliaseScopeColumn);
-                ScopeNameList.Load(aliasScopeData);
-
-                aliasesData.AutoGenerateColumns = false;
-                aliasesData.DataSource = bindingAlias;
-
-                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
-
+                // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
             }
