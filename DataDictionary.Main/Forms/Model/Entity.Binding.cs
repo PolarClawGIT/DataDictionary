@@ -379,10 +379,11 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
 
-            public void AddDefinition()
+            public EntityDefinitionValue NewDefinition()
             {
-                if (TryGetValue(out EntityValue? entity))
-                { Definitions.Add(new EntityDefinitionValue(entity)); }
+                if (TryGetValue(out EntityValue? value))
+                { return new EntityDefinitionValue(value); }
+                else { throw new InvalidOperationException("Current EntityValue not defined"); }
             }
 
             public EntityPropertyValue NewProperty()

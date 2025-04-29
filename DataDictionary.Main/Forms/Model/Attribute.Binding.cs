@@ -157,6 +157,13 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
 
+            public AttributeDefinitionValue NewDefinition()
+            {
+                if (TryGetValue(out AttributeValue? value))
+                { return new AttributeDefinitionValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();

@@ -2,6 +2,8 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using System.Data;
+using Toolbox.BindingTable;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Model.Controls
 {
@@ -9,6 +11,14 @@ namespace DataDictionary.Main.Forms.Model.Controls
     {
         Dictionary<ListViewItem, ISubjectAreaValue> subjectItems = new Dictionary<ListViewItem, ISubjectAreaValue>();
         BindingSource bindingSubjectArea = new BindingSource();
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
+            new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+
+        //TODO: Repeat changes to Properties to Subject Areas.
 
         public SubjectArea()
         {

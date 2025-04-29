@@ -35,7 +35,10 @@
             definitionSummaryTab = new TabPage();
             definitionSummaryData = new TextBox();
             definitionLayout = new TableLayoutPanel();
-            definitionData = new DataDictionary.Main.Controls.ComboBoxData();
+            definitionData = new DataGridView();
+            definitionColumn = new DataGridViewComboBoxColumn();
+            definitionSummaryColumn = new DataGridViewTextBoxColumn();
+            definitionTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             fullTextTools = new ContextMenuStrip(components);
             syncTextToSummary = new ToolStripMenuItem();
             definitionTab = new TabControl();
@@ -43,6 +46,7 @@
             definitionTextTab.SuspendLayout();
             definitionSummaryTab.SuspendLayout();
             definitionLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)definitionData).BeginInit();
             fullTextTools.SuspendLayout();
             SuspendLayout();
             // 
@@ -51,10 +55,10 @@
             definitionTab.Controls.Add(definitionTextTab);
             definitionTab.Controls.Add(definitionSummaryTab);
             definitionTab.Dock = DockStyle.Fill;
-            definitionTab.Location = new Point(3, 55);
+            definitionTab.Location = new Point(3, 173);
             definitionTab.Name = "definitionTab";
             definitionTab.SelectedIndex = 0;
-            definitionTab.Size = new Size(295, 158);
+            definitionTab.Size = new Size(295, 171);
             definitionTab.TabIndex = 2;
             // 
             // definitionTextTab
@@ -64,7 +68,7 @@
             definitionTextTab.Location = new Point(4, 24);
             definitionTextTab.Name = "definitionTextTab";
             definitionTextTab.Padding = new Padding(3);
-            definitionTextTab.Size = new Size(287, 130);
+            definitionTextTab.Size = new Size(287, 143);
             definitionTextTab.TabIndex = 1;
             definitionTextTab.Text = "Full Text";
             // 
@@ -77,8 +81,9 @@
             definitionTextData.Location = new Point(3, 3);
             definitionTextData.Name = "definitionTextData";
             definitionTextData.ReadOnly = false;
-            definitionTextData.Size = new Size(281, 124);
+            definitionTextData.Size = new Size(281, 137);
             definitionTextData.TabIndex = 0;
+            definitionTextData.ToolStripVisible = true;
             definitionTextData.Validated += DefinitionTextData_Validated;
             // 
             // definitionSummaryTab
@@ -88,7 +93,7 @@
             definitionSummaryTab.Location = new Point(4, 24);
             definitionSummaryTab.Name = "definitionSummaryTab";
             definitionSummaryTab.Padding = new Padding(3);
-            definitionSummaryTab.Size = new Size(287, 130);
+            definitionSummaryTab.Size = new Size(287, 114);
             definitionSummaryTab.TabIndex = 0;
             definitionSummaryTab.Text = "Summary";
             // 
@@ -99,7 +104,7 @@
             definitionSummaryData.Multiline = true;
             definitionSummaryData.Name = "definitionSummaryData";
             definitionSummaryData.ScrollBars = ScrollBars.Both;
-            definitionSummaryData.Size = new Size(281, 124);
+            definitionSummaryData.Size = new Size(281, 108);
             definitionSummaryData.TabIndex = 0;
             // 
             // definitionLayout
@@ -107,30 +112,62 @@
             definitionLayout.ColumnCount = 1;
             definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             definitionLayout.Controls.Add(definitionData, 0, 0);
-            definitionLayout.Controls.Add(definitionTab, 0, 1);
+            definitionLayout.Controls.Add(definitionTab, 0, 2);
+            definitionLayout.Controls.Add(definitionTypeData, 0, 1);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(0, 0);
             definitionLayout.Name = "definitionLayout";
-            definitionLayout.RowCount = 2;
+            definitionLayout.RowCount = 3;
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             definitionLayout.RowStyles.Add(new RowStyle());
-            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            definitionLayout.Size = new Size(301, 216);
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            definitionLayout.Size = new Size(301, 347);
             definitionLayout.TabIndex = 1;
             // 
             // definitionData
             // 
-            definitionData.AutoSize = true;
-            definitionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            definitionData.AllowUserToAddRows = false;
+            definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
             definitionData.Dock = DockStyle.Fill;
-            definitionData.DropDownStyle = ComboBoxStyle.DropDownList;
-            definitionData.HeaderText = "Definition type";
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.ReadOnly = false;
-            definitionData.Size = new Size(295, 46);
-            definitionData.TabIndex = 0;
-            definitionData.SelectedIndexChanged += DefinitionData_SelectedIndexChanged;
-            definitionData.SelectionChangeCommitted += DefinitionData_SelectionChangeCommitted;
+            definitionData.ReadOnly = true;
+            definitionData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            definitionData.Size = new Size(295, 112);
+            definitionData.TabIndex = 3;
+            // 
+            // definitionColumn
+            // 
+            definitionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionColumn.DataPropertyName = "DefinitionId";
+            definitionColumn.FillWeight = 50F;
+            definitionColumn.HeaderText = "Definition";
+            definitionColumn.Name = "definitionColumn";
+            definitionColumn.ReadOnly = true;
+            // 
+            // definitionSummaryColumn
+            // 
+            definitionSummaryColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
+            definitionSummaryColumn.HeaderText = "Definition Summary";
+            definitionSummaryColumn.Name = "definitionSummaryColumn";
+            definitionSummaryColumn.ReadOnly = true;
+            // 
+            // definitionTypeData
+            // 
+            definitionTypeData.AutoSize = true;
+            definitionTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            definitionTypeData.Dock = DockStyle.Fill;
+            definitionTypeData.DropDownStyle = ComboBoxStyle.DropDownList;
+            definitionTypeData.HeaderText = "Definition type";
+            definitionTypeData.Location = new Point(3, 121);
+            definitionTypeData.Name = "definitionTypeData";
+            definitionTypeData.ReadOnly = false;
+            definitionTypeData.Size = new Size(295, 46);
+            definitionTypeData.TabIndex = 0;
+            definitionTypeData.SelectedIndexChanged += DefinitionData_SelectedIndexChanged;
+            definitionTypeData.SelectionChangeCommitted += DefinitionData_SelectionChangeCommitted;
             // 
             // fullTextTools
             // 
@@ -154,7 +191,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(definitionLayout);
             Name = "Definition";
-            Size = new Size(301, 216);
+            Size = new Size(301, 347);
             definitionTab.ResumeLayout(false);
             definitionTextTab.ResumeLayout(false);
             definitionTextTab.PerformLayout();
@@ -162,6 +199,7 @@
             definitionSummaryTab.PerformLayout();
             definitionLayout.ResumeLayout(false);
             definitionLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)definitionData).EndInit();
             fullTextTools.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -169,12 +207,15 @@
         #endregion
 
         private TableLayoutPanel definitionLayout;
-        private DataDictionary.Main.Controls.ComboBoxData definitionData;
+        private DataDictionary.Main.Controls.ComboBoxData definitionTypeData;
         private TabPage definitionTextTab;
         private DataDictionary.Main.Controls.RichTextBoxData definitionTextData;
         private TabPage definitionSummaryTab;
         private TextBox definitionSummaryData;
         private ContextMenuStrip fullTextTools;
         private ToolStripMenuItem syncTextToSummary;
+        private DataGridView definitionData;
+        private DataGridViewComboBoxColumn definitionColumn;
+        private DataGridViewTextBoxColumn definitionSummaryColumn;
     }
 }

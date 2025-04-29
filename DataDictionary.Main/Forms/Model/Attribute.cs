@@ -70,7 +70,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
-            DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
             if (needsData)
@@ -119,13 +118,9 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                //Fixed Binding
+                //
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
-
-                DefinitionNameList.Load(definitionColumn, fixedBinding.Definitions);
-                definitionData.AutoGenerateColumns = false;
-                definitionData.DataSource = bindingDefinition;
-                definitionControl.BindTo(bindingDefinition, fixedBinding.Definitions);
+                definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
 
                 subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
 
@@ -206,18 +201,6 @@ namespace DataDictionary.Main.Forms.Model
                 isAliasInModelData.Checked = inModel;
                 aliasNameData.ReadOnly = inModel;
                 aliasScopeData.ReadOnly = inModel;
-            }
-        }
-
-        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        { }
-
-        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                AttributeDefinitionValue newItem = new AttributeDefinitionValue(current);
-                e.NewObject = newItem;
             }
         }
 

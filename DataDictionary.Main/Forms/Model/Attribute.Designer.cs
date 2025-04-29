@@ -33,7 +33,6 @@ namespace DataDictionary.Main.Forms.Model
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
-            TableLayoutPanel definitionLayout;
             TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel subjectAreaLayout;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
@@ -56,10 +55,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab = new TabPage();
             propertyData = new DataDictionary.Main.Forms.Model.Controls.Property();
             definitionTab = new TabPage();
-            definitionData = new DataGridView();
-            definitionColumn = new DataGridViewComboBoxColumn();
-            definitionSummaryColumn = new DataGridViewTextBoxColumn();
-            definitionControl = new DataDictionary.Main.Forms.Model.Controls.Definition();
+            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
@@ -81,7 +77,6 @@ namespace DataDictionary.Main.Forms.Model
             bindingDefinition = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
-            definitionLayout = new TableLayoutPanel();
             aliasCommandLayout = new TableLayoutPanel();
             subjectAreaLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
@@ -90,8 +85,6 @@ namespace DataDictionary.Main.Forms.Model
             detailsLayout.SuspendLayout();
             propertyTab.SuspendLayout();
             definitionTab.SuspendLayout();
-            definitionLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)definitionData).BeginInit();
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
@@ -354,7 +347,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -363,72 +356,26 @@ namespace DataDictionary.Main.Forms.Model
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(406, 337);
+            propertyData.Size = new Size(186, 66);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
             // 
             definitionTab.BackColor = SystemColors.Control;
-            definitionTab.Controls.Add(definitionLayout);
+            definitionTab.Controls.Add(definitionData);
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(412, 343);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
-            // definitionLayout
-            // 
-            definitionLayout.ColumnCount = 1;
-            definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            definitionLayout.Controls.Add(definitionData, 0, 0);
-            definitionLayout.Controls.Add(definitionControl, 0, 1);
-            definitionLayout.Dock = DockStyle.Fill;
-            definitionLayout.Location = new Point(0, 0);
-            definitionLayout.Name = "definitionLayout";
-            definitionLayout.Padding = new Padding(3);
-            definitionLayout.RowCount = 2;
-            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(192, 72);
-            definitionLayout.TabIndex = 0;
-            // 
             // definitionData
             // 
-            definitionData.AllowUserToAddRows = false;
-            definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
             definitionData.Dock = DockStyle.Fill;
-            definitionData.Location = new Point(6, 6);
+            definitionData.Location = new Point(0, 0);
             definitionData.Name = "definitionData";
-            definitionData.ReadOnly = true;
-            definitionData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            definitionData.Size = new Size(180, 13);
+            definitionData.Size = new Size(412, 343);
             definitionData.TabIndex = 0;
-            // 
-            // definitionColumn
-            // 
-            definitionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            definitionColumn.DataPropertyName = "DefinitionId";
-            definitionColumn.FillWeight = 50F;
-            definitionColumn.HeaderText = "Definition";
-            definitionColumn.Name = "definitionColumn";
-            definitionColumn.ReadOnly = true;
-            // 
-            // definitionSummaryColumn
-            // 
-            definitionSummaryColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
-            definitionSummaryColumn.HeaderText = "Definition Summary";
-            definitionSummaryColumn.Name = "definitionSummaryColumn";
-            definitionSummaryColumn.ReadOnly = true;
-            // 
-            // definitionControl
-            // 
-            definitionControl.Dock = DockStyle.Fill;
-            definitionControl.Location = new Point(6, 25);
-            definitionControl.Name = "definitionControl";
-            definitionControl.Size = new Size(180, 41);
-            definitionControl.TabIndex = 1;
             // 
             // aliasTab
             // 
@@ -639,11 +586,6 @@ namespace DataDictionary.Main.Forms.Model
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
             // 
-            // bindingDefinition
-            // 
-            bindingDefinition.AddingNew += BindingDefinition_AddingNew;
-            bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
-            // 
             // Attribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -662,8 +604,6 @@ namespace DataDictionary.Main.Forms.Model
             detailsLayout.PerformLayout();
             propertyTab.ResumeLayout(false);
             definitionTab.ResumeLayout(false);
-            definitionLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)definitionData).EndInit();
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
             aliaseLayout.PerformLayout();
@@ -708,7 +648,6 @@ namespace DataDictionary.Main.Forms.Model
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
         private TabPage definitionTab;
-        private DataGridView definitionData;
         private BindingSource bindingDefinition;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private TableLayoutPanel aliaseLayout;
@@ -723,9 +662,7 @@ namespace DataDictionary.Main.Forms.Model
         private DataDictionary.Main.Controls.ComboBoxData dataTypeData;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
-        private Controls.Definition definitionControl;
-        private DataGridViewComboBoxColumn definitionColumn;
-        private DataGridViewTextBoxColumn definitionSummaryColumn;
         private Controls.Property propertyData;
+        private Controls.Definition definitionData;
     }
 }
