@@ -42,11 +42,27 @@ namespace DataDictionary.Main.Controls
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedItem { get { return checkedListBox.SelectedItem; } set { checkedListBox.SelectedItem = value; } }
+        public Object? SelectedItem
+        {
+            get { return checkedListBox.SelectedItem; }
+            set
+            {
+                if (value is null) { checkedListBox.ClearSelected(); }
+                else { checkedListBox.SelectedIndex = checkedListBox.Items.IndexOf(value); }
+            }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedValue { get { return checkedListBox.SelectedValue; } set { checkedListBox.SelectedValue = value; } }
+        public Object? SelectedValue
+        {
+            get { return checkedListBox.SelectedValue; }
+            set
+            {
+                if (value is null) { checkedListBox.ClearSelected(); }
+                else { checkedListBox.SelectedIndex = checkedListBox.Items.IndexOf(value); }
+            }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -309,7 +309,7 @@
             roleData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             roleData.Size = new Size(192, 576);
             roleData.TabIndex = 0;
-            roleData.DataError += roleData_DataError;
+            roleData.DataError += RoleData_DataError;
             // 
             // roleNameColumn
             // 

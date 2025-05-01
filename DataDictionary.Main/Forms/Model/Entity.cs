@@ -188,8 +188,8 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            //TODO: Figure out how do this using the Binding class.
-
+            //TODO: Figure out how do this using the Binding class. How??
+            
             if (formBinding.TryGetAlias(out EntityAliasValue? current))
             {
                 Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
@@ -209,15 +209,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
-        }
-
-        private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                e.NewObject = new EntityAttributeValue(current)
-                { OrdinalPosition = bindingAttribute.Count + 1 };
-            }
         }
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)

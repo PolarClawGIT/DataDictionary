@@ -134,7 +134,6 @@
             // 
             // modelBinding
             // 
-            modelBinding.BindingComplete += BindingComplete;
             modelBinding.CurrentChanged += modelBinding_CurrentChanged;
             // 
             // modelToolStrip

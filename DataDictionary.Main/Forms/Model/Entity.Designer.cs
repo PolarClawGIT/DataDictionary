@@ -627,7 +627,6 @@ namespace DataDictionary.Main.Forms.Model
             // 
             // bindingAttribute
             // 
-            bindingAttribute.AddingNew += BindingAttribute_AddingNew;
             bindingAttribute.CurrentChanged += BindingAttribute_CurrentChanged;
             // 
             // bindingAttributeDetail

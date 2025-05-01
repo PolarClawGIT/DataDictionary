@@ -60,11 +60,19 @@ namespace DataDictionary.Main.Controls
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
+        public Object? SelectedItem
+        {
+            get { return comboBox.SelectedItem; }
+            set { comboBox.SelectedIndex = comboBox.Items.IndexOf(value); }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedValue { get { return comboBox.SelectedValue; } set { comboBox.SelectedValue = value; } }
+        public Object? SelectedValue
+        {
+            get { return comboBox.SelectedValue; }
+            set { comboBox.SelectedIndex = comboBox.Items.IndexOf(value); }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

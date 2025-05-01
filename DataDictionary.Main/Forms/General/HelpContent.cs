@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
             helpToolStripButton.Enabled = false;
-            formData = new FormBinding()  { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
+            formData = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
             formData.Init();
 
             formTree = new ContentTree(helpContentNavigation);
@@ -186,7 +186,8 @@ namespace DataDictionary.Main.Forms.General
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (formTree.GetSubject(e.Node, out BindingSubject? subject))
+            if (e.Node is not null
+                && formTree.GetSubject(e.Node, out BindingSubject? subject))
             { formData.SetPosition(subject.Path); }
         }
 
