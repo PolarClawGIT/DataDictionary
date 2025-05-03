@@ -22,15 +22,23 @@ namespace DataDictionary.Main.Controls
     partial class TextBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return textBox.DataBindings; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new String Text { get { return textBox.Text; } set { textBox.Text = value; } }
 
         // Expose Control Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean Multiline { get { return textBox.Multiline; } set { textBox.Multiline = value; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean WordWrap { get { return textBox.WordWrap; } set { textBox.WordWrap = value; } }
 
         /// <summary>

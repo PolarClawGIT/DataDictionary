@@ -3,11 +3,8 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
-using Toolbox.BindingTable;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.Main.Dialogs;
-using System.Linq;
-using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
@@ -20,11 +17,27 @@ namespace DataDictionary.Main.Forms.Model
         public Boolean IsOpenItem(object? item)
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
-        Boolean isNew = false; // Flags the item as new to handled deferred Refresh.
+        FormBinding formBinding;
+        FixedBinding fixedBinding;
+        Boolean needsData = false;
 
         protected Entity() : base()
         {
             InitializeComponent();
+            formBinding = new FormBinding()
+            {
+                BindingAlias = bindingAlias,
+                BindingEntity = bindingEntity,
+                BindingSubjectArea = bindingSubjectArea,
+                BindingProperty = bindingProperty,
+                BindingDefinition = bindingDefinition,
+                BindingAttribute = bindingAttribute,
+                BindingAttributeDetail = bindingAttributeDetail,
+                DoWork = base.DoWork
+            };
+            formBinding.Init();
+
+            fixedBinding = new FixedBinding();
 
             SetRowState(
                 bindingEntity,
@@ -34,152 +47,150 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea,
                 bindingAttribute);
             SetTitle(bindingEntity);
-            SetCommand(ScopeType.ModelEntity, CommandImageType.Delete);
+            SetCommand(ScopeType.ModelEntity,
+                CommandImageType.Delete,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase,
+                CommandImageType.HistoryDatabase);
 
             attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
+            attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
-
-
-
         }
 
-        public Entity(IEntityValue? entityItem) : this()
+        public Entity(IEntityIndex? entity) : this()
         {
-            if (entityItem is null)
-            {
-                entityItem = new EntityValue();
-                BusinessData.Model.Entities.Values.Add(entityItem);
-                SendMessage(new RefreshNavigation());
-            }
-
-            EntityIndex key = new EntityIndex(entityItem);
-
-            IBindingList data = new BindingView<EntityValue>(BusinessData.Model.Entities.Values, w => key.Equals(w));
-            data.ListChanged += ListChanged;
-
-            bindingEntity.DataSource = data;
-            bindingEntity.Position = 0;
-
-            if (bindingEntity.Current is IEntityValue current)
-            {
-                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.Model.Entities.Properties, w => key.Equals(w));
-                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.Model.Entities.Definitions, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.Model.Entities.Aliases, w => key.Equals(w));
-                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.Model.Entities.SubjectArea, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.Model.Entities.Attributes, w => key.Equals(w), o => o.OrdinalPosition ?? 0);
-                bindingAttributeDetail.DataSource = new List<AttributeValue>();
-            }
-
-            void ListChanged(Object? sender, ListChangedEventArgs e)
-            {
-                // This addresses an invalid operation exception fired by CurrencyManager.FindGoodRow on an empty list
-                if (e.ListChangedType is ListChangedType.ItemDeleted
-                    && sender is IBindingList values
-                    && values.Count is 0)
-                {
-                    bindingEntity.RaiseListChangedEvents = false;
-                    bindingProperty.RaiseListChangedEvents = false;
-                    bindingDefinition.RaiseListChangedEvents = false;
-                    bindingAlias.RaiseListChangedEvents = false;
-                    bindingSubjectArea.RaiseListChangedEvents = false;
-                    bindingAttribute.RaiseListChangedEvents = false;
-                    bindingAttributeDetail.RaiseListChangedEvents = false;
-
-                    // This addresses index out of range exception generated by DataGridView
-                    Invoke(() => { propertiesData.DataSource = null; });
-                    Invoke(() => { definitionData.DataSource = null; });
-                    Invoke(() => { attributeData.DataSource = null; });
-                    Invoke(() => { aliasesData.DataSource = null; });
-                }
-            }
+            if (entity is null)
+            { entity = formBinding.NewValue(); }
+            else { formBinding.SetPosition(entity); }
         }
+
+        public Entity(IEntityIndex entity, ITemporalIndex temporal) : this(entity)
+        { formBinding.SetPosition(entity, temporal); needsData = true; }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            PropertyNameList.Load(propertyIdColumn);
-            DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            if (isNew) { SendMessage(new RefreshNavigation()); }
+            if (needsData)
+            { formBinding.Load(onCompleting); }
+            else { DoBinding(); }
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is null)
+                {
+                    DoBinding();
+                    SendMessage(new RefreshNavigation());
+                }
+            }
 
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
+            void DoBinding()
+            {
+                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
+                descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
 
-            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
+                memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            PropertyNameList.Load(propertyIdColumn, BusinessData.Model.Properties);
-            propertiesData.AutoGenerateColumns = false;
-            propertiesData.DataSource = bindingProperty;
-            propertyControl.BindTo(bindingProperty, BusinessData.Model.Properties);
+                // Attribute Handling
+                attributeData.AutoGenerateColumns = false;
+                attributeData.DataSource = bindingAttribute;
 
-            DefinitionNameList.Load(definitionColumn, BusinessData.Model.Definitions);
-            definitionData.AutoGenerateColumns = false;
-            definitionData.DataSource = bindingDefinition;
-            definitionControl.BindTo(bindingDefinition, BusinessData.Model.Definitions);
+                attributePathData.DataBindings.Add(new Binding(nameof(attributePathData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributePath)));
+                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
+                attributeKnownAsData.DataBindings.Add(new Binding(nameof(attributeKnownAsData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
+                attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
+                attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
 
-            // Attribute Handling
-            attributeData.AutoGenerateColumns = false;
-            attributeData.DataSource = bindingAttribute;
+                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
+                attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            attributePathData.DataBindings.Add(new Binding(nameof(attributePathData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributePath)));
-            attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
-            attributeAliasData.DataBindings.Add(new Binding(nameof(attributeAliasData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
-            attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
-            attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
-            subjectArea.BindTo(bindingSubjectArea, BusinessData.Model.SubjectAreas);
+                attributeLayout.Enabled = false;
 
-            // Alias Handling
-            ScopeNameList.Load(aliaseScopeColumn);
-            ScopeNameList.Load(aliasScopeData);
+                // Alias Handling
+                ScopeNameList.Load(aliaseScopeColumn);
+                ScopeNameList.Load(aliasScopeData);
 
-            aliasesData.AutoGenerateColumns = false;
-            aliasesData.DataSource = bindingAlias;
+                aliasesData.AutoGenerateColumns = false;
+                aliasesData.DataSource = bindingAlias;
 
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
+                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            attributeNavigation.BindingSource = bindingAttributeDetail;
-            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle)));
-            attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeDescription)));
+                //
+                propertyData.BindTo(bindingProperty, formBinding.NewProperty);
+                definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
+                subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
+            }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (bindingEntity.Current is IEntityValue current)
-            { DoWork(BusinessData.Model.Entities.Delete(current), Complete); }
-
-            void Complete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            formBinding.RemoveValue();
+            IsLocked(formBinding.GetLocked());
         }
 
-        private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                EntityPropertyValue newItem = new EntityPropertyValue(current);
-                e.NewObject = newItem;
-            }
+            base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
-        private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
-            if (bindingEntity.Current is EntityValue current)
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            formBinding.RemoveValue();
+            formBinding.Save(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
             {
-                EntityAliasValue newItem = new EntityAliasValue(current);
-                e.NewObject = newItem;
-            }
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out EntityValue? entity))
+                    { return new Entity(entity, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                }
+            });
         }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is EntityAliasValue current)
+            //TODO: Figure out how do this using the Binding class. How??
+            
+            if (formBinding.TryGetAlias(out EntityAliasValue? current))
             {
                 Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
                 isAliasInModelData.Checked = inModel;
@@ -188,48 +199,11 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        { }
-
-
-        private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (addingSubject is ISubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
-            {
-                EntitySubjectAreaValue newItem = new EntitySubjectAreaValue(entity, subject);
-                e.NewObject = newItem;
-            }
-            addingSubject = null;
-        }
-
-        ISubjectAreaValue? addingSubject = null;
         private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
-        {
-            addingSubject = e;
-            bindingSubjectArea.AddNew();
-        }
+        { formBinding.AddSubjectArea(e); }
 
         private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
-        {
-            SubjectAreaIndex key = new SubjectAreaIndex(e);
-
-            if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
-                && data.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue target)
-            { bindingSubjectArea.Remove(target); }
-        }
-
-        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                EntityDefinitionValue newItem = new EntityDefinitionValue(current);
-                e.NewObject = newItem;
-            }
-        }
-
-        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        { }
-
+        { formBinding.RemoveSubjectArea(e); }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
@@ -237,46 +211,12 @@ namespace DataDictionary.Main.Forms.Model
             memberNameData.Text = path.MemberFullPath;
         }
 
-        private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingEntity.Current is EntityValue current)
-            {
-                e.NewObject = new EntityAttributeValue(current)
-                { OrdinalPosition = bindingAttribute.Count + 1 };
-            }
-        }
-
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
         {
-            //attributeNavigation.BindingSource = null;
-            //bindingAttributeDetail.DataSource = null;
-            attributeInModelData.Checked = false;
-
-            if (bindingAttribute.Current is IEntityAttributeValue alias)
-            {
-                AliasIndexName aliasIndex = new AliasIndexName(alias);
-
-                //TODO: Include Attribute Path, not just the alias of the Attribute.
-
-                var attributes = BusinessData.Model.Attributes.
-                    FindAttribute(aliasIndex).
-                    Select(s => new AttributeIndex(s)).
-                    Join(BusinessData.Model.Attributes.Values,
-                        key => key,
-                        attribute => new AttributeIndex(attribute),
-                        (key, attribute) => attribute).
-                    ToList();
-
-                bindingAttributeDetail.DataSource = attributes;
-                if (attributes.Count > 0)
-                { attributeInModelData.Checked = true; }
-
-                //attributeNavigation.BindingSource = bindingAttributeDetail;
-            }
+            if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
+            { attributeLayout.Enabled = true; }
+            else { attributeLayout.Enabled = false; }
         }
-
-        private void AttributeTitleData_Validated(object sender, EventArgs e)
-        { }
 
         private void AttributeSelect_Click(object sender, EventArgs e)
         {
@@ -285,32 +225,18 @@ namespace DataDictionary.Main.Forms.Model
                 using (SelectionDialog dialog = new SelectionDialog(this))
                 {
                     dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                    IEnumerable<PathIndex> selected = attributes.Select(s => s.AttributePath);
 
-                    dialog.BuildData();
+                    dialog.BuildData(selected, GetDescription);
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
-                        IEnumerable<IPathValue> selected = dialog.SelectedByValue<AttributeValue>().OfType<IPathValue>();
-
-                        var toAdd = selected.Where(w => !attributes.Any(a => a.AttributePath.Equals(w.Path))).ToList();
-                        var toRemove = attributes.Where(w => !selected.Any(a => w.AttributePath.Equals(a.Path))).ToList();
-
-                        foreach (EntityAttributeValue removeItem in toRemove)
-                        { bindingAttribute.Remove(removeItem); }
-
-                        foreach (IPathValue addItem in toAdd)
-                        {
-                            if (bindingAttribute.AddNew() is EntityAttributeValue newItem)
-                            {
-                                newItem.AttributeTitle = addItem.Title;
-                                newItem.AttributePath = addItem.Path;
-                            }
-                        }
+                        formBinding.AddAttributes(dialog.SelectedByValue<AttributeValue>());
+                        bindingAttribute.ResetCurrentItem();
                     }
                 }
             }
 
-            // TODO: Hook Description into dialog.BuildData(???);
             String GetDescription(INamedScopeSourceValue value)
             {   // Needed a physical method rather then a Lambda expression.
                 // Properties don't get passed as expected.
@@ -319,14 +245,13 @@ namespace DataDictionary.Main.Forms.Model
                 { return attribute.AttributeDescription ?? String.Empty; }
                 else { return String.Empty; }
             }
-
         }
+
+        private void AttributeNewCommand_Click(object sender, EventArgs e)
+        { formBinding.AddAttribute(); }
 
         private void AliasAddCommand_Click(object sender, EventArgs e)
-        {
-            if (bindingAlias.AddNew() is EntityAliasValue newValue)
-            { }
-        }
+        { formBinding.AddAlias(); }
 
         private void AliasSelectCommand_Click(object sender, EventArgs e)
         {
@@ -341,44 +266,24 @@ namespace DataDictionary.Main.Forms.Model
 
                     dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
 
-
                     if (dialog.ShowDialog(this) is DialogResult.OK)
-                    {
-                        IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
-                        IEnumerable<EntityAliasValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.AliasPath).Count() > 0);
-
-                        foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.AliasPath).Contains(w.Path)).ToList())
-                        { // Add
-                            if (bindingAlias.AddNew() is EntityAliasValue newValue)
-                            {
-                                newValue.AliasPath = addItem.Path;
-                                newValue.AliasScope = addItem.Scope;
-                            }
-                        }
-                    }
+                    { formBinding.AddAlias(dialog.SelectedByNamedScope()); }
                 }
             }
         }
 
         private void AliasNameData_Validating(object sender, CancelEventArgs e)
         {
-            PathIndex path = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
-            aliasNameData.Text = path.MemberFullPath;
+            if (formBinding.TryGetAlias(out EntityAliasValue? value))
+            { value.AliasPath = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray()); }
         }
 
-        private void bindingAlias_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        private void AttributePathData_Validating(object sender, CancelEventArgs e)
         {
-
+            if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
+            { value.AttributePath = new PathIndex(PathIndex.Parse(attributePathData.Text).ToArray()); }
         }
 
-        private void bindingAttributeDetail_CurrentChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void attributeNavigatorData_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

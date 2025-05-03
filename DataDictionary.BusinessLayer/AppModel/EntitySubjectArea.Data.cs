@@ -60,5 +60,15 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>EntitySubjectArea</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntitySubjectArea</remarks>
+        public void Remove(IEntityIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntitySubjectArea</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

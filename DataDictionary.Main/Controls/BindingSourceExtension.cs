@@ -8,6 +8,7 @@ namespace DataDictionary.Main.Controls
 {
     static class BindingSourceExtension
     {
+        [Obsolete("Not used")]
         public static void BindComplete(this BindingSource binding,  object sender, BindingCompleteEventArgs e)
         { // This is to help detecting binding errors and provide something meaningful.
             Control? rootUserControl = null; // If this is a User Control, what is the control.
@@ -17,7 +18,7 @@ namespace DataDictionary.Main.Controls
 
             if (e.Exception is not null)
             {
-                if (e.Binding is not null)
+                if (e.Binding is not null && e.Binding.Control is not null)
                 {
                     e.Exception.Data.Add(nameof(e.Binding.Control), e.Binding.Control.GetType().Name);
                     if (rootUserControl is not null) { e.Exception.Data.Add(nameof(rootUserControl), rootUserControl.Name); }

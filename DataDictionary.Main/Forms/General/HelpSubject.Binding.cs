@@ -1,8 +1,10 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -14,51 +16,75 @@ namespace DataDictionary.Main.Forms.General
     {
         class FormBinding
         {
-            BindingSource bindingHelpSubject;
+            public required BindingSource BindingHelpSubject { private get; init; }
+            public BindingView<HelpSubjectValue> HelpSubjects { get; private set; } =
+                new BindingView<HelpSubjectValue>([]) 
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+            public BindingList<ControlValue> HelpControls { get; } = new BindingList<ControlValue>();
 
-            public BindingView<HelpSubjectValue> HelpSubjects { get; private set; }
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
             HelpSubjectIndex subjectIndex = new HelpSubjectIndex();
             TemporalIndex? temporalIndex = null;
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public FormBinding(ref BindingSource helpBinding) : base()
+            public FormBinding() : base()
+            { }
+
+            public void Init()
             {
-                bindingHelpSubject = helpBinding;
+                // Note: C# 13 adds "field".
+                // This code could then be moved to the BindingHelpSubject init.
+
+                subjectData = BusinessData.ApplicationData.HelpSubjects;
                 HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                bindingHelpSubject.DataSource = HelpSubjects;
+
+                if (HelpSubjects.Count > 0)
+                {
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    BindingHelpSubject.Position = 0;
+                    HelpSubjects.ListChanged += OnListChanged;
+
+                    HelpSubjects.RaiseListChangedEvents = true;
+                    BindingHelpSubject.RaiseListChangedEvents = true;
+                    HelpSubjects.ResetList();
+                }
             }
 
-            public void SetIndex(IHelpSubjectIndex helpSubject)
+            public void SetPosition(IHelpSubjectIndex helpSubject)
             {
                 subjectIndex = new HelpSubjectIndex(helpSubject);
                 HelpSubjects.ListChanged -= OnListChanged;
 
                 HelpSubjects.RaiseListChangedEvents = false;
-                bindingHelpSubject.RaiseListChangedEvents = false;
+                BindingHelpSubject.RaiseListChangedEvents = false;
 
                 HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                bindingHelpSubject.DataSource = HelpSubjects;
-                bindingHelpSubject.Position = 0;
-                HelpSubjects.ListChanged += OnListChanged;
 
-                HelpSubjects.RaiseListChangedEvents = true;
-                bindingHelpSubject.RaiseListChangedEvents = true;
+                if (HelpSubjects.Count > 0)
+                {
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    HelpSubjects.ListChanged += OnListChanged;
+
+                    HelpSubjects.RaiseListChangedEvents = true;
+                    BindingHelpSubject.RaiseListChangedEvents = true;
+                }
+
                 HelpSubjects.ResetList();
+                BindingHelpSubject.MoveFirst();  // For some reason this must be done last or it does not work.
             }
 
-            public void SetIndex(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
+            public void SetPosition(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
             {
-                SetIndex(helpSubject);
+                SetPosition(helpSubject);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
-            public HelpSubjectValue NewSubject()
+            public HelpSubjectValue NewValue()
             {
                 HelpSubjectValue newValue = new HelpSubjectValue();
                 subjectData.Add(newValue);
-                SetIndex(newValue);
+                SetPosition(newValue);
 
                 return newValue;
             }
@@ -85,21 +111,20 @@ namespace DataDictionary.Main.Forms.General
                 DoWork(work, StartBinding);
 
                 void StopBinding()
-                { bindingHelpSubject.SuspendBinding(); }
+                { BindingHelpSubject.SuspendBinding(); }
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
                     subjectData.ResetBindings();
 
                     HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                    bindingHelpSubject.DataSource = HelpSubjects;
-                    bindingHelpSubject.Position = 0;
-                    bindingHelpSubject.ResumeBinding();
+                    BindingHelpSubject.DataSource = HelpSubjects;
+                    BindingHelpSubject.Position = 0;
+                    BindingHelpSubject.ResumeBinding();
 
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
-
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
@@ -114,10 +139,10 @@ namespace DataDictionary.Main.Forms.General
 
                 void StopBinding()
                 {
-                    bindingHelpSubject.SuspendBinding();
+                    BindingHelpSubject.SuspendBinding();
                     HelpSubjects.ListChanged -= OnListChanged;
                     HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
+                    BindingHelpSubject.RaiseListChangedEvents = false;
 
                     temporalIndex = null;
                     subjectData = BusinessData.ApplicationData.HelpSubjects;
@@ -125,13 +150,13 @@ namespace DataDictionary.Main.Forms.General
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    bindingHelpSubject.Position = 0;
+                    BindingHelpSubject.Position = 0;
                     HelpSubjects.ListChanged += OnListChanged;
 
                     HelpSubjects.RaiseListChangedEvents = true;
-                    bindingHelpSubject.RaiseListChangedEvents = true;
-                    bindingHelpSubject.ResumeBinding();
-                    bindingHelpSubject.ResetBindings(false);
+                    BindingHelpSubject.RaiseListChangedEvents = true;
+                    BindingHelpSubject.ResumeBinding();
+                    BindingHelpSubject.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -149,7 +174,7 @@ namespace DataDictionary.Main.Forms.General
                     // A related error can occur with DataGridViews when the BindingList has an empty list.
 
                     //HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
+                    BindingHelpSubject.RaiseListChangedEvents = false;
                 }
             }
 
@@ -158,24 +183,43 @@ namespace DataDictionary.Main.Forms.General
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
-            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (bindingHelpSubject.Position >= 0
-                    && bindingHelpSubject.Current is HelpSubjectValue value)
+                if (BindingHelpSubject.Position >= 0
+                    && BindingHelpSubject.Current is HelpSubjectValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
-            public void RemoveSubject()
+            public void RemoveValue()
             {
-                if (TryGetSubject(out HelpSubjectValue? value))
+                if (TryGetValue(out HelpSubjectValue? value))
                 {
-                    bindingHelpSubject.SuspendBinding();
-                    HelpSubjects.ListChanged -= OnListChanged;
-                    HelpSubjects.RaiseListChangedEvents = false;
-                    bindingHelpSubject.RaiseListChangedEvents = false;
-
                     HelpSubjects.Remove(value);
+                    SetPosition(value);
+                }
+            }
+
+            public Boolean GetAuthorization(CommandImageType command)
+            {
+                Boolean isGrant = false;
+
+                if (TryGetValue(out HelpSubjectValue? helpSubject))
+                {
+                    SecurableIndex securable = new HelpSubjectIndex(helpSubject);
+                    isGrant = BusinessData.Authorization.IsGrant(securable);
+                }
+
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.Delete: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
+                    default: return false;
                 }
             }
         }

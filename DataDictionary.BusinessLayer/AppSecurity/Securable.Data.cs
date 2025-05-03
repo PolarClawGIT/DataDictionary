@@ -47,5 +47,9 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public IReadOnlyList<WorkItem> Delete()
         { throw new InvalidOperationException("Not Supported"); }
 
+        /// <inheritdoc/>
+        /// <remarks>SecurableData</remarks>
+        public void Remove(ISecurableIndex dataKey)
+        { throw new InvalidOperationException("Not Supported"); }
     }
 }

@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     /// <inheritdoc/>
     class PropertyData : PropertyCollection<PropertyValue>, IPropertyData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
@@ -39,13 +39,13 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey, ITemporalIndex asOfUtcDate)
-        { return factory.CreateLoad(this, dataKey, asOfUtcDate).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
@@ -59,8 +59,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
@@ -80,6 +80,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
@@ -104,5 +109,17 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return result;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public void Remove(IPropertyIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
+
+
     }
 }

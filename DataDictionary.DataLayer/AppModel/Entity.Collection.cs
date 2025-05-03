@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppModel
         IReadData<IModelKey>, IReadData<IEntityKey>,
         IWriteData<IModelKey>, IWriteData<IEntityKey>,
         IRemoveItem<IEntityKey>,
-        IReadTemporal<IModelKey>
+        IReadTemporal<IModelKey>, IReadTemporal<IEntityKey>
         where TItem : EntityItem, new()
     {
         /// <inheritdoc/>
@@ -37,6 +37,10 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, modelId: modelId.ModelId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IEntityKey key)
+        { return LoadCommand(connection, entityId: key.EntityId, includeHistory: true); }
 
         Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? entityId = null,

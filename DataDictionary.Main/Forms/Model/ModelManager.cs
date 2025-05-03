@@ -164,9 +164,6 @@ namespace DataDictionary.Main.Forms.Model
             CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
 
-        private void BindingComplete(object sender, BindingCompleteEventArgs e)
-        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
-
         private void newModelCommand_Click(object sender, EventArgs e)
         {
             IsLocked(true);

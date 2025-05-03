@@ -9,9 +9,6 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
-    /// <summary>
-    /// Layout of the History View form
-    /// </summary>
     partial class HistoryView : ApplicationData
     {
         ITemporalData formData = null!;
@@ -23,6 +20,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         /// <summary>
         /// Function to open the detail form.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TemporalValue, Form>? OpenForm { get; init; }
 
         protected HistoryView() : base()

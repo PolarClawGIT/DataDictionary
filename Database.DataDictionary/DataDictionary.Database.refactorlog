@@ -3580,4 +3580,18 @@
     <Property Name="NewSchema" Value="AppModel" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="4ab6a2d9-a7a8-48f7-821a-c2d257bf5968" ChangeDateTime="04/15/2025 16:52:23">
+    <Property Name="ElementName" Value="[AppModel].[EntityAttribute].[AttributeTitle]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppModel].[EntityAttribute]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[AttributeKnownAs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="38646f91-49c1-4bb0-bc07-ffb7fcae4295" ChangeDateTime="04/15/2025 16:59:15">
+    <Property Name="ElementName" Value="[HsModel].[EntityAttribute].[AttributeTitle]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsModel].[EntityAttribute]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[AttributeKnownAs]" />
+  </Operation>
 </Operations>

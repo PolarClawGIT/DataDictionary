@@ -70,5 +70,15 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Delete(ILibrarySourceIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Library Member", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public void Remove(ILibrarySourceIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
+
     }
 }

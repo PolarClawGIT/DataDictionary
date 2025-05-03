@@ -69,5 +69,14 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> Delete(ICatalogIndex dataKey)
         { return new WorkItem() { WorkName = "Remove ConstraintColumn", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>ConstraintColumn</remarks>
+        public void Remove(ICatalogIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ConstraintColumn</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

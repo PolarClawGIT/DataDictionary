@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -14,12 +15,13 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IModel :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IDeleteData, IScopeType, DataLayer.AppModel.IModel
+        IDeleteData, IScopeType, DataLayer.AppModel.IModel,
+        IBindListChanged
     {
         /// <summary>
         /// Index of the Model currently loaded.
         /// </summary>
-        IModelIndex ModelIndex { get; }
+        ModelIndex ModelIndex { get; }
 
         /// <summary>
         /// The Model Definitions (0 or one Model expected)
@@ -83,7 +85,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public IModelIndex ModelIndex
+        public ModelIndex ModelIndex
         { get { return new ModelIndex(CurrentModel); } }
 
         /// <inheritdoc/>
@@ -108,6 +110,27 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues = new DefinitionData();
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return attributeValues.RaiseListChangedEvents
+                    && entityValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && subjectValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                attributeValues.RaiseListChangedEvents = value;
+                entityValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                subjectValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public Model() : base()
         {
@@ -144,6 +167,8 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
             work.AddRange(definitionValues.Load(factory, dataKey));
+            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
+
             return work;
         }
 
@@ -158,7 +183,23 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
+            work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
             return work;
+        }
+
+        IEnumerable<IAttributeValue> FindAttributes(PathIndex path)
+        {
+            List<IAttributeValue> result = new List<IAttributeValue>();
+            PathIndex key = new PathIndex(path);
+
+            result.AddRange(attributeValues.Values.Where(w => key.Equals(w.AttributePath)));
+
+            result.AddRange(
+                attributeValues.Values.
+                Where(w => attributeValues.Values.
+                    Any(a => key.Equals(w.AttributePath))));
+
+            return result.DistinctBy(d => new AttributeIndex(d));
         }
 
         /// <inheritdoc/>
@@ -243,6 +284,39 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
 
             return work;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            modelValues.Remove(dataKey);
+            subjectValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            entityValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            modelValues.Clear();
+            subjectValues.Clear();
+            attributeValues.Clear();
+            entityValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            modelValues.ResetBindings();
+            subjectValues.ResetBindings();
+            attributeValues.ResetBindings();
+            entityValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
         }
     }
 }

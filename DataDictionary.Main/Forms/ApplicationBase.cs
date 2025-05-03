@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using System.ComponentModel;
 using System.Data;
@@ -262,6 +263,7 @@ namespace DataDictionary.Main.Forms
         /// 
         /// The MS documentation suggests otherwise.
         /// -->
+        [Obsolete("Not needed?")]
         public virtual void SuspendBinding(BindingSource binding)
         {
             binding.RaiseListChangedEvents = false;
@@ -273,6 +275,7 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="binding"></param>
         /// <remarks>Use as needed. Deals with some cross threading/data binding issues.</remarks>
+        [Obsolete("Not needed?")]
         public virtual void ResumeBinding(BindingSource binding)
         {
             binding.RaiseListChangedEvents = true;

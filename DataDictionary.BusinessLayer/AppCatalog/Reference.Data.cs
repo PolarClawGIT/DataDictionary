@@ -68,4 +68,13 @@ class ReferenceData : ReferenceCollection<ReferenceValue>,
     public IReadOnlyList<WorkItem> Delete(ICatalogIndex dataKey)
     { return new WorkItem() { WorkName = "Remove Reference", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
+    /// <inheritdoc/>
+    /// <remarks>Reference</remarks>
+    public void Remove(ICatalogIndex dataKey)
+    { base.Remove(dataKey); }
+
+    /// <inheritdoc/>
+    /// <remarks>Reference</remarks>
+    public void Remove(IModelIndex dataKey)
+    { Clear(); }
 }

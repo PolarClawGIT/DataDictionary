@@ -50,8 +50,6 @@ namespace DataDictionary.Main.Forms.Security
 
         private void ObjectManager_Load(object sender, EventArgs e)
         {
-            IsLocked(true);
-            IsWaitCursor(true);
             IDatabaseWork factory = BusinessData.GetDbFactory();
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.OpenConnection());
@@ -65,7 +63,6 @@ namespace DataDictionary.Main.Forms.Security
                 bindingPermissions.DataSource = new BindingView<SecurablePermissionValue>(securityData.Permissions, w => securableKey is not null && securableKey.Equals(w));
                 bindingOwner.DataSource = new BindingView<SecurableOwnerValue>(securityData.Owners, w => securableKey is not null && securableKey.Equals(w));
 
-                
                 RoleNameList.Load(roleIdColumn, securityData.Roles);
                 PrincipalLoginList.Load(principalIdColumn, securityData.Principals);
 
@@ -83,9 +80,6 @@ namespace DataDictionary.Main.Forms.Security
                     CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
                     CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
                 }
-
-                IsLocked(false);
-                IsWaitCursor(false);
             }
         }
 

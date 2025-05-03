@@ -17,32 +17,13 @@ namespace DataDictionary.Main.Forms.Model.Controls
     partial class Definition : UserControl
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
+        Func<IDefinitionSubType>? onAddDefinition; // Constructor for the Definition
 
-        /// <summary>
-        /// The currently Selected Definition.
-        /// </summary>
         [Browsable(false)]
-        public IDefinitionIndex? SelectedDefinition
-        {
-            get
-            {
-                if (definitionData.SelectedValue is DefinitionNameList value)
-                { return value; }
-                else { return null; }
-            }
-            set
-            {
-                if (value is null) { definitionData.SelectedIndex = 0; }
-                else
-                {
-                    DefinitionIndex index = new DefinitionIndex(value);
-                    if (definitionData.Items is IEnumerable<DefinitionNameList> items &&
-                        items.FirstOrDefault(w => index.Equals(w)) is DefinitionNameList item)
-                    { definitionData.SelectedIndex = items.ToList().IndexOf(item); }
-                    else { definitionData.SelectedIndex = 0; }
-                }
-            }
-        }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public BindingView<DefinitionValue> Definitions { get; private set; } =
+            new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
+            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         public Definition()
         {
@@ -50,17 +31,29 @@ namespace DataDictionary.Main.Forms.Model.Controls
             definitionTextData.AddTools(fullTextTools);
         }
 
-        /// <summary>
-        /// Sets up the Control.
-        /// </summary>
-        public void BindTo(BindingSource binding, IEnumerable<IDefinitionValue> values)
+        public void BindTo(BindingSource binding, Func<IDefinitionSubType> newDefinition)
         {
             dataBinding = binding;
-            DefinitionNameList.Load(definitionData, values);
+            onAddDefinition = newDefinition;
+            DefinitionNameList.Load(definitionTypeData, Definitions);
+            DefinitionNameList.Load(definitionColumn, Definitions);
 
-            definitionData.DataBindings.Add(new Binding(nameof(definitionData.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.Rtf), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionTextData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTypeData.DataBindings.Add(new Binding(nameof(definitionTypeData.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionSummaryData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
+            
+            definitionData.AutoGenerateColumns = false;
+            definitionData.DataSource = dataBinding;
+
+            dataBinding.AddingNew += DataBinding_AddingNew;
+            dataBinding.CurrentChanged += DataBinding_CurrentChanged;
+
+            void DataBinding_AddingNew(Object? sender, AddingNewEventArgs e)
+            { e.NewObject = onAddDefinition(); }
+
+            void DataBinding_CurrentChanged(Object? sender, EventArgs e)
+            { }
+
         }
 
         private void DefinitionData_SelectedIndexChanged(object sender, EventArgs e)
@@ -68,17 +61,17 @@ namespace DataDictionary.Main.Forms.Model.Controls
 
         private void DefinitionData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (definitionData.SelectedValue is Guid value && value != Guid.Empty)
+            if (definitionTypeData.SelectedValue is Guid value && value != Guid.Empty)
             {
                 definitionTextData.Enabled = true;
                 definitionSummaryData.Enabled = true;
 
                 if (dataBinding is not null &&
-                    dataBinding.DataSource is IList data &&
-                    definitionData.SelectedItem is IDefinitionIndex selectedValue)
+                    //dataBinding.DataSource is IList data &&
+                    definitionTypeData.SelectedItem is IDefinitionIndex selectedValue)
                 {
                     DefinitionIndex key = new DefinitionIndex(selectedValue);
-                    var currentValues = data.OfType<IDefinitionSubType>().ToList();
+                    var currentValues = dataBinding.List.OfType<IDefinitionSubType>().ToList();
 
                     if (currentValues.FirstOrDefault(w => key.Equals(w)) is IDefinitionSubType currentValue)
                     { dataBinding.Position = currentValues.IndexOf(currentValue); }

@@ -22,10 +22,15 @@ namespace DataDictionary.Main.Dialogs
         };
 
         public List<(String ServerName, String DatabaseName)> Servers { get; } = new List<(String ServerName, String DatabaseName)>();
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String ServerName { get { return connectionBuilder.DataSource; } set { connectionBuilder.DataSource = value; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String DatabaseName { get { return connectionBuilder.InitialCatalog; } set { connectionBuilder.InitialCatalog = value; } }
         public String UserName { get { return connectionBuilder.UserID; } }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Action OpenHelp { get; set; } = () => { };
 
         public ServerConnectionDialog()

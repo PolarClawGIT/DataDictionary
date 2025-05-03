@@ -59,11 +59,13 @@ namespace DataDictionary.Main.Enumerations
                 if (item.Position >= item.Count)
                 { item.Position = 0; }
 
-                if (item.Current is IBindingRowState rowState
+                if (item.Position >= 0
+                    && item.Current is IBindingRowState rowState
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { result = rowState.RowState().AsBindingRowState(); }
 
-                if (item.Current is ITemporal temporal
+                if (item.Position >= 0
+                    && item.Current is ITemporal temporal
                     && temporal.Temporal.IsCurrent == false
                     && result is BindingRowState.Null or BindingRowState.Unchanged)
                 { return BindingRowState.Historic; }
@@ -86,7 +88,7 @@ namespace DataDictionary.Main.Enumerations
                 String stateValue;
                 String temporalValue;
 
-                if (item.Current is IBindingRowState rowState)
+                if (item.Position >= 0 && item.Current is IBindingRowState rowState)
                 {
                     stateValue = String.Format("{0}: {1}",
                         item.Current.GetType().Name,
@@ -94,7 +96,7 @@ namespace DataDictionary.Main.Enumerations
                 }
                 else { stateValue = String.Empty; }
 
-                if (item.Current is ITemporal temporal)
+                if (item.Position >= 0 && item.Current is ITemporal temporal)
                 { temporalValue = temporal.Temporal.ToString() ?? String.Empty; }
                 else
                 { temporalValue = String.Empty; }

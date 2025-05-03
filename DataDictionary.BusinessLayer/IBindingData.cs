@@ -8,15 +8,11 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer
 {
-
     /// <summary>
     /// Interface for Data BindingList objects
     /// </summary>
-    public interface IBindingData: IBindingList, IBindingName, IBindingDataReader
-    {
-        /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
-        void ResetBindings();
-    }
+    public interface IBindingData : IBindingList, IBindingName, IBindingDataReader, IBindListChanged
+    { }
 
     /// <summary>
     /// Interface for Data BindingList objects

@@ -12,6 +12,9 @@ namespace DataDictionary.BusinessLayer.AppModel
     public class EntityIndex : EntityKey, IEntityIndex,
         IKeyEquality<IEntityIndex>, IKeyEquality<EntityIndex>
     {
+        /// <inheritdoc cref="EntityKey()"/>
+        public EntityIndex() : base() { }
+
         /// <inheritdoc cref="EntityKey(IEntityKey)"/>
         public EntityIndex(IEntityIndex source) : base(source) { }
 

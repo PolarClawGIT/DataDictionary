@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -22,13 +25,23 @@ namespace DataDictionary.Main.Forms.General
             public String Description { get; } = String.Empty;
             public String ToolTip { get; } = String.Empty;
             public HelpSubjectIndex? SubjectIndex { get; set; } = null;
-            public Form? SubjectForm { get; set; } = null;
+
+            public List<HelpControlValue> SubjectControls { get; } = new List<HelpControlValue>();
+            public HelpControlValue? SubjectForm
+            {
+                get
+                {
+                    if (SubjectControls.FirstOrDefault(w => w.IsForm) is HelpControlValue value)
+                    { return value; }
+                    else { return null; }
+                }
+            }
 
             public BindingSubject(Form form)
             {
                 Path = form.ToHelpSubjectPath();
                 Title = String.Format("(new Subject: {0})", Path.Member);
-                SubjectForm = form;
+                SubjectControls = HelpControlValue.Create(form).ToList();
             }
 
             public BindingSubject(HelpSubjectValue helpSubject)
@@ -38,6 +51,7 @@ namespace DataDictionary.Main.Forms.General
                 Description = helpSubject.HelpText ?? String.Empty;
                 ToolTip = helpSubject.HelpToolTip ?? String.Empty;
                 SubjectIndex = new HelpSubjectIndex(helpSubject);
+                SubjectControls = new List<HelpControlValue>();
 
                 helpSubject.PropertyChanged += PropertyChanged;
                 //helpSubject.RowStateChanged += RowStateChanged;
@@ -81,28 +95,40 @@ namespace DataDictionary.Main.Forms.General
             }
         }
 
-        /// <summary>
-        ///  Helper class that helps manage the binding class and associated data.
-        /// </summary>
         class FormBinding
         {
-            BindingSource bindingHelpSubject;
+            public required BindingSource BindingHelpSubject { private get; init ; }
 
             public IEnumerable<BindingSubject> HelpSubjects { get { return subjects; } }
             BindingList<BindingSubject> subjects = new BindingList<BindingSubject>();
             IHelpSubjectData subjectData = BusinessData.ApplicationData.HelpSubjects;
 
-            public FormBinding(ref BindingSource helpBinding)
+            static Dictionary<HelpSubjectIndexPath, List<HelpControlValue>> subjectForms = new Dictionary<HelpSubjectIndexPath, List<HelpControlValue>>();
+
+            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+
+            public FormBinding()
+            { }
+
+            public void Init()
             {
-                bindingHelpSubject = helpBinding;
+                // Note: C# 13 adds "field".
+                // This code could then be moved to the BindingHelpSubject init.
+
+                subjectData = BusinessData.ApplicationData.HelpSubjects;
+                subjects.Clear();
                 subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
-                bindingHelpSubject.DataSource = subjects;
+                BindingHelpSubject.DataSource = subjects;
+
+                // restore the subject forms already known.
+                foreach (var item in subjectForms)
+                { SetForm(item.Key, item.Value); }
 
                 subjectData.ListChanged += SubjectData_ListChanged;
 
                 void SubjectData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    TryGetSubject(out BindingSubject? current);
+                    TryGetValue(out BindingSubject? current);
 
                     if (e.ListChangedType is ListChangedType.Reset
                         or ListChangedType.ItemAdded
@@ -112,6 +138,10 @@ namespace DataDictionary.Main.Forms.General
                     {
                         subjects.Clear();
                         subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
+
+                        // restore the subject forms already known.
+                        foreach (var item in subjectForms)
+                        { SetForm(item.Key, item.Value); }
 
                         if (e.NewIndex >= 0)
                         { SetPosition(subjectData[e.NewIndex]); }
@@ -128,13 +158,45 @@ namespace DataDictionary.Main.Forms.General
 
             public void AddForm(Form form)
             {
-                HelpSubjectIndexPath helpSubject = form.ToHelpSubjectPath();
+                HelpSubjectIndexPath key = form.ToHelpSubjectPath();
 
-                if (!subjects.Any(w => helpSubject.Equals(w.Path)))
+                if (subjectForms.ContainsKey(key))
+                {
+                    subjectForms[key].Clear();
+                    subjectForms[key].AddRange(HelpControlValue.Create(form));
+                }
+                else { subjectForms.Add(key, HelpControlValue.Create(form).ToList()); }
+
+                if (!subjects.Any(w => key.Equals(w.Path)))
                 { subjects.Add(new BindingSubject(form)); }
+            }
 
-                foreach (BindingSubject item in subjects.Where(w => w.Path.ChildOf(helpSubject)))
-                { item.SubjectForm = form; }
+            public void SetForm(IHelpSubjectIndexPath helpPath, Form form)
+            { SetForm(helpPath, HelpControlValue.Create(form)); }
+
+            public void SetForm(IHelpSubjectIndex helpSubject, Form form)
+            {   SetForm(helpSubject, HelpControlValue.Create(form)); }
+
+            void SetForm(IHelpSubjectIndexPath helpPath, IEnumerable<HelpControlValue> controls)
+            {
+                HelpSubjectIndexPath key = new HelpSubjectIndexPath(helpPath);
+
+                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.Path) || w.Path.ChildOf(key)))
+                {
+                    item.SubjectControls.Clear();
+                    item.SubjectControls.AddRange(controls);
+                }
+            }
+
+            void SetForm(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> controls)
+            {
+                HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
+
+                foreach (BindingSubject item in subjects.Where(w => key.Equals(w.Path)))
+                {
+                    item.SubjectControls.Clear();
+                    item.SubjectControls.AddRange(controls);
+                }
             }
 
             public void SetPosition(IHelpSubjectIndex helpSubject)
@@ -142,32 +204,27 @@ namespace DataDictionary.Main.Forms.General
                 HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
 
                 if (subjects.FirstOrDefault(w => key.Equals(w.SubjectIndex)) is BindingSubject value)
-                {
-                    var x = subjects.IndexOf(value);
-                    bindingHelpSubject.Position = subjects.IndexOf(value); }
+                { BindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(HelpSubjectIndexPath helpSubject)
             {
                 if (subjects.FirstOrDefault(w => helpSubject.Equals(w.Path)) is BindingSubject value)
-                { bindingHelpSubject.Position = subjects.IndexOf(value); }
+                { BindingHelpSubject.Position = subjects.IndexOf(value); }
             }
 
             public void SetPosition(String helpSubject)
             { SetPosition(new HelpSubjectIndexPath(helpSubject)); }
 
-            public void SetPosition(Form helpSubject)
-            { SetPosition(helpSubject.ToHelpSubjectPath()); }
-
             public void SetPosition(BindingSubject subject)
             {
                 if (subject.SubjectIndex is HelpSubjectIndex index)
                 { SetPosition(index); }
-                else if (subject.SubjectForm is Form form)
-                { SetPosition(form); }
+                else if (subject.SubjectForm is HelpControlValue form)
+                { SetPosition(form.Path); }
             }
 
-            public HelpSubjectValue NewSubject()
+            public HelpSubjectValue NewValue()
             {
                 HelpSubjectValue result = new HelpSubjectValue();
                 subjectData.Add(result);
@@ -176,37 +233,43 @@ namespace DataDictionary.Main.Forms.General
                 return result;
             }
 
-            public HelpSubjectValue NewSubject(BindingSubject source)
+            public HelpSubjectValue NewValue(BindingSubject source)
             {
-                if (source.SubjectIndex is not null && subjectData.FirstOrDefault(w => source.SubjectIndex.Equals(w)) is HelpSubjectValue value)
-                { return value; } // Subject already exists, return it.
-
                 HelpSubjectValue result = new HelpSubjectValue();
 
-                if (source.SubjectForm is Form)
+                if (source.SubjectForm is HelpControlValue)
                 {
                     result.HelpSubject = String.Format("(new Help Subject: {0})", source.Path.Member);
-                    result.Path = source.Path;
+
+                    if (source.SubjectIndex is not null
+                        && subjectData.FirstOrDefault(
+                            w => source.SubjectIndex.Equals(w))
+                            is HelpSubjectValue value)
+                    { result.Path = new HelpSubjectIndexPath(value.Path.Merge(source.Path)); }
+                    else { result.Path = source.Path; }
+
                     source.SubjectIndex = new HelpSubjectIndex(result);
+
+                    subjectData.Add(result);
+                    SetForm(result, source.SubjectControls);
                 }
+                else { subjectData.Add(result); }
 
-                subjectData.Add(result);
                 SetPosition(result);
-
                 return result;
             }
 
-            public Boolean TryGetSubject([NotNullWhen(true)] out BindingSubject? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out BindingSubject? result)
             {
-                if (bindingHelpSubject.Position >= 0
-                    && bindingHelpSubject.Current is BindingSubject value)
+                if (BindingHelpSubject.Position >= 0
+                    && BindingHelpSubject.Current is BindingSubject value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
-            public Boolean TryGetSubject([NotNullWhen(true)] out HelpSubjectValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out HelpSubjectValue? result)
             {
-                if (TryGetSubject(out BindingSubject? subject)
+                if (TryGetValue(out BindingSubject? subject)
                     && subjectData.FirstOrDefault(w =>
                         subject.SubjectIndex is not null
                         && subject.SubjectIndex.Equals(w))
@@ -217,6 +280,65 @@ namespace DataDictionary.Main.Forms.General
 
             public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
+
+            public Boolean GetAuthorization(CommandImageType command)
+            {
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Browse: return true;
+                    case CommandImageType.Select: return true;
+                    case CommandImageType.Add:
+                        return BusinessData.Authorization.IsHelpAdmin
+                            || BusinessData.Authorization.IsHelpOwner;
+                    case CommandImageType.Open: return true;
+                    case CommandImageType.OpenDatabase: return true;
+                    case CommandImageType.SaveDatabase:
+                        return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandImageType.SecurityDatabase:
+                        return BusinessData.Authorization.IsSecurityAdmin;
+                    default:
+                        return false;
+                }
+            }
+
+            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(subjectData.Delete());
+                work.AddRange(subjectData.Load(factory));
+
+                DoWork(work, onCompleteing);
+
+                void onCompleteing(RunWorkerCompletedEventArgs args)
+                {
+                    subjects.Clear();
+                    subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));
+
+                    // restore the subject forms already known.
+                    foreach (var item in subjectForms)
+                    { SetForm(item.Key, item.Value); }
+
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(subjectData.Save(factory));
+
+                DoWork(work, onCompleteing);
+
+                void onCompleteing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
+            }
         }
     }
 }

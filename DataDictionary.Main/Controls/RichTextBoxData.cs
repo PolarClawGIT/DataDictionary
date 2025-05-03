@@ -1,16 +1,6 @@
 ﻿// Ignore Spelling: Rtf
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DataDictionary.Main.Controls
 {
@@ -19,91 +9,84 @@ namespace DataDictionary.Main.Controls
     /// </summary>
     /// <remarks>
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
-    /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
     [DefaultBindingProperty("RichText")]
-    partial class RichTextBoxData : UserControl, ISupportEditMenu, INotifyPropertyChanged
+    partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
+        // This control uses two-way binding using the base RichText control as the base.
+        // Additional handling on the Rtf property of the RichText control is needed.
+        // As such, pass-threw binding does not work.
+        // Pass-threw binding overrides the DataBindings of the User control and points it to the base control.
+        // 
+        // This control needs full two way binding.
+        // To get this to work, several things need to occur.
+        //
+        // * Add the property for Data Binding. This wrappers the base controls property.
+        // * Add the attribute to the property:  [Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
+        // * Add the change event named based on the property suffixed with "Changed".
+        // * Set the Default Biding property for the control: [DefaultBindingProperty("RichText")]
+        // * Because this is wrapped, the change event needs to fire on the base change event (not the property changed).
+        // 
+        // The Get is called when the change event for the property is triggered.
+        // This is triggered by the change event of the wrapped property. 
+        // The value returned by the Get is sent to the data object.
+        //
+        // The Set is called when the notify property change event occurs on
+        // the data object (possibly multiple times).
+        // The added code is fired and the value is passed to the wrapped controls property.
+
 
         /// <summary>
         /// Gets/Sets the Text for the Header.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
-        public new ControlBindingsCollection DataBindings { get { return richTextBox.DataBindings; } }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
 
         /// <summary>
         /// Makes the control ReadOnly or Read/Write. Changes the color of the control.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
         /// <summary>
         /// Makes the Header Visible or hidden
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean HeaderVisible { get { return label.Visible; } set { label.Visible = value; } }
 
         /// <summary>
         /// Makes the Tool Strip Visible or hidden
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ToolStripVisible { get { return toolStrip.Visible; } set { toolStrip.Visible = value; } }
 
         /// <summary>
         /// Exposes the Rich Text attribute.
         /// </summary>
         /// <remarks>
-        /// ISSUE: Binding does not actual connect to this property.
-        /// It connects to the RTF of the RichTextBox control directly.
-        /// As such, the logic in the property is never called.
-        /// This causes problems with Threading and cleaning the value before it is used.
-        /// The root RTF property can also throw errors if the text is
-        /// not Rich Text.
+        /// Additional handling to deal with values that are plain text.
         /// </remarks>
         [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
-        public String? Rtf
-        {
-            get { return RichText; }
-            set
-            {
-                RichText = value;
-
-                if (PropertyChanged is PropertyChangedEventHandler handler)
-                { handler(this, new PropertyChangedEventArgs(nameof(Rtf))); }
-
-                if (RtfChanged is EventHandler eventHandler)
-                { eventHandler(this, new EventArgs()); }
-
-                // This is never called with Binding. It may be called in the designer.
-                throw new InvalidOperationException("Debug: This does not occur.");
-            }
-        }
-        // Based on: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/change-notification-in-windows-forms-data-binding?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
-        // This does not work either.
-        public event EventHandler? RtfChanged;
-        public event EventHandler? RichTextChanged;
-
-
-        [Browsable(false), DefaultValue(""), Bindable(BindableSupport.Yes, BindingDirection.TwoWay)]
         public String? RichText
-        {   // This is the intended Property for Data Binding.
-            // It does not work.
-            // A runtime Invalid Augment exception occurs when creating the Binding.
+        {
             get
-            { return richTextBox.Rtf; }
+            {
+                if (String.IsNullOrWhiteSpace(richTextBox.Text))
+                { return String.Empty; }
+                else { return richTextBox.Rtf; }
+            }
             set
             {
                 try
                 {
+                    // If the value is not RTF, setting the Rtf property throws an exception.
                     if (this.IsHandleCreated)
-                    { Invoke(() => { richTextBox.Clear(); richTextBox.Rtf = value; }); }
-                    else { richTextBox.Clear(); richTextBox.Rtf = value; }
-
-                    if (PropertyChanged is PropertyChangedEventHandler handler)
-                    { handler(this, new PropertyChangedEventArgs(nameof(RichText))); }
-
-                    if (RichTextChanged is EventHandler eventHandler)
-                    { eventHandler(this, new EventArgs()); }
+                    { Invoke(() => { richTextBox.Rtf = value; }); }
+                    else { richTextBox.Rtf = value; }
                 }
                 catch (Exception)
                 {
@@ -111,10 +94,10 @@ namespace DataDictionary.Main.Controls
                     { Invoke(() => { richTextBox.Clear(); richTextBox.Text = value; }); }
                     else { richTextBox.Clear(); richTextBox.Text = value; }
                 }
-
-
             }
         }
+
+
 
         /// <summary>
         /// Control used to position the Error Provider Icon.
@@ -125,18 +108,27 @@ namespace DataDictionary.Main.Controls
         [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
-        //public EventHandler TextChanged;
-
         public RichTextBoxData()
         {
             InitializeComponent();
-            this.TextChanged += RichTextBoxData_TextChanged;
+            richTextBox.TextChanged += RichTextBox_TextChanged;
         }
 
-        private void RichTextBoxData_TextChanged(Object? sender, EventArgs e)
-        {   // Nope, does not bind to the Text property of the User Control either.
-            var x = this.Text;
-            //throw new NotImplementedException();
+        // Based on: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/change-notification-in-windows-forms-data-binding?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
+        // This causes the post-back to the data and must be named after the property.
+        // Needed for two-way binding.
+        public event EventHandler? RichTextChanged;
+
+        private void RichTextBox_TextChanged(Object? sender, EventArgs e)
+        {
+            // Needed for two-way binding.
+            // Because this is a wrapped control,
+            // the post back need to be triggered when the base control changes.
+            if (RichTextChanged is EventHandler rtfHandler)
+            { rtfHandler(this, new EventArgs()); }
+
+            //Text changed of the UserControl changed because it was overridden.
+            OnTextChanged(new EventArgs()); 
         }
 
         private void RichTextBox_ReadOnlyChanged(object sender, EventArgs e)
@@ -151,7 +143,7 @@ namespace DataDictionary.Main.Controls
             toolStripPaste.Enabled = !richTextBox.ReadOnly;
         }
 
-        private void toolStripBold_Click(object sender, EventArgs e)
+        private void ToolStripBold_Click(object sender, EventArgs e)
         {
             if (richTextBox.SelectionFont is Font value)
             {
@@ -232,7 +224,6 @@ namespace DataDictionary.Main.Controls
         { if (Validated is EventHandler handler) { handler(sender, e); } }
 
         public new event CancelEventHandler? Validating;
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void richTextBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }

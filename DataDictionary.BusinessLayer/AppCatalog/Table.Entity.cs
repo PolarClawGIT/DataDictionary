@@ -74,7 +74,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 foreach (ITableColumnValue item in GetColumns(sourceTable))
                 {
                     EntityAttributeValue value = new EntityAttributeValue(Entity);
-                    value.AttributeTitle = item.ColumnName;
+                    value.AttributeKnownAs = item.ColumnName;
                     
                     value.AttributePath = item.CreatePath();
                     value.OrdinalPosition = item.OrdinalPosition;

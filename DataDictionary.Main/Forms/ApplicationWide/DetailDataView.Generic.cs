@@ -18,8 +18,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         /// <summary>
         /// The Constructor for the Detail/Selected Form.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Func<TValue, TForm>? SelectedForm { get; init; }
-
 
         public DetailDataView(ScopeType scope, IBindingData data) : base(scope, data)
         { }

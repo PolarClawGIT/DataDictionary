@@ -20,13 +20,17 @@ namespace DataDictionary.Main.Controls
     partial class ComboBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return comboBox.DataBindings; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public new String Text { get { return comboBox.Text; } set { comboBox.Text = value; } }
 
         // Expose Control Properties
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly
         {
             get { return readOnly; }
@@ -47,7 +51,7 @@ namespace DataDictionary.Main.Controls
         }
         Boolean readOnly;
 
-
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public ComboBoxStyle DropDownStyle { get { return comboBox.DropDownStyle; } set { comboBox.DropDownStyle = value; } }
 
         [Browsable(false)]
@@ -56,11 +60,19 @@ namespace DataDictionary.Main.Controls
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
+        public Object? SelectedItem
+        {
+            get { return comboBox.SelectedItem; }
+            set { comboBox.SelectedIndex = comboBox.Items.IndexOf(value); }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object? SelectedValue { get { return comboBox.SelectedValue; } set { comboBox.SelectedValue = value; } }
+        public Object? SelectedValue
+        {
+            get { return comboBox.SelectedValue; }
+            set { comboBox.SelectedIndex = comboBox.Items.IndexOf(value); }
+        }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -9,15 +9,20 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     /// <summary>
-    /// Interface for Create WorkItems that removes items from the collection by Key
+    /// Interface for Create WorkItems that removes items from the collection
     /// </summary>
     public interface IDeleteData
     {
         /// <summary>
-        /// Create WorkItems that removes/delete all items from the collection
+        /// Create WorkItems that removes all items from the collection
         /// </summary>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Delete();
+
+        /// <summary>
+        /// Removes all items in the collection.
+        /// </summary>
+        void Clear();
     }
 
     /// <summary>
@@ -28,10 +33,16 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         where TKey : IKey
     {
         /// <summary>
-        /// Create WorkItems that removes/delete items from the collection by Key
+        /// Create WorkItems that delete items from the collection by Key
         /// </summary>
         /// <param name="dataKey"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Delete(TKey dataKey);
+
+        /// <summary>
+        /// Removes items from the collection by Key
+        /// </summary>
+        /// <param name="dataKey"></param>
+        void Remove(TKey dataKey);
     }
 }

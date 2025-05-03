@@ -17,7 +17,7 @@ Select	D.[EntityId], --AK
 		FA.[EntityTitle],
 		D.[AttributeAliasId], -- PK
 		FL.[AttributePath],
-		D.[AttributeTitle],
+		D.[AttributeKnownAs],
 		D.[OrdinalPosition], -- AK
 		D.[IsNullable],
 		D.[IsPrimaryKey],

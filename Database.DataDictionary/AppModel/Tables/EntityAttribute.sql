@@ -2,7 +2,7 @@
 (
 	[EntityId]          UniqueIdentifier Not Null,
 	[AttributeAliasId]  UniqueIdentifier Not Null,
-	[AttributeTitle]	[App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
+	[AttributeKnownAs]	[App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
 	[OrdinalPosition]   Int Not Null,
 	[IsNullable]		Bit Not Null CONSTRAINT [DF_EntityAttributeNullable] DEFAULT (0), -- Is the Attribute Null-able.
 	[IsPrimaryKey]		Bit Not Null CONSTRAINT [DF_EntityAttributePrimaryKey] DEFAULT (0), -- Is the Attribute a Primary key of the Entity  
@@ -15,5 +15,5 @@
 	CONSTRAINT [FK_EntityAttribute_Entity] FOREIGN KEY ([EntityId]) REFERENCES [AppModel].[Entity] ([EntityId]),
 	CONSTRAINT [FK_EntityAttribute_Alias] FOREIGN KEY ([AttributeAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
 	CONSTRAINT [AK_EntityAttributePosition] UNIQUE ([EntityId] ASC, [OrdinalPosition] ASC),
-	CONSTRAINT [AK_EntityAttributeTitle] UNIQUE ([EntityId] ASC, [AttributeTitle] ASC),
+	CONSTRAINT [AK_EntityAttributeTitle] UNIQUE ([EntityId] ASC, [AttributeKnownAs] ASC),
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[EntityAttribute]))

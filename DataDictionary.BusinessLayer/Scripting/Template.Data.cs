@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Remove((ITemplateIndex)dataKey); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { this.Clear(); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
@@ -88,5 +88,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Template</remarks>
         public IReadOnlyList<DataTable> Export()
         { return this.ToDataTable().ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplatePath</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

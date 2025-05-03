@@ -73,5 +73,15 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <remarks>PermissionData</remarks>
         public IReadOnlyList<WorkItem> Delete(IRoleIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Permission", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>PermissionData</remarks>
+        public void Remove(ISecurableIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>PermissionData</remarks>
+        public void Remove(IRoleIndex dataKey)
+        { base.Remove(dataKey); }
     }
 }

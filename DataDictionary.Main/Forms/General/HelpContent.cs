@@ -1,9 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.General
 {
@@ -16,7 +18,9 @@ namespace DataDictionary.Main.Forms.General
         {
             InitializeComponent();
             helpToolStripButton.Enabled = false;
-            formData = new FormBinding(ref helpBinding);
+            formData = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
+            formData.Init();
+
             formTree = new ContentTree(helpContentNavigation);
 
             SetIcon(ScopeType.ApplicationHelp);
@@ -24,15 +28,14 @@ namespace DataDictionary.Main.Forms.General
                 ScopeType.ApplicationHelp,
                 CommandImageType.Add,
                 CommandImageType.Open,
-                CommandImageType.Import,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
                 CommandImageType.HistoryDatabase);
 
             formTree.SetImages();
 
-            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject (blank)";
+            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject";
             CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
-            CommandButtons[CommandImageType.Import].IsEnabled = false;
-            CommandButtons[CommandImageType.Import].Text = "Add new Help Subject using Form Data";
 
             OpenSubject(Settings.Default.DefaultSubject);
         }
@@ -41,7 +44,7 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(targetSubject);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
@@ -49,17 +52,21 @@ namespace DataDictionary.Main.Forms.General
         {
             formData.SetPosition(helpSubject);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
         }
 
         public void OpenSubject(Form targetForm)
         {
             formData.AddForm(targetForm);
-            formData.SetPosition(targetForm);
+            formData.SetForm(targetForm.ToHelpSubjectPath(), targetForm);
+            formData.SetPosition(targetForm.ToHelpSubjectPath());
 
-            if (formData.TryGetSubject(out BindingSubject? current))
-            { formTree.SetNode(current); }
+            if (formData.TryGetValue(out BindingSubject? current))
+            {
+                formTree.BuildTree(formData.HelpSubjects);
+                formTree.SetNode(current);
+            }
         }
 
         private void HelpContent_Load(object sender, EventArgs e)
@@ -68,35 +75,31 @@ namespace DataDictionary.Main.Forms.General
             formTree.BuildTree(formData.HelpSubjects);
 
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
+            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }
 
             void FormData_SubjectsChanged(Object? sender, EventArgs e)
             {
                 formTree.BuildTree(formData.HelpSubjects);
 
-                if (formData.TryGetSubject(out BindingSubject? current))
+                if (formData.TryGetValue(out BindingSubject? current))
                 { formTree.SetNode(current); }
+
+                SetAuthorization(formData.GetAuthorization);
             }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            HelpSubjectValue newValue;
 
-            HelpSubjectValue newValue = formData.NewSubject();
-            OpenSubjectForm();
-        }
-
-        protected override void ImportCommand_Click(Object? sender, EventArgs e)
-        {
-            base.ImportCommand_Click(sender, e);
-
-            if (formData.TryGetSubject(out BindingSubject? current)
+            if (formData.TryGetValue(out BindingSubject? current)
                 && current.SubjectForm is not null)
-            { HelpSubjectValue newValue = formData.NewSubject(current); }
+            { newValue = formData.NewValue(current); }
+            else { newValue = formData.NewValue(); }
 
             OpenSubjectForm();
         }
@@ -105,18 +108,48 @@ namespace DataDictionary.Main.Forms.General
         {
             base.OpenCommand_Click(sender, e);
 
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             {
                 if (current.SubjectIndex is null && current.SubjectForm is not null)
-                { HelpSubjectValue newValue = formData.NewSubject(current); }
+                { HelpSubjectValue newValue = formData.NewValue(current); }
             }
 
             OpenSubjectForm();
         }
 
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+            HelpSubjectValue? current = null;
+
+            if (formData.TryGetValue(out HelpSubjectValue? helpSubject))
+            { current = helpSubject; }
+
+            formData.Load(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                formTree.BuildTree(formData.HelpSubjects);
+
+                if (current is HelpSubjectValue)
+                { OpenSubject(current); }
+                else { OpenSubject(Settings.Default.DefaultSubject); }
+            }
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+
+            formData.Save(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { formTree.BuildTree(formData.HelpSubjects); }
+        }
+
         private void OpenSubjectForm()
         {
-            if (formData.TryGetSubject(out BindingSubject? current))
+            if (formData.TryGetValue(out BindingSubject? current))
             {
                 if (current.SubjectIndex is not null && current.SubjectForm is null)
                 {
@@ -127,7 +160,7 @@ namespace DataDictionary.Main.Forms.General
                 else if (current.SubjectIndex is not null && current.SubjectForm is not null)
                 {
                     Activate(
-                    () => new HelpSubject(current.SubjectIndex, current.SubjectForm),
+                    () => new HelpSubject(current.SubjectIndex, current.SubjectControls),
                     (form) => form.IsOpenItem(current.SubjectIndex));
                 }
                 else
@@ -153,7 +186,8 @@ namespace DataDictionary.Main.Forms.General
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (formTree.GetSubject(e.Node, out BindingSubject? subject))
+            if (e.Node is not null
+                && formTree.GetSubject(e.Node, out BindingSubject? subject))
             { formData.SetPosition(subject.Path); }
         }
 

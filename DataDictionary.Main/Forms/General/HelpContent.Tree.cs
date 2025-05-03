@@ -179,7 +179,8 @@ namespace DataDictionary.Main.Forms.General
 
             public Boolean GetSubject([NotNullWhen(true)] out BindingSubject? value)
             {
-                if (subjectNodes.TryGetValue(treeControl.SelectedNode, out BindingSubject? result))
+                if (treeControl.SelectedNode is not null
+                    && subjectNodes.TryGetValue(treeControl.SelectedNode, out BindingSubject? result))
                 { value = result; return true; }
                 else { value = null; return false; }
             }

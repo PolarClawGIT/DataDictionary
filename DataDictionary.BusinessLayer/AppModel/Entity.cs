@@ -4,6 +4,8 @@ using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -14,7 +16,9 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IEntity :
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>, IDeleteData<IEntityIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IBindListChanged,
+        IGetTemporal<IModelIndex>, IGetTemporal<IEntityIndex>
     {
         /// <summary>
         /// List of Entities within the Model.
@@ -59,6 +63,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <param name="source"></param>
         /// <returns></returns>
         IEntityValue Import(AppCatalog.TableEntity source);
+
+        /// <summary>
+        /// Returns an empty IEntity.
+        /// </summary>
+        /// <returns></returns>
+        public static IEntity Create()
+        { return new Entity(); }
     }
 
     class Entity : IEntity, IDataTableFile
@@ -83,9 +94,34 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IEntityAttributeData Attributes { get { return attributeValues; } }
         private readonly EntityAttributeData attributeValues;
 
+        // TODO: Need to get a combined object EntityAttribute & Attribute. How?
+
         /// <inheritdoc/>
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return entityValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && attributeValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                entityValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                attributeValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public Entity() : base()
         {
@@ -96,6 +132,33 @@ namespace DataDictionary.BusinessLayer.AppModel
             attributeValues = new EntityAttributeData();
             subjectAreaValues = new EntitySubjectAreaData();
         }
+
+        public FindAttributes FindAttributes
+        {
+            get { return findAttributes; }
+            set
+            {
+                attributeValues.ListChanged -= AttributeValues_ListChanged;
+                findAttributes = value;
+
+                foreach (EntityAttributeValue item in attributeValues)
+                { item.FindAttributes = value; }
+
+                attributeValues.ListChanged += AttributeValues_ListChanged;
+
+                void AttributeValues_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if (e.ListChangedType is ListChangedType.Reset)
+                    {
+                        foreach (EntityAttributeValue item in attributeValues)
+                        { item.FindAttributes = value; }
+                    }
+                    else if (e.ListChangedType is ListChangedType.ItemAdded && e.NewIndex >= 0)
+                    { attributeValues[e.NewIndex].FindAttributes = value; }
+                }
+            }
+        }
+        FindAttributes findAttributes = (path) => new List<IAttributeValue>();
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
@@ -278,7 +341,8 @@ namespace DataDictionary.BusinessLayer.AppModel
                 {
                     PropertyIndex propertyIndex = new PropertyIndex(property);
                     if (Properties.FirstOrDefault(w => entityIndex.Equals(w) && propertyIndex.Equals(w)) is not EntityPropertyValue)
-                    { Properties.Add(new EntityPropertyValue(value, property) { PropertyValue = property.PropertyValue }); };
+                    { Properties.Add(new EntityPropertyValue(value, property) { PropertyValue = property.PropertyValue }); }
+                    ;
                 }
 
                 foreach (var alias in source.Aliases)
@@ -310,5 +374,54 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return entity;
         }
+
+        public void Remove(IEntityIndex dataKey)
+        {
+            entityValues.Remove(dataKey);
+            aliasValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            subjectAreaValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            entityValues.Remove(dataKey);
+            aliasValues.Remove(dataKey);
+            propertyValues.Remove(dataKey);
+            definitionValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+            subjectAreaValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            entityValues.Clear();
+            aliasValues.Clear();
+            propertyValues.Clear();
+            definitionValues.Clear();
+            attributeValues.Clear();
+            subjectAreaValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            entityValues.ResetBindings();
+            aliasValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
+            attributeValues.ResetBindings();
+            subjectAreaValues.ResetBindings();
+        }
+
+        public ITemporalData GetTemporal(IModelIndex key)
+        { return entityValues.GetTemporal(key); }
+
+        public ITemporalData GetTemporal(IEntityIndex key)
+        { return entityValues.GetTemporal(key); }
     }
 }

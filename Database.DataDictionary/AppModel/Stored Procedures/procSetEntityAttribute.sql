@@ -30,12 +30,12 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]			   UniqueIdentifier Not Null,
 		[AttributeAliasId]     UniqueIdentifier Not Null,
-		[AttributeTitle]	   [App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
+		[AttributeKnownAs]	   [App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
 		[IsPrimaryKey]		   Bit Null,
 		Primary Key ([EntityId], [AttributeAliasId]),
-		Unique ([EntityId], [AttributeTitle]),
+		Unique ([EntityId], [AttributeKnownAs]),
 		Unique ([EntityId], [OrdinalPosition]))
 
 	Declare @Alias [AppModel].[typeAlias];
@@ -49,7 +49,7 @@ Begin Try
 	Insert Into @Values
 	Select	D.[EntityId],
 			[AppModel].[funcAliasId](D.[AttributePath]) As [AttributeAliasId],
-			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
+			NullIf(Trim(D.[AttributeKnownAs]),'') As [AttributeKnownAs],
 			D.[OrdinalPosition],
 			IsNull(D.[IsNullable],0) As [IsNullable],
 			IsNull(D.[IsPrimaryKey],0) As [IsPrimaryKey]
@@ -86,7 +86,7 @@ Begin Try
 	;With [Delta] As (
 		Select	[EntityId],
 				[AttributeAliasId],
-				[AttributeTitle],
+				[AttributeKnownAs],
 				[OrdinalPosition],
 				[IsNullable],
 				[IsPrimaryKey]
@@ -94,13 +94,13 @@ Begin Try
 		Except
 		Select	[EntityId],
 				[AttributeAliasId],
-				[AttributeTitle],
+				[AttributeKnownAs],
 				[OrdinalPosition],
 				[IsNullable],
 				[IsPrimaryKey]
 		From	[AppModel].[EntityAttribute])
 	Update [AppModel].[EntityAttribute]
-	Set		[AttributeTitle] = S.[AttributeTitle],
+	Set		[AttributeKnownAs] = S.[AttributeKnownAs],
 			[OrdinalPosition] = S.[OrdinalPosition],
 			[IsNullable] = S.[IsNullable],
 			[IsPrimaryKey] = S.[IsPrimaryKey]
@@ -114,13 +114,13 @@ Begin Try
 	Insert Into [AppModel].[EntityAttribute] (
 			[EntityId],
 			[AttributeAliasId],
-			[AttributeTitle],
+			[AttributeKnownAs],
 			[OrdinalPosition],
 			[IsNullable],
 			[IsPrimaryKey])
 	Select	S.[EntityId],
 			S.[AttributeAliasId],
-			S.[AttributeTitle],
+			S.[AttributeKnownAs],
 			S.[OrdinalPosition],
 			S.[IsNullable],
 			S.[IsPrimaryKey]

@@ -17,7 +17,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// </summary>
     public interface IScriptingEngine :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+        IBindListChanged
     {
         /// <summary>
         /// List of Scripting Engine Templates.
@@ -83,6 +84,27 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         public INodePropertyData Properties { get { return propertyValues; } }
         private readonly NodePropertyData propertyValues;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return templateValues.RaiseListChangedEvents
+                    && nodeValues.RaiseListChangedEvents
+                    && attributeValues.RaiseListChangedEvents
+                    && pathValues.RaiseListChangedEvents
+                    && documentValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                templateValues.RaiseListChangedEvents = value;
+                nodeValues.RaiseListChangedEvents = value;
+                attributeValues.RaiseListChangedEvents = value;
+                pathValues.RaiseListChangedEvents = value;
+                documentValues.RaiseListChangedEvents = value;
+            }
+        }
 
         public ScriptingEngine() : base()
         {
@@ -247,5 +269,40 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
+        /// <inheritdoc/>
+        public void Remove(IModelIndex dataKey)
+        {
+            templateValues.Remove(dataKey);
+            pathValues.Remove(dataKey);
+            nodeValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ITemplateIndex dataKey)
+        {
+            templateValues.Remove(dataKey);
+            pathValues.Remove(dataKey);
+            nodeValues.Remove(dataKey);
+            attributeValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            templateValues.Clear();
+            pathValues.Clear();
+            nodeValues.Clear();
+            attributeValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            templateValues.ResetBindings();
+            pathValues.ResetBindings();
+            nodeValues.ResetBindings();
+            attributeValues.ResetBindings();
+        }
     }
 }

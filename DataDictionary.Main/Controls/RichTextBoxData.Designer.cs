@@ -111,7 +111,7 @@
             toolStripBold.Name = "toolStripBold";
             toolStripBold.Size = new Size(23, 22);
             toolStripBold.Text = "Bold";
-            toolStripBold.Click += toolStripBold_Click;
+            toolStripBold.Click += ToolStripBold_Click;
             // 
             // toolStripItalic
             // 

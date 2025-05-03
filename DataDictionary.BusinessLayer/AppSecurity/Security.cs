@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppSecurity
@@ -18,7 +19,8 @@ namespace DataDictionary.BusinessLayer.AppSecurity
     /// </summary>
     public interface ISecurity :
         ILoadData, ILoadData<IPrincipalIndex>, ILoadData<IRoleIndex>, ILoadData<ISecurableIndex>,
-        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>
+        ISaveData, ISaveData<IPrincipalIndex>, ISaveData<IRoleIndex>, ISaveData<ISecurableIndex>,
+        IBindListChanged
     {
         /// <summary>
         /// Security Principals (user/logins)
@@ -83,6 +85,29 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         /// <inheritdoc/>
         public ISecurableData Securables { get { return securableValues; } }
         SecurableData securableValues = new SecurableData();
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return principalValues.RaiseListChangedEvents
+                    && roleValues.RaiseListChangedEvents
+                    && membershipValues.RaiseListChangedEvents
+                    && ownerValues.RaiseListChangedEvents
+                    && permissionValues.RaiseListChangedEvents
+                    && securableValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                principalValues.RaiseListChangedEvents = value;
+                roleValues.RaiseListChangedEvents = value;
+                membershipValues.RaiseListChangedEvents = value;
+                ownerValues.RaiseListChangedEvents = value;
+                permissionValues.RaiseListChangedEvents = value;
+                securableValues.RaiseListChangedEvents = value;
+            }
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -250,6 +275,50 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             work.AddRange(ownerValues.Delete(dataKey));
             work.AddRange(permissionValues.Delete(dataKey));
             return work;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IPrincipalIndex dataKey)
+        {
+            principalValues.Remove(dataKey);
+            membershipValues.Remove(dataKey);
+            ownerValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IRoleIndex dataKey)
+        {
+            membershipValues.Remove(dataKey);
+            permissionValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ISecurableIndex dataKey)
+        {
+            ownerValues.Remove(dataKey);
+            permissionValues.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            principalValues.Clear();
+            roleValues.Clear();
+            ownerValues.Clear();
+            permissionValues.Clear();
+            membershipValues.Clear();
+            securableValues.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            principalValues.ResetBindings();
+            roleValues.ResetBindings();
+            ownerValues.ResetBindings();
+            membershipValues.ResetBindings();
+            permissionValues.ResetBindings();
+            securableValues.ResetBindings();
         }
     }
 }

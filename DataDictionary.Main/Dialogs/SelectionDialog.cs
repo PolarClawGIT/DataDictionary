@@ -100,15 +100,15 @@ namespace DataDictionary.Main.Dialogs
                 selectionDialogLayout.RowStyles[rowNumber].SizeType = SizeType.AutoSize;
             }
 
-            formData.BuildList(getDescription); 
+            formData.BuildList(getDescription);
         }
 
-        public void BuildData(IEnumerable<DataIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
+        public void BuildData(IEnumerable<PathIndex> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
         {
             BuildData(getDescription);
 
             foreach (NamedScopeIndex item in formData.
-                Where(w => selected.Contains(w.Source.Index)).
+                Where(w => selected.Contains(w.Source.Path)).
                 Select(s => s.Index))
             { if (!Selected.Contains(item)) { Selected.Add(item); } }
         }
@@ -126,8 +126,7 @@ namespace DataDictionary.Main.Dialogs
         public void BuildData<TValue>(IEnumerable<TValue> selected, Func<INamedScopeSourceValue, String>? getDescription = null)
             where TValue : INamedScopeSourceValue
         {
-            IEnumerable<DataIndex> indexes = selected.Select(s => s.Index);
-
+            IEnumerable<PathIndex> indexes = selected.Select(s => s.Path);
             BuildData(indexes, getDescription);
         }
 

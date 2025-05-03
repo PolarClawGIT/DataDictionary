@@ -14,7 +14,8 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// </summary>
     public interface ICatalog :
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>, IDeleteData<ICatalogIndex>,
-        ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>
+        ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
+        IBindListChanged
     {
         /// <summary>
         /// List of Model Catalogs within the Model.
@@ -147,6 +148,41 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc/>
         public ITableColumnData DbTableColumns { get { return tableColumns; } }
         private readonly TableColumnData tableColumns;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return catalogs.RaiseListChangedEvents
+                    && schemta.RaiseListChangedEvents
+                    && domains.RaiseListChangedEvents
+                    && properties.RaiseListChangedEvents
+                    && tables.RaiseListChangedEvents
+                    && tableColumns.RaiseListChangedEvents
+                    && routines.RaiseListChangedEvents
+                    && routineParameters.RaiseListChangedEvents
+                    && routineColumns.RaiseListChangedEvents
+                    && references.RaiseListChangedEvents
+                    && constraints.RaiseListChangedEvents
+                    && constraintColumns.RaiseListChangedEvents;
+            }
+            set
+            {
+                catalogs.RaiseListChangedEvents = value;
+                schemta.RaiseListChangedEvents = value; 
+                domains.RaiseListChangedEvents = value; 
+                properties.RaiseListChangedEvents = value; 
+                tables.RaiseListChangedEvents = value;
+                tableColumns.RaiseListChangedEvents = value; 
+                routines.RaiseListChangedEvents = value; 
+                routineParameters.RaiseListChangedEvents = value; 
+                routineColumns.RaiseListChangedEvents = value; 
+                references.RaiseListChangedEvents = value; 
+                constraints.RaiseListChangedEvents = value; 
+                constraintColumns.RaiseListChangedEvents = value;
+            }
+        }
 
         public Catalog() : base()
         {
@@ -528,6 +564,76 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             return work;
         }
 
+        /// <inheritdoc/>
+        public void Remove(ICatalogIndex dataKey)
+        {
+            catalogs.Remove(dataKey);
+            schemta.Remove(dataKey);
+            domains.Remove(dataKey);
 
+            tables.Remove(dataKey);
+            tableColumns.Remove(dataKey);
+
+            routines.Remove(dataKey);
+            routineParameters.Remove(dataKey);
+            routineColumns.Remove(dataKey);
+            references.Remove(dataKey);
+
+            constraints.Remove(dataKey);
+            constraintColumns.Remove(dataKey);
+
+            properties.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(AppModel.IModelIndex dataKey)
+        {
+            catalogs.Remove(dataKey);
+            schemta.Remove(dataKey);
+            domains.Remove(dataKey);
+            tables.Remove(dataKey);
+            tableColumns.Remove(dataKey);
+            routines.Remove(dataKey);
+            routineParameters.Remove(dataKey);
+            routineColumns.Remove(dataKey);
+            references.Remove(dataKey);
+            constraints.Remove(dataKey);
+            constraintColumns.Remove(dataKey);
+            properties.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            catalogs.Clear();
+            schemta.Clear();
+            domains.Clear();
+            tables.Clear();
+            tableColumns.Clear();
+            routines.Clear();
+            routineParameters.Clear();
+            routineColumns.Clear();
+            references.Clear();
+            constraints.Clear();
+            constraintColumns.Clear();
+            properties.Clear();
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            catalogs.ResetBindings();
+            schemta.ResetBindings();
+            domains.ResetBindings();
+            properties.ResetBindings();
+            tables.ResetBindings();
+            tableColumns.ResetBindings();
+            routines.ResetBindings();
+            routineParameters.ResetBindings();
+            routineColumns.ResetBindings();
+            references.ResetBindings();
+            constraints.ResetBindings();
+            constraintColumns.ResetBindings();
+        }
     }
 }

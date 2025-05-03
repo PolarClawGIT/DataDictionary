@@ -9,6 +9,7 @@ using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Text;
 using Toolbox.BindingTable;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms
 {
@@ -164,6 +165,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Returns the DataRowState of the first BindingSource of SetRowState.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DataRowState RowState { get; private set; } = DataRowState.Unchanged;
 
         /// <summary>
@@ -254,6 +256,15 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        /// <summary>
+        /// Set the IsEnabled based on security function.
+        /// </summary>
+        /// <param name="getAuthorization"></param>
+        public virtual void SetAuthorization(Func<CommandImageType, Boolean> getAuthorization)
+        {
+            foreach (var item in CommandButtons)
+            { item.Value.IsEnabled = getAuthorization(item.Key); }
+        }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
         {

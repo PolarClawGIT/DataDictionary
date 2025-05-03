@@ -20,12 +20,25 @@ namespace DataDictionary.Main.Forms.Model
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
-        AttributeIndex formKey = new AttributeIndex();
-        AttributeView formData = new AttributeView(BusinessData.Model);
+        FormBinding formBinding;
+        FixedBinding fixedBinding;
+        Boolean needsData = false;
 
         protected Attribute() : base()
         {
             InitializeComponent();
+            formBinding = new FormBinding()
+            {
+                BindingAlias = bindingAlias,
+                BindingAttribute = bindingAttribute,
+                BindingSubjectArea = bindingSubjectArea,
+                BindingProperty = bindingProperty,
+                BindingDefinition = bindingDefinition,
+                DoWork = base.DoWork
+            };
+            formBinding.Init();
+
+            fixedBinding = new FixedBinding();
 
             SetRowState(
                 bindingAttribute,
@@ -43,53 +56,37 @@ namespace DataDictionary.Main.Forms.Model
 
             aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
             aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
-
-            formData.ListEmpty += FormData_ListEmpty;
-        }
-
-        private void FormData_ListEmpty(Object? sender, EventArgs e)
-        {
-            bindingAttribute.RaiseListChangedEvents = false;
-            bindingProperty.RaiseListChangedEvents = false;
-            bindingDefinition.RaiseListChangedEvents = false;
-            bindingAlias.RaiseListChangedEvents = false;
-            bindingSubjectArea.RaiseListChangedEvents = false;
         }
 
         public Attribute(IAttributeIndex? attribute) : this()
         {
             if (attribute is null)
-            {
-                AttributeValue attributeItem = new AttributeValue();
-                formData.Attributes.Add(attributeItem);
-                formKey = new AttributeIndex(attributeItem);
-            }
-            else
-            { formKey = new AttributeIndex(attribute); }
+            { attribute = formBinding.NewValue(); }
+            else { formBinding.SetPosition(attribute); }
         }
+
+        public Attribute(IAttributeIndex attribute, ITemporalIndex temporal) : this(attribute)
+        { formBinding.SetPosition(attribute, temporal); needsData = true; }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            PropertyNameList.Load(propertyIdColumn);
-            DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            DoWork(formData.Load(formKey), OnComplete);
+            if (needsData)
+            { formBinding.Load(onCompleting); }
+            else { DoBinding(); }
 
-            void OnComplete(RunWorkerCompletedEventArgs args)
+            void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                SendMessage(new RefreshNavigation());
-                bindingAttribute.DataSource = formData.Attributes;
-                bindingAttribute.Position = 0;
-
-                if (bindingAttribute.Current is IAttributeValue current)
+                if (args.Error is null)
                 {
-                    bindingProperty.DataSource = formData.Properties;
-                    bindingDefinition.DataSource = formData.Definitions;
-                    bindingAlias.DataSource = formData.Aliases;
-                    bindingSubjectArea.DataSource = formData.SubjectArea;
+                    DoBinding();
+                    SendMessage(new RefreshNavigation());
                 }
+            }
 
+            void DoBinding()
+            {
                 titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle)));
                 descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -111,18 +108,6 @@ namespace DataDictionary.Main.Forms.Model
                 isNonKeyData.DataBindings.Add(new Binding(nameof(isNonKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsNonKey), false, DataSourceUpdateMode.OnPropertyChanged));
                 isKeyData.DataBindings.Add(new Binding(nameof(isKeyData.Checked), bindingAttribute, nameof(IAttributeValue.IsKey), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                PropertyNameList.Load(propertyIdColumn, formData.ModelProperty);
-                propertiesData.AutoGenerateColumns = false;
-                propertiesData.DataSource = bindingProperty;
-                propertyControl.BindTo(bindingProperty, formData.ModelProperty);
-
-                DefinitionNameList.Load(definitionColumn, formData.ModelDefinitions);
-                definitionData.AutoGenerateColumns = false;
-                definitionData.DataSource = bindingDefinition;
-                definitionControl.BindTo(bindingDefinition, formData.ModelDefinitions);
-
-                subjectArea.BindTo(bindingSubjectArea, formData.ModelSubjectAreas);
-
                 // Alias Handling
                 ScopeNameList.Load(aliaseScopeColumn);
                 ScopeNameList.Load(aliasScopeData);
@@ -133,7 +118,15 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
+                //
+                propertyData.BindTo(bindingProperty, formBinding.NewProperty);
+                definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
+
+                subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -141,111 +134,54 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteCommand_Click(sender, e);
 
-            bindingAttribute.RaiseListChangedEvents = false;
-            bindingProperty.RaiseListChangedEvents = false;
-            bindingDefinition.RaiseListChangedEvents = false;
-            bindingAlias.RaiseListChangedEvents = false;
-            bindingSubjectArea.RaiseListChangedEvents = false;
-
-            formData.Remove();
+            formBinding.RemoveValue();
+            IsLocked(formBinding.GetLocked());
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-                IsLocked(true);
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(formData.Load(factory));
-                DoWork(work, onCompleting);
-            }
+            formBinding.Load(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingAttribute.ResetBindings(false);
-                bindingProperty.ResetBindings(false);
-                bindingDefinition.ResetBindings(false);
-                bindingAlias.ResetBindings(false);
-                bindingSubjectArea.ResetBindings(false);
-
-                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
-            }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-                IsLocked(true);
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(formData.Delete(factory));
-                DoWork(work, onCompleting);
-            }
+            formBinding.RemoveValue();
+            formBinding.Save(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingAttribute.ResetBindings(false);
-                bindingProperty.ResetBindings(false);
-                bindingDefinition.ResetBindings(false);
-                bindingAlias.ResetBindings(false);
-                bindingSubjectArea.ResetBindings(false);
-
-                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
-            }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-                IsLocked(true);
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(formData.Save(factory));
-                DoWork(work, onCompleting);
-            }
+            formBinding.Save(onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingAttribute.ResetBindings(false);
-                bindingProperty.ResetBindings(false);
-                bindingDefinition.ResetBindings(false);
-                bindingAlias.ResetBindings(false);
-                bindingSubjectArea.ResetBindings(false);
-
-                IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
-            }
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
 
-            Form form = Activate(() => new ApplicationWide.HistoryView(
-                formData.GetTemporal(BusinessData.Model.ModelIndex)));
-        }
-
-        private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingAttribute.Current is AttributeValue current)
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
             {
-                AttributePropertyValue newItem = new AttributePropertyValue(current);
-                e.NewObject = newItem;
-            }
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out AttributeValue? attribute))
+                    { return new Attribute(attribute, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                }
+            });
         }
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
@@ -265,21 +201,6 @@ namespace DataDictionary.Main.Forms.Model
                 isAliasInModelData.Checked = inModel;
                 aliasNameData.ReadOnly = inModel;
                 aliasScopeData.ReadOnly = inModel;
-            }
-        }
-
-        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
-        { }
-
-        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
-        { }
-
-        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingAttribute.Current is AttributeValue current)
-            {
-                AttributeDefinitionValue newItem = new AttributeDefinitionValue(current);
-                e.NewObject = newItem;
             }
         }
 

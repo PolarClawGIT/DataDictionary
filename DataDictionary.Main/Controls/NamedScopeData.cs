@@ -12,14 +12,21 @@ namespace DataDictionary.Main.Controls
         INamedScopeData namedScope = BusinessData.NamedScope;
         Dictionary<ListViewItem, NamedScopeIndex> crossRefrence = new Dictionary<ListViewItem, NamedScopeIndex>();
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText { get { return groupBox.Text; } set { groupBox.Text = value; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public NamedScopeIndex? ScopeKey { get; private set; }
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PathIndex ScopePath
         {
             get { return scopePath; }
@@ -28,6 +35,7 @@ namespace DataDictionary.Main.Controls
         private PathIndex scopePath = new PathIndex();
 
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ScopeType Scope
         {
             get { return scope; }
@@ -35,6 +43,7 @@ namespace DataDictionary.Main.Controls
         }
         private ScopeType scope = ScopeType.Null;
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Boolean ReadOnly
         {
             get { return !groupBox.Enabled; }

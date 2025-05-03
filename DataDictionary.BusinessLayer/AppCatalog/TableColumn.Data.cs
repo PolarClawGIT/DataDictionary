@@ -78,6 +78,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         { return new WorkItem() { WorkName = "Remove TableColumn", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
+        /// <remarks>TableColumn</remarks>
         public IEnumerable<ITableColumnValue> GetAlias(ITableColumnIndexName tableColumn)
         {
             List<TableColumnIndexName> keys = new List<TableColumnIndexName>();
@@ -108,5 +109,15 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 (column, key) => column
                 ).ToList();
         }
+
+        /// <inheritdoc/>
+        /// <remarks>TableColumn</remarks>
+        public void Remove(ICatalogIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>TableColumn</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
     }
 }

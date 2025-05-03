@@ -25,11 +25,13 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// The Worker Method of ApplicationData.DoWork
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?>? DoWork { get; set; } = null;
 
         /// <summary>
         /// Text that appears at the top of the control
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public String HeaderText
         {
             get { return headerTitle.Text ?? String.Empty; }
@@ -124,9 +126,10 @@ namespace DataDictionary.Main.Controls
 
         private void TreeViewData_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
-            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
+            if (e.Node is not null && e.Node.TreeView is not null)
+            { isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus; }
 
+            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
         }
 
         private void TreeViewData_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
@@ -150,9 +153,9 @@ namespace DataDictionary.Main.Controls
         private void TreeViewData_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             // Need to get the Hit Location itself because the flag may have been reset.
-            Boolean isPlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
-
-            if (!isPlusMinus
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && OnNamedScopeSelected is EventHandler<NamedScopeValueEventArgs> hander
                 && data.GetValue(e.Node) is INamedScopeSourceValue value)
             { hander(this, new NamedScopeValueEventArgs(value)); }

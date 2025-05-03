@@ -296,7 +296,7 @@ namespace DataDictionary.Main.Forms.Security
         }
 
 
-        private void roleData_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void RoleData_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
         }
