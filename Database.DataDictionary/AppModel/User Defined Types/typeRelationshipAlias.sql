@@ -1,9 +1,8 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
-(
-	[EntityId]			   UniqueIdentifier NOT Null,
-	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
-	[DefinitionText]       [AppModel].[typeRichText] Null,
+﻿CREATE TYPE [AppModel].[typeRelationshipAlias] AS TABLE
+(    -- TIP: This matches the C# DataTable structure and GET procedure
+    [RelationshipId]       UniqueIdentifier NULL,
+	[AliasScope]           [AppModel].[typeScopeName] Null,
+	[AliasPath]            [App_DataDictionary].[typeNameSpacePath] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,
@@ -13,4 +12,4 @@
 	[IsUpdated]            Bit Null,
 	[IsDeleted]            Bit Null,
 	[IsCurrent]            Bit Null
-);
+)

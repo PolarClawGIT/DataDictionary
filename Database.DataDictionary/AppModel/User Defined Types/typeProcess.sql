@@ -1,9 +1,9 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+﻿CREATE TYPE [AppModel].[typeProcess] AS TABLE
 (
-	[EntityId]			   UniqueIdentifier NOT Null,
-	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
-	[DefinitionText]       [AppModel].[typeRichText] Null,
+    [ProcessId]            UniqueIdentifier NULL,
+	[ProcessTitle]         [App_DataDictionary].[typeTitle] Null,
+	[ProcessDescription]   [App_DataDictionary].[typeDescription] Null,
+	[ProcessName]          [AppModel].[typeQualifiedName] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

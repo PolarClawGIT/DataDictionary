@@ -1,6 +1,6 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+﻿CREATE TYPE [AppModel].[typeRelationshipDefinition] AS TABLE
 (
-	[EntityId]			   UniqueIdentifier NOT Null,
+	[RelationshipId]       UniqueIdentifier NOT Null,
 	[DefinitionId]         UniqueIdentifier NOT NULL,
 	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
 	[DefinitionText]       [AppModel].[typeRichText] Null,

@@ -1,9 +1,10 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+﻿CREATE TYPE [AppModel].[typeProcessDataFlow] AS TABLE
 (
-	[EntityId]			   UniqueIdentifier NOT Null,
-	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
-	[DefinitionText]       [AppModel].[typeRichText] Null,
+    [ProcessId]            UniqueIdentifier NULL,
+	[DataFlowKnownAs]      [App_DataDictionary].[typeTitle] Null,
+	[DataFlowAliasPath]    [App_DataDictionary].[typeNameSpacePath] Null,
+	[IsInFlow]		       Bit Null,
+	[IsOutFlow]		       Bit Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,
@@ -13,4 +14,4 @@
 	[IsUpdated]            Bit Null,
 	[IsDeleted]            Bit Null,
 	[IsCurrent]            Bit Null
-);
+)

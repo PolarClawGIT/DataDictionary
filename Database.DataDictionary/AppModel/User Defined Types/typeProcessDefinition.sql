@@ -1,6 +1,6 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+﻿CREATE TYPE [AppModel].[typeProcessDefinition] AS TABLE
 (
-	[EntityId]			   UniqueIdentifier NOT Null,
+	[ProcessId]			   UniqueIdentifier NOT Null,
 	[DefinitionId]         UniqueIdentifier NOT NULL,
 	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
 	[DefinitionText]       [AppModel].[typeRichText] Null,

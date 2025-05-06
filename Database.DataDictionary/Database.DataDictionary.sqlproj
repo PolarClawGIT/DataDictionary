@@ -485,6 +485,19 @@
     <Build Include="AppModel\Views\Alias.Hs.sql" />
     <Build Include="AppModel\Triggers\trigAliasHierarchy.sql" />
     <Build Include="AppModel\Stored Procedures\procSetAlias.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcess.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessAlias.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessSubjectArea.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessProperty.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessDefinition.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessDataFlow.sql" />
+    <Build Include="AppModel\Tables\RelationshipDefinition.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationship.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationshipAlias.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationshipAttribute.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationshipDefinition.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationshipProperty.sql" />
+    <Build Include="AppModel\User Defined Types\typeRelationshipSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

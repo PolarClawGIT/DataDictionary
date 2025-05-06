@@ -1,9 +1,9 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+﻿CREATE TYPE [AppModel].[typeProcessProperty] AS TABLE
 (
-	[EntityId]			   UniqueIdentifier NOT Null,
-	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,
-	[DefinitionText]       [AppModel].[typeRichText] Null,
+	-- TIP: This matches the C# DataTable structure
+    [RelationshipId]       UNIQUEIDENTIFIER NULL,
+	[PropertyId]           UNIQUEIDENTIFIER NULL,
+	[PropertyValue]        [AppModel].[typePropertyValue]  NULL,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,
