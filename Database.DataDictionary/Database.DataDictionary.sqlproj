@@ -510,6 +510,16 @@
     <Build Include="HsModel\Tables\RelationshipDefinition.sql" />
     <Build Include="HsModel\Tables\RelationshipProperty.sql" />
     <Build Include="HsModel\Tables\RelationshipSubjectArea.sql" />
+    <Build Include="AppModel\Triggers\trigProcessProperty.sql" />
+    <Build Include="AppModel\Triggers\trigProcessDefinition.sql" />
+    <Build Include="AppModel\Triggers\trigProcessDataFlow.sql" />
+    <Build Include="AppModel\Triggers\trigProcessAlias.sql" />
+    <Build Include="AppModel\Triggers\trigProcess.sql" />
+    <Build Include="AppModel\Triggers\trigRelationshipProperty.sql" />
+    <Build Include="AppModel\Triggers\trigRelationshipDefinition.sql" />
+    <Build Include="AppModel\Triggers\trigRelationshipAttribute.sql" />
+    <Build Include="AppModel\Triggers\trigRelationshipAlias.sql" />
+    <Build Include="AppModel\Triggers\trigRelationship.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
