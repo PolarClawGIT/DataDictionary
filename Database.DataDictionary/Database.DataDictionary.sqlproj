@@ -498,6 +498,18 @@
     <Build Include="AppModel\User Defined Types\typeRelationshipDefinition.sql" />
     <Build Include="AppModel\User Defined Types\typeRelationshipProperty.sql" />
     <Build Include="AppModel\User Defined Types\typeRelationshipSubjectArea.sql" />
+    <Build Include="HsModel\Tables\Process.sql" />
+    <Build Include="HsModel\Tables\ProcessAlias.sql" />
+    <Build Include="HsModel\Tables\ProcessDataFlow.sql" />
+    <Build Include="HsModel\Tables\ProcessDefinition.sql" />
+    <Build Include="HsModel\Tables\ProcessProperty.sql" />
+    <Build Include="HsModel\Tables\ProcessSubjectArea.sql" />
+    <Build Include="HsModel\Tables\Relationship.sql" />
+    <Build Include="HsModel\Tables\RelationshipAlias.sql" />
+    <Build Include="HsModel\Tables\RelationshipAttribute.sql" />
+    <Build Include="HsModel\Tables\RelationshipDefinition.sql" />
+    <Build Include="HsModel\Tables\RelationshipProperty.sql" />
+    <Build Include="HsModel\Tables\RelationshipSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

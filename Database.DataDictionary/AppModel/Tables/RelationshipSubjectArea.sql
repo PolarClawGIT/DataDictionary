@@ -1,4 +1,5 @@
-﻿CREATE TABLE [AppModel].[RelationshipSubjectArea] (
+﻿CREATE TABLE [AppModel].[RelationshipSubjectArea]
+(
     [RelationshipId] UniqueIdentifier NOT NULL,
     [SubjectAreaId]  UniqueIdentifier NOT NULL,
     -- Temporal History Support
@@ -9,6 +10,6 @@
     CONSTRAINT [PK_RelationshipSubjectArea] PRIMARY KEY CLUSTERED ([SubjectAreaId] ASC, [RelationshipId] ASC),
     CONSTRAINT [FK_RelationshipSubjectArea_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [AppModel].[Relationship] ([RelationshipId]),
     CONSTRAINT [FK_RelationshipSubjectArea_Subject] FOREIGN KEY ([SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([SubjectAreaId]),
-)
---WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipSubjectArea]))
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipSubjectArea]))
+GO
 

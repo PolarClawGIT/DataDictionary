@@ -12,7 +12,7 @@
 		-- Compound: A Compounded Attribute of an Entity (other). Typically used in Views or Processes.
 	[OwnerAliasId]            UniqueIdentifier Not Null, -- Owner of the Relationship. Normally an Entity.
 	[RefrenceAliasId]         UniqueIdentifier Null, -- Relationship referenced, if any. (FK's and Compound, normally)
-	-- TODO: Add System Version later once the schema is locked down
+    -- Temporal History Support
 	[SysStart]                DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Relationship_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd]                  DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Relationship_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
@@ -20,5 +20,5 @@
 	CONSTRAINT [PK_Relationship] PRIMARY KEY CLUSTERED ([RelationshipId] ASC),
 	CONSTRAINT [FK_RelationshipEntity_Alias] FOREIGN KEY ([OwnerAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
 	CONSTRAINT [FK_RelationshipRefrence_Alias] FOREIGN KEY ([RefrenceAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
-
-)
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[Relationship]))
+GO

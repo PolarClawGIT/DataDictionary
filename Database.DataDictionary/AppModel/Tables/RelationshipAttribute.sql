@@ -5,7 +5,7 @@
 	[AttributeAliasId]        UniqueIdentifier Not Null, -- Attribute within the Owner 
 	[AttributeKnownAs]	      [App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Relationship (default is the Attribute Name)
 	[OrdinalPosition]         Int Not Null,
-	-- TODO: Add System Version later once the schema is locked down
+    -- Temporal History Support
 	[SysStart]                DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_RelationshipAttribute_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd]                  DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_RelationshipAttribute_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
@@ -15,5 +15,5 @@
 	CONSTRAINT [FK_RelationshipAttribute_Alias] FOREIGN KEY ([AttributeAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
 	CONSTRAINT [AK_RelationshipAttributeTitle] UNIQUE ([RelationshipId] ASC, [AttributeKnownAs] ASC),
 	CONSTRAINT [AK_RelationshipAttributePosition] UNIQUE ([RelationshipId] ASC, [OrdinalPosition] ASC),
-
-)
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipAttribute]))
+GO

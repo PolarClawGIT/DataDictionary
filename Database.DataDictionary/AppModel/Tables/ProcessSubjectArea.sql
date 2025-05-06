@@ -1,4 +1,5 @@
-﻿CREATE TABLE [AppModel].[ProcessSubjectArea] (
+﻿CREATE TABLE [AppModel].[ProcessSubjectArea]
+(
     [ProcessId]     UniqueIdentifier NOT NULL,
     [SubjectAreaId] UniqueIdentifier NOT NULL,
     -- Temporal History Support
@@ -9,6 +10,6 @@
     CONSTRAINT [PK_ProcessSubjectArea] PRIMARY KEY CLUSTERED ([SubjectAreaId] ASC, [ProcessId] ASC),
     CONSTRAINT [FK_ProcessSubjectArea_Process] FOREIGN KEY ([ProcessId]) REFERENCES [AppModel].[Process] ([ProcessId]),
     CONSTRAINT [FK_ProcessSubjectArea_Subject] FOREIGN KEY ([SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([SubjectAreaId]),
-)
---WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessSubjectArea]))
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessSubjectArea]))
+GO
 
