@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeProcessProperty] AS TABLE
 (
 	-- TIP: This matches the C# DataTable structure
-    [RelationshipId]       UNIQUEIDENTIFIER NULL,
+    [ProcessId]            UNIQUEIDENTIFIER NULL,
 	[PropertyId]           UNIQUEIDENTIFIER NULL,
 	[PropertyValue]        [AppModel].[typePropertyValue]  NULL,
 	-- Temporal Data

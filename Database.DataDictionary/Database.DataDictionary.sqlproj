@@ -555,6 +555,18 @@
     <Build Include="AppModel\Triggers\trigModelEntity.sql" />
     <Build Include="AppModel\Triggers\trigModelProcess.sql" />
     <Build Include="AppModel\Triggers\trigModelRelationship.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcess.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessAlias.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessDataFlow.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessDefinition.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessProperty.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessSubjectArea.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationship.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationshipAlias.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationshipAttribute.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationshipDefinition.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationshipProperty.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetRelationshipSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

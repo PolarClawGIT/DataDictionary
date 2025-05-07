@@ -2,7 +2,7 @@
 (
     [ProcessId]            UniqueIdentifier NULL,
 	[DataFlowKnownAs]      [App_DataDictionary].[typeTitle] Null,
-	[DataFlowAliasPath]    [App_DataDictionary].[typeNameSpacePath] Null,
+	[DataFlowPath]         [App_DataDictionary].[typeNameSpacePath] Null,
 	[IsInFlow]		       Bit Null,
 	[IsOutFlow]		       Bit Null,
 	-- Temporal Data
