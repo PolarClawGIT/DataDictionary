@@ -536,6 +536,25 @@
     <Build Include="AppModel\Views\RelationshipSubjectArea.Hs.sql" />
     <Build Include="AppModel\Views\RelationshipAttribute.Hs.sql" />
     <Build Include="AppModel\Views\ProcessDataFlow.Hs.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcess.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessAlias.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessDataFlow.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessDefinition.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessProperty.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessSubjectArea.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationship.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationshipAlias.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationshipAttribute.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationshipDefinition.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationshipProperty.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetRelationshipSubjectArea.sql" />
+    <Build Include="AppModel\Views\ModelProcess.Hs.sql" />
+    <Build Include="AppModel\Views\ModelRelationship.Hs.sql" />
+    <Build Include="HsModel\Tables\ModelProcess.sql" />
+    <Build Include="HsModel\Tables\ModelRelationship.sql" />
+    <Build Include="AppModel\Triggers\trigModelEntity.sql" />
+    <Build Include="AppModel\Triggers\trigModelProcess.sql" />
+    <Build Include="AppModel\Triggers\trigModelRelationship.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
