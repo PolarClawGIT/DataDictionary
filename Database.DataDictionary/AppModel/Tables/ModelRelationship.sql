@@ -8,7 +8,5 @@
     CONSTRAINT [FK_ModelRelationship_Model] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
     CONSTRAINT [FK_ModelRelationship_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [AppModel].[Relationship] ([RelationshipId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
-);
-
-
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ModelRelationship]))
 GO
