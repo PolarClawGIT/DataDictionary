@@ -1,7 +1,7 @@
-﻿CREATE FUNCTION [AppSecurity].[funcModelAttributeAuthorization]
+﻿CREATE FUNCTION [AppSecurity].[funcModelProcessAuthorization]
 (
 	@ModelId UniqueIdentifier,
-	@AttributeId UniqueIdentifier,
+	@ProcessId UniqueIdentifier,
 	@IsAuthorized Bit = 1
 		-- Null: return value only if [IsApplication] or [IsDbWriter] is true (for Security Policy).
 		-- 1: return values only if [IsAuthorized] is true
@@ -30,9 +30,9 @@ With [Authorization] As (
 				Else 0 End)
 				As [IsAuthorized]
 	From	[AppModel].[Model] M
-			Left Join [AppModel].[ModelAttribute] A
+			Left Join [AppModel].[ModelProcess] A
 			On	M.[ModelId] = A.[ModelId] And
-				A.[AttributeId] = @AttributeId
+				A.[ProcessId] = @ProcessId
 			Cross Apply [AppSecurity].[funcAuthorization](IsNull(M.[ModelId], @ModelId))
 			)
 Select	[PrincipalLogin],
@@ -47,7 +47,7 @@ Select	[PrincipalLogin],
 		Convert(Bit, Max(Convert(Int, [IsDeny]))) As [IsDeny],
 		Convert(Bit, Min(Convert(Int, [IsAuthorized]))) As [IsAuthorized]
 From	[Authorization]
-Where	(@AttributeId is Null And @IsAuthorized is Null And ([IsApplication] = 1 or [IsDbWriter] = 1)) Or
+Where	(@ProcessId is Null And @IsAuthorized is Null And ([IsApplication] = 1 or [IsDbWriter] = 1)) Or
 		([IsAuthorized] = @IsAuthorized)
 Group By [PrincipalLogin],
 		[PrincipalId]

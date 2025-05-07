@@ -13,25 +13,7 @@
 
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DefinitionEnumeration],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[PropertyEnumeration],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[AliasHierarchy],
-	
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[Process],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessAlias],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessDataFlow],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessDefinition],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessProperty],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[ProcessSubjectArea],
-
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[Relationship],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipAlias],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipAttribute],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipProperty],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[RelationshipSubjectArea],
-
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlow],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowDefinition],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowElement],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DataFlowProperty]
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[AliasHierarchy]
 
 	WITH (STATE = ON, SCHEMABINDING = ON)
 GO

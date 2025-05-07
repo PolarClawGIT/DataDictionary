@@ -520,6 +520,10 @@
     <Build Include="AppModel\Triggers\trigRelationshipAttribute.sql" />
     <Build Include="AppModel\Triggers\trigRelationshipAlias.sql" />
     <Build Include="AppModel\Triggers\trigRelationship.sql" />
+    <Build Include="AppSecurity\Functions\funcModelProcessAuthorization.sql" />
+    <Build Include="AppSecurity\Functions\funcModelRelationshipAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyModelProcess.sql" />
+    <Build Include="AppSecurity\Policy\policyModelRelationship.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
