@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [AppModel].[ProcessDataFlow]
 (	-- For a given process, what are the Input/Output values (aka DataFlows).
+    -- TODO: In a process, a data flow is a Parameter. Do I need the DataFlow structure?
 	[ProcessId]              UniqueIdentifier Not Null,
 	[DataFlowAliasId]        UniqueIdentifier Not Null, -- Entity, Attribute or Relationship of the flow
 	[DataFlowKnownAs]	     [App_DataDictionary].[typeTitle] Not Null, -- What to call the object within this DataFlows (default is the Attribute/Entity Name)
@@ -14,5 +15,5 @@
 	CONSTRAINT [FK_ProcessDataFlow_Process] FOREIGN KEY ([ProcessId]) REFERENCES [AppModel].[Process] ([ProcessId]),
 	CONSTRAINT [FK_ProcessDataFlow_Alias] FOREIGN KEY ([DataFlowAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
 	CONSTRAINT [AK_ProcessDataFlowTitle] UNIQUE ([ProcessId] ASC, [DataFlowKnownAs] ASC),
-) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessDataFlow]))
+) --WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessDataFlow]))
 GO

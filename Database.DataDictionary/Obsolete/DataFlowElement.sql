@@ -2,6 +2,9 @@
 (	-- Used to define what Information (elements) are part of the DataFlow
 	[DataFlowElementId]  UniqueIdentifier Not Null CONSTRAINT [DF_DataFlowElementId] DEFAULT (newid()),
 	[DataFlowId]         UniqueIdentifier Not Null,
+
+	-- TODO: Generalize. Use DataElementAliasId?
+
 	[EntityName]         [AppModel].[typeQualifiedName] Null,
 	[AttributeName]      [AppModel].[typeQualifiedName] Null,
 	-- TODO: Add System Version later once the schema is locked down
