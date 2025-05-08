@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [AppModel].[procSetProcessDataFlow]
+﻿CREATE PROCEDURE [AppModel].[procSetProcessArgument]
 		@ModelId UniqueIdentifier = Null,
 		@ProcessId UniqueIdentifier = Null,
-		@Data [AppModel].[typeProcessDataFlow] ReadOnly
+		@Data [AppModel].[typeProcessArgument] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on Model ProcessDataFlow.
+/* Description: Performs Set on Model ProcessArgument.
 */
 
 -- Transaction Handling
@@ -28,32 +28,41 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[ProcessId]			   UniqueIdentifier Not Null,
-		[DataFlowAliasId]      UniqueIdentifier Not Null,
-		[DataFlowKnownAs]	   [App_DataDictionary].[typeTitle] Not Null, -- What to call the DataFlow within this Process (default is the DataFlow Name)
-		[IsInFlow]             Bit Null,
-		[IsOutFlow]		       Bit Null,
-		Primary Key ([ProcessId], [DataFlowAliasId]),
-		Unique ([ProcessId], [DataFlowKnownAs]))
-
-	Declare @Alias [AppModel].[typeAlias];
-
-	Insert Into @Alias ([AliasNameSpace])
-	Select	[DataFlowPath]
-	From	@Data
-
-	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
+		[ProcessId]				UniqueIdentifier Not Null,
+		[ArgumentId]			UniqueIdentifier Not Null,
+		[ArgumentTitle]			[App_DataDictionary].[typeTitle]       Not Null,
+		[ArgumentDescription]	[App_DataDictionary].[typeDescription] Null,
+		[ArgumentName]			[AppModel].[typeQualifiedName]         Null,
+		[ArgumentType]			[AppModel].[typeQualifiedName]         Null, -- An Entity, Attribute, or system
+		[OrdinalPosition]       Int Not Null,
+		[IsInput]               Bit Null, -- Input Can be bidirectional or not defined (contributes)
+		[IsOutput]              Bit Null, -- Output Can be bidirectional or not defined (contributes)
+		Primary Key ([ProcessId], [ArgumentId]),
+		Unique ([ProcessId], [ArgumentTitle]),
+		Unique ([ProcessId], [OrdinalPosition]))
 
 	Insert Into @Values
 	Select	D.[ProcessId],
-			[AppModel].[funcAliasId](D.[DataFlowPath]) As [DataFlowAliasId],
-			NullIf(Trim(D.[DataFlowKnownAs]),'') As [DataFlowKnownAs],
-			IsNull(D.[IsInFlow],0) As [IsInFlow],
-			IsNull(D.[IsOutFlow],0) As [IsOutFlow]
+			Coalesce(H.[ArgumentId], NewId()) As [ArgumentId],
+			NullIf(Trim(D.[ArgumentTitle]),'') As [ProcessTitle],
+			NullIf(Trim(D.[ArgumentDescription]),'') As [ProcessDescription],
+			N.[ArgumentName],
+			T.[ArgumentType],
+			D.[OrdinalPosition],
+			IsNull(D.[IsInput],0) As [IsInput],
+			IsNull(D.[IsOutput],0) As [IsOutput]
 	From	@Data D
-			Left Join [AppModel].[ProcessDataFlowHs] H
+			Left Join [AppModel].[ProcessArgumentHs] H
 			On	D.[ProcessId] = H.[ProcessId] And
-				D.[DataFlowPath] = H.[DataFlowPath]
+				D.[OrdinalPosition] = H.[OrdinalPosition]
+			Outer Apply (
+				Select	[QualifiedName] As [ArgumentName]
+				From	[AppModel].[funcParseName](D.[ArgumentName])
+				Where	[IsBase] = 1) N
+			Outer Apply (
+				Select	[QualifiedName] As [ArgumentType]
+				From	[AppModel].[funcParseName](D.[ArgumentType])
+				Where	[IsBase] = 1) T
 	Where	(@ProcessId is Null Or @ProcessId = D.[ProcessId]) And
 			(@ModelId is Null Or D.[ProcessId] In (
 				Select	[ProcessId]
@@ -65,64 +74,84 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppModel].[ProcessDataFlow]
-	From	[AppModel].[ProcessDataFlow] T
+	Delete From [AppModel].[ProcessArgument]
+	From	[AppModel].[ProcessArgument] T
 			Left Join @Values V
 			On	T.[ProcessId] = V.[ProcessId] And
-				T.[DataFlowAliasId] = V.[DataFlowAliasId]
+				T.[ArgumentId] = V.[ArgumentId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, T.[ProcessId], 1)
-	Where	V.[DataFlowAliasId] is Null And
+	Where	V.[ArgumentId] is Null And
 			(@ProcessId is Not Null Or @ModelId is Not Null) And
 			(@ProcessId is Null Or @ProcessId = T.[ProcessId])  And
 			(@ModelId is Null Or T.[ProcessId] In (
 				Select	[ProcessId]
 				From	[AppModel].[ModelProcess]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppModel].[ProcessDataFlow]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppModel].[ProcessArgument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[ProcessId],
-				[DataFlowAliasId],
-				[DataFlowKnownAs],
-				[IsInFlow],
-				[IsOutFlow]
+				[ArgumentId],
+				[ArgumentTitle],
+				[ArgumentDescription],
+				[ArgumentName],
+				[ArgumentType],
+				[OrdinalPosition],
+				[IsInput],
+				[IsOutput]
 		From	@Values
 		Except
 		Select	[ProcessId],
-				[DataFlowAliasId],
-				[DataFlowKnownAs],
-				[IsInFlow],
-				[IsOutFlow]
-		From	[AppModel].[ProcessDataFlow])
-	Update [AppModel].[ProcessDataFlow]
-	Set		[DataFlowKnownAs] = S.[DataFlowKnownAs],
-			[IsInFlow] = S.[IsInFlow],
-			[IsOutFlow] = S.[IsOutFlow]
-	From	[AppModel].[ProcessDataFlow] T
+				[ArgumentId],
+				[ArgumentTitle],
+				[ArgumentDescription],
+				[ArgumentName],
+				[ArgumentType],
+				[OrdinalPosition],
+				[IsInput],
+				[IsOutput]
+		From	[AppModel].[ProcessArgument])
+	Update [AppModel].[ProcessArgument]
+	Set		[ArgumentTitle] = S.[ArgumentTitle],
+			[ArgumentDescription] = S.[ArgumentDescription],
+			[ArgumentName] = S.[ArgumentName],
+			[ArgumentType] = S.[ArgumentType],
+			[OrdinalPosition] = S.[OrdinalPosition],
+			[IsInput] = S.[IsInput],
+			[IsOutput] = S.[IsOutput]
+	From	[AppModel].[ProcessArgument] T
 			Inner Join [Delta] S
 			On	T.[ProcessId] = S.[ProcessId] And
-				T.[DataFlowAliasId] = S.[DataFlowAliasId]
+				T.[ArgumentId] = S.[ArgumentId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, S.[ProcessId], 1)
-	Print FormatMessage ('Update [AppModel].[ProcessDataFlow]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppModel].[ProcessArgument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppModel].[ProcessDataFlow] (
+	Insert Into [AppModel].[ProcessArgument] (
 			[ProcessId],
-			[DataFlowAliasId],
-			[DataFlowKnownAs],
-			[IsInFlow],
-			[IsOutFlow])
+			[ArgumentId],
+			[ArgumentTitle],
+			[ArgumentDescription],
+			[ArgumentName],
+			[ArgumentType],
+			[OrdinalPosition],
+			[IsInput],
+			[IsOutput])
 	Select	S.[ProcessId],
-			S.[DataFlowAliasId],
-			S.[DataFlowKnownAs],
-			S.[IsInFlow],
-			S.[IsOutFlow]
+			S.[ArgumentId],
+			S.[ArgumentTitle],
+			S.[ArgumentDescription],
+			S.[ArgumentName],
+			S.[ArgumentType],
+			S.[OrdinalPosition],
+			S.[IsInput],
+			S.[IsOutput]
 	From	@Values S
-			Left Join [AppModel].[ProcessDataFlow] T
+			Left Join [AppModel].[ProcessArgument] T
 			On	S.[ProcessId] = T.[ProcessId] And
-				S.[DataFlowAliasId] = T.[DataFlowAliasId]
+				S.[ArgumentId] = T.[ArgumentId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, S.[ProcessId], 1)
-	Where	T.[DataFlowAliasId] is Null
-	Print FormatMessage ('Insert [AppModel].[Process]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Where	T.[ArgumentId] is Null
+	Print FormatMessage ('Insert [AppModel].[ProcessArgument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

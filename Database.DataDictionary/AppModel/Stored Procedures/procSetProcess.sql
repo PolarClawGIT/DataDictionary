@@ -122,14 +122,14 @@ Begin Try
 			T.[ProcessId] In (Select [ProcessId] From @Delete)
 	Print FormatMessage ('Delete [AppModel].[ProcessSubjectArea] (Process): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppModel].[ProcessDataFlow]
-	From	[AppModel].[ProcessDataFlow] T
+	Delete From [AppModel].[ProcessArgument]
+	From	[AppModel].[ProcessArgument] T
 			Left Join @Values S
 			On	T.[ProcessId] = S.[ProcessId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, T.[ProcessId], 1)
 	Where	S.[ProcessId] is Null And
 			T.[ProcessId] In (Select [ProcessId] From @Delete)
-	Print FormatMessage ('Delete [AppModel].[ProcessDataFlow] (Process): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppModel].[ProcessArgument] (Process): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[Process]
 	From	[AppModel].[Process] T

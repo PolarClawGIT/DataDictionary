@@ -454,7 +454,6 @@
     <Build Include="AppModel\Tables\Process.sql" />
     <Build Include="AppModel\Tables\ProcessAlias.sql" />
     <Build Include="AppModel\Tables\ProcessDefinition.sql" />
-    <Build Include="AppModel\Tables\ProcessDataFlow.sql" />
     <Build Include="AppModel\Tables\ProcessProperty.sql" />
     <Build Include="AppModel\Tables\Relationship.sql" />
     <Build Include="AppModel\Tables\RelationshipAlias.sql" />
@@ -462,11 +461,6 @@
     <Build Include="AppModel\Tables\RelationshipProperty.sql" />
     <Build Include="AppModel\Tables\ModelProcess.sql" />
     <Build Include="AppModel\Tables\ModelRelationship.sql" />
-    <Build Include="AppModel\Tables\DataFlow.sql" />
-    <Build Include="AppModel\Tables\DataFlowDefinition.sql" />
-    <Build Include="AppModel\Tables\DataFlowProperty.sql" />
-    <Build Include="AppModel\Tables\DataFlowElement.sql" />
-    <Build Include="AppModel\Tables\ModelDataFlow.sql" />
     <Build Include="AppSecurity\Functions\funcApplicationAuthorization.sql" />
     <Build Include="AppSecurity\Functions\funcCatalogAuthorization.sql" />
     <Build Include="AppModel\Views\ModelEntity.Hs.sql" />
@@ -490,7 +484,6 @@
     <Build Include="AppModel\User Defined Types\typeProcessSubjectArea.sql" />
     <Build Include="AppModel\User Defined Types\typeProcessProperty.sql" />
     <Build Include="AppModel\User Defined Types\typeProcessDefinition.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessDataFlow.sql" />
     <Build Include="AppModel\Tables\RelationshipDefinition.sql" />
     <Build Include="AppModel\User Defined Types\typeRelationship.sql" />
     <Build Include="AppModel\User Defined Types\typeRelationshipAlias.sql" />
@@ -500,7 +493,6 @@
     <Build Include="AppModel\User Defined Types\typeRelationshipSubjectArea.sql" />
     <Build Include="HsModel\Tables\Process.sql" />
     <Build Include="HsModel\Tables\ProcessAlias.sql" />
-    <Build Include="HsModel\Tables\ProcessDataFlow.sql" />
     <Build Include="HsModel\Tables\ProcessDefinition.sql" />
     <Build Include="HsModel\Tables\ProcessProperty.sql" />
     <Build Include="HsModel\Tables\ProcessSubjectArea.sql" />
@@ -512,7 +504,6 @@
     <Build Include="HsModel\Tables\RelationshipSubjectArea.sql" />
     <Build Include="AppModel\Triggers\trigProcessProperty.sql" />
     <Build Include="AppModel\Triggers\trigProcessDefinition.sql" />
-    <Build Include="AppModel\Triggers\trigProcessDataFlow.sql" />
     <Build Include="AppModel\Triggers\trigProcessAlias.sql" />
     <Build Include="AppModel\Triggers\trigProcess.sql" />
     <Build Include="AppModel\Triggers\trigRelationshipProperty.sql" />
@@ -535,10 +526,8 @@
     <Build Include="AppModel\Views\RelationshipProperty.Hs.sql" />
     <Build Include="AppModel\Views\RelationshipSubjectArea.Hs.sql" />
     <Build Include="AppModel\Views\RelationshipAttribute.Hs.sql" />
-    <Build Include="AppModel\Views\ProcessDataFlow.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcess.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessAlias.sql" />
-    <Build Include="AppModel\Stored Procedures\procGetProcessDataFlow.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessSubjectArea.sql" />
@@ -557,7 +546,6 @@
     <Build Include="AppModel\Triggers\trigModelRelationship.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcess.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessAlias.sql" />
-    <Build Include="AppModel\Stored Procedures\procSetProcessDataFlow.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessSubjectArea.sql" />
@@ -567,6 +555,22 @@
     <Build Include="AppModel\Stored Procedures\procSetRelationshipDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procSetRelationshipProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procSetRelationshipSubjectArea.sql" />
+    <Build Include="Obsolete\DataFlow.sql" />
+    <Build Include="Obsolete\DataFlowDefinition.sql" />
+    <Build Include="Obsolete\DataFlowElement.sql" />
+    <Build Include="Obsolete\DataFlowProperty.sql" />
+    <Build Include="Obsolete\ModelDataFlow.sql" />
+    <Build Include="AppModel\Tables\ProcessArgument.sql" />
+    <Build Include="Obsolete\ProcessDataFlow.sql" />
+    <Build Include="Obsolete\trigProcessDataFlow.sql" />
+    <Build Include="Obsolete\typeProcessDataFlow.sql" />
+    <Build Include="Obsolete\ProcessDataFlow.Hs.sql" />
+    <Build Include="AppModel\Triggers\trigProcessArgument.sql" />
+    <Build Include="AppModel\User Defined Types\typeProcessArgument.sql" />
+    <Build Include="HsModel\Tables\ProcessArgument.sql" />
+    <Build Include="AppModel\Views\ProcessArgument.Hs.sql" />
+    <Build Include="AppModel\Stored Procedures\procGetProcessArgument.sql" />
+    <Build Include="AppModel\Stored Procedures\procSetProcessArgument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

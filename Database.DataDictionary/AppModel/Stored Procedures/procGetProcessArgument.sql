@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppModel].[procGetProcessDataFlow]
+﻿CREATE PROCEDURE [AppModel].[procGetProcessArgument]
 		@ModelId UniqueIdentifier = Null,
 		@ProcessId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -6,15 +6,18 @@
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on Model ProcessDataFlow.
+/* Description: Performs Get on Model ProcessArgument.
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
 Select	[ProcessId],
-		[DataFlowKnownAs],
-		[DataFlowPath],
-		[IsInFlow],
-		[IsOutFlow],
+		[ArgumentTitle],
+		[ArgumentDescription],
+		[ArgumentName],
+		[ArgumentType],
+		[OrdinalPosition],
+		[IsInput],
+		[IsOutput],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -24,7 +27,7 @@ Select	[ProcessId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppModel].[ProcessDataFlowHs] For System_Time All D
+From	[AppModel].[ProcessArgumentHs] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@ProcessId is Null Or @ProcessId = [ProcessId]) And
 		(@ModelId is Null Or @ModelId In (

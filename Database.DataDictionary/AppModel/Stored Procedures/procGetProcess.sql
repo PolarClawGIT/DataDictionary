@@ -33,7 +33,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 	Union
 	Select	[ProcessId],
 			[SysStart]
-	From	[AppModel].[ProcessDataFlowHs] For System_Time All),
+	From	[AppModel].[ProcessArgumentHs] For System_Time All),
 [Dates] As (
 	Select	[ProcessId],
 			[SysStart],
