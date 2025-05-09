@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppModel;
+﻿using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel

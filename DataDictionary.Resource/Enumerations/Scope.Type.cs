@@ -109,6 +109,36 @@
         ModelEntityAttribute,
 
         /// <summary>
+        /// Application Model Process
+        /// </summary>
+        ModelProcess,
+
+        /// <summary>
+        /// Application Model Process Alias
+        /// </summary>
+        ModelProcessAlias,
+
+        /// <summary>
+        /// Application Model Process Property
+        /// </summary>
+        ModelProcessProperty,
+
+        /// <summary>
+        /// Application Model Process Definition
+        /// </summary>
+        ModelProcessDefinition,
+
+        /// <summary>
+        /// Subject Areas of the Process
+        /// </summary>
+        ModelProcessSubjectArea,
+
+        /// <summary>
+        /// Application Model Argument of an Process
+        /// </summary>
+        ModelProcessArgument,
+
+        /// <summary>
         /// NameSpace item for the Model
         /// </summary>
         ModelNameSpace,
@@ -298,6 +328,7 @@
         /// Scripting Template Document
         /// </summary>
         ScriptingTemplateDocument,
+
     }
 
 }

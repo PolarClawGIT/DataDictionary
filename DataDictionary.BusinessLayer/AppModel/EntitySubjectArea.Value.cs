@@ -27,7 +27,5 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="EntitySubjectAreaItem(IEntityKey, ISubjectAreaKey)"/>
         public EntitySubjectAreaValue(IEntityIndex Entity, ISubjectAreaIndex subjectArea) : base(Entity, subjectArea)
         { }
-
-
     }
 }
