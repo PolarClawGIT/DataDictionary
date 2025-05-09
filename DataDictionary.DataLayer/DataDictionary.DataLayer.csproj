@@ -157,6 +157,36 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Schema.resx</DependentUpon>
     </Compile>
+    <Compile Update="AppModel\Process.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Process.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\ProcessAlias.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessAlias.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\ProcessArgument.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessArgument.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\ProcessDefinition.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessDefinition.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\ProcessProperty.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessProperty.resx</DependentUpon>
+    </Compile>
+    <Compile Update="AppModel\ProcessSubjectArea.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessSubjectArea.resx</DependentUpon>
+    </Compile>
     <Compile Update="AppModel\Property.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -359,6 +389,30 @@
     <EmbeddedResource Update="AppCatalog\Schema.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Schema.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\Process.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Process.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\ProcessAlias.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessAlias.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\ProcessArgument.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessArgument.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\ProcessDefinition.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessDefinition.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\ProcessProperty.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessProperty.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="AppModel\ProcessSubjectArea.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessSubjectArea.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Property.resx">
       <Generator>ResXFileCodeGenerator</Generator>
