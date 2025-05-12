@@ -114,7 +114,7 @@ namespace DataDictionary.Main
         void OpenForm(SubjectAreaValue subjectItem)
         {
             Activate(
-                () => new Forms.Model.ModelSubjectArea(subjectItem),
+                () => new Forms.Model.SubjectArea(subjectItem),
                 (form) => form.IsOpenItem(subjectItem));
         }
 

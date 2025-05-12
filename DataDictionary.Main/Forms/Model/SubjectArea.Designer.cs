@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Model
 {
-    partial class ModelSubjectArea
+    partial class SubjectArea
     {
         /// <summary>
         /// Required designer variable.
@@ -45,6 +45,11 @@
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
+            processTab = new TabPage();
+            processGrid = new DataGridView();
+            processTitleColumn = new DataGridViewTextBoxColumn();
+            processDescriptionColumn = new DataGridViewTextBoxColumn();
+            bindingProcess = new BindingSource(components);
             subjectAreaLayout = new TableLayoutPanel();
             subjectAreaTab = new TabControl();
             subjectAreaLayout.SuspendLayout();
@@ -56,6 +61,9 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
+            processTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)processGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProcess).BeginInit();
             SuspendLayout();
             // 
             // subjectAreaLayout
@@ -107,6 +115,7 @@
             // 
             subjectAreaTab.Controls.Add(attributeTab);
             subjectAreaTab.Controls.Add(entityTab);
+            subjectAreaTab.Controls.Add(processTab);
             subjectAreaTab.Dock = DockStyle.Fill;
             subjectAreaTab.Location = new Point(3, 238);
             subjectAreaTab.Name = "subjectAreaTab";
@@ -134,6 +143,7 @@
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 3);
             attributeData.Name = "attributeData";
+            attributeData.ReadOnly = true;
             attributeData.Size = new Size(359, 163);
             attributeData.TabIndex = 0;
             // 
@@ -144,6 +154,7 @@
             attributeTitleColumn.FillWeight = 40F;
             attributeTitleColumn.HeaderText = "Attribute Title";
             attributeTitleColumn.Name = "attributeTitleColumn";
+            attributeTitleColumn.ReadOnly = true;
             // 
             // attributeDescriptionColumn
             // 
@@ -152,6 +163,7 @@
             attributeDescriptionColumn.FillWeight = 60F;
             attributeDescriptionColumn.HeaderText = "Attribute Description";
             attributeDescriptionColumn.Name = "attributeDescriptionColumn";
+            attributeDescriptionColumn.ReadOnly = true;
             // 
             // entityTab
             // 
@@ -173,6 +185,7 @@
             entityData.Dock = DockStyle.Fill;
             entityData.Location = new Point(3, 3);
             entityData.Name = "entityData";
+            entityData.ReadOnly = true;
             entityData.Size = new Size(359, 163);
             entityData.TabIndex = 0;
             // 
@@ -183,6 +196,7 @@
             entityTitleColumn.FillWeight = 40F;
             entityTitleColumn.HeaderText = "Entity Title";
             entityTitleColumn.Name = "entityTitleColumn";
+            entityTitleColumn.ReadOnly = true;
             // 
             // entityDescriptionColumn
             // 
@@ -191,6 +205,7 @@
             entityDescriptionColumn.FillWeight = 60F;
             entityDescriptionColumn.HeaderText = "Entity Description";
             entityDescriptionColumn.Name = "entityDescriptionColumn";
+            entityDescriptionColumn.ReadOnly = true;
             // 
             // memberNameData
             // 
@@ -206,14 +221,54 @@
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
             // 
-            // ModelSubjectArea
+            // processTab
+            // 
+            processTab.Controls.Add(processGrid);
+            processTab.Location = new Point(4, 24);
+            processTab.Name = "processTab";
+            processTab.Padding = new Padding(3);
+            processTab.Size = new Size(365, 169);
+            processTab.TabIndex = 2;
+            processTab.Text = "Processes";
+            processTab.UseVisualStyleBackColor = true;
+            // 
+            // processGrid
+            // 
+            processGrid.AllowUserToAddRows = false;
+            processGrid.AllowUserToDeleteRows = false;
+            processGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            processGrid.Columns.AddRange(new DataGridViewColumn[] { processTitleColumn, processDescriptionColumn });
+            processGrid.Dock = DockStyle.Fill;
+            processGrid.Location = new Point(3, 3);
+            processGrid.Name = "processGrid";
+            processGrid.ReadOnly = true;
+            processGrid.Size = new Size(359, 163);
+            processGrid.TabIndex = 0;
+            // 
+            // processTitleColumn
+            // 
+            processTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            processTitleColumn.FillWeight = 40F;
+            processTitleColumn.HeaderText = "Process Title";
+            processTitleColumn.Name = "processTitleColumn";
+            processTitleColumn.ReadOnly = true;
+            // 
+            // processDescriptionColumn
+            // 
+            processDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            processDescriptionColumn.FillWeight = 60F;
+            processDescriptionColumn.HeaderText = "Process Description";
+            processDescriptionColumn.Name = "processDescriptionColumn";
+            processDescriptionColumn.ReadOnly = true;
+            // 
+            // SubjectArea
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(379, 463);
             Controls.Add(subjectAreaLayout);
-            Name = "ModelSubjectArea";
-            Text = "DomainSubjectArea";
+            Name = "SubjectArea";
+            Text = "SubjectArea";
             Load += DomainSubjectArea_Load;
             Controls.SetChildIndex(subjectAreaLayout, 0);
             subjectAreaLayout.ResumeLayout(false);
@@ -226,6 +281,9 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
+            processTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)processGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProcess).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -246,5 +304,10 @@
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private BindingSource bindingEntity;
         private BindingSource bindingAttribute;
+        private TabPage processTab;
+        private DataGridView processGrid;
+        private DataGridViewTextBoxColumn processTitleColumn;
+        private DataGridViewTextBoxColumn processDescriptionColumn;
+        private BindingSource bindingProcess;
     }
 }

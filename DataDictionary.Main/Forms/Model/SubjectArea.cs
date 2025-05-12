@@ -9,12 +9,12 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
+    partial class SubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSubject.Current is ISubjectAreaValue current && ReferenceEquals(current, item); }
 
-        public ModelSubjectArea() : base()
+        public SubjectArea() : base()
         {
             InitializeComponent();
 
@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.Delete);
         }
 
-        public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
+        public SubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
         {
             if (subjectAreaItem is null)
             {

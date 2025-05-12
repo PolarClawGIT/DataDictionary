@@ -24,7 +24,7 @@ namespace DataDictionary.Main
         { Activate(static () => new Forms.Model.Entity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(static () => new Forms.Model.ModelSubjectArea(null)); }
+        { Activate(static () => new Forms.Model.SubjectArea(null)); }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(static () => new Forms.Model.ModelManager()); }
@@ -48,9 +48,9 @@ namespace DataDictionary.Main
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <SubjectAreaValue, Forms.Model.ModelSubjectArea>
+                <SubjectAreaValue, Forms.Model.SubjectArea>
                 (ScopeType.ModelSubjectArea, BusinessData.Model.SubjectAreas)
-            { SelectedForm = (data) => new Forms.Model.ModelSubjectArea(data) });
+            { SelectedForm = (data) => new Forms.Model.SubjectArea(data) });
         }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
