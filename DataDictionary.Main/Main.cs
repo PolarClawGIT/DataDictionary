@@ -115,7 +115,7 @@ namespace DataDictionary.Main
 
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
-        {   Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent()); }
+        { Forms.General.HelpContent helpForm = Activate(() => new Forms.General.HelpContent()); }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         { throw new NotImplementedException(); } // Not Used.
@@ -218,7 +218,7 @@ namespace DataDictionary.Main
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {  }
+            { }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -231,7 +231,7 @@ namespace DataDictionary.Main
             { saveAsToolStripMenuItem_Click(sender, e); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {  }
+            { }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -274,7 +274,6 @@ namespace DataDictionary.Main
             { namedScopeData.HeaderText = current.ModelTitle ?? "(no model title)"; }
             else { namedScopeData.HeaderText = "(no Model)"; }
         }
-
 
     }
 }

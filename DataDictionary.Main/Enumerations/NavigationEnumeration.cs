@@ -201,7 +201,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelEntitySubjectArea,     Resources.Icon_Diagram, Resources.Diagram) ,
 
-                new NavigationEnumeration(ScopeType.ModelProcess,               Resources.Icon_Entities,
+                new NavigationEnumeration(ScopeType.ModelProcess,               Resources.Icon_Process,
                     new (CommandImageType.Default, Resources.Process),
                     new (CommandImageType.Add, Resources.NewProcess),
                     new (CommandImageType.Select, Resources.SelectProcess),

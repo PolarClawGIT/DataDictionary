@@ -298,6 +298,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
             work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
+            work.AddRange(processValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
 
             return work;
         }
