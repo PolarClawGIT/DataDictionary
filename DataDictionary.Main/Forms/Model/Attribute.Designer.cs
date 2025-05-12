@@ -551,8 +551,6 @@ namespace DataDictionary.Main.Forms.Model
             subjectArea.Name = "subjectArea";
             subjectArea.Size = new Size(186, 16);
             subjectArea.TabIndex = 0;
-            subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
-            subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
             // 
             // memberNameData
             // 

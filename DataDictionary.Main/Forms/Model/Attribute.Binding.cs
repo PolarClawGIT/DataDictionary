@@ -164,6 +164,20 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
 
+            public void AddSubjectArea(ISubjectAreaIndex subject)
+            {
+                if (TryGetValue(out AttributeValue? attribute))
+                { SubjectAreas.Add(new AttributeSubjectAreaValue(attribute, subject)); }
+            }
+
+            public void RemoveSubjectArea(ISubjectAreaIndex subject)
+            {
+                SubjectAreaIndex key = new SubjectAreaIndex(subject);
+
+                while (SubjectAreas.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue item)
+                { SubjectAreas.Remove(item); }
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -291,18 +305,6 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else return true;
             }
-        }
-
-        class FixedBinding
-        {
-            public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
-                new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public BindingView<DefinitionValue> Definitions { get; private set; } =
-                new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
         }
     }
 }

@@ -18,7 +18,6 @@ namespace DataDictionary.Main.Forms.Model
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
         FormBinding formBinding;
-        FixedBinding fixedBinding;
         Boolean needsData = false;
 
         protected Entity() : base()
@@ -36,8 +35,6 @@ namespace DataDictionary.Main.Forms.Model
                 DoWork = base.DoWork
             };
             formBinding.Init();
-
-            fixedBinding = new FixedBinding();
 
             SetRowState(
                 bindingEntity,
@@ -120,11 +117,10 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
                 aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                //
+                // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
-
-                subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
+                subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea );
 
                 // Security
                 IsLocked(formBinding.GetLocked());

@@ -47,7 +47,6 @@ namespace DataDictionary.Main.Forms.Model.Controls
             { RebuildChoices(); }
         }
 
-
         private void PropertyTypeData_SelectedIndexChanged(object sender, EventArgs e)
         { } // This can be called multiple times
 

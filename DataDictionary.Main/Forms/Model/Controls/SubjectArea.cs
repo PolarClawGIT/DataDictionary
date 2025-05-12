@@ -10,15 +10,16 @@ namespace DataDictionary.Main.Forms.Model.Controls
     partial class SubjectArea : UserControl
     {
         Dictionary<ListViewItem, ISubjectAreaValue> subjectItems = new Dictionary<ListViewItem, ISubjectAreaValue>();
-        BindingSource bindingSubjectArea = new BindingSource();
 
+        Func<IEnumerable<ISubjectAreaIndex>>? onGetSelected;
+        Action<ISubjectAreaIndex>? onAddSubject;
+        Action<ISubjectAreaValue>? onRemoveSubject;
+
+        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
             new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
             { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-
-        //TODO: Repeat changes to Properties to Subject Areas.
 
         public SubjectArea()
         {
@@ -26,23 +27,23 @@ namespace DataDictionary.Main.Forms.Model.Controls
             subjectAreaData.ResizeColumns();
         }
 
-        /// <summary>
-        /// Associates the BindingSource to the control so the control can respond to binding events.
-        /// </summary>
-        /// <param name="binding">IEnumerable of ISubjectAreaIndex</param>
-        /// <param name="values"></param>
-        public void BindTo(BindingSource binding, IEnumerable<ISubjectAreaValue> values)
+        public void BindTo(
+            Func<IEnumerable<ISubjectAreaIndex>> getSelected,
+            Action<ISubjectAreaIndex> addSubject,
+            Action<ISubjectAreaValue> removeSubject)
         {
-            bindingSubjectArea = binding;
+            onGetSelected = getSelected;
+            onAddSubject = addSubject;
+            onRemoveSubject = removeSubject;
+            IEnumerable<ISubjectAreaIndex> selected = onGetSelected();
 
-            foreach (ISubjectAreaValue item in values.OrderBy(o => o.SubjectAreaTitle))
+            foreach (SubjectAreaValue item in SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
             {
                 ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
                 value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = ((IPathValue)item).Path.MemberFullPath });
                 SubjectAreaIndex key = new SubjectAreaIndex(item);
 
-                if (binding.DataSource is IEnumerable<ISubjectAreaIndex> selected &&
-                    selected.FirstOrDefault(w => key.Equals(w)) is ISubjectAreaIndex)
+                if (selected.FirstOrDefault(w => key.Equals(w)) is ISubjectAreaIndex)
                 { value.Checked = true; }
                 else { value.Checked = false; }
 
@@ -54,34 +55,21 @@ namespace DataDictionary.Main.Forms.Model.Controls
         private void subjectAreaData_Resize(object sender, EventArgs e)
         { subjectAreaData.ResizeColumns(); }
 
-        /// <summary>
-        /// Triggered when on Checked when the SubjectArea is not in the list.
-        /// </summary>
-        public event EventHandler<ISubjectAreaValue>? OnSubjectAdd;
-
-        /// <summary>
-        /// Triggered when on Checked when the SubjectArea is in the list.
-        /// </summary>
-        public event EventHandler<ISubjectAreaValue>? OnSubjectRemove;
-
         private void SubjectAreaData_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            // The checked event can be fired by something other then the user clicking the CheckBox (such as OnVisible).
-            // This trap is to catch the checked event only when the control is the active control.
-            if (ActiveControl == subjectAreaData)
+            if (ActiveControl == subjectAreaData
+                && onGetSelected is not null
+                && onAddSubject is not null
+                && onRemoveSubject is not null
+                && subjectItems.TryGetValue(e.Item, out ISubjectAreaValue? subjectArea))
             {
-                if (subjectItems.ContainsKey(e.Item) && bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data)
-                {
-                    SubjectAreaIndex selectedKey = new SubjectAreaIndex(subjectItems[e.Item]);
+                SubjectAreaIndex key = new SubjectAreaIndex(subjectArea);
+                ISubjectAreaIndex? value = onGetSelected().FirstOrDefault(w => key.Equals(w));
 
-                    ISubjectAreaIndex? value = data.FirstOrDefault(w => selectedKey.Equals(w));
-
-                    if (e.Item.Checked && value is null && OnSubjectAdd is EventHandler<ISubjectAreaValue> addHandler)
-                    { addHandler(this, subjectItems[e.Item]); }
-
-                    if (!e.Item.Checked && value is not null && OnSubjectRemove is EventHandler<ISubjectAreaValue> removeHandler)
-                    { removeHandler(this, subjectItems[e.Item]); }
-                }
+                if (e.Item.Checked && value is null)
+                { onAddSubject(subjectArea); }
+                else if (!e.Item.Checked && value is not null)
+                { onRemoveSubject(subjectArea); }
             }
         }
     }

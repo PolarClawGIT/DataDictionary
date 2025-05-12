@@ -393,6 +393,7 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current EntityValue not defined"); }
             }
 
+
             public void AddSubjectArea(ISubjectAreaIndex subject)
             {
                 if (TryGetValue(out EntityValue? entity))
@@ -406,18 +407,6 @@ namespace DataDictionary.Main.Forms.Model
                 while (SubjectAreas.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue item)
                 { SubjectAreas.Remove(item); }
             }
-
-        }
-
-        class FixedBinding
-        {
-            public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
-                new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public BindingView<DefinitionValue> Definitions { get; private set; } =
-                new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         }
     }
