@@ -44,7 +44,6 @@ namespace DataDictionary.Main.Forms.Model
                 new BindingView<EntityDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-
             public required BindingSource BindingAttribute { private get; init; }
             public BindingView<EntityAttributeValue> Attributes { get; private set; } =
                 new BindingView<EntityAttributeValue>([])
