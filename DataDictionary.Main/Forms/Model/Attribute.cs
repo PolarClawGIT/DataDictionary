@@ -51,8 +51,8 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.DeleteDatabase,
                 CommandImageType.HistoryDatabase);
 
-            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttributeAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttributeAlias, CommandImageType.Select);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()

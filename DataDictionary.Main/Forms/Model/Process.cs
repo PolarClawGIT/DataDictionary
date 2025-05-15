@@ -48,10 +48,10 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.DeleteDatabase,
                 CommandImageType.HistoryDatabase);
 
-            argumentSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
-            argumentNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
-            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+            argumentSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessArgument, CommandImageType.Select);
+            argumentNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessArgument, CommandImageType.Add);
+            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessAlias, CommandImageType.Add);
+            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessAlias, CommandImageType.Select);
         }
 
         public Process(IProcessIndex? entity) : this()
