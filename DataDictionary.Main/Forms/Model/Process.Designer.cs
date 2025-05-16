@@ -44,9 +44,9 @@
             argumentNameData = new DataDictionary.Main.Controls.TextBoxData();
             argumentTypeData = new DataDictionary.Main.Controls.TextBoxData();
             argumentOptionLayout = new TableLayoutPanel();
-            argumentOrdinalPositionDat = new DataDictionary.Main.Controls.TextBoxData();
-            ArgumentIsInputData = new CheckBox();
-            argumentIsOutput = new CheckBox();
+            argumentOrdinalPositionData = new DataDictionary.Main.Controls.TextBoxData();
+            argumentIsInputData = new CheckBox();
+            argumentIsOutputData = new CheckBox();
             argumentButtonLayout = new TableLayoutPanel();
             argumentSelectCommand = new Button();
             argumentNewCommand = new Button();
@@ -74,6 +74,7 @@
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             bindingArgument = new BindingSource(components);
+            detailLayout = new TableLayoutPanel();
             mainLayout = new TableLayoutPanel();
             aliasCommandLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
@@ -97,6 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingArgument).BeginInit();
+            detailLayout.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -113,7 +115,7 @@
             mainLayout.RowStyles.Add(new RowStyle());
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            mainLayout.Size = new Size(460, 640);
+            mainLayout.Size = new Size(447, 640);
             mainLayout.TabIndex = 4;
             // 
             // titleData
@@ -125,7 +127,7 @@
             titleData.Multiline = false;
             titleData.Name = "titleData";
             titleData.ReadOnly = false;
-            titleData.Size = new Size(454, 44);
+            titleData.Size = new Size(441, 44);
             titleData.TabIndex = 0;
             titleData.WordWrap = true;
             // 
@@ -138,7 +140,7 @@
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = false;
-            descriptionData.Size = new Size(454, 112);
+            descriptionData.Size = new Size(441, 112);
             descriptionData.TabIndex = 1;
             descriptionData.WordWrap = true;
             // 
@@ -153,17 +155,17 @@
             detailTabLayout.Location = new Point(3, 171);
             detailTabLayout.Name = "detailTabLayout";
             detailTabLayout.SelectedIndex = 0;
-            detailTabLayout.Size = new Size(454, 466);
+            detailTabLayout.Size = new Size(441, 466);
             detailTabLayout.TabIndex = 2;
             // 
             // detailTab
             // 
             detailTab.BackColor = SystemColors.Control;
-            detailTab.Controls.Add(argumentLayout);
+            detailTab.Controls.Add(detailLayout);
             detailTab.Location = new Point(4, 24);
             detailTab.Name = "detailTab";
             detailTab.Padding = new Padding(3);
-            detailTab.Size = new Size(446, 438);
+            detailTab.Size = new Size(433, 438);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
@@ -172,24 +174,20 @@
             argumentLayout.ColumnCount = 2;
             argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
             argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            argumentLayout.Controls.Add(argumentData, 0, 0);
-            argumentLayout.Controls.Add(argumentTitleData, 0, 1);
-            argumentLayout.Controls.Add(argumentDescriptionData, 0, 2);
-            argumentLayout.Controls.Add(argumentNameData, 0, 3);
-            argumentLayout.Controls.Add(argumentTypeData, 0, 4);
-            argumentLayout.Controls.Add(argumentOptionLayout, 1, 3);
-            argumentLayout.Controls.Add(argumentButtonLayout, 0, 5);
+            argumentLayout.Controls.Add(argumentTitleData, 0, 0);
+            argumentLayout.Controls.Add(argumentDescriptionData, 0, 1);
+            argumentLayout.Controls.Add(argumentNameData, 0, 2);
+            argumentLayout.Controls.Add(argumentOptionLayout, 1, 2);
+            argumentLayout.Controls.Add(argumentTypeData, 0, 3);
             argumentLayout.Dock = DockStyle.Fill;
-            argumentLayout.Location = new Point(3, 3);
+            argumentLayout.Location = new Point(3, 161);
             argumentLayout.Name = "argumentLayout";
-            argumentLayout.RowCount = 6;
-            argumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            argumentLayout.RowCount = 4;
             argumentLayout.RowStyles.Add(new RowStyle());
-            argumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            argumentLayout.RowStyles.Add(new RowStyle());
+            argumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             argumentLayout.RowStyles.Add(new RowStyle());
             argumentLayout.RowStyles.Add(new RowStyle());
-            argumentLayout.Size = new Size(440, 432);
+            argumentLayout.Size = new Size(421, 232);
             argumentLayout.TabIndex = 0;
             // 
             // argumentData
@@ -197,12 +195,11 @@
             argumentData.AllowUserToAddRows = false;
             argumentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             argumentData.Columns.AddRange(new DataGridViewColumn[] { argumentTitleColumn, ordinalPositionColumn });
-            argumentLayout.SetColumnSpan(argumentData, 2);
             argumentData.Dock = DockStyle.Fill;
             argumentData.Location = new Point(3, 3);
             argumentData.Name = "argumentData";
             argumentData.ReadOnly = true;
-            argumentData.Size = new Size(434, 138);
+            argumentData.Size = new Size(421, 152);
             argumentData.TabIndex = 0;
             // 
             // argumentTitleColumn
@@ -229,11 +226,11 @@
             argumentLayout.SetColumnSpan(argumentTitleData, 2);
             argumentTitleData.Dock = DockStyle.Fill;
             argumentTitleData.HeaderText = "Argument Title";
-            argumentTitleData.Location = new Point(3, 147);
+            argumentTitleData.Location = new Point(3, 3);
             argumentTitleData.Multiline = false;
             argumentTitleData.Name = "argumentTitleData";
             argumentTitleData.ReadOnly = false;
-            argumentTitleData.Size = new Size(434, 44);
+            argumentTitleData.Size = new Size(415, 44);
             argumentTitleData.TabIndex = 1;
             argumentTitleData.WordWrap = true;
             // 
@@ -243,11 +240,11 @@
             argumentLayout.SetColumnSpan(argumentDescriptionData, 2);
             argumentDescriptionData.Dock = DockStyle.Fill;
             argumentDescriptionData.HeaderText = "Argument Description";
-            argumentDescriptionData.Location = new Point(3, 197);
+            argumentDescriptionData.Location = new Point(3, 53);
             argumentDescriptionData.Multiline = true;
             argumentDescriptionData.Name = "argumentDescriptionData";
             argumentDescriptionData.ReadOnly = false;
-            argumentDescriptionData.Size = new Size(434, 90);
+            argumentDescriptionData.Size = new Size(415, 70);
             argumentDescriptionData.TabIndex = 2;
             argumentDescriptionData.WordWrap = true;
             // 
@@ -256,11 +253,11 @@
             argumentNameData.AutoSize = true;
             argumentNameData.Dock = DockStyle.Fill;
             argumentNameData.HeaderText = "Argument Name";
-            argumentNameData.Location = new Point(3, 293);
+            argumentNameData.Location = new Point(3, 129);
             argumentNameData.Multiline = false;
             argumentNameData.Name = "argumentNameData";
             argumentNameData.ReadOnly = false;
-            argumentNameData.Size = new Size(287, 44);
+            argumentNameData.Size = new Size(274, 44);
             argumentNameData.TabIndex = 3;
             argumentNameData.WordWrap = true;
             // 
@@ -269,11 +266,11 @@
             argumentTypeData.AutoSize = true;
             argumentTypeData.Dock = DockStyle.Fill;
             argumentTypeData.HeaderText = "Argument Type";
-            argumentTypeData.Location = new Point(3, 343);
+            argumentTypeData.Location = new Point(3, 179);
             argumentTypeData.Multiline = false;
             argumentTypeData.Name = "argumentTypeData";
             argumentTypeData.ReadOnly = false;
-            argumentTypeData.Size = new Size(287, 50);
+            argumentTypeData.Size = new Size(274, 50);
             argumentTypeData.TabIndex = 5;
             argumentTypeData.WordWrap = true;
             // 
@@ -281,57 +278,56 @@
             // 
             argumentOptionLayout.ColumnCount = 1;
             argumentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            argumentOptionLayout.Controls.Add(argumentOrdinalPositionDat, 0, 0);
-            argumentOptionLayout.Controls.Add(ArgumentIsInputData, 0, 1);
-            argumentOptionLayout.Controls.Add(argumentIsOutput, 0, 2);
+            argumentOptionLayout.Controls.Add(argumentOrdinalPositionData, 0, 0);
+            argumentOptionLayout.Controls.Add(argumentIsInputData, 0, 1);
+            argumentOptionLayout.Controls.Add(argumentIsOutputData, 0, 2);
             argumentOptionLayout.Dock = DockStyle.Fill;
-            argumentOptionLayout.Location = new Point(296, 293);
+            argumentOptionLayout.Location = new Point(283, 129);
             argumentOptionLayout.Name = "argumentOptionLayout";
             argumentOptionLayout.RowCount = 3;
             argumentLayout.SetRowSpan(argumentOptionLayout, 2);
             argumentOptionLayout.RowStyles.Add(new RowStyle());
             argumentOptionLayout.RowStyles.Add(new RowStyle());
             argumentOptionLayout.RowStyles.Add(new RowStyle());
-            argumentOptionLayout.Size = new Size(141, 100);
+            argumentOptionLayout.Size = new Size(135, 100);
             argumentOptionLayout.TabIndex = 6;
             // 
-            // argumentOrdinalPositionDat
+            // argumentOrdinalPositionData
             // 
-            argumentOrdinalPositionDat.AutoSize = true;
-            argumentOrdinalPositionDat.HeaderText = "Ordinal Position";
-            argumentOrdinalPositionDat.Location = new Point(3, 3);
-            argumentOrdinalPositionDat.Multiline = false;
-            argumentOrdinalPositionDat.Name = "argumentOrdinalPositionDat";
-            argumentOrdinalPositionDat.ReadOnly = false;
-            argumentOrdinalPositionDat.Size = new Size(120, 44);
-            argumentOrdinalPositionDat.TabIndex = 4;
-            argumentOrdinalPositionDat.WordWrap = true;
+            argumentOrdinalPositionData.AutoSize = true;
+            argumentOrdinalPositionData.HeaderText = "Ordinal Position";
+            argumentOrdinalPositionData.Location = new Point(3, 3);
+            argumentOrdinalPositionData.Multiline = false;
+            argumentOrdinalPositionData.Name = "argumentOrdinalPositionData";
+            argumentOrdinalPositionData.ReadOnly = false;
+            argumentOrdinalPositionData.Size = new Size(120, 44);
+            argumentOrdinalPositionData.TabIndex = 4;
+            argumentOrdinalPositionData.WordWrap = true;
             // 
-            // ArgumentIsInputData
+            // argumentIsInputData
             // 
-            ArgumentIsInputData.AutoSize = true;
-            ArgumentIsInputData.Location = new Point(3, 53);
-            ArgumentIsInputData.Name = "ArgumentIsInputData";
-            ArgumentIsInputData.Size = new Size(65, 19);
-            ArgumentIsInputData.TabIndex = 5;
-            ArgumentIsInputData.Text = "Is Input";
-            ArgumentIsInputData.UseVisualStyleBackColor = true;
+            argumentIsInputData.AutoSize = true;
+            argumentIsInputData.Location = new Point(3, 53);
+            argumentIsInputData.Name = "argumentIsInputData";
+            argumentIsInputData.Size = new Size(65, 19);
+            argumentIsInputData.TabIndex = 5;
+            argumentIsInputData.Text = "Is Input";
+            argumentIsInputData.UseVisualStyleBackColor = true;
             // 
-            // argumentIsOutput
+            // argumentIsOutputData
             // 
-            argumentIsOutput.AutoSize = true;
-            argumentIsOutput.Location = new Point(3, 78);
-            argumentIsOutput.Name = "argumentIsOutput";
-            argumentIsOutput.Size = new Size(75, 19);
-            argumentIsOutput.TabIndex = 6;
-            argumentIsOutput.Text = "Is Output";
-            argumentIsOutput.UseVisualStyleBackColor = true;
+            argumentIsOutputData.AutoSize = true;
+            argumentIsOutputData.Location = new Point(3, 78);
+            argumentIsOutputData.Name = "argumentIsOutputData";
+            argumentIsOutputData.Size = new Size(75, 19);
+            argumentIsOutputData.TabIndex = 6;
+            argumentIsOutputData.Text = "Is Output";
+            argumentIsOutputData.UseVisualStyleBackColor = true;
             // 
             // argumentButtonLayout
             // 
             argumentButtonLayout.AutoSize = true;
             argumentButtonLayout.ColumnCount = 3;
-            argumentLayout.SetColumnSpan(argumentButtonLayout, 2);
             argumentButtonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             argumentButtonLayout.ColumnStyles.Add(new ColumnStyle());
             argumentButtonLayout.ColumnStyles.Add(new ColumnStyle());
@@ -342,12 +338,12 @@
             argumentButtonLayout.Name = "argumentButtonLayout";
             argumentButtonLayout.RowCount = 1;
             argumentButtonLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            argumentButtonLayout.Size = new Size(434, 30);
+            argumentButtonLayout.Size = new Size(421, 30);
             argumentButtonLayout.TabIndex = 7;
             // 
             // argumentSelectCommand
             // 
-            argumentSelectCommand.Location = new Point(356, 3);
+            argumentSelectCommand.Location = new Point(343, 3);
             argumentSelectCommand.Name = "argumentSelectCommand";
             argumentSelectCommand.Size = new Size(75, 23);
             argumentSelectCommand.TabIndex = 1;
@@ -357,7 +353,7 @@
             // 
             // argumentNewCommand
             // 
-            argumentNewCommand.Location = new Point(275, 3);
+            argumentNewCommand.Location = new Point(262, 3);
             argumentNewCommand.Name = "argumentNewCommand";
             argumentNewCommand.Size = new Size(75, 23);
             argumentNewCommand.TabIndex = 0;
@@ -588,14 +584,32 @@
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             // 
+            // detailLayout
+            // 
+            detailLayout.ColumnCount = 1;
+            detailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailLayout.Controls.Add(argumentData, 0, 0);
+            detailLayout.Controls.Add(argumentLayout, 0, 1);
+            detailLayout.Controls.Add(argumentButtonLayout, 0, 2);
+            detailLayout.Dock = DockStyle.Fill;
+            detailLayout.Location = new Point(3, 3);
+            detailLayout.Name = "detailLayout";
+            detailLayout.RowCount = 3;
+            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            detailLayout.RowStyles.Add(new RowStyle());
+            detailLayout.Size = new Size(427, 432);
+            detailLayout.TabIndex = 1;
+            // 
             // Process
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(460, 665);
+            ClientSize = new Size(447, 665);
             Controls.Add(mainLayout);
             Name = "Process";
             Text = "Process";
+            Load += Process_Load;
             Controls.SetChildIndex(mainLayout, 0);
             mainLayout.ResumeLayout(false);
             mainLayout.PerformLayout();
@@ -624,6 +638,8 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingArgument).EndInit();
+            detailLayout.ResumeLayout(false);
+            detailLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -659,11 +675,11 @@
         private DataDictionary.Main.Controls.TextBoxData argumentTitleData;
         private DataDictionary.Main.Controls.TextBoxData argumentDescriptionData;
         private DataDictionary.Main.Controls.TextBoxData argumentNameData;
-        private DataDictionary.Main.Controls.TextBoxData argumentOrdinalPositionDat;
+        private DataDictionary.Main.Controls.TextBoxData argumentOrdinalPositionData;
         private DataDictionary.Main.Controls.TextBoxData argumentTypeData;
         private TableLayoutPanel argumentOptionLayout;
-        private CheckBox ArgumentIsInputData;
-        private CheckBox argumentIsOutput;
+        private CheckBox argumentIsInputData;
+        private CheckBox argumentIsOutputData;
         private TableLayoutPanel argumentButtonLayout;
         private Button argumentSelectCommand;
         private Button argumentNewCommand;
@@ -673,5 +689,6 @@
         private BindingSource bindingSubjectArea;
         private BindingSource bindingDefinition;
         private BindingSource bindingArgument;
+        private TableLayoutPanel detailLayout;
     }
 }

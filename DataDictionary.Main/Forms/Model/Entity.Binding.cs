@@ -140,9 +140,9 @@ namespace DataDictionary.Main.Forms.Model
                 BindingEntity.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IEntityIndex Entity, ITemporalIndex temporal)
+            public void SetPosition(IEntityIndex entity, ITemporalIndex temporal)
             {
-                SetPosition(Entity);
+                SetPosition(entity);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Model
                 return newValue;
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public void Load(Action<RunWorkerCompletedEventArgs>? onCompleting = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -211,7 +211,7 @@ namespace DataDictionary.Main.Forms.Model
                     BindingDefinition.ResumeBinding();
                     BindingAttribute.ResumeBinding();
 
-                    if (onComplete is not null) { onComplete(args); }
+                    if (onCompleting is not null) { onCompleting(args); }
                 }
             }
 
@@ -393,10 +393,10 @@ namespace DataDictionary.Main.Forms.Model
             }
 
 
-            public void AddSubjectArea(ISubjectAreaIndex subject)
+            public void AddSubjectArea(ISubjectAreaIndex index)
             {
                 if (TryGetValue(out EntityValue? entity))
-                { SubjectAreas.Add(new EntitySubjectAreaValue(entity, subject)); }
+                { SubjectAreas.Add(new EntitySubjectAreaValue(entity, index)); }
             }
 
             public void RemoveSubjectArea(ISubjectAreaIndex subject)
