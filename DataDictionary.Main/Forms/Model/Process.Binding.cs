@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -202,6 +203,12 @@ namespace DataDictionary.Main.Forms.Model
                     case CommandImageType.HistoryDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
                     default: return false;
                 }
+            }
+
+            public Boolean GetIsOpen(IProcessValue value)
+            {
+                ProcessIndex key = new ProcessIndex(value);
+                return TryGetValue(out ProcessValue? current) && key.Equals(current);
             }
 
             public void Load(Action<RunWorkerCompletedEventArgs> onCompleting)

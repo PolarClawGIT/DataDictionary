@@ -14,11 +14,7 @@ namespace DataDictionary.Main.Forms.Model
         Boolean needsData = false;
 
         public Boolean IsOpenItem(object? item)
-        {
-            return true;
-            //return bindingProcess.Current is IProcessValue current && ReferenceEquals(current, item); 
-        }
-
+        { return item is IProcessValue value && formBinding is not null && formBinding.GetIsOpen(value); }
 
         public Process()
         {
