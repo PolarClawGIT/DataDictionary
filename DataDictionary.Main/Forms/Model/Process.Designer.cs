@@ -35,18 +35,19 @@
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
-            argumentLayout = new TableLayoutPanel();
+            detailLayout = new TableLayoutPanel();
             argumentData = new DataGridView();
             argumentTitleColumn = new DataGridViewTextBoxColumn();
             ordinalPositionColumn = new DataGridViewTextBoxColumn();
+            argumentLayout = new TableLayoutPanel();
             argumentTitleData = new DataDictionary.Main.Controls.TextBoxData();
             argumentDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             argumentNameData = new DataDictionary.Main.Controls.TextBoxData();
-            argumentTypeData = new DataDictionary.Main.Controls.TextBoxData();
             argumentOptionLayout = new TableLayoutPanel();
             argumentOrdinalPositionData = new DataDictionary.Main.Controls.TextBoxData();
             argumentIsInputData = new CheckBox();
             argumentIsOutputData = new CheckBox();
+            argumentTypeData = new DataDictionary.Main.Controls.TextBoxData();
             argumentButtonLayout = new TableLayoutPanel();
             argumentSelectCommand = new Button();
             argumentNewCommand = new Button();
@@ -74,14 +75,14 @@
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             bindingArgument = new BindingSource(components);
-            detailLayout = new TableLayoutPanel();
             mainLayout = new TableLayoutPanel();
             aliasCommandLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
-            argumentLayout.SuspendLayout();
+            detailLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)argumentData).BeginInit();
+            argumentLayout.SuspendLayout();
             argumentOptionLayout.SuspendLayout();
             argumentButtonLayout.SuspendLayout();
             propertyTab.SuspendLayout();
@@ -98,7 +99,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingArgument).BeginInit();
-            detailLayout.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -169,26 +169,22 @@
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
-            // argumentLayout
+            // detailLayout
             // 
-            argumentLayout.ColumnCount = 2;
-            argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
-            argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            argumentLayout.Controls.Add(argumentTitleData, 0, 0);
-            argumentLayout.Controls.Add(argumentDescriptionData, 0, 1);
-            argumentLayout.Controls.Add(argumentNameData, 0, 2);
-            argumentLayout.Controls.Add(argumentOptionLayout, 1, 2);
-            argumentLayout.Controls.Add(argumentTypeData, 0, 3);
-            argumentLayout.Dock = DockStyle.Fill;
-            argumentLayout.Location = new Point(3, 161);
-            argumentLayout.Name = "argumentLayout";
-            argumentLayout.RowCount = 4;
-            argumentLayout.RowStyles.Add(new RowStyle());
-            argumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            argumentLayout.RowStyles.Add(new RowStyle());
-            argumentLayout.RowStyles.Add(new RowStyle());
-            argumentLayout.Size = new Size(421, 232);
-            argumentLayout.TabIndex = 0;
+            detailLayout.ColumnCount = 1;
+            detailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailLayout.Controls.Add(argumentData, 0, 0);
+            detailLayout.Controls.Add(argumentLayout, 0, 1);
+            detailLayout.Controls.Add(argumentButtonLayout, 0, 2);
+            detailLayout.Dock = DockStyle.Fill;
+            detailLayout.Location = new Point(3, 3);
+            detailLayout.Name = "detailLayout";
+            detailLayout.RowCount = 3;
+            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            detailLayout.RowStyles.Add(new RowStyle());
+            detailLayout.Size = new Size(427, 432);
+            detailLayout.TabIndex = 1;
             // 
             // argumentData
             // 
@@ -219,6 +215,27 @@
             ordinalPositionColumn.HeaderText = "Order";
             ordinalPositionColumn.Name = "ordinalPositionColumn";
             ordinalPositionColumn.ReadOnly = true;
+            // 
+            // argumentLayout
+            // 
+            argumentLayout.ColumnCount = 2;
+            argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
+            argumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            argumentLayout.Controls.Add(argumentTitleData, 0, 0);
+            argumentLayout.Controls.Add(argumentDescriptionData, 0, 1);
+            argumentLayout.Controls.Add(argumentNameData, 0, 2);
+            argumentLayout.Controls.Add(argumentOptionLayout, 1, 2);
+            argumentLayout.Controls.Add(argumentTypeData, 0, 3);
+            argumentLayout.Dock = DockStyle.Fill;
+            argumentLayout.Location = new Point(3, 161);
+            argumentLayout.Name = "argumentLayout";
+            argumentLayout.RowCount = 4;
+            argumentLayout.RowStyles.Add(new RowStyle());
+            argumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            argumentLayout.RowStyles.Add(new RowStyle());
+            argumentLayout.RowStyles.Add(new RowStyle());
+            argumentLayout.Size = new Size(421, 232);
+            argumentLayout.TabIndex = 0;
             // 
             // argumentTitleData
             // 
@@ -260,19 +277,7 @@
             argumentNameData.Size = new Size(274, 44);
             argumentNameData.TabIndex = 3;
             argumentNameData.WordWrap = true;
-            // 
-            // argumentTypeData
-            // 
-            argumentTypeData.AutoSize = true;
-            argumentTypeData.Dock = DockStyle.Fill;
-            argumentTypeData.HeaderText = "Argument Type";
-            argumentTypeData.Location = new Point(3, 179);
-            argumentTypeData.Multiline = false;
-            argumentTypeData.Name = "argumentTypeData";
-            argumentTypeData.ReadOnly = false;
-            argumentTypeData.Size = new Size(274, 50);
-            argumentTypeData.TabIndex = 5;
-            argumentTypeData.WordWrap = true;
+            argumentNameData.Validating += ArgumentNameData_Validating;
             // 
             // argumentOptionLayout
             // 
@@ -324,6 +329,20 @@
             argumentIsOutputData.Text = "Is Output";
             argumentIsOutputData.UseVisualStyleBackColor = true;
             // 
+            // argumentTypeData
+            // 
+            argumentTypeData.AutoSize = true;
+            argumentTypeData.Dock = DockStyle.Fill;
+            argumentTypeData.HeaderText = "Argument Type";
+            argumentTypeData.Location = new Point(3, 179);
+            argumentTypeData.Multiline = false;
+            argumentTypeData.Name = "argumentTypeData";
+            argumentTypeData.ReadOnly = false;
+            argumentTypeData.Size = new Size(274, 50);
+            argumentTypeData.TabIndex = 5;
+            argumentTypeData.WordWrap = true;
+            argumentTypeData.Validating += ArgumentTypeData_Validating;
+            // 
             // argumentButtonLayout
             // 
             argumentButtonLayout.AutoSize = true;
@@ -350,6 +369,7 @@
             argumentSelectCommand.Text = "Select";
             argumentSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             argumentSelectCommand.UseVisualStyleBackColor = true;
+            argumentSelectCommand.Click += ArgumentSelectCommand_Click;
             // 
             // argumentNewCommand
             // 
@@ -360,6 +380,7 @@
             argumentNewCommand.Text = "New";
             argumentNewCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             argumentNewCommand.UseVisualStyleBackColor = true;
+            argumentNewCommand.Click += ArgumentNewCommand_Click;
             // 
             // propertyTab
             // 
@@ -368,7 +389,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(433, 438);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -377,7 +398,7 @@
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(186, 66);
+            propertyData.Size = new Size(427, 432);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -406,7 +427,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(433, 438);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -426,7 +447,7 @@
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             aliaseLayout.RowStyles.Add(new RowStyle());
             aliaseLayout.RowStyles.Add(new RowStyle());
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.Size = new Size(427, 432);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -439,7 +460,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 1);
+            aliasesData.Size = new Size(421, 324);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -464,11 +485,11 @@
             aliasNameData.AutoSize = true;
             aliasNameData.Dock = DockStyle.Fill;
             aliasNameData.HeaderText = "Alias Name";
-            aliasNameData.Location = new Point(3, 19);
+            aliasNameData.Location = new Point(3, 385);
             aliasNameData.Multiline = false;
             aliasNameData.Name = "aliasNameData";
             aliasNameData.ReadOnly = true;
-            aliasNameData.Size = new Size(93, 44);
+            aliasNameData.Size = new Size(334, 44);
             aliasNameData.TabIndex = 2;
             aliasNameData.WordWrap = true;
             // 
@@ -479,10 +500,10 @@
             aliasScopeData.Dock = DockStyle.Fill;
             aliasScopeData.DropDownStyle = ComboBoxStyle.DropDown;
             aliasScopeData.HeaderText = "Scope";
-            aliasScopeData.Location = new Point(3, -33);
+            aliasScopeData.Location = new Point(3, 333);
             aliasScopeData.Name = "aliasScopeData";
             aliasScopeData.ReadOnly = true;
-            aliasScopeData.Size = new Size(93, 46);
+            aliasScopeData.Size = new Size(334, 46);
             aliasScopeData.TabIndex = 1;
             // 
             // aliasCommandLayout
@@ -495,7 +516,7 @@
             aliasCommandLayout.Controls.Add(aliasAddCommand, 0, 2);
             aliasCommandLayout.Controls.Add(isAliasInModelData, 0, 0);
             aliasCommandLayout.Dock = DockStyle.Fill;
-            aliasCommandLayout.Location = new Point(102, -33);
+            aliasCommandLayout.Location = new Point(343, 333);
             aliasCommandLayout.Name = "aliasCommandLayout";
             aliasCommandLayout.RowCount = 3;
             aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
@@ -515,6 +536,7 @@
             aliasSelectCommand.Text = "Select";
             aliasSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             aliasSelectCommand.UseVisualStyleBackColor = true;
+            aliasSelectCommand.Click += AliasSelectCommand_Click;
             // 
             // aliasAddCommand
             // 
@@ -526,6 +548,7 @@
             aliasAddCommand.Text = "New";
             aliasAddCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             aliasAddCommand.UseVisualStyleBackColor = true;
+            aliasAddCommand.Click += AliasAddCommand_Click;
             // 
             // isAliasInModelData
             // 
@@ -544,7 +567,7 @@
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(433, 438);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -560,7 +583,7 @@
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(192, 72);
+            subjectAreaLayout.Size = new Size(433, 438);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -568,7 +591,7 @@
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(186, 16);
+            subjectArea.Size = new Size(427, 382);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -580,26 +603,9 @@
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(186, 44);
+            memberNameData.Size = new Size(427, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
-            // 
-            // detailLayout
-            // 
-            detailLayout.ColumnCount = 1;
-            detailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            detailLayout.Controls.Add(argumentData, 0, 0);
-            detailLayout.Controls.Add(argumentLayout, 0, 1);
-            detailLayout.Controls.Add(argumentButtonLayout, 0, 2);
-            detailLayout.Dock = DockStyle.Fill;
-            detailLayout.Location = new Point(3, 3);
-            detailLayout.Name = "detailLayout";
-            detailLayout.RowCount = 3;
-            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            detailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            detailLayout.RowStyles.Add(new RowStyle());
-            detailLayout.Size = new Size(427, 432);
-            detailLayout.TabIndex = 1;
             // 
             // Process
             // 
@@ -615,9 +621,11 @@
             mainLayout.PerformLayout();
             detailTabLayout.ResumeLayout(false);
             detailTab.ResumeLayout(false);
+            detailLayout.ResumeLayout(false);
+            detailLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)argumentData).EndInit();
             argumentLayout.ResumeLayout(false);
             argumentLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)argumentData).EndInit();
             argumentOptionLayout.ResumeLayout(false);
             argumentOptionLayout.PerformLayout();
             argumentButtonLayout.ResumeLayout(false);
@@ -638,8 +646,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingArgument).EndInit();
-            detailLayout.ResumeLayout(false);
-            detailLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }

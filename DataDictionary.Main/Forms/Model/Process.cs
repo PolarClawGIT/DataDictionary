@@ -123,5 +123,55 @@ namespace DataDictionary.Main.Forms.Model
                 SetAuthorization(formBinding.GetAuthorization);
             }
         }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+        }
+
+        private void ArgumentNewCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ArgumentSelectCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AliasAddCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AliasSelectCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ArgumentNameData_Validating(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void ArgumentTypeData_Validating(object sender, CancelEventArgs e)
+        {
+
+        }
     }
 }

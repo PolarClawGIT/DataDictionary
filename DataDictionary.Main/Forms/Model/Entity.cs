@@ -184,8 +184,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            //TODO: Figure out how do this using the Binding class. How??
-            
             if (formBinding.TryGetAlias(out EntityAliasValue? current))
             {
                 Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
@@ -194,12 +192,6 @@ namespace DataDictionary.Main.Forms.Model
                 aliasScopeData.ReadOnly = inModel;
             }
         }
-
-        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
-        { formBinding.AddSubjectArea(e); }
-
-        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
-        { formBinding.RemoveSubjectArea(e); }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
