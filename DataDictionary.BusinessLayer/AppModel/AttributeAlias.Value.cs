@@ -8,7 +8,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IAttributeAliasValue : IAttributeAliasItem,
-        IAttributeIndex, IAliasIndex,
+        IAttributeIndex, IAliasIndex, IAliasSubType,
         IScopeType
     {
         /// <summary>

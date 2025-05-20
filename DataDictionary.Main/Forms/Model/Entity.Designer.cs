@@ -57,6 +57,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab = new TabPage();
             propertyData = new DataDictionary.Main.Forms.Model.Controls.Property();
             definitionTab = new TabPage();
+            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
@@ -78,7 +79,6 @@ namespace DataDictionary.Main.Forms.Model
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingAttributeDetail = new BindingSource(components);
-            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             aliasCommandLayout = new TableLayoutPanel();
@@ -426,9 +426,17 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(476, 443);
+            definitionTab.Size = new Size(192, 72);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
+            // 
+            // definitionData
+            // 
+            definitionData.Dock = DockStyle.Fill;
+            definitionData.Location = new Point(3, 3);
+            definitionData.Name = "definitionData";
+            definitionData.Size = new Size(186, 66);
+            definitionData.TabIndex = 0;
             // 
             // aliasTab
             // 
@@ -437,7 +445,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(476, 443);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -457,7 +465,7 @@ namespace DataDictionary.Main.Forms.Model
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             aliaseLayout.RowStyles.Add(new RowStyle());
             aliaseLayout.RowStyles.Add(new RowStyle());
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.Size = new Size(470, 437);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -470,7 +478,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 1);
+            aliasesData.Size = new Size(464, 329);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -495,11 +503,11 @@ namespace DataDictionary.Main.Forms.Model
             aliasNameData.AutoSize = true;
             aliasNameData.Dock = DockStyle.Fill;
             aliasNameData.HeaderText = "Alias Name";
-            aliasNameData.Location = new Point(3, 19);
+            aliasNameData.Location = new Point(3, 390);
             aliasNameData.Multiline = false;
             aliasNameData.Name = "aliasNameData";
             aliasNameData.ReadOnly = true;
-            aliasNameData.Size = new Size(93, 44);
+            aliasNameData.Size = new Size(377, 44);
             aliasNameData.TabIndex = 2;
             aliasNameData.WordWrap = true;
             aliasNameData.Validating += AliasNameData_Validating;
@@ -511,10 +519,10 @@ namespace DataDictionary.Main.Forms.Model
             aliasScopeData.Dock = DockStyle.Fill;
             aliasScopeData.DropDownStyle = ComboBoxStyle.DropDown;
             aliasScopeData.HeaderText = "Scope";
-            aliasScopeData.Location = new Point(3, -33);
+            aliasScopeData.Location = new Point(3, 338);
             aliasScopeData.Name = "aliasScopeData";
             aliasScopeData.ReadOnly = true;
-            aliasScopeData.Size = new Size(93, 46);
+            aliasScopeData.Size = new Size(377, 46);
             aliasScopeData.TabIndex = 1;
             // 
             // aliasCommandLayout
@@ -527,7 +535,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasCommandLayout.Controls.Add(aliasAddCommand, 0, 2);
             aliasCommandLayout.Controls.Add(isAliasInModelData, 0, 0);
             aliasCommandLayout.Dock = DockStyle.Fill;
-            aliasCommandLayout.Location = new Point(102, -33);
+            aliasCommandLayout.Location = new Point(386, 338);
             aliasCommandLayout.Name = "aliasCommandLayout";
             aliasCommandLayout.RowCount = 3;
             aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
@@ -630,14 +638,6 @@ namespace DataDictionary.Main.Forms.Model
             // bindingAttributeDetail
             // 
             bindingAttributeDetail.AllowNew = false;
-            // 
-            // definitionData
-            // 
-            definitionData.Dock = DockStyle.Fill;
-            definitionData.Location = new Point(3, 3);
-            definitionData.Name = "definitionData";
-            definitionData.Size = new Size(470, 437);
-            definitionData.TabIndex = 0;
             // 
             // Entity
             // 

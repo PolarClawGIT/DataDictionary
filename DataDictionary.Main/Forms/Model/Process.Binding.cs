@@ -261,6 +261,13 @@ namespace DataDictionary.Main.Forms.Model
                 SetPosition(process);
                 temporalIndex = new TemporalIndex(temporal);
             }
+
+            public IAliasSubType NewAlias ()
+            {
+                if (TryGetValue(out ProcessValue? value))
+                { return new ProcessAliasValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+            }
         }
     }
 }

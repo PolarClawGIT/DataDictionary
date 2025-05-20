@@ -22,8 +22,8 @@ namespace DataDictionary.Main.Forms.Model
 
             formBinding = new FormBinding()
             {
-                BindingAlias = bindingAlias,
                 BindingProcess = bindingProcess,
+                BindingAlias = bindingAlias,
                 BindingSubjectArea = bindingSubjectArea,
                 BindingProperty = bindingProperty,
                 BindingDefinition = bindingDefinition,
@@ -50,8 +50,6 @@ namespace DataDictionary.Main.Forms.Model
 
             argumentSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessArgument, CommandImageType.Select);
             argumentNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessArgument, CommandImageType.Add);
-            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelProcessAlias, CommandImageType.Select);
         }
 
         public Process(IProcessIndex? process) : this()
@@ -66,8 +64,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Process_Load(object sender, EventArgs e)
         {
-            ScopeNameList.Load(aliaseScopeColumn);
-
             if (needsData)
             { formBinding.Load(onCompleting); }
             else { DoBinding(); }
@@ -103,20 +99,12 @@ namespace DataDictionary.Main.Forms.Model
 
                 argumentLayout.Enabled = false;
 
-                // Alias Handling
-                ScopeNameList.Load(aliaseScopeColumn);
-                ScopeNameList.Load(aliasScopeData);
-
-                aliasesData.AutoGenerateColumns = false;
-                aliasesData.DataSource = bindingAlias;
-
-                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IProcessAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(ProcessAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
-
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
                 subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea);
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias, ScopeType.DatabaseFunction,
+                    ScopeType.DatabaseProcedure, ScopeType.LibraryTypeEvent, ScopeType.LibraryTypeMethod);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

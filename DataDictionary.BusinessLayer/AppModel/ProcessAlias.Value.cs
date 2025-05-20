@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <inheritdoc/>
     public interface IProcessAliasValue : IProcessAliasItem,
-        IProcessIndex, IAliasIndex,
+        IProcessIndex, IAliasIndex, IAliasSubType,
         IScopeType
     { }
 

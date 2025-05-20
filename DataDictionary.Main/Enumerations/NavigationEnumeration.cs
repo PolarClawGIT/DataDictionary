@@ -173,7 +173,11 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
-                
+                new NavigationEnumeration(ScopeType.ModelAlias,                 Resources.Icon_Synonym,
+                    new(CommandImageType.Default, Resources.Synonym),
+                    new(CommandImageType.Add, Resources.NewSynonym),
+                    new(CommandImageType.Select, Resources.SelectSynonym)),
+
                 new NavigationEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute,
                     new(CommandImageType.Default, Resources.Attribute),
                     new(CommandImageType.Add, Resources.NewAttribute),

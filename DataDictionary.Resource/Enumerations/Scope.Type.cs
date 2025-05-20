@@ -154,6 +154,11 @@
         ModelDefinition,
 
         /// <summary>
+        /// Alias for the Model
+        /// </summary>
+        ModelAlias,
+
+        /// <summary>
         /// .Net Library
         /// </summary>
         Library,
