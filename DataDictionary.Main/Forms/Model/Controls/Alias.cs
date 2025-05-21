@@ -23,8 +23,6 @@ namespace DataDictionary.Main.Forms.Model.Controls
         BindingSource? dataBinding; // Pointer to the BindingSource.
         List<ScopeType> filterScope = new List<ScopeType>();
 
-        //TODO: Testing, write to Entity and Attribute.
-
         /// <summary>
         /// List of Alias in the BindingSource.
         /// </summary>

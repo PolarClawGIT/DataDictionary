@@ -392,6 +392,13 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current EntityValue not defined"); }
             }
 
+            internal IAliasSubType NewAlias()
+            {
+                if (TryGetValue(out EntityValue? value))
+                { return new EntityAliasValue(value); }
+                else { throw new InvalidOperationException("Current EntityValue not defined"); }
+            }
+
 
             public void AddSubjectArea(ISubjectAreaIndex index)
             {
@@ -406,6 +413,7 @@ namespace DataDictionary.Main.Forms.Model
                 while (SubjectAreas.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue item)
                 { SubjectAreas.Remove(item); }
             }
+
 
         }
     }

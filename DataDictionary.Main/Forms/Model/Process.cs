@@ -103,8 +103,10 @@ namespace DataDictionary.Main.Forms.Model
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
                 subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea);
-                aliasData.BindTo(bindingAlias, formBinding.NewAlias, ScopeType.DatabaseFunction,
-                    ScopeType.DatabaseProcedure, ScopeType.LibraryTypeEvent, ScopeType.LibraryTypeMethod);
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias, 
+                    ScopeType.ModelProcess,
+                    ScopeType.DatabaseFunction, ScopeType.DatabaseProcedure,
+                    ScopeType.LibraryTypeEvent, ScopeType.LibraryTypeMethod);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

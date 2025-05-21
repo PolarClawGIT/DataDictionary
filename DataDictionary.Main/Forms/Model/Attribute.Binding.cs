@@ -164,6 +164,14 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
 
+            public IAliasSubType NewAlias()
+            {
+                if (TryGetValue(out AttributeValue? value))
+                { return new AttributeAliasValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+                throw new NotImplementedException();
+            }
+
             public void AddSubjectArea(ISubjectAreaIndex subject)
             {
                 if (TryGetValue(out AttributeValue? attribute))
@@ -305,6 +313,8 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else return true;
             }
+
+
         }
     }
 }

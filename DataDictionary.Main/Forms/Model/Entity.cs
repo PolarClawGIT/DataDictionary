@@ -53,8 +53,6 @@ namespace DataDictionary.Main.Forms.Model
 
             attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Select);
             attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Add);
-            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
         }
 
         public Entity(IEntityIndex? entity) : this()
@@ -69,8 +67,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
-            ScopeNameList.Load(aliaseScopeColumn);
-
             if (needsData)
             { formBinding.Load(onCompleting); }
             else { DoBinding(); }
@@ -107,20 +103,14 @@ namespace DataDictionary.Main.Forms.Model
 
                 attributeLayout.Enabled = false;
 
-                // Alias Handling
-                ScopeNameList.Load(aliaseScopeColumn);
-                ScopeNameList.Load(aliasScopeData);
-
-                aliasesData.AutoGenerateColumns = false;
-                aliasesData.DataSource = bindingAlias;
-
-                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
-
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
                 subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea );
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias,
+                    ScopeType.ModelEntity,
+                    ScopeType.DatabaseTable, ScopeType.DatabaseView,
+                    ScopeType.LibraryType);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -182,17 +172,6 @@ namespace DataDictionary.Main.Forms.Model
             });
         }
 
-        private void BindingAlias_CurrentChanged(object sender, EventArgs e)
-        {
-            if (formBinding.TryGetAlias(out EntityAliasValue? current))
-            {
-                Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
-                isAliasInModelData.Checked = inModel;
-                aliasNameData.ReadOnly = inModel;
-                aliasScopeData.ReadOnly = inModel;
-            }
-        }
-
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
             PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
@@ -237,34 +216,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void AttributeNewCommand_Click(object sender, EventArgs e)
         { formBinding.AddAttribute(); }
-
-        private void AliasAddCommand_Click(object sender, EventArgs e)
-        { formBinding.AddAlias(); }
-
-        private void AliasSelectCommand_Click(object sender, EventArgs e)
-        {
-            if (bindingAlias.DataSource is IList<EntityAliasValue> alias)
-            {
-                using (var dialog = new SelectionDialog(this))
-                {
-                    dialog.FilterScopes.Add(ScopeType.ModelEntity);
-                    dialog.FilterScopes.Add(ScopeType.DatabaseTable);
-                    dialog.FilterScopes.Add(ScopeType.DatabaseView);
-                    dialog.FilterScopes.Add(ScopeType.LibraryType);
-
-                    dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
-
-                    if (dialog.ShowDialog(this) is DialogResult.OK)
-                    { formBinding.AddAlias(dialog.SelectedByNamedScope()); }
-                }
-            }
-        }
-
-        private void AliasNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (formBinding.TryGetAlias(out EntityAliasValue? value))
-            { value.AliasPath = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray()); }
-        }
 
         private void AttributePathData_Validating(object sender, CancelEventArgs e)
         {
