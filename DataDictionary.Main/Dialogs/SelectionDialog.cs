@@ -81,10 +81,6 @@ namespace DataDictionary.Main.Dialogs
                 Text = String.Format("Selection: {0}", source.Text);
             }
 
-            // Setup BindingSource
-            bindingSource.DataSource = formData;
-            bindingSource.Position = 0;
-
             formData.FilterChanged += FormData_FilterChanged;
             FilterScopes.ListChanged += FilterScopes_ListChanged;
             FilterPaths.ListChanged += FilterPaths_ListChanged;
@@ -140,17 +136,9 @@ namespace DataDictionary.Main.Dialogs
         private void SelectionDialog_Load(object sender, EventArgs e)
         {
             // Data Bindings
-            //Issue: Could not get binding to Radio Buttons to work. Manual Binding is used.
             formData.BindGroupBy(groupByScope);
-
-            //Issue: Could not get binding to Combo Boxes to work as desired. Manual Binding is used.
             formData.BindScopes(filterScope);
             formData.BindPaths(filterPath);
-
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingSource, nameof(SelectionDialogValue.Title)));
-            scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingSource, nameof(SelectionDialogValue.ScopeName)));
-            pathData.DataBindings.Add(new Binding(nameof(pathData.Text), bindingSource, nameof(SelectionDialogValue.PathName)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingSource, nameof(SelectionDialogValue.Description)));
 
             LoadListView();
         }
@@ -222,10 +210,19 @@ namespace DataDictionary.Main.Dialogs
 
         private void SelectionData_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (bindingSource.DataSource is IList<SelectionDialogValue> data)
+            if(formData.FirstOrDefault(w => w.ListView.Equals(e.Item)) is SelectionDialogValue current)
             {
-                if (data.FirstOrDefault(w => w.ListView.Equals(e.Item)) is SelectionDialogValue value)
-                { bindingSource.Position = data.IndexOf(value); }
+                titleData.Text = current.Title;
+                scopeData.Text = current.ScopeName;
+                pathData.Text = current.PathName;
+                descriptionData.Text = current.Description;
+            }
+            else
+            {
+                titleData.Text = String.Empty;
+                scopeData.Text = String.Empty;
+                pathData.Text = String.Empty;
+                descriptionData.Text = String.Empty;
             }
         }
 
@@ -240,9 +237,9 @@ namespace DataDictionary.Main.Dialogs
 
         private void SelectionData_ItemCheck(object sender, ItemCheckEventArgs e)
         {   // This triggers when the checked box is changed. Visible/Show does not trigger this event.
-            if (formData.FirstOrDefault(w => w.ListView == selectionData.Items[e.Index]) is SelectionDialogValue value)
+            if (formData.FirstOrDefault(w => w.ListView == selectionData.Items[e.Index]) is SelectionDialogValue current)
             {
-                NamedScopeIndex key = value.Index;
+                NamedScopeIndex key = current.Index;
 
                 // Causes Selected_ListChanged to trigger
                 if (e.NewValue is CheckState.Checked && !Selected.Contains(key))
@@ -250,6 +247,11 @@ namespace DataDictionary.Main.Dialogs
                 else if (e.NewValue is CheckState.Unchecked && Selected.Contains(key))
                 { Selected.Remove(key); }
                 // Everything else does not change state. Avoids infinite Loop.
+
+                titleData.Text = current.Title;
+                scopeData.Text = current.ScopeName;
+                pathData.Text = current.PathName;
+                descriptionData.Text = current.Description;
             }
         }
 

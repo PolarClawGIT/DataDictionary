@@ -28,81 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             TableLayoutPanel filterSelectionLayout;
             TableLayoutPanel commandLayout;
-            selectionDialogLayout = new TableLayoutPanel();
-            descriptionData = new Controls.TextBoxData();
-            selectionFilterGroup = new GroupBox();
             groupByScope = new RadioButton();
             groupByPath = new RadioButton();
             filterScope = new ComboBox();
             filterPath = new ComboBox();
-            selectionData = new ListView();
-            titleData = new Controls.TextBoxData();
-            scopeData = new Controls.TextBoxData();
-            pathData = new Controls.TextBoxData();
             acceptCommand = new Button();
             cancelCommand = new Button();
-            bindingSource = new BindingSource(components);
+            selectionDialogLayout = new TableLayoutPanel();
+            descriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            selectionFilterGroup = new GroupBox();
+            selectionData = new ListView();
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
+            scopeData = new DataDictionary.Main.Controls.TextBoxData();
+            pathData = new DataDictionary.Main.Controls.TextBoxData();
             filterSelectionLayout = new TableLayoutPanel();
             commandLayout = new TableLayoutPanel();
-            selectionDialogLayout.SuspendLayout();
-            selectionFilterGroup.SuspendLayout();
             filterSelectionLayout.SuspendLayout();
             commandLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
+            selectionDialogLayout.SuspendLayout();
+            selectionFilterGroup.SuspendLayout();
             SuspendLayout();
-            // 
-            // selectionDialogLayout
-            // 
-            selectionDialogLayout.ColumnCount = 1;
-            selectionDialogLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            selectionDialogLayout.Controls.Add(descriptionData, 0, 5);
-            selectionDialogLayout.Controls.Add(selectionFilterGroup, 0, 0);
-            selectionDialogLayout.Controls.Add(selectionData, 0, 1);
-            selectionDialogLayout.Controls.Add(titleData, 0, 2);
-            selectionDialogLayout.Controls.Add(scopeData, 0, 3);
-            selectionDialogLayout.Controls.Add(pathData, 0, 4);
-            selectionDialogLayout.Controls.Add(commandLayout, 0, 6);
-            selectionDialogLayout.Dock = DockStyle.Fill;
-            selectionDialogLayout.Location = new Point(0, 0);
-            selectionDialogLayout.Name = "selectionDialogLayout";
-            selectionDialogLayout.RowCount = 7;
-            selectionDialogLayout.RowStyles.Add(new RowStyle());
-            selectionDialogLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            selectionDialogLayout.RowStyles.Add(new RowStyle());
-            selectionDialogLayout.RowStyles.Add(new RowStyle());
-            selectionDialogLayout.RowStyles.Add(new RowStyle());
-            selectionDialogLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            selectionDialogLayout.RowStyles.Add(new RowStyle());
-            selectionDialogLayout.Size = new Size(424, 522);
-            selectionDialogLayout.TabIndex = 0;
-            // 
-            // descriptionData
-            // 
-            descriptionData.AutoSize = true;
-            descriptionData.Dock = DockStyle.Fill;
-            descriptionData.HeaderText = "Description";
-            descriptionData.Location = new Point(3, 414);
-            descriptionData.Multiline = true;
-            descriptionData.Name = "descriptionData";
-            descriptionData.ReadOnly = true;
-            descriptionData.Size = new Size(418, 69);
-            descriptionData.TabIndex = 7;
-            descriptionData.WordWrap = true;
-            // 
-            // selectionFilterGroup
-            // 
-            selectionFilterGroup.AutoSize = true;
-            selectionFilterGroup.Controls.Add(filterSelectionLayout);
-            selectionFilterGroup.Dock = DockStyle.Fill;
-            selectionFilterGroup.Location = new Point(3, 3);
-            selectionFilterGroup.Name = "selectionFilterGroup";
-            selectionFilterGroup.Size = new Size(418, 80);
-            selectionFilterGroup.TabIndex = 0;
-            selectionFilterGroup.TabStop = false;
-            selectionFilterGroup.Text = "Filter";
             // 
             // filterSelectionLayout
             // 
@@ -161,6 +108,95 @@
             filterPath.Size = new Size(200, 23);
             filterPath.TabIndex = 3;
             // 
+            // commandLayout
+            // 
+            commandLayout.AutoSize = true;
+            commandLayout.ColumnCount = 3;
+            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            commandLayout.Controls.Add(acceptCommand, 0, 0);
+            commandLayout.Controls.Add(cancelCommand, 2, 0);
+            commandLayout.Dock = DockStyle.Fill;
+            commandLayout.Location = new Point(3, 489);
+            commandLayout.Name = "commandLayout";
+            commandLayout.RowCount = 1;
+            commandLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            commandLayout.Size = new Size(418, 30);
+            commandLayout.TabIndex = 6;
+            // 
+            // acceptCommand
+            // 
+            acceptCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            acceptCommand.DialogResult = DialogResult.OK;
+            acceptCommand.Location = new Point(3, 4);
+            acceptCommand.Name = "acceptCommand";
+            acceptCommand.Size = new Size(75, 23);
+            acceptCommand.TabIndex = 0;
+            acceptCommand.Text = "Ok";
+            acceptCommand.UseVisualStyleBackColor = true;
+            // 
+            // cancelCommand
+            // 
+            cancelCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelCommand.DialogResult = DialogResult.Cancel;
+            cancelCommand.Location = new Point(340, 4);
+            cancelCommand.Name = "cancelCommand";
+            cancelCommand.Size = new Size(75, 23);
+            cancelCommand.TabIndex = 1;
+            cancelCommand.Text = "cancel";
+            cancelCommand.UseVisualStyleBackColor = true;
+            // 
+            // selectionDialogLayout
+            // 
+            selectionDialogLayout.ColumnCount = 1;
+            selectionDialogLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            selectionDialogLayout.Controls.Add(descriptionData, 0, 5);
+            selectionDialogLayout.Controls.Add(selectionFilterGroup, 0, 0);
+            selectionDialogLayout.Controls.Add(selectionData, 0, 1);
+            selectionDialogLayout.Controls.Add(titleData, 0, 2);
+            selectionDialogLayout.Controls.Add(scopeData, 0, 3);
+            selectionDialogLayout.Controls.Add(pathData, 0, 4);
+            selectionDialogLayout.Controls.Add(commandLayout, 0, 6);
+            selectionDialogLayout.Dock = DockStyle.Fill;
+            selectionDialogLayout.Location = new Point(0, 0);
+            selectionDialogLayout.Name = "selectionDialogLayout";
+            selectionDialogLayout.RowCount = 7;
+            selectionDialogLayout.RowStyles.Add(new RowStyle());
+            selectionDialogLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            selectionDialogLayout.RowStyles.Add(new RowStyle());
+            selectionDialogLayout.RowStyles.Add(new RowStyle());
+            selectionDialogLayout.RowStyles.Add(new RowStyle());
+            selectionDialogLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            selectionDialogLayout.RowStyles.Add(new RowStyle());
+            selectionDialogLayout.Size = new Size(424, 522);
+            selectionDialogLayout.TabIndex = 0;
+            // 
+            // descriptionData
+            // 
+            descriptionData.AutoSize = true;
+            descriptionData.Dock = DockStyle.Fill;
+            descriptionData.HeaderText = "Description";
+            descriptionData.Location = new Point(3, 414);
+            descriptionData.Multiline = true;
+            descriptionData.Name = "descriptionData";
+            descriptionData.ReadOnly = true;
+            descriptionData.Size = new Size(418, 69);
+            descriptionData.TabIndex = 7;
+            descriptionData.WordWrap = true;
+            // 
+            // selectionFilterGroup
+            // 
+            selectionFilterGroup.AutoSize = true;
+            selectionFilterGroup.Controls.Add(filterSelectionLayout);
+            selectionFilterGroup.Dock = DockStyle.Fill;
+            selectionFilterGroup.Location = new Point(3, 3);
+            selectionFilterGroup.Name = "selectionFilterGroup";
+            selectionFilterGroup.Size = new Size(418, 80);
+            selectionFilterGroup.TabIndex = 0;
+            selectionFilterGroup.TabStop = false;
+            selectionFilterGroup.Text = "Filter";
+            // 
             // selectionData
             // 
             selectionData.CheckBoxes = true;
@@ -214,49 +250,6 @@
             pathData.TabIndex = 4;
             pathData.WordWrap = true;
             // 
-            // commandLayout
-            // 
-            commandLayout.AutoSize = true;
-            commandLayout.ColumnCount = 3;
-            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            commandLayout.Controls.Add(acceptCommand, 0, 0);
-            commandLayout.Controls.Add(cancelCommand, 2, 0);
-            commandLayout.Dock = DockStyle.Fill;
-            commandLayout.Location = new Point(3, 489);
-            commandLayout.Name = "commandLayout";
-            commandLayout.RowCount = 1;
-            commandLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            commandLayout.Size = new Size(418, 30);
-            commandLayout.TabIndex = 6;
-            // 
-            // acceptCommand
-            // 
-            acceptCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            acceptCommand.DialogResult = DialogResult.OK;
-            acceptCommand.Location = new Point(3, 4);
-            acceptCommand.Name = "acceptCommand";
-            acceptCommand.Size = new Size(75, 23);
-            acceptCommand.TabIndex = 0;
-            acceptCommand.Text = "Ok";
-            acceptCommand.UseVisualStyleBackColor = true;
-            // 
-            // cancelCommand
-            // 
-            cancelCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            cancelCommand.DialogResult = DialogResult.Cancel;
-            cancelCommand.Location = new Point(340, 4);
-            cancelCommand.Name = "cancelCommand";
-            cancelCommand.Size = new Size(75, 23);
-            cancelCommand.TabIndex = 1;
-            cancelCommand.Text = "cancel";
-            cancelCommand.UseVisualStyleBackColor = true;
-            // 
-            // bindingSource
-            // 
-            bindingSource.AllowNew = false;
-            // 
             // SelectionDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -269,14 +262,13 @@
             Text = "Selection Dialog";
             Load += SelectionDialog_Load;
             SizeChanged += SelectionDialog_SizeChanged;
+            filterSelectionLayout.ResumeLayout(false);
+            filterSelectionLayout.PerformLayout();
+            commandLayout.ResumeLayout(false);
             selectionDialogLayout.ResumeLayout(false);
             selectionDialogLayout.PerformLayout();
             selectionFilterGroup.ResumeLayout(false);
             selectionFilterGroup.PerformLayout();
-            filterSelectionLayout.ResumeLayout(false);
-            filterSelectionLayout.PerformLayout();
-            commandLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
             ResumeLayout(false);
         }
 
@@ -294,7 +286,6 @@
         private Button acceptCommand;
         private Button cancelCommand;
         private Controls.TextBoxData descriptionData;
-        private BindingSource bindingSource;
         private TableLayoutPanel selectionDialogLayout;
     }
 }
