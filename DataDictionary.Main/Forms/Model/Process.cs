@@ -103,7 +103,7 @@ namespace DataDictionary.Main.Forms.Model
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
                 subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea);
-                aliasData.BindTo(bindingAlias, formBinding.NewAlias, 
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias,
                     ScopeType.ModelProcess,
                     ScopeType.DatabaseFunction, ScopeType.DatabaseProcedure,
                     ScopeType.LibraryTypeEvent, ScopeType.LibraryTypeMethod);
@@ -135,33 +135,36 @@ namespace DataDictionary.Main.Forms.Model
         }
 
         private void ArgumentNewCommand_Click(object sender, EventArgs e)
-        {
-
-        }
+        { bindingArgument.AddNew(); }
 
         private void ArgumentSelectCommand_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void AliasAddCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AliasSelectCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ArgumentNameData_Validating(object sender, CancelEventArgs e)
         {
-
+            if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
+            { value.ArgumentName = new PathIndex(PathIndex.Parse(argumentNameData.Text).ToArray()).MemberFullPath; }
         }
 
         private void ArgumentTypeData_Validating(object sender, CancelEventArgs e)
         {
+            if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
+            { value.ArgumentType = new PathIndex(PathIndex.Parse(argumentTypeData.Text).ToArray()).MemberFullPath; }
+        }
 
+        private void BindingArgument_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            e.NewObject = formBinding.NewArgument();
+            argumentLayout.Enabled = true;
+        }
+
+        private void BindingArgument_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
+            { argumentLayout.Enabled = true; }
+            else { argumentLayout.Enabled = false; }
         }
     }
 }

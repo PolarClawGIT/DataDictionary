@@ -29,29 +29,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelProcessArgument; } }
 
-        /// <inheritdoc cref="ProcessArgumentItem.ArgumentName"/>
-        public PathIndex ArgumentPath
-        {
-            get
-            {
-                return new PathIndex(
-                    new PathIndex(PathIndex.Parse(base.ArgumentName).ToArray()));
-            }
-            set { base.ArgumentName = value.MemberFullPath; }
-        }
-
-        /// <inheritdoc cref="ProcessArgumentItem.ArgumentType"/>
-        public new PathIndex ArgumentType
-        {
-            get
-            {
-                return new PathIndex(
-                    new PathIndex(PathIndex.Parse(base.ArgumentType).ToArray()));
-            }
-            set { base.ArgumentType = value.MemberFullPath; }
-        }
-
-
         /// <inheritdoc/>
         public ProcessArgumentValue() : base()
         {

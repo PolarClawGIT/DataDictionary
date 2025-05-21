@@ -149,6 +149,14 @@ namespace DataDictionary.Main.Forms.Model
                 else { result = null; return false; }
             }
 
+            public Boolean TryGetArgument([NotNullWhen(true)] out ProcessArgumentValue? result)
+            {
+                if (BindingArgument.Position >= 0
+                    && BindingArgument.Current is ProcessArgumentValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
             public IPropertySubType NewProperty()
             {
                 if (TryGetValue(out ProcessValue? value))
@@ -160,6 +168,13 @@ namespace DataDictionary.Main.Forms.Model
             {
                 if (TryGetValue(out ProcessValue? value))
                 { return new ProcessDefinitionValue(value); }
+                else { throw new InvalidOperationException("Current ProcessValue not defined"); }
+            }
+
+            public IProcessArgumentValue NewArgument()
+            {
+                if (TryGetValue(out ProcessValue? value))
+                { return new ProcessArgumentValue(value); }
                 else { throw new InvalidOperationException("Current ProcessValue not defined"); }
             }
 

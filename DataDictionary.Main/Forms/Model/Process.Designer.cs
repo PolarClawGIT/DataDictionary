@@ -376,7 +376,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(433, 438);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -385,7 +385,7 @@
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(427, 432);
+            propertyData.Size = new Size(186, 66);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -395,7 +395,7 @@
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(433, 438);
+            definitionTab.Size = new Size(192, 72);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -404,7 +404,7 @@
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.Size = new Size(427, 432);
+            definitionData.Size = new Size(186, 66);
             definitionData.TabIndex = 0;
             // 
             // aliasTab
@@ -414,7 +414,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(433, 438);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -423,7 +423,7 @@
             aliasData.Dock = DockStyle.Fill;
             aliasData.Location = new Point(3, 3);
             aliasData.Name = "aliasData";
-            aliasData.Size = new Size(427, 432);
+            aliasData.Size = new Size(186, 66);
             aliasData.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -433,7 +433,7 @@
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
             subjectAreaTab.Padding = new Padding(3);
-            subjectAreaTab.Size = new Size(433, 438);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -449,7 +449,7 @@
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(427, 432);
+            subjectAreaLayout.Size = new Size(186, 66);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -457,7 +457,7 @@
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(421, 376);
+            subjectArea.Size = new Size(180, 10);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -469,9 +469,14 @@
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(421, 44);
+            memberNameData.Size = new Size(180, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
+            // 
+            // bindingArgument
+            // 
+            bindingArgument.AddingNew += BindingArgument_AddingNew;
+            bindingArgument.CurrentChanged += BindingArgument_CurrentChanged;
             // 
             // Process
             // 
