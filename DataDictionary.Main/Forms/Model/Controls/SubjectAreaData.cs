@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class SubjectArea : UserControl
+    partial class SubjectAreaData : UserControl
     {
         Dictionary<ListViewItem, ISubjectAreaValue> subjectItems = new Dictionary<ListViewItem, ISubjectAreaValue>();
 
@@ -21,10 +21,10 @@ namespace DataDictionary.Main.Forms.Model.Controls
             new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
             { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-        public SubjectArea()
+        public SubjectAreaData()
         {
             InitializeComponent();
-            subjectAreaData.ResizeColumns();
+            subjectAreaList.ResizeColumns();
         }
 
         public void BindTo(
@@ -48,16 +48,16 @@ namespace DataDictionary.Main.Forms.Model.Controls
                 else { value.Checked = false; }
 
                 subjectItems.Add(value, item);
-                subjectAreaData.Items.Add(value);
+                subjectAreaList.Items.Add(value);
             }
         }
 
         private void subjectAreaData_Resize(object sender, EventArgs e)
-        { subjectAreaData.ResizeColumns(); }
+        { subjectAreaList.ResizeColumns(); }
 
         private void SubjectAreaData_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (ActiveControl == subjectAreaData
+            if (ActiveControl == subjectAreaList
                 && onGetSelected is not null
                 && onAddSubject is not null
                 && onRemoveSubject is not null

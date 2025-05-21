@@ -51,13 +51,14 @@
             argumentSelectCommand = new Button();
             argumentNewCommand = new Button();
             propertyTab = new TabPage();
-            propertyData = new DataDictionary.Main.Forms.Model.Controls.Property();
+            propertyData = new DataDictionary.Main.Forms.Model.Controls.PropertyData();
             definitionTab = new TabPage();
-            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
+            definitionData = new DataDictionary.Main.Forms.Model.Controls.DefinitionData();
             aliasTab = new TabPage();
+            aliasData = new DataDictionary.Main.Forms.Model.Controls.AliasData();
             subjectAreaTab = new TabPage();
             subjectAreaLayout = new TableLayoutPanel();
-            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectArea();
+            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectAreaData();
             memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             bindingProcess = new BindingSource(components);
             bindingAlias = new BindingSource(components);
@@ -65,7 +66,6 @@
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             bindingArgument = new BindingSource(components);
-            aliasData = new DataDictionary.Main.Forms.Model.Controls.Alias();
             mainLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
@@ -376,7 +376,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(433, 438);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -385,7 +385,7 @@
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(186, 66);
+            propertyData.Size = new Size(427, 432);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -395,7 +395,7 @@
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(433, 438);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -404,7 +404,7 @@
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.Size = new Size(186, 66);
+            definitionData.Size = new Size(427, 432);
             definitionData.TabIndex = 0;
             // 
             // aliasTab
@@ -418,13 +418,22 @@
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
+            // aliasData
+            // 
+            aliasData.Dock = DockStyle.Fill;
+            aliasData.Location = new Point(3, 3);
+            aliasData.Name = "aliasData";
+            aliasData.Size = new Size(427, 432);
+            aliasData.TabIndex = 0;
+            // 
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Padding = new Padding(3);
+            subjectAreaTab.Size = new Size(433, 438);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -435,12 +444,12 @@
             subjectAreaLayout.Controls.Add(subjectArea, 0, 1);
             subjectAreaLayout.Controls.Add(memberNameData, 0, 0);
             subjectAreaLayout.Dock = DockStyle.Fill;
-            subjectAreaLayout.Location = new Point(0, 0);
+            subjectAreaLayout.Location = new Point(3, 3);
             subjectAreaLayout.Name = "subjectAreaLayout";
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(192, 72);
+            subjectAreaLayout.Size = new Size(427, 432);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -448,7 +457,7 @@
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(186, 16);
+            subjectArea.Size = new Size(421, 376);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -460,17 +469,9 @@
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(186, 44);
+            memberNameData.Size = new Size(421, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
-            // 
-            // aliasData
-            // 
-            aliasData.Dock = DockStyle.Fill;
-            aliasData.Location = new Point(3, 3);
-            aliasData.Name = "aliasData";
-            aliasData.Size = new Size(427, 432);
-            aliasData.TabIndex = 0;
             // 
             // Process
             // 
@@ -517,13 +518,13 @@
         private TabControl detailTabLayout;
         private TabPage detailTab;
         private TabPage propertyTab;
-        private Controls.Property propertyData;
+        private Controls.PropertyData propertyData;
         private TabPage definitionTab;
-        private Controls.Definition definitionData;
+        private Controls.DefinitionData definitionData;
         private TabPage aliasTab;
         private TabPage subjectAreaTab;
         private TableLayoutPanel subjectAreaLayout;
-        private Controls.SubjectArea subjectArea;
+        private Controls.SubjectAreaData subjectArea;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private TableLayoutPanel argumentLayout;
         private DataGridView argumentData;
@@ -547,6 +548,6 @@
         private BindingSource bindingDefinition;
         private BindingSource bindingArgument;
         private TableLayoutPanel detailLayout;
-        private Controls.Alias aliasData;
+        private Controls.AliasData aliasData;
     }
 }

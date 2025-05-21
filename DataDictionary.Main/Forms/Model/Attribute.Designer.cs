@@ -52,13 +52,13 @@ namespace DataDictionary.Main.Forms.Model
             isKeyData = new CheckBox();
             dataTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyTab = new TabPage();
-            propertyData = new DataDictionary.Main.Forms.Model.Controls.Property();
+            propertyData = new DataDictionary.Main.Forms.Model.Controls.PropertyData();
             definitionTab = new TabPage();
-            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
+            definitionData = new DataDictionary.Main.Forms.Model.Controls.DefinitionData();
             aliasTab = new TabPage();
-            aliasData = new DataDictionary.Main.Forms.Model.Controls.Alias();
+            aliasData = new DataDictionary.Main.Forms.Model.Controls.AliasData();
             subjectAreaTab = new TabPage();
-            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectArea();
+            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectAreaData();
             memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             entityTab = new TabPage();
             bindingAttribute = new BindingSource(components);
@@ -334,7 +334,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -343,7 +343,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(186, 66);
+            propertyData.Size = new Size(406, 337);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -352,16 +352,17 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Controls.Add(definitionData);
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Padding = new Padding(3);
+            definitionTab.Size = new Size(412, 343);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
             // definitionData
             // 
             definitionData.Dock = DockStyle.Fill;
-            definitionData.Location = new Point(0, 0);
+            definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.Size = new Size(192, 72);
+            definitionData.Size = new Size(406, 337);
             definitionData.TabIndex = 0;
             // 
             // aliasTab
@@ -389,7 +390,8 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Padding = new Padding(3);
+            subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -400,12 +402,12 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaLayout.Controls.Add(subjectArea, 0, 1);
             subjectAreaLayout.Controls.Add(memberNameData, 0, 0);
             subjectAreaLayout.Dock = DockStyle.Fill;
-            subjectAreaLayout.Location = new Point(0, 0);
+            subjectAreaLayout.Location = new Point(3, 3);
             subjectAreaLayout.Name = "subjectAreaLayout";
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(192, 72);
+            subjectAreaLayout.Size = new Size(406, 337);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -413,7 +415,7 @@ namespace DataDictionary.Main.Forms.Model
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(186, 16);
+            subjectArea.Size = new Size(400, 281);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -425,7 +427,7 @@ namespace DataDictionary.Main.Forms.Model
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(186, 44);
+            memberNameData.Size = new Size(400, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
@@ -435,7 +437,8 @@ namespace DataDictionary.Main.Forms.Model
             entityTab.BackColor = SystemColors.Control;
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
-            entityTab.Size = new Size(192, 72);
+            entityTab.Padding = new Padding(3);
+            entityTab.Size = new Size(412, 343);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
             // 
@@ -498,15 +501,15 @@ namespace DataDictionary.Main.Forms.Model
         private TabPage entityTab;
         private BindingSource bindingAlias;
         private BindingSource bindingSubjectArea;
-        private Controls.SubjectArea subjectArea;
+        private Controls.SubjectAreaData subjectArea;
         private TabPage definitionTab;
         private BindingSource bindingDefinition;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private DataDictionary.Main.Controls.TextBoxData dataLengthData;
         private DataDictionary.Main.Controls.TextBoxData dataPrecisionData;
         private DataDictionary.Main.Controls.ComboBoxData dataTypeData;
-        private Controls.Property propertyData;
-        private Controls.Definition definitionData;
-        private Controls.Alias aliasData;
+        private Controls.PropertyData propertyData;
+        private Controls.DefinitionData definitionData;
+        private Controls.AliasData aliasData;
     }
 }

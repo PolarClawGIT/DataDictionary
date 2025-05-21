@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class Alias
+    partial class AliasData
     {
         /// <summary> 
         /// Required designer variable.
@@ -33,7 +33,7 @@
             aliasAddCommand = new Button();
             isAliasInModelData = new CheckBox();
             aliaseLayout = new TableLayoutPanel();
-            aliasesData = new DataGridView();
+            aliasGrid = new DataGridView();
             aliaseScopeColumn = new DataGridViewComboBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
             aliasNameData = new DataDictionary.Main.Controls.TextBoxData();
@@ -41,7 +41,7 @@
             aliasCommandLayout = new TableLayoutPanel();
             aliasCommandLayout.SuspendLayout();
             aliaseLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)aliasGrid).BeginInit();
             SuspendLayout();
             // 
             // aliasCommandLayout
@@ -54,7 +54,7 @@
             aliasCommandLayout.Controls.Add(aliasAddCommand, 0, 2);
             aliasCommandLayout.Controls.Add(isAliasInModelData, 0, 0);
             aliasCommandLayout.Dock = DockStyle.Fill;
-            aliasCommandLayout.Location = new Point(249, 212);
+            aliasCommandLayout.Location = new Point(246, 251);
             aliasCommandLayout.Name = "aliasCommandLayout";
             aliasCommandLayout.RowCount = 3;
             aliaseLayout.SetRowSpan(aliasCommandLayout, 2);
@@ -104,7 +104,7 @@
             aliaseLayout.ColumnCount = 2;
             aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             aliaseLayout.ColumnStyles.Add(new ColumnStyle());
-            aliaseLayout.Controls.Add(aliasesData, 0, 0);
+            aliaseLayout.Controls.Add(aliasGrid, 0, 0);
             aliaseLayout.Controls.Add(aliasNameData, 0, 2);
             aliaseLayout.Controls.Add(aliasScopeData, 0, 1);
             aliaseLayout.Controls.Add(aliasCommandLayout, 1, 1);
@@ -115,21 +115,21 @@
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             aliaseLayout.RowStyles.Add(new RowStyle());
             aliaseLayout.RowStyles.Add(new RowStyle());
-            aliaseLayout.Size = new Size(333, 311);
+            aliaseLayout.Size = new Size(330, 350);
             aliaseLayout.TabIndex = 2;
             // 
-            // aliasesData
+            // aliasGrid
             // 
-            aliasesData.AllowUserToAddRows = false;
-            aliasesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            aliasesData.Columns.AddRange(new DataGridViewColumn[] { aliaseScopeColumn, aliasNameColumn });
-            aliaseLayout.SetColumnSpan(aliasesData, 2);
-            aliasesData.Dock = DockStyle.Fill;
-            aliasesData.Location = new Point(3, 3);
-            aliasesData.Name = "aliasesData";
-            aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(327, 203);
-            aliasesData.TabIndex = 0;
+            aliasGrid.AllowUserToAddRows = false;
+            aliasGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            aliasGrid.Columns.AddRange(new DataGridViewColumn[] { aliaseScopeColumn, aliasNameColumn });
+            aliaseLayout.SetColumnSpan(aliasGrid, 2);
+            aliasGrid.Dock = DockStyle.Fill;
+            aliasGrid.Location = new Point(3, 3);
+            aliasGrid.Name = "aliasGrid";
+            aliasGrid.ReadOnly = true;
+            aliasGrid.Size = new Size(324, 242);
+            aliasGrid.TabIndex = 0;
             // 
             // aliaseScopeColumn
             // 
@@ -153,11 +153,11 @@
             aliasNameData.AutoSize = true;
             aliasNameData.Dock = DockStyle.Fill;
             aliasNameData.HeaderText = "Alias Name";
-            aliasNameData.Location = new Point(3, 264);
+            aliasNameData.Location = new Point(3, 303);
             aliasNameData.Multiline = false;
             aliasNameData.Name = "aliasNameData";
             aliasNameData.ReadOnly = true;
-            aliasNameData.Size = new Size(240, 44);
+            aliasNameData.Size = new Size(237, 44);
             aliasNameData.TabIndex = 2;
             aliasNameData.WordWrap = true;
             aliasNameData.Validated += AliasNameData_Validated;
@@ -170,31 +170,31 @@
             aliasScopeData.Dock = DockStyle.Fill;
             aliasScopeData.DropDownStyle = ComboBoxStyle.DropDown;
             aliasScopeData.HeaderText = "Scope";
-            aliasScopeData.Location = new Point(3, 212);
+            aliasScopeData.Location = new Point(3, 251);
             aliasScopeData.Name = "aliasScopeData";
             aliasScopeData.ReadOnly = true;
-            aliasScopeData.Size = new Size(240, 46);
+            aliasScopeData.Size = new Size(237, 46);
             aliasScopeData.TabIndex = 1;
             // 
-            // Alias
+            // AliasData
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(aliaseLayout);
-            Name = "Alias";
-            Size = new Size(333, 311);
+            Name = "AliasData";
+            Size = new Size(330, 350);
             aliasCommandLayout.ResumeLayout(false);
             aliasCommandLayout.PerformLayout();
             aliaseLayout.ResumeLayout(false);
             aliaseLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)aliasGrid).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
         private TableLayoutPanel aliaseLayout;
-        private DataGridView aliasesData;
+        private DataGridView aliasGrid;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
         private DataDictionary.Main.Controls.TextBoxData aliasNameData;

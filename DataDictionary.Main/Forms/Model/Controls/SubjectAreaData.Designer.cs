@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class SubjectArea
+    partial class SubjectAreaData
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,24 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            subjectAreaData = new ListView();
+            subjectAreaList = new ListView();
             subjectAreaColumn = new ColumnHeader();
             subjectNameSpaceColumn = new ColumnHeader();
             SuspendLayout();
             // 
-            // subjectAreaData
+            // subjectAreaList
             // 
-            subjectAreaData.CheckBoxes = true;
-            subjectAreaData.Columns.AddRange(new ColumnHeader[] { subjectAreaColumn, subjectNameSpaceColumn });
-            subjectAreaData.Dock = DockStyle.Fill;
-            subjectAreaData.Location = new Point(0, 0);
-            subjectAreaData.Name = "subjectAreaData";
-            subjectAreaData.Size = new Size(136, 114);
-            subjectAreaData.TabIndex = 0;
-            subjectAreaData.UseCompatibleStateImageBehavior = false;
-            subjectAreaData.View = View.Details;
-            subjectAreaData.ItemChecked += SubjectAreaData_ItemChecked;
-            subjectAreaData.Resize += subjectAreaData_Resize;
+            subjectAreaList.CheckBoxes = true;
+            subjectAreaList.Columns.AddRange(new ColumnHeader[] { subjectAreaColumn, subjectNameSpaceColumn });
+            subjectAreaList.Dock = DockStyle.Fill;
+            subjectAreaList.Location = new Point(0, 0);
+            subjectAreaList.Name = "subjectAreaList";
+            subjectAreaList.Size = new Size(330, 350);
+            subjectAreaList.TabIndex = 0;
+            subjectAreaList.UseCompatibleStateImageBehavior = false;
+            subjectAreaList.View = View.Details;
+            subjectAreaList.ItemChecked += SubjectAreaData_ItemChecked;
+            subjectAreaList.Resize += subjectAreaData_Resize;
             // 
             // subjectAreaColumn
             // 
@@ -55,19 +55,19 @@
             // 
             subjectNameSpaceColumn.Text = "NameSpace";
             // 
-            // SubjectArea
+            // SubjectAreaData
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(subjectAreaData);
-            Name = "SubjectArea";
-            Size = new Size(136, 114);
+            Controls.Add(subjectAreaList);
+            Name = "SubjectAreaData";
+            Size = new Size(330, 350);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ListView subjectAreaData;
+        private ListView subjectAreaList;
         private ColumnHeader subjectAreaColumn;
         private ColumnHeader subjectNameSpaceColumn;
     }

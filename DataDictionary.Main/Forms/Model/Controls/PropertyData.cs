@@ -6,7 +6,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class Property : UserControl
+    partial class PropertyData : UserControl
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
         Func<IPropertySubType>? onAddProperty; // Constructor for the Property
@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
             new BindingView<PropertyValue>(BusinessData.Model.Properties)
             { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-        public Property()
+        public PropertyData()
         {
             InitializeComponent();
         }
@@ -32,8 +32,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
             propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
             propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            propertiesData.AutoGenerateColumns = false;
-            propertiesData.DataSource = dataBinding;
+            propertyGrid.AutoGenerateColumns = false;
+            propertyGrid.DataSource = dataBinding;
 
             RebuildChoices();
 

@@ -14,7 +14,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class Definition : UserControl
+    partial class DefinitionData : UserControl
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
         Func<IDefinitionSubType>? onAddDefinition; // Constructor for the Definition
@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
             new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
             { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-        public Definition()
+        public DefinitionData()
         {
             InitializeComponent();
             definitionTextData.AddTools(fullTextTools);
@@ -42,8 +42,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
             definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
             definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionSummaryData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
             
-            definitionData.AutoGenerateColumns = false;
-            definitionData.DataSource = dataBinding;
+            definitionGrid.AutoGenerateColumns = false;
+            definitionGrid.DataSource = dataBinding;
 
             dataBinding.AddingNew += DataBinding_AddingNew;
             dataBinding.CurrentChanged += DataBinding_CurrentChanged;

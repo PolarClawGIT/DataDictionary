@@ -54,13 +54,14 @@ namespace DataDictionary.Main.Forms.Model
             attributeSelectCommand = new Button();
             attributeNewCommand = new Button();
             propertyTab = new TabPage();
-            propertyData = new DataDictionary.Main.Forms.Model.Controls.Property();
+            propertyData = new DataDictionary.Main.Forms.Model.Controls.PropertyData();
             definitionTab = new TabPage();
-            definitionData = new DataDictionary.Main.Forms.Model.Controls.Definition();
+            definitionData = new DataDictionary.Main.Forms.Model.Controls.DefinitionData();
             aliasTab = new TabPage();
+            aliasData = new DataDictionary.Main.Forms.Model.Controls.AliasData();
             subjectAreaTab = new TabPage();
             subjectAreaLayout = new TableLayoutPanel();
-            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectArea();
+            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectAreaData();
             memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
@@ -69,7 +70,6 @@ namespace DataDictionary.Main.Forms.Model
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingAttributeDetail = new BindingSource(components);
-            aliasData = new DataDictionary.Main.Forms.Model.Controls.Alias();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
@@ -394,7 +394,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(476, 443);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -403,7 +403,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(186, 66);
+            propertyData.Size = new Size(470, 437);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -413,7 +413,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(476, 443);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -422,7 +422,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.Size = new Size(186, 66);
+            definitionData.Size = new Size(470, 437);
             definitionData.TabIndex = 0;
             // 
             // aliasTab
@@ -436,13 +436,22 @@ namespace DataDictionary.Main.Forms.Model
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
+            // aliasData
+            // 
+            aliasData.Dock = DockStyle.Fill;
+            aliasData.Location = new Point(3, 3);
+            aliasData.Name = "aliasData";
+            aliasData.Size = new Size(470, 437);
+            aliasData.TabIndex = 0;
+            // 
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Padding = new Padding(3);
+            subjectAreaTab.Size = new Size(476, 443);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -453,12 +462,12 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaLayout.Controls.Add(subjectArea, 0, 1);
             subjectAreaLayout.Controls.Add(memberNameData, 0, 0);
             subjectAreaLayout.Dock = DockStyle.Fill;
-            subjectAreaLayout.Location = new Point(0, 0);
+            subjectAreaLayout.Location = new Point(3, 3);
             subjectAreaLayout.Name = "subjectAreaLayout";
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(192, 72);
+            subjectAreaLayout.Size = new Size(470, 437);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -466,7 +475,7 @@ namespace DataDictionary.Main.Forms.Model
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(186, 16);
+            subjectArea.Size = new Size(464, 381);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -478,7 +487,7 @@ namespace DataDictionary.Main.Forms.Model
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(186, 44);
+            memberNameData.Size = new Size(464, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
@@ -490,14 +499,6 @@ namespace DataDictionary.Main.Forms.Model
             // bindingAttributeDetail
             // 
             bindingAttributeDetail.AllowNew = false;
-            // 
-            // aliasData
-            // 
-            aliasData.Dock = DockStyle.Fill;
-            aliasData.Location = new Point(3, 3);
-            aliasData.Name = "aliasData";
-            aliasData.Size = new Size(470, 437);
-            aliasData.TabIndex = 0;
             // 
             // Entity
             // 
@@ -551,7 +552,7 @@ namespace DataDictionary.Main.Forms.Model
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
         private BindingSource bindingSubjectArea;
-        private Controls.SubjectArea subjectArea;
+        private Controls.SubjectAreaData subjectArea;
         private TabPage definitionTab;
         private BindingSource bindingDefinition;
         private TableLayoutPanel subjectAreaLayout;
@@ -574,8 +575,8 @@ namespace DataDictionary.Main.Forms.Model
         private DataGridViewTextBoxColumn attributeOrderColumn;
         private TableLayoutPanel attributeButtonLayout;
         private Button attributeNewCommand;
-        private Controls.Property propertyData;
-        private Controls.Definition definitionData;
-        private Controls.Alias aliasData;
+        private Controls.PropertyData propertyData;
+        private Controls.DefinitionData definitionData;
+        private Controls.AliasData aliasData;
     }
 }

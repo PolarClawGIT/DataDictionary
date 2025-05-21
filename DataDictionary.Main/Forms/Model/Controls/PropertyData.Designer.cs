@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class Property
+    partial class PropertyData
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,27 +29,27 @@
         private void InitializeComponent()
         {
             propertyLayout = new TableLayoutPanel();
+            propertyGrid = new DataGridView();
+            propertyIdColumn = new DataGridViewComboBoxColumn();
+            propertyValueColumn = new DataGridViewTextBoxColumn();
             propertyTabs = new TabControl();
             propertyValueTab = new TabPage();
             propertyValueData = new DataDictionary.Main.Controls.TextBoxData();
             propertyChoiceTab = new TabPage();
             propertyChoiceData = new DataDictionary.Main.Controls.CheckedListBoxData();
             propertyTypeData = new DataDictionary.Main.Controls.ComboBoxData();
-            propertiesData = new DataGridView();
-            propertyIdColumn = new DataGridViewComboBoxColumn();
-            propertyValueColumn = new DataGridViewTextBoxColumn();
             propertyLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)propertyGrid).BeginInit();
             propertyTabs.SuspendLayout();
             propertyValueTab.SuspendLayout();
             propertyChoiceTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
             SuspendLayout();
             // 
             // propertyLayout
             // 
             propertyLayout.ColumnCount = 1;
             propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            propertyLayout.Controls.Add(propertiesData, 0, 0);
+            propertyLayout.Controls.Add(propertyGrid, 0, 0);
             propertyLayout.Controls.Add(propertyTabs, 0, 2);
             propertyLayout.Controls.Add(propertyTypeData, 0, 1);
             propertyLayout.Dock = DockStyle.Fill;
@@ -59,18 +59,49 @@
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             propertyLayout.RowStyles.Add(new RowStyle());
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            propertyLayout.Size = new Size(265, 270);
+            propertyLayout.Size = new Size(330, 350);
             propertyLayout.TabIndex = 4;
+            // 
+            // propertyGrid
+            // 
+            propertyGrid.AllowUserToAddRows = false;
+            propertyGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            propertyGrid.Columns.AddRange(new DataGridViewColumn[] { propertyIdColumn, propertyValueColumn });
+            propertyGrid.Dock = DockStyle.Fill;
+            propertyGrid.Location = new Point(3, 3);
+            propertyGrid.Name = "propertyGrid";
+            propertyGrid.ReadOnly = true;
+            propertyGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            propertyGrid.Size = new Size(324, 143);
+            propertyGrid.TabIndex = 3;
+            // 
+            // propertyIdColumn
+            // 
+            propertyIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyIdColumn.DataPropertyName = "PropertyId";
+            propertyIdColumn.FillWeight = 30F;
+            propertyIdColumn.HeaderText = "Property";
+            propertyIdColumn.Name = "propertyIdColumn";
+            propertyIdColumn.ReadOnly = true;
+            // 
+            // propertyValueColumn
+            // 
+            propertyValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyValueColumn.DataPropertyName = "PropertyValue";
+            propertyValueColumn.FillWeight = 70F;
+            propertyValueColumn.HeaderText = "Property Value";
+            propertyValueColumn.Name = "propertyValueColumn";
+            propertyValueColumn.ReadOnly = true;
             // 
             // propertyTabs
             // 
             propertyTabs.Controls.Add(propertyValueTab);
             propertyTabs.Controls.Add(propertyChoiceTab);
             propertyTabs.Dock = DockStyle.Fill;
-            propertyTabs.Location = new Point(3, 164);
+            propertyTabs.Location = new Point(3, 204);
             propertyTabs.Name = "propertyTabs";
             propertyTabs.SelectedIndex = 0;
-            propertyTabs.Size = new Size(259, 103);
+            propertyTabs.Size = new Size(324, 143);
             propertyTabs.TabIndex = 2;
             // 
             // propertyValueTab
@@ -80,7 +111,7 @@
             propertyValueTab.Location = new Point(4, 24);
             propertyValueTab.Name = "propertyValueTab";
             propertyValueTab.Padding = new Padding(3);
-            propertyValueTab.Size = new Size(251, 75);
+            propertyValueTab.Size = new Size(316, 115);
             propertyValueTab.TabIndex = 0;
             propertyValueTab.Text = "Value";
             // 
@@ -93,7 +124,7 @@
             propertyValueData.Multiline = true;
             propertyValueData.Name = "propertyValueData";
             propertyValueData.ReadOnly = false;
-            propertyValueData.Size = new Size(245, 69);
+            propertyValueData.Size = new Size(310, 109);
             propertyValueData.TabIndex = 1;
             propertyValueData.WordWrap = true;
             // 
@@ -130,60 +161,29 @@
             propertyTypeData.Dock = DockStyle.Fill;
             propertyTypeData.DropDownStyle = ComboBoxStyle.DropDownList;
             propertyTypeData.HeaderText = "Property Type";
-            propertyTypeData.Location = new Point(3, 112);
+            propertyTypeData.Location = new Point(3, 152);
             propertyTypeData.Name = "propertyTypeData";
             propertyTypeData.ReadOnly = false;
-            propertyTypeData.Size = new Size(259, 46);
+            propertyTypeData.Size = new Size(324, 46);
             propertyTypeData.TabIndex = 0;
             propertyTypeData.SelectedIndexChanged += PropertyTypeData_SelectedIndexChanged;
             propertyTypeData.SelectionChangeCommitted += PropertyTypeData_SelectionChangeCommitted;
             // 
-            // propertiesData
-            // 
-            propertiesData.AllowUserToAddRows = false;
-            propertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            propertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyIdColumn, propertyValueColumn });
-            propertiesData.Dock = DockStyle.Fill;
-            propertiesData.Location = new Point(3, 3);
-            propertiesData.Name = "propertiesData";
-            propertiesData.ReadOnly = true;
-            propertiesData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            propertiesData.Size = new Size(259, 103);
-            propertiesData.TabIndex = 3;
-            // 
-            // propertyIdColumn
-            // 
-            propertyIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyIdColumn.DataPropertyName = "PropertyId";
-            propertyIdColumn.FillWeight = 30F;
-            propertyIdColumn.HeaderText = "Property";
-            propertyIdColumn.Name = "propertyIdColumn";
-            propertyIdColumn.ReadOnly = true;
-            // 
-            // propertyValueColumn
-            // 
-            propertyValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyValueColumn.DataPropertyName = "PropertyValue";
-            propertyValueColumn.FillWeight = 70F;
-            propertyValueColumn.HeaderText = "Property Value";
-            propertyValueColumn.Name = "propertyValueColumn";
-            propertyValueColumn.ReadOnly = true;
-            // 
-            // Property
+            // PropertyData
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(propertyLayout);
-            Name = "Property";
-            Size = new Size(265, 270);
+            Name = "PropertyData";
+            Size = new Size(330, 350);
             propertyLayout.ResumeLayout(false);
             propertyLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)propertyGrid).EndInit();
             propertyTabs.ResumeLayout(false);
             propertyValueTab.ResumeLayout(false);
             propertyValueTab.PerformLayout();
             propertyChoiceTab.ResumeLayout(false);
             propertyChoiceTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
             ResumeLayout(false);
         }
 
@@ -196,7 +196,7 @@
         private TabPage propertyChoiceTab;
         private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
         private DataDictionary.Main.Controls.ComboBoxData propertyTypeData;
-        private DataGridView propertiesData;
+        private DataGridView propertyGrid;
         private DataGridViewComboBoxColumn propertyIdColumn;
         private DataGridViewTextBoxColumn propertyValueColumn;
     }

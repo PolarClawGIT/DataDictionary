@@ -18,7 +18,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model.Controls
 {
-    partial class Alias : UserControl
+    partial class AliasData : UserControl
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
         List<ScopeType> filterScope = new List<ScopeType>();
@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
             }
         }
 
-        public Alias()
+        public AliasData()
         {
             InitializeComponent();
 
@@ -49,8 +49,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
         {
             dataBinding = binding;
 
-            aliasesData.AutoGenerateColumns = false;
-            aliasesData.DataSource = binding;
+            aliasGrid.AutoGenerateColumns = false;
+            aliasGrid.DataSource = binding;
 
             ScopeNameList.Load(aliaseScopeColumn);
             ScopeNameList.Load(aliasScopeData);
