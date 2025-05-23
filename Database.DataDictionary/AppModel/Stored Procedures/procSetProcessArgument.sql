@@ -33,10 +33,13 @@ Begin Try
 		[ArgumentTitle]			[App_DataDictionary].[typeTitle]       Not Null,
 		[ArgumentDescription]	[App_DataDictionary].[typeDescription] Null,
 		[ArgumentName]			[AppModel].[typeQualifiedName]         Null,
-		[ArgumentType]			[AppModel].[typeQualifiedName]         Null, -- An Entity, Attribute, or system
 		[OrdinalPosition]       Int Not Null,
-		[IsInput]               Bit Null, -- Input Can be bidirectional or not defined (contributes)
-		[IsOutput]              Bit Null, -- Output Can be bidirectional or not defined (contributes)
+		[IsPassed]				Bit Not Null,
+		[IsReturned]			Bit Not Null,
+		[IsContributor]			Bit Not Null,
+		[IsAltered]				Bit Not Null,
+		[AsValue]				Bit Not Null,
+		[AsReference]			Bit Not Null,
 		Primary Key ([ProcessId], [ArgumentId]),
 		Unique ([ProcessId], [ArgumentTitle]),
 		Unique ([ProcessId], [OrdinalPosition]))
@@ -47,10 +50,13 @@ Begin Try
 			NullIf(Trim(D.[ArgumentTitle]),'') As [ProcessTitle],
 			NullIf(Trim(D.[ArgumentDescription]),'') As [ProcessDescription],
 			N.[ArgumentName],
-			T.[ArgumentType],
 			D.[OrdinalPosition],
-			IsNull(D.[IsInput],0) As [IsInput],
-			IsNull(D.[IsOutput],0) As [IsOutput]
+			IsNull(D.[IsPassed],0) As [IsPassed],
+			IsNull(D.[IsReturned],0) As [IsReturned],
+			IsNull(D.[IsContributor],0) As [IsContributor],
+			IsNull(D.[IsAltered],0) As [IsAltered],
+			IsNull(D.[AsValue],0) As [AsValue],
+			IsNull(D.[AsReference],0) As [AsReference]
 	From	@Data D
 			Left Join [AppModel].[ProcessArgumentHs] H
 			On	D.[ProcessId] = H.[ProcessId] And
@@ -95,10 +101,13 @@ Begin Try
 				[ArgumentTitle],
 				[ArgumentDescription],
 				[ArgumentName],
-				[ArgumentType],
 				[OrdinalPosition],
-				[IsInput],
-				[IsOutput]
+				[IsPassed],
+				[IsReturned],
+				[IsContributor],
+				[IsAltered],
+				[AsValue],
+				[AsReference]
 		From	@Values
 		Except
 		Select	[ProcessId],
@@ -106,19 +115,25 @@ Begin Try
 				[ArgumentTitle],
 				[ArgumentDescription],
 				[ArgumentName],
-				[ArgumentType],
 				[OrdinalPosition],
-				[IsInput],
-				[IsOutput]
+				[IsPassed],
+				[IsReturned],
+				[IsContributor],
+				[IsAltered],
+				[AsValue],
+				[AsReference]
 		From	[AppModel].[ProcessArgument])
 	Update [AppModel].[ProcessArgument]
 	Set		[ArgumentTitle] = S.[ArgumentTitle],
 			[ArgumentDescription] = S.[ArgumentDescription],
 			[ArgumentName] = S.[ArgumentName],
-			[ArgumentType] = S.[ArgumentType],
 			[OrdinalPosition] = S.[OrdinalPosition],
-			[IsInput] = S.[IsInput],
-			[IsOutput] = S.[IsOutput]
+			[IsPassed] = S.[IsPassed],
+			[IsReturned] = S.[IsReturned],
+			[IsContributor] = S.[IsContributor],
+			[IsAltered] = S.[IsAltered],
+			[AsValue] = S.[AsValue],
+			[AsReference] = S.[AsReference]
 	From	[AppModel].[ProcessArgument] T
 			Inner Join [Delta] S
 			On	T.[ProcessId] = S.[ProcessId] And
@@ -132,19 +147,25 @@ Begin Try
 			[ArgumentTitle],
 			[ArgumentDescription],
 			[ArgumentName],
-			[ArgumentType],
 			[OrdinalPosition],
-			[IsInput],
-			[IsOutput])
+			[IsPassed],
+			[IsReturned],
+			[IsContributor],
+			[IsAltered],
+			[AsValue],
+			[AsReference])
 	Select	S.[ProcessId],
 			S.[ArgumentId],
 			S.[ArgumentTitle],
 			S.[ArgumentDescription],
 			S.[ArgumentName],
-			S.[ArgumentType],
 			S.[OrdinalPosition],
-			S.[IsInput],
-			S.[IsOutput]
+			S.[IsPassed],
+			S.[IsReturned],
+			S.[IsContributor],
+			S.[IsAltered],
+			S.[AsValue],
+			S.[AsReference]
 	From	@Values S
 			Left Join [AppModel].[ProcessArgument] T
 			On	S.[ProcessId] = T.[ProcessId] And

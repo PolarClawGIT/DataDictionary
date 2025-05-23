@@ -91,11 +91,17 @@ namespace DataDictionary.Main.Forms.Model
                 argumentTitleData.DataBindings.Add(new Binding(nameof(argumentTitleData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentTitle)));
                 argumentDescriptionData.DataBindings.Add(new Binding(nameof(argumentDescriptionData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentDescription)));
                 argumentNameData.DataBindings.Add(new Binding(nameof(argumentNameData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentName)));
-                argumentTypeData.DataBindings.Add(new Binding(nameof(argumentTypeData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentType)));
                 argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition)));
 
-                argumentIsInputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsOutput), true, DataSourceUpdateMode.OnValidation, false));
-                argumentIsOutputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsInput), true, DataSourceUpdateMode.OnValidation, false));
+                argumentIsPassedData.DataBindings.Add(new Binding(nameof(argumentIsPassedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsPassed), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsReturnedData.DataBindings.Add(new Binding(nameof(argumentIsReturnedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsReturned), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsContributorData.DataBindings.Add(new Binding(nameof(argumentIsContributorData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsContributor), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsAlteredData.DataBindings.Add(new Binding(nameof(argumentIsAlteredData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsAltered), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentAsValueData.DataBindings.Add(new Binding(nameof(argumentAsValueData.Checked), bindingArgument, nameof(IProcessArgumentValue.AsValue), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentAsReferenceData.DataBindings.Add(new Binding(nameof(argumentAsReferenceData.Checked), bindingArgument, nameof(IProcessArgumentValue.AsReference), true, DataSourceUpdateMode.OnPropertyChanged, false));
+
+                argumentIsInputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsInput), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsOutputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsOutput), true, DataSourceUpdateMode.OnPropertyChanged, false));
 
                 argumentLayout.Enabled = false;
 
@@ -146,12 +152,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
             { value.ArgumentName = new PathIndex(PathIndex.Parse(argumentNameData.Text).ToArray()).MemberFullPath; }
-        }
-
-        private void ArgumentTypeData_Validating(object sender, CancelEventArgs e)
-        {
-            if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
-            { value.ArgumentType = new PathIndex(PathIndex.Parse(argumentTypeData.Text).ToArray()).MemberFullPath; }
         }
 
         private void BindingArgument_AddingNew(object sender, AddingNewEventArgs e)
