@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.AppModel
         String? ArgumentDescription { get; }
 
         /// <summary>
-        /// Process Argument Name within the Subject Area.
+        /// Process Argument technical Name.
         /// </summary>
         String? ArgumentName { get; }
 
@@ -31,14 +31,6 @@ namespace DataDictionary.DataLayer.AppModel
         /// The Position/Order of the Argument
         /// </summary>
         Int32? OrdinalPosition { get; }
-        /*
-        [IsPassed] Bit Not Null,
-	[IsReturned] Bit Not Null,
-	[IsContributor] Bit Not Null,
-	[IsAltered] Bit Not Null,
-	[AsValue] Bit Not Null,
-	[AsReference] Bit Not Null,
-        */
 
         /// <summary>
         /// Is the Argument passed, usually as a parameter

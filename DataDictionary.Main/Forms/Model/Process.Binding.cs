@@ -178,6 +178,19 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current ProcessValue not defined"); }
             }
 
+
+            public void AddArgument(ScopeType scope, PathIndex path)
+            {
+                if (TryGetValue(out ProcessValue? value))
+                {
+                    ProcessArgumentValue newValue = new ProcessArgumentValue(value);
+                    newValue.OrdinalPosition = Arguments.Max(m => m.OrdinalPosition) +1;
+                    //newValue.ArgumentScope = scope; //TODO Missing Scope
+                    newValue.ArgumentPath = path;
+                    newValue.ArgumentTitle = path.Member;
+                }
+            }
+
             public void AddSubjectArea(ISubjectAreaIndex index)
             {
                 if (TryGetValue(out ProcessValue? value))
@@ -283,6 +296,8 @@ namespace DataDictionary.Main.Forms.Model
                 { return new ProcessAliasValue(value); }
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
+
+
         }
     }
 }

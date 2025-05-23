@@ -13,7 +13,12 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <inheritdoc/>
     public interface IProcessArgumentValue : IProcessArgumentItem,
         IProcessIndex, IScopeType, ITemporal, IBindingRowState
-    { }
+    {
+        /// <summary>
+        /// Returns the Argument Name converted to a Path.
+        /// </summary>
+        PathIndex ArgumentPath { get; }
+    }
 
     /// <inheritdoc/>
     public class ProcessArgumentValue : ProcessArgumentItem, IProcessArgumentValue
@@ -53,16 +58,15 @@ namespace DataDictionary.BusinessLayer.AppModel
             };
         }
 
-        // <summary>
-        // Constructor for ProcessArgumentValue
-        // </summary>
-        // <param name="Process"></param>
-        // <param name="Argument"></param>
-        //public ProcessArgumentValue(IProcessIndex Process, ArgumentValue Argument) : this(Process)
-        //{
-        //    ArgumentKnownAs = Argument.ArgumentTitle;
-        //    ArgumentPath = Argument.ArgumentPath;
-        //    FindArgument = (path) => Argument;
-        //}
+        /// <inheritdoc/>
+        public PathIndex ArgumentPath
+        {
+            get
+            {
+                return new PathIndex(
+                    new PathIndex(PathIndex.Parse(base.ArgumentName).ToArray()));
+            }
+            set { base.ArgumentName = value.MemberFullPath; }
+        }
     }
 }

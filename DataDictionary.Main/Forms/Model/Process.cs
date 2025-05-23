@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -145,7 +147,46 @@ namespace DataDictionary.Main.Forms.Model
 
         private void ArgumentSelectCommand_Click(object sender, EventArgs e)
         {
+            if (bindingArgument.DataSource is IList<ProcessArgumentValue> arguments)
+            {
+                using (SelectionDialog dialog = new SelectionDialog(this))
+                {
+                    dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                    dialog.FilterScopes.Add(ScopeType.ModelEntity);
+                    dialog.FilterScopes.Add(ScopeType.ModelEntityAttribute);
+                    dialog.FilterScopes.Add(ScopeType.ModelProcess);
+                    IEnumerable<PathIndex> selected = arguments.Select(s => s.ArgumentPath);
 
+                    dialog.BuildData(selected, GetDescription);
+
+                    if (dialog.ShowDialog(this) is DialogResult.OK)
+                    {
+                        foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                        { formBinding.AddArgument(item.Scope, item.Path); }
+
+                        bindingArgument.ResetCurrentItem();
+                    }
+                }
+            }
+
+            String GetDescription(INamedScopeSourceValue value)
+            {   // Needed a physical method rather then a Lambda expression.
+                // Properties don't get passed as expected.
+                // I needed the property passed by Reference and that did not work.
+                if (value is AttributeValue attribute)
+                { return attribute.AttributeDescription ?? String.Empty; }
+
+                else if (value is EntityValue entity)
+                { return entity.EntityDescription ?? String.Empty; }
+
+                else if (value is EntityAttributeValue entityAttribute)
+                { return entityAttribute.AttributeDescription ?? String.Empty; }
+
+                else if (value is ProcessValue process)
+                { return process.ProcessDescription ?? String.Empty; }
+
+                else { return String.Empty; }
+            }
         }
 
         private void ArgumentNameData_Validating(object sender, CancelEventArgs e)
