@@ -334,7 +334,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -343,7 +343,7 @@ namespace DataDictionary.Main.Forms.Model
             propertyData.Dock = DockStyle.Fill;
             propertyData.Location = new Point(3, 3);
             propertyData.Name = "propertyData";
-            propertyData.Size = new Size(406, 337);
+            propertyData.Size = new Size(186, 66);
             propertyData.TabIndex = 0;
             // 
             // definitionTab
@@ -353,7 +353,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(412, 343);
+            definitionTab.Size = new Size(192, 72);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
@@ -362,7 +362,7 @@ namespace DataDictionary.Main.Forms.Model
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(3, 3);
             definitionData.Name = "definitionData";
-            definitionData.Size = new Size(406, 337);
+            definitionData.Size = new Size(186, 66);
             definitionData.TabIndex = 0;
             // 
             // aliasTab
@@ -372,7 +372,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -381,7 +381,7 @@ namespace DataDictionary.Main.Forms.Model
             aliasData.Dock = DockStyle.Fill;
             aliasData.Location = new Point(3, 3);
             aliasData.Name = "aliasData";
-            aliasData.Size = new Size(406, 337);
+            aliasData.Size = new Size(186, 66);
             aliasData.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -438,13 +438,9 @@ namespace DataDictionary.Main.Forms.Model
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
             entityTab.Padding = new Padding(3);
-            entityTab.Size = new Size(412, 343);
+            entityTab.Size = new Size(192, 72);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
-            // 
-            // bindingSubjectArea
-            // 
-            bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
             // 
             // Attribute
             // 

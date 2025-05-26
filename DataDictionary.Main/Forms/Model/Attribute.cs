@@ -165,32 +165,6 @@ namespace DataDictionary.Main.Forms.Model
             });
         }
 
-        private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (addingSubject is ISubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
-            {
-                AttributeSubjectAreaValue newItem = new AttributeSubjectAreaValue(attribute, subject);
-                e.NewObject = newItem;
-            }
-            addingSubject = null;
-        }
-
-        ISubjectAreaValue? addingSubject = null;
-        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
-        {
-            addingSubject = e;
-            bindingSubjectArea.AddNew();
-        }
-
-        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
-        {
-            SubjectAreaIndex key = new SubjectAreaIndex(e);
-
-            if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
-                && data.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue target)
-            { bindingSubjectArea.Remove(target); }
-        }
-
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
             PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());

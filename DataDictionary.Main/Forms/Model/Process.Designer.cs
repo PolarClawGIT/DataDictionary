@@ -495,7 +495,7 @@
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
             subjectAreaTab.Padding = new Padding(3);
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(534, 487);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -511,7 +511,7 @@
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(186, 66);
+            subjectAreaLayout.Size = new Size(528, 481);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -519,7 +519,7 @@
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(180, 10);
+            subjectArea.Size = new Size(522, 425);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -531,9 +531,10 @@
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(180, 44);
+            memberNameData.Size = new Size(522, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
+            memberNameData.Validating += MemberNameData_Validating;
             // 
             // bindingArgument
             // 

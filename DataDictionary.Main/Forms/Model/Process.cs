@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 argumentKnownAsData.DataBindings.Add(new Binding(nameof(argumentKnownAsData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentKnownAs)));
                 argumentNameData.DataBindings.Add(new Binding(nameof(argumentNameData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentName)));
-                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition),true, DataSourceUpdateMode.OnPropertyChanged,String.Empty));
+                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
                 argumentIsPassedData.DataBindings.Add(new Binding(nameof(argumentIsPassedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsPassed), true, DataSourceUpdateMode.OnPropertyChanged, false));
                 argumentIsReturnedData.DataBindings.Add(new Binding(nameof(argumentIsReturnedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsReturned), true, DataSourceUpdateMode.OnPropertyChanged, false));
@@ -224,6 +224,12 @@ namespace DataDictionary.Main.Forms.Model
             if (formBinding.TryGetArgument(out ProcessArgumentValue? value))
             { argumentLayout.Enabled = true; }
             else { argumentLayout.Enabled = false; }
+        }
+
+        private void MemberNameData_Validating(object sender, CancelEventArgs e)
+        {
+            PathIndex path = new PathIndex(PathIndex.Parse(memberNameData.Text).ToArray());
+            memberNameData.Text = path.MemberFullPath;
         }
     }
 }
