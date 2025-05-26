@@ -2,23 +2,22 @@
 -- Temporal View
 With [Dates] As (
 	Select	[ProcessId],
-			[ArgumentId],
+			[ArgumentAliasId],
 			[SysStart],
 			[SysEnd]
 	From	[AppModel].[ProcessArgument]
 	Union
 	Select	[ProcessId],
-			[ArgumentId],
+			[ArgumentAliasId],
 			[SysStart],
 			[SysEnd]
 	From	[HsModel].[ProcessArgument]
 	Where	[SysStart] != [SysEnd])
 Select	D.[ProcessId],
-		D.[ArgumentId],
 		FA.[ProcessTitle],
-		D.[ArgumentTitle],
-		D.[ArgumentDescription],
-		D.[ArgumentName],
+		D.[ArgumentAliasId], -- PK
+		FL.[ArgumentName],
+		D.[ArgumentKnownAs],
 		D.[OrdinalPosition],
 		D.[IsPassed],
 		D.[IsReturned],
@@ -42,13 +41,13 @@ From	[AppModel].[ProcessArgument] D
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
 			Where	[ProcessId] = D.[ProcessId] And
-					[ArgumentId] = D.[ArgumentId] And
+					[ArgumentAliasId] = D.[ArgumentAliasId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
 			Where	[ProcessId] = D.[ProcessId] And
-					[ArgumentId] = D.[ArgumentId] And
+					[ArgumentAliasId] = D.[ArgumentAliasId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -65,4 +64,12 @@ From	[AppModel].[ProcessArgument] D
 			Where	[ProcessId] = D.[ProcessId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FA
+		Outer Apply (
+			Select	Top 1
+					[AliasId],
+					[AliasNameSpace] As [ArgumentName]
+			From	[AppModel].[AliasHS]
+			Where	[AliasId] = D.[ArgumentAliasId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FL
 GO

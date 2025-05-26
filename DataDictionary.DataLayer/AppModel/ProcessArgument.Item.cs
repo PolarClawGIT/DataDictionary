@@ -13,17 +13,12 @@ namespace DataDictionary.DataLayer.AppModel
         ITemporalItem
     {
         /// <summary>
-        /// Title of the Process Argument, such as the Parameter Name.
+        /// The Name of the Argument as known to the Process.
         /// </summary>
-        String? ArgumentTitle { get; }
+        String? ArgumentKnownAs { get; }
 
         /// <summary>
-        /// Description of the Process Argument
-        /// </summary>
-        String? ArgumentDescription { get; }
-
-        /// <summary>
-        /// Process Argument technical Name.
+        /// The NameSpace of the Alias of the Argument
         /// </summary>
         String? ArgumentName { get; }
 
@@ -86,17 +81,10 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? ArgumentTitle
+        public String? ArgumentKnownAs
         {
-            get { return GetValue(nameof(ArgumentTitle)); }
-            set { SetValue(nameof(ArgumentTitle), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ArgumentDescription
-        {
-            get { return GetValue(nameof(ArgumentDescription)); }
-            set { SetValue(nameof(ArgumentDescription), value); }
+            get { return GetValue(nameof(ArgumentKnownAs)); }
+            set { SetValue(nameof(ArgumentKnownAs), value); }
         }
 
         /// <inheritdoc/>
@@ -190,7 +178,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// </summary>
         public ProcessArgumentItem() : base()
         {
-            ArgumentTitle = "{new Argument}";
+            ArgumentKnownAs = "{new Argument}";
 
             Temporal = new TemporalItem()
             {
@@ -210,8 +198,7 @@ namespace DataDictionary.DataLayer.AppModel
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(ProcessId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(ArgumentTitle), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ArgumentDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ArgumentKnownAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ArgumentName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(IsPassed), typeof(Boolean)){ AllowDBNull = true},

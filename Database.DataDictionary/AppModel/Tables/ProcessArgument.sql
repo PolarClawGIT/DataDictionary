@@ -1,10 +1,8 @@
 ﻿CREATE TABLE [AppModel].[ProcessArgument]
 (
 	[ProcessId]             UniqueIdentifier Not Null,
-	[ArgumentId]			UniqueIdentifier Not Null CONSTRAINT [DF_ArgumentId] DEFAULT (newid()),
-	[ArgumentTitle]			[App_DataDictionary].[typeTitle]       Not Null,
-	[ArgumentDescription]	[App_DataDictionary].[typeDescription] Null,
-	[ArgumentName]			[AppModel].[typeQualifiedName]         Null, -- This is the Entity or Attribute Name
+	[ArgumentAliasId]		UniqueIdentifier Not Null,
+	[ArgumentKnownAs]		[App_DataDictionary].[typeTitle] Not Null, -- What to call the Argument within this Entity (default is the Attribute Name)
 	[OrdinalPosition]       Int Not Null,
 	[IsPassed]				Bit Not Null CONSTRAINT [DF_ProcessArgumentPassed] DEFAULT (0), -- The Argument is passed to the process (Input)
 	[IsReturned]			Bit Not Null CONSTRAINT [DF_ProcessArgumentReturned] DEFAULT (0), -- The Argument is returned by the process (Output)
@@ -19,9 +17,9 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ProcessArgument_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_ProcessArgument] PRIMARY KEY CLUSTERED ([ProcessId] ASC, [ArgumentId] ASC ),	
+	CONSTRAINT [PK_ProcessArgument] PRIMARY KEY CLUSTERED ([ProcessId] ASC, [ArgumentAliasId] ASC ),	
 	CONSTRAINT [FK_ProcessArgument_Process] FOREIGN KEY ([ProcessId]) REFERENCES [AppModel].[Process] ([ProcessId]),
-	CONSTRAINT [AK_ProcessArgumentTitle] UNIQUE ([ProcessId] ASC, [ArgumentTitle] ASC),
+	CONSTRAINT [AK_ProcessArgumentTitle] UNIQUE ([ProcessId] ASC, [ArgumentKnownAs] ASC),
 	CONSTRAINT [AK_ProcessArgumentPosition] UNIQUE ([ProcessId] ASC, [OrdinalPosition] ASC),
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessArgument]))
 GO

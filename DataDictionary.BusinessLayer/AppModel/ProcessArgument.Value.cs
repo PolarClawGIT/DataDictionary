@@ -40,9 +40,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             dataValue = new DataValue(this)
             {
                 GetIndex = () => new ProcessIndex(this),
-                GetTitle = () => ArgumentTitle ?? String.Empty,
+                GetTitle = () => ArgumentKnownAs ?? String.Empty,
                 GetScope = () => Scope,
-                IsTitleChanged = (e) => e.PropertyName is nameof(ArgumentTitle)
+                IsTitleChanged = (e) => e.PropertyName is nameof(ArgumentKnownAs)
             };
         }
 
@@ -52,9 +52,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             dataValue = new DataValue(this)
             {
                 GetIndex = () => new ProcessIndex(this),
-                GetTitle = () => ArgumentTitle ?? String.Empty,
+                GetTitle = () => ArgumentKnownAs ?? String.Empty,
                 GetScope = () => Scope,
-                IsTitleChanged = (e) => e.PropertyName is nameof(ArgumentTitle)
+                IsTitleChanged = (e) => e.PropertyName is nameof(ArgumentKnownAs)
             };
         }
 
@@ -66,7 +66,11 @@ namespace DataDictionary.BusinessLayer.AppModel
                 return new PathIndex(
                     new PathIndex(PathIndex.Parse(base.ArgumentName).ToArray()));
             }
-            set { base.ArgumentName = value.MemberFullPath; }
+            set
+            {
+                base.ArgumentName = value.MemberFullPath;
+                OnPropertyChanged(nameof(ArgumentPath));
+            }
         }
     }
 }

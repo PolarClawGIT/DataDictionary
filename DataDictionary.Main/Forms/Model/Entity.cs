@@ -91,8 +91,8 @@ namespace DataDictionary.Main.Forms.Model
                 attributeData.AutoGenerateColumns = false;
                 attributeData.DataSource = bindingAttribute;
 
-                attributePathData.DataBindings.Add(new Binding(nameof(attributePathData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributePath)));
-                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
+                attributeNameData.DataBindings.Add(new Binding(nameof(attributeNameData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
+                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 attributeKnownAsData.DataBindings.Add(new Binding(nameof(attributeKnownAsData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
                 attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
                 attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
@@ -167,7 +167,7 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     if (temporal.TryGetValue(out EntityValue? entity))
                     { return new Entity(entity, new TemporalIndex(temporal)); }
-                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to EntityValue"); }
                 }
             });
         }
@@ -217,10 +217,10 @@ namespace DataDictionary.Main.Forms.Model
         private void AttributeNewCommand_Click(object sender, EventArgs e)
         { formBinding.AddAttribute(); }
 
-        private void AttributePathData_Validating(object sender, CancelEventArgs e)
+        private void AttributeNameData_Validating(object sender, CancelEventArgs e)
         {
             if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
-            { value.AttributePath = new PathIndex(PathIndex.Parse(attributePathData.Text).ToArray()); }
+            { value.AttributePath = new PathIndex(PathIndex.Parse(attributeNameData.Text).ToArray()); }
         }
 
 

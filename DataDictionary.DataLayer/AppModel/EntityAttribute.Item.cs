@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// <summary>
         /// The NameSpace of the Alias of the Attribute
         /// </summary>
-        String? AttributePath { get; }
+        String? AttributeName { get; }
 
         /// <summary>
         /// Is the Attribute Nullable
@@ -57,10 +57,10 @@ namespace DataDictionary.DataLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public String? AttributePath
+        public String? AttributeName
         {
-            get { return GetValue(nameof(AttributePath)); }
-            set { SetValue(nameof(AttributePath), value); }
+            get { return GetValue(nameof(AttributeName)); }
+            set { SetValue(nameof(AttributeName), value); }
         }
 
         /// <inheritdoc/>
@@ -113,7 +113,7 @@ namespace DataDictionary.DataLayer.AppModel
         [
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeKnownAs), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(AttributePath), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(IsNullable), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(IsPrimaryKey), typeof(Boolean)){ AllowDBNull = true},

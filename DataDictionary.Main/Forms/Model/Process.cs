@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Forms.Model
         public Process(IProcessIndex? process) : this()
         {
             if (process is null)
-            { process = formBinding.NewValue(); }
+            { process = formBinding.Create(); }
             else { formBinding.SetPosition(process); }
         }
 
@@ -90,10 +90,9 @@ namespace DataDictionary.Main.Forms.Model
                 argumentData.AutoGenerateColumns = false;
                 argumentData.DataSource = bindingArgument;
 
-                argumentTitleData.DataBindings.Add(new Binding(nameof(argumentTitleData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentTitle)));
-                argumentDescriptionData.DataBindings.Add(new Binding(nameof(argumentDescriptionData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentDescription)));
+                argumentKnownAsData.DataBindings.Add(new Binding(nameof(argumentKnownAsData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentKnownAs)));
                 argumentNameData.DataBindings.Add(new Binding(nameof(argumentNameData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentName)));
-                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition)));
+                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition),true, DataSourceUpdateMode.OnPropertyChanged,String.Empty));
 
                 argumentIsPassedData.DataBindings.Add(new Binding(nameof(argumentIsPassedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsPassed), true, DataSourceUpdateMode.OnPropertyChanged, false));
                 argumentIsReturnedData.DataBindings.Add(new Binding(nameof(argumentIsReturnedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsReturned), true, DataSourceUpdateMode.OnPropertyChanged, false));
@@ -125,21 +124,40 @@ namespace DataDictionary.Main.Forms.Model
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+
+            formBinding.Remove();
+            IsLocked(formBinding.GetLocked());
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Remove();
+            formBinding.Save(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         private void ArgumentNewCommand_Click(object sender, EventArgs e)
@@ -162,7 +180,7 @@ namespace DataDictionary.Main.Forms.Model
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
-                        { formBinding.AddArgument(item.Scope, item.Path); }
+                        { formBinding.AddArgument(item.Path); }
 
                         bindingArgument.ResetCurrentItem();
                     }

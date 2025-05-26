@@ -74,7 +74,7 @@ namespace DataDictionary.Main.Forms.Model
                 BindingArgument.DataSource = Arguments;
             }
 
-            public IProcessIndex? NewValue()
+            public IProcessIndex? Create()
             {
                 ProcessValue newValue = new ProcessValue();
                 processData.Values.Add(newValue);
@@ -179,16 +179,22 @@ namespace DataDictionary.Main.Forms.Model
             }
 
 
-            public void AddArgument(ScopeType scope, PathIndex path)
+            public void AddArgument(PathIndex path)
             {
                 if (TryGetValue(out ProcessValue? value))
                 {
                     ProcessArgumentValue newValue = new ProcessArgumentValue(value);
-                    newValue.OrdinalPosition = Arguments.Max(m => m.OrdinalPosition) +1;
-                    //newValue.ArgumentScope = scope; //TODO Missing Scope
+                    newValue.OrdinalPosition = Arguments.Count + 1;
                     newValue.ArgumentPath = path;
-                    newValue.ArgumentTitle = path.Member;
+                    newValue.ArgumentKnownAs = path.Member;
+
+                    Arguments.Add(newValue);
                 }
+
+                var positions = Arguments.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.ArgumentKnownAs).ToList();
+                foreach (ProcessArgumentValue item in Arguments)
+                { item.OrdinalPosition = positions.IndexOf(item) +1; }
+
             }
 
             public void AddSubjectArea(ISubjectAreaIndex index)
@@ -239,12 +245,35 @@ namespace DataDictionary.Main.Forms.Model
                 return TryGetValue(out ProcessValue? current) && key.Equals(current);
             }
 
+            public void SetPosition(IProcessIndex process, ITemporalIndex temporal)
+            {
+                SetPosition(process);
+                temporalIndex = new TemporalIndex(temporal);
+            }
+
+            public IAliasSubType NewAlias()
+            {
+                if (TryGetValue(out ProcessValue? value))
+                { return new ProcessAliasValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+            }
+
+            public void Save(Action<RunWorkerCompletedEventArgs> onCompleting)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(processData.Save(factory, processIndex));
+
+                DoWork(work, onCompleting);
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs> onCompleting)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
 
                 if (temporalIndex is null)
@@ -258,46 +287,18 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(processData.Load(factory, processIndex, temporalIndex));
                 }
 
-                DoWork(work, StartBinding);
-
-                void StopBinding()
-                {
-                    BindingProcess.SuspendBinding();
-                    BindingProperty.SuspendBinding();
-                    BindingAlias.SuspendBinding();
-                    BindingSubjectArea.SuspendBinding();
-                    BindingDefinition.SuspendBinding();
-                    BindingArgument.SuspendBinding();
-                }
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(processIndex);
-                    BindingProcess.ResumeBinding();
-                    BindingProperty.ResumeBinding();
-                    BindingAlias.ResumeBinding();
-                    BindingSubjectArea.ResumeBinding();
-                    BindingDefinition.ResumeBinding();
-                    BindingArgument.ResumeBinding();
-
-                    if (onCompleting is not null) { onCompleting(args); }
-                }
+                DoWork(work, onCompleting);
             }
 
-            public void SetPosition(IProcessIndex process, ITemporalIndex temporal)
-            {
-                SetPosition(process);
-                temporalIndex = new TemporalIndex(temporal);
-            }
-
-            public IAliasSubType NewAlias ()
+            public void Remove()
             {
                 if (TryGetValue(out ProcessValue? value))
-                { return new ProcessAliasValue(value); }
-                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+                {
+                    processData.RaiseListChangedEvents = false;
+                    processData.Remove(value);
+                    SetPosition(value);
+                }
             }
-
-
         }
     }
 }

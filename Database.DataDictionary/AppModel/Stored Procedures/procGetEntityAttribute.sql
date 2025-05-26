@@ -12,7 +12,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDateTime())
 
 Select	[EntityId],
 		[AttributeKnownAs],
-		[AttributePath],
+		[AttributeName],
 		[OrdinalPosition],
 		[IsNullable],
 		[IsPrimaryKey],

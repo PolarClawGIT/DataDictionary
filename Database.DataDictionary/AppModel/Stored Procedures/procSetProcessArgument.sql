@@ -29,10 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ProcessId]				UniqueIdentifier Not Null,
-		[ArgumentId]			UniqueIdentifier Not Null,
-		[ArgumentTitle]			[App_DataDictionary].[typeTitle]       Not Null,
-		[ArgumentDescription]	[App_DataDictionary].[typeDescription] Null,
-		[ArgumentName]			[AppModel].[typeQualifiedName]         Null,
+		[ArgumentAliasId]       UniqueIdentifier Not Null,
+		[ArgumentKnownAs]	    [App_DataDictionary].[typeTitle] Not Null,
 		[OrdinalPosition]       Int Not Null,
 		[IsPassed]				Bit Not Null,
 		[IsReturned]			Bit Not Null,
@@ -40,16 +38,23 @@ Begin Try
 		[IsAltered]				Bit Not Null,
 		[AsValue]				Bit Not Null,
 		[AsReference]			Bit Not Null,
-		Primary Key ([ProcessId], [ArgumentId]),
-		Unique ([ProcessId], [ArgumentTitle]),
+		Primary Key ([ProcessId], [ArgumentAliasId]),
+		Unique ([ProcessId], [ArgumentKnownAs]),
 		Unique ([ProcessId], [OrdinalPosition]))
+
+	Declare @Alias [AppModel].[typeAlias];
+
+	Insert Into @Alias ([AliasNameSpace])
+	Select	[ArgumentName]
+	From	@Data
+	Group By [ArgumentName]
+
+	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
 
 	Insert Into @Values
 	Select	D.[ProcessId],
-			Coalesce(H.[ArgumentId], NewId()) As [ArgumentId],
-			NullIf(Trim(D.[ArgumentTitle]),'') As [ProcessTitle],
-			NullIf(Trim(D.[ArgumentDescription]),'') As [ProcessDescription],
-			N.[ArgumentName],
+			[AppModel].[funcAliasId](D.[ArgumentName]) As [ArgumentAliasId],
+			NullIf(Trim(D.[ArgumentKnownAs]),'') As [ArgumentKnownAs],
 			D.[OrdinalPosition],
 			IsNull(D.[IsPassed],0) As [IsPassed],
 			IsNull(D.[IsReturned],0) As [IsReturned],
@@ -58,17 +63,6 @@ Begin Try
 			IsNull(D.[AsValue],0) As [AsValue],
 			IsNull(D.[AsReference],0) As [AsReference]
 	From	@Data D
-			Left Join [AppModel].[ProcessArgumentHs] H
-			On	D.[ProcessId] = H.[ProcessId] And
-				D.[OrdinalPosition] = H.[OrdinalPosition]
-			Outer Apply (
-				Select	[QualifiedName] As [ArgumentName]
-				From	[AppModel].[funcParseName](D.[ArgumentName])
-				Where	[IsBase] = 1) N
-			Outer Apply (
-				Select	[QualifiedName] As [ArgumentType]
-				From	[AppModel].[funcParseName](D.[ArgumentType])
-				Where	[IsBase] = 1) T
 	Where	(@ProcessId is Null Or @ProcessId = D.[ProcessId]) And
 			(@ModelId is Null Or D.[ProcessId] In (
 				Select	[ProcessId]
@@ -84,9 +78,9 @@ Begin Try
 	From	[AppModel].[ProcessArgument] T
 			Left Join @Values V
 			On	T.[ProcessId] = V.[ProcessId] And
-				T.[ArgumentId] = V.[ArgumentId]
+				T.[ArgumentAliasId] = V.[ArgumentAliasId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, T.[ProcessId], 1)
-	Where	V.[ArgumentId] is Null And
+	Where	V.[ArgumentAliasId] is Null And
 			(@ProcessId is Not Null Or @ModelId is Not Null) And
 			(@ProcessId is Null Or @ProcessId = T.[ProcessId])  And
 			(@ModelId is Null Or T.[ProcessId] In (
@@ -97,10 +91,8 @@ Begin Try
 
 	;With [Delta] As (
 		Select	[ProcessId],
-				[ArgumentId],
-				[ArgumentTitle],
-				[ArgumentDescription],
-				[ArgumentName],
+				[ArgumentAliasId],
+				[ArgumentKnownAs],
 				[OrdinalPosition],
 				[IsPassed],
 				[IsReturned],
@@ -111,10 +103,8 @@ Begin Try
 		From	@Values
 		Except
 		Select	[ProcessId],
-				[ArgumentId],
-				[ArgumentTitle],
-				[ArgumentDescription],
-				[ArgumentName],
+				[ArgumentAliasId],
+				[ArgumentKnownAs],
 				[OrdinalPosition],
 				[IsPassed],
 				[IsReturned],
@@ -124,9 +114,7 @@ Begin Try
 				[AsReference]
 		From	[AppModel].[ProcessArgument])
 	Update [AppModel].[ProcessArgument]
-	Set		[ArgumentTitle] = S.[ArgumentTitle],
-			[ArgumentDescription] = S.[ArgumentDescription],
-			[ArgumentName] = S.[ArgumentName],
+	Set		[ArgumentKnownAs] = S.[ArgumentKnownAs],
 			[OrdinalPosition] = S.[OrdinalPosition],
 			[IsPassed] = S.[IsPassed],
 			[IsReturned] = S.[IsReturned],
@@ -137,16 +125,14 @@ Begin Try
 	From	[AppModel].[ProcessArgument] T
 			Inner Join [Delta] S
 			On	T.[ProcessId] = S.[ProcessId] And
-				T.[ArgumentId] = S.[ArgumentId]
+				T.[ArgumentAliasId] = S.[ArgumentAliasId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, S.[ProcessId], 1)
 	Print FormatMessage ('Update [AppModel].[ProcessArgument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppModel].[ProcessArgument] (
 			[ProcessId],
-			[ArgumentId],
-			[ArgumentTitle],
-			[ArgumentDescription],
-			[ArgumentName],
+			[ArgumentAliasId],
+			[ArgumentKnownAs],
 			[OrdinalPosition],
 			[IsPassed],
 			[IsReturned],
@@ -155,10 +141,8 @@ Begin Try
 			[AsValue],
 			[AsReference])
 	Select	S.[ProcessId],
-			S.[ArgumentId],
-			S.[ArgumentTitle],
-			S.[ArgumentDescription],
-			S.[ArgumentName],
+			S.[ArgumentAliasId],
+			S.[ArgumentKnownAs],
 			S.[OrdinalPosition],
 			S.[IsPassed],
 			S.[IsReturned],
@@ -169,9 +153,9 @@ Begin Try
 	From	@Values S
 			Left Join [AppModel].[ProcessArgument] T
 			On	S.[ProcessId] = T.[ProcessId] And
-				S.[ArgumentId] = T.[ArgumentId]
+				S.[ArgumentAliasId] = T.[ArgumentAliasId]
 			Cross Apply [AppSecurity].[funcModelProcessAuthorization](@ModelId, S.[ProcessId], 1)
-	Where	T.[ArgumentId] is Null
+	Where	T.[ArgumentAliasId] is Null
 	Print FormatMessage ('Insert [AppModel].[ProcessArgument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

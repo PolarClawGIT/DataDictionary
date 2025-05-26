@@ -160,7 +160,7 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     if (temporal.TryGetValue(out AttributeValue? attribute))
                     { return new Attribute(attribute, new TemporalIndex(temporal)); }
-                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to AttributeValue"); }
                 }
             });
         }

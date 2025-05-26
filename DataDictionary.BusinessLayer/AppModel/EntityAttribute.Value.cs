@@ -17,6 +17,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         new Boolean? IsNullable { get; set; }
 
         /// <summary>
+        /// Returns the Attribute Name converted to a Path.
+        /// </summary>
+        PathIndex AttributePath { get; set; }
+
+        /// <summary>
         /// Returns the Attribute, if found.
         /// </summary>
         IAttributeValue? Attribute { get; }
@@ -76,15 +81,19 @@ namespace DataDictionary.BusinessLayer.AppModel
         public String? AttributeDescription
         { get { return Attribute is IAttributeValue value ? value.AttributeDescription : null; } }
 
-        /// <inheritdoc cref="EntityAttributeItem.AttributePath"/>
-        public new PathIndex AttributePath
+        /// <inheritdoc/>
+        public PathIndex AttributePath
         {
             get
             {
                 return new PathIndex(
-                    new PathIndex(PathIndex.Parse(base.AttributePath).ToArray()));
+                    new PathIndex(PathIndex.Parse(base.AttributeName).ToArray()));
             }
-            set { base.AttributePath = value.MemberFullPath; }
+            set
+            {
+                base.AttributeName = value.MemberFullPath;
+                OnPropertyChanged(nameof(AttributePath));
+            }
         }
 
         /// <inheritdoc/>

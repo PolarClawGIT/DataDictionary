@@ -516,16 +516,10 @@
     <Build Include="AppSecurity\Policy\policyModelProcess.sql" />
     <Build Include="AppSecurity\Policy\policyModelRelationship.sql" />
     <Build Include="AppModel\Views\Process.Hs.sql" />
-    <Build Include="AppModel\Views\Relationship.Hs.sql" />
     <Build Include="AppModel\Views\ProcessAlias.Hs.sql" />
     <Build Include="AppModel\Views\ProcessDefinition.Hs.sql" />
     <Build Include="AppModel\Views\ProcessProperty.Hs.sql" />
     <Build Include="AppModel\Views\ProcessSubjectArea.Hs.sql" />
-    <Build Include="AppModel\Views\RelationshipAlias.Hs.sql" />
-    <Build Include="AppModel\Views\RelationshipDefinition.Hs.sql" />
-    <Build Include="AppModel\Views\RelationshipProperty.Hs.sql" />
-    <Build Include="AppModel\Views\RelationshipSubjectArea.Hs.sql" />
-    <Build Include="AppModel\Views\RelationshipAttribute.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcess.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessAlias.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessDefinition.sql" />
@@ -571,6 +565,12 @@
     <Build Include="AppModel\Views\ProcessArgument.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessArgument.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessArgument.sql" />
+    <Build Include="AppModel\Views\Relationship.Hs.sql" />
+    <Build Include="AppModel\Views\RelationshipAlias.Hs.sql" />
+    <Build Include="AppModel\Views\RelationshipAttribute.Hs.sql" />
+    <Build Include="AppModel\Views\RelationshipDefinition.Hs.sql" />
+    <Build Include="AppModel\Views\RelationshipProperty.Hs.sql" />
+    <Build Include="AppModel\Views\RelationshipSubjectArea.Hs.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

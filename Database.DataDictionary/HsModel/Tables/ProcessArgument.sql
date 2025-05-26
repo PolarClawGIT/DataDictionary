@@ -1,10 +1,8 @@
 ﻿CREATE TABLE [HsModel].[ProcessArgument]
 (
 	[ProcessId]             UniqueIdentifier Not Null,
-	[ArgumentId]			UniqueIdentifier Not Null,
-	[ArgumentTitle]			[App_DataDictionary].[typeTitle]       Not Null,
-	[ArgumentDescription]	[App_DataDictionary].[typeDescription] Null,
-	[ArgumentName]			[AppModel].[typeQualifiedName]         Null,
+	[ArgumentAliasId]		UniqueIdentifier Not Null,
+	[ArgumentKnownAs]		[App_DataDictionary].[typeTitle] Not Null,
 	[OrdinalPosition]       Int Not Null,
 	[IsPassed]				Bit Not Null,
 	[IsReturned]			Bit Not Null,
@@ -20,5 +18,5 @@ CREATE CLUSTERED INDEX [IX_ProcessArgument]
     ON [HsModel].[ProcessArgument]([SysEnd] ASC, [SysStart] ASC)
 GO
 CREATE INDEX [FK_PProcessArgument]
-    ON [HsModel].[ProcessArgument]([ProcessId] ASC, [ArgumentId] ASC)
+    ON [HsModel].[ProcessArgument]([ProcessId] ASC, [ArgumentAliasId] ASC)
 GO
