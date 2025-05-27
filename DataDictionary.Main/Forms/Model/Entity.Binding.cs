@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Model
                 return newValue;
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -179,6 +179,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
+                    entityData = BusinessData.Model.Entities;
                     work.AddRange(entityData.Delete(entityIndex));
                     work.AddRange(entityData.Load(factory, entityIndex));
                 }
@@ -188,7 +189,13 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(entityData.Load(factory, entityIndex, temporalIndex));
                 }
 
-                DoWork(work, onCompleting);
+                DoWork(work, StartBinding);
+
+                void StartBinding(RunWorkerCompletedEventArgs args)
+                {
+                    SetPosition(entityIndex);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)

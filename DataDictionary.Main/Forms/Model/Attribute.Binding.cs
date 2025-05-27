@@ -195,6 +195,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
+                    attributeData = BusinessData.Model.Attributes;
                     work.AddRange(attributeData.Delete(attributeIndex));
                     work.AddRange(attributeData.Load(factory, attributeIndex));
                 }
@@ -204,7 +205,13 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
                 }
 
-                DoWork(work, onComplete);
+                DoWork(work, StartBinding);
+
+                void StartBinding(RunWorkerCompletedEventArgs args)
+                {
+                    SetPosition(attributeIndex);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)

@@ -269,7 +269,7 @@ namespace DataDictionary.Main.Forms.Model
                 DoWork(work, onCompleting);
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs> onCompleting)
+            public void Load(Action<RunWorkerCompletedEventArgs> onComplete)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -278,6 +278,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
+                    processData = BusinessData.Model.Processes;
                     work.AddRange(processData.Delete(processIndex));
                     work.AddRange(processData.Load(factory, processIndex));
                 }
@@ -287,7 +288,13 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(processData.Load(factory, processIndex, temporalIndex));
                 }
 
-                DoWork(work, onCompleting);
+                DoWork(work, StartBinding);
+
+                void StartBinding(RunWorkerCompletedEventArgs args)
+                {
+                    SetPosition(processIndex);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
 
             public void Remove()
