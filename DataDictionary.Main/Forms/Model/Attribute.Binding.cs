@@ -191,7 +191,6 @@ namespace DataDictionary.Main.Forms.Model
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
 
                 if (temporalIndex is null)
@@ -205,28 +204,7 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
                 }
 
-                DoWork(work, StartBinding);
-
-                void StopBinding()
-                {
-                    BindingAttribute.SuspendBinding();
-                    BindingProperty.SuspendBinding();
-                    BindingAlias.SuspendBinding();
-                    BindingSubjectArea.SuspendBinding();
-                    BindingDefinition.SuspendBinding();
-                }
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
-                    BindingProperty.ResumeBinding();
-                    BindingAlias.ResumeBinding();
-                    BindingSubjectArea.ResumeBinding();
-                    BindingDefinition.ResumeBinding();
-
-                    if (onComplete is not null) { onComplete(args); }
-                }
+                DoWork(work, onComplete);
             }
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
@@ -234,35 +212,10 @@ namespace DataDictionary.Main.Forms.Model
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
                 work.AddRange(attributeData.Save(factory, attributeIndex));
 
-                DoWork(work, StartBinding);
-
-                void StopBinding()
-                {
-                    BindingAttribute.SuspendBinding();
-                    BindingProperty.SuspendBinding();
-                    BindingAlias.SuspendBinding();
-                    BindingSubjectArea.SuspendBinding();
-                    BindingDefinition.ResumeBinding();
-
-                    temporalIndex = null;
-                    attributeData = BusinessData.Model.Attributes;
-                }
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
-                    BindingProperty.ResumeBinding();
-                    BindingAlias.ResumeBinding();
-                    BindingSubjectArea.ResumeBinding();
-                    BindingDefinition.ResumeBinding();
-
-                    if (onComplete is not null) { onComplete(args); }
-                }
+                DoWork(work, onComplete);
             }
 
             public ITemporalData GetTemporal()
