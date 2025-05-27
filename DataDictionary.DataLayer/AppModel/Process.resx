@@ -121,7 +121,7 @@
     <value>[AppModel].[procGetProcess]</value>
   </data>
   <data name="ProcessId" xml:space="preserve">
-    <value>@Processd</value>
+    <value>@ProcessId</value>
     <comment>GUID</comment>
   </data>
   <data name="SetProcedure" xml:space="preserve">

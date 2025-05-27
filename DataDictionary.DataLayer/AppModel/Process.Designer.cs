@@ -70,7 +70,7 @@ namespace DataDictionary.DataLayer.AppModel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @Processd.
+        ///   Looks up a localized string similar to @ProcessId.
         /// </summary>
         internal static string ProcessId {
             get {
