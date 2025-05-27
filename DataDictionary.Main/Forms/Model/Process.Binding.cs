@@ -306,6 +306,11 @@ namespace DataDictionary.Main.Forms.Model
                     SetPosition(value);
                 }
             }
+
+            public ITemporalData GetTemporal()
+            {
+                { return processData.GetTemporal(processIndex); }
+            }
         }
     }
 }

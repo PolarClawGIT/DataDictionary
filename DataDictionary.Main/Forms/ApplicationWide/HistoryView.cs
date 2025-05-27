@@ -81,7 +81,6 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 if (groups.FirstOrDefault() is IDataValue group &&
                     formData.GetDetails(group).LastOrDefault() is TemporalValue value)
                 { bindingHistory.Position = formData.IndexOf(value); }
-                else { throw new IndexOutOfRangeException("Current Value could not be found"); }
 
                 CommandButtons[CommandImageType.Open].IsEnabled = (OpenForm is not null);
             }

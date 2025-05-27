@@ -63,7 +63,10 @@ namespace DataDictionary.Main.Forms.Model
         }
 
         public Process(IProcessIndex process, ITemporalIndex temporal) : this(process)
-        { formBinding.SetPosition(process, temporal); needsData = true; }
+        {
+            formBinding.SetPosition(process, temporal);
+            needsData = true;
+        }
 
         private void Process_Load(object sender, EventArgs e)
         {
@@ -157,6 +160,21 @@ namespace DataDictionary.Main.Forms.Model
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out ProcessValue? process))
+                    { return new Process(process, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to EntityValue"); }
+                }
+            });
         }
 
         private void ArgumentNewCommand_Click(object sender, EventArgs e)
