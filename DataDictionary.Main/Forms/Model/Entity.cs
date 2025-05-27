@@ -23,6 +23,8 @@ namespace DataDictionary.Main.Forms.Model
         protected Entity() : base()
         {
             InitializeComponent();
+            attributeLayout.Enabled = false;
+
             formBinding = new FormBinding()
             {
                 BindingAlias = bindingAlias,
@@ -67,6 +69,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
+
             if (needsData)
             { formBinding.Load(onCompleting); }
             else { DoBinding(); }
@@ -100,8 +103,6 @@ namespace DataDictionary.Main.Forms.Model
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
                 attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
-
-                attributeLayout.Enabled = false;
 
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);

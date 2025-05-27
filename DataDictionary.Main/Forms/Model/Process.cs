@@ -21,6 +21,7 @@ namespace DataDictionary.Main.Forms.Model
         public Process()
         {
             InitializeComponent();
+            argumentLayout.Enabled = false;
 
             formBinding = new FormBinding()
             {
@@ -103,8 +104,6 @@ namespace DataDictionary.Main.Forms.Model
 
                 argumentIsInputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsInput), true, DataSourceUpdateMode.OnPropertyChanged, false));
                 argumentIsOutputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsOutput), true, DataSourceUpdateMode.OnPropertyChanged, false));
-
-                argumentLayout.Enabled = false;
 
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
