@@ -10,6 +10,21 @@
     CONSTRAINT [PK_RelationshipSubjectArea] PRIMARY KEY CLUSTERED ([SubjectAreaId] ASC, [RelationshipId] ASC),
     CONSTRAINT [FK_RelationshipSubjectArea_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [AppModel].[Relationship] ([RelationshipId]),
     CONSTRAINT [FK_RelationshipSubjectArea_Subject] FOREIGN KEY ([SubjectAreaId]) REFERENCES [AppModel].[SubjectArea] ([SubjectAreaId]),
-) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipSubjectArea]))
+) --WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipSubjectArea]))
 GO
-
+/*
+CREATE TABLE [HsModel].[RelationshipSubjectArea]
+(
+    [RelationshipId] UniqueIdentifier NOT NULL,
+    [SubjectAreaId]  UniqueIdentifier NOT NULL,
+	[SysStart]          DateTime2 (7) NOT NULL,
+	[SysEnd]            DateTime2 (7) NOT NULL,
+)
+GO
+CREATE CLUSTERED INDEX [IX_RelationshipSubjectArea]
+    ON [HsModel].[RelationshipSubjectArea]([SysEnd] ASC, [SysStart] ASC)
+GO
+CREATE INDEX [FK_RelationshipSubjectArea]
+    ON [HsModel].[RelationshipSubjectArea]([RelationshipId] ASC, [SubjectAreaId] ASC)
+GO
+*/

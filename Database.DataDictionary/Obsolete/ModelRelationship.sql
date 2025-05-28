@@ -8,5 +8,20 @@
     CONSTRAINT [FK_ModelRelationship_Model] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
     CONSTRAINT [FK_ModelRelationship_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [AppModel].[Relationship] ([RelationshipId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
-) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ModelRelationship]))
+) --WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ModelRelationship]))
 GO
+/*
+CREATE TABLE [HsModel].[ModelRelationship] (
+    [ModelId]       UniqueIdentifier NOT NULL,
+    [RelationshipId] UniqueIdentifier NOT NULL,
+    [SysStart]      DateTime2 (7)    NOT NULL,
+    [SysEnd]        DateTime2 (7)    NOT NULL
+)
+GO
+CREATE CLUSTERED INDEX [IX_ModelRelationship]
+    ON [HsModel].[ModelRelationship]([SysEnd] ASC, [SysStart] ASC)
+GO
+CREATE INDEX [FK_ModelRelationship]
+    ON [HsModel].[ModelRelationship]([ModelId] ASC, [RelationshipId] ASC)
+GO
+*/

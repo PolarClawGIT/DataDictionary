@@ -10,5 +10,22 @@
 	CONSTRAINT [PK_RelationshipAlias] PRIMARY KEY CLUSTERED ([RelationshipId] ASC, [AliasId] ASC),
 	CONSTRAINT [FK_RelationshipAlias_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [AppModel].[Relationship] ([RelationshipId]),
 	CONSTRAINT [FK_RelationshipAlias_Alias] FOREIGN KEY ([AliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
-) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipAlias]))
+) --WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[RelationshipAlias]))
 GO
+/*
+CREATE TABLE [HsModel].[RelationshipAlias]
+(
+	[RelationshipId]    UniqueIdentifier Not Null,
+	[AliasId]           UniqueIdentifier Not Null,
+	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,
+	[SysStart]          DateTime2 (7) NOT NULL,
+	[SysEnd]            DateTime2 (7) NOT NULL,
+)
+GO
+CREATE CLUSTERED INDEX [IX_RelationshipAlias]
+    ON [HsModel].[RelationshipAlias]([SysEnd] ASC, [SysStart] ASC)
+GO
+CREATE INDEX [FK_RelationshipAlias]
+    ON [HsModel].[RelationshipAlias]([RelationshipId] ASC, [AliasId] ASC)
+GO
+*/
