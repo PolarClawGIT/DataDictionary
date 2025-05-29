@@ -15,6 +15,7 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     <Company>Nive Software Engineering Solutions</Company>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
