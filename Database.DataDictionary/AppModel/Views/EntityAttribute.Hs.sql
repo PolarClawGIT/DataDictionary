@@ -16,7 +16,7 @@ With [Dates] As (
 Select	D.[EntityId], --AK
 		FA.[EntityTitle],
 		D.[AttributeAliasId], -- PK
-		FL.[AttributePath],
+		FL.[AttributeName],
 		D.[AttributeKnownAs],
 		D.[OrdinalPosition], -- AK
 		D.[IsNullable],
@@ -63,7 +63,7 @@ From	[AppModel].[EntityAttribute] D
 		Outer Apply (
 			Select	Top 1
 					[AliasId],
-					[AliasNameSpace] As [AttributePath]
+					[AliasNameSpace] As [AttributeName]
 			From	[AppModel].[AliasHS]
 			Where	[AliasId] = D.[AttributeAliasId] And
 					[SysStart] <= D.[SysEnd]

@@ -44,6 +44,11 @@ namespace DataDictionary.BusinessLayer.AppModel
         IEntity Entities { get; }
 
         /// <summary>
+        /// Container for Process within the Model.
+        /// </summary>
+        IProcess Processes { get; }
+
+        /// <summary>
         /// The Properties for the Model (includes common)
         /// </summary>
         IPropertyData Properties { get; }
@@ -104,6 +109,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         private readonly Entity entityValues;
 
         /// <inheritdoc/>
+        public IProcess Processes { get { return processValues; } }
+        private readonly Process processValues;
+
+        /// <inheritdoc/>
         public IPropertyData Properties { get { return propertyValues; } }
         private readonly PropertyData propertyValues = new PropertyData();
 
@@ -138,6 +147,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectValues = new SubjectAreaData();
             attributeValues = new Attribute();
             entityValues = new Entity();
+            processValues = new Process();
         }
 
         /// <summary>
@@ -165,6 +175,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.Load(factory, dataKey));
             work.AddRange(attributeValues.Load(factory, dataKey));
             work.AddRange(entityValues.Load(factory, dataKey));
+            work.AddRange(processValues.Load(factory, dataKey));
             work.AddRange(propertyValues.Load(factory, dataKey));
             work.AddRange(definitionValues.Load(factory, dataKey));
             work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
@@ -181,6 +192,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(entityValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(processValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(propertyValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(definitionValues.Load(factory, dataKey, asOfUtcDate));
             work.Add(new WorkItem() { DoWork = () => { entityValues.FindAttributes = FindAttributes; } });
@@ -211,6 +223,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.Save(factory, dataKey));
             work.AddRange(attributeValues.Save(factory, dataKey));
             work.AddRange(entityValues.Save(factory, dataKey));
+            work.AddRange(processValues.Save(factory, dataKey));
             work.AddRange(propertyValues.Save(factory, dataKey));
             work.AddRange(definitionValues.Save(factory, dataKey));
             return work;
@@ -225,6 +238,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             result.AddRange(subjectValues.Export());
             result.AddRange(attributeValues.Export());
             result.AddRange(entityValues.Export());
+            result.AddRange(processValues.Export());
             result.AddRange(propertyValues.Export());
             result.AddRange(definitionValues.Export());
             return result;
@@ -238,6 +252,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectValues.Import(source);
             attributeValues.Import(source);
             entityValues.Import(source);
+            processValues.Import(source);
             propertyValues.Import(source);
             definitionValues.Import(source);
         }
@@ -251,6 +266,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.Delete());
             work.AddRange(attributeValues.Delete());
             work.AddRange(entityValues.Delete());
+            work.AddRange(processValues.Delete());
             work.AddRange(propertyValues.Delete());
             work.AddRange(definitionValues.Delete());
             return work;
@@ -282,6 +298,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             work.AddRange(subjectValues.LoadNamedScope(CurrentModel, addNamedScope));
             work.AddRange(entityValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
             work.AddRange(attributeValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
+            work.AddRange(processValues.LoadNamedScope(CurrentModel, subjectValues, addNamedScope));
 
             return work;
         }
@@ -293,6 +310,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectValues.Remove(dataKey);
             attributeValues.Remove(dataKey);
             entityValues.Remove(dataKey);
+            processValues.Remove(dataKey);
             propertyValues.Remove(dataKey);
             definitionValues.Remove(dataKey);
         }
@@ -304,6 +322,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectValues.Clear();
             attributeValues.Clear();
             entityValues.Clear();
+            processValues.Clear();
             propertyValues.Clear();
             definitionValues.Clear();
         }
@@ -315,6 +334,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectValues.ResetBindings();
             attributeValues.ResetBindings();
             entityValues.ResetBindings();
+            processValues.ResetBindings();
             propertyValues.ResetBindings();
             definitionValues.ResetBindings();
         }

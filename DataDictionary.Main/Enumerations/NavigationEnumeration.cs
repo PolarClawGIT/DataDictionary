@@ -173,7 +173,11 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
                 new NavigationEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
-                
+                new NavigationEnumeration(ScopeType.ModelAlias,                 Resources.Icon_Synonym,
+                    new(CommandImageType.Default, Resources.Synonym),
+                    new(CommandImageType.Add, Resources.NewSynonym),
+                    new(CommandImageType.Select, Resources.SelectSynonym)),
+
                 new NavigationEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute,
                     new(CommandImageType.Default, Resources.Attribute),
                     new(CommandImageType.Add, Resources.NewAttribute),
@@ -200,6 +204,20 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
                 new NavigationEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelEntitySubjectArea,     Resources.Icon_Diagram, Resources.Diagram) ,
+
+                new NavigationEnumeration(ScopeType.ModelProcess,               Resources.Icon_Process,
+                    new (CommandImageType.Default, Resources.Process),
+                    new (CommandImageType.Add, Resources.NewProcess),
+                    new (CommandImageType.Select, Resources.SelectProcess),
+                    new (CommandImageType.Delete, Resources.DeleteProcess)) { GroupBy = false},
+                new NavigationEnumeration(ScopeType.ModelProcessAlias,          Resources.Icon_Synonym,
+                    new (CommandImageType.Default, Resources.Synonym),
+                    new (CommandImageType.Select, Resources.SelectSynonym),
+                    new (CommandImageType.Add, Resources.NewSynonym)),
+                new NavigationEnumeration(ScopeType.ModelProcessProperty,       Resources.Icon_Property, Resources.Property) ,
+                new NavigationEnumeration(ScopeType.ModelProcessArgument,       Resources.Icon_Parameter, Resources.Parameter) ,
+                new NavigationEnumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new NavigationEnumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
 
                 new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,

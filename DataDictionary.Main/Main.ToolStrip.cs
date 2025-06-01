@@ -24,7 +24,7 @@ namespace DataDictionary.Main
         { Activate(static () => new Forms.Model.Entity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
-        { Activate(static () => new Forms.Model.ModelSubjectArea(null)); }
+        { Activate(static () => new Forms.Model.SubjectArea(null)); }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(static () => new Forms.Model.ModelManager()); }
@@ -48,9 +48,9 @@ namespace DataDictionary.Main
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <SubjectAreaValue, Forms.Model.ModelSubjectArea>
+                <SubjectAreaValue, Forms.Model.SubjectArea>
                 (ScopeType.ModelSubjectArea, BusinessData.Model.SubjectAreas)
-            { SelectedForm = (data) => new Forms.Model.ModelSubjectArea(data) });
+            { SelectedForm = (data) => new Forms.Model.SubjectArea(data) });
         }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
@@ -259,5 +259,47 @@ namespace DataDictionary.Main
 
         private void SecurityRole_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Security.RoleManager()); }
+
+        private void MenuProcess_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                <ProcessValue, Forms.Model.Process>
+                (ScopeType.ModelProcess, BusinessData.Model.Processes.Values)
+            { SelectedForm = (data) => new Forms.Model.Process(data) });
+        }
+
+        private void MenuProcessAlias_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelProcessAlias, BusinessData.Model.Processes.Aliases));
+        }
+
+        private void MenuProcessArgument_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelProcessArgument, BusinessData.Model.Processes.Arguments));
+        }
+
+        private void MenuProcessDefinition_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelProcessDefinition, BusinessData.Model.Processes.Definitions));
+        }
+
+        private void MenuProcessProperty_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ModelProcessProperty, BusinessData.Model.Processes.Properties));
+        }
+
+        private void NewProcessCommand_ButtonClick(object sender, EventArgs e)
+        {
+            { Activate(static () => new Forms.Model.Process(null)); }
+        }
+
+        private void newRelationshipCommand_ButtonClick(object sender, EventArgs e)
+        {
+            // Currently not used
+        }
     }
 }

@@ -1913,6 +1913,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SelectProcess {
+            get {
+                object obj = ResourceManager.GetObject("SelectProcess", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SelectStatusHelp {
             get {
                 object obj = ResourceManager.GetObject("SelectStatusHelp", resourceCulture);

@@ -15,6 +15,7 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     <Company>Nive Software Engineering Solutions</Company>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,7 +36,7 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Forms\Model\Controls\Property.cs">
+    <Compile Update="Forms\Model\Controls\PropertyData.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

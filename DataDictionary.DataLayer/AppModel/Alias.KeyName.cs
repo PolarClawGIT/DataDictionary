@@ -66,7 +66,7 @@ namespace DataDictionary.DataLayer.AppModel
         /// </summary>
         /// <param name="alias"></param>
         public AliasKeyName(AppModel.IEntityAttributeItem alias) : base()
-        { AliasPath = alias.AttributePath ?? String.Empty; }
+        { AliasPath = alias.AttributeName ?? String.Empty; }
 
 
         #region IEquatable

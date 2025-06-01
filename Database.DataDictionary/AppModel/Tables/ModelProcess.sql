@@ -8,7 +8,5 @@
     CONSTRAINT [FK_ModelProcess_Model] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
     CONSTRAINT [FK_ModelProcess_Process] FOREIGN KEY ([ProcessId]) REFERENCES [AppModel].[Process] ([ProcessId]),
     PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd])
-);
-
-
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ModelProcess]))
 GO

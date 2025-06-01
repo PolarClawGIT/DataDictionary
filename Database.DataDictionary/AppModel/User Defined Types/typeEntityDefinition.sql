@@ -1,4 +1,5 @@
-﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE (
+﻿CREATE TYPE [AppModel].[typeEntityDefinition] AS TABLE 
+(
 	[EntityId]			   UniqueIdentifier NOT Null,
 	[DefinitionId]         UniqueIdentifier NOT NULL,
 	[DefinitionSummary]    [App_DataDictionary].[typeDescription] Null,

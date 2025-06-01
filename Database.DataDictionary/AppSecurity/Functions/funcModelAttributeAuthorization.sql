@@ -1,11 +1,12 @@
-﻿CREATE FUNCTION [AppSecurity].[funcModelAttributeAuthorization](
+﻿CREATE FUNCTION [AppSecurity].[funcModelAttributeAuthorization]
+(
 	@ModelId UniqueIdentifier,
 	@AttributeId UniqueIdentifier,
 	@IsAuthorized Bit = 1
 		-- Null: return value only if [IsApplication] or [IsDbWriter] is true (for Security Policy).
 		-- 1: return values only if [IsAuthorized] is true
 		-- 0: return values only if [IsAuthorized] is false
-	)
+)
 Returns Table With SchemaBinding as Return
 -- Row Level Security. Returns zero or one row.
 With [Authorization] As (

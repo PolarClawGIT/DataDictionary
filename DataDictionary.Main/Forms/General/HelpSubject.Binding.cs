@@ -94,11 +94,11 @@ namespace DataDictionary.Main.Forms.General
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
 
                 if (temporalIndex is null)
                 {
+                    subjectData = BusinessData.ApplicationData.HelpSubjects;
                     work.AddRange(subjectData.Delete(subjectIndex));
                     work.AddRange(subjectData.Load(factory, subjectIndex));
                 }
@@ -110,18 +110,9 @@ namespace DataDictionary.Main.Forms.General
 
                 DoWork(work, StartBinding);
 
-                void StopBinding()
-                { BindingHelpSubject.SuspendBinding(); }
-
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    subjectData.ResetBindings();
-
-                    HelpSubjects = new BindingView<HelpSubjectValue>(subjectData, w => subjectIndex.Equals(w));
-                    BindingHelpSubject.DataSource = HelpSubjects;
-                    BindingHelpSubject.Position = 0;
-                    BindingHelpSubject.ResumeBinding();
-
+                    SetPosition(subjectIndex);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -131,35 +122,10 @@ namespace DataDictionary.Main.Forms.General
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
                 work.AddRange(subjectData.Save(factory, subjectIndex));
 
-                DoWork(work, StartBinding);
-
-                void StopBinding()
-                {
-                    BindingHelpSubject.SuspendBinding();
-                    HelpSubjects.ListChanged -= OnListChanged;
-                    HelpSubjects.RaiseListChangedEvents = false;
-                    BindingHelpSubject.RaiseListChangedEvents = false;
-
-                    temporalIndex = null;
-                    subjectData = BusinessData.ApplicationData.HelpSubjects;
-                }
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    BindingHelpSubject.Position = 0;
-                    HelpSubjects.ListChanged += OnListChanged;
-
-                    HelpSubjects.RaiseListChangedEvents = true;
-                    BindingHelpSubject.RaiseListChangedEvents = true;
-                    BindingHelpSubject.ResumeBinding();
-                    BindingHelpSubject.ResetBindings(false);
-
-                    if (onComplete is not null) { onComplete(args); }
-                }
+                DoWork(work, onComplete);
             }
 
             private void OnListChanged(Object? sender, ListChangedEventArgs e)

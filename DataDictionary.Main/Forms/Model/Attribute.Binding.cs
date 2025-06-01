@@ -164,16 +164,38 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
 
+            public IAliasSubType NewAlias()
+            {
+                if (TryGetValue(out AttributeValue? value))
+                { return new AttributeAliasValue(value); }
+                else { throw new InvalidOperationException("Current AttributeValue not defined"); }
+                throw new NotImplementedException();
+            }
+
+            public void AddSubjectArea(ISubjectAreaIndex subject)
+            {
+                if (TryGetValue(out AttributeValue? attribute))
+                { SubjectAreas.Add(new AttributeSubjectAreaValue(attribute, subject)); }
+            }
+
+            public void RemoveSubjectArea(ISubjectAreaIndex subject)
+            {
+                SubjectAreaIndex key = new SubjectAreaIndex(subject);
+
+                while (SubjectAreas.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue item)
+                { SubjectAreas.Remove(item); }
+            }
+
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
 
                 if (temporalIndex is null)
                 {
+                    attributeData = BusinessData.Model.Attributes;
                     work.AddRange(attributeData.Delete(attributeIndex));
                     work.AddRange(attributeData.Load(factory, attributeIndex));
                 }
@@ -185,24 +207,9 @@ namespace DataDictionary.Main.Forms.Model
 
                 DoWork(work, StartBinding);
 
-                void StopBinding()
-                {
-                    BindingAttribute.SuspendBinding();
-                    BindingProperty.SuspendBinding();
-                    BindingAlias.SuspendBinding();
-                    BindingSubjectArea.SuspendBinding();
-                    BindingDefinition.SuspendBinding();
-                }
-
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
                     SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
-                    BindingProperty.ResumeBinding();
-                    BindingAlias.ResumeBinding();
-                    BindingSubjectArea.ResumeBinding();
-                    BindingDefinition.ResumeBinding();
-
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -212,35 +219,10 @@ namespace DataDictionary.Main.Forms.Model
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                StopBinding();
                 work.Add(factory.OpenConnection());
                 work.AddRange(attributeData.Save(factory, attributeIndex));
 
-                DoWork(work, StartBinding);
-
-                void StopBinding()
-                {
-                    BindingAttribute.SuspendBinding();
-                    BindingProperty.SuspendBinding();
-                    BindingAlias.SuspendBinding();
-                    BindingSubjectArea.SuspendBinding();
-                    BindingDefinition.ResumeBinding();
-
-                    temporalIndex = null;
-                    attributeData = BusinessData.Model.Attributes;
-                }
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(attributeIndex);
-                    BindingAttribute.ResumeBinding();
-                    BindingProperty.ResumeBinding();
-                    BindingAlias.ResumeBinding();
-                    BindingSubjectArea.ResumeBinding();
-                    BindingDefinition.ResumeBinding();
-
-                    if (onComplete is not null) { onComplete(args); }
-                }
+                DoWork(work, onComplete);
             }
 
             public ITemporalData GetTemporal()
@@ -291,17 +273,7 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else return true;
             }
-        }
 
-        class FixedBinding
-        {
-            public BindingView<SubjectAreaValue> SubjectAreas { get; private set; } =
-                new BindingView<SubjectAreaValue>(BusinessData.Model.SubjectAreas)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public BindingView<DefinitionValue> Definitions { get; private set; } =
-                new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         }
     }

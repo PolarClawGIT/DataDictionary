@@ -17,7 +17,7 @@ namespace DataDictionary.Main
             namedScopeData.ReloadCommand();
         }
 
-        private void namedScopeData_OnNamedScopeSelected(object sender, NamedScopeValueEventArgs e)
+        private void NamedScopeData_OnNamedScopeSelected(object sender, NamedScopeValueEventArgs e)
         {
             if (e.Value is INamedScopeSourceValue target)
             {
@@ -111,10 +111,17 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(entityItem));
         }
 
+        void OpenForm(ProcessValue processItem)
+        {
+            Activate(
+                () => new Forms.Model.Process(processItem),
+                (form) => form.IsOpenItem(processItem));
+        }
+
         void OpenForm(SubjectAreaValue subjectItem)
         {
             Activate(
-                () => new Forms.Model.ModelSubjectArea(subjectItem),
+                () => new Forms.Model.SubjectArea(subjectItem),
                 (form) => form.IsOpenItem(subjectItem));
         }
 

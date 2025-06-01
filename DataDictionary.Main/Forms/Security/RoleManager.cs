@@ -19,6 +19,7 @@ namespace DataDictionary.Main.Forms.Security
 {
     partial class RoleManager : ApplicationData
     {
+        // TODO: Candidate to re-factor with Binding class
         ISecurity securityData = ISecurity.Create();
 
         public RoleManager()
@@ -41,7 +42,6 @@ namespace DataDictionary.Main.Forms.Security
         private void RoleManager_Load(object sender, EventArgs e)
         {
             IsLocked(true);
-            IsWaitCursor(true);
             IDatabaseWork factory = BusinessData.GetDbFactory();
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.OpenConnection());
@@ -92,7 +92,6 @@ namespace DataDictionary.Main.Forms.Security
                 }
 
                 IsLocked(false);
-                IsWaitCursor(false);
             }
         }
 
@@ -161,14 +160,12 @@ namespace DataDictionary.Main.Forms.Security
             }
 
             IsLocked(true);
-            IsWaitCursor(true);
             SuspendBinding(bindingRole);
             DoWork(work, onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             {
                 IsLocked(false);
-                IsWaitCursor(false);
                 ResumeBinding(bindingRole);
                 roleData.DataSource = bindingRole;
             }
@@ -201,14 +198,12 @@ namespace DataDictionary.Main.Forms.Security
             }
 
             IsLocked(true);
-            IsWaitCursor(true);
             SuspendBinding(bindingRole);
             DoWork(work, onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             {
                 IsLocked(false);
-                IsWaitCursor(false);
                 ResumeBinding(bindingRole);
             }
         }
@@ -236,14 +231,12 @@ namespace DataDictionary.Main.Forms.Security
             }
 
             IsLocked(true);
-            IsWaitCursor(true);
             SuspendBinding(bindingRole);
             DoWork(work, onComplete);
 
             void onComplete(RunWorkerCompletedEventArgs args)
             {
                 IsLocked(false);
-                IsWaitCursor(false);
                 ResumeBinding(bindingRole);
                 roleData.ClearSelection();
             }
@@ -273,7 +266,6 @@ namespace DataDictionary.Main.Forms.Security
             void onComplete(RunWorkerCompletedEventArgs args)
             {
                 IsLocked(false);
-                IsWaitCursor(false);
                 ResumeBinding(bindingRole);
                 roleData.ClearSelection();
             }

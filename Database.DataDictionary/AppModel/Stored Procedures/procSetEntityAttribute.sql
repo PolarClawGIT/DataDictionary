@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]			   UniqueIdentifier Not Null,
 		[AttributeAliasId]     UniqueIdentifier Not Null,
-		[AttributeKnownAs]	   [App_DataDictionary].[typeTitle] Not Null, -- What to call the Attribute within this Entity (default is the Attribute Name)
+		[AttributeKnownAs]	   [App_DataDictionary].[typeTitle] Not Null,
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
 		[IsPrimaryKey]		   Bit Null,
@@ -41,22 +41,20 @@ Begin Try
 	Declare @Alias [AppModel].[typeAlias];
 
 	Insert Into @Alias ([AliasNameSpace])
-	Select	[AttributePath]
+	Select	[AttributeName]
 	From	@Data
+	Group By [AttributeName]
 
 	Exec [AppModel].[procSetAlias] @ModelId = @ModelId, @Data = @Alias
 
 	Insert Into @Values
 	Select	D.[EntityId],
-			[AppModel].[funcAliasId](D.[AttributePath]) As [AttributeAliasId],
+			[AppModel].[funcAliasId](D.[AttributeName]) As [AttributeAliasId],
 			NullIf(Trim(D.[AttributeKnownAs]),'') As [AttributeKnownAs],
 			D.[OrdinalPosition],
 			IsNull(D.[IsNullable],0) As [IsNullable],
 			IsNull(D.[IsPrimaryKey],0) As [IsPrimaryKey]
 	From	@Data D
-			Left Join [AppModel].[EntityAttributeHs] H
-			On	D.[EntityId] = H.[EntityId] And
-				D.[AttributePath] = H.[AttributePath]
 	Where	(@EntityId is Null Or @EntityId = D.[EntityId]) And
 			(@ModelId is Null Or D.[EntityId] In (
 				Select	[EntityId]
@@ -130,7 +128,7 @@ Begin Try
 				S.[AttributeAliasId] = T.[AttributeAliasId]
 			Cross Apply [AppSecurity].[funcModelEntityAuthorization](@ModelId, S.[EntityId], 1)
 	Where	T.[AttributeAliasId] is Null
-	Print FormatMessage ('Insert [AppModel].[Entity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppModel].[EntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

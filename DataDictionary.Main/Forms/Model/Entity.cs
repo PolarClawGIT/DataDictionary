@@ -18,12 +18,13 @@ namespace DataDictionary.Main.Forms.Model
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
         FormBinding formBinding;
-        FixedBinding fixedBinding;
         Boolean needsData = false;
 
         protected Entity() : base()
         {
             InitializeComponent();
+            attributeLayout.Enabled = false;
+
             formBinding = new FormBinding()
             {
                 BindingAlias = bindingAlias,
@@ -36,8 +37,6 @@ namespace DataDictionary.Main.Forms.Model
                 DoWork = base.DoWork
             };
             formBinding.Init();
-
-            fixedBinding = new FixedBinding();
 
             SetRowState(
                 bindingEntity,
@@ -54,10 +53,8 @@ namespace DataDictionary.Main.Forms.Model
                 CommandImageType.DeleteDatabase,
                 CommandImageType.HistoryDatabase);
 
-            attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Select);
-            attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
-            aliasAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Add);
-            aliasSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAlias, CommandImageType.Select);
+            attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Select);
+            attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Add);
         }
 
         public Entity(IEntityIndex? entity) : this()
@@ -72,7 +69,6 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Form_Load(object sender, EventArgs e)
         {
-            ScopeNameList.Load(aliaseScopeColumn);
 
             if (needsData)
             { formBinding.Load(onCompleting); }
@@ -98,8 +94,8 @@ namespace DataDictionary.Main.Forms.Model
                 attributeData.AutoGenerateColumns = false;
                 attributeData.DataSource = bindingAttribute;
 
-                attributePathData.DataBindings.Add(new Binding(nameof(attributePathData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributePath)));
-                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
+                attributeNameData.DataBindings.Add(new Binding(nameof(attributeNameData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
+                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 attributeKnownAsData.DataBindings.Add(new Binding(nameof(attributeKnownAsData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
                 attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
                 attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
@@ -108,23 +104,14 @@ namespace DataDictionary.Main.Forms.Model
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
                 attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                attributeLayout.Enabled = false;
-
-                // Alias Handling
-                ScopeNameList.Load(aliaseScopeColumn);
-                ScopeNameList.Load(aliasScopeData);
-
-                aliasesData.AutoGenerateColumns = false;
-                aliasesData.DataSource = bindingAlias;
-
-                aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), bindingAlias, nameof(IEntityAliasValue.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), bindingAlias, nameof(EntityAliasValue.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
-
-                //
+                // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
-
-                subjectArea.BindTo(bindingSubjectArea, fixedBinding.SubjectAreas);
+                subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea );
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias,
+                    ScopeType.ModelEntity,
+                    ScopeType.DatabaseTable, ScopeType.DatabaseView,
+                    ScopeType.LibraryType);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -181,29 +168,10 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     if (temporal.TryGetValue(out EntityValue? entity))
                     { return new Entity(entity, new TemporalIndex(temporal)); }
-                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to EntityValue"); }
                 }
             });
         }
-
-        private void BindingAlias_CurrentChanged(object sender, EventArgs e)
-        {
-            //TODO: Figure out how do this using the Binding class. How??
-            
-            if (formBinding.TryGetAlias(out EntityAliasValue? current))
-            {
-                Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
-                isAliasInModelData.Checked = inModel;
-                aliasNameData.ReadOnly = inModel;
-                aliasScopeData.ReadOnly = inModel;
-            }
-        }
-
-        private void SubjectArea_OnSubjectAdd(object sender, ISubjectAreaValue e)
-        { formBinding.AddSubjectArea(e); }
-
-        private void SubjectArea_OnSubjectRemove(object sender, ISubjectAreaValue e)
-        { formBinding.RemoveSubjectArea(e); }
 
         private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
@@ -250,38 +218,10 @@ namespace DataDictionary.Main.Forms.Model
         private void AttributeNewCommand_Click(object sender, EventArgs e)
         { formBinding.AddAttribute(); }
 
-        private void AliasAddCommand_Click(object sender, EventArgs e)
-        { formBinding.AddAlias(); }
-
-        private void AliasSelectCommand_Click(object sender, EventArgs e)
-        {
-            if (bindingAlias.DataSource is IList<EntityAliasValue> alias)
-            {
-                using (var dialog = new SelectionDialog(this))
-                {
-                    dialog.FilterScopes.Add(ScopeType.ModelEntity);
-                    dialog.FilterScopes.Add(ScopeType.DatabaseTable);
-                    dialog.FilterScopes.Add(ScopeType.DatabaseView);
-                    dialog.FilterScopes.Add(ScopeType.LibraryType);
-
-                    dialog.BuildData(alias.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
-
-                    if (dialog.ShowDialog(this) is DialogResult.OK)
-                    { formBinding.AddAlias(dialog.SelectedByNamedScope()); }
-                }
-            }
-        }
-
-        private void AliasNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (formBinding.TryGetAlias(out EntityAliasValue? value))
-            { value.AliasPath = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray()); }
-        }
-
-        private void AttributePathData_Validating(object sender, CancelEventArgs e)
+        private void AttributeNameData_Validating(object sender, CancelEventArgs e)
         {
             if (formBinding.TryGetAttribute(out EntityAttributeValue? value))
-            { value.AttributePath = new PathIndex(PathIndex.Parse(attributePathData.Text).ToArray()); }
+            { value.AttributePath = new PathIndex(PathIndex.Parse(attributeNameData.Text).ToArray()); }
         }
 
 

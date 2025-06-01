@@ -70,6 +70,7 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ModelDefinition,            ScopeType.Model,          "Model.Definition"),
             new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
+            new ScopeEnumeration(ScopeType.ModelAlias,                 ScopeType.Model,          "Model.Alias"),
 
             new ScopeEnumeration(ScopeType.ModelAttribute,             ScopeType.Model,          "Model.Attribute"),
             new ScopeEnumeration(ScopeType.ModelAttributeAlias,        ScopeType.ModelAttribute, "Model.Attribute.Alias"),
@@ -83,6 +84,13 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ModelEntityDefinition,      ScopeType.ModelEntity,    "Model.Entity.Definition"),
             new ScopeEnumeration(ScopeType.ModelEntitySubjectArea,     ScopeType.ModelEntity,    "Model.Entity.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelEntityAttribute,       ScopeType.ModelEntity,    "Model.Entity.Attribute"),
+
+            new ScopeEnumeration(ScopeType.ModelProcess,               ScopeType.Model,           "Model.Process"),
+            new ScopeEnumeration(ScopeType.ModelProcessAlias,          ScopeType.ModelProcess,    "Model.Process.Alias"),
+            new ScopeEnumeration(ScopeType.ModelProcessProperty,       ScopeType.ModelProcess,    "Model.Process.Property"),
+            new ScopeEnumeration(ScopeType.ModelProcessDefinition,     ScopeType.ModelProcess,    "Model.Process.Definition"),
+            new ScopeEnumeration(ScopeType.ModelProcessSubjectArea,    ScopeType.ModelProcess,    "Model.Process.SubjectArea"),
+            new ScopeEnumeration(ScopeType.ModelProcessArgument,       ScopeType.ModelProcess,    "Model.Process.Argument"),
 
             new ScopeEnumeration(ScopeType.Security,                  "Security"),
             new ScopeEnumeration(ScopeType.SecurityPrincipal,          ScopeType.Security,         "Security.Principal"),

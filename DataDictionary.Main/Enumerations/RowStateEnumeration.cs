@@ -143,6 +143,13 @@ namespace DataDictionary.Main.Enumerations
             primary.CurrentChanged += Primary_CurrentChanged;
             primary.Disposed += Primary_Disposed;
 
+            if (primary.Current is IBindingRowState value)
+            {
+                setRowState(value.RowState());
+                primaryRowState = value;
+                primaryRowState.RowStateChanged += Primary_RowStateChanged;
+            }
+
             foreach (BindingSource item in bindings)
             {
                 item.CurrentChanged += Item_CurrentChanged;
