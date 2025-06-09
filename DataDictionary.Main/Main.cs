@@ -81,7 +81,7 @@ namespace DataDictionary.Main
                 IsLocked(false);
                 dataLoaded = true;
 
-                securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+                SetAuthorization();
                 namedScopeData.ReloadCommand();
 
                 if (splashDone)
@@ -173,7 +173,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             toolStripStatusUser.Text = BusinessData.Authorization.PrincipalName;
-            securityContextMenu.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+            SetAuthorization();
 
             if (Settings.Default.IsOnLineMode)
             { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
@@ -275,5 +275,12 @@ namespace DataDictionary.Main
             else { namedScopeData.HeaderText = "(no Model)"; }
         }
 
+        private void SetAuthorization()
+        {
+            securityPrincipal.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+            securityRole.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+            securityAuthorization.Enabled = true;
+
+        }
     }
 }

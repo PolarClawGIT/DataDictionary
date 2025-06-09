@@ -297,6 +297,11 @@ namespace DataDictionary.Main
             { Activate(static () => new Forms.Model.Process(null)); }
         }
 
+        private void SecurityAuthorization_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.Security, BusinessData.Authorization));
+        }
         private void newRelationshipCommand_ButtonClick(object sender, EventArgs e)
         {
             // Currently not used
