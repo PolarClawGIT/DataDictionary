@@ -34,6 +34,7 @@ namespace DataDictionary.Main.Forms.Model
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             TableLayoutPanel subjectAreaLayout;
+            TableLayoutPanel xElementLayout;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -60,7 +61,10 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaTab = new TabPage();
             subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectAreaData();
             memberNameData = new DataDictionary.Main.Controls.TextBoxData();
-            entityTab = new TabPage();
+            xElementTab = new TabPage();
+            xElementData = new DataDictionary.Main.Controls.TextBoxData();
+            xElementToolStrip = new ToolStrip();
+            xElementRenderCommand = new ToolStripButton();
             bindingAttribute = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingAlias = new BindingSource(components);
@@ -69,6 +73,7 @@ namespace DataDictionary.Main.Forms.Model
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             subjectAreaLayout = new TableLayoutPanel();
+            xElementLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
@@ -78,6 +83,9 @@ namespace DataDictionary.Main.Forms.Model
             aliasTab.SuspendLayout();
             subjectAreaTab.SuspendLayout();
             subjectAreaLayout.SuspendLayout();
+            xElementTab.SuspendLayout();
+            xElementLayout.SuspendLayout();
+            xElementToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
@@ -135,7 +143,7 @@ namespace DataDictionary.Main.Forms.Model
             detailTabLayout.Controls.Add(definitionTab);
             detailTabLayout.Controls.Add(aliasTab);
             detailTabLayout.Controls.Add(subjectAreaTab);
-            detailTabLayout.Controls.Add(entityTab);
+            detailTabLayout.Controls.Add(xElementTab);
             detailTabLayout.Dock = DockStyle.Fill;
             detailTabLayout.Location = new Point(3, 147);
             detailTabLayout.Name = "detailTabLayout";
@@ -238,7 +246,7 @@ namespace DataDictionary.Main.Forms.Model
             isSimpleTypeData.AutoSize = true;
             isSimpleTypeData.Location = new Point(3, 132);
             isSimpleTypeData.Name = "isSimpleTypeData";
-            isSimpleTypeData.Size = new Size(89, 19);
+            isSimpleTypeData.Size = new Size(90, 19);
             isSimpleTypeData.TabIndex = 5;
             isSimpleTypeData.Text = "Simple Type";
             isSimpleTypeData.UseVisualStyleBackColor = true;
@@ -248,7 +256,7 @@ namespace DataDictionary.Main.Forms.Model
             isCompositeTypeData.AutoSize = true;
             isCompositeTypeData.Location = new Point(206, 132);
             isCompositeTypeData.Name = "isCompositeTypeData";
-            isCompositeTypeData.Size = new Size(111, 19);
+            isCompositeTypeData.Size = new Size(112, 19);
             isCompositeTypeData.TabIndex = 6;
             isCompositeTypeData.Text = "Composite Type";
             isCompositeTypeData.UseVisualStyleBackColor = true;
@@ -391,7 +399,7 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
             subjectAreaTab.Padding = new Padding(3);
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -407,7 +415,7 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(406, 337);
+            subjectAreaLayout.Size = new Size(186, 66);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -415,7 +423,7 @@ namespace DataDictionary.Main.Forms.Model
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(400, 281);
+            subjectArea.Size = new Size(180, 10);
             subjectArea.TabIndex = 0;
             // 
             // memberNameData
@@ -427,20 +435,68 @@ namespace DataDictionary.Main.Forms.Model
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(400, 44);
+            memberNameData.Size = new Size(180, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
             // 
-            // entityTab
+            // xElementTab
             // 
-            entityTab.BackColor = SystemColors.Control;
-            entityTab.Location = new Point(4, 24);
-            entityTab.Name = "entityTab";
-            entityTab.Padding = new Padding(3);
-            entityTab.Size = new Size(192, 72);
-            entityTab.TabIndex = 4;
-            entityTab.Text = "Entities";
+            xElementTab.BackColor = SystemColors.Control;
+            xElementTab.Controls.Add(xElementLayout);
+            xElementTab.Location = new Point(4, 24);
+            xElementTab.Name = "xElementTab";
+            xElementTab.Padding = new Padding(3);
+            xElementTab.Size = new Size(412, 343);
+            xElementTab.TabIndex = 4;
+            xElementTab.Text = "XML";
+            // 
+            // xElementLayout
+            // 
+            xElementLayout.ColumnCount = 1;
+            xElementLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            xElementLayout.Controls.Add(xElementData, 0, 1);
+            xElementLayout.Controls.Add(xElementToolStrip, 0, 0);
+            xElementLayout.Dock = DockStyle.Fill;
+            xElementLayout.Location = new Point(3, 3);
+            xElementLayout.Name = "xElementLayout";
+            xElementLayout.RowCount = 2;
+            xElementLayout.RowStyles.Add(new RowStyle());
+            xElementLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            xElementLayout.Size = new Size(406, 337);
+            xElementLayout.TabIndex = 1;
+            // 
+            // xElementData
+            // 
+            xElementData.AutoSize = true;
+            xElementData.Dock = DockStyle.Fill;
+            xElementData.HeaderText = "XML fragment";
+            xElementData.Location = new Point(3, 28);
+            xElementData.Multiline = true;
+            xElementData.Name = "xElementData";
+            xElementData.ReadOnly = true;
+            xElementData.Size = new Size(400, 306);
+            xElementData.TabIndex = 0;
+            xElementData.WordWrap = false;
+            // 
+            // xElementToolStrip
+            // 
+            xElementToolStrip.Items.AddRange(new ToolStripItem[] { xElementRenderCommand });
+            xElementToolStrip.Location = new Point(0, 0);
+            xElementToolStrip.Name = "xElementToolStrip";
+            xElementToolStrip.Size = new Size(406, 25);
+            xElementToolStrip.TabIndex = 1;
+            xElementToolStrip.Text = "toolStrip1";
+            // 
+            // xElementRenderCommand
+            // 
+            xElementRenderCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            xElementRenderCommand.Image = Properties.Resources.XmlFile;
+            xElementRenderCommand.ImageTransparentColor = Color.Magenta;
+            xElementRenderCommand.Name = "xElementRenderCommand";
+            xElementRenderCommand.Size = new Size(23, 22);
+            xElementRenderCommand.Text = "render XML fragement";
+            xElementRenderCommand.Click += XElementRenderCommand_Click;
             // 
             // Attribute
             // 
@@ -464,6 +520,11 @@ namespace DataDictionary.Main.Forms.Model
             subjectAreaTab.ResumeLayout(false);
             subjectAreaLayout.ResumeLayout(false);
             subjectAreaLayout.PerformLayout();
+            xElementTab.ResumeLayout(false);
+            xElementLayout.ResumeLayout(false);
+            xElementLayout.PerformLayout();
+            xElementToolStrip.ResumeLayout(false);
+            xElementToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
@@ -494,7 +555,7 @@ namespace DataDictionary.Main.Forms.Model
         private CheckBox isKeyData;
         private BindingSource bindingProperty;
         private TabPage subjectAreaTab;
-        private TabPage entityTab;
+        private TabPage xElementTab;
         private BindingSource bindingAlias;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectAreaData subjectArea;
@@ -507,5 +568,8 @@ namespace DataDictionary.Main.Forms.Model
         private Controls.PropertyData propertyData;
         private Controls.DefinitionData definitionData;
         private Controls.AliasData aliasData;
+        private DataDictionary.Main.Controls.TextBoxData xElementData;
+        private ToolStrip xElementToolStrip;
+        private ToolStripButton xElementRenderCommand;
     }
 }

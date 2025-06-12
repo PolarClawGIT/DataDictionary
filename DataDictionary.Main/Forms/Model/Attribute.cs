@@ -8,6 +8,8 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.AppScripting;
+using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -171,5 +173,34 @@ namespace DataDictionary.Main.Forms.Model
             memberNameData.Text = path.MemberFullPath;
         }
 
+        private void XElementRenderCommand_Click(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out AttributeValue? value))
+            {
+                XElementBuilder builder = new XElementBuilder(value);
+
+                builder.Settings[nameof(AttributeValue.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                builder.Settings[nameof(AttributeValue.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                builder.Settings[nameof(AttributeValue.Scope)].NodeRender = TemplateNodeValueAsType.none;
+
+                XElement results = builder.Build();
+                
+                foreach (AttributePropertyValue item in formBinding.Properties)
+                {
+                    // TODO: AttributePropertyValue needs the Property name/title. Repeat for Entity and Process.
+
+
+                    XElementBuilder properties = new XElementBuilder(item);
+                    properties.Settings[nameof(AttributePropertyValue.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(AttributePropertyValue.PropertyId)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(AttributePropertyValue.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(AttributePropertyValue.Scope)].NodeRender = TemplateNodeValueAsType.none;
+                    results.Add(properties.Build());
+                }
+
+                xElementData.Text = results.ToString();
+            }
+
+        }
     }
 }
