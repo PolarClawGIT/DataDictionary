@@ -24,10 +24,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
             //TODO: This is how I will inject the setting from the Template.
 
             /// <summary>
-            /// Gets or sets the name of the rendered node.
+            /// Gets or sets a delegate that returns the text used as the XName for the XAttribute/XElement.
             /// </summary>
-            /// <remarks>Default is the name of the property.</remarks>
-            public String NodeName { get; set; } = String.Empty;
+            public Func<String> GetNodeName { get; set; } = () => String.Empty;
+
+            /// <summary>
+            /// Gets or sets a delegate that retrieves the value of a XAttribute/XElement node as a string.
+            /// </summary>
+            /// <remarks>The delegate can be used to dynamically fetch the value of a node.  Ensure
+            /// the function handles cases where the node value might be null.</remarks>
+            public Func<String?> GetNodeValue { get; set; } = () => null;
 
             /// <summary>
             /// Gets or sets the rendering behavior for the node.
@@ -51,8 +57,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// List of Properties of the data source and the rendering settings.
         /// </summary>
-        public Dictionary<String, RenderSetting> Settings { get { return renderSettings.ToDictionary(d => d.Key.Name, e => e.Value); } }
-        Dictionary<PropertyInfo, RenderSetting> renderSettings = new Dictionary<PropertyInfo, RenderSetting>();
+        public IDictionary<String, RenderSetting> Settings { get; } = new Dictionary<String, RenderSetting>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XElementBuilder"/> class,
@@ -69,9 +74,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             foreach (PropertyInfo item in ObjectType.GetProperties())
             {
-                renderSettings.Add(item, new RenderSetting()
+                Settings.Add(item.Name, new RenderSetting()
                 {
-                    NodeName = item.Name,
+                    GetNodeName = () => item.Name,
+                    GetNodeValue = () => { if (item.GetValue(source) is Object value) { return value.ToString(); } else { return null; } },
                     NodeRender = TemplateNodeValueAsType.ElementText
                 });
             }
@@ -99,31 +105,25 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { result = new XElement(ObjectType.FullName); }
             else { result = new XElement(ObjectType.Name); }
 
-            foreach (PropertyInfo item in renderSettings.Keys)
+            foreach (var item in Settings.Values)
             {
-                if(Settings.TryGetValue(item.Name, out RenderSetting? setting))
+                if(BuildXObject(item) is XObject value)
                 {
-                    if(BuildXObject(setting, item.GetValue(dataSource)) is XObject renderValue)
-                    {
-                        if (setting.ChildObject is XObject child
-                            && renderValue is XElement parent)
-                        { parent.Add(child); }
+                    if (item.ChildObject is XObject child
+                        && value is XElement parent)
+                    { parent.Add(child); }
 
-                        result.Add(renderValue);
-                    }
+                    result.Add(value);
                 }
-                else if (BuildXObject(item.GetValue(dataSource)) is XObject objectValue)
-                { result.Add(objectValue); }
             }
 
             return result;
         }
 
-        XObject? BuildXObject(RenderSetting setting, Object? nodeValue)
+        XObject? BuildXObject(RenderSetting setting)
         {
-            if (nodeValue is null) { return null; }
-
-            String? value = nodeValue.ToString();
+            String name = setting.GetNodeName();
+            String? value = setting.GetNodeValue();
             if (String.IsNullOrWhiteSpace(value))
             { return null; }
 
@@ -132,44 +132,31 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 case TemplateNodeValueAsType.none:
                     return null;
                 case TemplateNodeValueAsType.ElementText:
-                    return new XElement(setting.NodeName, value);
+                    return new XElement(name, value);
                 case TemplateNodeValueAsType.ElementCData:
-                    return new XElement(setting.NodeName, new XCData(value));
+                    return new XElement(name, new XCData(value));
                 case TemplateNodeValueAsType.ElementXML:
                     try
                     {
                         if (String.IsNullOrWhiteSpace(value))
-                        { return new XElement(setting.NodeName, XElement.Parse(value)); }
+                        { return new XElement(setting.GetNodeName(), XElement.Parse(value)); }
                         else { return null; }
                     }
                     catch (Exception fragementEx)
                     {
-                        fragementEx.Data.Add(nameof(setting.NodeName), setting.NodeName);
-                        fragementEx.Data.Add(nameof(nodeValue), nodeValue.ToString());
+                        fragementEx.Data.Add(nameof(setting.GetNodeName), setting.GetNodeName());
+                        fragementEx.Data.Add(nameof(setting.GetNodeValue), value);
                         fragementEx.Data.Add(nameof(setting.NodeRender), setting.NodeRender.ToString());
                         throw;
                     }
                 case TemplateNodeValueAsType.Attribute:
-                    return new XAttribute(setting.NodeName, nodeValue);
+                    return new XAttribute(name, value);
                 default:
                     Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(TemplateNodeValueAsType)));
+                    ex.Data.Add(nameof(setting.GetNodeName), setting.GetNodeName());
                     ex.Data.Add(nameof(setting.NodeRender), setting.NodeRender.ToString());
                     throw ex;
             }
-        }
-
-
-        XObject? BuildXObject(Object? nodeValue)
-        {
-            if (nodeValue is null) { return null; }
-
-            return BuildXObject(
-                new RenderSetting()
-                {
-                    NodeName = nodeValue.GetType().Name,
-                    NodeRender = TemplateNodeValueAsType.ElementText
-                },
-                nodeValue);
         }
     }
 }
