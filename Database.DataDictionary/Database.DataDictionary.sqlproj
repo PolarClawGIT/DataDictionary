@@ -529,7 +529,7 @@
     <Build Include="AppScript\User Defined Types\typeScriptingNode.sql" />
     <Build Include="AppScript\User Defined Types\typeScriptingPath.sql" />
     <Build Include="AppScript\User Defined Types\typeScriptingTemplate.sql" />
-    <Build Include="HsCatalog\Tables\ModelCatalog.sql" />
+    <Build Include="HsCatalog\Tables\CatalogModel.sql" />
     <Build Include="AppCatalog\Triggers\trigCatalogModel.sql" />
     <Build Include="AppCatalog\Views\CatalogModel.Hs.sql" />
     <Build Include="AppLibrary\Triggers\trigLibrarySource.sql" />
