@@ -12,7 +12,7 @@ With [Securable] As (
 	Union
 	Select	[LibraryId] As [SecurableId],
 			[LibraryTitle] As [SecurableTitle]
-	From	[App_DataDictionary].[LibrarySource]
+	From	[AppLibrary].[LibrarySource]
 	Union
 	Select	[ModelId] As [SecurableId],
 			[ModelTitle] As [SecurableTitle]
@@ -20,7 +20,7 @@ With [Securable] As (
 	Union
 	Select	[TemplateId] As [SecurableId],
 			[TemplateTitle] As [SecurableTitle]
-	From	[App_DataDictionary].[ScriptingTemplate]
+	From	[AppScript].[ScriptingTemplate]
 	/* Not Supported
 	Union
 	Select	[AttributeId] As [ObjectId],

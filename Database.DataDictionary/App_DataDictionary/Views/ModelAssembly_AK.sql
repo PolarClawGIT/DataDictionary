@@ -5,8 +5,8 @@ WITH SCHEMABINDING AS
 Select	M.[ModelId],
 		C.[LibraryId],
 		C.[AssemblyName]
-From	[App_DataDictionary].[LibrarySource] C
-		Inner Join [App_DataDictionary].[ModelLibrary] M
+From	[AppLibrary].[LibrarySource] C
+		Inner Join [AppLibrary].[LibraryModel] M
 		On	C.[LibraryId] = M.[LibraryId]
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_ModelAssembly]

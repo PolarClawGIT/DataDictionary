@@ -148,8 +148,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelLibrary]
-	From	[App_DataDictionary].[ModelLibrary] T
+	Delete From [AppLibrary].[LibraryModel]
+	From	[AppLibrary].[LibraryModel] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
@@ -158,8 +158,8 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppModel].[ModelCatalog]
-	From	[AppModel].[ModelCatalog] T
+	Delete From [AppCatalog].[CatalogModel]
+	From	[AppCatalog].[CatalogModel] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 

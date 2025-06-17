@@ -10,7 +10,7 @@ RETURNS TABLE AS RETURN (
 					FormatMessage('[%s]',[MemberName])) As [MemberNameSpace],
 				Convert(NVarChar(Max), Null) As [ParentNameSpace],
 				[MemberName]
-		From	[App_DataDictionary].[LibraryMember]
+		From	[AppLibrary].[LibraryMember]
 		Where	[MemberId] = @MemberId
 		Union All
 		Select	D.[MemberId],
@@ -24,7 +24,7 @@ RETURNS TABLE AS RETURN (
 					As [ParentNameSpace],
 				D.[MemberName]
 		From	[Data] D
-				Inner Join [App_DataDictionary].[LibraryMember] P
+				Inner Join [AppLibrary].[LibraryMember] P
 				On	D.[MemberParentId] = P.[MemberId])
 	Select	[MemberId],
 			[MemberNameSpace],
