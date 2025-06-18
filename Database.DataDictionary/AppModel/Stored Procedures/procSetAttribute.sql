@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[AttributeId]			UniqueIdentifier Not Null,
-		[AttributeTitle]		[App_DataDictionary].[typeTitle] Not Null,
-		[AttributeDescription]	[App_DataDictionary].[typeDescription] Null,
+		[AttributeTitle]		[AppGeneral].[typeTitle] Not Null,
+		[AttributeDescription]	[AppGeneral].[typeDescription] Null,
 		[AttributeName]			[AppModel].[typeQualifiedName] Null,
 		[DataType]			    NVarChar(128) Null,
 		[DataLength]		    SmallInt Null,

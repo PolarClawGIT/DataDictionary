@@ -2,7 +2,7 @@
 (
 	[ProcessId]             UniqueIdentifier Not Null,
 	[ArgumentAliasId]		UniqueIdentifier Not Null,
-	[ArgumentKnownAs]		[App_DataDictionary].[typeTitle] Not Null, -- What to call the Argument within this Entity (default is the Attribute Name)
+	[ArgumentKnownAs]		[AppGeneral].[typeTitle] Not Null, -- What to call the Argument within this Entity (default is the Attribute Name)
 	[OrdinalPosition]       Int Not Null,
 	[IsPassed]				Bit Not Null CONSTRAINT [DF_ProcessArgumentPassed] DEFAULT (0), -- The Argument is passed to the process (Input)
 	[IsReturned]			Bit Not Null CONSTRAINT [DF_ProcessArgumentReturned] DEFAULT (0), -- The Argument is returned by the process (Output)

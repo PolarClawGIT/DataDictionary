@@ -73,7 +73,7 @@
     <Folder Include="AppGeneral\Functions" />
     <Folder Include="AppGeneral\Stored Procedures" />
     <Folder Include="AppGeneral\Tables" />
-    <Folder Include="AppGeneral\User Defined Types" />
+    <Folder Include="AppGeneral\User Defined Table Types" />
     <Folder Include="AppGeneral\Views" />
     <Folder Include="HsGeneral" />
     <Folder Include="HsGeneral\Tables" />
@@ -83,12 +83,12 @@
     <Folder Include="AppSecurity\Policy" />
     <Folder Include="AppSecurity\Views" />
     <Folder Include="AppSecurity\Stored Procedures" />
-    <Folder Include="AppSecurity\User Defined Types" />
+    <Folder Include="AppSecurity\User Defined Table Types" />
     <Folder Include="AppCatalog" />
     <Folder Include="HsCatalog" />
     <Folder Include="AppCatalog\Stored Procedures" />
     <Folder Include="AppCatalog\Tables" />
-    <Folder Include="AppCatalog\User Defined Types" />
+    <Folder Include="AppCatalog\User Defined Table Types" />
     <Folder Include="AppCatalog\Views" />
     <Folder Include="HsCatalog\Tables" />
     <Folder Include="AppModel" />
@@ -104,7 +104,7 @@
     <Folder Include="AppScript" />
     <Folder Include="AppScript\Stored Procedures" />
     <Folder Include="AppScript\Tables" />
-    <Folder Include="AppScript\User Defined Types" />
+    <Folder Include="AppScript\User Defined Table Types" />
     <Folder Include="AppScript\Views" />
     <Folder Include="HsModel" />
     <Folder Include="HsModel\Tables" />
@@ -120,6 +120,10 @@
     <Folder Include="AppLibrary\Triggers" />
     <Folder Include="AppScript\Triggers" />
     <Folder Include="AppModel\Functions" />
+    <Folder Include="AppModel\User Defined Data Types" />
+    <Folder Include="AppModel\User Defined Table Types" />
+    <Folder Include="AppGeneral\User Defined Data Types" />
+    <Folder Include="AppLibrary\Functions" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -131,21 +135,15 @@
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeObjectType.sql" />
-    <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
     <Build Include="AppGeneral\Tables\HelpSubject.sql" />
     <Build Include="HsGeneral\Tables\HelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procSetHelpSubject.sql" />
-    <Build Include="AppGeneral\User Defined Types\typeHelpSubject.sql" />
+    <Build Include="AppGeneral\User Defined Table Types\typeHelpSubject.sql" />
     <Build Include="AppSecurity\Tables\Role.sql" />
     <Build Include="AppSecurity\Tables\Principal.sql" />
     <Build Include="AppSecurity\Tables\SecurablePermission.sql" />
@@ -162,11 +160,11 @@
       <SuppressTSqlWarnings>
       </SuppressTSqlWarnings>
     </Build>
-    <Build Include="AppSecurity\User Defined Types\typePrincipal.sql" />
+    <Build Include="AppSecurity\User Defined Table Types\typePrincipal.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetRole.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeRole.sql" />
+    <Build Include="AppSecurity\User Defined Table Types\typeRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetRoleMembership.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeRoleMembership.sql" />
+    <Build Include="AppSecurity\User Defined Table Types\typeRoleMembership.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetPrincipal.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetRole.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetMembership.sql" />
@@ -175,8 +173,8 @@
     </Build>
     <Build Include="AppSecurity\Stored Procedures\procGetSecurableOwner.sql" />
     <Build Include="AppSecurity\Stored Procedures\procGetSecurablePermission.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeSecurableOwner.sql" />
-    <Build Include="AppSecurity\User Defined Types\typeSecurablePermission.sql" />
+    <Build Include="AppSecurity\User Defined Table Types\typeSecurableOwner.sql" />
+    <Build Include="AppSecurity\User Defined Table Types\typeSecurablePermission.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetSecurableOwner.sql" />
     <Build Include="AppSecurity\Stored Procedures\procSetSecurablePermission.sql" />
     <Build Include="AppSecurity\Views\Securable.sql" />
@@ -196,7 +194,7 @@
     <Build Include="AppCatalog\Tables\Catalog.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetCatalog.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetCatalog.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeCatalog.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeCatalog.sql" />
     <Build Include="HsCatalog\Tables\Catalog.sql" />
     <Build Include="AppSecurity\Policy\policyCatalog.sql" />
     <Build Include="AppCatalog\Tables\Schema.sql" />
@@ -206,18 +204,18 @@
     <Build Include="AppCatalog\Views\Catalog.Hs.sql" />
     <Build Include="AppCatalog\Views\Schema.Hs.sql" />
     <Build Include="AppGeneral\Views\HelpSubjectHs.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeSchema.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeSchema.sql" />
     <Build Include="AppCatalog\Tables\Domain.sql" />
     <Build Include="HsCatalog\Tables\Domain.sql" />
     <Build Include="AppCatalog\Views\Domain.Hs.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetDomain.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetDomain.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeDomain.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeDomain.sql" />
     <Build Include="AppCatalog\Tables\Property.sql" />
     <Build Include="HsCatalog\Tables\Property.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetProperty.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetProperty.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeProperty.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeProperty.sql" />
     <Build Include="AppCatalog\Views\Property.Hs.sql" />
     <Build Include="AppGeneral\Tables\TransactionLog.sql" />
     <Build Include="AppGeneral\Stored Procedures\procRecordTransactionLog.sql">
@@ -235,8 +233,8 @@
     <Build Include="AppCatalog\Stored Procedures\procGetTableColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetTable.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetTableColumn.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeTable.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeTableColumn.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeTable.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeTableColumn.sql" />
     <Build Include="HsCatalog\Tables\Table.sql" />
     <Build Include="HsCatalog\Tables\TableColumn.sql" />
     <Build Include="AppCatalog\Views\Table.Hs.sql" />
@@ -247,8 +245,8 @@
     <Build Include="AppCatalog\Tables\RoutineParameter.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetRoutine.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetRoutineParameter.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeRoutine.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeRoutineParameter.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeRoutine.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeRoutineParameter.sql" />
     <Build Include="AppCatalog\Views\Routine.Hs.sql" />
     <Build Include="AppCatalog\Views\RoutineParameter.Hs.sql" />
     <Build Include="AppCatalog\Tables\RoutineColumn.sql" />
@@ -262,7 +260,7 @@
     <Build Include="AppCatalog\Triggers\trigRoutineColumn.sql" />
     <Build Include="AppCatalog\Triggers\trigRoutineParameter.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetRoutineColumn.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeRoutineColumn.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeRoutineColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetRoutineColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetConstraint.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetConstraintColumn.sql" />
@@ -270,8 +268,8 @@
     <Build Include="AppCatalog\Views\ConstraintColumn.Hs.sql" />
     <Build Include="AppCatalog\Tables\Constraint.sql" />
     <Build Include="AppCatalog\Tables\ConstraintColumn.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeConstraint.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeConstraintColumn.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeConstraint.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeConstraintColumn.sql" />
     <Build Include="HsCatalog\Tables\Constraint.sql" />
     <Build Include="HsCatalog\Tables\ConstraintColumn.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetConstraint.sql" />
@@ -279,7 +277,7 @@
     <Build Include="AppCatalog\Tables\Reference.sql" />
     <Build Include="AppCatalog\Stored Procedures\procGetReference.sql" />
     <Build Include="AppCatalog\Stored Procedures\procSetReference.sql" />
-    <Build Include="AppCatalog\User Defined Types\typeReference.sql" />
+    <Build Include="AppCatalog\User Defined Table Types\typeReference.sql" />
     <Build Include="HsCatalog\Tables\Reference.sql" />
     <Build Include="AppCatalog\Views\Reference.Hs.sql" />
     <Build Include="AppCatalog\Triggers\trigReference.sql" />
@@ -287,7 +285,6 @@
     <Build Include="AppModel\Tables\Model.sql" />
     <Build Include="AppModel\Stored Procedures\procGetModel.sql" />
     <Build Include="AppModel\Stored Procedures\procSetModel.sql" />
-    <Build Include="AppModel\User Defined Types\typeModel.sql" />
     <Build Include="HsModel\Tables\Model.sql" />
     <Build Include="AppModel\Views\Model.Hs.sql" />
     <Build Include="AppModel\Triggers\trigModel.sql" />
@@ -301,8 +298,6 @@
     <Build Include="AppModel\Stored Procedures\procGetProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procSetDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProperty.sql" />
-    <Build Include="AppModel\User Defined Types\typeDefinition.sql" />
-    <Build Include="AppModel\User Defined Types\typeProperty.sql" />
     <Build Include="AppModel\Triggers\trigPropertyEnumeration.sql" />
     <Build Include="AppModel\Triggers\trigDefinitionEnumeration.sql" />
     <Build Include="AppModel\Views\Definition.Hs.sql" />
@@ -318,7 +313,6 @@
     <Build Include="AppModel\Tables\SubjectArea.sql" />
     <Build Include="HsModel\Tables\SubjectArea.sql" />
     <Build Include="AppModel\Triggers\trigSubjectArea.sql" />
-    <Build Include="AppModel\User Defined Types\typeSubjectArea.sql" />
     <Build Include="AppModel\Views\SubjectArea.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
@@ -338,7 +332,6 @@
     <Build Include="Obsolete\funcGetNameSpaceByName.sql" />
     <Build Include="Obsolete\funcModelNameSpaceAuthorization.sql" />
     <Build Include="Obsolete\policyModelNameSpace.sql" />
-    <Build Include="AppModel\User Defined Types\typeQualifiedName.sql" />
     <Build Include="Obsolete\trigNameSpaceHierarchy.sql" />
     <Build Include="Obsolete\typeNameSpace.sql" />
     <Build Include="Obsolete\NameSpace.Hs.sql" />
@@ -357,11 +350,6 @@
     <Build Include="HsModel\Tables\AttributeDefinition.sql" />
     <Build Include="HsModel\Tables\AttributeProperty.sql" />
     <Build Include="HsModel\Tables\ModelAttribute.sql" />
-    <Build Include="AppModel\User Defined Types\typeAttribute.sql" />
-    <Build Include="AppModel\User Defined Types\typeAttributeAlias.sql" />
-    <Build Include="AppModel\User Defined Types\typeAttributeDefinition.sql" />
-    <Build Include="AppModel\User Defined Types\typeAttributeProperty.sql" />
-    <Build Include="AppModel\User Defined Types\typeAttributeSubjectArea.sql" />
     <Build Include="AppModel\Views\Attribute.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetAttribute.sql" />
     <Build Include="AppModel\Stored Procedures\procGetAttributeAlias.sql" />
@@ -378,7 +366,6 @@
     <Build Include="AppModel\Views\AttributeProperty.Hs.sql" />
     <Build Include="AppModel\Views\AttributeSubjectArea.Hs.sql" />
     <Build Include="AppModel\Views\ModelAttribute.Hs.sql" />
-    <Build Include="AppModel\User Defined Types\typePropertyValue.sql" />
     <Build Include="AppModel\Tables\Entity.sql" />
     <Build Include="AppModel\Tables\EntityAlias.sql" />
     <Build Include="AppModel\Tables\EntityAttribute.sql" />
@@ -396,12 +383,6 @@
     <Build Include="AppModel\Stored Procedures\procGetEntityAttribute.sql" />
     <Build Include="AppModel\Stored Procedures\procGetEntityDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procGetEntityProperty.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntity.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntityAlias.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntityAttribute.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntityDefinition.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntityProperty.sql" />
-    <Build Include="AppModel\User Defined Types\typeEntitySubjectArea.sql" />
     <Build Include="AppModel\Triggers\trigEntity.sql" />
     <Build Include="AppModel\Triggers\trigEntityAlias.sql" />
     <Build Include="AppModel\Triggers\trigEntityAttribute.sql" />
@@ -433,20 +414,12 @@
     <Build Include="AppSecurity\Functions\funcModelEntityAuthorization.sql" />
     <Build Include="AppModel\Stored Procedures\procGetEntitySubjectArea.sql" />
     <Build Include="AppModel\Tables\AliasHierarchy.sql" />
-    <Build Include="AppModel\User Defined Types\typeRichText.sql" />
-    <Build Include="AppModel\User Defined Types\typeScopeName.sql" />
-    <Build Include="AppModel\User Defined Types\typeAlias.sql" />
     <Build Include="AppModel\Functions\funcAliasNameSpace.sql" />
     <Build Include="AppModel\Functions\funcAliasId.sql" />
     <Build Include="HsModel\Tables\AliasHierarchy.sql" />
     <Build Include="AppModel\Views\Alias.Hs.sql" />
     <Build Include="AppModel\Triggers\trigAliasHierarchy.sql" />
     <Build Include="AppModel\Stored Procedures\procSetAlias.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcess.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessAlias.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessSubjectArea.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessProperty.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessDefinition.sql" />
     <Build Include="HsModel\Tables\Process.sql" />
     <Build Include="HsModel\Tables\ProcessAlias.sql" />
     <Build Include="HsModel\Tables\ProcessDefinition.sql" />
@@ -479,7 +452,6 @@
     <Build Include="AppModel\Stored Procedures\procSetProcessSubjectArea.sql" />
     <Build Include="AppModel\Tables\ProcessArgument.sql" />
     <Build Include="AppModel\Triggers\trigProcessArgument.sql" />
-    <Build Include="AppModel\User Defined Types\typeProcessArgument.sql" />
     <Build Include="HsModel\Tables\ProcessArgument.sql" />
     <Build Include="AppModel\Views\ProcessArgument.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessArgument.sql" />
@@ -507,10 +479,10 @@
     <Build Include="AppScript\Stored Procedures\procSetScriptingTemplate.sql" />
     <Build Include="AppLibrary\User Defined Types\typeLibraryMember.sql" />
     <Build Include="AppLibrary\User Defined Types\typeLibrarySource.sql" />
-    <Build Include="AppScript\User Defined Types\typeScriptingAttribute.sql" />
-    <Build Include="AppScript\User Defined Types\typeScriptingNode.sql" />
-    <Build Include="AppScript\User Defined Types\typeScriptingPath.sql" />
-    <Build Include="AppScript\User Defined Types\typeScriptingTemplate.sql" />
+    <Build Include="AppScript\User Defined Table Types\typeScriptingAttribute.sql" />
+    <Build Include="AppScript\User Defined Table Types\typeScriptingNode.sql" />
+    <Build Include="AppScript\User Defined Table Types\typeScriptingPath.sql" />
+    <Build Include="AppScript\User Defined Table Types\typeScriptingTemplate.sql" />
     <Build Include="HsCatalog\Tables\CatalogModel.sql" />
     <Build Include="AppCatalog\Triggers\trigCatalogModel.sql" />
     <Build Include="AppCatalog\Views\CatalogModel.Hs.sql" />
@@ -522,6 +494,36 @@
     <Build Include="AppScript\Triggers\trigScriptingModel.sql" />
     <Build Include="AppScript\Triggers\trigScriptingAttribute.sql" />
     <Build Include="AppScript\Triggers\trigScriptingPath.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAlias.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAttribute.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAttributeAlias.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAttributeDefinition.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAttributeProperty.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeAttributeSubjectArea.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeDefinition.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntity.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntityAlias.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntityAttribute.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntityDefinition.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntityProperty.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeEntitySubjectArea.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeModel.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcess.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcessAlias.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcessArgument.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcessDefinition.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcessProperty.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProcessSubjectArea.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeProperty.sql" />
+    <Build Include="AppModel\User Defined Table Types\typePropertyValue.sql" />
+    <Build Include="AppModel\User Defined Table Types\typeSubjectArea.sql" />
+    <Build Include="AppModel\User Defined Data Types\typeQualifiedName.sql" />
+    <Build Include="AppModel\User Defined Data Types\typeRichText.sql" />
+    <Build Include="AppModel\User Defined Data Types\typeScopeName.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\typeDescription.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\typeObjectType.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\typeTitle.sql" />
+    <Build Include="AppLibrary\Functions\funcGetMemberNameSpace.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

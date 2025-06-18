@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppModel].[Attribute]
 (	-- An ER diagram attribute is is associated with a Column or Parameter.
 	[AttributeId]			UniqueIdentifier Not Null CONSTRAINT [DF_AttributeId] DEFAULT (newid()),
-	[AttributeTitle]		[App_DataDictionary].[typeTitle] Not Null,
-	[AttributeDescription]	[App_DataDictionary].[typeDescription] Null,
+	[AttributeTitle]		[AppGeneral].[typeTitle] Not Null,
+	[AttributeDescription]	[AppGeneral].[typeDescription] Null,
 	[AttributeName]			[AppModel].[typeQualifiedName]         Null,
 	[DataType]				NVarChar(128) Null, -- Generic definition of the Data Type.
 	[DataLength]			SmallInt Null, -- The Length/Maximum Size of the Data Type. Null generally = maximum possible.

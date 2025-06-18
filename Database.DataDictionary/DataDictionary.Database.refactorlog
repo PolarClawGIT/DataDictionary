@@ -3816,4 +3816,28 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[CatalogModelHs]" />
   </Operation>
+  <Operation Name="Move Schema" Key="3155f42e-e7a7-4373-b226-768de36578ce" ChangeDateTime="06/18/2025 15:23:57">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeDescription]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="7bf92e25-35b5-4881-8d9d-1f26e40537f7" ChangeDateTime="06/18/2025 15:24:19">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeObjectType]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="0b1d2674-5a00-4b33-aa50-9cdf8945f778" ChangeDateTime="06/18/2025 15:24:39">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeTitle]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="265fca7d-938d-49ee-b737-0bf2b806d34c" ChangeDateTime="06/18/2025 15:27:06">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcGetMemberName]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="NewSchema" Value="AppLibrary" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

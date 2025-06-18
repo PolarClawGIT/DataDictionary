@@ -29,7 +29,7 @@ Begin Try
 		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
 		[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[MemberType]            [App_DataDictionary].[typeObjectType] Not Null,
+		[MemberType]            [AppGeneral].[typeObjectType] Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
 
@@ -51,7 +51,7 @@ Begin Try
 	From	[AppLibrary].[LibraryMember] M
 			Left Join [AppLibrary].[LibraryModel] L
 			On	M.[LibraryId] = L.[LibraryId]
-			Cross Apply [App_DataDictionary].[funcGetMemberName](M.[MemberId]) N
+			Cross Apply [AppLibrary].[funcGetMemberName](M.[MemberId]) N
 	Where	M.[MemberType] In ('NameSpace','Type') And
 			(@ModelId is Null or L.[ModelId] = @ModelId) And
 			(@LibraryId is Null or M.[LibraryId] = @LibraryId)),

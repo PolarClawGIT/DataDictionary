@@ -1,0 +1,31 @@
+﻿CREATE TYPE [AppCatalog].[typeReference] AS TABLE
+(
+	[CatalogId]               UniqueIdentifier Null,
+	[ReferenceId]             UniqueIdentifier Null,
+	[DatabaseName]            SysName Null,
+	[SchemaName]              SysName Null,
+	[ObjectName]              SysName Null,
+	[ObjectType]              [AppGeneral].[typeObjectType] Null,
+	[ReferencedDatabaseName]  SysName Null,
+	[ReferencedSchemaName]    SysName Null,
+	[ReferencedObjectName]    SysName Null,
+	[ReferencedColumnName]    SysName Null,
+	[ReferencedType]          [AppGeneral].[typeObjectType] Null,
+	[IsCallerDependent]       Bit Null,
+	[IsAmbiguous]             Bit Null,
+	[IsSelected]              Bit Null,
+	[IsModified]              Bit Null,
+	[IsSelectAll]             Bit Null,
+	[IsAllColumnsFound]       Bit Null,
+	[IsInsertAll]             Bit Null,
+	[IsIncomplete]            Bit NULL,
+	-- Temporal Data
+	[CreatedOn]              DateTime2 (7) Null,
+	[CreatedBy]              NVarChar(4000) Null,
+	[RemovedOn]              DateTime2 (7) Null,
+	[RemovedBy]              NVarChar(4000) Null,
+	[IsInserted]             Bit Null,
+	[IsUpdated]              Bit Null,
+	[IsDeleted]              Bit Null,
+	[IsCurrent]              Bit Null
+)

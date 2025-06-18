@@ -22,8 +22,8 @@ Begin Try
 	Declare @Values Table (
 			[PrincipalId] UniqueIdentifier Not Null,
 			[PrincipalLogin] SysName Not Null,
-			[PrincipalName] [App_DataDictionary].[typeTitle] Not Null,
-			[PrincipalAnnotation] [App_DataDictionary].[typeDescription] Null,
+			[PrincipalName] [AppGeneral].[typeTitle] Not Null,
+			[PrincipalAnnotation] [AppGeneral].[typeDescription] Null,
 			Primary Key ([PrincipalId]))
 
 	Insert Into @Values

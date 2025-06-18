@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
-		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
-		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+		[SubjectAreaTitle]       [AppGeneral].[typeTitle] Not NULL,
+		[SubjectAreaDescription] [AppGeneral].[typeDescription] NULL,
 		[ModelId]				 UniqueIdentifier Not NULL,
 		[SubjectName]            [AppModel].[typeQualifiedName] Not Null
 		Primary Key ([SubjectAreaId]),

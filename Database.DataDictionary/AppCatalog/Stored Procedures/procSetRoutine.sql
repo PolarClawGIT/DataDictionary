@@ -38,7 +38,7 @@ Begin Try
 		[RoutineId]          UniqueIdentifier Not Null,
 		[SchemaId]           UniqueIdentifier Not Null,
 		[RoutineName]        SysName Not Null,
-		[RoutineType]        [App_DataDictionary].[typeObjectType] Null,
+		[RoutineType]        [AppGeneral].[typeObjectType] Null,
 		Primary Key ([RoutineId]),
 		Unique ([SchemaId], [RoutineName]))
 

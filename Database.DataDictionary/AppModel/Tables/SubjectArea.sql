@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [AppModel].[SubjectArea] (
     [SubjectAreaId]          UniqueIdentifier                       CONSTRAINT [DF_SubjectAreaId] DEFAULT (newsequentialid()) NOT NULL,
-    [SubjectAreaTitle]       [App_DataDictionary].[typeTitle]       NULL,
-    [SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+    [SubjectAreaTitle]       [AppGeneral].[typeTitle]       NULL,
+    [SubjectAreaDescription] [AppGeneral].[typeDescription] NULL,
     [SubjectName]            [AppModel].[typeQualifiedName]         Null,
     [ModelId]                UniqueIdentifier                       NOT NULL,
    	-- Temporal History Support

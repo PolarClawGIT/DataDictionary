@@ -7,7 +7,7 @@
 	[RoutineId]          UniqueIdentifier Not Null CONSTRAINT [DF_RoutineId] DEFAULT (newid()),
 	[SchemaId]           UniqueIdentifier Not Null,
 	[RoutineName]        SysName Not Null,
-	[RoutineType]        [App_DataDictionary].[typeObjectType] Null, -- Known types: PROCEDURE, FUNCTION
+	[RoutineType]        [AppGeneral].[typeObjectType] Null, -- Known types: PROCEDURE, FUNCTION
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Routine_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Routine_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

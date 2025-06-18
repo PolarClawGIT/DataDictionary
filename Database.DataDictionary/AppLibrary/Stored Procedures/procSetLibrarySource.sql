@@ -26,8 +26,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[LibraryId]             UniqueIdentifier Not Null,
-		[LibraryTitle]          [App_DataDictionary].[typeTitle] Not Null,
-		[LibraryDescription]    [App_DataDictionary].[typeDescription] Null,
+		[LibraryTitle]          [AppGeneral].[typeTitle] Not Null,
+		[LibraryDescription]    [AppGeneral].[typeDescription] Null,
 		[AssemblyName]          NVarChar(128) Not Null, -- Natural Key
 		[SourceFile]            NVarChar(500) Not Null, 
 		[SourceDate]            DateTime2 (7) Not Null,

@@ -17,7 +17,7 @@ From	[AppLibrary].[LibraryMember] M
 		On	M.[LibraryId] = L.[LibraryId]
 		Left Join [AppLibrary].[LibraryModel] A
 		On	M.[LibraryId] = A.[LibraryId]
-		Cross Apply [App_DataDictionary].[funcGetMemberName] (M.[MemberId]) N
+		Cross Apply [AppLibrary].[funcGetMemberName] (M.[MemberId]) N
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@LibraryId is Null or @LibraryId = M.[LibraryId])
 Order By [MemberNameSpace]

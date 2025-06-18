@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]			   UniqueIdentifier Not Null,
 		[AttributeAliasId]     UniqueIdentifier Not Null,
-		[AttributeKnownAs]	   [App_DataDictionary].[typeTitle] Not Null,
+		[AttributeKnownAs]	   [AppGeneral].[typeTitle] Not Null,
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
 		[IsPrimaryKey]		   Bit Null,

@@ -43,8 +43,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table ( -- Needs to match the target data structure
 		[CatalogId] UniqueIdentifier Not Null,
-		[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
-		[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
+		[CatalogTitle] [AppGeneral].[typeTitle] Not Null,
+		[CatalogDescription] [AppGeneral].[typeDescription] Null,
 		[ServerName] SysName Not Null,
 		[DatabaseName] SysName Not Null,
 		[SourceDate] DateTime Not Null,

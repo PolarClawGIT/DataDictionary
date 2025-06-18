@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[EntityId]			    UniqueIdentifier Not Null,
-		[EntityTitle]		    [App_DataDictionary].[typeTitle] Not Null,
-		[EntityDescription]	    [App_DataDictionary].[typeDescription] Null,
+		[EntityTitle]		    [AppGeneral].[typeTitle] Not Null,
+		[EntityDescription]	    [AppGeneral].[typeDescription] Null,
 		[EntityName]			[AppModel].[typeQualifiedName] Null,
 		Primary Key ([EntityId]),
 		Unique ([EntityTitle]))

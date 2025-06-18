@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ProcessId]			    UniqueIdentifier Not Null,
-		[ProcessTitle]		    [App_DataDictionary].[typeTitle] Not Null,
-		[ProcessDescription]	[App_DataDictionary].[typeDescription] Null,
+		[ProcessTitle]		    [AppGeneral].[typeTitle] Not Null,
+		[ProcessDescription]	[AppGeneral].[typeDescription] Null,
 		[ProcessName]			[AppModel].[typeQualifiedName] Null,
 		Primary Key ([ProcessId]),
 		Unique ([ProcessTitle]))

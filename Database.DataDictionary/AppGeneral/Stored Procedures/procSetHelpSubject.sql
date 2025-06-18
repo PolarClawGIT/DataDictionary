@@ -33,8 +33,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 			[HelpId] UniqueIdentifier Not Null,
-			[HelpSubject] [App_DataDictionary].[typeTitle] Not Null,
-			[HelpToolTip] [App_DataDictionary].[typeDescription] Null,
+			[HelpSubject] [AppGeneral].[typeTitle] Not Null,
+			[HelpToolTip] [AppGeneral].[typeDescription] Null,
 			[HelpText] NVarChar(Max) Not Null,
 			[NameSpace] NVarChar(1023) Null,
 			Primary Key ([HelpId]))

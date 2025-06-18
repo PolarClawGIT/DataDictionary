@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[DefinitionEnumeration]
 (
 	[DefinitionId]             UniqueIdentifier NOT NULL,
-	[DefinitionTitle]          [App_DataDictionary].[typeTitle] Not Null,
-	[DefinitionDescription]    [App_DataDictionary].[typeDescription] Null,
+	[DefinitionTitle]          [AppGeneral].[typeTitle] Not Null,
+	[DefinitionDescription]    [AppGeneral].[typeDescription] Null,
 	[IsCommon]                 Bit Not Null DEFAULT(0),
 	[SysStart]                 DateTime2 (7) NOT NULL,
 	[SysEnd]                   DateTime2 (7) NOT NULL,

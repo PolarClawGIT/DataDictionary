@@ -49,7 +49,7 @@ Begin Try
 		[TableId]   UniqueIdentifier Not Null,
 		[SchemaId]  UniqueIdentifier Not Null,
 		[TableName] SysName Not Null,
-		[TableType] [App_DataDictionary].[typeObjectType] Null,
+		[TableType] [AppGeneral].[typeObjectType] Null,
 		Primary Key ([TableId]),
 		Unique ([SchemaId], [TableName]))
 

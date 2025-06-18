@@ -7,8 +7,8 @@
 	-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments
 	-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/
 	[LibraryId]             UniqueIdentifier Not Null CONSTRAINT [DF_LibrarySourceId] DEFAULT (newid()),
-	[LibraryTitle]          [App_DataDictionary].[typeTitle] Not Null,-- expected to be the same as [AssemblyName], but can be changed.
-	[LibraryDescription]    [App_DataDictionary].[typeDescription] Null,
+	[LibraryTitle]          [AppGeneral].[typeTitle] Not Null,-- expected to be the same as [AssemblyName], but can be changed.
+	[LibraryDescription]    [AppGeneral].[typeDescription] Null,
 	-- 1023 is believed to be the maximum length of any given component of a .Net NameSpace value.
 	-- Assembly names are general the first level(s) of the NameSpace.
 	-- There is no actual total limit to the length at the coding level.

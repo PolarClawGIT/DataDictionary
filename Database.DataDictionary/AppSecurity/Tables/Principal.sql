@@ -2,8 +2,8 @@
 (
 	[PrincipalId] UniqueIdentifier Not Null CONSTRAINT [DF_PrincipalId] DEFAULT (newsequentialid()),
 	[PrincipalLogin] SysName Not Null, -- Account Name as it appears in original_login()
-	[PrincipalName] [App_DataDictionary].[typeTitle] Not Null, -- Display Name
-	[PrincipalAnnotation] [App_DataDictionary].[typeDescription] Null, --Additional Notes
+	[PrincipalName] [AppGeneral].[typeTitle] Not Null, -- Display Name
+	[PrincipalAnnotation] [AppGeneral].[typeDescription] Null, --Additional Notes
 	-- TODO: Add System Version later once the schema is locked down
 	[ModifiedBy] SysName Not Null CONSTRAINT [DF_Principal_ModifiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Principal_SysStart] DEFAULT (sysdatetime()),
