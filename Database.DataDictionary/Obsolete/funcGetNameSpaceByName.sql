@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppModel].[funcGetNameSpaceByName] (@NameSpace [App_DataDictionary].[typeNameSpacePath])
+﻿CREATE FUNCTION [AppModel].[funcGetNameSpaceByName] (@NameSpace [AppGeneral].[typeNameSpacePath])
 -- This takes a value and returns the ID's for all matching NameSpace & the parents of that NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 --

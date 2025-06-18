@@ -3840,4 +3840,16 @@
     <Property Name="NewSchema" Value="AppLibrary" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="72b9b439-f491-4903-b275-5a22d8547387" ChangeDateTime="06/18/2025 15:46:07">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpaceMember]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="483b4386-2691-48eb-895e-6b3211adc3fc" ChangeDateTime="06/18/2025 15:46:50">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpacePath]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

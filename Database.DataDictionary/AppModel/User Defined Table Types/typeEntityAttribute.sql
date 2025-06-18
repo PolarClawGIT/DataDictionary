@@ -2,7 +2,7 @@
 (
     [EntityId]             UniqueIdentifier NULL,
 	[AttributeKnownAs]     [AppGeneral].[typeTitle] Null,
-	[AttributeName]        [App_DataDictionary].[typeNameSpacePath] Null,
+	[AttributeName]        [AppGeneral].[typeNameSpacePath] Null,
 	[OrdinalPosition]      Int Not Null,
 	[IsNullable]		   Bit Null,
 	[IsPrimaryKey]		   Bit Null,

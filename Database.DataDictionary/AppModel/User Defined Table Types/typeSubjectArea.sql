@@ -2,7 +2,7 @@
     [SubjectAreaId]          UNIQUEIDENTIFIER                           NULL,
     [SubjectAreaTitle]       [AppGeneral].[typeTitle]           NULL,
     [SubjectAreaDescription] [AppGeneral].[typeDescription]     NULL,
-    [SubjectName]            [App_DataDictionary].[typeNameSpacePath]   NULL,
+    [SubjectName]            [AppGeneral].[typeNameSpacePath]   NULL,
 	-- Temporal Data
 	[CreatedOn]              DateTime2 (7) Null,
 	[CreatedBy]              NVarChar(4000) Null,

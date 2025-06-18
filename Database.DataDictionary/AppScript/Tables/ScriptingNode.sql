@@ -4,8 +4,8 @@
 	[TemplateId]            UniqueIdentifier NOT NULL,
 	-- Match To
 	[PropertyScope]         [AppModel].[typeScopeName] Not Null, -- Application Scope to match to
-	[PropertyName]          [App_DataDictionary].[typeNameSpaceMember] Not Null, -- Name Property to match too
-	[NodeName]				[App_DataDictionary].[typeNameSpaceMember] Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
+	[PropertyName]          [AppGeneral].[typeNameSpaceMember] Not Null, -- Name Property to match too
+	[NodeName]				[AppGeneral].[typeNameSpaceMember] Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
 	[NodeValueAs]			NVarChar(50) Not Null, -- How is the data to be rendered Attribute/Element Text/CData/XML.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModifiedBy] SysName Not Null CONSTRAINT [DF_ScriptingNode_ModifiedBy] DEFAULT (original_login()),

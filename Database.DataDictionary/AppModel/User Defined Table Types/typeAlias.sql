@@ -2,7 +2,7 @@
 (    -- TIP: This matches the C# DataTable structure and GET procedure
     [AliasId]              UniqueIdentifier NULL,
 	--[AliasScope]           [AppModel].[typeScopeName] Null,
-	[AliasNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null--,
+	[AliasNameSpace]       [AppGeneral].[typeNameSpacePath] Null--,
 	-- Temporal Data (Not supported)
 	--[CreatedOn]            DateTime2 (7) Null,
 	--[CreatedBy]            NVarChar(4000) Null,

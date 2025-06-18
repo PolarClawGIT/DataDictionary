@@ -2,9 +2,9 @@
 -- This takes the Alias and rebuilds them into a Alias NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
-RETURNS [App_DataDictionary].[typeNameSpacePath] as 
+RETURNS [AppGeneral].[typeNameSpacePath] as 
 BEGIN
-	Declare @Result [App_DataDictionary].[typeNameSpacePath] = null
+	Declare @Result [AppGeneral].[typeNameSpacePath] = null
 
 	;With [Data] As (
 	Select	[AliasId],

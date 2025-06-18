@@ -29,8 +29,8 @@ Begin Try
 		[AliasMember]		NVarChar(800) Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
-		[AliasNameSpace]	[App_DataDictionary].[typeNameSpacePath] Not Null,
-		[ParentNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
+		[AliasNameSpace]	[AppGeneral].[typeNameSpacePath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[typeNameSpacePath] Null,
 		Primary Key ([AliasId]))
 
 	;With [Data] As (

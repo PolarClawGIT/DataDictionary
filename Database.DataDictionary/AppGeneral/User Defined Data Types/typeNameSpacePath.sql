@@ -4,4 +4,4 @@
 -- Database: [DatabaseName].[SchemaName].[TableName].[ColumnName]
 -- Library, C#: [NameSpace].[SubNameSpace].[ClassName].[PropertyName]
 -- Model: [SubjectArea].[Sub-SubjectArea].[ElementName]
-CREATE TYPE [App_DataDictionary].[typeNameSpacePath] FROM NVarchar(Max)
+CREATE TYPE [AppGeneral].[typeNameSpacePath] FROM NVarchar(Max)

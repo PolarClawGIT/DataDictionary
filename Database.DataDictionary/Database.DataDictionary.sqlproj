@@ -135,10 +135,6 @@
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
-    <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
-    <Build Include="App_DataDictionary\Views\DatabaseObject.sql" />
     <Build Include="AppGeneral\Tables\HelpSubject.sql" />
     <Build Include="HsGeneral\Tables\HelpSubject.sql" />
     <Build Include="AppGeneral\Stored Procedures\procGetHelpSubject.sql" />
@@ -524,6 +520,8 @@
     <Build Include="AppGeneral\User Defined Data Types\typeObjectType.sql" />
     <Build Include="AppGeneral\User Defined Data Types\typeTitle.sql" />
     <Build Include="AppLibrary\Functions\funcGetMemberNameSpace.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\typeNameSpaceMember.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\typeNameSpacePath.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
