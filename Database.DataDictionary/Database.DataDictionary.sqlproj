@@ -457,9 +457,7 @@
     <Build Include="AppModel\Triggers\trigProcessAlias.sql" />
     <Build Include="AppModel\Triggers\trigProcess.sql" />
     <Build Include="AppSecurity\Functions\funcModelProcessAuthorization.sql" />
-    <Build Include="AppSecurity\Functions\funcModelRelationshipAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyModelProcess.sql" />
-    <Build Include="AppSecurity\Policy\policyModelRelationship.sql" />
     <Build Include="AppModel\Views\Process.Hs.sql" />
     <Build Include="AppModel\Views\ProcessAlias.Hs.sql" />
     <Build Include="AppModel\Views\ProcessDefinition.Hs.sql" />
@@ -487,13 +485,6 @@
     <Build Include="AppModel\Views\ProcessArgument.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetProcessArgument.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessArgument.sql" />
-    <Build Include="Obsolete\Relationship.sql" />
-    <Build Include="Obsolete\RelationshipAlias.sql" />
-    <Build Include="Obsolete\RelationshipAttribute.sql" />
-    <Build Include="Obsolete\RelationshipDefinition.sql" />
-    <Build Include="Obsolete\RelationshipProperty.sql" />
-    <Build Include="Obsolete\RelationshipSubjectArea.sql" />
-    <Build Include="Obsolete\ModelRelationship.sql" />
     <Build Include="AppLibrary\Tables\LibraryMember.sql" />
     <Build Include="AppLibrary\Tables\LibrarySource.sql" />
     <Build Include="AppScript\Tables\ScriptingAttribute.sql" />

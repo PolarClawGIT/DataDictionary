@@ -8,7 +8,6 @@
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelEntity],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelProcess],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelProperty],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] ([ModelId], 1) ON [AppModel].[ModelRelationship],
 
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DefinitionEnumeration],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[PropertyEnumeration],

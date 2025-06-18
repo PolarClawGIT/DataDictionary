@@ -118,16 +118,6 @@ Begin Try
 	Set @RowCount = @@RowCount
 	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppModel].[ModelRelationship]
-	From	[AppModel].[ModelRelationship] T
-			Left Join @Values S
-			On	T.[ModelId] = S.[ModelId]
-			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
-	Where	S.[ModelId] is Null And
-			T.[ModelId] = @ModelId
-	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [AppModel].[SubjectArea]
 	From	[AppModel].[SubjectArea] T
 			Left Join @Values S

@@ -87,16 +87,6 @@ Begin Try
 			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[ProcessSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppModel].[RelationshipSubjectArea]
-	From	[AppModel].[RelationshipSubjectArea] T
-			Left Join @Values S
-			On	T.[SubjectAreaId] = S.[SubjectAreaId]
-			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
-	Where	S.[SubjectAreaId] is Null And
-			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
-	Print FormatMessage ('Delete [AppModel].[RelationshipSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
-
 	;With [Delta] As (
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
