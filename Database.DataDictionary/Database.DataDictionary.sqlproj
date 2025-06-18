@@ -56,18 +56,12 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="App_DataDictionary\" />
-    <Folder Include="App_DataDictionary\Tables\" />
-    <Folder Include="App_DataDictionary\Stored Procedures\" />
     <Folder Include="Security\" />
     <Folder Include="dbo" />
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Sequence" />
-    <Folder Include="App_DataDictionary\User Defined Types\" />
     <Folder Include="dbo\Views" />
-    <Folder Include="App_DataDictionary\Views" />
-    <Folder Include="App_DataDictionary\Functions\" />
     <Folder Include="Obsolete" />
     <Folder Include="AppGeneral" />
     <Folder Include="AppGeneral\Functions" />
@@ -133,7 +127,6 @@
     <None Include="AppGeneral\DefaultHelpText.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Security\App_DataDictionary.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="AppGeneral\Tables\HelpSubject.sql" />
     <Build Include="HsGeneral\Tables\HelpSubject.sql" />
