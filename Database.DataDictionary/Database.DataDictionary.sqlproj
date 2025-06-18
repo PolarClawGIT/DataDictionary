@@ -478,7 +478,6 @@
     <Build Include="AppModel\Stored Procedures\procSetProcessProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessSubjectArea.sql" />
     <Build Include="AppModel\Tables\ProcessArgument.sql" />
-    <Build Include="Obsolete\typeProcessDataFlow.sql" />
     <Build Include="AppModel\Triggers\trigProcessArgument.sql" />
     <Build Include="AppModel\User Defined Types\typeProcessArgument.sql" />
     <Build Include="HsModel\Tables\ProcessArgument.sql" />
