@@ -479,16 +479,8 @@
     <Build Include="AppModel\Stored Procedures\procSetProcessDefinition.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessProperty.sql" />
     <Build Include="AppModel\Stored Procedures\procSetProcessSubjectArea.sql" />
-    <Build Include="Obsolete\DataFlow.sql" />
-    <Build Include="Obsolete\DataFlowDefinition.sql" />
-    <Build Include="Obsolete\DataFlowElement.sql" />
-    <Build Include="Obsolete\DataFlowProperty.sql" />
-    <Build Include="Obsolete\ModelDataFlow.sql" />
     <Build Include="AppModel\Tables\ProcessArgument.sql" />
-    <Build Include="Obsolete\ProcessDataFlow.sql" />
-    <Build Include="Obsolete\trigProcessDataFlow.sql" />
     <Build Include="Obsolete\typeProcessDataFlow.sql" />
-    <Build Include="Obsolete\ProcessDataFlow.Hs.sql" />
     <Build Include="AppModel\Triggers\trigProcessArgument.sql" />
     <Build Include="AppModel\User Defined Types\typeProcessArgument.sql" />
     <Build Include="HsModel\Tables\ProcessArgument.sql" />
