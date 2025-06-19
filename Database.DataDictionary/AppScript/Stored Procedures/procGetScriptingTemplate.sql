@@ -1,7 +1,9 @@
 ﻿CREATE PROCEDURE [AppScript].[procGetScriptingTemplate]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@TemplateTitle [AppGeneral].[typeTitle] = Null
+		@TemplateTitle [AppGeneral].[typeTitle] = Null,
+		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
+		@IncludeHistory Bit = 0 -- History is included
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
