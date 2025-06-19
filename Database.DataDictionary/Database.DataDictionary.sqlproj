@@ -515,6 +515,12 @@
     <Build Include="AppLibrary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="AppGeneral\User Defined Data Types\typeNameSpaceMember.sql" />
     <Build Include="AppGeneral\User Defined Data Types\typeNameSpacePath.sql" />
+    <Build Include="AppLibrary\Views\LibraryMember.Hs.sql" />
+    <Build Include="AppLibrary\Views\LibrarySourceHs.sql" />
+    <Build Include="AppScript\Views\ScriptingTemplate.Hs.sql" />
+    <Build Include="AppScript\Views\ScriptingNode.Hs.sql" />
+    <Build Include="AppScript\Views\ScriptingPath.Hs.sql" />
+    <Build Include="AppScript\Views\ScriptingAttribute.Hs.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
