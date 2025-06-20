@@ -526,6 +526,8 @@
     <Build Include="AppScript\Functions\funcNameSpaceId.sql" />
     <Build Include="AppScript\Functions\funcNameSpace.sql" />
     <Build Include="AppScript\Views\ScriptingNameSpace.Hs.sql" />
+    <Build Include="AppSecurity\Functions\funcScriptingAuthorization.sql" />
+    <Build Include="AppSecurity\Policy\policyScripting.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
