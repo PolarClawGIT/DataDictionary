@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[typeScriptingTemplate] AS TABLE
+﻿CREATE TYPE [AppScript].[ttScriptingTemplate] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[TemplateTitle]			[AppGeneral].[typeTitle] Not Null,

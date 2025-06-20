@@ -87,7 +87,6 @@
     <Folder Include="HsCatalog\Tables" />
     <Folder Include="AppModel" />
     <Folder Include="AppModel\Views" />
-    <Folder Include="AppModel\User Defined Types" />
     <Folder Include="AppModel\Tables" />
     <Folder Include="AppModel\Stored Procedures" />
     <Folder Include="AppLibrary" />
@@ -118,6 +117,7 @@
     <Folder Include="AppModel\User Defined Table Types" />
     <Folder Include="AppGeneral\User Defined Data Types" />
     <Folder Include="AppLibrary\Functions" />
+    <Folder Include="AppScript\Functions" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -468,10 +468,10 @@
     <Build Include="AppScript\Stored Procedures\procSetScriptingTemplate.sql" />
     <Build Include="AppLibrary\User Defined Types\typeLibraryMember.sql" />
     <Build Include="AppLibrary\User Defined Types\typeLibrarySource.sql" />
-    <Build Include="AppScript\User Defined Table Types\typeScriptingAttribute.sql" />
-    <Build Include="AppScript\User Defined Table Types\typeScriptingNode.sql" />
-    <Build Include="AppScript\User Defined Table Types\typeScriptingPath.sql" />
-    <Build Include="AppScript\User Defined Table Types\typeScriptingTemplate.sql" />
+    <Build Include="AppScript\User Defined Table Types\ttScriptingAttribute.sql" />
+    <Build Include="AppScript\User Defined Table Types\ttScriptingNode.sql" />
+    <Build Include="AppScript\User Defined Table Types\ttScriptingPath.sql" />
+    <Build Include="AppScript\User Defined Table Types\ttScriptingTemplate.sql" />
     <Build Include="HsCatalog\Tables\CatalogModel.sql" />
     <Build Include="AppCatalog\Triggers\trigCatalogModel.sql" />
     <Build Include="AppCatalog\Views\CatalogModel.Hs.sql" />
@@ -521,6 +521,11 @@
     <Build Include="AppScript\Views\ScriptingNode.Hs.sql" />
     <Build Include="AppScript\Views\ScriptingPath.Hs.sql" />
     <Build Include="AppScript\Views\ScriptingAttribute.Hs.sql" />
+    <Build Include="AppScript\Tables\ScriptingNameSpace.sql" />
+    <Build Include="AppScript\Triggers\trigScriptingNameSpace.sql" />
+    <Build Include="AppScript\Functions\funcNameSpaceId.sql" />
+    <Build Include="AppScript\Functions\funcNameSpace.sql" />
+    <Build Include="AppScript\Views\ScriptingNameSpace.Hs.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -44,6 +44,9 @@ From	[AppScript].[ScriptingNode] D
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
 		Outer Apply (
 			Select	Top 1
 					[TemplateId],

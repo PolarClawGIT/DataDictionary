@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[typeScriptingPath] AS TABLE
+﻿CREATE TYPE [AppScript].[ttScriptingPath] AS TABLE
 (
 	[TemplateId]        UniqueIdentifier NULL,
 	[PathName]			[AppGeneral].[typeNameSpacePath] NULL,

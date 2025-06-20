@@ -8,16 +8,25 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Get on ScriptingPath.
 */
-Select	D.[TemplateId],
-		N.[NameSpace] As [PathName],
-		D.[PathScope]
-From	[AppScript].[ScriptingPath] D
-		Cross Apply [AppModel].[funcGetNameSpaceById](D.[NameSpaceId]) N
-		Left Join [AppScript].[ScriptingModel] M
-		On	D.[TemplateId] = M.[TemplateId]
-		Left Join [AppModel].[NameSpaceHierarchy] S
-		On	D.[NameSpaceId] = S.[NameSpaceId] And
-			M.[ModelId] = S.[ModelId]
-Where	(@ModelId is Null or (@ModelId = M.[ModelId] And @ModelId = S.[ModelId])) And -- NameSpace must also be for the Model Specified
-		(@TemplateId is Null or @TemplateId = D.[TemplateId])
+Select	[TemplateId],
+		[PathScope],
+		[PathName],
+		-- Temporal Data
+		[SysStart],
+		[SysEnd],
+		[CreatedOn],
+		[CreatedBy],
+		[RemovedOn],
+		[RemovedBy],
+		[IsInserted],
+		[IsUpdated],
+		[IsDeleted],
+		[IsCurrent]
+From	[AppScript].[ScriptingPathHs] D -- TODO: For System_Time All D
+Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
+		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
+		(@ModelId is Null Or @ModelId In (
+			Select	[ModelId]
+			From	[AppScript].[ScriptingModel] -- TODO: For System_Time As of @AsOfUtcDate
+			Where	D.[TemplateId] = [TemplateId]))
 GO

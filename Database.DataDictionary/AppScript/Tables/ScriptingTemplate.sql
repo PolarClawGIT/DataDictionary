@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [AppScript].[ScriptingTemplate]
 (
-	[TemplateId]            UniqueIdentifier NOT NULL CONSTRAINT [DF_ScriptingTemplateId] DEFAULT (newid()),
+	[TemplateId]            UniqueIdentifier Not Null CONSTRAINT [DF_ScriptingTemplateId] DEFAULT (newid()),
 	[TemplateTitle]			[AppGeneral].[typeTitle] Not Null,
 	[TemplateDescription]	[AppGeneral].[typeDescription] Null,
 	-- Transform Settings, refers to the XSLT and the document produced.

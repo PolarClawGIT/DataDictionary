@@ -1,5 +1,7 @@
 ﻿CREATE TABLE [AppScript].[ScriptingPath]
 (
+	-- TODO: Obsolete, Replace with Scripting Item
+
 	[TemplateId]        UniqueIdentifier NOT NULL,
 	[NameSpaceId]       UniqueIdentifier NOT NULL,
 	[PathScope]         [AppModel].[typeScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
@@ -10,5 +12,5 @@
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingPath] PRIMARY KEY CLUSTERED ([TemplateId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_ScriptingPathTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[ScriptingTemplate] ([TemplateId]),
-	CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppModel].[NameSpaceHierarchy] ([NameSpaceId]),
+	CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppScript].[ScriptingNameSpace] ([NameSpaceId]),
 )
