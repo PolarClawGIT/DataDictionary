@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeEntityAttribute] AS TABLE
 (
     [EntityId]             UniqueIdentifier NULL,
-	[AttributeKnownAs]     [AppGeneral].[typeTitle] Null,
-	[AttributeName]        [AppGeneral].[typeNameSpacePath] Null,
+	[AttributeKnownAs]     [AppGeneral].[dtTitle] Null,
+	[AttributeName]        [AppGeneral].[dtNameSpacePath] Null,
 	[OrdinalPosition]      Int Not Null,
 	[IsNullable]		   Bit Null,
 	[IsPrimaryKey]		   Bit Null,

@@ -23,8 +23,8 @@ Begin Try
 		[NodeId]				UniqueIdentifier NOT NULL,
 		[TemplateId]            UniqueIdentifier NOT NULL,
 		[PropertyScope]         [AppModel].[typeScopeName] NOT NULL,
-		[PropertyName]          [AppGeneral].[typeNameSpaceMember] NOT NULL,
-		[NodeName]				[AppGeneral].[typeNameSpaceMember] NOT Null,
+		[PropertyName]          [AppGeneral].[dtNameSpaceMember] NOT NULL,
+		[NodeName]				[AppGeneral].[dtNameSpaceMember] NOT Null,
 		[NodeValueAs]			NVarChar(50) Not Null,
 		Primary Key ([NodeId]))
 

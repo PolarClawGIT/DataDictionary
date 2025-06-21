@@ -5,7 +5,7 @@
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,
-	[TableType]              [AppGeneral].[typeObjectType] Null,
+	[TableType]              [AppGeneral].[dtObjectType] Null,
 	[ColumnName]             SysName          Null,
     [OrdinalPosition]        Int              Null,
 	[IsNullable]             Bit              Null,

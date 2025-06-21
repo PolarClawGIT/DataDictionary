@@ -2,7 +2,7 @@
 (
 	[RoleId]         UniqueIdentifier Null,
 	[SecurableId]    UniqueIdentifier Null,
-	[SecurableTitle] [AppGeneral].[typeTitle] Null,
+	[SecurableTitle] [AppGeneral].[dtTitle] Null,
 	[IsGrant]        Bit Null,
 	[IsDeny]         Bit Null
 )

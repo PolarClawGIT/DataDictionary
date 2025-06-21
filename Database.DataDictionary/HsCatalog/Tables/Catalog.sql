@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsCatalog].[Catalog]
 (
 	[CatalogId]          UniqueIdentifier Not Null,
-	[CatalogTitle]       [AppGeneral].[typeTitle] Not Null,
-	[CatalogDescription] [AppGeneral].[typeDescription] Null,
+	[CatalogTitle]       [AppGeneral].[dtTitle] Not Null,
+	[CatalogDescription] [AppGeneral].[dtDescription] Null,
 	[ServerName]         SysName Not Null,
 	[DatabaseName]       SysName Not Null,
 	[SourceDate]         DateTime Not Null,

@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[Attribute]
 (
 	[AttributeId]			UniqueIdentifier Not Null,
-	[AttributeTitle]		[AppGeneral].[typeTitle] Not Null,
-	[AttributeDescription]	[AppGeneral].[typeDescription] Null,
+	[AttributeTitle]		[AppGeneral].[dtTitle] Not Null,
+	[AttributeDescription]	[AppGeneral].[dtDescription] Null,
 	[AttributeName]			[AppModel].[typeQualifiedName] Null,
 	[DataType]			    NVarChar(128) Null,
 	[DataLength]		    SmallInt Null,

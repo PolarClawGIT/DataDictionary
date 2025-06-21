@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[PropertyId]             UniqueIdentifier NOT NULL,
-		[PropertyTitle]          [AppGeneral].[typeTitle] Not Null,
-		[PropertyDescription]    [AppGeneral].[typeDescription] Null,
+		[PropertyTitle]          [AppGeneral].[dtTitle] Not Null,
+		[PropertyDescription]    [AppGeneral].[dtDescription] Null,
 		[IsCommon]               Bit Not Null,
 		[DataType]               NVarChar(20) Not Null,
 		[PropertyData]           NVarChar(2000) Null,

@@ -2,6 +2,6 @@
 (
 	[PrincipalId]         UniqueIdentifier Null,
 	[PrincipalLogin]      SysName Not Null,
-	[PrincipalName]       [AppGeneral].[typeTitle] Null,
-	[PrincipalAnnotation] [AppGeneral].[typeDescription] Null
+	[PrincipalName]       [AppGeneral].[dtTitle] Null,
+	[PrincipalAnnotation] [AppGeneral].[dtDescription] Null
 )

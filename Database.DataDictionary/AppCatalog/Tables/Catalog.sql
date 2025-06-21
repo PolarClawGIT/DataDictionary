@@ -5,8 +5,8 @@
 	-- Instead the objects are used to provide a Snapshot of the Database and objects of interest.
 	-- The Object names are used as the key rather then creating a surrogate key that needs to be reconciled.
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_CatalogId] DEFAULT (newid()),
-	[CatalogTitle] [AppGeneral].[typeTitle] Not Null,
-	[CatalogDescription] [AppGeneral].[typeDescription] Null,
+	[CatalogTitle] [AppGeneral].[dtTitle] Not Null,
+	[CatalogDescription] [AppGeneral].[dtDescription] Null,
 	[ServerName] SysName Not Null,
 	[DatabaseName] SysName Not Null,
 	[SourceDate] DateTime Not Null,

@@ -5,7 +5,7 @@
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[RoutineName]            SysName          Null,
-	[RoutineType]            [AppGeneral].[typeObjectType] Null,
+	[RoutineType]            [AppGeneral].[dtObjectType] Null,
 	[ColumnName]             SysName          Null,
     [OrdinalPosition]        Int              Null,
 	[IsNullable]             Bit              Null,

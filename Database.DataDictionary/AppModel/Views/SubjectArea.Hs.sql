@@ -31,7 +31,7 @@ Select	D.[SubjectAreaId], -- PK
 From	[AppModel].[SubjectArea] D
 		Cross Apply (
 			Select	[QualifiedName] As [SubjectName]
-			From	[AppModel].[funcParseName](D.[SubjectName])) S
+			From	[AppGeneral].[funcParseName](D.[SubjectName])) S
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[Process]
 (
 	[ProcessId]          UniqueIdentifier Not Null,
-	[ProcessTitle]       [AppGeneral].[typeTitle] Not Null,
-	[ProcessDescription] [AppGeneral].[typeDescription] Null,
+	[ProcessTitle]       [AppGeneral].[dtTitle] Not Null,
+	[ProcessDescription] [AppGeneral].[dtDescription] Null,
 	[ProcessName]        [AppModel].[typeQualifiedName] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,

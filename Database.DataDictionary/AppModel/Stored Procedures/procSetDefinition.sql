@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[DefinitionId]             UniqueIdentifier NOT NULL,
-		[DefinitionTitle]          [AppGeneral].[typeTitle] Not Null,
-		[DefinitionDescription]    [AppGeneral].[typeDescription] Null,
+		[DefinitionTitle]          [AppGeneral].[dtTitle] Not Null,
+		[DefinitionDescription]    [AppGeneral].[dtDescription] Null,
 		[IsCommon]                 Bit Not Null,
 		Primary Key ([DefinitionId]),
 		Unique ([DefinitionTitle]))

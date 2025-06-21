@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeAttributeDefinition] AS TABLE (
 	[AttributeId]          UniqueIdentifier NOT Null,
 	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [AppGeneral].[typeDescription] Null,
+	[DefinitionSummary]    [AppGeneral].[dtDescription] Null,
 	[DefinitionText]       [AppModel].[typeRichText] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,

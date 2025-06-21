@@ -8,4 +8,4 @@
 -- Application uses one or two GUID's as a primary key (16 bytes each).
 -- Available spaces is rounded down to 800 for non-clustered indexes.
 -- A workaround is to create a Binary CheckSum on the value and index that with a unique part of the table.
-CREATE TYPE [AppGeneral].[typeNameSpaceMember] FROM NVarChar(800) NOT NULL
+CREATE TYPE [AppGeneral].[dtNameSpaceMember] FROM NVarChar(800) NOT NULL

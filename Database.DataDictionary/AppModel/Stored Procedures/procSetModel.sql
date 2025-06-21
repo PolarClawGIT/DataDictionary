@@ -36,8 +36,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[ModelId] UniqueIdentifier NOT NULL,
-		[ModelTitle] [AppGeneral].[typeTitle] Not Null,
-		[ModelDescription] [AppGeneral].[typeDescription] Null,
+		[ModelTitle] [AppGeneral].[dtTitle] Not Null,
+		[ModelDescription] [AppGeneral].[dtDescription] Null,
 		Primary Key ([ModelId]),
 		Unique ([ModelTitle]))
 

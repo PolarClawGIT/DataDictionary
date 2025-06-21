@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ProcessId]			    UniqueIdentifier Not Null,
-		[ProcessTitle]		    [AppGeneral].[typeTitle] Not Null,
-		[ProcessDescription]	[AppGeneral].[typeDescription] Null,
+		[ProcessTitle]		    [AppGeneral].[dtTitle] Not Null,
+		[ProcessDescription]	[AppGeneral].[dtDescription] Null,
 		[ProcessName]			[AppModel].[typeQualifiedName] Null,
 		Primary Key ([ProcessId]),
 		Unique ([ProcessTitle]))
@@ -49,7 +49,7 @@ Begin Try
 				Select	Coalesce(D.[ProcessId], H.[ProcessId], NewId()) As [ProcessId]) X
 			Outer Apply (
 				Select	[QualifiedName] As [ProcessName]
-				From	[AppModel].[funcParseName](D.[ProcessName])
+				From	[AppGeneral].[funcParseName](D.[ProcessName])
 				Where	[IsBase] = 1) N
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@ProcessId is Null Or @ProcessId = X.[ProcessId])

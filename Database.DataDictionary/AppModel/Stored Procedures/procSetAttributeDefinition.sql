@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[AttributeId]		UniqueIdentifier Not Null,
 		[DefinitionId]		UniqueIdentifier Not Null,
-		[DefinitionSummary]	[AppGeneral].[typeDescription] Null,
+		[DefinitionSummary]	[AppGeneral].[dtDescription] Null,
 		[DefinitionText]	[AppModel].[typeRichText] Null,
 		Primary Key ([AttributeId], [DefinitionId]))
 

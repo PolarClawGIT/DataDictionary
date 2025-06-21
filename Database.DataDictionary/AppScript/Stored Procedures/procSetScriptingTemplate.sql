@@ -22,8 +22,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 			[TemplateId]            UniqueIdentifier NOT NULL,
-			[TemplateTitle]			[AppGeneral].[typeTitle] Not Null,
-			[TemplateDescription]	[AppGeneral].[typeDescription] Null,
+			[TemplateTitle]			[AppGeneral].[dtTitle] Not Null,
+			[TemplateDescription]	[AppGeneral].[dtDescription] Null,
 			[BreakOnScope]			[AppModel].[typeScopeName] NULL, 
 			[TransformScript]		XML Null , 
 			[RootDirectory]         NVarChar(100) Null,

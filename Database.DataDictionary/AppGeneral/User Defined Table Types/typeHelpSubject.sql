@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppGeneral].[typeHelpSubject] AS TABLE
 (
 	[HelpId]        UniqueIdentifier Null,
-	[HelpSubject]   [AppGeneral].[typeTitle] Null,
-	[HelpToolTip]   [AppGeneral].[typeDescription] Null,
+	[HelpSubject]   [AppGeneral].[dtTitle] Null,
+	[HelpToolTip]   [AppGeneral].[dtDescription] Null,
 	[HelpText]      NVarChar(Max) Null,
 	[NameSpace]     NVarChar(1023) Null,
 	[CreatedOn]		DateTime2 (7) Null,

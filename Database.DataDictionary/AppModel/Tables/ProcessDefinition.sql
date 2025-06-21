@@ -2,7 +2,7 @@
 (
 	[ProcessId]         UniqueIdentifier NOT Null,
 	[DefinitionId]      UniqueIdentifier NOT NULL,
-	[DefinitionSummary] [AppGeneral].[typeDescription] Null, -- Plain Text summary, used where RTF cannot be used.
+	[DefinitionSummary] [AppGeneral].[dtDescription] Null, -- Plain Text summary, used where RTF cannot be used.
 	[DefinitionText]    [AppModel].[typeRichText] Null, -- Contains Rich Text Definition. Rich Text must be handled differently.
     -- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_ProcessDefinition_SysStart] Default (sysdatetime()),

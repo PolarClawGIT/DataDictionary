@@ -2,5 +2,5 @@
 (
 	[PrincipalId]    UniqueIdentifier Null,
 	[SecurableId]    UniqueIdentifier Null,
-	[SecurableTitle] [AppGeneral].[typeTitle] Null
+	[SecurableTitle] [AppGeneral].[dtTitle] Null
 )

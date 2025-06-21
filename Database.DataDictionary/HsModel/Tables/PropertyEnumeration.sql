@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[PropertyEnumeration]
 (
 	[PropertyId]             UniqueIdentifier Not Null,
-	[PropertyTitle]          [AppGeneral].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
-	[PropertyDescription]    [AppGeneral].[typeDescription] Null,
+	[PropertyTitle]          [AppGeneral].[dtTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
+	[PropertyDescription]    [AppGeneral].[dtDescription] Null,
 	[IsCommon]               Bit Not Null,
 	[DataType]               NVarChar(20) Not Null,
 	[PropertyData]           NVarChar(2000) Null,

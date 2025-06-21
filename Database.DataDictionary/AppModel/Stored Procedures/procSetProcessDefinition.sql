@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[ProcessId]		    UniqueIdentifier Not Null,
 		[DefinitionId]		UniqueIdentifier Not Null,
-		[DefinitionSummary]	[AppGeneral].[typeDescription] Null,
+		[DefinitionSummary]	[AppGeneral].[dtDescription] Null,
 		[DefinitionText]	[AppModel].[typeRichText] Null,
 		Primary Key ([ProcessId], [DefinitionId]))
 

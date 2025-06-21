@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppModel].[Process]
 (
 	[ProcessId]          UniqueIdentifier Not Null CONSTRAINT [DF_ProcessId] DEFAULT (newid()),
-	[ProcessTitle]       [AppGeneral].[typeTitle] Not Null,
-	[ProcessDescription] [AppGeneral].[typeDescription] Null,
+	[ProcessTitle]       [AppGeneral].[dtTitle] Not Null,
+	[ProcessDescription] [AppGeneral].[dtDescription] Null,
 	[ProcessName]        [AppModel].[typeQualifiedName]         Null,
     -- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Process_SysStart] DEFAULT (sysdatetime()),

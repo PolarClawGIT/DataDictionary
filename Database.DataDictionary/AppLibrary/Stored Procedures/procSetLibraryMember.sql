@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppLibrary].[procSetLibraryMember]
 		@ModelId UniqueIdentifier = null,
 		@LibraryId UniqueIdentifier = null,
-		@Data [AppLibrary].[typeLibraryMember] ReadOnly
+		@Data [AppLibrary].[ttLibraryMember] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,17 +28,17 @@ Begin Try
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
-		[MemberName]            [AppGeneral].[typeNameSpaceMember] Not Null,
-		[MemberType]            [AppGeneral].[typeObjectType] Not Null,
+		[MemberName]            [AppGeneral].[dtNameSpaceMember] Not Null,
+		[MemberType]            [AppGeneral].[dtObjectType] Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
 
 	Declare @NameSpace Table (
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
-		[MemberName]		    [AppGeneral].[typeNameSpaceMember] Not Null,
-		[MemberNameSpace]       [AppGeneral].[typeNameSpacePath] Null,
-		[ParentNameSpace]       [AppGeneral].[typeNameSpacePath] Null,
+		[MemberName]		    [AppGeneral].[dtNameSpaceMember] Not Null,
+		[MemberNameSpace]       [AppGeneral].[dtNameSpacePath] Null,
+		[ParentNameSpace]       [AppGeneral].[dtNameSpacePath] Null,
 		Primary Key ([MemberId]))
 
 
@@ -69,7 +69,7 @@ Begin Try
 						Order By IIF(X.[IsBase] = 1,0,1))
 						As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcParseName] (D.[MemberNameSpace]) X
+				Cross Apply [AppGeneral].[funcParseName] (D.[MemberNameSpace]) X
 		Where	Coalesce(D.[MemberType],'NameSpace') In ('NameSpace','Type')),
 	[Data] As (
 		Select	[LibraryId],
@@ -99,7 +99,7 @@ Begin Try
 			D.[MemberType],
 			D.[MemberData]
 	From	@Data D
-			Cross Apply [AppModel].[funcParseName] (D.[MemberNameSpace]) X
+			Cross Apply [AppGeneral].[funcParseName] (D.[MemberNameSpace]) X
 			-- Possible Parents
 			Left Join @Data P
 			On	D.[MemberParentId] = P.[MemberId]

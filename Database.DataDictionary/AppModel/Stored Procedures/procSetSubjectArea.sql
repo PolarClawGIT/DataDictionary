@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
-		[SubjectAreaTitle]       [AppGeneral].[typeTitle] Not NULL,
-		[SubjectAreaDescription] [AppGeneral].[typeDescription] NULL,
+		[SubjectAreaTitle]       [AppGeneral].[dtTitle] Not NULL,
+		[SubjectAreaDescription] [AppGeneral].[dtDescription] NULL,
 		[ModelId]				 UniqueIdentifier Not NULL,
 		[SubjectName]            [AppModel].[typeQualifiedName] Not Null
 		Primary Key ([SubjectAreaId]),
@@ -48,7 +48,7 @@ Begin Try
 				  D.[SubjectAreaTitle] = H.[SubjectAreaTitle]))
 			Cross Apply (
 				Select	[QualifiedName] As [SubjectName]
-				From	[AppModel].[funcParseName](D.[SubjectName])) N
+				From	[AppGeneral].[funcParseName](D.[SubjectName])) N
 	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
 			(@SubjectAreaId is Null Or @SubjectAreaId = Coalesce(D.[SubjectAreaId], H.[SubjectAreaId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

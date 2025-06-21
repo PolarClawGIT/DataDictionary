@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppCatalog].[typeCatalog] AS TABLE (
 	-- TIP: This matches the C# DataTable structure and results of the Get method.
 	[CatalogId]            UniqueIdentifier Null,
-	[CatalogTitle]         [AppGeneral].[typeTitle] Null,
-	[CatalogDescription]   [AppGeneral].[typeDescription] Null,
+	[CatalogTitle]         [AppGeneral].[dtTitle] Null,
+	[CatalogDescription]   [AppGeneral].[dtDescription] Null,
 	[ServerName]           SysName          Null,
 	[DatabaseName]         SysName          Null,
 	[SourceDate]           DateTime         Null,

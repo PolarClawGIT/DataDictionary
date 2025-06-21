@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeProcessArgument] AS TABLE
 (    -- TIP: This matches the C# DataTable structure and GET procedure
     [ProcessId]				UniqueIdentifier NULL,
-	[ArgumentKnownAs]		[AppGeneral].[typeTitle] Null,
-	[ArgumentName]			[AppGeneral].[typeNameSpacePath] Null,
+	[ArgumentKnownAs]		[AppGeneral].[dtTitle] Null,
+	[ArgumentName]			[AppGeneral].[dtNameSpacePath] Null,
 	[OrdinalPosition]       Int Null,
 	[IsPassed]				Bit Null,
 	[IsReturned]			Bit Null,

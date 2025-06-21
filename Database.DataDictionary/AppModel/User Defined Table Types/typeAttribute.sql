@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeAttribute] AS TABLE (
     [AttributeId]          UNIQUEIDENTIFIER NULL,
-    [AttributeTitle]       [AppGeneral].[typeTitle] NULL,
-    [AttributeDescription] [AppGeneral].[typeDescription] NULL,
+    [AttributeTitle]       [AppGeneral].[dtTitle] NULL,
+    [AttributeDescription] [AppGeneral].[dtDescription] NULL,
     [AttributeName]        [AppModel].[typeQualifiedName] NULL,
 
 	[DataType]			    NVarChar(128) Null,

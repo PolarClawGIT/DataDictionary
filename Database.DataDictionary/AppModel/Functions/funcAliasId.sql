@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppModel].[funcAliasId] (@AliasNameSpace [AppGeneral].[typeNameSpacePath])
+﻿CREATE FUNCTION [AppModel].[funcAliasId] (@AliasNameSpace [AppGeneral].[dtNameSpacePath])
 -- Takes an AliasNameSpace and gets the AliasID
 -- Temporal Data NOT Supported
 RETURNS UniqueIdentifier As 
@@ -10,7 +10,7 @@ Declare	@Result UniqueIdentifier = null
 			[QualifiedName] As [NameSpace],
 			[Level],
 			[IsBase]
-	From	[AppModel].[funcParseName](@AliasNameSpace)),
+	From	[AppGeneral].[funcParseName](@AliasNameSpace)),
 [Search] As (
 	Select	N.[AliasId],
 			N.[ParentAliasId],

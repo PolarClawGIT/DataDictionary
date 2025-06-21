@@ -5,7 +5,7 @@
 	[DatabaseName]         SysName          Null,
 	[SchemaName]           SysName          Null,
 	[TableName]            SysName          Null,
-	[TableType]            [AppGeneral].[typeObjectType] Null,
+	[TableType]            [AppGeneral].[dtObjectType] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

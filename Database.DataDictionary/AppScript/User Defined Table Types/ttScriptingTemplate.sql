@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppScript].[ttScriptingTemplate] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
-	[TemplateTitle]			[AppGeneral].[typeTitle] Not Null,
-	[TemplateDescription]	[AppGeneral].[typeDescription] Null,
+	[TemplateTitle]			[AppGeneral].[dtTitle] Not Null,
+	[TemplateDescription]	[AppGeneral].[dtDescription] Null,
 	[BreakOnScope]			[AppModel].[typeScopeName] NULL,
 	[TransformScript]		NVarChar(Max) Null,
 	[RootDirectory]         NVarChar(100) Null,

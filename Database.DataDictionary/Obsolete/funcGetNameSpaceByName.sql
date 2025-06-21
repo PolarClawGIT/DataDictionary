@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppModel].[funcGetNameSpaceByName] (@NameSpace [AppGeneral].[typeNameSpacePath])
+﻿CREATE FUNCTION [AppModel].[funcGetNameSpaceByName] (@NameSpace [AppGeneral].[dtNameSpacePath])
 -- This takes a value and returns the ID's for all matching NameSpace & the parents of that NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 --
@@ -13,7 +13,7 @@ With [Data] As (
 			[QualifiedName] As [NameSpace],
 			[Level],
 			[IsBase]
-	From	[AppModel].[funcParseName](@NameSpace)),
+	From	[AppGeneral].[funcParseName](@NameSpace)),
 [Search] As (
 	Select	N.[ModelId],
 			N.[NameSpaceId],

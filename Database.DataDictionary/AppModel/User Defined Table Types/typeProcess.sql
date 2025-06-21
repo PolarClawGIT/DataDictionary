@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeProcess] AS TABLE
 (
     [ProcessId]            UniqueIdentifier NULL,
-	[ProcessTitle]         [AppGeneral].[typeTitle] Null,
-	[ProcessDescription]   [AppGeneral].[typeDescription] Null,
+	[ProcessTitle]         [AppGeneral].[dtTitle] Null,
+	[ProcessDescription]   [AppGeneral].[dtDescription] Null,
 	[ProcessName]          [AppModel].[typeQualifiedName] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,

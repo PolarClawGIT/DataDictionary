@@ -3,7 +3,7 @@
 	[TableId]             UniqueIdentifier Not Null,
 	[SchemaId]            UniqueIdentifier Not Null,
 	[TableName]           SysName Not Null,
-	[TableType]           [AppGeneral].[typeObjectType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
+	[TableType]           [AppGeneral].[dtObjectType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
 	[SysStart]            DATETIME2 (7) NOT NULL,
 	[SysEnd]              DATETIME2 (7) NOT NULL,
 )

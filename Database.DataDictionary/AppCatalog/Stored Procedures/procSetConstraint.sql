@@ -39,7 +39,7 @@ Begin Try
 		[SchemaId]			UniqueIdentifier Not Null,
 		[TableId]			UniqueIdentifier Not Null,
 		[ConstraintName]	SysName Not Null,
-		[ConstraintType]	[AppGeneral].[typeObjectType] Null,
+		[ConstraintType]	[AppGeneral].[dtObjectType] Null,
 		Primary Key ([ConstraintId]),
 		Unique  ([SchemaId], [ConstraintName]))
 

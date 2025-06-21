@@ -46,7 +46,7 @@ Begin Try
 			N.[NameSpaceId],
 			D.[PathScope]
 	From	@Data D
-			Cross Apply [AppModel].[funcParseName](D.[PathName]) C
+			Cross Apply [AppGeneral].[funcParseName](D.[PathName]) C
 			Inner Join [NameSpace] N
 			On	C.[QualifiedName] = N.[NameSpace] And
 				C.[IsBase] = 1

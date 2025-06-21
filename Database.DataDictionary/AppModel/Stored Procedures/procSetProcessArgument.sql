@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[ProcessId]				UniqueIdentifier Not Null,
 		[ArgumentAliasId]       UniqueIdentifier Not Null,
-		[ArgumentKnownAs]	    [AppGeneral].[typeTitle] Not Null,
+		[ArgumentKnownAs]	    [AppGeneral].[dtTitle] Not Null,
 		[OrdinalPosition]       Int Not Null,
 		[IsPassed]				Bit Not Null,
 		[IsReturned]			Bit Not Null,

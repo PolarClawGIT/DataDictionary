@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppScript].[funcNameSpaceId] (@NameSpace [AppGeneral].[typeNameSpacePath])
+﻿CREATE FUNCTION [AppScript].[funcNameSpaceId] (@NameSpace [AppGeneral].[dtNameSpacePath])
 -- Takes an Scripting NameSpace and gets the NameSpaceID
 -- Temporal Data NOT Supported
 RETURNS UniqueIdentifier As 
@@ -10,7 +10,7 @@ Declare	@Result UniqueIdentifier = null
 			[QualifiedName] As [NameSpace],
 			[Level],
 			[IsBase]
-	From	[AppModel].[funcParseName](@NameSpace)),
+	From	[AppGeneral].[funcParseName](@NameSpace)),
 [Search] As (
 	Select	N.[NameSpaceId],
 			N.[ParentNameSpaceId],

@@ -33,8 +33,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 			[HelpId] UniqueIdentifier Not Null,
-			[HelpSubject] [AppGeneral].[typeTitle] Not Null,
-			[HelpToolTip] [AppGeneral].[typeDescription] Null,
+			[HelpSubject] [AppGeneral].[dtTitle] Not Null,
+			[HelpToolTip] [AppGeneral].[dtDescription] Null,
 			[HelpText] NVarChar(Max) Not Null,
 			[NameSpace] NVarChar(1023) Null,
 			Primary Key ([HelpId]))
@@ -56,7 +56,7 @@ Begin Try
 				End As [HelpText],
 			NullIf(Trim(S.[QualifiedName]),'') As [NameSpace]
 	From	@Data D
-			Outer Apply [AppModel].[funcParseName] (D.[NameSpace]) S
+			Outer Apply [AppGeneral].[funcParseName] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

@@ -3,8 +3,8 @@
 	-- In ER Diagrams, an Entity is a Table, View, or other supported object type.
 	-- In DFD Diagrams, an Entity is the Data Flow and Data Store. It may also be a Terminator.
 	[EntityId]          UniqueIdentifier Not Null CONSTRAINT [DF_EntityId] DEFAULT (newid()),
-	[EntityTitle]       [AppGeneral].[typeTitle] Not Null,
-	[EntityDescription] [AppGeneral].[typeDescription] Null,
+	[EntityTitle]       [AppGeneral].[dtTitle] Not Null,
+	[EntityDescription] [AppGeneral].[dtDescription] Null,
 	[EntityName]        [AppModel].[typeQualifiedName]         Null,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Entity_SysStart] DEFAULT (sysdatetime()),

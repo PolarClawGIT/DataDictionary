@@ -2,7 +2,7 @@
 (
 	[ProcessId]         UniqueIdentifier NOT Null,
 	[DefinitionId]      UniqueIdentifier NOT NULL,
-	[DefinitionSummary] [AppGeneral].[typeDescription] Null,
+	[DefinitionSummary] [AppGeneral].[dtDescription] Null,
 	[DefinitionText]    [AppModel].[typeRichText] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,

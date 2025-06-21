@@ -21,8 +21,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 			[RoleId] UniqueIdentifier Not Null,
-			[RoleName] [AppGeneral].[typeTitle] Not Null,
-			[RoleDescription] [AppGeneral].[typeDescription] Null,
+			[RoleName] [AppGeneral].[dtTitle] Not Null,
+			[RoleDescription] [AppGeneral].[dtDescription] Null,
 			[IsSecurityAdmin] Bit Not Null,
 			[IsHelpAdmin]     Bit Not Null,
 			[IsHelpOwner]     Bit Not Null,

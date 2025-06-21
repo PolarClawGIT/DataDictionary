@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppModel].[DefinitionEnumeration]
 (
 	[DefinitionId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_DefinitionId] DEFAULT (newid()),
-	[DefinitionTitle]          [AppGeneral].[typeTitle] Not Null, -- Title of the Definition as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
-	[DefinitionDescription]    [AppGeneral].[typeDescription] Null,
+	[DefinitionTitle]          [AppGeneral].[dtTitle] Not Null, -- Title of the Definition as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
+	[DefinitionDescription]    [AppGeneral].[dtDescription] Null,
 	[IsCommon]                 Bit Not Null CONSTRAINT [DF_DefinitionIsCommon] DEFAULT(0), -- Common Definitions are shared by all Models.
 	-- Note: IsCommon Definitions cannot be deleted or updated using the stored procedures. They must be modified directly.
 	--       IsCommon flag must also be set directly. This avoids the application accidentally changing these.

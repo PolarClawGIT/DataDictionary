@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[EntityId]			    UniqueIdentifier Not Null,
-		[EntityTitle]		    [AppGeneral].[typeTitle] Not Null,
-		[EntityDescription]	    [AppGeneral].[typeDescription] Null,
+		[EntityTitle]		    [AppGeneral].[dtTitle] Not Null,
+		[EntityDescription]	    [AppGeneral].[dtDescription] Null,
 		[EntityName]			[AppModel].[typeQualifiedName] Null,
 		Primary Key ([EntityId]),
 		Unique ([EntityTitle]))
@@ -49,7 +49,7 @@ Begin Try
 				Select	Coalesce(D.[EntityId], H.[EntityId], NewId()) As [EntityId]) X
 			Outer Apply (
 				Select	[QualifiedName] As [EntityName]
-				From	[AppModel].[funcParseName](D.[EntityName])
+				From	[AppGeneral].[funcParseName](D.[EntityName])
 				Where	[IsBase] = 1) N
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@EntityId is Null Or @EntityId = X.[EntityId])

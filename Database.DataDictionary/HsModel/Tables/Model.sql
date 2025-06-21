@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[Model]
 (
 	[ModelId]          UniqueIdentifier NOT NULL,
-	[ModelTitle]       [AppGeneral].[typeTitle] Not Null,
-	[ModelDescription] [AppGeneral].[typeDescription] Null,
+	[ModelTitle]       [AppGeneral].[dtTitle] Not Null,
+	[ModelDescription] [AppGeneral].[dtDescription] Null,
 	[SysStart]         DateTime2 (7) NOT NULL,
 	[SysEnd]           DateTime2 (7) NOT NULL,
 )

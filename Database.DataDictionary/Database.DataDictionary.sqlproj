@@ -305,7 +305,6 @@
     <Build Include="AppModel\Views\SubjectArea.Hs.sql" />
     <Build Include="AppModel\Stored Procedures\procGetSubjectArea.sql" />
     <Build Include="AppModel\Stored Procedures\procSetSubjectArea.sql" />
-    <Build Include="AppModel\Functions\funcParseName.sql" />
     <Build Include="AppModel\Tables\AttributeSubjectArea.sql" />
     <Build Include="AppModel\Tables\EntitySubjectArea.sql" />
     <Build Include="AppModel\Tables\ProcessSubjectArea.sql" />
@@ -466,8 +465,8 @@
     <Build Include="AppScript\Stored Procedures\procSetScriptingNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetScriptingPath.sql" />
     <Build Include="AppScript\Stored Procedures\procSetScriptingTemplate.sql" />
-    <Build Include="AppLibrary\User Defined Types\typeLibraryMember.sql" />
-    <Build Include="AppLibrary\User Defined Types\typeLibrarySource.sql" />
+    <Build Include="AppLibrary\User Defined Types\ttLibraryMember.sql" />
+    <Build Include="AppLibrary\User Defined Types\ttLibrarySource.sql" />
     <Build Include="AppScript\User Defined Table Types\ttScriptingAttribute.sql" />
     <Build Include="AppScript\User Defined Table Types\ttScriptingNode.sql" />
     <Build Include="AppScript\User Defined Table Types\ttScriptingPath.sql" />
@@ -509,12 +508,12 @@
     <Build Include="AppModel\User Defined Data Types\typeQualifiedName.sql" />
     <Build Include="AppModel\User Defined Data Types\typeRichText.sql" />
     <Build Include="AppModel\User Defined Data Types\typeScopeName.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\typeDescription.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\typeObjectType.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\typeTitle.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\dtDescription.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\dtObjectType.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\dtTitle.sql" />
     <Build Include="AppLibrary\Functions\funcGetMemberNameSpace.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\typeNameSpaceMember.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\typeNameSpacePath.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\dtNameSpaceMember.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\dtNameSpacePath.sql" />
     <Build Include="AppLibrary\Views\LibraryMember.Hs.sql" />
     <Build Include="AppLibrary\Views\LibrarySourceHs.sql" />
     <Build Include="AppScript\Views\ScriptingTemplate.Hs.sql" />
@@ -528,6 +527,7 @@
     <Build Include="AppScript\Views\ScriptingNameSpace.Hs.sql" />
     <Build Include="AppSecurity\Functions\funcScriptingAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyScripting.sql" />
+    <Build Include="AppGeneral\Functions\funcParseName.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

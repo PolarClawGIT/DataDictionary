@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeDefinition] AS TABLE
 (
 	[DefinitionId]             UniqueIdentifier NULL,
-	[DefinitionTitle]          [AppGeneral].[typeTitle] Null,
-	[DefinitionDescription]    [AppGeneral].[typeDescription] Null,
+	[DefinitionTitle]          [AppGeneral].[dtTitle] Null,
+	[DefinitionDescription]    [AppGeneral].[dtDescription] Null,
 	[IsCommon]                 Bit Null,
 	-- Temporal Data
 	[CreatedOn]	               DateTime2 (7) Null,

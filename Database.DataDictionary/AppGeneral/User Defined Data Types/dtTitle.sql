@@ -1,0 +1,1 @@
+﻿CREATE TYPE [AppGeneral].[dtTitle] FROM NVarChar(100) NOT NULL

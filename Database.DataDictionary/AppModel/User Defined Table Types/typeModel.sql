@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeModel] AS TABLE (
 	-- TIP: This matches the C# DataTable structure and results of the Get method.
 	[ModelId]              UniqueIdentifier Null,
-	[ModelTitle]           [AppGeneral].[typeTitle] Null,
-	[ModelDescription]     [AppGeneral].[typeDescription] Null,
+	[ModelTitle]           [AppGeneral].[dtTitle] Null,
+	[ModelDescription]     [AppGeneral].[dtDescription] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,
 	[CreatedBy]            NVarChar(4000) Null,

@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppModel].[typeEntity] AS TABLE (
     [EntityId]             UniqueIdentifier NULL,
-	[EntityTitle]          [AppGeneral].[typeTitle] Null,
-	[EntityDescription]    [AppGeneral].[typeDescription] Null,
+	[EntityTitle]          [AppGeneral].[dtTitle] Null,
+	[EntityDescription]    [AppGeneral].[dtDescription] Null,
 	[EntityName]           [AppModel].[typeQualifiedName] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,

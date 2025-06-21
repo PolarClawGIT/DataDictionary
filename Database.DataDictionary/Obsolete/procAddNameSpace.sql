@@ -20,9 +20,9 @@ Begin Try
 
 	Declare @Values Table (
 		[NameSpaceId]		UniqueIdentifier NOT NULL,
-		[MemberName]		[AppGeneral].[typeNameSpaceMember] Not Null,
-		[NameSpace]			[AppGeneral].[typeNameSpacePath] Null,
-		[ParentNameSpace]	[AppGeneral].[typeNameSpacePath] Null,
+		[MemberName]		[AppGeneral].[dtNameSpaceMember] Not Null,
+		[NameSpace]			[AppGeneral].[dtNameSpacePath] Null,
+		[ParentNameSpace]	[AppGeneral].[dtNameSpacePath] Null,
 		Primary Key ([NameSpaceId]))
 
 	;With [Data] As (
@@ -32,7 +32,7 @@ Begin Try
 				N.[ParentName],
 				Row_Number() Over (Partition By N.[QualifiedName] Order By N.[MemberName]) As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcParseName](D.[NameSpace]) N
+				Cross Apply [AppGeneral].[funcParseName](D.[NameSpace]) N
 				Outer Apply (
 					Select	[NameSpaceId]
 					From	[AppModel].[funcGetNameSpaceByName](N.[QualifiedName])

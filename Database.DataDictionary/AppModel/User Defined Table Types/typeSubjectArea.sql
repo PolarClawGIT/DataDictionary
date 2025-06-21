@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeSubjectArea] AS TABLE (
     [SubjectAreaId]          UNIQUEIDENTIFIER                           NULL,
-    [SubjectAreaTitle]       [AppGeneral].[typeTitle]           NULL,
-    [SubjectAreaDescription] [AppGeneral].[typeDescription]     NULL,
-    [SubjectName]            [AppGeneral].[typeNameSpacePath]   NULL,
+    [SubjectAreaTitle]       [AppGeneral].[dtTitle]           NULL,
+    [SubjectAreaDescription] [AppGeneral].[dtDescription]     NULL,
+    [SubjectName]            [AppGeneral].[dtNameSpacePath]   NULL,
 	-- Temporal Data
 	[CreatedOn]              DateTime2 (7) Null,
 	[CreatedBy]              NVarChar(4000) Null,

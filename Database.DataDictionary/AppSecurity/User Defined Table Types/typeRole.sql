@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [AppSecurity].[typeRole] AS TABLE (
 	[RoleId]          UniqueIdentifier Null,
-	[RoleName]        [AppGeneral].[typeTitle] Not Null,
-	[RoleDescription] [AppGeneral].[typeDescription] Null,
+	[RoleName]        [AppGeneral].[dtTitle] Not Null,
+	[RoleDescription] [AppGeneral].[dtDescription] Null,
 	[IsSecurityAdmin] Bit Null,
 	[IsHelpAdmin]     Bit Null,
 	[IsHelpOwner]     Bit Null,

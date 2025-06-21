@@ -2,7 +2,7 @@
 (
 	[ProcessId]			   UniqueIdentifier NOT Null,
 	[DefinitionId]         UniqueIdentifier NOT NULL,
-	[DefinitionSummary]    [AppGeneral].[typeDescription] Null,
+	[DefinitionSummary]    [AppGeneral].[dtDescription] Null,
 	[DefinitionText]       [AppModel].[typeRichText] Null,
 	-- Temporal Data
 	[CreatedOn]            DateTime2 (7) Null,

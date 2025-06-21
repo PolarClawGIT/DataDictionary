@@ -29,8 +29,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[AttributeId]			UniqueIdentifier Not Null,
-		[AttributeTitle]		[AppGeneral].[typeTitle] Not Null,
-		[AttributeDescription]	[AppGeneral].[typeDescription] Null,
+		[AttributeTitle]		[AppGeneral].[dtTitle] Not Null,
+		[AttributeDescription]	[AppGeneral].[dtDescription] Null,
 		[AttributeName]			[AppModel].[typeQualifiedName] Null,
 		[DataType]			    NVarChar(128) Null,
 		[DataLength]		    SmallInt Null,
@@ -81,7 +81,7 @@ Begin Try
 				Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId]) X
 			Outer Apply (
 				Select	[QualifiedName] As [AttributeName]
-				From	[AppModel].[funcParseName](D.[AttributeName])
+				From	[AppGeneral].[funcParseName](D.[AttributeName])
 				Where	[IsBase] = 1) N
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@AttributeId is Null Or @AttributeId = X.[AttributeId])

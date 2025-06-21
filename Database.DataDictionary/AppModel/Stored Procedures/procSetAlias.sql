@@ -29,8 +29,8 @@ Begin Try
 		[AliasMember]		NVarChar(800) Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
-		[AliasNameSpace]	[AppGeneral].[typeNameSpacePath] Not Null,
-		[ParentNameSpace]	[AppGeneral].[typeNameSpacePath] Null,
+		[AliasNameSpace]	[AppGeneral].[dtNameSpacePath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[dtNameSpacePath] Null,
 		Primary Key ([AliasId]))
 
 	;With [Data] As (
@@ -40,7 +40,7 @@ Begin Try
 				[ParentName] As [ParentNameSpace],
 				Row_Number() Over (Partition By [QualifiedName] Order By IIF([AliasId] is not null,0,1)) As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcParseName](D.[AliasNameSpace]))
+				Cross Apply [AppGeneral].[funcParseName](D.[AliasNameSpace]))
 	Insert Into @Values
 	Select	Coalesce([AppModel].[funcAliasId]([AliasNameSpace]), [AliasId], NewId()) As [AliasId],
 			[AliasMember],

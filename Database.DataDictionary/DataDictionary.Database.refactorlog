@@ -3894,4 +3894,59 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[NameSpaceId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0c3477cb-9523-4631-b1cf-897d1889c0e6" ChangeDateTime="06/21/2025 13:42:23">
+    <Property Name="ElementName" Value="[AppLibrary].[typeLibraryMember]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppLibrary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ttLibraryMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6b355edc-065e-46d9-9896-fff2542ff52e" ChangeDateTime="06/21/2025 13:42:41">
+    <Property Name="ElementName" Value="[AppLibrary].[typeLibrarySource]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppLibrary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ttLibrarySource]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="61115fa1-b40f-4ac3-b8e6-ddf220923974" ChangeDateTime="06/21/2025 13:43:37">
+    <Property Name="ElementName" Value="[AppModel].[funcParseName]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="NewSchema" Value="AppGeneral" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c9568217-1973-42a2-b861-b114e4a8b217" ChangeDateTime="06/21/2025 13:44:57">
+    <Property Name="ElementName" Value="[AppGeneral].[typeTitle]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[dtTitle]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="78b9934e-b698-481f-8737-65599c4de8ca" ChangeDateTime="06/21/2025 13:45:21">
+    <Property Name="ElementName" Value="[AppGeneral].[typeNameSpacePath]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[dtNameSpacePath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f6f03ea6-f7ba-4c73-b932-befdd2245cb7" ChangeDateTime="06/21/2025 13:45:37">
+    <Property Name="ElementName" Value="[AppGeneral].[typeObjectType]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[dtObjectType]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="24adc8d6-f69c-49bd-bc41-1fb04c2d6d60" ChangeDateTime="06/21/2025 13:45:52">
+    <Property Name="ElementName" Value="[AppGeneral].[typeNameSpaceMember]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[dtNameSpaceMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="000c0d9c-7134-4888-ad96-fb25d7e87548" ChangeDateTime="06/21/2025 13:46:10">
+    <Property Name="ElementName" Value="[AppGeneral].[typeDescription]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[dtDescription]" />
+  </Operation>
 </Operations>

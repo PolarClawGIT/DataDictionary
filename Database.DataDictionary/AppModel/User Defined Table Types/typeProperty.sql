@@ -1,8 +1,8 @@
 ﻿CREATE TYPE [AppModel].[typeProperty] AS TABLE
 (
 	[PropertyId]          UniqueIdentifier Null,
-	[PropertyTitle]       [AppGeneral].[typeTitle] Null,
-	[PropertyDescription] [AppGeneral].[typeDescription] Null,
+	[PropertyTitle]       [AppGeneral].[dtTitle] Null,
+	[PropertyDescription] [AppGeneral].[dtDescription] Null,
 	[IsCommon]            Bit Null,
 	[DataType]            NVarChar(20) Null,
 	[PropertyData]        NVarChar(2000) Null,
