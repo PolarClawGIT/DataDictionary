@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppModel].[SubjectArea] (
     [SubjectAreaId]          UniqueIdentifier                       CONSTRAINT [DF_SubjectAreaId] DEFAULT (newsequentialid()) NOT NULL,
-    [SubjectAreaTitle]       [AppGeneral].[dtTitle]       NULL,
-    [SubjectAreaDescription] [AppGeneral].[dtDescription] NULL,
-    [SubjectName]            [AppModel].[typeQualifiedName]         Null,
+    [SubjectAreaTitle]       [AppGeneral].[uddtTitle]       NULL,
+    [SubjectAreaDescription] [AppGeneral].[uddtDescription] NULL,
+    [SubjectName]            [AppGeneral].[uddtQualifiedName]         Null,
     [ModelId]                UniqueIdentifier                       NOT NULL,
    	-- Temporal History Support
     [SysStart]               DateTime2 (7) GENERATED ALWAYS AS ROW START HIDDEN CONSTRAINT [DF_SubjectArea_SysStart] DEFAULT (sysdatetime()) NOT NULL,

@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [AppModel].[Process]
 (
 	[ProcessId]          UniqueIdentifier Not Null CONSTRAINT [DF_ProcessId] DEFAULT (newid()),
-	[ProcessTitle]       [AppGeneral].[dtTitle] Not Null,
-	[ProcessDescription] [AppGeneral].[dtDescription] Null,
-	[ProcessName]        [AppModel].[typeQualifiedName]         Null,
+	[ProcessTitle]       [AppGeneral].[uddtTitle] Not Null,
+	[ProcessDescription] [AppGeneral].[uddtDescription] Null,
+	[ProcessName]        [AppGeneral].[uddtQualifiedName]         Null,
     -- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Process_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Process_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

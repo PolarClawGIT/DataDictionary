@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetReference]
 		@CatalogId UniqueIdentifier = Null,
 		@ReferenceId UniqueIdentifier = Null,
-		@Data [AppCatalog].[typeReference] ReadOnly
+		@Data [AppCatalog].[udttReference] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -38,12 +38,12 @@ Begin Try
 		[CatalogId]				    uniqueidentifier NOT NULL,
 		[SchemaName]                SysName NULL,
 		[ObjectName]                SysName Null,
-		[ObjectType]				[AppGeneral].[dtObjectType] NULL,
+		[ObjectType]				[AppGeneral].[uddtObjectType] NULL,
 		[ReferencedDatabaseName]	SysName NULL,
 		[ReferencedSchemaName]		SysName NULL,
 		[ReferencedObjectName]		SysName NULL,
 		[ReferencedColumnName]		SysName NULL,
-		[ReferencedType]			[AppGeneral].[dtObjectType] NULL,
+		[ReferencedType]			[AppGeneral].[uddtObjectType] NULL,
 		[IsCallerDependent]			Bit NULL,
 		[IsAmbiguous]				Bit NULL,
 		[IsSelected]				Bit NULL,

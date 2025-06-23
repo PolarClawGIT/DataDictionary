@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppSecurity].[Role]
 (
 	[RoleId] UniqueIdentifier NOT NULL CONSTRAINT [DF_RoleId] DEFAULT (newid()),
-	[RoleName] [AppGeneral].[dtTitle] Not Null,
-	[RoleDescription] [AppGeneral].[dtDescription] Null,
+	[RoleName] [AppGeneral].[uddtTitle] Not Null,
+	[RoleDescription] [AppGeneral].[uddtDescription] Null,
 	-- Permission List
 	-- Admin: 0 = not an administrator (could be an administrator in a different role)
 	--        1 = administrator for type of objects

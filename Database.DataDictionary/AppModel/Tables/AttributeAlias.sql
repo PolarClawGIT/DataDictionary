@@ -2,7 +2,7 @@
 (
 	[AttributeId]       UniqueIdentifier NOT Null,
 	[AliasId]           UniqueIdentifier Not Null,
-	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
+	[AliasScope]        [AppGeneral].[uddtScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
 	--[AliasNameSpace]    [App_DataDictionary].[typeNameSpacePath] Null, -- Delimited NameSpace. Cannot be indexed.
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_AttributeAlias_SysStart] DEFAULT (sysdatetime()),

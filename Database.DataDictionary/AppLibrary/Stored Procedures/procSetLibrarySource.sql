@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppLibrary].[procSetLibrarySource]
 		@ModelId UniqueIdentifier = null,
 		@LibraryId UniqueIdentifier = null,
-		@Data [AppLibrary].[ttLibrarySource] ReadOnly
+		@Data [AppLibrary].[udttLibrarySource] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -26,8 +26,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[LibraryId]             UniqueIdentifier Not Null,
-		[LibraryTitle]          [AppGeneral].[dtTitle] Not Null,
-		[LibraryDescription]    [AppGeneral].[dtDescription] Null,
+		[LibraryTitle]          [AppGeneral].[uddtTitle] Not Null,
+		[LibraryDescription]    [AppGeneral].[uddtDescription] Null,
 		[AssemblyName]          NVarChar(128) Not Null, -- Natural Key
 		[SourceFile]            NVarChar(500) Not Null, 
 		[SourceDate]            DateTime2 (7) Not Null,

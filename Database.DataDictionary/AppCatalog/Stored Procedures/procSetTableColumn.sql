@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetTableColumn]
 		@CatalogId UniqueIdentifier = Null,
 		@TableId UniqueIdentifier = Null,
-		@Data [AppCatalog].[typeTableColumn] ReadOnly
+		@Data [AppCatalog].[udttTableColumn] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued

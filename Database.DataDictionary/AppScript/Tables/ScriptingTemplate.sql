@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [AppScript].[ScriptingTemplate]
 (
 	[TemplateId]            UniqueIdentifier Not Null CONSTRAINT [DF_ScriptingTemplateId] DEFAULT (newid()),
-	[TemplateTitle]			[AppGeneral].[dtTitle] Not Null,
-	[TemplateDescription]	[AppGeneral].[dtDescription] Null,
+	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
+	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
 	-- Transform Settings, refers to the XSLT and the document produced.
-	[BreakOnScope]			[AppModel].[typeScopeName] NULL,  -- The Scope to have a document break on. Null = no break.
+	[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL,  -- The Scope to have a document break on. Null = no break.
 	[TransformScript]		XML Null , -- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	-- Document Settings, refers to the XML documents and scripting files that is built.
 	-- Concept: The database would not store the files.

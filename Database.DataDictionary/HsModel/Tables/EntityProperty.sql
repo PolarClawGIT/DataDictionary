@@ -2,7 +2,7 @@
 (
 	[EntityId]			UniqueIdentifier Not Null,
 	[PropertyId]		UniqueIdentifier NOT Null,
-	[PropertyValue]		[AppModel].[typePropertyValue] Null,
+	[PropertyValue]		[AppModel].[uddtPropertyValue] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

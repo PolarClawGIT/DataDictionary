@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetDefinition]
 		@ModelId UniqueIdentifier = Null,
 		@DefinitionId UniqueIdentifier = Null,
-		@Data [AppModel].[typeDefinition] ReadOnly
+		@Data [AppModel].[udttDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[DefinitionId]             UniqueIdentifier NOT NULL,
-		[DefinitionTitle]          [AppGeneral].[dtTitle] Not Null,
-		[DefinitionDescription]    [AppGeneral].[dtDescription] Null,
+		[DefinitionTitle]          [AppGeneral].[uddtTitle] Not Null,
+		[DefinitionDescription]    [AppGeneral].[uddtDescription] Null,
 		[IsCommon]                 Bit Not Null,
 		Primary Key ([DefinitionId]),
 		Unique ([DefinitionTitle]))

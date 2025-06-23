@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetAlias]
 		@ModelId UniqueIdentifier = Null,
-		@Data [AppModel].[typeAlias] ReadOnly
+		@Data [AppModel].[udttAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -29,8 +29,8 @@ Begin Try
 		[AliasMember]		NVarChar(800) Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
-		[AliasNameSpace]	[AppGeneral].[dtNameSpacePath] Not Null,
-		[ParentNameSpace]	[AppGeneral].[dtNameSpacePath] Null,
+		[AliasNameSpace]	[AppGeneral].[uddtNameSpacePath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
 		Primary Key ([AliasId]))
 
 	;With [Data] As (

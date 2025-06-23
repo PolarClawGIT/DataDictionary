@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppModel].[funcAliasId] (@AliasNameSpace [AppGeneral].[dtNameSpacePath])
+﻿CREATE FUNCTION [AppModel].[funcAliasId] (@AliasNameSpace [AppGeneral].[uddtNameSpacePath])
 -- Takes an AliasNameSpace and gets the AliasID
 -- Temporal Data NOT Supported
 RETURNS UniqueIdentifier As 

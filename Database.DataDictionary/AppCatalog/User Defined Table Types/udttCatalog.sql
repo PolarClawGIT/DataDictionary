@@ -1,0 +1,18 @@
+﻿CREATE TYPE [AppCatalog].[udttCatalog] AS TABLE (
+	-- TIP: This matches the C# DataTable structure and results of the Get method.
+	[CatalogId]            UniqueIdentifier Null,
+	[CatalogTitle]         [AppGeneral].[uddtTitle] Null,
+	[CatalogDescription]   [AppGeneral].[uddtDescription] Null,
+	[ServerName]           SysName          Null,
+	[DatabaseName]         SysName          Null,
+	[SourceDate]           DateTime         Null,
+	-- Temporal Data
+	[CreatedOn]            DateTime2 (7) Null,
+	[CreatedBy]            NVarChar(4000) Null,
+	[RemovedOn]            DateTime2 (7) Null,
+	[RemovedBy]            NVarChar(4000) Null,
+	[IsInserted]           Bit Null,
+	[IsUpdated]            Bit Null,
+	[IsDeleted]            Bit Null,
+	[IsCurrent]            Bit Null
+);

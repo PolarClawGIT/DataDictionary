@@ -2,7 +2,7 @@
 (
 	[EntityId]          UniqueIdentifier NOT Null,
 	[AliasId]           UniqueIdentifier Not Null,
-	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,
+	[AliasScope]        [AppGeneral].[uddtScopeName] NOT NULL,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

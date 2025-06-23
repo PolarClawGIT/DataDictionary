@@ -2,7 +2,7 @@
 (
 	[ProcessId]             UniqueIdentifier Not Null,
 	[ArgumentAliasId]		UniqueIdentifier Not Null,
-	[ArgumentKnownAs]		[AppGeneral].[dtTitle] Not Null,
+	[ArgumentKnownAs]		[AppGeneral].[uddtTitle] Not Null,
 	[OrdinalPosition]       Int Not Null,
 	[IsPassed]				Bit Not Null,
 	[IsReturned]			Bit Not Null,

@@ -4,7 +4,7 @@
 	[SchemaId]            UniqueIdentifier Not Null,
 	[ConstraintName]      SysName Not Null,
 	[TableId]             UniqueIdentifier Not Null,
-	[ConstraintType]      [AppGeneral].[dtObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
+	[ConstraintType]      [AppGeneral].[uddtObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
 	[SysStart]            DateTime2 (7) Not Null,
 	[SysEnd]              DateTime2 (7)  Not Null,
 )

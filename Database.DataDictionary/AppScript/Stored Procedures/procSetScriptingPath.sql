@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppScript].[procSetScriptingPath]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[ttScriptingPath] ReadOnly
+		@Data [AppScript].[udttScriptingPath] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -22,7 +22,7 @@ Begin Try
 	Declare @Values Table (
 		[TemplateId]        UniqueIdentifier NOT NULL,
 		[NameSpaceId]       UniqueIdentifier NOT NULL,
-		[PathScope]         [AppModel].[typeScopeName] NOT NULL,
+		[PathScope]         [AppGeneral].[uddtScopeName] NOT NULL,
 		Primary Key ([TemplateId], [NameSpaceId]))
 		
 	Declare @NameSpace [AppModel].[typeNameSpace]

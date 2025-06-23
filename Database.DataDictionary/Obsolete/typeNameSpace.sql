@@ -4,5 +4,5 @@
 CREATE TYPE [AppModel].[typeNameSpace] AS TABLE
 (
 	--[NameSpaceId]           UniqueIdentifier NULL,
-	[NameSpace]             [AppGeneral].[dtNameSpacePath] Null
+	[NameSpace]             [AppGeneral].[uddtNameSpacePath] Null
 )

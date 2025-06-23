@@ -2,7 +2,7 @@
 (
 	[EntityId]          UniqueIdentifier NOT Null,
 	[AliasId]           UniqueIdentifier Not Null,
-	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
+	[AliasScope]        [AppGeneral].[uddtScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
 --	[AliasNameSpace]    [App_DataDictionary].[typeNameSpacePath] Null, -- Delimited NameSpace. Cannot be indexed.
 	-- Relationship Options (based on Object Oriented programing)
 	-- [IsInheritance]		Bit Not Null CONSTRAINT [Df_EntityAlias_IsInheritance] DEFAULT (0), -- Is this Entity Inherited from the specified object. IE: Business layer Inherits from the Data Layer.

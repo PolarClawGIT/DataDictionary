@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetRoutine]
 		@CatalogId UniqueIdentifier = Null,
 		@RoutineId UniqueIdentifier = Null,
-		@Data [AppCatalog].[typeRoutine] ReadOnly
+		@Data [AppCatalog].[udttRoutine] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -38,7 +38,7 @@ Begin Try
 		[RoutineId]          UniqueIdentifier Not Null,
 		[SchemaId]           UniqueIdentifier Not Null,
 		[RoutineName]        SysName Not Null,
-		[RoutineType]        [AppGeneral].[dtObjectType] Null,
+		[RoutineType]        [AppGeneral].[uddtObjectType] Null,
 		Primary Key ([RoutineId]),
 		Unique ([SchemaId], [RoutineName]))
 

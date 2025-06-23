@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [HsGeneral].[HelpSubject] (
     [HelpId]      UNIQUEIDENTIFIER NOT NULL,
-    [HelpSubject] [AppGeneral].[dtTitle] NOT NULL,
-    [HelpToolTip] [AppGeneral].[dtDescription] NULL,
+    [HelpSubject] [AppGeneral].[uddtTitle] NOT NULL,
+    [HelpToolTip] [AppGeneral].[uddtDescription] NULL,
     [HelpText]    NVARCHAR (MAX)   NOT NULL,
     [NameSpace]   NVARCHAR (1023)  NULL,
     [SysStart]    DATETIME2 (7)    NOT NULL,

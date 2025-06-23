@@ -7,7 +7,7 @@
 	[RoutineId]          UniqueIdentifier Not Null CONSTRAINT [DF_RoutineId] DEFAULT (newid()),
 	[SchemaId]           UniqueIdentifier Not Null,
 	[RoutineName]        SysName Not Null,
-	[RoutineType]        [AppGeneral].[dtObjectType] Null, -- Known types: PROCEDURE, FUNCTION
+	[RoutineType]        [AppGeneral].[uddtObjectType] Null, -- Known types: PROCEDURE, FUNCTION
 	[SysStart]           DateTime2 (7) Not Null,
 	[SysEnd]             DateTime2 (7)  Not Null,)
 GO

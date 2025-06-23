@@ -1,9 +1,9 @@
 ﻿CREATE TABLE [HsModel].[Entity]
 (
 	[EntityId]          UniqueIdentifier Not Null,
-	[EntityTitle]       [AppGeneral].[dtTitle] Not Null,
-	[EntityDescription] [AppGeneral].[dtDescription] Null,
-	[EntityName]        [AppModel].[typeQualifiedName] Null,
+	[EntityTitle]       [AppGeneral].[uddtTitle] Not Null,
+	[EntityDescription] [AppGeneral].[uddtDescription] Null,
+	[EntityName]        [AppGeneral].[uddtQualifiedName] Null,
 	[SysStart]          DateTime2 (7) NOT NULL,
 	[SysEnd]            DateTime2 (7) NOT NULL,
 )

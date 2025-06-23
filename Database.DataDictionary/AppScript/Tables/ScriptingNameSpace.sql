@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [AppScript].[ScriptingNameSpace]
 (
 	[NameSpaceId]			UniqueIdentifier Not Null CONSTRAINT [DF_NameSpaceId] DEFAULT (newid()),
-	[NameSpaceMember]		[AppGeneral].[dtNameSpaceMember] Not Null, -- The Item Name to be scripted. Combined to create a NameSpace.
+	[NameSpaceMember]		[AppGeneral].[uddtNameSpaceMember] Not Null, -- The Item Name to be scripted. Combined to create a NameSpace.
 	[ParentNameSpaceId]		UniqueIdentifier Null,
 	-- TODO: Add System Version later once the schema is locked down
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ItemHierarchy_SysStart] DEFAULT (sysdatetime()),

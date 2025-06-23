@@ -2,7 +2,7 @@
 (
 	[ProcessId]         UniqueIdentifier Not Null,
 	[AliasId]           UniqueIdentifier Not Null,
-	[AliasScope]        [AppModel].[typeScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
+	[AliasScope]        [AppGeneral].[uddtScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
     -- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ProcessAlias_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ProcessAlias_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

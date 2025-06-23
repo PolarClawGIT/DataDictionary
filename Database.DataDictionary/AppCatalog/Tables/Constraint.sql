@@ -9,7 +9,7 @@
 	[SchemaId]            UniqueIdentifier Not Null,
 	[ConstraintName]      SysName Not Null,
 	[TableId]             UniqueIdentifier Not Null,
-	[ConstraintType]      [AppGeneral].[dtObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
+	[ConstraintType]      [AppGeneral].[uddtObjectType] Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Constraint_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Constraint_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

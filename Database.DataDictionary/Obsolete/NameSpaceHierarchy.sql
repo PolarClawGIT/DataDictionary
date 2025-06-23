@@ -16,7 +16,7 @@
 	[NameSpaceId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_NameSpaceId] DEFAULT (newid()),
 	[ModelId]               UniqueIdentifier NULL,
 	[ParentNameSpaceId]     UniqueIdentifier NULL,
-	[MemberName]            [AppGeneral].[dtNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
+	[MemberName]            [AppGeneral].[uddtNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
 	-- Temporal History Support
 	[SysStart]              DateTime2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_NameSpace_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd]                DateTime2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_NameSpace_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

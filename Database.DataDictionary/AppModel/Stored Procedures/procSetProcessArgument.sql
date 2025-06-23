@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetProcessArgument]
 		@ModelId UniqueIdentifier = Null,
 		@ProcessId UniqueIdentifier = Null,
-		@Data [AppModel].[typeProcessArgument] ReadOnly
+		@Data [AppModel].[udttProcessArgument] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[ProcessId]				UniqueIdentifier Not Null,
 		[ArgumentAliasId]       UniqueIdentifier Not Null,
-		[ArgumentKnownAs]	    [AppGeneral].[dtTitle] Not Null,
+		[ArgumentKnownAs]	    [AppGeneral].[uddtTitle] Not Null,
 		[OrdinalPosition]       Int Not Null,
 		[IsPassed]				Bit Not Null,
 		[IsReturned]			Bit Not Null,
@@ -42,7 +42,7 @@ Begin Try
 		Unique ([ProcessId], [ArgumentKnownAs]),
 		Unique ([ProcessId], [OrdinalPosition]))
 
-	Declare @Alias [AppModel].[typeAlias];
+	Declare @Alias [AppModel].[udttAlias];
 
 	Insert Into @Alias ([AliasNameSpace])
 	Select	[ArgumentName]

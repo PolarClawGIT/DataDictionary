@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppLibrary].[procSetLibraryMember]
 		@ModelId UniqueIdentifier = null,
 		@LibraryId UniqueIdentifier = null,
-		@Data [AppLibrary].[ttLibraryMember] ReadOnly
+		@Data [AppLibrary].[udttLibraryMember] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,17 +28,17 @@ Begin Try
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
-		[MemberName]            [AppGeneral].[dtNameSpaceMember] Not Null,
-		[MemberType]            [AppGeneral].[dtObjectType] Not Null,
+		[MemberName]            [AppGeneral].[uddtNameSpaceMember] Not Null,
+		[MemberType]            [AppGeneral].[uddtObjectType] Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
 
 	Declare @NameSpace Table (
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
-		[MemberName]		    [AppGeneral].[dtNameSpaceMember] Not Null,
-		[MemberNameSpace]       [AppGeneral].[dtNameSpacePath] Null,
-		[ParentNameSpace]       [AppGeneral].[dtNameSpacePath] Null,
+		[MemberName]		    [AppGeneral].[uddtNameSpaceMember] Not Null,
+		[MemberNameSpace]       [AppGeneral].[uddtNameSpacePath] Null,
+		[ParentNameSpace]       [AppGeneral].[uddtNameSpacePath] Null,
 		Primary Key ([MemberId]))
 
 

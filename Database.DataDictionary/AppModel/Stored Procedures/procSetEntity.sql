@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetEntity]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [AppModel].[typeEntity] ReadOnly
+		@Data [AppModel].[udttEntity] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -29,9 +29,9 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[EntityId]			    UniqueIdentifier Not Null,
-		[EntityTitle]		    [AppGeneral].[dtTitle] Not Null,
-		[EntityDescription]	    [AppGeneral].[dtDescription] Null,
-		[EntityName]			[AppModel].[typeQualifiedName] Null,
+		[EntityTitle]		    [AppGeneral].[uddtTitle] Not Null,
+		[EntityDescription]	    [AppGeneral].[uddtDescription] Null,
+		[EntityName]			[AppGeneral].[uddtQualifiedName] Null,
 		Primary Key ([EntityId]),
 		Unique ([EntityTitle]))
 

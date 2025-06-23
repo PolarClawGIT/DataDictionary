@@ -20,9 +20,9 @@ Begin Try
 
 	Declare @Values Table (
 		[NameSpaceId]		UniqueIdentifier NOT NULL,
-		[MemberName]		[AppGeneral].[dtNameSpaceMember] Not Null,
-		[NameSpace]			[AppGeneral].[dtNameSpacePath] Null,
-		[ParentNameSpace]	[AppGeneral].[dtNameSpacePath] Null,
+		[MemberName]		[AppGeneral].[uddtNameSpaceMember] Not Null,
+		[NameSpace]			[AppGeneral].[uddtNameSpacePath] Null,
+		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
 		Primary Key ([NameSpaceId]))
 
 	;With [Data] As (

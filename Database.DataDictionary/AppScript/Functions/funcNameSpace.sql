@@ -2,9 +2,9 @@
 -- This takes the NameSpaceId and rebuilds them into a Scripting NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
-RETURNS [AppGeneral].[dtNameSpacePath] as 
+RETURNS [AppGeneral].[uddtNameSpacePath] as 
 BEGIN
-	Declare @Result [AppGeneral].[dtNameSpacePath] = null
+	Declare @Result [AppGeneral].[uddtNameSpacePath] = null
 
 	;With [Data] As (
 	Select	[NameSpaceId],

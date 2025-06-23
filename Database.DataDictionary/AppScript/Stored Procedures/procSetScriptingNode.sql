@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppScript].[procSetScriptingNode]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[ttScriptingNode] ReadOnly
+		@Data [AppScript].[udttScriptingNode] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -22,9 +22,9 @@ Begin Try
 	Declare @Values Table (
 		[NodeId]				UniqueIdentifier NOT NULL,
 		[TemplateId]            UniqueIdentifier NOT NULL,
-		[PropertyScope]         [AppModel].[typeScopeName] NOT NULL,
-		[PropertyName]          [AppGeneral].[dtNameSpaceMember] NOT NULL,
-		[NodeName]				[AppGeneral].[dtNameSpaceMember] NOT Null,
+		[PropertyScope]         [AppGeneral].[uddtScopeName] NOT NULL,
+		[PropertyName]          [AppGeneral].[uddtNameSpaceMember] NOT NULL,
+		[NodeName]				[AppGeneral].[uddtNameSpaceMember] NOT Null,
 		[NodeValueAs]			NVarChar(50) Not Null,
 		Primary Key ([NodeId]))
 

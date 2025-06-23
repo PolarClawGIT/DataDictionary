@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetSubjectArea]
 		@ModelId UniqueIdentifier = Null,
 		@SubjectAreaId UniqueIdentifier = Null,
-		@Data [AppModel].[typeSubjectArea] ReadOnly
+		@Data [AppModel].[udttSubjectArea] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,10 +28,10 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
-		[SubjectAreaTitle]       [AppGeneral].[dtTitle] Not NULL,
-		[SubjectAreaDescription] [AppGeneral].[dtDescription] NULL,
+		[SubjectAreaTitle]       [AppGeneral].[uddtTitle] Not NULL,
+		[SubjectAreaDescription] [AppGeneral].[uddtDescription] NULL,
 		[ModelId]				 UniqueIdentifier Not NULL,
-		[SubjectName]            [AppModel].[typeQualifiedName] Not Null
+		[SubjectName]            [AppGeneral].[uddtQualifiedName] Not Null
 		Primary Key ([SubjectAreaId]),
 		Unique ([SubjectAreaTitle]))
 

@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [HsModel].[SubjectArea] (
     [SubjectAreaId]          UniqueIdentifier NOT NULL,
-    [SubjectAreaTitle]       [AppGeneral].[dtTitle]       NULL,
-    [SubjectAreaDescription] [AppGeneral].[dtDescription] NULL,
-    [SubjectName]            [AppModel].[typeQualifiedName]         Null,
+    [SubjectAreaTitle]       [AppGeneral].[uddtTitle]       NULL,
+    [SubjectAreaDescription] [AppGeneral].[uddtDescription] NULL,
+    [SubjectName]            [AppGeneral].[uddtQualifiedName]         Null,
     [ModelId]                UniqueIdentifier                       NOT NULL,
     -- Temporal History Support
     [SysStart]               DateTime2 (7) NOT NULL,

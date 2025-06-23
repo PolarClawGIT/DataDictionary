@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppScript].[procSetScriptingTemplate]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[ttScriptingTemplate] ReadOnly
+		@Data [AppScript].[udttScriptingTemplate] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -22,9 +22,9 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 			[TemplateId]            UniqueIdentifier NOT NULL,
-			[TemplateTitle]			[AppGeneral].[dtTitle] Not Null,
-			[TemplateDescription]	[AppGeneral].[dtDescription] Null,
-			[BreakOnScope]			[AppModel].[typeScopeName] NULL, 
+			[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
+			[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
+			[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL, 
 			[TransformScript]		XML Null , 
 			[RootDirectory]         NVarChar(100) Null,
 			[DocumentDirectory]		NVarChar(250) Null,

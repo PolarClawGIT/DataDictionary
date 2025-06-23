@@ -5,8 +5,8 @@
 	-- The Model contains the majority of the user-editable data.
 	-- The application works with a single model at a time.
 	[ModelId]          UniqueIdentifier NOT NULL CONSTRAINT [DF_ModelId] DEFAULT (newid()),
-	[ModelTitle]       [AppGeneral].[dtTitle] Not Null,
-	[ModelDescription] [AppGeneral].[dtDescription] Null,
+	[ModelTitle]       [AppGeneral].[uddtTitle] Not Null,
+	[ModelDescription] [AppGeneral].[uddtDescription] Null,
 	-- Temporal History Support
 	[SysStart]         DateTime2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Model_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd]           DateTime2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Model_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
