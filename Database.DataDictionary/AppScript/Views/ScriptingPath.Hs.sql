@@ -16,8 +16,8 @@ With [Dates] As (
 Select	D.[TemplateId],
 		D.[NameSpaceId],
 		FT.[TemplateTitle],
-		D.[PathScope],
-		FN.[PathName],
+		D.[ScopeName],
+		FN.[NameSpace],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -60,7 +60,7 @@ From	[AppScript].[ScriptingPath] D
 		Outer Apply (
 			Select	Top 1
 					[NameSpaceId],
-					[NameSpace] As [PathName]
+					[NameSpace]
 			From	[AppScript].[ScriptingNameSpaceHs]
 			Where	[NameSpaceId] = D.[NameSpaceId] And
 					[SysStart] <= D.[SysEnd]

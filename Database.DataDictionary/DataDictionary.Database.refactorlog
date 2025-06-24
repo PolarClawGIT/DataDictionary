@@ -4353,4 +4353,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[udttSecurablePermission]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e2d10116-cdfd-4e1d-b51a-65b35f4cc833" ChangeDateTime="06/23/2025 15:17:59">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingPath].[PathScope]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[ScriptingPath]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ScopeName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="558f8226-8a09-439c-b730-8d31f9685803" ChangeDateTime="06/24/2025 14:55:52">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingNameSpace].[NameSpaceMember]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[ScriptingNameSpace]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[MemberName]" />
+  </Operation>
 </Operations>

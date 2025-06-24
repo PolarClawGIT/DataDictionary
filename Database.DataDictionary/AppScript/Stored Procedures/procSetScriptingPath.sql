@@ -19,39 +19,72 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+
 	Declare @Values Table (
-		[TemplateId]        UniqueIdentifier NOT NULL,
-		[NameSpaceId]       UniqueIdentifier NOT NULL,
-		[PathScope]         [AppGeneral].[uddtScopeName] NOT NULL,
+		[TemplateId]		UniqueIdentifier NOT NULL,
+		[NameSpaceId]		UniqueIdentifier NOT NULL,
+		[ScopeName]			[AppGeneral].[uddtScopeName] NOT NULL,
 		Primary Key ([TemplateId], [NameSpaceId]))
-		
-	Declare @NameSpace [AppModel].[typeNameSpace]
 
+	Declare @NameSpace Table (
+		[NameSpaceId]		UniqueIdentifier NOT NULL,
+		[NameSpace]			[AppGeneral].[uddtNameSpacePath] NOT NULL,
+		[MemberName]		[AppGeneral].[uddtNameSpaceMember] NOT NULL,
+		[ParentName]		[AppGeneral].[uddtNameSpacePath] NULL,
+		Primary Key ([NameSpaceId]))
+
+	-- Resolve NameSpaceId
+	;With [Summary] As (
+		Select	C.[QualifiedName],
+				C.[ParentName],
+				C.[MemberName]
+		From	@Data D
+				Cross Apply [AppGeneral].[funcParseName](D.[NameSpace]) C
+		Group By C.[QualifiedName],
+				C.[ParentName],
+				C.[MemberName]),
+	[NameSpaces] As (
+		Select	Coalesce([AppScript].[funcNameSpaceId]([QualifiedName]), NewId()) As [NameSpaceId],
+				[QualifiedName],
+				[ParentName],
+				[MemberName]
+		From	[Summary])
 	Insert Into @NameSpace
-	Select	[PathName] As [NameSpace]
-	From	@Data
-	Group By [PathName]
-
-	-- Need to create & assign the NameSpaceID's
-	Exec [AppModel].[procAddNameSpace] @ModelId, @NameSpace
-
-	;With [NameSpace] As (
-		Select	M.[NameSpaceId],
-				N.[NameSpace]
-		From	[AppModel].[NameSpaceHierarchy] M
-				Cross Apply [AppModel].[funcGetNameSpaceById](M.[NameSpaceId]) N
-		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
-	Insert Into @Values
-	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
-			N.[NameSpaceId],
-			D.[PathScope]
-	From	@Data D
-			Cross Apply [AppGeneral].[funcParseName](D.[PathName]) C
-			Inner Join [NameSpace] N
-			On	C.[QualifiedName] = N.[NameSpace] And
-				C.[IsBase] = 1
+	Select	[NameSpaceId],
+			[QualifiedName] As [NameSpace],
+			[MemberName],
+			[ParentName]
+	From	[NameSpaces] N
+	Print FormatMessage ('Insert @NameSpace: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
+	Insert Into [AppScript].[ScriptingNameSpace] (
+			[NameSpaceId],
+			[MemberName],
+			[ParentNameSpaceId])
+	Select	N.[NameSpaceId],
+			N.[MemberName],
+			P.[NameSpaceId] As [ParentNameSpaceId]
+	From	@NameSpace N
+			Left Join @NameSpace P
+			On	N.[ParentName] = P.[NameSpace]
+			Left Join [AppScript].[ScriptingNameSpace] T
+			On	N.[NameSpaceId] = T.[NameSpaceId]
+	Where	T.[NameSpaceId] is Null
+	Print FormatMessage ('Insert [AppScript].[ScriptingNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into @Values -- Need [AppScript].[ScriptingNameSpace] updated first
+	Select	D.[TemplateId],
+			[AppScript].[funcNameSpaceId](D.[NameSpace]) As [NameSpaceId],
+			D.[ScopeName]
+	From	@Data D
+	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
+			(@ModelId is Null Or D.[TemplateId] In (
+				Select	[TemplateId]
+				From	[AppScript].[ScriptingModel]
+				Where	[ModelId] = @ModelId))
+	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppScript].[ScriptingPath]
 	From	[AppScript].[ScriptingPath] T
 			Left Join @Values S
@@ -65,21 +98,21 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingPath] (
 			[TemplateId],
 			[NameSpaceId],
-			[PathScope])
+			[ScopeName])
 	Select	S.[TemplateId],
 			S.[NameSpaceId],
-			S.[PathScope]
+			S.[ScopeName]
 	From	@Values S
 			Left Join [AppScript].[ScriptingPath] T
 			On	S.[TemplateId] = T.[TemplateId] And
 				S.[NameSpaceId] = T.[NameSpaceId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

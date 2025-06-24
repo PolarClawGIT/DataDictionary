@@ -10,18 +10,18 @@ BEGIN
 	Select	[NameSpaceId],
 			NullIf([ParentNameSpaceId], [NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[NameSpaceMember])) As [AliasNameSpace]
+				FormatMessage('[%s]',[MemberName])) As [NameSpace]
 	From	[AppScript].[ScriptingNameSpace]
 	Where	[NameSpaceId] = @NameSpaceId
 	Union All
 	Select	D.[NameSpaceId],
 			NullIf(P.[ParentNameSpaceId], D.[NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[NameSpaceMember],D.[AliasNameSpace])) As [AliasNameSpace]
+				FormatMessage('[%s].%s',P.[MemberName],D.[NameSpace])) As [NameSpace]
 	From	[Data] D
 			Inner Join [AppScript].[ScriptingNameSpace] P
 			On	D.[ParentNameSpaceId] = P.[NameSpaceId])
-Select	@Result = [AliasNameSpace]
+Select	@Result = [NameSpace]
 From	[Data]
 Where	[ParentNameSpaceId] is Null
 

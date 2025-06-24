@@ -1,12 +1,12 @@
 ﻿CREATE VIEW [AppScript].[ScriptingNameSpaceHs] As
 With [Data] As (
 	Select	[NameSpaceId],
-			[NameSpaceMember],
+			[MemberName],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[NameSpaceMember])) As [NameSpace],
+				FormatMessage('[%s]',[MemberName])) As [NameSpace],
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
-					Dense_Rank() Over (Order By [NameSpaceMember])))
+					Dense_Rank() Over (Order By [MemberName])))
 				As [HierarchyId],
 			[SysStart],
 			[SysEnd]
@@ -14,11 +14,11 @@ With [Data] As (
 	Where	[ParentNameSpaceId] is Null
 	Union All
 	Select	H.[NameSpaceId],
-			H.[NameSpaceMember],
+			H.[MemberName],
 			Convert(NVarChar(Max),
-				FormatMessage('%s.[%s]',D.[NameSpace], H.[NameSpaceMember])) As [NameSpace],
+				FormatMessage('%s.[%s]',D.[NameSpace], H.[MemberName])) As [NameSpace],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
-				Row_Number() Over (Partition By D.[NameSpaceId] Order By H.[NameSpaceMember])))
+				Row_Number() Over (Partition By D.[NameSpaceId] Order By H.[MemberName])))
 				As [HierarchyId],
 			Greatest(D.[SysStart], H.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], H.[SysEnd]) As [SysEnd]
@@ -40,7 +40,7 @@ With [Data] As (
 	From	[HsScript].[ScriptingNameSpace]
 	Where	[SysStart] != [SysEnd]*/)
 Select	D.[NameSpaceId], -- PK
-		D.[NameSpaceMember],
+		D.[MemberName],
 		D.[NameSpace], --AK
 		D.[HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status

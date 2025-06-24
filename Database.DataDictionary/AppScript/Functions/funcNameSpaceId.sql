@@ -14,18 +14,18 @@ Declare	@Result UniqueIdentifier = null
 [Search] As (
 	Select	N.[NameSpaceId],
 			N.[ParentNameSpaceId],
-			N.[NameSpaceMember],
+			N.[MemberName],
 			D.[Level],
 			D.[IsBase]
 	From	[Data] D
 			Inner Join [AppScript].[ScriptingNameSpace] N
-			On	D.[NameSpaceMember] = N.[NameSpaceMember] And
+			On	D.[NameSpaceMember] = N.[MemberName] And
 				N.[ParentNameSpaceId] is Null And
 				D.[Level] = 1
 	Union All
 	Select	N.[NameSpaceId],
 			N.[ParentNameSpaceId],
-			N.[NameSpaceMember],
+			N.[MemberName],
 			D.[Level],
 			D.[IsBase]
 	From	[Search] S
@@ -33,7 +33,7 @@ Declare	@Result UniqueIdentifier = null
 			On	S.[Level] + 1 = D.[Level]
 			Inner Join [AppScript].[ScriptingNameSpace] N
 			On	S.[NameSpaceId] = N.[ParentNameSpaceId] And
-				D.[NameSpaceMember] = N.[NameSpaceMember])
+				D.[NameSpaceMember] = N.[MemberName])
 Select	@Result = [NameSpaceId]
 From	[Search]
 Where	[IsBase] = 1
