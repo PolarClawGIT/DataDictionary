@@ -11,7 +11,7 @@
 
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[DefinitionEnumeration],
 	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[PropertyEnumeration],
-	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[AliasHierarchy]
+	ADD BLOCK PREDICATE [AppSecurity].[funcModelAuthorization] (Null, Null) ON [AppModel].[AliasNameSpace]
 
 	WITH (STATE = ON, SCHEMABINDING = ON)
 GO

@@ -68,7 +68,7 @@ From	[AppModel].[ProcessArgument] D
 			Select	Top 1
 					[AliasId],
 					[AliasNameSpace] As [ArgumentName]
-			From	[AppModel].[AliasHS]
+			From	[AppModel].[AliasNameSpaceHS]
 			Where	[AliasId] = D.[ArgumentAliasId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FL

@@ -4367,4 +4367,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[MemberName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="21df85fd-ff3c-4d1a-89b6-f9212f6ccf28" ChangeDateTime="06/24/2025 15:25:14">
+    <Property Name="ElementName" Value="[AppModel].[AliasHierarchy]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[AliasNameSpace]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3e5ce52d-cd5e-4a20-98d4-cbcd26c645d4" ChangeDateTime="06/24/2025 15:26:04">
+    <Property Name="ElementName" Value="[HsModel].[AliasHierarchy]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[HsModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[AliasNameSpace]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="12054dce-8bc2-47f1-bf0e-b89fbb096991" ChangeDateTime="06/24/2025 15:26:58">
+    <Property Name="ElementName" Value="[AppModel].[AliasHS]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppModel]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[AliasNameSpaceHS]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3829473f-037a-475b-8f0c-a80b3479de56" ChangeDateTime="06/24/2025 15:27:39">
+    <Property Name="ElementName" Value="[AppModel].[trigAliasHierarchy]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppModel].[AliasNameSpace]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigAliasNameSpace]" />
+  </Operation>
 </Operations>

@@ -18,7 +18,7 @@ Declare	@Result UniqueIdentifier = null
 			D.[Level],
 			D.[IsBase]
 	From	[Data] D
-			Inner Join [AppModel].[AliasHierarchy] N
+			Inner Join [AppModel].[AliasNameSpace] N
 			On	D.[AliasMember] = N.[AliasMember] And
 				N.[ParentAliasId] is Null And
 				D.[Level] = 1
@@ -31,7 +31,7 @@ Declare	@Result UniqueIdentifier = null
 	From	[Search] S
 			Inner Join [Data] D
 			On	S.[Level] + 1 = D.[Level]
-			Inner Join [AppModel].[AliasHierarchy] N
+			Inner Join [AppModel].[AliasNameSpace] N
 			On	S.[AliasId] = N.[ParentAliasId] And
 				D.[AliasMember] = N.[AliasMember])
 Select	@Result = [AliasId]

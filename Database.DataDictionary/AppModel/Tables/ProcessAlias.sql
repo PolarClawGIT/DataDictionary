@@ -9,7 +9,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ProcessAlias] PRIMARY KEY CLUSTERED ([ProcessId] ASC, [AliasId] ASC),
 	CONSTRAINT [FK_ProcessAlias_Process] FOREIGN KEY ([ProcessId]) REFERENCES [AppModel].[Process] ([ProcessId]),
-	CONSTRAINT [FK_ProcessAlias_Alias] FOREIGN KEY ([AliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
+	CONSTRAINT [FK_ProcessAlias_Alias] FOREIGN KEY ([AliasId]) REFERENCES [AppModel].[AliasNameSpace] ([AliasId]),
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[ProcessAlias]))
 GO
 

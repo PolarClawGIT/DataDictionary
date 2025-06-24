@@ -391,12 +391,12 @@
     <Build Include="AppSecurity\Policy\policyModelEntity.sql" />
     <Build Include="AppSecurity\Functions\funcModelEntityAuthorization.sql" />
     <Build Include="AppModel\Stored Procedures\procGetEntitySubjectArea.sql" />
-    <Build Include="AppModel\Tables\AliasHierarchy.sql" />
+    <Build Include="AppModel\Tables\AliasNameSpace.sql" />
     <Build Include="AppModel\Functions\funcAliasNameSpace.sql" />
     <Build Include="AppModel\Functions\funcAliasId.sql" />
-    <Build Include="HsModel\Tables\AliasHierarchy.sql" />
-    <Build Include="AppModel\Views\Alias.Hs.sql" />
-    <Build Include="AppModel\Triggers\trigAliasHierarchy.sql" />
+    <Build Include="HsModel\Tables\AliasNameSpace.sql" />
+    <Build Include="AppModel\Views\AliasNameSpace.Hs.sql" />
+    <Build Include="AppModel\Triggers\trigAliasNameSpace.sql" />
     <Build Include="AppModel\Stored Procedures\procSetAlias.sql" />
     <Build Include="HsModel\Tables\Process.sql" />
     <Build Include="HsModel\Tables\ProcessAlias.sql" />

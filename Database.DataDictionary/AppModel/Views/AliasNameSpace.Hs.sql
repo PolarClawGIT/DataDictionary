@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppModel].[AliasHS] As
+﻿CREATE VIEW [AppModel].[AliasNameSpaceHS] As
 -- Temporal View
 With [Data] As (
 	Select	[AliasId],
@@ -11,7 +11,7 @@ With [Data] As (
 				As [HierarchyId],
 			[SysStart],
 			[SysEnd]
-	From	[AppModel].[AliasHierarchy]
+	From	[AppModel].[AliasNameSpace]
 	Where	[ParentAliasId] is Null
 	Union All
 	Select	H.[AliasId],
@@ -24,7 +24,7 @@ With [Data] As (
 			Greatest(D.[SysStart], H.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], H.[SysEnd]) As [SysEnd]
 	From	[Data] D
-			Inner Join [AppModel].[AliasHierarchy] H
+			Inner Join [AppModel].[AliasNameSpace] H
 			On	D.[AliasId] = H.[ParentAliasId] And
 			-- Temporal, multiple rows could be returned. Do not have confidence in this.
 			((D.[SysStart] >= H.[SysStart] And D.[SysStart] < H.[SysEnd]) Or
@@ -33,12 +33,12 @@ With [Data] As (
 	Select	[AliasId],
 			[SysStart],
 			[SysEnd]
-	From	[AppModel].[AliasHierarchy]
+	From	[AppModel].[AliasNameSpace]
 	Union
 	Select	[AliasId],
 			[SysStart],
 			[SysEnd]
-	From	[HsModel].[AliasHierarchy]
+	From	[HsModel].[AliasNameSpace]
 	Where	[SysStart] != [SysEnd])
 Select	D.[AliasId], -- PK
 		D.[AliasMember],

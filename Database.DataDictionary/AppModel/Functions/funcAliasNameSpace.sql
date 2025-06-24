@@ -11,7 +11,7 @@ BEGIN
 			NullIf([ParentAliasId], [AliasId]) As [ParentAliasId],
 			Convert(NVarChar(Max),
 				FormatMessage('[%s]',[AliasMember])) As [AliasNameSpace]
-	From	[AppModel].[AliasHierarchy]
+	From	[AppModel].[AliasNameSpace]
 	Where	[AliasId] = @AliasId
 	Union All
 	Select	D.[AliasId],
@@ -19,7 +19,7 @@ BEGIN
 			Convert(NVarChar(Max),
 				FormatMessage('[%s].%s',P.[AliasMember],D.[AliasNameSpace])) As [AliasNameSpace]
 	From	[Data] D
-			Inner Join [AppModel].[AliasHierarchy] P
+			Inner Join [AppModel].[AliasNameSpace] P
 			On	D.[ParentAliasId] = P.[AliasId])
 Select	@Result = [AliasNameSpace]
 From	[Data]

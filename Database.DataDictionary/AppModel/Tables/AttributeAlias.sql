@@ -10,7 +10,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_AttributeAlias] PRIMARY KEY CLUSTERED ([AttributeId] ASC, [AliasId] ASC),
 	CONSTRAINT [FK_AttributeAlias_Attribute] FOREIGN KEY ([AttributeId]) REFERENCES [AppModel].[Attribute] ([AttributeId]),
-	CONSTRAINT [FK_AttributeAlias_Alias] FOREIGN KEY ([AliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
+	CONSTRAINT [FK_AttributeAlias_Alias] FOREIGN KEY ([AliasId]) REFERENCES [AppModel].[AliasNameSpace] ([AliasId]),
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[AttributeAlias]))
 GO

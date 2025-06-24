@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppModel].[AliasHierarchy]
+﻿CREATE TABLE [AppModel].[AliasNameSpace]
 (
 	-- Alias are a shared resource used as a data type to store NameSpace like values.
 	-- NameSpaces can exceed the limits of indexes within SQL.
@@ -11,8 +11,7 @@
 	-- An orphan is a Alias with no reference to it.
 	-- This is difficult to track and cannot be historically guaranteed.
 	[AliasId]           UniqueIdentifier Not Null CONSTRAINT [DF_AliasId] DEFAULT (newid()),
-	[AliasMember]       NVarChar(800) Not Null, -- Member Name of the alias. Combined to create a NameSpace.
---	[AliasScope]        [AppModel].[typeScopeName] NULL, -- The Scope for the Application to look for the Alias within. Leaf Nodes only. TODO: is this needed?
+	[AliasMember]       [AppGeneral].[uddtNameSpaceMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
 	[ParentAliasId]     UniqueIdentifier NULL,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Alias_SysStart] DEFAULT (sysdatetime()),
@@ -20,8 +19,8 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_Alias] PRIMARY KEY CLUSTERED ([AliasId] ASC),
-	CONSTRAINT [FK_Alias_Parent] FOREIGN KEY ([ParentAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
+	CONSTRAINT [FK_Alias_Parent] FOREIGN KEY ([ParentAliasId]) REFERENCES [AppModel].[AliasNameSpace] ([AliasId]),
 	CONSTRAINT [AK_Alias_MemberName] UNIQUE ([ParentAliasId] ASC, [AliasMember] ASC)
 )
-WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[AliasHierarchy]))
+WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[AliasNameSpace]))
 GO

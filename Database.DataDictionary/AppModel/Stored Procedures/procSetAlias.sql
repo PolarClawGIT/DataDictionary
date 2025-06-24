@@ -26,7 +26,7 @@ Begin Try
 
 	Declare @Values Table (
 		[AliasId]			UniqueIdentifier Not Null,
-		[AliasMember]		NVarChar(800) Not Null,
+		[AliasMember]		[AppGeneral].[uddtNameSpaceMember] Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
 		[AliasNameSpace]	[AppGeneral].[uddtNameSpacePath] Not Null,
@@ -55,7 +55,7 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 		
 	-- Apply Changes
-	Insert Into [AppModel].[AliasHierarchy] (
+	Insert Into [AppModel].[AliasNameSpace] (
 			[AliasId],
 			[AliasMember],
 			[ParentAliasId])
@@ -65,7 +65,7 @@ Begin Try
 	From	@Values S
 			Left Join @Values P
 			On	S.[ParentNameSpace] = P.[AliasNameSpace]
-			Left Join [AppModel].[AliasHierarchy] T
+			Left Join [AppModel].[AliasNameSpace] T
 			On	S.[AliasId] = T.[AliasId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	T.[AliasId] is Null

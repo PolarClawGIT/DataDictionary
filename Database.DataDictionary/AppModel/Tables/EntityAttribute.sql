@@ -13,7 +13,7 @@
 	-- Keys
 	CONSTRAINT [PK_EntityAttribute] PRIMARY KEY CLUSTERED ([EntityId] ASC, [AttributeAliasId] ASC),	
 	CONSTRAINT [FK_EntityAttribute_Entity] FOREIGN KEY ([EntityId]) REFERENCES [AppModel].[Entity] ([EntityId]),
-	CONSTRAINT [FK_EntityAttribute_Alias] FOREIGN KEY ([AttributeAliasId]) REFERENCES [AppModel].[AliasHierarchy] ([AliasId]),
+	CONSTRAINT [FK_EntityAttribute_Alias] FOREIGN KEY ([AttributeAliasId]) REFERENCES [AppModel].[AliasNameSpace] ([AliasId]),
 	CONSTRAINT [AK_EntityAttributePosition] UNIQUE ([EntityId] ASC, [OrdinalPosition] ASC),
 	CONSTRAINT [AK_EntityAttributeTitle] UNIQUE ([EntityId] ASC, [AttributeKnownAs] ASC),
 ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsModel].[EntityAttribute]))

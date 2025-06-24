@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppModel].[trigAliasHierarchy]
-	ON [AppModel].[AliasHierarchy]
+﻿CREATE TRIGGER [AppModel].[trigAliasNameSpace]
+	ON [AppModel].[AliasNameSpace]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN
