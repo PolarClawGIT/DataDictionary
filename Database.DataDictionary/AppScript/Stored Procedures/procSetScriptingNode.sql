@@ -53,7 +53,7 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingNode]
 	From	[AppScript].[ScriptingNode] T
@@ -67,7 +67,7 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[NodeId],
@@ -93,7 +93,7 @@ Begin Try
 	From	[AppScript].[ScriptingNode] T
 			Inner Join [Delta] S
 			On	T.[NodeId] = S.[NodeId]
-	Print FormatMessage ('Update [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingNode] (
 			[NodeId],
@@ -112,7 +112,7 @@ Begin Try
 			Left Join [AppScript].[ScriptingNode] T
 			On	S.[NodeId] = T.[NodeId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -159,9 +159,9 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [App_DataDictionary].[Model] Where [ModelTitle] = 'Unit Test')
-	Declare @Data [App_DataDictionary].[typeScriptingTemplate]
-	Declare @Element [App_DataDictionary].[typeScriptingNode]
+	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [AppScript].[Model] Where [ModelTitle] = 'Unit Test')
+	Declare @Data [AppScript].[typeScriptingTemplate]
+	Declare @Element [AppScript].[typeScriptingNode]
 
 	Insert Into @Data ([TemplateId], [TemplateTitle])
 	Values (NewId(),'Test Template')
@@ -173,20 +173,20 @@ Begin Try;
 			'Text'
 	From	@Data D
 
-	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
-	Exec [App_DataDictionary].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
+	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
+	Exec [AppScript].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
 
 	Update @Element
 	Set	[ElementName] = 'Fun'
 
-	Exec [App_DataDictionary].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
+	Exec [AppScript].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
 
 	Delete From @Data
 
-	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
+	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
 
 	Select	*
-	From	[App_DataDictionary].[ScriptingTemplate]
+	From	[AppScript].[ScriptingTemplate]
 
 
 	-- By default, throw and error and exit without committing

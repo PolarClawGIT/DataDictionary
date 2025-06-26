@@ -142,7 +142,7 @@ From	[Data] D
 					On	A.[LibraryId] = C.[LibraryId]
 			Where	(@LibraryId is Null Or @LibraryId = A.[LibraryId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppLibrary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[MemberId],
@@ -169,7 +169,7 @@ From	[Data] D
 	From	[AppLibrary].[LibraryMember] T
 			Inner Join [Delta] S
 			On	T.[MemberId] = S.[MemberId]
-	Print FormatMessage ('Update [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppLibrary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppLibrary].[LibraryMember] (
 			[MemberId],
@@ -188,7 +188,7 @@ From	[Data] D
 			Left Join [AppLibrary].[LibraryMember] T
 			On	S.[MemberId] = T.[MemberId]
 	Where	T.[MemberId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppLibrary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -236,10 +236,10 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	--Delete From [App_DataDictionary].[LibraryMember]
+	--Delete From [AppLibrary].[LibraryMember]
 
 
-	declare @p2 App_DataDictionary.typeLibraryMember
+	declare @p2 AppLibrary.typeLibraryMember
 	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','E5160896-7823-467E-8E5D-637E604EFAFB',NULL,N'Sample.Library',N'[SampleLibrary]',N'SampleLibrary',N'NameSpace',NULL)
 	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','EB23DDB6-A377-4A86-B972-6256009DFC63','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[ISampleArray]',N'ISampleArray',N'Type',N'<member name="T:SampleLibrary.ISampleArray"><summary>              Sample Interface.              </summary></member>')
 	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','56F00E84-C382-4AC9-9EEA-6CB0825630B5','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleClass]',N'SampleClass',N'Type',N'<member name="T:SampleLibrary.SampleClass"><summary>              Sample Class              </summary></member>') 
@@ -262,9 +262,9 @@ Begin Try;
 	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','BFBC3D16-E07B-4713-9377-23A42E481281','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleFunctionDelegate]',N'SampleFunctionDelegate',N'Type',N'<member name="T:SampleLibrary.SampleFunctionDelegate"><summary>              Sample NameSpace Delegate Function              </summary><returns /></member>')  
 	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','8A894442-F743-4F0C-AF31-360A7C2AB7D5','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleGeneric`1]',N'SampleGeneric`1',N'Type',N'<member name="T:SampleLibrary.SampleGeneric`1"><summary>              Sample Generic Class              </summary><typeparam name="T" /></member>')  
 	
-	exec [App_DataDictionary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
+	exec [AppLibrary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
 
-	exec [App_DataDictionary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
+	exec [AppLibrary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

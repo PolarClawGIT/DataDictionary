@@ -57,7 +57,7 @@ Begin Try
 						On	A.[LibraryId] = M.[LibraryId]
 				Where	(@LibraryId is Null or A.[LibraryId] = @LibraryId) And
 						(@ModelId is Null or M.[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppLibrary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppLibrary].[LibraryModel]
 	From	[AppLibrary].[LibraryModel] M
@@ -67,7 +67,7 @@ Begin Try
 	Where	S.[LibraryId] is Null And
 			(@LibraryId is Null or M.[LibraryId] = @LibraryId) And
 			(@ModelId is Null or M.[ModelId] = @ModelId)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppLibrary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppLibrary].[LibrarySource]
 	From	[AppLibrary].[LibrarySource] T
@@ -81,7 +81,7 @@ Begin Try
 					On	A.[LibraryId] = C.[LibraryId]
 			Where	(@LibraryId is Null Or @LibraryId = A.[LibraryId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
-	Print FormatMessage ('Delete [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppLibrary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[LibraryId],   
@@ -108,7 +108,7 @@ Begin Try
 	From	[AppLibrary].[LibrarySource] T
 			Inner Join [Delta] S
 			On	T.[LibraryId] = S.[LibraryId]
-	Print FormatMessage ('Update [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppLibrary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppLibrary].[LibrarySource] (
 			[LibraryId],   
@@ -127,7 +127,7 @@ Begin Try
 			Left Join [AppLibrary].[LibrarySource] T
 			On	S.[LibraryId] = T.[LibraryId]
 	Where	T.[LibraryId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppLibrary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppLibrary].[LibraryModel] ([ModelId], [LibraryId])
 	Select	@ModelId As [ModelId],
@@ -138,7 +138,7 @@ Begin Try
 				@ModelId = T.[ModelId]
 	Where	T.[ModelId] is Null And
 			@ModelId is Not Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppLibrary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

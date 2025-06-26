@@ -84,13 +84,3 @@ Select	[QualifiedName], -- Full name including Member
 		Count(*) Over (Partition by Null) As [TotalElements]
 From	[Tree])
 GO
-/*
-Select	*
-From	[App_DataDictionary].[funcSplitQualifiedName]('[DatabaseName].[SchemaName].[TableName].[ColumnName]')
-Order By [QualifiedName]
-
-Select	Distinct X.*
-From	Sys.Columns C
-		outer apply [App_DataDictionary].[funcSplitQualifiedName](FormatMessage('[%s].[%s].[%s].[%s]',Db_Name(),Object_Schema_Name(object_id),object_name(object_id),name)) X
-Order By [QualifiedName]
-*/

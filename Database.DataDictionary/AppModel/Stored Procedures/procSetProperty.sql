@@ -173,7 +173,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @Data [App_DataDictionary].[typeDomainProperty]
+	Declare @Data [AppModel].[typeDomainProperty]
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000010',
@@ -204,13 +204,13 @@ Begin Try;
 		'The Maxium Length of the value. Used with varaible length types.',
 		'Integer',Null)
 
-	Exec [App_DataDictionary].[procSetDomainProperty] @Data = @Data
+	Exec [AppModel].[procSetDomainProperty] @Data = @Data
 
-	update [App_DataDictionary].[DomainProperty]
+	update [AppModel].[DomainProperty]
 	Set		[IsCommon] = 1
 
 	Select	*
-	From	[App_DataDictionary].[DomainProperty]
+	From	[AppModel].[DomainProperty]
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

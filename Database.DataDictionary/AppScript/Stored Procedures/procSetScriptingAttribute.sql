@@ -51,7 +51,7 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[AttributeId],
@@ -74,7 +74,7 @@ Begin Try
 	From	[AppScript].[ScriptingAttribute] T
 			Inner Join [Delta] S
 			On	T.[AttributeId] = S.[AttributeId]
-	Print FormatMessage ('Update [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingAttribute] (
 			[AttributeId],
@@ -91,7 +91,7 @@ Begin Try
 			Left Join [AppScript].[ScriptingAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]
 	Where	T.[AttributeId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

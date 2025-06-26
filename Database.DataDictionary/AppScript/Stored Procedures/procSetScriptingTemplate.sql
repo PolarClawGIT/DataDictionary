@@ -87,7 +87,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingNode]
 	From	[AppScript].[ScriptingNode] T
@@ -97,7 +97,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingModel]
 	From	[AppScript].[ScriptingModel] T
@@ -108,7 +108,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingTemplate]
 	From	[AppScript].[ScriptingTemplate] T
@@ -118,7 +118,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[TemplateId],
@@ -172,7 +172,7 @@ Begin Try
 		From	[AppScript].[ScriptingTemplate] T
 				Inner Join [Delta] S
 				On	T.[TemplateId] = S.[TemplateId]
-	Print FormatMessage ('Update [App_DataDictionary].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingTemplate] (
 			[TemplateId],
@@ -209,7 +209,7 @@ Begin Try
 			Left Join [AppScript].[ScriptingTemplate] T
 			On	S.[TemplateId] = T.[TemplateId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingModel] (
 			[ModelId],
@@ -221,11 +221,11 @@ Begin Try
 			On	S.[TemplateId] = T.[TemplateId] And
 				@ModelId = T.[ModelId]
 	Where	T.[TemplateId] Is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 
 	-- Tracking statement, example
-	Print FormatMessage ('Set [App_DataDictionary].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Set [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -272,25 +272,25 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [App_DataDictionary].[Model] Where [ModelTitle] = 'Unit Test')
-	Declare @Data [App_DataDictionary].[typeScriptingTemplate]
+	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [AppScript].[Model] Where [ModelTitle] = 'Unit Test')
+	Declare @Data [AppScript].[typeScriptingTemplate]
 
 	Insert Into @Data ([TemplateId], [TemplateTitle])
 	Values (NewId(),'Test Template')
 
-	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
+	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
 
 	Update @Data
 	Set	[TransformScript] = '<Good/>'
 
-	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
+	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
 
 	Delete From @Data
 
-	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
+	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
 
 	Select	*
-	From	[App_DataDictionary].[ScriptingTemplate]
+	From	[AppScript].[ScriptingTemplate]
 
 
 	-- By default, throw and error and exit without committing

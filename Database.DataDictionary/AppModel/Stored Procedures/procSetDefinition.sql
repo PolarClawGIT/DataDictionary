@@ -152,7 +152,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @Data [App_DataDictionary].[typeDomainDefinition]
+	Declare @Data [AppModel].[typeDomainDefinition]
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000020',
@@ -163,13 +163,13 @@ Begin Try;
 		'Technical Definition',
 		'Definition of the item in Technical Terms.')
 
-	Exec [App_DataDictionary].[procSetDomainDefinition] @Data = @Data
+	Exec [AppModel].[procSetDomainDefinition] @Data = @Data
 
-	update [App_DataDictionary].[DomainDefinition]
+	update [AppModel].[DomainDefinition]
 	Set		[IsCommon] = 1
 
 	Select	*
-	From	[App_DataDictionary].[DomainDefinition]
+	From	[AppModel].[DomainDefinition]
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

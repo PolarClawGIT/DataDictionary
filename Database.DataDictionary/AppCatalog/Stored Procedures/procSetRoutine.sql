@@ -126,7 +126,7 @@ Begin Try
 				Select	[SchemaId]
 				From	[AppCatalog].[SchemaHs]
 						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
-	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppCatalog].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppCatalog].[Routine] (
 		[RoutineId],
@@ -145,7 +145,7 @@ Begin Try
 				Select	[SchemaId]
 				From	[AppCatalog].[SchemaHs]
 						Cross Apply [AppSecurity].[funcCatalogAuthorization]([CatalogId], 1))
-	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppCatalog].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

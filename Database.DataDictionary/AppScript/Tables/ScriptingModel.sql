@@ -13,8 +13,5 @@
 	-- Keys
 	CONSTRAINT [PK_ModelScripting] PRIMARY KEY CLUSTERED ([ModelId] ASC, [TemplateId] ASC),
 	CONSTRAINT [FK_ModelScriptingModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
-	--CONSTRAINT [FK_ModelScriptingSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[ScriptingSchema] ([SchemaId]),
-	--CONSTRAINT [FK_ModelScriptingTransform] FOREIGN KEY ([TransformId]) REFERENCES [App_DataDictionary].[ScriptingTransform] ([TransformId]),
-	--CONSTRAINT [FK_ModelScriptingSelection] FOREIGN KEY ([SelectionId]) REFERENCES [App_DataDictionary].[ScriptingSelection] ([SelectionId]),
 	CONSTRAINT [FK_ModelScriptingTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[ScriptingTemplate] ([TemplateId]),
 )

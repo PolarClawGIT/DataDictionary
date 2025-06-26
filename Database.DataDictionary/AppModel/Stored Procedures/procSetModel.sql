@@ -76,7 +76,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelAttribute] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelEntity]
 	From	[AppModel].[ModelEntity] T
@@ -86,7 +86,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelProperty]
 	From	[AppModel].[ModelProperty] T
@@ -96,7 +96,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelDefinition]
 	From	[AppModel].[ModelDefinition] T
@@ -106,7 +106,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelProcess]
 	From	[AppModel].[ModelProcess] T
@@ -116,7 +116,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[SubjectArea]
 	From	[AppModel].[SubjectArea] T
@@ -126,7 +126,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelSubjectArea] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppLibrary].[LibraryModel]
 	From	[AppLibrary].[LibraryModel] T
@@ -136,7 +136,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppLibrary].[LibraryModel] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppCatalog].[CatalogModel]
 	From	[AppCatalog].[CatalogModel] T
@@ -146,7 +146,7 @@ Begin Try
 	Where	S.[ModelId] is Null  And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	IF @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelCatalog] (Model): %i, %s', @RowCount, Convert(VarChar,GetDate()));
+	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[CatalogModel] (Model): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[Model]
 	From	[AppModel].[Model] T
