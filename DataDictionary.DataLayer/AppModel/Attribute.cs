@@ -81,4 +81,12 @@
         /// </summary>
         Boolean IsNonKey { get; set; }
     }
+
+    static class Attribute
+    {
+        public const String AttributeId = "@AttributeId";
+        public const String GetProcedure = "[AppModel].[procGetAttribute]";
+        public const String SetProcedure = "[AppModel].[procSetAttribute]";
+        public const String TableType = "[AppModel].[udttAttribute]";
+    }
 }

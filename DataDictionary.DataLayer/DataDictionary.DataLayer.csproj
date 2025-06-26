@@ -13,6 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AppCatalog\Catalog.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Constraint.TSql.InformationSchema.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,11 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AppCatalog\Constraint.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Constraint.resx</DependentUpon>
-    </Compile>
     <Compile Update="AppCatalog\ConstraintColumn.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -42,11 +42,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Property.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Catalog.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Catalog.resx</DependentUpon>
     </Compile>
     <Compile Update="AppCatalog\Reference.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -83,16 +78,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Domain.resx</DependentUpon>
     </Compile>
-    <Compile Update="AppGeneral\HelpSubject.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>HelpSubject.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Attribute.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Attribute.resx</DependentUpon>
-    </Compile>
     <Compile Update="AppModel\AttributeAlias.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -112,11 +97,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AttributeSubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Definition.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Definition.resx</DependentUpon>
     </Compile>
     <Compile Update="AppModel\Entity.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -187,11 +167,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ProcessSubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Property.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Property.resx</DependentUpon>
     </Compile>
     <Compile Update="AppModel\SubjectArea.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -286,10 +261,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="AppCatalog\Constraint.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Constraint.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="AppCatalog\ConstraintColumn.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ConstraintColumn.Designer.cs</LastGenOutput>
@@ -297,11 +268,6 @@
     <EmbeddedResource Update="AppCatalog\Property.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Property.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Catalog.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Catalog.Designer.cs</LastGenOutput>
-      <CustomToolNamespace></CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Update="AppCatalog\Reference.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -331,14 +297,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Domain.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="AppGeneral\HelpSubject.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Attribute.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Attribute.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="AppModel\AttributeAlias.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AttributeAlias.Designer.cs</LastGenOutput>
@@ -354,10 +312,6 @@
     <EmbeddedResource Update="AppModel\AttributeSubjectArea.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AttributeSubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Definition.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Definition.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Entity.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -414,10 +368,6 @@
     <EmbeddedResource Update="AppModel\ProcessSubjectArea.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ProcessSubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Property.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Property.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="AppModel\SubjectArea.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -503,6 +453,13 @@
   <ItemGroup>
     <Folder Include="AppLibrary\" />
     <Folder Include="AppScript\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="AppCatalog\Catalog.TSql.InformationSchema.sql">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppCatalog\Constraint.TSql.InformationSchema.sql" />
   </ItemGroup>
 
 </Project>
