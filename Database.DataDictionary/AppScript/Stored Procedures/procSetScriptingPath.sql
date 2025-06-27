@@ -76,7 +76,7 @@ Begin Try
 	Insert Into @Values -- Need [AppScript].[ScriptingNameSpace] updated first
 	Select	D.[TemplateId],
 			[AppScript].[funcNameSpaceId](D.[NameSpace]) As [NameSpaceId],
-			D.[ScopeName]
+			D.[NameSpaceScope]
 	From	@Data D
 	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
 			(@ModelId is Null Or D.[TemplateId] In (
@@ -103,7 +103,7 @@ Begin Try
 	Insert Into [AppScript].[ScriptingPath] (
 			[TemplateId],
 			[NameSpaceId],
-			[ScopeName])
+			[NameSpaceScope])
 	Select	S.[TemplateId],
 			S.[NameSpaceId],
 			S.[ScopeName]

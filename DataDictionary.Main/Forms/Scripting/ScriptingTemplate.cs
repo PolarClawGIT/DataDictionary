@@ -148,7 +148,7 @@ namespace DataDictionary.Main.Forms.Scripting
             pathsData.AutoGenerateColumns = false;
             pathsData.DataSource = bindingPath;
 
-            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.ScopeName), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(TemplatePathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
 
             ElementSelection_Load();
@@ -589,7 +589,7 @@ namespace DataDictionary.Main.Forms.Scripting
                             if (bindingPath.AddNew() is TemplatePathValue newValue)
                             {
                                 newValue.Path = addItem.Path;
-                                newValue.ScopeName = addItem.Scope;
+                                newValue.NameSpaceScope = addItem.Scope;
                             }
                         }
                     }

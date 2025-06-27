@@ -4395,4 +4395,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[trigAliasNameSpace]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="801678e1-490c-4490-8a88-aaadc2d9c09e" ChangeDateTime="06/27/2025 17:08:25">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingPath].[ScopeName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[ScriptingPath]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NameSpaceScope]" />
+  </Operation>
 </Operations>

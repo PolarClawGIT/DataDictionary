@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Application Scope of the item to Script.
         /// </summary>
-        ScopeType ScopeName { get; }
+        ScopeType NameSpaceScope { get; }
     }
 
     /// <summary>
@@ -39,16 +39,16 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public ScopeType ScopeName
+        public ScopeType NameSpaceScope
         {
             get
             {
-                String value = GetValue(nameof(ScopeName)) ?? String.Empty;
+                String value = GetValue(nameof(NameSpaceScope)) ?? String.Empty;
                 if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
                 { return result.Value; }
                 else { return ScopeType.Null; }
             }
-            set { SetValue(nameof(ScopeName), ScopeEnumeration.Cast(value).Name); }
+            set { SetValue(nameof(NameSpaceScope), ScopeEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>
@@ -80,7 +80,7 @@ namespace DataDictionary.DataLayer.AppScript
         [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NameSpaceScope), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

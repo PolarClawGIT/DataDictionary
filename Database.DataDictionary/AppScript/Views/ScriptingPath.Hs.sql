@@ -16,8 +16,8 @@ With [Dates] As (
 Select	D.[TemplateId],
 		D.[NameSpaceId],
 		FT.[TemplateTitle],
-		D.[ScopeName],
 		FN.[NameSpace],
+		D.[NameSpaceScope],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

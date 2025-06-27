@@ -2,7 +2,7 @@
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[NameSpace]             [AppGeneral].[uddtNameSpacePath] NULL,
-	[ScopeName]             [AppGeneral].[uddtScopeName] NULL,
+	[NameSpaceScope]        [AppGeneral].[uddtScopeName] NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,
