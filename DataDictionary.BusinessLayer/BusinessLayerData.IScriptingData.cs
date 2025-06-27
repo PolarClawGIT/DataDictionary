@@ -42,7 +42,7 @@ namespace DataDictionary.BusinessLayer
 
                     foreach (TemplatePathValue item in scripting.Paths)
                     {
-                        PathIndex path = new PathIndex(PathIndex.Parse(item.PathName).ToArray());
+                        PathIndex path = new PathIndex(PathIndex.Parse(item.NameSpace).ToArray());
 
                         foreach (NamedScopeIndex value in namedScopeValues.PathKeys(path))
                         {

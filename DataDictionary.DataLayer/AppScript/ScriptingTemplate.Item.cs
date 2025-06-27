@@ -3,12 +3,15 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
-    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsType, ITemplateDirectory, IScopeType
+    public interface IScriptingTemplateItem : 
+        IScriptingTemplateKey, IScriptingTemplateKeyName, 
+        IScriptAsType, ITemplateDirectory,
+        ITemporalItem
     {
         /// <summary>
         /// Description for the Template
@@ -210,7 +213,10 @@ namespace DataDictionary.DataLayer.ScriptingData
         }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ScriptingTemplate;
+        //public ScopeType Scope { get; } = ScopeType.ScriptingTemplate;
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for Scripting Transform
@@ -221,10 +227,17 @@ namespace DataDictionary.DataLayer.ScriptingData
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
             if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
             if (RootDirectory is TemplateDirectoryType.Null) { RootDirectory = TemplateDirectoryType.MySources; }
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateDescription), typeof(String)){ AllowDBNull = true},
@@ -240,7 +253,8 @@ namespace DataDictionary.DataLayer.ScriptingData
             new DataColumn(nameof(ScriptPrefix), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptSuffix), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptExtension), typeof(String)){ AllowDBNull = true},
-        };
+            ..TemporalItem.columnDefinitions,
+        ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -253,7 +267,14 @@ namespace DataDictionary.DataLayer.ScriptingData
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected ScriptingTemplateItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

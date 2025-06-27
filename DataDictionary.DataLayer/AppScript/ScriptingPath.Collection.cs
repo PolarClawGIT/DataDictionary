@@ -1,28 +1,28 @@
 ﻿// Ignore Spelling: Utc
 
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Generic Base class for Scripting Template
+    /// Generic Base class for Scripting Template Path
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class ScriptingTemplateCollection<TItem> : BindingTable<TItem>,
+    public abstract class ScriptingPathCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IScriptingTemplateKey>,
         IWriteData<IModelKey>, IWriteData<IScriptingTemplateKey>,
         IRemoveItem<IScriptingTemplateKey>
-        where TItem : BindingTableRow, IScriptingTemplateItem, new()
+        where TItem : BindingTableRow, IScriptingPathItem, new()
     {
-
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId); }
-
+        
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey key, ITemporalKey asOfUtcDate)
         { throw new NotImplementedException(); }
@@ -39,7 +39,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = ScriptingTemplate.GetProcedure;
+            command.CommandText = ScriptingPath.GetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(ScriptingTemplate.TemplateId, templateId);
             return command;
@@ -57,12 +57,12 @@ namespace DataDictionary.DataLayer.ScriptingData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = ScriptingTemplate.SetProcedure;
+            command.CommandText = ScriptingPath.SetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(ScriptingTemplate.TemplateId, templateId);
 
             IEnumerable<TItem> data = this.Where(w => templateId is null || w.TemplateId == templateId);
-            command.AddParameter(WriteData.Data, ScriptingTemplate.TableType, data);
+            command.AddParameter(WriteData.Data, ScriptingPath.TableType, data);
 
             return command;
         }

@@ -1,7 +1,7 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Key on Property Scope for the Scripting Template Node.

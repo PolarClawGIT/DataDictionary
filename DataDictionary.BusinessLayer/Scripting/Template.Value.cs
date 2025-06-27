@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -64,6 +64,10 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public IEnumerable<Exception> TemplateException { get { return templateException; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ScriptingTemplate; } }
+
         List<Exception> templateException = new List<Exception>();
 
         internal void AddException(Exception ex)

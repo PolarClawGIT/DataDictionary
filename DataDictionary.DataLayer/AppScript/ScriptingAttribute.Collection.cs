@@ -1,11 +1,12 @@
 ﻿// Ignore Spelling: Utc
 
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Generic Base class for Scripting Template

@@ -5,8 +5,6 @@ using System.Data;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ScriptingData;
-using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 

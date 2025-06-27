@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template Attribute.

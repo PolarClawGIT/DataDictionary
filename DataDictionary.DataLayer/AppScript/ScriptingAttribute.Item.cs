@@ -4,12 +4,14 @@ using System.Data;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.DataLayer.AppModel;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Scripting Template Node Attribute data.
     /// </summary>
-    public interface IScriptingAttributeItem : IScriptingAttributeKey, IScriptingNodeKey, IScriptingTemplateKey, IPropertyKey, IScopeType
+    public interface IScriptingAttributeItem :
+        IScriptingAttributeKey, IScriptingNodeKey, IScriptingTemplateKey, IPropertyKey,
+        ITemporalItem
     {
         /// <summary>
         /// Name to appear for the XML Attribute
@@ -71,13 +73,24 @@ namespace DataDictionary.DataLayer.ScriptingData
         }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ScriptingTemplateAttribute;
+        //public ScopeType Scope { get; } = ScopeType.ScriptingTemplateAttribute;
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for Scripting Template Node Attribute
         /// </summary>
         protected ScriptingAttributeItem() : base()
-        { AttributeId = Guid.NewGuid(); }
+        { AttributeId = Guid.NewGuid();
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <summary>
         /// Constructor for Scripting Template Node Attribute
@@ -88,8 +101,8 @@ namespace DataDictionary.DataLayer.ScriptingData
             NodeId = node.NodeId;
         }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
@@ -97,7 +110,8 @@ namespace DataDictionary.DataLayer.ScriptingData
             new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AttributeValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
-        };
+            ..TemporalItem.columnDefinitions,
+        ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -110,7 +124,14 @@ namespace DataDictionary.DataLayer.ScriptingData
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected ScriptingAttributeItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

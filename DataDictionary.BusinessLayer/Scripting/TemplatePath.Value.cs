@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.DataLayer.AppScript;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +23,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public PathIndex Path
         {
-            get { return new PathIndex(PathIndex.Parse(PathName).ToArray()); }
-            set { PathName = value.MemberFullPath; }
+            get { return new PathIndex(PathIndex.Parse(NameSpace).ToArray()); }
+            set { NameSpace = value.MemberFullPath; }
         }
 
         /// <inheritdoc cref="ScriptingPathItem(IScriptingTemplateKey)"/>

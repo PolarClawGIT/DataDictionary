@@ -42,26 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ScriptingData\ScriptingAttribute.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingAttribute.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingNode.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingNode.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingPath.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingPath.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingTemplate.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingTemplate.resx</DependentUpon>
-    </Compile>
     <Compile Update="Temporal.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -80,22 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="ScriptingData\ScriptingAttribute.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingAttribute.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingNode.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingNode.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingPath.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingPath.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingTemplate.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingTemplate.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Temporal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Temporal.Designer.cs</LastGenOutput>
@@ -115,11 +79,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AppScript\" />
-    <Folder Include="LibraryData\" />
   </ItemGroup>
 
   <ItemGroup>

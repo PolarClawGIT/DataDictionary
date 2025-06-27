@@ -3,17 +3,19 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Scripting Template Path data.
     /// </summary>
-    public interface IScriptingPathItem : IScriptingTemplateKey, IScriptingPathKeyName, IScopeType
+    public interface IScriptingPathItem : 
+        IScriptingTemplateKey, IScriptingPathKeyName,
+        ITemporalItem
     {
         /// <summary>
         /// Application Scope of the item to Script.
         /// </summary>
-        ScopeType PathScope { get; }
+        ScopeType ScopeName { get; }
     }
 
     /// <summary>
@@ -30,33 +32,43 @@ namespace DataDictionary.DataLayer.ScriptingData
         }
 
         /// <inheritdoc/>
-        public String? PathName
+        public String? NameSpace
         {
-            get { return GetValue(nameof(PathName)); }
-            set { SetValue(nameof(PathName), value); }
+            get { return GetValue(nameof(NameSpace)); }
+            set { SetValue(nameof(NameSpace), value); }
         }
 
         /// <inheritdoc/>
-        public ScopeType PathScope
+        public ScopeType ScopeName
         {
             get
             {
-                String value = GetValue(nameof(PathScope)) ?? String.Empty;
+                String value = GetValue(nameof(ScopeName)) ?? String.Empty;
                 if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
                 { return result.Value; }
                 else { return ScopeType.Null; }
             }
-            set { SetValue(nameof(PathScope), ScopeEnumeration.Cast(value).Name); }
+            set { SetValue(nameof(ScopeName), ScopeEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.ScriptingTemplatePath;
+        //public ScopeType Scope { get; } = ScopeType.ScriptingTemplatePath;
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for Scripting Template Path
         /// </summary>
         protected ScriptingPathItem() : base()
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
 
         /// <summary>
         /// Constructor for Scripting Template Path
@@ -64,12 +76,13 @@ namespace DataDictionary.DataLayer.ScriptingData
         public ScriptingPathItem(IScriptingTemplateKey template) : this()
         { TemplateId = template.TemplateId; }
 
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
-        {
+        static readonly IReadOnlyList<DataColumn> columnDefinitions = 
+        [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(PathName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(PathScope), typeof(String)){ AllowDBNull = true},
-        };
+            new DataColumn(nameof(NameSpace), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = true},
+            ..TemporalItem.columnDefinitions,
+        ];
 
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -82,11 +95,18 @@ namespace DataDictionary.DataLayer.ScriptingData
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected ScriptingPathItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
-        { return PathName ?? String.Empty; }
+        { return NameSpace ?? String.Empty; }
     }
 }

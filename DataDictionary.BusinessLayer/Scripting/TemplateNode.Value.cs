@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ScriptingData;
+﻿using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;

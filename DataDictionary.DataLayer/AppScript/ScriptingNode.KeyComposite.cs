@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Composite Key for the Scripting Template Node.

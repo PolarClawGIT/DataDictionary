@@ -4,7 +4,7 @@ using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
-using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.DataLayer.AppScript;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting

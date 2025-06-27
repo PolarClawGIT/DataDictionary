@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ScriptingData
+namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
     /// Interface for the Scripting Template Path Key
@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         /// <summary>
         /// Name of the Scripting Template Path.
         /// </summary>
-        String? PathName { get; }
+        String? NameSpace { get; }
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         IKeyComparable<IScriptingPathKeyName>, IKeyComparable<ScriptingPathKeyName>
     {
         /// <inheritdoc/>
-        public String PathName { get; init; } = string.Empty;
+        public String NameSpace { get; init; } = string.Empty;
 
         /// <summary>
         /// Constructor for the Scripting Template Path Key
@@ -33,8 +33,8 @@ namespace DataDictionary.DataLayer.ScriptingData
         /// <param name="source"></param>
         public ScriptingPathKeyName(IScriptingPathKeyName source) : this()
         {
-            if (source.PathName is string) { PathName = source.PathName; }
-            else { PathName = string.Empty; }
+            if (source.NameSpace is string) { NameSpace = source.NameSpace; }
+            else { NameSpace = string.Empty; }
         }
 
         #region IEquatable, IComparable
@@ -43,9 +43,9 @@ namespace DataDictionary.DataLayer.ScriptingData
         {
             return
                 other is ScriptingPathKeyName &&
-                !string.IsNullOrEmpty(PathName) &&
-                !string.IsNullOrEmpty(other.PathName) &&
-                PathName.Equals(other.PathName, KeyExtension.CompareString);
+                !string.IsNullOrEmpty(NameSpace) &&
+                !string.IsNullOrEmpty(other.NameSpace) &&
+                NameSpace.Equals(other.NameSpace, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -60,7 +60,7 @@ namespace DataDictionary.DataLayer.ScriptingData
         public Int32 CompareTo(ScriptingPathKeyName? other)
         {
             if (other is null) { return 1; }
-            else { return string.Compare(PathName, other.PathName, true); }
+            else { return string.Compare(NameSpace, other.NameSpace, true); }
         }
 
         /// <inheritdoc/>
@@ -97,13 +97,13 @@ namespace DataDictionary.DataLayer.ScriptingData
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return PathName.GetHashCode(KeyExtension.CompareString); }
+        { return NameSpace.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (PathName is string) { return PathName; }
+            if (NameSpace is string) { return NameSpace; }
             else { return string.Empty; }
         }
     }

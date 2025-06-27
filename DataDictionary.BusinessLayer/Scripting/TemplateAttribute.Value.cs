@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using DataDictionary.DataLayer.ScriptingData;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.DataLayer.AppScript;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {

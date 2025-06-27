@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.ScriptingData;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
