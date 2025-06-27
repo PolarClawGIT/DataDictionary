@@ -76,7 +76,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<PropertyMetaData> schemas = new BindingTable<PropertyMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Property.TSql_InformationSchema;
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(Property));
 
             schemas.Load(connection.ExecuteReader(command));
 

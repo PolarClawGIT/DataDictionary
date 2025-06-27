@@ -120,7 +120,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<RoutineParameterMetaData> schemas = new BindingTable<RoutineParameterMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = RoutineParameter.TSql_InformationSchema;
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(RoutineParameter));
 
             schemas.Load(connection.ExecuteReader(command));
 

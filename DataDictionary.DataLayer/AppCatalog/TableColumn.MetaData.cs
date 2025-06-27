@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Nullable
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -154,7 +156,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<TableColumnMetaData> schemas = new BindingTable<TableColumnMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = TableColumn.TSql_InformationSchema;
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(TableColumn));
 
             schemas.Load(connection.ExecuteReader(command));
 

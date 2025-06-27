@@ -35,6 +35,7 @@ namespace DataDictionary.DataLayer
         /// Example:
         ///   File name: Catalog.TSql.InformationSchema.sql
         ///   Resource name: DataDictionary.DataLayer.AppCatalog.Catalog.TSql.InformationSchema.sql
+        /// Be sure the file is set to "Embedded Resource" in the files property settings.
         /// </remarks>
         public static String GetInformationSchema(Type type)
         { return GetInformationSchema(type, ScriptType.TSql); }
@@ -76,6 +77,8 @@ namespace DataDictionary.DataLayer
             }
             else
             {
+                var debug = assembly.GetManifestResourceNames();
+
                 Exception ex = new ArgumentException("resource not found");
                 ex.Data.Add(nameof(type), type.Namespace);
                 ex.Data.Add(nameof(resource), resource);

@@ -15,6 +15,15 @@
   <ItemGroup>
     <None Remove="AppCatalog\Catalog.TSql.InformationSchema.sql" />
     <None Remove="AppCatalog\Constraint.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Domain.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Property.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Reference.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Routine.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\RoutineColumn.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\RoutineParameter.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Schema.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Table.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\TableColumn.TSql.InformationSchema.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,51 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AppCatalog\ConstraintColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ConstraintColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Property.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Property.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Reference.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Reference.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Routine.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Routine.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\RoutineColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoutineColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\RoutineParameter.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoutineParameter.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Table.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Table.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\TableColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TableColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Domain.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Domain.resx</DependentUpon>
-    </Compile>
     <Compile Update="AppModel\AttributeAlias.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -132,11 +96,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Model.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Schema.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Schema.resx</DependentUpon>
     </Compile>
     <Compile Update="AppModel\Process.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -261,42 +220,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="AppCatalog\ConstraintColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ConstraintColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Property.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Property.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Reference.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Reference.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Routine.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Routine.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\RoutineColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoutineColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\RoutineParameter.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoutineParameter.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Table.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Table.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\TableColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Domain.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Domain.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="AppModel\AttributeAlias.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AttributeAlias.Designer.cs</LastGenOutput>
@@ -340,10 +263,6 @@
     <EmbeddedResource Update="AppModel\Model.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Schema.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Schema.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="AppModel\Process.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -460,6 +379,16 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="AppCatalog\Constraint.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\ConstraintColumn.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Domain.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Property.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Reference.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Routine.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\RoutineColumn.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\RoutineParameter.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Schema.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Table.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\TableColumn.TSql.InformationSchema.sql" />
   </ItemGroup>
 
 </Project>
