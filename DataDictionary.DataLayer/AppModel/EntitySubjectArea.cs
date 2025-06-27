@@ -10,4 +10,11 @@
         /// </summary>
         String? EntityName { get; set; }
     }
+
+    static class EntitySubjectArea
+    {
+        public const String GetProcedure = "[AppModel].[procGetEntitySubjectArea]";
+        public const String SetProcedure = "[AppModel].[procSetEntitySubjectArea]";
+        public const String TableType = "[AppModel].[udttEntitySubjectArea]";
+    }
 }

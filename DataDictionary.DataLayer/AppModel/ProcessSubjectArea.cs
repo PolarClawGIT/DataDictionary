@@ -10,4 +10,11 @@
         /// </summary>
         String? ProcessName { get; set; }
     }
+
+    static class ProcessSubjectArea
+    {
+        public const String GetProcedure = "[AppModel].[procGetProcessSubjectArea]";
+        public const String SetProcedure = "[AppModel].[procSetProcessSubjectArea]";
+        public const String TableType = "[AppModel].[udttProcessSubjectArea]";
+    }
 }

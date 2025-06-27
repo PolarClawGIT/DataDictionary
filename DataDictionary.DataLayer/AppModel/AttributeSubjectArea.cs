@@ -10,4 +10,11 @@
         /// </summary>
         String? AttributeName { get; set; }
     }
+
+    static class AttributeSubjectArea
+    {
+        public const String GetProcedure = "[AppModel].[procGetAttributeSubjectArea]";
+        public const String SetProcedure = "[AppModel].[procSetAttributeSubjectArea]";
+        public const String TableType = "[AppModel].[udttAttributeSubjectArea]";
+    }
 }
