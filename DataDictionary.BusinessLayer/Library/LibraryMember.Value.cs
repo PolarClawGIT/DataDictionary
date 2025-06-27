@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.AppLibrary;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -25,6 +25,25 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (MemberType)
+                {
+                    case LibraryMemberType.NameSpace: return ScopeType.LibraryNameSpace;
+                    case LibraryMemberType.Type: return ScopeType.LibraryType;
+                    case LibraryMemberType.Field: return ScopeType.LibraryTypeField;
+                    case LibraryMemberType.Property: return ScopeType.LibraryTypeProperty;
+                    case LibraryMemberType.Method: return ScopeType.LibraryTypeMethod;
+                    case LibraryMemberType.Event: return ScopeType.LibraryTypeEvent;
+                    case LibraryMemberType.Parameter: return ScopeType.LibraryTypeParameter;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         /// <inheritdoc/>
         public LibraryMemberValue() : base()

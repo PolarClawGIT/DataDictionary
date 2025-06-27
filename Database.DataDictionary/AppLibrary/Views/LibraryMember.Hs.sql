@@ -3,6 +3,7 @@
 With [Data] As (
 	Select	[MemberId],
 			[LibraryId],
+			[MemberParentId],
 			[MemberName],
 			[MemberType],
 			[MemberData],
@@ -19,6 +20,7 @@ With [Data] As (
 	Union All
 	Select	H.[MemberId],
 			H.[LibraryId],
+			H.[MemberParentId],
 			H.[MemberName],
 			H.[MemberType],
 			H.[MemberData],
@@ -50,6 +52,8 @@ Select	D.[MemberId],
 		D.[MemberName],
 		D.[LibraryId],
 		FL.[LibraryTitle],
+		FL.[AssemblyName],
+		D.[MemberParentId],
 		D.[MemberType],
 		D.[MemberData],
 		D.[MemberNameSpace], --AK
@@ -86,7 +90,8 @@ From	[Data] D
 		Outer Apply (
 			Select	Top 1
 					[LibraryId],
-					[LibraryTitle]
+					[LibraryTitle],
+					[AssemblyName]
 			From	[AppLibrary].[LibrarySource]
 			Where	[LibraryId] = D.[LibraryId] And
 					[SysStart] <= D.[SysEnd]

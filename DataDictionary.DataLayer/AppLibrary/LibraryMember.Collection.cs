@@ -3,7 +3,7 @@ using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.AppLibrary
 {
     /// <summary>
     /// Generic Base class for Library Member Items

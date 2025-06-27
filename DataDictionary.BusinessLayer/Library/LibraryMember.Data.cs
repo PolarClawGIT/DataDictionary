@@ -4,10 +4,10 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using Toolbox.Threading;
 using System.ComponentModel;
-using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppLibrary;
 
 namespace DataDictionary.BusinessLayer.Library
 {

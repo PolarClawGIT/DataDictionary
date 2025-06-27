@@ -3,12 +3,13 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.AppLibrary
 {
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeType
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName,
+        ITemporalItem
     {
         /// <summary>
         /// Title for the Library
@@ -56,23 +57,36 @@ namespace DataDictionary.DataLayer.LibraryData
         public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } set { SetValue(nameof(SourceDate), value); } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.Library;
+        //public ScopeType Scope { get; } = ScopeType.Library;
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibrarySourceItem() : base()
-        { if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
-
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
+            if (LibraryId is null) { LibraryId = Guid.NewGuid(); }
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
+
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(LibraryId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(LibraryTitle), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(LibraryDescription), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(AssemblyName), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(SourceFile), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(SourceDate), typeof(DateTime)){ AllowDBNull = true},
-        };
+            ..TemporalItem.columnDefinitions,
+        ];
 
 
         /// <inheritdoc/>
@@ -86,7 +100,14 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected LibrarySourceItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

@@ -3,12 +3,15 @@ using System.Runtime.Serialization;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.AppLibrary
 {
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeType
+    public interface ILibraryMemberItem :
+        ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName,
+        ILibrarySourceKeyName, ILibraryMemberType,
+        ITemporalItem
     {
 
         /// <summary>
@@ -64,33 +67,28 @@ namespace DataDictionary.DataLayer.LibraryData
             }
         }
 
+
         /// <inheritdoc/>
-        public ScopeType Scope
-        {
-            get
-            {
-                switch (MemberType)
-                {
-                    case LibraryMemberType.NameSpace: return ScopeType.LibraryNameSpace;
-                    case LibraryMemberType.Type: return ScopeType.LibraryType;
-                    case LibraryMemberType.Field: return ScopeType.LibraryTypeField;
-                    case LibraryMemberType.Property: return ScopeType.LibraryTypeProperty;
-                    case LibraryMemberType.Method: return ScopeType.LibraryTypeMethod;
-                    case LibraryMemberType.Event: return ScopeType.LibraryTypeEvent;
-                    case LibraryMemberType.Parameter: return ScopeType.LibraryTypeParameter;
-                    default: return ScopeType.Null;
-                }
-            }
-        }
+        public ITemporal Temporal { get; }
 
         /// <summary>
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibraryMemberItem() : base()
-        { if (MemberId is null) { MemberId = Guid.NewGuid(); } }
-
-        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
+            if (MemberId is null) { MemberId = Guid.NewGuid(); }
+
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
+
+
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
             new DataColumn(nameof(LibraryId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(MemberId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(MemberParentId), typeof(Guid)){ AllowDBNull = true},
@@ -99,7 +97,8 @@ namespace DataDictionary.DataLayer.LibraryData
             new DataColumn(nameof(MemberName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(MemberType), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(MemberData), typeof(String)){ AllowDBNull = true},
-        };
+            ..TemporalItem.columnDefinitions,
+        ];
 
 
         /// <inheritdoc/>
@@ -113,7 +112,14 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
         protected LibraryMemberItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
         #endregion
 
         /// <inheritdoc/>

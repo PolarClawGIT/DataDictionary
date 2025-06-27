@@ -7,17 +7,18 @@
 As
 /* Description: Performs Get on LibraryMember.
 */
-Select	[MemberId],
+
+Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
+
+Select	[LibraryId],
+		[MemberId],
+		[MemberParentId],
+		[AssemblyName],
+		[MemberNameSpace],
 		[MemberName],
-		[LibraryId],
-		[LibraryTitle],
 		[MemberType],
 		[MemberData],
-		[MemberNameSpace],
-		[HierarchyId],
 		-- Temporal Data
-		[SysStart],
-		[SysEnd],
 		[CreatedOn],
 		[CreatedBy],
 		[RemovedOn],

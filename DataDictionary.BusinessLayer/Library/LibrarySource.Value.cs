@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.AppLibrary;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -25,6 +25,9 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         String IDataValue.Title { get { return pathValue.Title; } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.Library; } }
 
         /// <inheritdoc/>
         public LibrarySourceValue() : base()

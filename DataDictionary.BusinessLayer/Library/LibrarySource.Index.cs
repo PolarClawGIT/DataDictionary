@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.AppLibrary;
 using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer.Library

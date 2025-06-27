@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.AppLibrary
 {
     /// <summary>
     /// Interface for the Library Source Key

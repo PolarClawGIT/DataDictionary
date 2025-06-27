@@ -42,16 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="LibraryData\LibraryMember.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LibraryMember.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LibraryData\LibrarySource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LibrarySource.resx</DependentUpon>
-    </Compile>
     <Compile Update="ScriptingData\ScriptingAttribute.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -90,14 +80,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="LibraryData\LibraryMember.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LibraryMember.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LibraryData\LibrarySource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LibrarySource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="ScriptingData\ScriptingAttribute.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ScriptingAttribute.Designer.cs</LastGenOutput>
@@ -136,8 +118,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppLibrary\" />
     <Folder Include="AppScript\" />
+    <Folder Include="LibraryData\" />
   </ItemGroup>
 
   <ItemGroup>
