@@ -42,46 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AppSecurity\Authorization.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Authorization.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\AuthorizationSecurable.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AuthorizationSecurable.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Principal.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Principal.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Role.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Role.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\RoleMembership.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoleMembership.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Securable.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Securable.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\SecurableOwner.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SecurableOwner.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\SecurablePermission.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SecurablePermission.resx</DependentUpon>
-    </Compile>
     <Compile Update="LibraryData\LibraryMember.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -130,38 +90,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="AppSecurity\Authorization.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Authorization.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\AuthorizationSecurable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AuthorizationSecurable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Principal.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Principal.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Role.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Role.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\RoleMembership.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoleMembership.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Securable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Securable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\SecurableOwner.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SecurableOwner.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\SecurablePermission.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SecurablePermission.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="LibraryData\LibraryMember.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LibraryMember.Designer.cs</LastGenOutput>
