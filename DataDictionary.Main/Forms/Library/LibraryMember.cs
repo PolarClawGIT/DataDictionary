@@ -1,6 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Library;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppLibrary;
 using System.Data;
 using Toolbox.BindingTable;
 

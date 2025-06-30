@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Library;
+﻿using DataDictionary.BusinessLayer.AppLibrary;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;

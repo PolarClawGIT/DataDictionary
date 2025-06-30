@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppGeneral;
+using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.Library;
-using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Resource.Enumerations;
 
