@@ -1,9 +1,23 @@
 ﻿namespace DataDictionary.DataLayer.AppLibrary
 {
+    /// <summary>  
+    /// Static class containing constants related to the LibraryMember database operations.
+    /// </summary>  
     static class LibraryMember
     {
-        public const String GetProcedure = "[AppLibrary].[procGetLibraryMember]";
-        public const String SetProcedure = "[AppLibrary].[procSetLibraryMember]";
-        public const String TableType = "[AppLibrary].[udttLibraryMember]";
+        /// <summary>  
+        /// The stored procedure for retrieving library member information.  
+        /// </summary>  
+        public const string GetProcedure = "[AppLibrary].[procGetLibraryMember]";
+
+        /// <summary>  
+        /// The stored procedure for setting library member information.  
+        /// </summary>  
+        public const string SetProcedure = "[AppLibrary].[procSetLibraryMember]";
+
+        /// <summary>  
+        /// The user-defined table type for library members.  
+        /// </summary>  
+        public const string TableType = "[AppLibrary].[udttLibraryMember]";
     }
 }
