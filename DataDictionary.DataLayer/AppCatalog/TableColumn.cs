@@ -42,10 +42,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         String? GeneratedAlwayType { get; }
     }
 
+    /// <summary>  
+    /// Static class containing constants related to the Table Column database operations.
+    /// </summary>  
     static class TableColumn
     {
+        /// <summary>  
+        /// Stored procedure to get table column information.  
+        /// </summary>  
         public const String GetProcedure = "[AppCatalog].[procGetTableColumn]";
+
+        /// <summary>  
+        /// Stored procedure to set table column information.  
+        /// </summary>  
         public const String SetProcedure = "[AppCatalog].[procSetTableColumn]";
+
+        /// <summary>  
+        /// User-defined table type for table column information.  
+        /// </summary>  
         public const String TableType = "[AppCatalog].[udttTableColumn]";
     }
 }
