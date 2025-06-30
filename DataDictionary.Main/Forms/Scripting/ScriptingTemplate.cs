@@ -142,7 +142,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
             // Path Handling
-            ScopeNameList.Load(pathScopeColumn);
+            ScopeNameList.Load(nameSpaceScopeColumn);
             ScopeNameList.Load(pathScopeData);
 
             pathsData.AutoGenerateColumns = false;
