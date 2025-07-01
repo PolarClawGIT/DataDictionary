@@ -1,11 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
+using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.Library;
+using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {

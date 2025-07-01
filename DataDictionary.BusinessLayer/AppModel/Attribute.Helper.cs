@@ -1,9 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppModel;
-using DataDictionary.Resource.Enumerations;
-using System.Xml.Linq;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel

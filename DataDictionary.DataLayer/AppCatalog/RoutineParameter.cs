@@ -7,10 +7,24 @@
         IDataType, IOrdinalPosition, IRoutineType, IDomainKeyReference
     { }
 
+    /// <summary>  
+    /// Static class containing constants related to the Routine Parameter database operations.
+    /// </summary>  
     static class RoutineParameter
     {
-        public const String GetProcedure = "[AppCatalog].[procGetRoutineParameter]";
-        public const String SetProcedure = "[AppCatalog].[procSetRoutineParameter]";
-        public const String TableType = "[AppCatalog].[udttRoutineParameter]";
+        /// <summary>  
+        /// The stored procedure to retrieve routine parameters.  
+        /// </summary>  
+        public const string GetProcedure = "[AppCatalog].[procGetRoutineParameter]";
+
+        /// <summary>  
+        /// The stored procedure to set routine parameters.  
+        /// </summary>  
+        public const string SetProcedure = "[AppCatalog].[procSetRoutineParameter]";
+
+        /// <summary>  
+        /// The table type used for routine parameters.  
+        /// </summary>  
+        public const string TableType = "[AppCatalog].[udttRoutineParameter]";
     }
 }

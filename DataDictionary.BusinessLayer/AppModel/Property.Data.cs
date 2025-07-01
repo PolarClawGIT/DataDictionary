@@ -1,12 +1,10 @@
 ﻿// Ignore Spelling: Utc
 
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 

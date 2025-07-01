@@ -28,11 +28,29 @@
         string? PropertyValue { get; }
     }
 
+    /// <summary>  
+    /// Static class containing constants related to the Properties database operations.
+    /// </summary>  
     static class Property
     {
-        public const String GetProcedure = "[AppCatalog].[procGetProperty]";
-        public const String PropertyId = "@PropertyId";
-        public const String SetProcedure = "[AppCatalog].[procSetProperty]";
-        public const String TableType = "[AppCatalog].[udttProperty]";
+        /// <summary>  
+        /// The stored procedure for retrieving a property.  
+        /// </summary>  
+        public const string GetProcedure = "[AppCatalog].[procGetProperty]";
+
+        /// <summary>  
+        /// The parameter name for the property ID in stored procedures.  
+        /// </summary>  
+        public const string PropertyId = "@PropertyId";
+
+        /// <summary>  
+        /// The stored procedure for setting a property.  
+        /// </summary>  
+        public const string SetProcedure = "[AppCatalog].[procSetProperty]";
+
+        /// <summary>  
+        /// The table type used for properties.  
+        /// </summary>  
+        public const string TableType = "[AppCatalog].[udttProperty]";
     }
 }

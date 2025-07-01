@@ -56,11 +56,29 @@
         Boolean? IsIncomplete { get; }
     }
 
+    /// <summary>
+    /// Static class containing constants related to the References database operations..
+    /// </summary>
     static class Reference
     {
+        /// <summary>
+        /// The stored procedure for retrieving references.
+        /// </summary>
         public const String GetProcedure = "[AppCatalog].[procGetReference]";
+
+        /// <summary>
+        /// The parameter name for the reference ID.
+        /// </summary>
         public const String ReferenceId = "@ReferenceId";
+
+        /// <summary>
+        /// The stored procedure for setting references.
+        /// </summary>
         public const String SetProcedure = "[AppCatalog].[procSetReference]";
+
+        /// <summary>
+        /// The user-defined table type for references.
+        /// </summary>
         public const String TableType = "[AppCatalog].[udttReference]";
     }
 }

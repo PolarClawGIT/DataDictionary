@@ -32,10 +32,24 @@ namespace DataDictionary.DataLayer.AppCatalog
         String? ComputedDefinition { get; }
     }
 
+    /// <summary>  
+    /// Static class containing constants related to the Routine Column database operations..  
+    /// </summary>  
     static class RoutineColumn
     {
+        /// <summary>  
+        /// Stored procedure to retrieve RoutineColumn data.  
+        /// </summary>  
         public const String GetProcedure = "[AppCatalog].[procGetRoutineColumn]";
+
+        /// <summary>  
+        /// Stored procedure to set RoutineColumn data.  
+        /// </summary>  
         public const String SetProcedure = "[AppCatalog].[procSetRoutineColumn]";
+
+        /// <summary>  
+        /// User-defined table type for RoutineColumn.  
+        /// </summary>  
         public const String TableType = "[AppCatalog].[udttRoutineColumn]";
     }
 }

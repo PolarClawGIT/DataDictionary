@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Controls;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList

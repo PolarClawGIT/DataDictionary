@@ -2,64 +2,63 @@
 
 namespace DataDictionary.DataLayer
 {
-    /// <summary>
-    /// Helper class for dealing with InformationSchema
-    /// </summary>
-    static class SchemaScript
-    {
-        /// <summary>
-        /// Base name of the Resource file used for InformationSchema.
-        /// </summary>
-        const String InfoSchemaFile = "InformationSchema.sql";
 
+    /// <summary>  
+    /// Provides methods to retrieve embedded SQL schema scripts from resources.  
+    /// </summary>  
+    public static class SchemaScript
+    {
+
+        /// <summary>  
+        /// The file name of the InformationSchema SQL script.  
+        /// </summary>  
+        const string InfoSchemaFile = "InformationSchema.sql";
+
+        /// <summary>  
+        /// Represents the type of script supported by the schema script retrieval methods.  
+        /// </summary>  
         public enum ScriptType
         {
-            /// <summary>
-            /// MS TSQL Script
-            /// </summary>
+            /// <summary>  
+            /// Microsoft T-SQL script type.  
+            /// </summary>  
             TSql
 
-            // TODO: other types are not supported.
-            // Needs a lot of research to resolve this.
+            // TODO: other types are not supported.  
+            // Needs a lot of research to resolve this.  
         }
 
-        /// <summary>
-        /// Gets the Embedded Resource file that contains the InformationSchema script
-        /// using the default script type of TSQL.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This can be sensitive to name changes.
-        ///   Pattern: {namespace}.{className}.{scriptType}.InformationSchema.sql
-        /// Example:
-        ///   File name: Catalog.TSql.InformationSchema.sql
-        ///   Resource name: DataDictionary.DataLayer.AppCatalog.Catalog.TSql.InformationSchema.sql
-        /// Be sure the file is set to "Embedded Resource" in the files property settings.
-        /// </remarks>
-        public static String GetInformationSchema(Type type)
-        { return GetInformationSchema(type, ScriptType.TSql); }
+        /// <summary>  
+        /// Gets the embedded resource file that contains the InformationSchema script.  
+        /// </summary>  
+        /// <param name="type">The type whose namespace and class name are used to locate the resource.</param>  
+        /// <returns>The content of the InformationSchema script as a string.</returns>  
+        /// <remarks>  
+        /// This overload uses the default script type, which is TSql.
+        /// Ensure the file is set to "Embedded Resource" in the file's property settings. 
+        /// </remarks>  
+        public static string GetInformationSchema(Type type)
+        { return GetInformationSchema(type, ScriptType.TSql); }
 
-        /// <summary>
-        /// Gets the Embedded Resource file that contains the InformationSchema script.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="script"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This can be sensitive to name changes.
-        ///   Pattern: {namespace}.{className}.{scriptType}.{baseFile}
-        /// Example:
-        ///   File name: Catalog.TSql.InformationSchema.sql
-        ///   Resource name: DataDictionary.DataLayer.AppCatalog.Catalog.TSql.InformationSchema.sql
-        /// </remarks>
-        public static String GetInformationSchema(Type type, ScriptType script)
+        /// <summary>  
+        /// Gets the embedded resource file that contains the InformationSchema script.  
+        /// </summary>  
+        /// <param name="type">The type whose namespace and class name are used to locate the resource.</param>  
+        /// <param name="script">The type of script to retrieve, such as TSql.</param>  
+        /// <returns>The content of the InformationSchema script as a string.</returns>  
+        /// <remarks>  
+        /// This method retrieves the embedded resource file based on the provided script type.  
+        /// Ensure the file is set to "Embedded Resource" in the file's property settings.  
+        /// </remarks>  
+        public static string GetInformationSchema(Type type, ScriptType script)
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            String resource = String.Format("{0}.{1}.{2}", type.FullName, Enum.GetName(script), InfoSchemaFile);
 
-            if (assembly.GetManifestResourceNames().FirstOrDefault(w => resource.Equals(w, StringComparison.InvariantCultureIgnoreCase)) is String resourceName)
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resource = string.Format("{0}.{1}.{2}", type.FullName, Enum.GetName(script), InfoSchemaFile);
+
+            if (assembly.GetManifestResourceNames().FirstOrDefault(w => resource.Equals(w, StringComparison.InvariantCultureIgnoreCase)) is string resourceName)
             {
+
                 using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream is Stream)
@@ -69,8 +68,9 @@ namespace DataDictionary.DataLayer
                     }
                     else
                     {
-                        Exception ex = new ArgumentException("resource could not be loaded");
+                        Exception ex = new ArgumentException("Resource could not be loaded.");
                         ex.Data.Add(nameof(resourceName), resourceName);
+
                         throw ex;
                     }
                 }
@@ -79,11 +79,11 @@ namespace DataDictionary.DataLayer
             {
                 var debug = assembly.GetManifestResourceNames();
 
-                Exception ex = new ArgumentException("resource not found");
+                Exception ex = new ArgumentException("Resource not found.");
                 ex.Data.Add(nameof(type), type.Namespace);
                 ex.Data.Add(nameof(resource), resource);
+
                 throw ex;
             }
-        }
-    }
+        }    }
 }
