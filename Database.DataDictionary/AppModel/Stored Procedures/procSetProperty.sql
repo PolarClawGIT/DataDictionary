@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetProperty]
 		@ModelId UniqueIdentifier = Null,
 		@PropertyId UniqueIdentifier = Null,
-		@Data [AppModel].[typeProperty] ReadOnly
+		@Data [AppModel].[udttProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[PropertyId]             UniqueIdentifier NOT NULL,
-		[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null,
-		[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
+		[PropertyTitle]          [AppGeneral].[uddtTitle] Not Null,
+		[PropertyDescription]    [AppGeneral].[uddtDescription] Null,
 		[IsCommon]               Bit Not Null,
 		[DataType]               NVarChar(20) Not Null,
 		[PropertyData]           NVarChar(2000) Null,
@@ -173,7 +173,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @Data [App_DataDictionary].[typeDomainProperty]
+	Declare @Data [AppModel].[typeDomainProperty]
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000010',
@@ -204,13 +204,13 @@ Begin Try;
 		'The Maxium Length of the value. Used with varaible length types.',
 		'Integer',Null)
 
-	Exec [App_DataDictionary].[procSetDomainProperty] @Data = @Data
+	Exec [AppModel].[procSetDomainProperty] @Data = @Data
 
-	update [App_DataDictionary].[DomainProperty]
+	update [AppModel].[DomainProperty]
 	Set		[IsCommon] = 1
 
 	Select	*
-	From	[App_DataDictionary].[DomainProperty]
+	From	[AppModel].[DomainProperty]
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

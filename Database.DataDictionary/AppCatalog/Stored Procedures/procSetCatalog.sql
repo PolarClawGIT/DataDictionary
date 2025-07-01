@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetCatalog]
 		@CatalogId UniqueIdentifier = Null,
-		@Data [AppCatalog].[typeCatalog] ReadOnly
+		@Data [AppCatalog].[udttCatalog] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -43,8 +43,8 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table ( -- Needs to match the target data structure
 		[CatalogId] UniqueIdentifier Not Null,
-		[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
-		[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
+		[CatalogTitle] [AppGeneral].[uddtTitle] Not Null,
+		[CatalogDescription] [AppGeneral].[uddtDescription] Null,
 		[ServerName] SysName Not Null,
 		[DatabaseName] SysName Not Null,
 		[SourceDate] DateTime Not Null,

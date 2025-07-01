@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetDefinition]
 		@ModelId UniqueIdentifier = Null,
 		@DefinitionId UniqueIdentifier = Null,
-		@Data [AppModel].[typeDefinition] ReadOnly
+		@Data [AppModel].[udttDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,8 +28,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[DefinitionId]             UniqueIdentifier NOT NULL,
-		[DefinitionTitle]          [App_DataDictionary].[typeTitle] Not Null,
-		[DefinitionDescription]    [App_DataDictionary].[typeDescription] Null,
+		[DefinitionTitle]          [AppGeneral].[uddtTitle] Not Null,
+		[DefinitionDescription]    [AppGeneral].[uddtDescription] Null,
 		[IsCommon]                 Bit Not Null,
 		Primary Key ([DefinitionId]),
 		Unique ([DefinitionTitle]))
@@ -152,7 +152,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @Data [App_DataDictionary].[typeDomainDefinition]
+	Declare @Data [AppModel].[typeDomainDefinition]
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000020',
@@ -163,13 +163,13 @@ Begin Try;
 		'Technical Definition',
 		'Definition of the item in Technical Terms.')
 
-	Exec [App_DataDictionary].[procSetDomainDefinition] @Data = @Data
+	Exec [AppModel].[procSetDomainDefinition] @Data = @Data
 
-	update [App_DataDictionary].[DomainDefinition]
+	update [AppModel].[DomainDefinition]
 	Set		[IsCommon] = 1
 
 	Select	*
-	From	[App_DataDictionary].[DomainDefinition]
+	From	[AppModel].[DomainDefinition]
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

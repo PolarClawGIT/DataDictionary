@@ -70,9 +70,9 @@ namespace DataDictionary.BusinessLayer
 
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
-            libraryValues = new Library.LibraryModel();
+            libraryValues = new AppLibrary.LibraryModel();
 
-            scriptingValues = new Scripting.ScriptingEngine() { Model = modelValues };
+            scriptingValues = new AppScripting.ScriptingEngine() { Model = modelValues };
         }
 
         /// <summary>

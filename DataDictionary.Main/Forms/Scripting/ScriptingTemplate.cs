@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
@@ -142,14 +142,14 @@ namespace DataDictionary.Main.Forms.Scripting
             documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
             // Path Handling
-            ScopeNameList.Load(pathScopeColumn);
+            ScopeNameList.Load(nameSpaceScopeColumn);
             ScopeNameList.Load(pathScopeData);
 
             pathsData.AutoGenerateColumns = false;
             pathsData.DataSource = bindingPath;
 
-            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.PathScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(TemplatePathValue.PathName), false, DataSourceUpdateMode.OnPropertyChanged));
+            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(TemplatePathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
 
             ElementSelection_Load();
 
@@ -589,7 +589,7 @@ namespace DataDictionary.Main.Forms.Scripting
                             if (bindingPath.AddNew() is TemplatePathValue newValue)
                             {
                                 newValue.Path = addItem.Path;
-                                newValue.PathScope = addItem.Scope;
+                                newValue.NameSpaceScope = addItem.Scope;
                             }
                         }
                     }

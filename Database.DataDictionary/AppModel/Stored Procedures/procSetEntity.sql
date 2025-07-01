@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetEntity]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [AppModel].[typeEntity] ReadOnly
+		@Data [AppModel].[udttEntity] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -29,9 +29,9 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[EntityId]			    UniqueIdentifier Not Null,
-		[EntityTitle]		    [App_DataDictionary].[typeTitle] Not Null,
-		[EntityDescription]	    [App_DataDictionary].[typeDescription] Null,
-		[EntityName]			[AppModel].[typeQualifiedName] Null,
+		[EntityTitle]		    [AppGeneral].[uddtTitle] Not Null,
+		[EntityDescription]	    [AppGeneral].[uddtDescription] Null,
+		[EntityName]			[AppGeneral].[uddtQualifiedName] Null,
 		Primary Key ([EntityId]),
 		Unique ([EntityTitle]))
 
@@ -49,7 +49,7 @@ Begin Try
 				Select	Coalesce(D.[EntityId], H.[EntityId], NewId()) As [EntityId]) X
 			Outer Apply (
 				Select	[QualifiedName] As [EntityName]
-				From	[AppModel].[funcParseName](D.[EntityName])
+				From	[AppGeneral].[funcParseName](D.[EntityName])
 				Where	[IsBase] = 1) N
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@EntityId is Null Or @EntityId = X.[EntityId])

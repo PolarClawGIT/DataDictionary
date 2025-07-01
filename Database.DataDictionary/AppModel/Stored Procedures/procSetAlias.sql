@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetAlias]
 		@ModelId UniqueIdentifier = Null,
-		@Data [AppModel].[typeAlias] ReadOnly
+		@Data [AppModel].[udttAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -26,11 +26,11 @@ Begin Try
 
 	Declare @Values Table (
 		[AliasId]			UniqueIdentifier Not Null,
-		[AliasMember]		NVarChar(800) Not Null,
+		[AliasMember]		[AppGeneral].[uddtNameSpaceMember] Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
-		[AliasNameSpace]	[App_DataDictionary].[typeNameSpacePath] Not Null,
-		[ParentNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
+		[AliasNameSpace]	[AppGeneral].[uddtNameSpacePath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
 		Primary Key ([AliasId]))
 
 	;With [Data] As (
@@ -40,7 +40,7 @@ Begin Try
 				[ParentName] As [ParentNameSpace],
 				Row_Number() Over (Partition By [QualifiedName] Order By IIF([AliasId] is not null,0,1)) As [RankIndex]
 		From	@Data D
-				Cross Apply [AppModel].[funcParseName](D.[AliasNameSpace]))
+				Cross Apply [AppGeneral].[funcParseName](D.[AliasNameSpace]))
 	Insert Into @Values
 	Select	Coalesce([AppModel].[funcAliasId]([AliasNameSpace]), [AliasId], NewId()) As [AliasId],
 			[AliasMember],
@@ -55,7 +55,7 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 		
 	-- Apply Changes
-	Insert Into [AppModel].[AliasHierarchy] (
+	Insert Into [AppModel].[AliasNameSpace] (
 			[AliasId],
 			[AliasMember],
 			[ParentAliasId])
@@ -65,7 +65,7 @@ Begin Try
 	From	@Values S
 			Left Join @Values P
 			On	S.[ParentNameSpace] = P.[AliasNameSpace]
-			Left Join [AppModel].[AliasHierarchy] T
+			Left Join [AppModel].[AliasNameSpace] T
 			On	S.[AliasId] = T.[AliasId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
 	Where	T.[AliasId] is Null

@@ -111,7 +111,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<ReferenceMetaData> schemas = new BindingTable<ReferenceMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Reference.TSql_InformationSchema;
+
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(Reference));
 
             schemas.Load(connection.ExecuteReader(command));
 

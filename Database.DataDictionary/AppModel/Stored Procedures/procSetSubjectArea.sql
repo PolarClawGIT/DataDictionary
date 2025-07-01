@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetSubjectArea]
 		@ModelId UniqueIdentifier = Null,
 		@SubjectAreaId UniqueIdentifier = Null,
-		@Data [AppModel].[typeSubjectArea] ReadOnly
+		@Data [AppModel].[udttSubjectArea] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -28,10 +28,10 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
-		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
-		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+		[SubjectAreaTitle]       [AppGeneral].[uddtTitle] Not NULL,
+		[SubjectAreaDescription] [AppGeneral].[uddtDescription] NULL,
 		[ModelId]				 UniqueIdentifier Not NULL,
-		[SubjectName]            [AppModel].[typeQualifiedName] Not Null
+		[SubjectName]            [AppGeneral].[uddtQualifiedName] Not Null
 		Primary Key ([SubjectAreaId]),
 		Unique ([SubjectAreaTitle]))
 
@@ -48,7 +48,7 @@ Begin Try
 				  D.[SubjectAreaTitle] = H.[SubjectAreaTitle]))
 			Cross Apply (
 				Select	[QualifiedName] As [SubjectName]
-				From	[AppModel].[funcParseName](D.[SubjectName])) N
+				From	[AppGeneral].[funcParseName](D.[SubjectName])) N
 	Where	(@ModelId is Null Or @ModelId = H.[ModelId]) And
 			(@SubjectAreaId is Null Or @SubjectAreaId = Coalesce(D.[SubjectAreaId], H.[SubjectAreaId]))
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -86,16 +86,6 @@ Begin Try
 			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
 			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
 	Print FormatMessage ('Delete [AppModel].[ProcessSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[RelationshipSubjectArea]
-	From	[AppModel].[RelationshipSubjectArea] T
-			Left Join @Values S
-			On	T.[SubjectAreaId] = S.[SubjectAreaId]
-			Cross Apply [AppSecurity].[funcModelAuthorization](@ModelId, 1)
-	Where	S.[SubjectAreaId] is Null And
-			(@SubjectAreaId is Not Null Or @ModelId is Not Null) And
-			(@SubjectAreaId is Null Or @SubjectAreaId = T.[SubjectAreaId])
-	Print FormatMessage ('Delete [AppModel].[RelationshipSubjectArea] (SubjectArea): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[SubjectAreaId],

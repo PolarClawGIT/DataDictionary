@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetEntityAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [AppModel].[typeEntityAttribute] ReadOnly
+		@Data [AppModel].[udttEntityAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]			   UniqueIdentifier Not Null,
 		[AttributeAliasId]     UniqueIdentifier Not Null,
-		[AttributeKnownAs]	   [App_DataDictionary].[typeTitle] Not Null,
+		[AttributeKnownAs]	   [AppGeneral].[uddtTitle] Not Null,
 		[OrdinalPosition]      Int Not Null,
 		[IsNullable]		   Bit Null,
 		[IsPrimaryKey]		   Bit Null,
@@ -38,7 +38,7 @@ Begin Try
 		Unique ([EntityId], [AttributeKnownAs]),
 		Unique ([EntityId], [OrdinalPosition]))
 
-	Declare @Alias [AppModel].[typeAlias];
+	Declare @Alias [AppModel].[udttAlias];
 
 	Insert Into @Alias ([AliasNameSpace])
 	Select	[AttributeName]

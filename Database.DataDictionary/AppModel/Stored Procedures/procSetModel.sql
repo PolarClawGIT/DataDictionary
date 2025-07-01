@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetModel]
 		@ModelId UniqueIdentifier = Null,
-		@Data [AppModel].[typeModel] ReadOnly
+		@Data [AppModel].[udttModel] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -36,8 +36,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[ModelId] UniqueIdentifier NOT NULL,
-		[ModelTitle] [App_DataDictionary].[typeTitle] Not Null,
-		[ModelDescription] [App_DataDictionary].[typeDescription] Null,
+		[ModelTitle] [AppGeneral].[uddtTitle] Not Null,
+		[ModelDescription] [AppGeneral].[uddtDescription] Null,
 		Primary Key ([ModelId]),
 		Unique ([ModelTitle]))
 
@@ -76,7 +76,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelAttribute] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelEntity]
 	From	[AppModel].[ModelEntity] T
@@ -86,7 +86,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelEntity] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelProperty]
 	From	[AppModel].[ModelProperty] T
@@ -96,7 +96,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelProperty] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelDefinition]
 	From	[AppModel].[ModelDefinition] T
@@ -106,7 +106,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelDefinition] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[ModelProcess]
 	From	[AppModel].[ModelProcess] T
@@ -116,27 +116,7 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[ModelDataFlow]
-	From	[AppModel].[ModelDataFlow] T
-			Left Join @Values S
-			On	T.[ModelId] = S.[ModelId]
-			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
-	Where	S.[ModelId] is Null And
-			T.[ModelId] = @ModelId
-	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelDataFlow] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppModel].[ModelRelationship]
-	From	[AppModel].[ModelRelationship] T
-			Left Join @Values S
-			On	T.[ModelId] = S.[ModelId]
-			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
-	Where	S.[ModelId] is Null And
-			T.[ModelId] = @ModelId
-	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelProcess] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[SubjectArea]
 	From	[AppModel].[SubjectArea] T
@@ -146,27 +126,27 @@ Begin Try
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelSubjectArea] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelLibrary]
-	From	[App_DataDictionary].[ModelLibrary] T
+	Delete From [AppLibrary].[LibraryModel]
+	From	[AppLibrary].[LibraryModel] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	If @RowCount > 0 Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
+	If @RowCount > 0 Print FormatMessage ('Delete [AppLibrary].[LibraryModel] (Model): %i, %s',@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppModel].[ModelCatalog]
-	From	[AppModel].[ModelCatalog] T
+	Delete From [AppCatalog].[CatalogModel]
+	From	[AppCatalog].[CatalogModel] T
 			Left Join @Values S
 			On	T.[ModelId] = S.[ModelId]
 			Cross Apply [AppSecurity].[funcModelAuthorization](T.[ModelId], 1) 
 	Where	S.[ModelId] is Null  And
 			T.[ModelId] = @ModelId
 	Set @RowCount = @@RowCount
-	IF @RowCount > 0 Print FormatMessage ('Delete [AppModel].[ModelCatalog] (Model): %i, %s', @RowCount, Convert(VarChar,GetDate()));
+	IF @RowCount > 0 Print FormatMessage ('Delete [AppCatalog].[CatalogModel] (Model): %i, %s', @RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppModel].[Model]
 	From	[AppModel].[Model] T

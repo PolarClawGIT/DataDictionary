@@ -11,6 +11,6 @@
 --       Other Authentication will likely work but have not been explored.
 --       Password can be changed so long as it is changed here and in the Application source code.
 CREATE APPLICATION ROLE [DataDictionaryApp]
-    WITH PASSWORD = N'MyApp131*99', DEFAULT_SCHEMA = [App_DataDictionary];
+    WITH PASSWORD = N'MyApp131*99', DEFAULT_SCHEMA = [dbo];
 GO
 

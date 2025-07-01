@@ -64,7 +64,7 @@ namespace DataDictionary.DataLayer.AppCatalog
         {
             get
             {
-                var list = Table.IsSystem.Split(',').Select(s =>
+                var list = Routine.IsSystem.Split(',').Select(s =>
                 {
                     if (s.EndsWith(".*") && RoutineName is String)
                     { s.Substring(0, s.Length - 1).Concat(RoutineName); }

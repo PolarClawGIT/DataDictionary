@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procSetPrincipal]
 		@PrincipalId UniqueIdentifier = Null,
-		@Data [AppSecurity].[typePrincipal] ReadOnly
+		@Data [AppSecurity].[udttPrincipal] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -22,8 +22,8 @@ Begin Try
 	Declare @Values Table (
 			[PrincipalId] UniqueIdentifier Not Null,
 			[PrincipalLogin] SysName Not Null,
-			[PrincipalName] [App_DataDictionary].[typeTitle] Not Null,
-			[PrincipalAnnotation] [App_DataDictionary].[typeDescription] Null,
+			[PrincipalName] [AppGeneral].[uddtTitle] Not Null,
+			[PrincipalAnnotation] [AppGeneral].[uddtDescription] Null,
 			Primary Key ([PrincipalId]))
 
 	Insert Into @Values

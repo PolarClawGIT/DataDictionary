@@ -81,4 +81,30 @@
         /// </summary>
         Boolean IsNonKey { get; set; }
     }
+
+    /// <summary>
+    /// Static class containing constants related to the Attribute database operations.
+    /// </summary>
+    static class Attribute
+    {
+        /// <summary>
+        /// Identifier for the Attribute.
+        /// </summary>
+        public const String AttributeId = "@AttributeId";
+
+        /// <summary>
+        /// Stored procedure to retrieve an Attribute.
+        /// </summary>
+        public const String GetProcedure = "[AppModel].[procGetAttribute]";
+
+        /// <summary>
+        /// Stored procedure to set an Attribute.
+        /// </summary>
+        public const String SetProcedure = "[AppModel].[procSetAttribute]";
+
+        /// <summary>
+        /// User-defined table type for Attribute operations.
+        /// </summary>
+        public const String TableType = "[AppModel].[udttAttribute]";
+    }
 }

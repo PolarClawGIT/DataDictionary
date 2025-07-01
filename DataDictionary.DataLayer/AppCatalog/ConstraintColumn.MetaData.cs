@@ -68,7 +68,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<ConstraintColumnMetaData> schemas = new BindingTable<ConstraintColumnMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = ConstraintColumn.TSql_InformationSchema;
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(ConstraintColumn));
 
             schemas.Load(connection.ExecuteReader(command));
 

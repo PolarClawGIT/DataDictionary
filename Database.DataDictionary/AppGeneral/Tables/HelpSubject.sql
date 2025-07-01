@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [AppGeneral].[HelpSubject]
 (
 	[HelpId] UniqueIdentifier Not Null CONSTRAINT [DF_HelpSubjectId] DEFAULT (newid()),
-	[HelpSubject] [App_DataDictionary].[typeTitle] Not Null,
-	[HelpToolTip] [App_DataDictionary].[typeDescription] Null,
+	[HelpSubject] [AppGeneral].[uddtTitle] Not Null,
+	[HelpToolTip] [AppGeneral].[uddtDescription] Null,
 	[HelpText] NVarChar(Max) Not Null,
 	[NameSpace] NVarChar(1023) Null, -- Length is based on the fact I don't use long names. 1023 is the VB.Net NameSpace definition.
 	-- Temporal History Support

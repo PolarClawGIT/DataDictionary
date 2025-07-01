@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppGeneral].[procSetHelpSubject]
 		@HelpId UniqueIdentifier = null,
-		@Data [AppGeneral].[typeHelpSubject] ReadOnly
+		@Data [AppGeneral].[udttHelpSubject] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -33,8 +33,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 			[HelpId] UniqueIdentifier Not Null,
-			[HelpSubject] [App_DataDictionary].[typeTitle] Not Null,
-			[HelpToolTip] [App_DataDictionary].[typeDescription] Null,
+			[HelpSubject] [AppGeneral].[uddtTitle] Not Null,
+			[HelpToolTip] [AppGeneral].[uddtDescription] Null,
 			[HelpText] NVarChar(Max) Not Null,
 			[NameSpace] NVarChar(1023) Null,
 			Primary Key ([HelpId]))
@@ -56,7 +56,7 @@ Begin Try
 				End As [HelpText],
 			NullIf(Trim(S.[QualifiedName]),'') As [NameSpace]
 	From	@Data D
-			Outer Apply [AppModel].[funcParseName] (D.[NameSpace]) S
+			Outer Apply [AppGeneral].[funcParseName] (D.[NameSpace]) S
 	Where	(@HelpId is Null or @HelpId = D.[HelpId]) And
 			S.[IsBase] = 1
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

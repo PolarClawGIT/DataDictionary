@@ -2,7 +2,25 @@
 	Begin Transaction;
 	Set NoCount On;
 
-	Declare @Roles [AppSecurity].[typeSecurityRole]
+	-- Add current user
+	Declare @PrincipalId uniqueidentifier = NewID() -- '75668946-297C-48AA-BFDC-040CD65F91BD'
+	Declare @PrincipalLogin SysName = ORIGINAL_LOGIN() -- 'DOLPHINSTAR\Polar'
+
+	Select	@PrincipalId = [PrincipalId]
+	From	[AppSecurity].[Principal]
+	Where	[PrincipalLogin] = @PrincipalLogin
+
+	Declare @Principal [AppSecurity].[udttPrincipal]
+	Insert Into @Principal ([PrincipalId], [PrincipalLogin])
+	Select	@PrincipalId, @PrincipalLogin
+
+	Exec [AppSecurity].[procSetPrincipal] @PrincipalId = @PrincipalId, @Data = @Principal
+
+	Select	*
+	From	[AppSecurity].[Principal]
+
+	-- Fixed Roles
+	Declare @Roles [AppSecurity].[udttRole]
 	Insert Into @Roles (
 		[RoleId],
 		[RoleName],
@@ -35,8 +53,26 @@
 	Select	*
 	From	[AppSecurity].[Role]
 
+	-- Make current user an Admin
+	Declare @Membership [AppSecurity].[udttRoleMembership]
+	Insert Into @Membership ([RoleId], [PrincipalId])
+	Select	[RoleId],
+			[PrincipalId]
+	From	@Principal
+			Cross Join @Roles
+
+	Exec [AppSecurity].[procSetRoleMembership] @PrincipalId = @PrincipalId, @Data = @Membership
+
+	Select	*
+	From	[AppSecurity].[RoleMembership] M
+			Inner Join [AppSecurity].[Principal] P
+			On	M.[PrincipalId] = P.[PrincipalId]
+			Inner Join [AppSecurity].[Role] R
+			On	M.[RoleId] = R.[RoleId]
+
+
 	-- By default, throw and error and exit without committing
---;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
 	
 	Commit Transaction;
 	Print 'Commit Issued';

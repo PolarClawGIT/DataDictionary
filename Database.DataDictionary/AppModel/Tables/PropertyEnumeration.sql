@@ -2,8 +2,8 @@
 (
 	-- Works as a lookup to create/define an Extended Property.
 	[PropertyId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_PropertyTypeId] DEFAULT (newid()),
-	[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
-	[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
+	[PropertyTitle]          [AppGeneral].[uddtTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
+	[PropertyDescription]    [AppGeneral].[uddtDescription] Null,
 	[IsCommon]               Bit Not Null CONSTRAINT [DF_PropertyIsCommon] DEFAULT(0), -- Common Properties are shared by all Models.
 	-- Note: IsCommon Properties cannot be deleted or updated using the stored procedures. They must be modified directly.
 	--       IsCommon flag must also be set directly. This avoids the application accidentally changing these.

@@ -57,7 +57,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             BindingTable<RoutineMetaData> schemas = new BindingTable<RoutineMetaData>();
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = Routine.TSql_InformationSchema;
+            command.CommandText = SchemaScript.GetInformationSchema(typeof(Routine));
 
             schemas.Load(connection.ExecuteReader(command));
 

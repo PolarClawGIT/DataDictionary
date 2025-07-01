@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetProcessProperty]
 		@ModelId UniqueIdentifier = Null,
 		@ProcessId UniqueIdentifier = Null,
-		@Data [AppModel].[typeProcessProperty] ReadOnly
+		@Data [AppModel].[udttProcessProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -30,7 +30,7 @@ Begin Try
 	Declare @Values Table (
 		[ProcessId]		    UniqueIdentifier Not Null,
 		[PropertyId]		UniqueIdentifier Not Null,
-		[PropertyValue]		[AppModel].[typePropertyValue] Null,
+		[PropertyValue]		[AppModel].[uddtPropertyValue] Null,
 		Primary Key ([ProcessId], [PropertyId]))
 
 	Insert Into @Values

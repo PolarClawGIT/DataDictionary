@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@AttributeId UniqueIdentifier = Null,
-		@Data [AppModel].[typeAttribute] ReadOnly
+		@Data [AppModel].[udttAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -29,9 +29,9 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[AttributeId]			UniqueIdentifier Not Null,
-		[AttributeTitle]		[App_DataDictionary].[typeTitle] Not Null,
-		[AttributeDescription]	[App_DataDictionary].[typeDescription] Null,
-		[AttributeName]			[AppModel].[typeQualifiedName] Null,
+		[AttributeTitle]		[AppGeneral].[uddtTitle] Not Null,
+		[AttributeDescription]	[AppGeneral].[uddtDescription] Null,
+		[AttributeName]			[AppGeneral].[uddtQualifiedName] Null,
 		[DataType]			    NVarChar(128) Null,
 		[DataLength]		    SmallInt Null,
 		[DataPrecision]		    TinyInt Null,
@@ -81,7 +81,7 @@ Begin Try
 				Select	Coalesce(D.[AttributeId], H.[AttributeId], NewId()) As [AttributeId]) X
 			Outer Apply (
 				Select	[QualifiedName] As [AttributeName]
-				From	[AppModel].[funcParseName](D.[AttributeName])
+				From	[AppGeneral].[funcParseName](D.[AttributeName])
 				Where	[IsBase] = 1) N
 	Where	(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
 			(@AttributeId is Null Or @AttributeId = X.[AttributeId])

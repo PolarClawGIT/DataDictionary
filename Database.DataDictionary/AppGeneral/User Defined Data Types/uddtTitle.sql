@@ -1,0 +1,1 @@
+﻿CREATE TYPE [AppGeneral].[uddtTitle] FROM NVarChar(100) NOT NULL

@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [AppSecurity].[procSetRole]
 		@RoleId UniqueIdentifier = Null,
-		@Data [AppSecurity].[typeRole] ReadOnly
+		@Data [AppSecurity].[udttRole] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -21,8 +21,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 			[RoleId] UniqueIdentifier Not Null,
-			[RoleName] [App_DataDictionary].[typeTitle] Not Null,
-			[RoleDescription] [App_DataDictionary].[typeDescription] Null,
+			[RoleName] [AppGeneral].[uddtTitle] Not Null,
+			[RoleDescription] [AppGeneral].[uddtDescription] Null,
 			[IsSecurityAdmin] Bit Not Null,
 			[IsHelpAdmin]     Bit Not Null,
 			[IsHelpOwner]     Bit Not Null,

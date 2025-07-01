@@ -13,6 +13,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AppCatalog\Catalog.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Constraint.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Domain.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Property.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Reference.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Routine.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\RoutineColumn.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\RoutineParameter.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Schema.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\Table.TSql.InformationSchema.sql" />
+    <None Remove="AppCatalog\TableColumn.TSql.InformationSchema.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,246 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AppCatalog\Constraint.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Constraint.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\ConstraintColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ConstraintColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Property.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Property.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Catalog.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Catalog.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Reference.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Reference.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Routine.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Routine.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\RoutineColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoutineColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\RoutineParameter.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoutineParameter.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Table.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Table.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\TableColumn.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TableColumn.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Domain.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Domain.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppGeneral\HelpSubject.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>HelpSubject.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Attribute.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Attribute.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\AttributeAlias.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AttributeAlias.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\AttributeDefinition.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AttributeDefinition.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\AttributeProperty.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AttributeProperty.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\AttributeSubjectArea.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AttributeSubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Definition.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Definition.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Entity.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Entity.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\EntityAlias.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityAlias.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\EntityAttribute.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityAttribute.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\EntityDefinition.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityDefinition.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\EntityProperty.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntityProperty.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\EntitySubjectArea.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EntitySubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Model.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Model.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppCatalog\Schema.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Schema.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Process.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Process.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\ProcessAlias.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProcessAlias.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\ProcessArgument.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProcessArgument.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\ProcessDefinition.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProcessDefinition.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\ProcessProperty.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProcessProperty.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\ProcessSubjectArea.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ProcessSubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\Property.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Property.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppModel\SubjectArea.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SubjectArea.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Authorization.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Authorization.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\AuthorizationSecurable.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AuthorizationSecurable.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Principal.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Principal.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Role.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Role.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\RoleMembership.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoleMembership.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\Securable.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Securable.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\SecurableOwner.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SecurableOwner.resx</DependentUpon>
-    </Compile>
-    <Compile Update="AppSecurity\SecurablePermission.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SecurablePermission.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LibraryData\LibraryMember.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LibraryMember.resx</DependentUpon>
-    </Compile>
-    <Compile Update="LibraryData\LibrarySource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LibrarySource.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingAttribute.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingAttribute.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingNode.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingNode.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingPath.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingPath.resx</DependentUpon>
-    </Compile>
-    <Compile Update="ScriptingData\ScriptingTemplate.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ScriptingTemplate.resx</DependentUpon>
-    </Compile>
     <Compile Update="Temporal.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -286,199 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="AppCatalog\Constraint.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Constraint.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\ConstraintColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ConstraintColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Property.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Property.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Catalog.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Catalog.Designer.cs</LastGenOutput>
-      <CustomToolNamespace></CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Reference.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Reference.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Routine.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Routine.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\RoutineColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoutineColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\RoutineParameter.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoutineParameter.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Table.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Table.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\TableColumn.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TableColumn.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Domain.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Domain.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppGeneral\HelpSubject.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>HelpSubject.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Attribute.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Attribute.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\AttributeAlias.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AttributeAlias.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\AttributeDefinition.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AttributeDefinition.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\AttributeProperty.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AttributeProperty.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\AttributeSubjectArea.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AttributeSubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Definition.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Definition.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Entity.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Entity.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\EntityAlias.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntityAlias.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\EntityAttribute.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntityAttribute.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\EntityDefinition.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntityDefinition.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\EntityProperty.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntityProperty.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\EntitySubjectArea.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EntitySubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Model.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Model.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppCatalog\Schema.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Schema.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Process.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Process.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\ProcessAlias.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProcessAlias.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\ProcessArgument.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProcessArgument.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\ProcessDefinition.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProcessDefinition.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\ProcessProperty.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProcessProperty.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\ProcessSubjectArea.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProcessSubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\Property.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Property.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppModel\SubjectArea.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SubjectArea.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Authorization.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Authorization.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\AuthorizationSecurable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AuthorizationSecurable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Principal.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Principal.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Role.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Role.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\RoleMembership.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>RoleMembership.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\Securable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Securable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\SecurableOwner.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SecurableOwner.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="AppSecurity\SecurablePermission.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SecurablePermission.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LibraryData\LibraryMember.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LibraryMember.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="LibraryData\LibrarySource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LibrarySource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingAttribute.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingAttribute.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingNode.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingNode.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingPath.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingPath.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="ScriptingData\ScriptingTemplate.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ScriptingTemplate.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Temporal.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Temporal.Designer.cs</LastGenOutput>
@@ -501,8 +82,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppLibrary\" />
-    <Folder Include="AppScript\" />
+    <EmbeddedResource Include="AppCatalog\Catalog.TSql.InformationSchema.sql">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppCatalog\Constraint.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\ConstraintColumn.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Domain.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Property.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Reference.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Routine.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\RoutineColumn.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\RoutineParameter.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Schema.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\Table.TSql.InformationSchema.sql" />
+    <EmbeddedResource Include="AppCatalog\TableColumn.TSql.InformationSchema.sql" />
   </ItemGroup>
 
 </Project>

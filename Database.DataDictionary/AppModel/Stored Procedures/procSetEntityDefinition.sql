@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppModel].[procSetEntityDefinition]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@Data [AppModel].[typeEntityDefinition] ReadOnly
+		@Data [AppModel].[udttEntityDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -30,8 +30,8 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]		    UniqueIdentifier Not Null,
 		[DefinitionId]		UniqueIdentifier Not Null,
-		[DefinitionSummary]	[App_DataDictionary].[typeDescription] Null,
-		[DefinitionText]	[AppModel].[typeRichText] Null,
+		[DefinitionSummary]	[AppGeneral].[uddtDescription] Null,
+		[DefinitionText]	[AppModel].[uddtRichText] Null,
 		Primary Key ([EntityId], [DefinitionId]))
 
 	Insert Into @Values

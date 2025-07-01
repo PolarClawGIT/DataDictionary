@@ -34,53 +34,51 @@ namespace DataDictionary.Main.Forms.Scripting
             TableLayoutPanel templateLayoutPanel;
             TableLayoutPanel documentLayout;
             TableLayoutPanel documentGroupLayout;
-            ListViewGroup listViewGroup1 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
-            ListViewItem listViewItem1 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
+            ListViewGroup listViewGroup3 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
+            ListViewItem listViewItem3 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
             GroupBox attributeGroup;
             TableLayoutPanel aliasCommandLayout;
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentTemplateLayout;
-            templateTitleData = new Controls.TextBoxData();
-            templateDescriptionData = new Controls.TextBoxData();
+            templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
             documentSettingTab = new TabPage();
             documentGroup = new GroupBox();
-            documentDirectoryData = new Controls.TextBoxData();
-            documentPrefixData = new Controls.TextBoxData();
-            documentSuffixData = new Controls.TextBoxData();
-            documentExtensionData = new Controls.TextBoxData();
+            documentDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            documentPrefixData = new DataDictionary.Main.Controls.TextBoxData();
+            documentSuffixData = new DataDictionary.Main.Controls.TextBoxData();
+            documentExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             documentDirectoryPicker = new Button();
-            breakOnScopeData = new Controls.ComboBoxData();
-            rootDirectoryData = new Controls.ComboBoxData();
-            rootDirectoryExpanded = new Controls.TextBoxData();
+            breakOnScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            rootDirectoryData = new DataDictionary.Main.Controls.ComboBoxData();
+            rootDirectoryExpanded = new DataDictionary.Main.Controls.TextBoxData();
             scriptingGroup = new GroupBox();
             scriptingGroupLayout = new TableLayoutPanel();
-            scriptingExtensionData = new Controls.TextBoxData();
-            scriptingSuffixData = new Controls.TextBoxData();
-            scriptingPrefixData = new Controls.TextBoxData();
-            scriptingDirectoryData = new Controls.TextBoxData();
-            scriptAsData = new Controls.ComboBoxData();
+            scriptingExtensionData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptingSuffixData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptingPrefixData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptingDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptAsData = new DataDictionary.Main.Controls.ComboBoxData();
             scriptingDirectoryPicker = new Button();
             nodeDefinitionTab = new TabPage();
             schemaDefinitionLayout = new SplitContainer();
             elementSelection = new ListView();
             columnName = new ColumnHeader();
             schemaNodeLayout = new TableLayoutPanel();
-            propertyNameData = new Controls.TextBoxData();
-            nodeNameData = new Controls.TextBoxData();
-            nodeValueAsData = new Controls.ComboBoxData();
+            propertyNameData = new DataDictionary.Main.Controls.TextBoxData();
+            nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
+            nodeValueAsData = new DataDictionary.Main.Controls.ComboBoxData();
             attributeData = new DataGridView();
             attributeNameColumn = new DataGridViewTextBoxColumn();
             attributeValueColumn = new DataGridViewTextBoxColumn();
             attributePropertyColumn = new DataGridViewComboBoxColumn();
-            propertyScopeData = new Controls.ComboBoxData();
+            propertyScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             dataSelectionTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             pathsData = new DataGridView();
-            pathScopeColumn = new DataGridViewComboBoxColumn();
-            pathNameColumn = new DataGridViewTextBoxColumn();
-            pathNameData = new Controls.TextBoxData();
-            pathScopeData = new Controls.ComboBoxData();
+            pathNameData = new DataDictionary.Main.Controls.TextBoxData();
+            pathScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             pathSelectCommand = new Button();
             pathAddCommand = new Button();
             isPathInModelData = new CheckBox();
@@ -90,7 +88,7 @@ namespace DataDictionary.Main.Forms.Scripting
             transformImportCommand = new ToolStripButton();
             transformExportCommand = new ToolStripButton();
             transformFilePath = new ToolStripLabel();
-            transformExceptionData = new Controls.TextBoxData();
+            transformExceptionData = new DataDictionary.Main.Controls.TextBoxData();
             transformScriptData = new TextBox();
             documentsTab = new TabPage();
             documentToolStrip = new ToolStrip();
@@ -103,9 +101,9 @@ namespace DataDictionary.Main.Forms.Scripting
             documentElementColumn = new DataGridViewTextBoxColumn();
             documentNameColumn = new DataGridViewTextBoxColumn();
             documentScriptName = new DataGridViewTextBoxColumn();
-            documentException = new Controls.TextBoxData();
-            documentXMLData = new Controls.TextBoxData();
-            documentScriptData = new Controls.TextBoxData();
+            documentException = new DataDictionary.Main.Controls.TextBoxData();
+            documentXMLData = new DataDictionary.Main.Controls.TextBoxData();
+            documentScriptData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
@@ -114,6 +112,8 @@ namespace DataDictionary.Main.Forms.Scripting
             bindingNode = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingDocument = new BindingSource(components);
+            nameSpaceScopeColumn = new DataGridViewComboBoxColumn();
+            nameSpaceColumn = new DataGridViewTextBoxColumn();
             templateLayoutPanel = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
@@ -508,7 +508,7 @@ namespace DataDictionary.Main.Forms.Scripting
             nodeDefinitionTab.Controls.Add(schemaDefinitionLayout);
             nodeDefinitionTab.Location = new Point(4, 24);
             nodeDefinitionTab.Name = "nodeDefinitionTab";
-            nodeDefinitionTab.Size = new Size(192, 72);
+            nodeDefinitionTab.Size = new Size(849, 478);
             nodeDefinitionTab.TabIndex = 2;
             nodeDefinitionTab.Text = "Node Definition (XSD)";
             // 
@@ -526,8 +526,8 @@ namespace DataDictionary.Main.Forms.Scripting
             // schemaDefinitionLayout.Panel2
             // 
             schemaDefinitionLayout.Panel2.Controls.Add(schemaNodeLayout);
-            schemaDefinitionLayout.Size = new Size(192, 72);
-            schemaDefinitionLayout.SplitterDistance = 64;
+            schemaDefinitionLayout.Size = new Size(849, 478);
+            schemaDefinitionLayout.SplitterDistance = 283;
             schemaDefinitionLayout.TabIndex = 1;
             // 
             // elementSelection
@@ -535,16 +535,16 @@ namespace DataDictionary.Main.Forms.Scripting
             elementSelection.CheckBoxes = true;
             elementSelection.Columns.AddRange(new ColumnHeader[] { columnName });
             elementSelection.Dock = DockStyle.Fill;
-            listViewGroup1.Header = "Scope Name 1";
-            listViewGroup1.Name = "sampleScope";
-            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup1 });
-            listViewItem1.Group = listViewGroup1;
-            listViewItem1.StateImageIndex = 0;
-            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem1 });
+            listViewGroup3.Header = "Scope Name 1";
+            listViewGroup3.Name = "sampleScope";
+            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup3 });
+            listViewItem3.Group = listViewGroup3;
+            listViewItem3.StateImageIndex = 0;
+            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem3 });
             elementSelection.Location = new Point(0, 0);
             elementSelection.MultiSelect = false;
             elementSelection.Name = "elementSelection";
-            elementSelection.Size = new Size(62, 70);
+            elementSelection.Size = new Size(281, 476);
             elementSelection.TabIndex = 2;
             elementSelection.UseCompatibleStateImageBehavior = false;
             elementSelection.View = View.Details;
@@ -578,7 +578,7 @@ namespace DataDictionary.Main.Forms.Scripting
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            schemaNodeLayout.Size = new Size(122, 70);
+            schemaNodeLayout.Size = new Size(560, 476);
             schemaNodeLayout.TabIndex = 0;
             // 
             // propertyNameData
@@ -591,7 +591,7 @@ namespace DataDictionary.Main.Forms.Scripting
             propertyNameData.Multiline = false;
             propertyNameData.Name = "propertyNameData";
             propertyNameData.ReadOnly = true;
-            propertyNameData.Size = new Size(116, 44);
+            propertyNameData.Size = new Size(554, 44);
             propertyNameData.TabIndex = 1;
             propertyNameData.WordWrap = true;
             // 
@@ -604,7 +604,7 @@ namespace DataDictionary.Main.Forms.Scripting
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = false;
-            nodeNameData.Size = new Size(67, 46);
+            nodeNameData.Size = new Size(330, 46);
             nodeNameData.TabIndex = 2;
             nodeNameData.WordWrap = true;
             // 
@@ -615,10 +615,10 @@ namespace DataDictionary.Main.Forms.Scripting
             nodeValueAsData.Dock = DockStyle.Fill;
             nodeValueAsData.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeValueAsData.HeaderText = "render Data as";
-            nodeValueAsData.Location = new Point(76, 105);
+            nodeValueAsData.Location = new Point(339, 105);
             nodeValueAsData.Name = "nodeValueAsData";
             nodeValueAsData.ReadOnly = false;
-            nodeValueAsData.Size = new Size(43, 46);
+            nodeValueAsData.Size = new Size(218, 46);
             nodeValueAsData.TabIndex = 5;
             // 
             // attributeGroup
@@ -628,7 +628,7 @@ namespace DataDictionary.Main.Forms.Scripting
             attributeGroup.Dock = DockStyle.Fill;
             attributeGroup.Location = new Point(3, 157);
             attributeGroup.Name = "attributeGroup";
-            attributeGroup.Size = new Size(116, 14);
+            attributeGroup.Size = new Size(554, 316);
             attributeGroup.TabIndex = 6;
             attributeGroup.TabStop = false;
             attributeGroup.Text = "Attributes";
@@ -639,7 +639,7 @@ namespace DataDictionary.Main.Forms.Scripting
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 19);
             attributeData.Name = "attributeData";
-            attributeData.Size = new Size(110, 0);
+            attributeData.Size = new Size(548, 294);
             attributeData.TabIndex = 0;
             // 
             // attributeNameColumn
@@ -675,7 +675,7 @@ namespace DataDictionary.Main.Forms.Scripting
             propertyScopeData.Location = new Point(3, 3);
             propertyScopeData.Name = "propertyScopeData";
             propertyScopeData.ReadOnly = true;
-            propertyScopeData.Size = new Size(67, 46);
+            propertyScopeData.Size = new Size(330, 46);
             propertyScopeData.TabIndex = 7;
             // 
             // dataSelectionTab
@@ -711,7 +711,7 @@ namespace DataDictionary.Main.Forms.Scripting
             // 
             pathsData.AllowUserToAddRows = false;
             pathsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            pathsData.Columns.AddRange(new DataGridViewColumn[] { pathScopeColumn, pathNameColumn });
+            pathsData.Columns.AddRange(new DataGridViewColumn[] { nameSpaceScopeColumn, nameSpaceColumn });
             aliaseLayout.SetColumnSpan(pathsData, 2);
             pathsData.Dock = DockStyle.Fill;
             pathsData.Location = new Point(3, 3);
@@ -719,23 +719,6 @@ namespace DataDictionary.Main.Forms.Scripting
             pathsData.ReadOnly = true;
             pathsData.Size = new Size(843, 370);
             pathsData.TabIndex = 0;
-            // 
-            // pathScopeColumn
-            // 
-            pathScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            pathScopeColumn.DataPropertyName = "PathScope";
-            pathScopeColumn.FillWeight = 50F;
-            pathScopeColumn.HeaderText = "Scope";
-            pathScopeColumn.Name = "pathScopeColumn";
-            pathScopeColumn.ReadOnly = true;
-            // 
-            // pathNameColumn
-            // 
-            pathNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            pathNameColumn.DataPropertyName = "PathName";
-            pathNameColumn.HeaderText = "Path";
-            pathNameColumn.Name = "pathNameColumn";
-            pathNameColumn.ReadOnly = true;
             // 
             // pathNameData
             // 
@@ -893,7 +876,7 @@ namespace DataDictionary.Main.Forms.Scripting
             // 
             transformFilePath.Alignment = ToolStripItemAlignment.Right;
             transformFilePath.Name = "transformFilePath";
-            transformFilePath.Size = new Size(72, 22);
+            transformFilePath.Size = new Size(71, 22);
             transformFilePath.Text = "dummy text";
             // 
             // transformExceptionData
@@ -1005,7 +988,7 @@ namespace DataDictionary.Main.Forms.Scripting
             // 
             documentStatus.Alignment = ToolStripItemAlignment.Right;
             documentStatus.Name = "documentStatus";
-            documentStatus.Size = new Size(72, 22);
+            documentStatus.Size = new Size(71, 22);
             documentStatus.Text = "dummy text";
             // 
             // documentData
@@ -1100,6 +1083,23 @@ namespace DataDictionary.Main.Forms.Scripting
             // bindingAttribute
             // 
             bindingAttribute.AddingNew += BindingAttribute_AddingNew;
+            // 
+            // nameSpaceScopeColumn
+            // 
+            nameSpaceScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            nameSpaceScopeColumn.DataPropertyName = "nameSpaceScope";
+            nameSpaceScopeColumn.FillWeight = 50F;
+            nameSpaceScopeColumn.HeaderText = "Scope";
+            nameSpaceScopeColumn.Name = "nameSpaceScopeColumn";
+            nameSpaceScopeColumn.ReadOnly = true;
+            // 
+            // nameSpaceColumn
+            // 
+            nameSpaceColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            nameSpaceColumn.DataPropertyName = "NameSpace";
+            nameSpaceColumn.HeaderText = "Path";
+            nameSpaceColumn.Name = "nameSpaceColumn";
+            nameSpaceColumn.ReadOnly = true;
             // 
             // ScriptingTemplate
             // 
@@ -1232,7 +1232,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private Button pathSelectCommand;
         private Button pathAddCommand;
         private CheckBox isPathInModelData;
-        private DataGridViewComboBoxColumn pathScopeColumn;
-        private DataGridViewTextBoxColumn pathNameColumn;
+        private DataGridViewComboBoxColumn nameSpaceScopeColumn;
+        private DataGridViewTextBoxColumn nameSpaceColumn;
     }
 }

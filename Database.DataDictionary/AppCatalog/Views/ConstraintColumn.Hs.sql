@@ -106,9 +106,9 @@ GO
 /*
 -- Policy and Indexed Views are not compatible.
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseConstraintColumn]
-    ON [App_DataDictionary].[DatabaseConstraintColumn_AK]([ConstraintColumnId])
+    ON [AppCatalog].[DatabaseConstraintColumn_AK]([ConstraintColumnId])
 GO
 CREATE UNIQUE INDEX [AK_DatabaseConstraintColumn]
-    ON [App_DataDictionary].[DatabaseConstraintColumn_AK]([DatabaseName] ASC, [SchemaName] ASC, [ConstraintName] ASC, [ColumnName] ASC, [CatalogId] ASC)
+    ON [AppCatalog].[DatabaseConstraintColumn_AK]([DatabaseName] ASC, [SchemaName] ASC, [ConstraintName] ASC, [ColumnName] ASC, [CatalogId] ASC)
 GO
 */

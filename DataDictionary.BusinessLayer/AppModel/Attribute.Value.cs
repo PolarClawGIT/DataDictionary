@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
+    public partial class AttributeValue : AttributeItem, IAttributeValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

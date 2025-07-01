@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [AppCatalog].[procSetConstraint]
 		@CatalogId UniqueIdentifier = Null,
 		@ConstraintId UniqueIdentifier = Null,
-		@Data [AppCatalog].[typeConstraint] ReadOnly
+		@Data [AppCatalog].[udttConstraint] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -39,7 +39,7 @@ Begin Try
 		[SchemaId]			UniqueIdentifier Not Null,
 		[TableId]			UniqueIdentifier Not Null,
 		[ConstraintName]	SysName Not Null,
-		[ConstraintType]	[App_DataDictionary].[typeObjectType] Null,
+		[ConstraintType]	[AppGeneral].[uddtObjectType] Null,
 		Primary Key ([ConstraintId]),
 		Unique  ([SchemaId], [ConstraintName]))
 

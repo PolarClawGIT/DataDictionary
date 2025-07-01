@@ -64,7 +64,7 @@ From	[AppModel].[EntityAttribute] D
 			Select	Top 1
 					[AliasId],
 					[AliasNameSpace] As [AttributeName]
-			From	[AppModel].[AliasHS]
+			From	[AppModel].[AliasNameSpaceHS]
 			Where	[AliasId] = D.[AttributeAliasId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FL
