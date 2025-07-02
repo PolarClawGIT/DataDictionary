@@ -72,8 +72,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             dataSource = source;
             ObjectType = source.GetType();
 
+            var x = ObjectType.GetProperties( BindingFlags.Public);
+
             foreach (PropertyInfo item in ObjectType.GetProperties())
             {
+                
                 Settings.Add(item.Name, new RenderSetting()
                 {
                     GetNodeName = () => item.Name,

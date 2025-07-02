@@ -3,20 +3,29 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    /// <summary>
-    /// Interface component for the Model Attribute Definition
-    /// </summary>
+    /// <summary>  
+    /// Interface component for the Model Attribute Definition  
+    /// </summary>  
     public interface IAttributeDefinitionData : IBindingData<AttributeDefinitionValue>
-    { }
+    {
+        /// <summary>  
+        /// Delegate to attempt retrieving a definition based on a key.  
+        /// </summary>  
+        TryGetDefinition TryGetDefinition { get; }
+    }
 
-    class AttributeDefinitionData : AttributeDefinitionCollection<AttributeDefinitionValue>, IAttributeDefinitionData,
+    class AttributeDefinitionData(IDefinitionGetValue definition) : AttributeDefinitionCollection<AttributeDefinitionValue>(), IAttributeDefinitionData,
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        /// <inheritdoc/>
+        public TryGetDefinition TryGetDefinition { get; init; } = definition.TryGetValue;
+
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)

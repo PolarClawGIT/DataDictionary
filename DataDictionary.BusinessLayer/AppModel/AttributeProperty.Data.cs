@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -11,12 +12,20 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface component for the Model Attribute Property
     /// </summary>
     public interface IAttributePropertyData : IBindingData<AttributePropertyValue>
-    { }
+    {
+        /// <summary>
+        /// Delegate to attempt retrieving a property value based on a key.
+        /// </summary>
+        TryGetProperty TryGetProperty { get; }
+    }
 
-    class AttributePropertyData : AttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
+    class AttributePropertyData(IPropertyGetValue property) : AttributePropertyCollection<AttributePropertyValue>(), IAttributePropertyData,
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        /// <inheritdoc/>
+        public TryGetProperty TryGetProperty { get; init; } = property.TryGetValue;
+
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)

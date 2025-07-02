@@ -5,19 +5,25 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
-    /// Interface component for the Property data
+    /// Interface for retrieving property values.
     /// </summary>
-    /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
-    public interface IPropertyData :
-        IBindingData<PropertyValue>,
-        ILoadData, ILoadData<IPropertyIndex>, ISaveData<IPropertyIndex>
+    public interface IPropertyGetValue
     {
+        /// <summary>
+        /// Attempts to retrieve a Property value based on the specified property index.
+        /// </summary>
+        /// <param name="propertyIndex">The index of the property to retrieve.</param>
+        /// <param name="propertyValue">The retrieved property value, or null if not found.</param>
+        /// <returns>True if the property value was found; otherwise, false.</returns>
+        Boolean TryGetValue(IPropertyIndex propertyIndex, [NotNullWhen(true)] out IPropertyValue? propertyValue);
+
         /// <summary>
         /// Gets the Property Value from the Catalog Property
         /// </summary>
@@ -25,6 +31,16 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <returns></returns>
         IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty);
     }
+
+    /// <summary>
+    /// Interface component for the Property data
+    /// </summary>
+    /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
+    public interface IPropertyData :
+        IBindingData<PropertyValue>,
+        ILoadData, ILoadData<IPropertyIndex>, ISaveData<IPropertyIndex>,
+        IPropertyGetValue
+    { }
 
     /// <inheritdoc/>
     class PropertyData : PropertyCollection<PropertyValue>, IPropertyData,
@@ -97,6 +113,27 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
+        public void Remove(IPropertyIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public Boolean TryGetValue(IPropertyIndex propertyIndex, [NotNullWhen(true)] out IPropertyValue? propertyValue)
+        {
+            PropertyIndex key = new PropertyIndex(propertyIndex);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is IPropertyValue value)
+            { propertyValue = value; return true; }
+            else { propertyValue = null; return false; }
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
         public IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty)
         {
             PropertyValue? result = null;
@@ -107,17 +144,5 @@ namespace DataDictionary.BusinessLayer.AppModel
 
             return result;
         }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public void Remove(IPropertyIndex dataKey)
-        { base.Remove(dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public void Remove(IModelIndex dataKey)
-        { Clear(); }
-
-
     }
 }
