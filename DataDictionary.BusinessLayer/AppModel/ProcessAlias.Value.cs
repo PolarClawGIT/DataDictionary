@@ -42,7 +42,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         internal ProcessAliasValue(IProcessKey key) : base(key) { }
 
         /// <inheritdoc cref="ProcessAliasItem.AliasPath"/>
-        public new PathIndex AliasPath
+        public PathIndex AliasName
         {
             get { return new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
             set { base.AliasPath = value.MemberFullPath; }

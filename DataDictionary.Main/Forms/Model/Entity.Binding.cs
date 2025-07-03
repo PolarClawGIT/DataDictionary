@@ -322,11 +322,11 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     foreach (INamedScopeValue namedScope in namedScopes)
                     {
-                        if (!Aliases.Any(w => namedScope.Path.Equals(w.AliasPath)))
+                        if (!Aliases.Any(w => namedScope.Path.Equals(w.AliasName)))
                         {
                             Aliases.Add(new EntityAliasValue(entity)
                             {
-                                AliasPath = namedScope.Path,
+                                AliasName = namedScope.Path,
                                 AliasScope = namedScope.Scope
                             });
                         }
