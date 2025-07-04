@@ -176,7 +176,7 @@ namespace DataDictionary.Main.Forms.Model
         private void XElementRenderCommand_Click(object sender, EventArgs e)
         {
             if (formBinding.TryGetValue(out AttributeValue? value))
-            { xElementData.Text = formBinding.GetXElement(value).ToString(); }
+            { xElementData.Text = formBinding.GetXElement().ToString(); }
         }
     }
 }

@@ -11,6 +11,11 @@ public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
     none,
 
     /// <summary>
+    /// Render as Element without a Value
+    /// </summary>
+    Element,
+
+    /// <summary>
     /// Render value as an Element Text
     /// </summary>
     ElementText,
