@@ -3,14 +3,16 @@
 	Set NoCount On;
 
 	-- Add current user
-	Declare @PrincipalId uniqueidentifier = newId()
+	Declare @PrincipalId uniqueidentifier = NewID() -- '75668946-297C-48AA-BFDC-040CD65F91BD'
+	Declare @PrincipalLogin SysName = ORIGINAL_LOGIN() -- 'DOLPHINSTAR\Polar'
+
 	Select	@PrincipalId = [PrincipalId]
 	From	[AppSecurity].[Principal]
-	Where	[PrincipalLogin] = ORIGINAL_LOGIN()
+	Where	[PrincipalLogin] = @PrincipalLogin
 
-	Declare @Principal [AppSecurity].[typePrincipal]
+	Declare @Principal [AppSecurity].[udttPrincipal]
 	Insert Into @Principal ([PrincipalId], [PrincipalLogin])
-	Select	@PrincipalId, ORIGINAL_LOGIN()
+	Select	@PrincipalId, @PrincipalLogin
 
 	Exec [AppSecurity].[procSetPrincipal] @PrincipalId = @PrincipalId, @Data = @Principal
 
@@ -18,7 +20,7 @@
 	From	[AppSecurity].[Principal]
 
 	-- Fixed Roles
-	Declare @Roles [AppSecurity].[typeRole]
+	Declare @Roles [AppSecurity].[udttRole]
 	Insert Into @Roles (
 		[RoleId],
 		[RoleName],
@@ -52,7 +54,7 @@
 	From	[AppSecurity].[Role]
 
 	-- Make current user an Admin
-	Declare @Membership [AppSecurity].[typeRoleMembership]
+	Declare @Membership [AppSecurity].[udttRoleMembership]
 	Insert Into @Membership ([RoleId], [PrincipalId])
 	Select	[RoleId],
 			[PrincipalId]
