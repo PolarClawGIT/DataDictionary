@@ -114,11 +114,11 @@ namespace DataDictionary.BusinessLayer.AppModel
 
         /// <inheritdoc/>
         public IPropertyData Properties { get { return propertyValues; } }
-        private readonly PropertyData propertyValues = new PropertyData();
+        private readonly PropertyData propertyValues;
 
         /// <inheritdoc/>
         public IDefinitionData Definitions { get { return definitionValues; } }
-        private readonly DefinitionData definitionValues = new DefinitionData();
+        private readonly DefinitionData definitionValues;
 
         /// <inheritdoc/>
         public Boolean RaiseListChangedEvents
@@ -144,8 +144,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         public Model() : base()
         {
             modelValues = new ModelData();
+            propertyValues = new PropertyData();
+            definitionValues = new DefinitionData();
             subjectValues = new SubjectAreaData();
-            attributeValues = new Attribute();
+            attributeValues = new Attribute(propertyValues, definitionValues);
             entityValues = new Entity();
             processValues = new Process();
         }

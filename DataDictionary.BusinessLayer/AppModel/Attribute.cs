@@ -2,6 +2,7 @@
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -62,11 +63,13 @@ namespace DataDictionary.BusinessLayer.AppModel
         IAttributeValue Import(AppCatalog.TableColumnAttribute source);
 
         /// <summary>
-        /// Returns an empty IAttribute.
+        /// Creates an empty instance of IAttribute with specified property and definition getters.
         /// </summary>
-        /// <returns></returns>
-        public static IAttribute Create()
-        { return new Attribute(); }
+        /// <param name="propertyGet">The property getter delegate.</param>
+        /// <param name="definitionGet">The definition getter delegate.</param>
+        /// <returns>An instance of IAttribute.</returns>
+        public static IAttribute Create(IPropertyGetValue propertyGet, IDefinitionGetValue definitionGet)
+        { return new Attribute(propertyGet, definitionGet); }
     }
 
     class Attribute : IAttribute, IDataTableFile
@@ -112,12 +115,12 @@ namespace DataDictionary.BusinessLayer.AppModel
             }
         }
 
-        public Attribute() : base()
+        public Attribute(IPropertyGetValue propertyGet, IDefinitionGetValue definitionGet) : base()
         {
             attributeValues = new AttributeData();
             aliasValues = new AttributeAliasData();
-            propertyValues = new AttributePropertyData();
-            definitionValues = new AttributeDefinitionData();
+            propertyValues = new AttributePropertyData(propertyGet);
+            definitionValues = new AttributeDefinitionData(definitionGet);
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 

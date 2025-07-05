@@ -1,11 +1,14 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -201,7 +204,7 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else
                 {
-                    attributeData = IAttribute.Create();
+                    attributeData = IAttribute.Create(BusinessData.Model.Properties, BusinessData.Model.Definitions);
                     work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
                 }
 
@@ -274,7 +277,171 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
+            [Obsolete]
+            public XElement GetXElement_V1(AttributeValue value)
+            {
+                //TODO: POC code for building XML, Repeat for Entity and Process. Move to Business Layer.
+                XElementBuilder_V1 builder = new XElementBuilder_V1(value);
 
+                // Don't render these elements
+                builder.Settings[nameof(value.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                builder.Settings[nameof(value.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                builder.Settings[nameof(value.Scope)].NodeRender = TemplateNodeValueAsType.none;
+
+                XElement results = builder.Build();
+
+                // Add the Properties
+                foreach (AttributePropertyValue item in attributeData.Properties)
+                {
+                    XElementBuilder_V1 properties = new XElementBuilder_V1(item);
+
+                    // Add the Property Title
+                    if (attributeData.Properties.TryGetProperty(item, out IPropertyValue? property))
+                    {
+                        properties.Settings.Add(
+                            nameof(property.PropertyTitle),
+                            new XElementBuilder_V1.RenderSetting(
+                                nameof(property.PropertyTitle),
+                                property.PropertyTitle,
+                                TemplateNodeValueAsType.ElementText));
+                    }
+
+                    // Don't render these elements
+                    properties.Settings[nameof(item.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(item.PropertyId)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(item.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                    properties.Settings[nameof(item.Scope)].NodeRender = TemplateNodeValueAsType.none;
+
+                    results.Add(properties.Build());
+                }
+
+                // Add the Definitions
+                foreach (AttributeDefinitionValue item in attributeData.Definitions)
+                {
+                    XElementBuilder_V1 definitions = new XElementBuilder_V1(item);
+
+                    // Add the Definition Title
+                    if (attributeData.Definitions.TryGetDefinition(item, out IDefinitionValue? definition))
+                    {
+                        definitions.Settings.Add(
+                            nameof(definition.DefinitionTitle),
+                            new XElementBuilder_V1.RenderSetting(
+                                nameof(definition.DefinitionTitle),
+                                definition.DefinitionTitle,
+                                TemplateNodeValueAsType.ElementText));
+                    }
+
+                    // Don't render these elements
+                    definitions.Settings[nameof(item.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                    definitions.Settings[nameof(item.DefinitionId)].NodeRender = TemplateNodeValueAsType.none;
+                    definitions.Settings[nameof(item.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                    definitions.Settings[nameof(item.Scope)].NodeRender = TemplateNodeValueAsType.none;
+
+                    // Render the DefinitionText as CData rather then plain text.
+                    definitions.Settings[nameof(item.DefinitionText)].NodeRender = TemplateNodeValueAsType.ElementCData;
+
+                    results.Add(definitions.Build());
+                }
+
+                foreach (AttributeAliasValue item in attributeData.Aliases)
+                {
+                    XElementBuilder_V1 alaises = new XElementBuilder_V1(item);
+
+                    alaises.Settings[nameof(item.AttributeId)].NodeRender = TemplateNodeValueAsType.none;
+                    alaises.Settings[nameof(item.AliasParts)].NodeRender = TemplateNodeValueAsType.none;
+                    alaises.Settings[nameof(item.AliasPath)].NodeRender = TemplateNodeValueAsType.none;
+                    alaises.Settings[nameof(item.Temporal)].NodeRender = TemplateNodeValueAsType.none;
+                    alaises.Settings[nameof(item.Scope)].NodeRender = TemplateNodeValueAsType.none;
+
+                    results.Add(alaises.Build());
+                }
+
+                return results;
+
+
+            }
+
+            public XElement GetXElement()
+            {
+                AttributeValue value = attributeData.Values.First();
+                XElementBuilder builder = new XElementBuilder(value.Scope);
+                builder.Children.AddRange(XElementBuilder.Create(value));
+
+                builder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
+                builder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
+                builder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
+
+                builder.Children.AddRange(
+                       attributeData.Properties.SelectMany(BuildProperty).
+                       Union(attributeData.Definitions.SelectMany(BuildDefinition)).
+                       Union(attributeData.Aliases.SelectMany(BuildAlias)));
+
+                return builder.Build();
+
+
+                IEnumerable<XElementBuilder> BuildProperty(AttributePropertyValue value)
+                {
+                    List<XElementBuilder> result = new List<XElementBuilder>();
+                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
+
+                    if (attributeData.Properties.TryGetProperty(value, out IPropertyValue? property))
+                    {
+                        childBuilder.Children.Add(
+                            nameof(property.PropertyTitle),
+                            property.PropertyTitle,
+                            TemplateNodeValueAsType.ElementText);
+                    }
+
+                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+                    childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.PropertyId)).RenderAs = TemplateNodeValueAsType.none;
+
+                    result.AddRange(childBuilder);
+                    return result;
+                }
+
+                IEnumerable<XElementBuilder> BuildDefinition(AttributeDefinitionValue value)
+                {
+                    List<XElementBuilder> result = new List<XElementBuilder>();
+                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
+
+                    if (attributeData.Definitions.TryGetDefinition(value, out IDefinitionValue? definition))
+                    {
+                        childBuilder.Children.Add(
+                            nameof(definition.DefinitionTitle),
+                            definition.DefinitionTitle,
+                            TemplateNodeValueAsType.ElementText);
+                    }
+
+                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+                    
+                    childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.DefinitionId)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.DefinitionText)).RenderAs = TemplateNodeValueAsType.ElementCData;
+
+                    result.AddRange(childBuilder);
+                    return result;
+                }
+
+                IEnumerable<XElementBuilder> BuildAlias(AttributeAliasValue value)
+                {
+                    List<XElementBuilder> result = new List<XElementBuilder>();
+                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
+                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+
+                    childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
+                    childBuilder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
+
+                    result.AddRange(childBuilder);
+                    return result;
+                }
+
+            }
         }
     }
 }

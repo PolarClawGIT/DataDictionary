@@ -1,161 +1,343 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
-    /// Builder class (see Builder pattern) that creates an XElement out of a object data source.
+    /// Base class for building XML nodes. Provides functionality to define node names, values, and rendering behavior.
     /// </summary>
-    /// <remarks>POC: Revised way of building the XML used by the scripting engine.</remarks>
-    public class XElementBuilder
+    public class XmlBuilderBase
     {
         /// <summary>
-        /// Sets the Rendering settings for each of the properties of the data source.
+        /// Gets or sets a delegate that returns the text used as the XName for the XAttribute/XElement.
         /// </summary>
-        public class RenderSetting
+        public Func<String> GetNodeName { get; set; } = () => String.Empty;
+
+        /// <summary>
+        /// Gets or sets a delegate that retrieves the value of a XAttribute/XElement node as a string.
+        /// </summary>
+        /// <remarks>The delegate can be used to dynamically fetch the value of a node. Ensure
+        /// the function handles cases where the node value might be null.</remarks>
+        public Func<String?> GetNodeValue { get; set; } = () => null;
+
+        /// <summary>
+        /// Gets or sets the rendering behavior for the node.
+        /// </summary>
+        public TemplateNodeValueAsType RenderAs { get; set; } = TemplateNodeValueAsType.none;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            ScopeType nodeName,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            : base()
         {
-            //TODO: This is how I will inject the setting from the Template.
-
-            /// <summary>
-            /// Gets or sets a delegate that returns the text used as the XName for the XAttribute/XElement.
-            /// </summary>
-            public Func<String> GetNodeName { get; set; } = () => String.Empty;
-
-            /// <summary>
-            /// Gets or sets a delegate that retrieves the value of a XAttribute/XElement node as a string.
-            /// </summary>
-            /// <remarks>The delegate can be used to dynamically fetch the value of a node.  Ensure
-            /// the function handles cases where the node value might be null.</remarks>
-            public Func<String?> GetNodeValue { get; set; } = () => null;
-
-            /// <summary>
-            /// Gets or sets the rendering behavior for the node.
-            /// </summary>
-            public TemplateNodeValueAsType NodeRender { get; set; }
-
-            /// <summary>
-            /// Gets or sets the child object (XElement or XAttribute) to be added to the result.
-            /// </summary>
-            public XObject? ChildObject { get; set; }
-        }
-
-        // refrence to the Data Source of the item.
-        Object dataSource;
-
-        /// <summary>
-        /// Gets the Type of the Object associated with the data source.
-        /// </summary>
-        public Type ObjectType { get; }
-
-        /// <summary>
-        /// List of Properties of the data source and the rendering settings.
-        /// </summary>
-        public IDictionary<String, RenderSetting> Settings { get; } = new Dictionary<String, RenderSetting>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XElementBuilder"/> class,
-        /// configuring property rendering settings for the specified data source.
-        /// </summary>
-        /// <remarks>The constructor inspects the properties of the provided <paramref name="source"/>
-        /// object and initializes rendering settings for each property.
-        /// Each property is assigned a default rendering configuration, including its node name and rendering type.</remarks>
-        /// <param name="source">The object to be used as the data source. This object provides the properties that will be rendered as XML elements.</param>
-        public XElementBuilder(Object source)
-        {
-            dataSource = source;
-            ObjectType = source.GetType();
-
-            foreach (PropertyInfo item in ObjectType.GetProperties())
-            {
-                Settings.Add(item.Name, new RenderSetting()
-                {
-                    GetNodeName = () => item.Name,
-                    GetNodeValue = () => { if (item.GetValue(source) is Object value) { return value.ToString(); } else { return null; } },
-                    NodeRender = TemplateNodeValueAsType.ElementText
-                });
-            }
+            GetNodeName = () => ScopeEnumeration.Cast(nodeName).Name;
+            RenderAs = renderAs;
         }
 
         /// <summary>
-        /// Generates an <see cref="XElement"/> representation of the current object and its properties.
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name and rendering behavior.
         /// </summary>
-        /// <remarks>
-        /// This method creates an XML element based on the object's type and scope, and includes
-        /// child elements for each property according to the specified rendering options.
-        /// The resulting XML structure reflects the object's data and configuration.
-        /// </remarks>
-        /// <returns>
-        /// An <see cref="XElement"/> representing the object and its properties.
-        /// The element may contain nested child elements based on the rendering options provided.
-        /// </returns>
-        public XElement Build()
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            String nodeName,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            : base()
         {
-            XElement result;
+            GetNodeName = () => nodeName;
+            RenderAs = TemplateNodeValueAsType.Element;
+        }
 
-            if (dataSource is IScopeType dataValue)
-            { result = new XElement(ScopeEnumeration.Cast(dataValue.Scope).Name); }
-            else if (ObjectType.FullName is String)
-            { result = new XElement(ObjectType.FullName); }
-            else { result = new XElement(ObjectType.Name); }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            ScopeType nodeName,
+            String? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : this(nodeName, renderAs)
+        { GetNodeValue = () => nodeValue; }
 
-            foreach (var item in Settings.Values)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            ScopeType nodeName,
+            Object? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : this(nodeName, renderAs)
+        { GetNodeValue = GetValue((dynamic?)nodeValue); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            String nodeName,
+            String? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : this(nodeName, renderAs)
+        { GetNodeValue = () => nodeValue; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmlBuilderBase"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XmlBuilderBase(
+            String nodeName,
+            Object? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : this(nodeName, renderAs)
+        { GetNodeValue = GetValue((dynamic?)nodeValue); }
+
+        /// <summary>
+        /// Retrieves the value of the node as a string.
+        /// </summary>
+        /// <param name="value">The value to retrieve.</param>
+        /// <returns>A delegate that returns the value as a string.</returns>
+        Func<String?> GetValue(Object value)
+        {
+            if (value is null) { return () => null; }
+            return value.ToString;
+        }
+
+        /// <summary>
+        /// Retrieves the value of the node as a string.
+        /// </summary>
+        /// <param name="value">The value to retrieve.</param>
+        /// <returns>A delegate that returns the value as a string.</returns>
+        Func<String?> GetValue(ScopeType value)
+        { return () => ScopeEnumeration.Cast(value).Name; }
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return GetNodeName(); }
+    }
+
+
+    /// <summary>
+    /// Represents a builder for creating XML elements (<see cref="XElement"/>).
+    /// </summary>
+    /// <remarks>
+    /// This class extends <see cref="XmlBuilderBase"/> and provides functionality to manage child elements
+    /// and build a complete <see cref="XElement"/> structure.
+    /// </remarks>
+    public class XElementBuilder : XmlBuilderBase
+    {
+        /// <summary>
+        /// Gets the list of child <see cref="XElementBuilder"/> objects.
+        /// </summary>
+        public List<XElementBuilder> Children { get; } = new();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XElementBuilder"/> class with a specified node name.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        public XElementBuilder(
+            ScopeType nodeName)
+            : base(nodeName)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XElementBuilder"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XElementBuilder(
+            String nodeName,
+            String? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : base(nodeName, nodeValue, renderAs)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XElementBuilder"/> class with a specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="nodeName">The name of the node.</param>
+        /// <param name="nodeValue">The value of the node.</param>
+        /// <param name="renderAs">The rendering behavior for the node.</param>
+        public XElementBuilder(
+            String nodeName,
+            Object? nodeValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+            : base(nodeName, nodeValue, renderAs)
+        { }
+
+        /// <summary>
+        /// Creates a collection of <see cref="XElementBuilder"/> objects from the properties of the specified object.
+        /// </summary>
+        /// <param name="value">The object whose properties will be used to create the builders.</param>
+        /// <returns>A collection of <see cref="XElementBuilder"/> objects.</returns>
+        public static IEnumerable<XElementBuilder> Create(Object value)
+        {
+            List<XElementBuilder> result = new List<XElementBuilder>();
+
+            foreach (PropertyInfo property in value.GetType().GetProperties().ToList())
             {
-                if(BuildXObject(item) is XObject value)
-                {
-                    if (item.ChildObject is XObject child
-                        && value is XElement parent)
-                    { parent.Add(child); }
-
-                    result.Add(value);
-                }
+                if (property.CanRead && property.GetIndexParameters().Length == 0)
+                { result.Add(new XElementBuilder(property.Name, property.GetValue(value))); }
             }
 
             return result;
         }
 
-        XObject? BuildXObject(RenderSetting setting)
+        /// <summary>
+        /// Builds the <see cref="XElement"/> represented by this builder and its children.
+        /// </summary>
+        /// <returns>The constructed <see cref="XElement"/>.</returns>
+        public XElement Build()
+        {
+            XElement result;
+            XObject? value = BuildXObject(this);
+
+            if (value is XElement elementValue)
+            { result = elementValue; }
+            else if (value is XObject objectValue)
+            {
+                result = new XElement(GetNodeName());
+                result.Add(objectValue);
+            }
+            else { result = new XElement(GetNodeName()); }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Builds an <see cref="XObject"/> (either an <see cref="XElement"/> or <see cref="XAttribute"/>) based on the current builder's settings.
+        /// </summary>
+        /// <param name="setting">The builder settings to use for constructing the object.</param>
+        /// <returns>The constructed <see cref="XObject"/>, or <c>null</c> if the object cannot be constructed.</returns>
+        private XObject? BuildXObject(XElementBuilder setting)
         {
             String name = setting.GetNodeName();
             String? value = setting.GetNodeValue();
-            if (String.IsNullOrWhiteSpace(value))
-            { return null; }
+            XElement element;
 
-            switch (setting.NodeRender)
+            if (String.IsNullOrWhiteSpace(name))
+            { setting.RenderAs = TemplateNodeValueAsType.none; }
+
+            switch (setting.RenderAs)
             {
                 case TemplateNodeValueAsType.none:
-                    return null;
+                    element = new XElement("not.rendered"); break;
+                case TemplateNodeValueAsType.Element:
+                    element = new XElement(name); break;
                 case TemplateNodeValueAsType.ElementText:
-                    return new XElement(name, value);
+                    if (String.IsNullOrWhiteSpace(value)) { return null; }
+                    element = new XElement(name, value); break;
                 case TemplateNodeValueAsType.ElementCData:
-                    return new XElement(name, new XCData(value));
+                    if (String.IsNullOrWhiteSpace(value)) { return null; }
+                    element = new XElement(name, new XCData(value)); break;
                 case TemplateNodeValueAsType.ElementXML:
                     try
                     {
-                        if (String.IsNullOrWhiteSpace(value))
-                        { return new XElement(setting.GetNodeName(), XElement.Parse(value)); }
-                        else { return null; }
+                        if (String.IsNullOrWhiteSpace(value)) { return null; }
+                        element = new XElement(setting.GetNodeName(), XElement.Parse(value)); break;
                     }
                     catch (Exception fragementEx)
                     {
                         fragementEx.Data.Add(nameof(setting.GetNodeName), setting.GetNodeName());
                         fragementEx.Data.Add(nameof(setting.GetNodeValue), value);
-                        fragementEx.Data.Add(nameof(setting.NodeRender), setting.NodeRender.ToString());
+                        fragementEx.Data.Add(nameof(setting.RenderAs), setting.RenderAs.ToString());
                         throw;
                     }
                 case TemplateNodeValueAsType.Attribute:
+                    if (String.IsNullOrWhiteSpace(value)) { return null; }
                     return new XAttribute(name, value);
                 default:
                     Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(TemplateNodeValueAsType)));
                     ex.Data.Add(nameof(setting.GetNodeName), setting.GetNodeName());
-                    ex.Data.Add(nameof(setting.NodeRender), setting.NodeRender.ToString());
+                    ex.Data.Add(nameof(setting.RenderAs), setting.RenderAs.ToString());
                     throw ex;
+            }
+
+            // Add the Children, if any
+            foreach (XElementBuilder item in setting.Children)
+            {
+                var values = BuildXObject(item);
+                if (values is XElement elementValue && item.RenderAs is TemplateNodeValueAsType.none)
+                { element.Add(elementValue.Nodes()); }
+                else { element.Add(values); }
+            }
+
+            return element;
+        }
+    }
+
+    /// <summary>
+    /// Provides extension methods for working with a list of <see cref="XElementBuilder"/> objects.
+    /// </summary>
+    public static class XElementExtension
+    {
+        /// <summary>
+        /// Adds a new <see cref="XElementBuilder"/> to the list with the specified node name, value, and rendering behavior.
+        /// </summary>
+        /// <param name="values">The list of <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="nodeName">The name of the node to add.</param>
+        /// <param name="nodeValue">The value of the node to add. Defaults to <c>null</c>.</param>
+        /// <param name="renderAs">The rendering behavior for the node. Defaults to <see cref="TemplateNodeValueAsType.ElementText"/>.</param>
+        public static void Add(this IList<XElementBuilder> values, String nodeName, Object? nodeValue = null, TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
+        { values.Add(new XElementBuilder(nodeName, nodeValue, renderAs)); }
+
+        /// <summary>
+        /// Removes all <see cref="XElementBuilder"/> objects with the specified node name from the list.
+        /// </summary>
+        /// <param name="values">The list of <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="nodeName">The name of the node to remove.</param>
+        public static void Remove(this IList<XElementBuilder> values, String nodeName)
+        {
+            while (values.FirstOrDefault(w => nodeName.Equals(w.GetNodeName())) is XElementBuilder child)
+            { values.Remove(child); }
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a <see cref="XmlBuilderBase"/> object with the specified node name from the list.
+        /// </summary>
+        /// <param name="values">The list of <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="nodeName">The name of the node to retrieve.</param>
+        /// <param name="result">When this method returns, contains the <see cref="XmlBuilderBase"/> object if found; otherwise, <c>null</c>.</param>
+        /// <returns><c>true</c> if a node with the specified name was found; otherwise, <c>false</c>.</returns>
+        public static Boolean TryGet(this IList<XElementBuilder> values, String nodeName, [NotNullWhen(true)] out XmlBuilderBase? result)
+        {
+            if (values.FirstOrDefault(w => nodeName.Equals(w.GetNodeName())) is XmlBuilderBase value)
+            { result = value; return true; }
+            else { result = null; return false; }
+        }
+
+        /// <summary>
+        /// Retrieves a <see cref="XmlBuilderBase"/> object with the specified node name from the list.
+        /// </summary>
+        /// <param name="values">The list of <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="nodeName">The name of the node to retrieve.</param>
+        /// <returns>The <see cref="XmlBuilderBase"/> object with the specified name.</returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown if no node with the specified name is found.</exception>
+        public static XmlBuilderBase Get(this IList<XElementBuilder> values, String nodeName)
+        {
+            if (values.FirstOrDefault(w => nodeName.Equals(w.GetNodeName())) is XmlBuilderBase value)
+            { return value; }
+            else
+            {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(nodeName), nodeName);
+                throw ex;
             }
         }
     }

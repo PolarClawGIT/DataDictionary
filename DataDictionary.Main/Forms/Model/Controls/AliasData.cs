@@ -72,8 +72,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
             {
                 if (dataBinding.Current is IAliasSubType current)
                 {
-                    aliasNameData.Text = current.AliasPath.MemberFullPath;
-                    Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasPath).Count > 0;
+                    aliasNameData.Text = current.AliasName.MemberFullPath;
+                    Boolean inModel = BusinessData.NamedScope.PathKeys(current.AliasName).Count > 0;
                     isAliasInModelData.Checked = inModel;
                     aliasNameData.ReadOnly = inModel;
                     aliasScopeData.ReadOnly = inModel;
@@ -101,7 +101,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
                 && dataBinding.Position >= 0
                 && dataBinding.Current is IAliasSubType value)
             {
-                value.AliasPath = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
+                value.AliasName = new PathIndex(PathIndex.Parse(aliasNameData.Text).ToArray());
             }
         }
 
@@ -113,20 +113,20 @@ namespace DataDictionary.Main.Forms.Model.Controls
                 using (SelectionDialog dialog = new SelectionDialog(ParentForm))
                 {
                     dialog.FilterScopes.AddRange(filterScope);
-                    dialog.BuildData(Aliases.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasPath)));
+                    dialog.BuildData(Aliases.SelectMany(s => BusinessData.NamedScope.PathKeys(s.AliasName)));
 
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
                         {
-                            if (!Aliases.Any(w => w.AliasScope.Equals(item.Scope) && w.AliasPath.Equals(item.Path))
+                            if (!Aliases.Any(w => w.AliasScope.Equals(item.Scope) && w.AliasName.Equals(item.Path))
                                 && dataBinding.AddNew() is IAliasSubType value)
                             {
                                 value.AliasScope = item.Scope;
-                                value.AliasPath = item.Path;
+                                value.AliasName = item.Path;
 
                                 dataBinding.Position = Aliases.ToList().IndexOf(value);
-                                aliasNameData.Text = value.AliasPath.MemberFullPath;
+                                aliasNameData.Text = value.AliasName.MemberFullPath;
                             }
                         }
                     }
