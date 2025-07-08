@@ -361,11 +361,11 @@ namespace DataDictionary.Main.Forms.Model
 
             }
 
-            public XElement GetXElement()
+            public XElement GetXElement_V2()
             {
                 AttributeValue value = attributeData.Values.First();
-                XElementBuilder builder = new XElementBuilder(value.Scope);
-                builder.Children.AddRange(XElementBuilder.Create(value));
+                XElementBuilder_V2 builder = new XElementBuilder_V2(value.Scope);
+                builder.Children.AddRange(XElementBuilder_V2.Create(value));
 
                 builder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
                 builder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
@@ -379,10 +379,10 @@ namespace DataDictionary.Main.Forms.Model
                 return builder.Build();
 
 
-                IEnumerable<XElementBuilder> BuildProperty(AttributePropertyValue value)
+                IEnumerable<XElementBuilder_V2> BuildProperty(AttributePropertyValue value)
                 {
-                    List<XElementBuilder> result = new List<XElementBuilder>();
-                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
+                    List<XElementBuilder_V2> result = new List<XElementBuilder_V2>();
+                    XElementBuilder_V2 childBuilder = new XElementBuilder_V2(value.Scope);
 
                     if (attributeData.Properties.TryGetProperty(value, out IPropertyValue? property))
                     {
@@ -392,7 +392,7 @@ namespace DataDictionary.Main.Forms.Model
                             TemplateNodeValueAsType.ElementText);
                     }
 
-                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+                    childBuilder.Children.AddRange(XElementBuilder_V2.Create(value));
                     childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
@@ -402,10 +402,10 @@ namespace DataDictionary.Main.Forms.Model
                     return result;
                 }
 
-                IEnumerable<XElementBuilder> BuildDefinition(AttributeDefinitionValue value)
+                IEnumerable<XElementBuilder_V2> BuildDefinition(AttributeDefinitionValue value)
                 {
-                    List<XElementBuilder> result = new List<XElementBuilder>();
-                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
+                    List<XElementBuilder_V2> result = new List<XElementBuilder_V2>();
+                    XElementBuilder_V2 childBuilder = new XElementBuilder_V2(value.Scope);
 
                     if (attributeData.Definitions.TryGetDefinition(value, out IDefinitionValue? definition))
                     {
@@ -415,7 +415,7 @@ namespace DataDictionary.Main.Forms.Model
                             TemplateNodeValueAsType.ElementText);
                     }
 
-                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+                    childBuilder.Children.AddRange(XElementBuilder_V2.Create(value));
                     
                     childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
@@ -427,11 +427,11 @@ namespace DataDictionary.Main.Forms.Model
                     return result;
                 }
 
-                IEnumerable<XElementBuilder> BuildAlias(AttributeAliasValue value)
+                IEnumerable<XElementBuilder_V2> BuildAlias(AttributeAliasValue value)
                 {
-                    List<XElementBuilder> result = new List<XElementBuilder>();
-                    XElementBuilder childBuilder = new XElementBuilder(value.Scope);
-                    childBuilder.Children.AddRange(XElementBuilder.Create(value));
+                    List<XElementBuilder_V2> result = new List<XElementBuilder_V2>();
+                    XElementBuilder_V2 childBuilder = new XElementBuilder_V2(value.Scope);
+                    childBuilder.Children.AddRange(XElementBuilder_V2.Create(value));
 
                     childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
@@ -441,6 +441,15 @@ namespace DataDictionary.Main.Forms.Model
                     return result;
                 }
 
+            }
+
+            public XElement GetXElement()
+            {
+                AttributeValue value = attributeData.Values.First();
+                XElementBuilder builder = new XElementBuilder(value.Scope);
+                builder.Children.AddRange(XElementBuilder.Create(value.GetType()));
+
+                return builder.Build(value);
             }
         }
     }
