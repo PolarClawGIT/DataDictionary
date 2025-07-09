@@ -108,7 +108,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 {
                     GetAlias = BusinessData.CatalogModel.DbTables.GetAlias,
                     GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
-                    GetModelProperty = BusinessData.Model.Properties.GetProperty,
+                    GetModelProperty = BusinessData.Model.Properties.GetValue,
                     GetColumns = BusinessData.CatalogModel.DbTables.GetColumns
                 };
 

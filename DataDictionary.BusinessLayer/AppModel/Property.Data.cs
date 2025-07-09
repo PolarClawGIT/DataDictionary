@@ -25,11 +25,28 @@ namespace DataDictionary.BusinessLayer.AppModel
         Boolean TryGetValue(IPropertyIndex propertyIndex, [NotNullWhen(true)] out IPropertyValue? propertyValue);
 
         /// <summary>
-        /// Gets the Property Value from the Catalog Property
+        /// Attempts to retrieve a Property value based on the specified property index.
+        /// </summary>
+        /// <param name="propertyIndex"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException">If the index cannot be found.</exception>
+        IPropertyValue GetValue(IPropertyIndex propertyIndex);
+
+        /// <summary>
+        /// Attempts to retrieve a Property value based on the specified Catalog Property.
+        /// </summary>
+        /// <param name="catalogProperty"></param>
+        /// <param name="propertyValue"></param>
+        /// <returns></returns>
+        Boolean TryGetValue(AppCatalog.IPropertyValue catalogProperty, [NotNullWhen(true)] out IPropertyValue? propertyValue);
+
+        /// <summary>
+        /// Attempts to retrieve a Property value based on the specified Catalog Property.
         /// </summary>
         /// <param name="catalogProperty"></param>
         /// <returns></returns>
-        IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty);
+        /// <exception cref="IndexOutOfRangeException">If the index cannot be found.</exception>
+        IPropertyValue GetValue(AppCatalog.IPropertyValue catalogProperty);
     }
 
     /// <summary>
@@ -122,7 +139,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         { Clear(); }
 
         /// <inheritdoc/>
-        /// <remarks>Property</remarks>
         public Boolean TryGetValue(IPropertyIndex propertyIndex, [NotNullWhen(true)] out IPropertyValue? propertyValue)
         {
             PropertyIndex key = new PropertyIndex(propertyIndex);
@@ -133,16 +149,42 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        public IPropertyValue? GetProperty(AppCatalog.IPropertyValue catalogProperty)
+        public IPropertyValue GetValue(IPropertyIndex propertyIndex)
         {
-            PropertyValue? result = null;
-
-            result = this.FirstOrDefault(w =>
-                w.PropertyType is DomainPropertyType.MS_ExtendedProperty
-                && w.ExtendedPropertyName.Equals(catalogProperty.PropertyName, KeyExtension.CompareString));
-
-            return result;
+            if (TryGetValue(propertyIndex, out IPropertyValue? propertyValue))
+            { return propertyValue; }
+            else
+            {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(propertyIndex), propertyIndex);
+                throw ex;
+            }
         }
+
+        /// <inheritdoc/>
+        public Boolean TryGetValue(AppCatalog.IPropertyValue catalogProperty, [NotNullWhen(true)] out IPropertyValue? propertyValue)
+        {
+            if (this.FirstOrDefault(w =>
+                w.PropertyType is DomainPropertyType.MS_ExtendedProperty
+                && w.ExtendedPropertyName.Equals(catalogProperty.PropertyName, KeyExtension.CompareString)) is IPropertyValue result)
+            { propertyValue = result; return true; }
+            else { propertyValue = null; return false; }
+        }
+
+
+        /// <inheritdoc/>
+        public IPropertyValue GetValue(AppCatalog.IPropertyValue catalogProperty)
+        {
+            if (TryGetValue(catalogProperty, out IPropertyValue? propertyValue))
+            { return propertyValue; }
+            else
+            {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(catalogProperty), catalogProperty);
+                throw ex;
+            }
+        }
+
+        
     }
 }

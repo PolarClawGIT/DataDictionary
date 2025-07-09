@@ -110,7 +110,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 {
                     GetAlias = BusinessData.CatalogModel.DbTableColumns.GetAlias,
                     GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
-                    GetModelProperty = BusinessData.Model.Properties.GetProperty
+                    GetModelProperty = BusinessData.Model.Properties.GetValue
                 };
 
                 IAttributeValue attribute = BusinessData.Model.Attributes.Import(columnAttribute);
