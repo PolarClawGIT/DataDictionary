@@ -1,5 +1,7 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,56 +11,121 @@ using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
-    public class XElementBuilder : XElementNode
+    public class XElementBuilder : IList<XElementNode>
     {
-        public List<XElementBuilder> Children { get; } = new List<XElementBuilder>();
+        public String RootNodeName { get; init; }
 
-        public XElementBuilder(ScopeType scope) : base(scope) 
-        { }
+        List<XElementNode> Children { get; } = new List<XElementNode>();
 
-        public XElementBuilder(PropertyInfo property) : base(property)
-        { }
+        /// <inheritdoc/>
+        public Int32 Count { get { return Children.Count; } }
 
-        public static IEnumerable<XElementBuilder> Create(Type value)
+        /// <inheritdoc/>
+        public Boolean IsReadOnly { get { return false; } }
+
+        /// <inheritdoc/>
+        public XElementNode this[Int32 index]
         {
-            List<XElementBuilder> result = new List<XElementBuilder>();
-
-            foreach (PropertyInfo property in value.GetProperties().ToList())
+            get
             {
-                result.Add(
-                new XElementBuilder(property)
-                { RenderAs = TemplateNodeValueAsType.ElementText }
-                );
+                if (index >= 0 && index < Children.Count)
+                { return Children[index]; }
+                else
+                {
+                    Exception ex = new IndexOutOfRangeException();
+                    ex.Data.Add(nameof(index), index);
+                    ex.Data.Add(nameof(Children.Count), Children.Count);
+                    throw ex;
+                }
             }
-
-            return result;
+            set
+            {
+                if (index >= 0 && index < Children.Count)
+                { Children[index] = value; }
+                else
+                {
+                    Exception ex = new IndexOutOfRangeException();
+                    ex.Data.Add(nameof(index), index);
+                    ex.Data.Add(nameof(Children.Count), Children.Count);
+                    throw ex;
+                }
+            }
         }
+
+        public XElementNode this[String index]
+        {
+            get
+            {
+                if (Children.FirstOrDefault(w => index.Equals(w.PropertyName)) is XElementNode byPropertyName)
+                { return byPropertyName; }
+                else if (Children.FirstOrDefault(w => index.Equals(w.NodeName)) is XElementNode byNodeName)
+                { return byNodeName; }
+                else
+                {
+                    Exception ex = new IndexOutOfRangeException();
+                    ex.Data.Add(nameof(index), index);
+                    throw ex;
+                }
+            }
+        }
+
+        public XElementBuilder(ScopeType scope) : base()
+        { RootNodeName = ScopeEnumeration.Cast(scope).Name; }
 
         public XElement Build(Object value)
         {
-            XObject? nodeObject = BuildBase(value);
+            XElement result = new XElement(RootNodeName);
 
-            if (nodeObject is XElement nodeElement)
-            { return nodeElement; }
-            else
-            {
-                XElement result = new XElement(NodeName);
-                result.Add(nodeObject);
-                return result;
-            }
-        }
-
-        protected override XObject? BuildBase(Object value)
-        {
-            XObject? result = base.BuildBase(value);
-
-            if (result is XElement nodeElement)
-            {
-                foreach (var item in Children)
-                { nodeElement.Add(item.BuildBase(value)); }
-            }
+            foreach (var item in Children)
+            { result.Add(item.Build(value)); }
 
             return result;
         }
+
+        /// <inheritdoc/>
+        public override String ToString()
+        { return RootNodeName; }
+
+        /// <inheritdoc/>
+        public Int32 IndexOf(XElementNode item)
+        { return Children.IndexOf(item); }
+
+        /// <inheritdoc/>
+        public void Insert(Int32 index, XElementNode item)
+        { Children.Insert(index, item); }
+
+        /// <inheritdoc/>
+        public void RemoveAt(Int32 index)
+        { Children.RemoveAt(index); }
+
+        /// <inheritdoc/>
+        public void Add(XElementNode item)
+        { Children.Add(item); }
+
+        /// <inheritdoc/>
+        public void Clear()
+        { Children.Clear(); }
+
+        /// <inheritdoc/>
+        public Boolean Contains(XElementNode item)
+        { return Children.Contains(item); }
+
+        /// <inheritdoc/>
+        public void CopyTo(XElementNode[] array, Int32 arrayIndex)
+        {   Children.CopyTo(array, arrayIndex); }
+
+        /// <inheritdoc/>
+        public Boolean Remove(XElementNode item)
+        { return Children.Remove(item); }
+
+        /// <inheritdoc/>
+        public IEnumerator<XElementNode> GetEnumerator()
+        { return Children.GetEnumerator(); }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        { return Children.GetEnumerator(); }
     }
+
+
 }

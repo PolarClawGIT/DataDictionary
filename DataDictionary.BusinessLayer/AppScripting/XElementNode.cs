@@ -12,9 +12,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     public class XElementNode
     {
-        public String NodeName { get; init; }
+        public String NodeName { get; set; }
 
-        public TemplateNodeValueAsType RenderAs { get; init; } = TemplateNodeValueAsType.none;
+        public String PropertyName { get; init; }
+
+        public TemplateNodeValueAsType RenderAs { get; set; } = TemplateNodeValueAsType.none;
 
         public Func<Object, String?> GetValue { get; init; }
 
@@ -24,6 +26,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             : base()
         {
             NodeName = name;
+            PropertyName = name;
 
             if (String.IsNullOrWhiteSpace(name))
             { RenderAs = TemplateNodeValueAsType.none; }
@@ -37,6 +40,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         public XElementNode(PropertyInfo property) : this(property.Name)
         { GetValue = (value) => GetValueDelegate(property, value); }
+
+        public static IEnumerable<XElementNode> Create(Type value)
+        {
+            List<XElementNode> result = new List<XElementNode>();
+
+            foreach (PropertyInfo property in value.GetProperties().ToList())
+            {
+                result.Add(
+                new XElementNode(property)
+                { RenderAs = TemplateNodeValueAsType.ElementText }
+                );
+            }
+
+            return result;
+        }
 
         public virtual String? GetValueDelegate(Object value)
         {
@@ -57,7 +75,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public virtual String? GetValueDelegate(PathIndex value)
         { return value.MemberFullPath; }
 
-        protected virtual XObject? BuildBase(Object value)
+        public virtual XObject? Build(Object value)
         {
             String? nodeValue = GetValue(value);
 

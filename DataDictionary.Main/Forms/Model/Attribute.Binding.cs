@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -416,7 +417,7 @@ namespace DataDictionary.Main.Forms.Model
                     }
 
                     childBuilder.Children.AddRange(XElementBuilder_V2.Create(value));
-                    
+
                     childBuilder.Children.Get(nameof(value.AttributeId)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Temporal)).RenderAs = TemplateNodeValueAsType.none;
                     childBuilder.Children.Get(nameof(value.Scope)).RenderAs = TemplateNodeValueAsType.none;
@@ -445,11 +446,12 @@ namespace DataDictionary.Main.Forms.Model
 
             public XElement GetXElement()
             {
-                AttributeValue value = attributeData.Values.First();
-                XElementBuilder builder = new XElementBuilder(value.Scope);
-                builder.Children.AddRange(XElementBuilder.Create(value.GetType()));
+                AttributeValue attributeValue = attributeData.Values.First();
+                XElement result = XElementFactory.Build(attributeValue);
+                result.Add(XElementFactory.Build(attributeData.Properties, BusinessData.Model.Properties));
+                result.Add(XElementFactory.Build(attributeData.Definitions, BusinessData.Model.Definitions));
 
-                return builder.Build(value);
+                return result;
             }
         }
     }
