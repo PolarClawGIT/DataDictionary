@@ -1,22 +1,21 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     public class XElementNode
     {
+        /// <inheritdoc cref="IScriptingNode.NodeName"/>
         public String NodeName { get; set; }
 
+        /// <inheritdoc cref="IScriptingNodeKeyName.PropertyName"/>
         public String PropertyName { get; init; }
 
-        public TemplateNodeValueAsType RenderAs { get; set; } = TemplateNodeValueAsType.none;
+        /// <inheritdoc cref="INodeValueAsType.NodeValueAs"/>
+        public TemplateNodeValueAsType NodeValueAs { get; set; } = TemplateNodeValueAsType.none;
 
         public Func<Object, String?> GetValue { get; init; }
 
@@ -29,8 +28,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             PropertyName = name;
 
             if (String.IsNullOrWhiteSpace(name))
-            { RenderAs = TemplateNodeValueAsType.none; }
-            else { RenderAs = renderAs; }
+            { NodeValueAs = TemplateNodeValueAsType.none; }
+            else { NodeValueAs = renderAs; }
 
             GetValue = (value) => GetValueDelegate((dynamic)value);
         }
@@ -49,8 +48,37 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 result.Add(
                 new XElementNode(property)
-                { RenderAs = TemplateNodeValueAsType.ElementText }
-                );
+                { NodeValueAs = TemplateNodeValueAsType.ElementText });
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<XElementNode> Create(Type value, ScopeType scope, IEnumerable<ITemplateNodeValue> scripting)
+        {
+            List<XElementNode> result = new List<XElementNode>();
+
+            foreach (PropertyInfo property in value.GetProperties().ToList())
+            {
+                TemplateNodeIndexName key = new TemplateNodeIndexName(scope, property);
+
+                if (scripting.FirstOrDefault(w => key.Equals(w)) is ITemplateNodeValue nodeSetting)
+                {
+                    result.Add(
+                    new XElementNode(property)
+                    {
+                        NodeValueAs = nodeSetting.NodeValueAs,
+                        NodeName = nodeSetting.NodeName ?? property.Name
+                    });
+                }
+                else
+                {
+                    result.Add(
+                    new XElementNode(property)
+                    { NodeValueAs = TemplateNodeValueAsType.none });
+                }
+
+
             }
 
             return result;
@@ -79,10 +107,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             String? nodeValue = GetValue(value);
 
-            if (String.IsNullOrEmpty(NodeName) || RenderAs is TemplateNodeValueAsType.none)
+            if (String.IsNullOrEmpty(NodeName) || NodeValueAs is TemplateNodeValueAsType.none)
             { return null; }
 
-            switch (RenderAs)
+            switch (NodeValueAs)
             {
                 case TemplateNodeValueAsType.none:
                     return null;
@@ -104,7 +132,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     {
                         fragementEx.Data.Add(nameof(NodeName), NodeName);
                         fragementEx.Data.Add(nameof(nodeValue), nodeValue);
-                        fragementEx.Data.Add(nameof(RenderAs), RenderAs.ToString());
+                        fragementEx.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
                         throw;
                     }
                 case TemplateNodeValueAsType.Attribute:
@@ -113,7 +141,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 default:
                     Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(TemplateNodeValueAsType)));
                     ex.Data.Add(nameof(NodeName), NodeName);
-                    ex.Data.Add(nameof(RenderAs), RenderAs.ToString());
+                    ex.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
                     throw ex;
             }
         }

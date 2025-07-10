@@ -1,8 +1,10 @@
 ﻿using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +21,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
         public TemplateNodeIndexName(ITemplateNodeIndexName source) : base(source)
         { }
+
+        public TemplateNodeIndexName(ScopeType scope, PropertyInfo property) : base()
+        {
+            PropertyScope = scope;
+            PropertyName = property.Name;
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateNodeIndexName? other)
