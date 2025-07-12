@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue
+    public partial class AttributePropertyValue : AttributePropertyItem, IAttributePropertyValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttributeProperty; } }

@@ -32,20 +32,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 XElementBuilder builder = new XElementBuilder(property.Scope);
 
-                builder.Add(
-                        new XElementNode(nameof(PropertyValue.PropertyTitle))
-                        {
-                            GetValue = (value) =>
-                            {
-                                if (value is IAttributePropertyValue attributeProperty
-                                    && propertyGet.TryGetValue(
-                                        attributeProperty,
-                                        out IPropertyValue? propertyValue))
-                                { return propertyValue.PropertyTitle; }
-                                else { return null; }
-                            },
-                            NodeValueAs = TemplateNodeValueAsType.Attribute
-                        });
+                //TODO: Broken. GetValueDelegate(propertyGet, value) cannot be resolved.
+
+                var x = new XElementNode(nameof(PropertyValue.PropertyTitle))
+                { NodeValueAs = TemplateNodeValueAsType.Attribute };
+                //x.GetValue = (value) => x.GetValueDelegate(propertyGet, value);
 
                 builder.AddRange(XElementNode.Create(property.GetType()));
                 builder[nameof(property.AttributeId)].NodeValueAs = TemplateNodeValueAsType.none;
@@ -93,5 +84,27 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             return result;
         }
+
+
+        public static IEnumerable<XElementNode> Create<TProperties>()
+            where TProperties : AttributePropertyValue
+        {
+            List<XElementNode> result = XElementNode.Create(typeof(TProperties)).ToList();
+
+            result.Set(TemplateNodeValueAsType.none,
+                nameof(AttributePropertyValue.AttributeId),
+                nameof(AttributePropertyValue.Scope),
+                nameof(AttributePropertyValue.Temporal));
+
+            return result;
+        }
+
+
+        public static void Set(this IEnumerable<XElementNode> nodes, TemplateNodeValueAsType nodeValueAs, params String[] properties)
+        {
+            foreach (XElementNode item in nodes.Where(w => properties.Contains(w.PropertyName)))
+            { item.NodeValueAs = nodeValueAs; }
+        }
     }
+
 }

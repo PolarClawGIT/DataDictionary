@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="INodeValueAsType.NodeValueAs"/>
         public TemplateNodeValueAsType NodeValueAs { get; set; } = TemplateNodeValueAsType.none;
 
-        public Func<Object, String?> GetValue { get; init; }
+        public Func<Object, String?> GetValue { get; set; }
 
         public XElementNode(
             String name,
@@ -54,11 +55,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return result;
         }
 
-        public static IEnumerable<XElementNode> Create(Type value, ScopeType scope, IEnumerable<ITemplateNodeValue> scripting)
+        public static IEnumerable<XElementNode> Create(ScopeType scope, IEnumerable<ITemplateNodeValue> scripting)
         {
             List<XElementNode> result = new List<XElementNode>();
 
-            foreach (PropertyInfo property in value.GetProperties().ToList())
+            foreach (PropertyInfo property in XElementEnumeration.GetProperties(scope))
             {
                 TemplateNodeIndexName key = new TemplateNodeIndexName(scope, property);
 
@@ -102,6 +103,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         public virtual String? GetValueDelegate(PathIndex value)
         { return value.MemberFullPath; }
+
+        public virtual String? GetValueDelegate(IPropertyGetValue property, IPropertyIndex value)
+        {
+            PropertyIndex key = new PropertyIndex(value);
+
+            if(property.TryGetValue(value, out IPropertyValue? result))
+            {   return result.PropertyTitle; }
+            else { return null; }
+               
+        }
 
         public virtual XObject? Build(Object value)
         {
