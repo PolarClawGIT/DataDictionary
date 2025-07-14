@@ -35,6 +35,34 @@ namespace DataDictionary.BusinessLayer.AppScripting
             GetValue = (value) => GetValueDelegate((dynamic)value);
         }
 
+        public XElementNode(
+            IPropertyGetValue propertyGet,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            :this (nameof(IPropertyValue.PropertyTitle), renderAs)
+        {
+            GetValue = (value) => 
+            { 
+                if(value is IPropertyIndex index
+                    && propertyGet.TryGetValue(index, out IPropertyValue? result))
+                {   return result.PropertyTitle; }
+                else { return null; }
+            };
+        }
+
+        public XElementNode(
+            IDefinitionGetValue definitionGet,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            : this(nameof(IDefinitionValue.DefinitionTitle), renderAs)
+        {
+            GetValue = (value) =>
+            {
+                if (value is IDefinitionValue index
+                    && definitionGet.TryGetValue(index, out IDefinitionValue? result))
+                { return result.DefinitionTitle; }
+                else { return null; }
+            };
+        }
+
         public XElementNode(ScopeType scope) : this(ScopeEnumeration.Cast(scope).Name)
         { }
 

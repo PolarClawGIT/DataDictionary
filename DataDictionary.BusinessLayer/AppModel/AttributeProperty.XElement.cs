@@ -10,9 +10,11 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     partial class AttributePropertyValue
     {
-        public static IEnumerable<XElementNode> GetXElement()
+        public static IEnumerable<XElementNode> GetXElement(IPropertyGetValue propertyGet)
         {
-            List<XElementNode> result = XElementNode.Create(typeof(AttributeValue)).ToList();
+            List<XElementNode> result = new List<XElementNode>();
+            result.Add(new XElementNode(propertyGet));
+            result.AddRange(XElementNode.Create(typeof(AttributeValue)));
 
             result.Set(TemplateNodeValueAsType.none,
                 nameof(AttributeId),

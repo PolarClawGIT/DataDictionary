@@ -32,12 +32,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 XElementBuilder builder = new XElementBuilder(property.Scope);
 
-                //TODO: Broken. GetValueDelegate(propertyGet, value) cannot be resolved.
-
-                var x = new XElementNode(nameof(PropertyValue.PropertyTitle))
-                { NodeValueAs = TemplateNodeValueAsType.Attribute };
-                //x.GetValue = (value) => x.GetValueDelegate(propertyGet, value);
-
+                builder.Add(new XElementNode(propertyGet));
                 builder.AddRange(XElementNode.Create(property.GetType()));
                 builder[nameof(property.AttributeId)].NodeValueAs = TemplateNodeValueAsType.none;
                 builder[nameof(property.Temporal)].NodeValueAs = TemplateNodeValueAsType.none;
