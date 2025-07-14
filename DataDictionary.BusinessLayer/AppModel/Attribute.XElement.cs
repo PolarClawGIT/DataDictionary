@@ -10,14 +10,13 @@ namespace DataDictionary.BusinessLayer.AppModel
 {
     partial class AttributeValue
     {
-        public static IEnumerable<XElementNode> GetXElement()
+        public static IEnumerable<XElementBuilder> GetXElementNodes()
         {
-            List<XElementNode> result = XElementNode.Create(typeof(AttributeValue)).ToList();
+            IEnumerable<XElementBuilder> result = XElementBuilder.Create(typeof(AttributeValue));
 
-            result.Set(TemplateNodeValueAsType.none,
-                nameof(AttributeId),
-                nameof(Scope),
-                nameof(Temporal));
+            result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
 
             return result;
         }

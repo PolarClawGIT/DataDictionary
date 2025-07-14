@@ -8,19 +8,20 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributePropertyValue
+    partial class AttributeDefinitionValue
     {
-        public static IEnumerable<XElementBuilder> GetXElementNodes(IPropertyGetValue propertyGet)
+        public static IEnumerable<XElementBuilder> GetXElementNodes(IDefinitionGetValue definitionGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
-            result.Add(new XElementBuilder(propertyGet));
-            result.AddRange(XElementBuilder.Create(typeof(AttributePropertyValue)));
+            result.Add(new XElementBuilder(definitionGet));
+            result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
 
             result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(PropertyId)).NodeValueAs = TemplateNodeValueAsType.none;
-            
+            result.GetValue(nameof(DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(DefinitionText)).NodeValueAs = TemplateNodeValueAsType.ElementCData;
+
             return result;
         }
     }

@@ -24,6 +24,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public TemplateNodeValue(ITemplateIndex source) : base(source)
         { }
 
+        [Obsolete("Replace with XELementNode")]
         internal XObject? BuildXObject(Object? value)
         {
             String? nodeName = NodeName ?? PropertyName;

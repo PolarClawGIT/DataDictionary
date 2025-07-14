@@ -18,15 +18,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class TemplateNodeIndexName : ScriptingNodeKeyName, ITemplateNodeIndexName,
         IKeyEquality<ITemplateNodeIndexName>, IKeyEquality<TemplateNodeIndexName>
     {
-        /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
-        public TemplateNodeIndexName(ITemplateNodeIndexName source) : base(source)
-        { }
+        /// <inheritdoc cref="ScriptingNodeKeyName()"/>
+        public TemplateNodeIndexName() : base() { }
 
-        public TemplateNodeIndexName(ScopeType scope, PropertyInfo property) : base()
+        /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
+        public TemplateNodeIndexName(ITemplateNodeIndexName source) : base(source) { }
+
+        public TemplateNodeIndexName(ScopeType scope, String name) : base()
         {
             PropertyScope = scope;
-            PropertyName = property.Name;
+            PropertyName = name;
         }
+
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateNodeIndexName? other)

@@ -281,9 +281,10 @@ namespace DataDictionary.Main.Forms.Model
             public XElement GetXElement()
             {
                 AttributeValue attributeValue = attributeData.Values.First();
-                XElement result = XElementFactory.Build(attributeValue);
-                result.Add(XElementFactory.Build(attributeData.Properties, BusinessData.Model.Properties));
-                result.Add(XElementFactory.Build(attributeData.Definitions, BusinessData.Model.Definitions));
+
+                XElement result = AttributeValue.GetXElementNodes().Build(attributeValue);
+                result.Add(AttributePropertyValue.GetXElementNodes(BusinessData.Model.Properties).Build(attributeData.Properties));
+                result.Add(AttributeDefinitionValue.GetXElementNodes(BusinessData.Model.Definitions).Build(attributeData.Definitions));
 
                 return result;
             }
