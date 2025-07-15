@@ -12,26 +12,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template Document
     /// </summary>
-    public interface ITemplateDocumentData :
-        ICollection<TemplateDocumentValue>, IBindingList<TemplateDocumentValue>
+    public interface IXDocumentData :
+        ICollection<XDocumentValue>, IBindingList<XDocumentValue>
     {
         /// <summary>
         /// Removes all occurrences of items that match.
         /// </summary>
         /// <param name="template"></param>
         /// <returns>False if any of the items could not be removed.</returns>
-        Boolean Remove(ITemplateIndex template);
+        Boolean Remove(IScriptingTemplateIndex template);
     }
 
-    class TemplateDocumentData : BindingList<TemplateDocumentValue>, ITemplateDocumentData
+    class XDocumentData : BindingList<XDocumentValue>, IXDocumentData
     {
         /// <inheritdoc/>
-        public Boolean Remove(ITemplateIndex template)
+        public Boolean Remove(IScriptingTemplateIndex template)
         {
-            TemplateIndex key = new TemplateIndex(template);
+            ScriptingTemplateIndex key = new ScriptingTemplateIndex(template);
             Boolean result = true;
 
-            while (result && this.FirstOrDefault(w => key.Equals(w)) is TemplateDocumentValue value)
+            while (result && this.FirstOrDefault(w => key.Equals(w)) is XDocumentValue value)
             { result = base.Remove(value); }
 
             return result;

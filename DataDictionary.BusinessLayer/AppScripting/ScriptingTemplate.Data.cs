@@ -15,11 +15,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template
     /// </summary>
-    public interface ITemplateData : IBindingData<TemplateValue>
+    public interface IScriptingTemplateData : IBindingData<ScriptingTemplateValue>
     { }
 
-    class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, 
-        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+    class ScriptingTemplateData : ScriptingTemplateCollection<ScriptingTemplateValue>, IScriptingTemplateData, 
+        ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         public required ScriptingEngine Scripting { get; init; }
 
-        public TemplateData() : base()
+        public ScriptingTemplateData() : base()
         { }
 
         /// <inheritdoc/>
@@ -42,17 +42,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         { return factory.CreateSave(this, (IScriptingTemplateKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
-        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Template", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
@@ -91,7 +91,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public void Remove(ITemplateIndex dataKey)
+        public void Remove(IScriptingTemplateIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>

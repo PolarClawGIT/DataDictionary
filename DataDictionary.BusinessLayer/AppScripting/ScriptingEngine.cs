@@ -15,18 +15,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public interface IScriptingEngine :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+        ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
         IBindListChanged
     {
         /// <summary>
         /// List of Scripting Engine Templates.
         /// </summary>
-        ITemplateData Templates { get; }
+        IScriptingTemplateData Templates { get; }
 
         /// <summary>
         /// List of Scripting Nodes for the Template
         /// </summary>
-        ITemplateNodeData TemplateNodes { get; }
+        IScriptingNodeData TemplateNodes { get; }
 
         /// <summary>
         /// List of Scripting Attributes for the Template
@@ -36,12 +36,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// List of Scripting Paths for the Template
         /// </summary>
-        ITemplatePathData TemplatePaths { get; }
+        IScriptingPathData TemplatePaths { get; }
 
         /// <summary>
         /// List of Scripting Documents (output) for the Template
         /// </summary>
-        ITemplateDocumentData TemplateDocuments { get; }
+        IXDocumentData TemplateDocuments { get; }
 
         /// <summary>
         /// List of Scripting Engine Column definitions
@@ -60,24 +60,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public required Model Model { get; init; }
 
         /// <inheritdoc/>
-        public ITemplateData Templates { get { return templateValues; } }
-        private readonly TemplateData templateValues;
+        public IScriptingTemplateData Templates { get { return templateValues; } }
+        private readonly ScriptingTemplateData templateValues;
 
         /// <inheritdoc/>
-        public ITemplateNodeData TemplateNodes { get { return nodeValues; } }
-        private readonly TemplateNodeData nodeValues;
+        public IScriptingNodeData TemplateNodes { get { return nodeValues; } }
+        private readonly ScriptingNodeData nodeValues;
 
         /// <inheritdoc/>
         public ITemplateAttributeData TemplateAttributes { get { return attributeValues; } }
         private readonly TemplateAttributeData attributeValues;
 
         /// <inheritdoc/>
-        public ITemplatePathData TemplatePaths { get { return pathValues; } }
-        private readonly TemplatePathData pathValues;
+        public IScriptingPathData TemplatePaths { get { return pathValues; } }
+        private readonly ScriptingPathData pathValues;
 
         /// <inheritdoc/>
-        public ITemplateDocumentData TemplateDocuments { get { return documentValues; } }
-        private readonly TemplateDocumentData documentValues;
+        public IXDocumentData TemplateDocuments { get { return documentValues; } }
+        private readonly XDocumentData documentValues;
 
         /// <inheritdoc/>
         public INodePropertyData Properties { get { return propertyValues; } }
@@ -106,10 +106,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         public ScriptingEngine() : base()
         {
-            templateValues = new TemplateData() { Scripting = this };
-            pathValues = new TemplatePathData();
-            documentValues = new TemplateDocumentData();
-            nodeValues = new TemplateNodeData();
+            templateValues = new ScriptingTemplateData() { Scripting = this };
+            pathValues = new ScriptingPathData();
+            documentValues = new XDocumentData();
+            nodeValues = new ScriptingNodeData();
             attributeValues = new TemplateAttributeData();
             propertyValues = new NodePropertyData();
         }
@@ -174,7 +174,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete(dataKey));
@@ -199,7 +199,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Save(factory, dataKey));
@@ -235,7 +235,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
@@ -247,7 +247,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
@@ -262,7 +262,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
+            work.AddRange(NameSpaceSource.Load<ScriptingTemplateData, ScriptingTemplateValue>(templateValues, addNamedScope));
 
             return work;
         }
@@ -277,7 +277,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public void Remove(ITemplateIndex dataKey)
+        public void Remove(IScriptingTemplateIndex dataKey)
         {
             templateValues.Remove(dataKey);
             pathValues.Remove(dataKey);

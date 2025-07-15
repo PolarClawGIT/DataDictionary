@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateNodeIndexName : IScriptingNodeKeyName
+    public interface IScriptingNodeIndexName : IScriptingNodeKeyName
     { }
 
     /// <inheritdoc/>
-    public class TemplateNodeIndexName : ScriptingNodeKeyName, ITemplateNodeIndexName,
-        IKeyEquality<ITemplateNodeIndexName>, IKeyEquality<TemplateNodeIndexName>
+    public class ScriptingNodeIndexName : ScriptingNodeKeyName, IScriptingNodeIndexName,
+        IKeyEquality<IScriptingNodeIndexName>, IKeyEquality<ScriptingNodeIndexName>
     {
         /// <inheritdoc cref="ScriptingNodeKeyName()"/>
-        public TemplateNodeIndexName() : base() { }
+        public ScriptingNodeIndexName() : base() { }
 
         /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
-        public TemplateNodeIndexName(ITemplateNodeIndexName source) : base(source) { }
+        public ScriptingNodeIndexName(IScriptingNodeIndexName source) : base(source) { }
 
-        public TemplateNodeIndexName(ScopeType scope, String name) : base()
+        public ScriptingNodeIndexName(ScopeType scope, String name) : base()
         {
             PropertyScope = scope;
             PropertyName = name;
@@ -32,11 +32,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
 
         /// <inheritdoc/>
-        public Boolean Equals(ITemplateNodeIndexName? other)
+        public Boolean Equals(IScriptingNodeIndexName? other)
         { return other is IScriptingNodeKeyName key && Equals(new ScriptingNodeKeyName(key)); }
 
         /// <inheritdoc/>
-        public Boolean Equals(TemplateNodeIndexName? other)
+        public Boolean Equals(ScriptingNodeIndexName? other)
         { return other is IScriptingNodeKeyName key && Equals(new ScriptingNodeKeyName(key)); }
     }
 }

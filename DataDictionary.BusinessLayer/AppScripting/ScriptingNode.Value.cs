@@ -11,17 +11,17 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateNodeValue : IScriptingNodeItem, ITemplateIndex, ITemplateNodeIndex, ITemplateNodeIndexName
+    public interface IScriptingNodeValue : IScriptingNodeItem, IScriptingTemplateIndex, IScriptingNodeIndex, IScriptingNodeIndexName
     { }
 
     /// <inheritdoc/>
-    public class TemplateNodeValue : ScriptingNodeItem, ITemplateNodeValue
+    public class ScriptingNodeValue : ScriptingNodeItem, IScriptingNodeValue
     {
         /// <inheritdoc/>
-        public TemplateNodeValue() : base() { }
+        public ScriptingNodeValue() : base() { }
 
         /// <inheritdoc cref="ScriptingNodeItem(IScriptingTemplateKey)"/>
-        public TemplateNodeValue(ITemplateIndex source) : base(source)
+        public ScriptingNodeValue(IScriptingTemplateIndex source) : base(source)
         { }
 
         [Obsolete("Replace with XELementNode")]

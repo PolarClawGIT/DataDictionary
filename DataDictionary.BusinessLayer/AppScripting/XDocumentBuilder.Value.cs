@@ -10,9 +10,9 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
-    /// Interface for Scripting Engine Template Document
+    /// Interface for Scripting Engine Template Document 
     /// </summary>
-    public interface ITemplateDocumentValue : ITemplateIndex, IBindingPropertyChanged
+    public interface IXDocumentValue : IScriptingTemplateIndex, IBindingPropertyChanged
     {
         /// <summary>
         /// The Name of the Element for this Document
@@ -69,7 +69,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Scripting Engine Template Document
     /// </summary>
-    public class TemplateDocumentValue : ITemplateDocumentValue
+    public class XDocumentValue : IXDocumentValue
     {
         /// <inheritdoc/>
         public Guid? TemplateId { get { return templateValue.TemplateId; } }
@@ -230,7 +230,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
         XDocument? resultsAsXml = null;
 
-        ITemplateValue templateValue;
+        IScriptingTemplateValue templateValue;
         XDocument source = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <param name="template"></param>
         /// <param name="root"></param>
-        public TemplateDocumentValue(ITemplateValue template, XElement root) : base()
+        public XDocumentValue(IScriptingTemplateValue template, XElement root) : base()
         {
             templateValue = template;
 

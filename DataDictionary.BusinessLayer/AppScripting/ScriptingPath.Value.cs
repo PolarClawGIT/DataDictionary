@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplatePathValue : IScriptingPathItem, ITemplateIndex
+    public interface IScriptingPathValue : IScriptingPathItem, IScriptingTemplateIndex
     { }
 
     /// <inheritdoc/>
-    public class TemplatePathValue : ScriptingPathItem, ITemplatePathValue
+    public class ScriptingPathValue : ScriptingPathItem, IScriptingPathValue
     {
         /// <inheritdoc/>
-        public TemplatePathValue() : base() { }
+        public ScriptingPathValue() : base() { }
 
         /// <summary>
         /// The Template Path derived from PathName
@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="ScriptingPathItem(IScriptingTemplateKey)"/>
-        public TemplatePathValue(ITemplateIndex source) : base(source)
+        public ScriptingPathValue(IScriptingTemplateIndex source) : base(source)
         { }
     }
 }

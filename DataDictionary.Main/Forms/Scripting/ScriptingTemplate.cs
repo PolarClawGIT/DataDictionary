@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class ScriptingTemplate : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingTemplate.Current is ITemplateValue current && ReferenceEquals(current, item); }
+        { return bindingTemplate.Current is IScriptingTemplateValue current && ReferenceEquals(current, item); }
 
 
         protected ScriptingTemplate() : base()
@@ -39,25 +39,25 @@ namespace DataDictionary.Main.Forms.Scripting
             pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
-        public ScriptingTemplate(ITemplateValue? templateItem) : this()
+        public ScriptingTemplate(IScriptingTemplateValue? templateItem) : this()
         {
             if (templateItem is null)
             {
-                templateItem = new TemplateValue();
+                templateItem = new ScriptingTemplateValue();
                 BusinessData.ScriptingEngine.Templates.Add(templateItem);
             }
 
-            TemplateIndex key = new TemplateIndex(templateItem);
+            ScriptingTemplateIndex key = new ScriptingTemplateIndex(templateItem);
 
-            bindingTemplate.DataSource = new BindingView<TemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
+            bindingTemplate.DataSource = new BindingView<ScriptingTemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
             bindingTemplate.Position = 0;
 
 
-            if (bindingTemplate.Current is ITemplateValue current)
+            if (bindingTemplate.Current is IScriptingTemplateValue current)
             {
-                bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
-                bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
-                bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+                bindingPath.DataSource = new BindingView<ScriptingPathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
+                bindingNode.DataSource = new BindingView<ScriptingNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
+                bindingDocument.DataSource = new BindingView<XDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
 
                 bindingAttribute.DataSource = null;
             }
@@ -67,15 +67,15 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             { DoWork(BusinessData.ScriptingEngine.Delete(current)); }
         }
 
         private void ScriptingTemplate_Load(object sender, EventArgs e)
         {
-            ITemplateValue nameOfValues;
-            ITemplateNodeValue nameOfNode;
-            ITemplateDocumentValue nameOfDocument;
+            IScriptingTemplateValue nameOfValues;
+            IScriptingNodeValue nameOfNode;
+            IXDocumentValue nameOfDocument;
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle)));
             templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle)));
@@ -148,12 +148,12 @@ namespace DataDictionary.Main.Forms.Scripting
             pathsData.AutoGenerateColumns = false;
             pathsData.DataSource = bindingPath;
 
-            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(TemplatePathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(TemplatePathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
+            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(ScriptingPathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(ScriptingPathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
 
             ElementSelection_Load();
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTemplate.Current is not ITemplateValue);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTemplate.Current is not IScriptingTemplateValue);
         }
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
@@ -167,7 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
-                && bindingTemplate.Current is TemplateValue current)
+                && bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 current.RootDirectory = value; // TODO: Some reason Binding is not setting the value.
                 current.DocumentDirectory = null;
@@ -179,7 +179,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current
+            if (bindingTemplate.Current is ScriptingTemplateValue current
                 && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
@@ -194,7 +194,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ScriptingDirectoryPicker_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current
+            if (bindingTemplate.Current is ScriptingTemplateValue current
                 && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
@@ -212,7 +212,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ScriptAsData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current
+            if (bindingTemplate.Current is ScriptingTemplateValue current
                 && scriptAsData.SelectedValue is TemplateScriptAsType value)
             {
                 current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
@@ -222,7 +222,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TransformParseCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 if (current.TransformException is null && current.TransformXml is not null)
                 {
@@ -237,7 +237,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TransformImportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
                 { openFileDialog.InitialDirectory = directory.FullName; }
@@ -257,7 +257,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TransformExportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
                 { saveFileDialog.InitialDirectory = directory.FullName; }
@@ -289,16 +289,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingPath_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             {
-                TemplatePathValue newItem = new TemplatePathValue(current);
+                ScriptingPathValue newItem = new ScriptingPathValue(current);
                 e.NewObject = newItem;
             }
         }
 
         private void BindingPath_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingPath.Current is TemplatePathValue current)
+            if (bindingPath.Current is ScriptingPathValue current)
             {
                 Boolean inModel = BusinessData.NamedScope.PathKeys(current.Path).Count > 0;
                 isPathInModelData.Checked = inModel;
@@ -326,12 +326,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     ListViewItem newItem = new ListViewItem(item.PropertyName, newGroup);
 
 
-                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodes)
+                    if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes)
                     {
                         NodePropertyIndex nodeKey = new NodePropertyIndex(item);
-                        TemplateNodeValue? node = nodes.FirstOrDefault(w => nodeKey.Equals(new NodePropertyIndex(w)));
+                        ScriptingNodeValue? node = nodes.FirstOrDefault(w => nodeKey.Equals(new NodePropertyIndex(w)));
 
-                        if (node is TemplateNodeValue)
+                        if (node is ScriptingNodeValue)
                         { newItem.Checked = true; }
                         else { newItem.Checked = false; }
                     }
@@ -372,16 +372,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (nodesSelectReady
                 && nodeProperties.ContainsKey(item)
-                && bindingTemplate.Current is TemplateValue template)
+                && bindingTemplate.Current is ScriptingTemplateValue template)
             {
                 NodePropertyValue element = nodeProperties[item];
                 if (e.NewValue == CheckState.Checked)
                 {
                     // Duplicate check. Here just in case something unexpected happens.
-                    TemplateNodeIndexName dupKey = new TemplateNodeIndexName(element);
-                    TemplateIndex dupTemplate = new TemplateIndex(template);
-                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodesDupCheck
-                        && nodesDupCheck.FirstOrDefault(w => dupTemplate.Equals(w) && dupKey.Equals(w)) is TemplateNodeValue nodeDupCheck)
+                    ScriptingNodeIndexName dupKey = new ScriptingNodeIndexName(element);
+                    ScriptingTemplateIndex dupTemplate = new ScriptingTemplateIndex(template);
+                    if (bindingNode.DataSource is IList<ScriptingNodeValue> nodesDupCheck
+                        && nodesDupCheck.FirstOrDefault(w => dupTemplate.Equals(w) && dupKey.Equals(w)) is ScriptingNodeValue nodeDupCheck)
                     {
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
@@ -390,9 +390,9 @@ namespace DataDictionary.Main.Forms.Scripting
                         throw ex;
                     }
 
-                    if (bindingNode.AddNew() is TemplateNodeValue newNode)
+                    if (bindingNode.AddNew() is ScriptingNodeValue newNode)
                     {
-                        TemplateNodeIndex key = new TemplateNodeIndex(newNode);
+                        ScriptingNodeIndex key = new ScriptingNodeIndex(newNode);
 
                         newNode.PropertyScope = element.PropertyScope;
                         newNode.PropertyName = element.PropertyName;
@@ -400,13 +400,13 @@ namespace DataDictionary.Main.Forms.Scripting
                         newNode.NodeValueAs = TemplateNodeValueAsType.ElementText;
                         bindingNode.ResumeBinding();
 
-                        if (bindingNode.DataSource is IList<TemplateNodeValue> nodes
-                        && nodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue node)
+                        if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes
+                        && nodes.FirstOrDefault(w => key.Equals(w)) is ScriptingNodeValue node)
                         { bindingNode.Position = nodes.IndexOf(node); }
 
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
-                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
+                        bindingAttribute.DataSource = new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                         attributeData.DataSource = bindingAttribute;
 
                         schemaNodeLayout.Enabled = true;
@@ -414,10 +414,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
                 else if (e.NewValue == CheckState.Unchecked)
                 {
-                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodes
-                        && nodes.FirstOrDefault(w => new NodePropertyIndex(nodeProperties[item]).Equals(new NodePropertyIndex(w))) is TemplateNodeValue node)
+                    if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes
+                        && nodes.FirstOrDefault(w => new NodePropertyIndex(nodeProperties[item]).Equals(new NodePropertyIndex(w))) is ScriptingNodeValue node)
                     {
-                        TemplateNodeIndex key = new TemplateNodeIndex(node);
+                        ScriptingNodeIndex key = new ScriptingNodeIndex(node);
                         bindingNode.RemoveAt(nodes.IndexOf(node));
 
                         bindingNode.SuspendBinding();
@@ -425,7 +425,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
 
-                        while (BusinessData.ScriptingEngine.TemplateAttributes.FirstOrDefault(w => key.Equals(w)) is TemplateAttributeValue attribute)
+                        while (BusinessData.ScriptingEngine.TemplateAttributes.FirstOrDefault(w => key.Equals(w)) is ScriptingAttributeValue attribute)
                         { BusinessData.ScriptingEngine.TemplateAttributes.Remove(attribute); }
 
                         schemaNodeLayout.Enabled = false;
@@ -443,16 +443,16 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 NodePropertyIndex columnKey = new NodePropertyIndex(nodeProperties[elementSelection.SelectedItems[0]]);
 
-                if (bindingNode.DataSource is IList<TemplateNodeValue> nodes && nodes.FirstOrDefault(w => columnKey.Equals(w)) is TemplateNodeValue node)
+                if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes && nodes.FirstOrDefault(w => columnKey.Equals(w)) is ScriptingNodeValue node)
                 {
-                    TemplateNodeIndex key = new TemplateNodeIndex(node);
+                    ScriptingNodeIndex key = new ScriptingNodeIndex(node);
                     schemaNodeLayout.Enabled = true;
                     bindingNode.ResumeBinding();
                     bindingNode.Position = nodes.IndexOf(node);
 
                     attributeData.DataSource = null;
                     bindingAttribute.DataSource = null;
-                    bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
+                    bindingAttribute.DataSource = new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                     attributeData.DataSource = bindingAttribute;
                 }
                 else
@@ -467,21 +467,21 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingNode_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingTemplate.Current is ITemplateValue template)
-            { e.NewObject = new TemplateNodeValue(template); }
+            if (bindingTemplate.Current is IScriptingTemplateValue template)
+            { e.NewObject = new ScriptingNodeValue(template); }
         }
 
         private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingNode.Current is ITemplateNodeValue node)
-            { e.NewObject = new TemplateAttributeValue(node); }
+            if (bindingNode.Current is IScriptingNodeValue node)
+            { e.NewObject = new ScriptingAttributeValue(node); }
         }
 
         private void DocumentBuildComand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
+            if (bindingTemplate.Current is ScriptingTemplateValue current)
             {
-                TemplateIndex key = new TemplateIndex(current);
+                ScriptingTemplateIndex key = new ScriptingTemplateIndex(current);
                 bindingDocument.SuspendBinding();
                 documentData.DataSource = null;
                 //bindingDocument.DataSource = null;
@@ -494,7 +494,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (args.Error is null)
                     {
-                        bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+                        bindingDocument.DataSource = new BindingView<XDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
                         documentData.DataSource = bindingDocument;
                         bindingDocument.ResumeBinding();
                     }
@@ -512,7 +512,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (DataGridViewRow item in documentData.SelectedRows)
             {
-                if (item.DataBoundItem is TemplateDocumentValue doc)
+                if (item.DataBoundItem is XDocumentValue doc)
                 { work.AddRange(doc.SaveSource()); }
 
             }
@@ -526,7 +526,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (DataGridViewRow item in documentData.SelectedRows)
             {
-                if (item.DataBoundItem is TemplateDocumentValue doc)
+                if (item.DataBoundItem is XDocumentValue doc)
                 { work.AddRange(doc.SaveResult()); }
 
             }
@@ -536,7 +536,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentSaveAllCommand_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            if (bindingDocument.DataSource is IEnumerable<TemplateDocumentValue> items)
+            if (bindingDocument.DataSource is IEnumerable<XDocumentValue> items)
             {
                 documentStatus.Text = "working";
 
@@ -562,7 +562,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void PathSelectCommand_Click(object sender, EventArgs e)
         {
-            if (bindingPath.DataSource is IList<TemplatePathValue> alias)
+            if (bindingPath.DataSource is IList<ScriptingPathValue> alias)
             {
                 using (var dialog = new SelectionDialog(this))
                 {
@@ -576,9 +576,9 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (dialog.ShowDialog(this) is DialogResult.OK)
                     {
                         IEnumerable<INamedScopeValue> selected = dialog.SelectedByNamedScope();
-                        IEnumerable<TemplatePathValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.Path).Count() > 0);
+                        IEnumerable<ScriptingPathValue> inModel = alias.Where(w => BusinessData.NamedScope.PathKeys(w.Path).Count() > 0);
 
-                        foreach (TemplatePathValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.Path)).ToList())
+                        foreach (ScriptingPathValue removeItem in alias.Where(w => !selected.Select(s => s.Path).Contains(w.Path)).ToList())
                         {
                             if (inModel.Contains(removeItem)) // Only remove items that are in this model
                             { alias.Remove(removeItem); }
@@ -586,7 +586,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         foreach (INamedScopeValue addItem in selected.Where(w => !alias.Select(s => s.Path).Contains(w.Path)).ToList())
                         { // Add
-                            if (bindingPath.AddNew() is TemplatePathValue newValue)
+                            if (bindingPath.AddNew() is ScriptingPathValue newValue)
                             {
                                 newValue.Path = addItem.Path;
                                 newValue.NameSpaceScope = addItem.Scope;
@@ -599,7 +599,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void PathAddCommand_Click(object sender, EventArgs e)
         {
-            if (bindingPath.AddNew() is TemplatePathValue newValue)
+            if (bindingPath.AddNew() is ScriptingPathValue newValue)
             { }
         }
 

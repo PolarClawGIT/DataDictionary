@@ -11,17 +11,17 @@ using DataDictionary.DataLayer.AppScript;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateAttributeValue : IScriptingAttributeItem, ITemplateIndex, ITemplateNodeIndex, IPropertyIndex
+    public interface IScriptingAttributeValue : IScriptingAttributeItem, IScriptingTemplateIndex, IScriptingNodeIndex, IPropertyIndex
     { }
 
     /// <inheritdoc/>
-    public class TemplateAttributeValue : ScriptingAttributeItem, ITemplateAttributeValue
+    public class ScriptingAttributeValue : ScriptingAttributeItem, IScriptingAttributeValue
     {
         /// <inheritdoc/>
-        public TemplateAttributeValue() : base() { }
+        public ScriptingAttributeValue() : base() { }
 
         /// <inheritdoc cref="ScriptingAttributeItem(IScriptingNodeKeyComposite)"/>
-        public TemplateAttributeValue(IScriptingNodeKeyComposite source) : base(source)
+        public ScriptingAttributeValue(IScriptingNodeKeyComposite source) : base(source)
         { }
 
         internal XAttribute? BuildXAttribute(String name, Object? value)

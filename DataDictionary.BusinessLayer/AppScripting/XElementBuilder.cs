@@ -319,12 +319,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Updates the properties of a collection of <see cref="XElementBuilder"/> objects based on matching templates.
         /// </summary>
         /// <param name="nodes">The collection of <see cref="XElementBuilder"/> objects to update.</param>
-        /// <param name="templates">A collection of <see cref="ITemplateNodeValue"/> objects used to update the nodes. Each template is matched to a node by the <see cref="XElementBuilder.PropertyName"/> property.</param>
-        public static void Set(this IEnumerable<XElementBuilder> nodes, IEnumerable<ITemplateNodeValue> templates)
+        /// <param name="templates">A collection of <see cref="IScriptingNodeValue"/> objects used to update the nodes. Each template is matched to a node by the <see cref="XElementBuilder.PropertyName"/> property.</param>
+        public static void Set(this IEnumerable<XElementBuilder> nodes, IEnumerable<IScriptingNodeValue> templates)
         {
             foreach (XElementBuilder node in nodes)
             {
-                if (templates.FirstOrDefault(w => node.PropertyName.Equals(w.PropertyName)) is ITemplateNodeValue template)
+                if (templates.FirstOrDefault(w => node.PropertyName.Equals(w.PropertyName)) is IScriptingNodeValue template)
                 {
                     node.NodeName = template.NodeName ?? node.NodeName;
                     node.NodeValueAs = template.NodeValueAs;

@@ -11,30 +11,30 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
 
     /// <inheritdoc/>
-    public interface ITemplateIndexName : IScriptingTemplateKeyName
+    public interface IScriptingTemplateName : IScriptingTemplateKeyName
     { }
 
     /// <inheritdoc/>
-    public class TemplateIndexName : ScriptingTemplateKeyName, ITemplateIndexName,
-        IKeyEquality<ITemplateIndexName>, IKeyEquality<TemplateIndexName>
+    public class ScriptingTemplateName : ScriptingTemplateKeyName, IScriptingTemplateName,
+        IKeyEquality<IScriptingTemplateName>, IKeyEquality<ScriptingTemplateName>
     {
         /// <inheritdoc cref="ScriptingTemplateKeyName(IScriptingTemplateKeyName)"/>
-        public TemplateIndexName(ITemplateIndexName source) : base(source)
+        public ScriptingTemplateName(IScriptingTemplateName source) : base(source)
         { }
 
         /// <inheritdoc/>
-        public Boolean Equals(ITemplateIndexName? other)
+        public Boolean Equals(IScriptingTemplateName? other)
         { return other is IScriptingTemplateKeyName key && Equals(new ScriptingTemplateKeyName(key)); }
 
         /// <inheritdoc/>
-        public Boolean Equals(TemplateIndexName? other)
+        public Boolean Equals(ScriptingTemplateName? other)
         { return other is IScriptingTemplateKeyName key && Equals(new ScriptingTemplateKeyName(key)); }
 
         /// <summary>
         /// Convert TemplateIndexName to a DataIndexName
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataIndexName(TemplateIndexName source)
+        public static implicit operator DataIndexName(ScriptingTemplateName source)
         { return new DataIndexName() { Title = source.TemplateTitle ?? String.Empty }; }
     }
 }

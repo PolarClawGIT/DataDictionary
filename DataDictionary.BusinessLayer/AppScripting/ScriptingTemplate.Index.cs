@@ -5,30 +5,30 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateIndex : IScriptingTemplateKey
+    public interface IScriptingTemplateIndex : IScriptingTemplateKey
     { }
 
     /// <inheritdoc/>
-    public class TemplateIndex : ScriptingTemplateKey, ITemplateIndex,
-        IKeyEquality<ITemplateIndex>, IKeyEquality<TemplateIndex>
+    public class ScriptingTemplateIndex : ScriptingTemplateKey, IScriptingTemplateIndex,
+        IKeyEquality<IScriptingTemplateIndex>, IKeyEquality<ScriptingTemplateIndex>
     {
         /// <inheritdoc cref="ScriptingTemplateKey(IScriptingTemplateKey)"/>
-        public TemplateIndex(ITemplateIndex source) : base(source)
+        public ScriptingTemplateIndex(IScriptingTemplateIndex source) : base(source)
         { }
 
         /// <inheritdoc/>
-        public Boolean Equals(ITemplateIndex? other)
+        public Boolean Equals(IScriptingTemplateIndex? other)
         { return other is IScriptingTemplateKey key && Equals(new ScriptingTemplateKey(key)); }
 
         /// <inheritdoc/>
-        public Boolean Equals(TemplateIndex? other)
+        public Boolean Equals(ScriptingTemplateIndex? other)
         { return other is IScriptingTemplateKey key && Equals(new ScriptingTemplateKey(key)); }
 
         /// <summary>
         /// Convert TemplateIndex to a DataIndex
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DataIndex(TemplateIndex source)
+        public static implicit operator DataIndex(ScriptingTemplateIndex source)
         { return new DataIndex() { SystemId = source.TemplateId ?? Guid.Empty }; }
     }
 

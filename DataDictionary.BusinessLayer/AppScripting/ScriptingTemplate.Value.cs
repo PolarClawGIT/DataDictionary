@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateValue : IScriptingTemplateItem, ITemplateIndex, ITemplateIndexName
+    public interface IScriptingTemplateValue : IScriptingTemplateItem, IScriptingTemplateIndex, IScriptingTemplateName
     {
         /// <summary>
         /// Transform Script as XDocument
@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     }
 
     /// <inheritdoc/>
-    public class TemplateValue : ScriptingTemplateItem, ITemplateValue, IPathValue, INamedScopeSourceValue
+    public class ScriptingTemplateValue : ScriptingTemplateItem, IScriptingTemplateValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -41,13 +41,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public TemplateValue() : base()
+        public ScriptingTemplateValue() : base()
         {
             PropertyChanged += TemplateValue_PropertyChanged;
 
             pathValue = new PathValue(this)
             {
-                GetIndex = () => new TemplateIndex(this),
+                GetIndex = () => new ScriptingTemplateIndex(this),
                 GetPath = () => new PathIndex(TemplateTitle),
                 GetScope = () => Scope,
                 GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,

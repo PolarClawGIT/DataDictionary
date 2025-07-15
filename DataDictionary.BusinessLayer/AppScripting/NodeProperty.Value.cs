@@ -3,10 +3,13 @@ using System.Data;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
+    //TODO: This can be removed. It is repaced by the XElementBuilder.
+
     /// <summary>
     /// Interface for the Scripting Node Property data.
     /// </summary>
-    public interface INodePropertyValue : INodePropertyIndex, ITemplateNodeIndexName
+    [Obsolete]
+    public interface INodePropertyValue : INodePropertyIndex, IScriptingNodeIndexName
     {
         /// <inheritdoc cref="DataColumn.AllowDBNull"/>
         Boolean AllowDBNull { get; }
@@ -19,6 +22,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Implementation for the Scripting Node Property data.
     /// </summary>
     /// <remarks>The items are expected to be static.</remarks>
+    [Obsolete]
     public class NodePropertyValue : INodePropertyValue
     {
         /// <inheritdoc/>

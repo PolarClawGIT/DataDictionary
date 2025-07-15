@@ -68,11 +68,11 @@ namespace DataDictionary.BusinessLayer.AppModel
             return result;
         }
 
-        internal XElement? GetXElement(ScriptingWork scripting, Func<TemplateNodeValue, IReadOnlyList<XAttribute>> getAttributes)
+        internal XElement? GetXElement(ScriptingWork scripting, Func<ScriptingNodeValue, IReadOnlyList<XAttribute>> getAttributes)
         {
             XElement? result = null;
 
-            foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == Scope))
+            foreach (ScriptingNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == Scope))
             {
                 List<XObject> values = new List<XObject>();
 

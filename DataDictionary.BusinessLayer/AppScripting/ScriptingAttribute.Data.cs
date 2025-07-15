@@ -12,11 +12,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template Attribute
     /// </summary>
-    public interface ITemplateAttributeData : IBindingData<TemplateAttributeValue>
+    public interface ITemplateAttributeData : IBindingData<ScriptingAttributeValue>
     { }
 
-    class TemplateAttributeData : ScriptingAttributeCollection<TemplateAttributeValue>, ITemplateAttributeData,
-        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+    class TemplateAttributeData : ScriptingAttributeCollection<ScriptingAttributeValue>, ITemplateAttributeData,
+        ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
@@ -31,17 +31,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>TemplateAttribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TemplateAttribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IScriptingTemplateKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>TemplateAttribute</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
         { return factory.CreateSave(this, (IScriptingTemplateKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>TemplateAttribute</remarks>
-        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Template Attribute", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>TemplatePath</remarks>
-        public void Remove(ITemplateIndex dataKey)
+        public void Remove(IScriptingTemplateIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
