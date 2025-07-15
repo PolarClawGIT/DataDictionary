@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributePropertyValue
+    partial class AttributePropertyValue : IXElementFactory<IPropertyGetValue>
     {
-        public static IEnumerable<XElementBuilder> GetXElementNodes(IPropertyGetValue propertyGet)
+        /// <inheritdoc/>
+        public static IEnumerable<XElementBuilder> CreateXElementBuilders(IPropertyGetValue propertyGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
             result.Add(new XElementBuilder(propertyGet));

@@ -6,12 +6,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for the Scripting Node Property key.
     /// </summary>
+    [Obsolete]
     public interface INodePropertyIndex : IScriptingNodeKeyName
     { }
 
     /// <summary>
     /// Implementation for the Scripting Schema Column key.
     /// </summary>
+    [Obsolete]
     public class NodePropertyIndex : ScriptingNodeKeyName, INodePropertyIndex,
         IKeyEquality<INodePropertyIndex>, IKeyEquality<NodePropertyIndex>
     {

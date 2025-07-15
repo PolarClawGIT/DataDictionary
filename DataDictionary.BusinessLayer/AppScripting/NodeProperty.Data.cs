@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Node Property
     /// </summary>
+    [Obsolete]
     public interface INodePropertyData : IEnumerable<NodePropertyValue>
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Implementation component for the Scripting Engine Node Property
     /// </summary>
+    [Obsolete]
     public class NodePropertyData : Collection<NodePropertyValue>, INodePropertyData
     {
         /// <summary>

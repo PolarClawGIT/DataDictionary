@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     }
 
     /// <inheritdoc/>
-    public class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue
+    public partial class AttributeAliasValue : AttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
         public List<String> AliasParts { get { return PathIndex.Parse(base.AliasPath); } }

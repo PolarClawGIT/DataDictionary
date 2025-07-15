@@ -8,20 +8,17 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributeDefinitionValue : IXElementFactory<IDefinitionGetValue>
+    partial class AttributeAliasValue : IXElementFactory
     {
         /// <inheritdoc/>
-        public static IEnumerable<XElementBuilder> CreateXElementBuilders(IDefinitionGetValue definitionGet)
+        public static IEnumerable<XElementBuilder> CreateXElementBuilders()
         {
-            List<XElementBuilder> result = new List<XElementBuilder>();
-            result.Add(new XElementBuilder(definitionGet));
-            result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
+            IEnumerable<XElementBuilder> result = XElementBuilder.Create(typeof(AttributeValue));
 
             result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionText)).NodeValueAs = TemplateNodeValueAsType.ElementCData;
+            result.GetValue(nameof(AliasPath)).NodeValueAs = TemplateNodeValueAsType.none;
 
             return result;
         }
