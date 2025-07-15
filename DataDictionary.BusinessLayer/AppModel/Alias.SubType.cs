@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         ScopeType IAliasKey.AliasScope { get { return AliasScope; } }
 
         /// <inheritdoc cref="IAliasKeyName.AliasPath"/>
-        new PathIndex AliasName { get; set; }
+        PathIndex AliasName { get; set; }
 
         /// <inheritdoc cref="IAliasKey.AliasScope"/>
         new ScopeType AliasScope { get; set; }

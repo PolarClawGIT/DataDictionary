@@ -24,13 +24,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
         public ScriptingNodeIndexName(IScriptingNodeIndexName source) : base(source) { }
 
-        public ScriptingNodeIndexName(ScopeType scope, String name) : base()
-        {
-            PropertyScope = scope;
-            PropertyName = name;
-        }
-
-
         /// <inheritdoc/>
         public Boolean Equals(IScriptingNodeIndexName? other)
         { return other is IScriptingNodeKeyName key && Equals(new ScriptingNodeKeyName(key)); }
