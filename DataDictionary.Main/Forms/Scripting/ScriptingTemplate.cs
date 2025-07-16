@@ -33,6 +33,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingAttributes = bindingAttribute,
                 DoWork = base.DoWork
             };
+            formBinding.Init();
 
             SetRowState(
                 bindingTemplate,
@@ -324,24 +325,23 @@ namespace DataDictionary.Main.Forms.Scripting
             elementSelection.Items.Clear();
             schemaNodeLayout.Enabled = false;
 
-            foreach (var properties in formBinding.Properties)
+            foreach (var properties in formBinding.Properties.GroupBy(g => g.PropertyScope))
             {
                 ListViewGroup newGroup = new ListViewGroup(ScopeEnumeration.Cast(properties.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
-                foreach (var property in properties.Value)
+                foreach (ScriptingNodeIndexName property in properties)
                 {
-                    ListViewItem newItem = new ListViewItem(property, newGroup);
-                    ScriptingNodeIndexName key = new ScriptingNodeIndexName(properties.Key, property);
+                    ListViewItem newItem = new ListViewItem(property.PropertyName, newGroup);
 
-                    if (formBinding.TemplateNodes.FirstOrDefault(w => key.Equals(w)) is ScriptingNodeValue node)
+                    if (formBinding.TemplateNodes.FirstOrDefault(w => property.Equals(w)) is ScriptingNodeValue node)
                     {
                         if (node is ScriptingNodeValue)
                         { newItem.Checked = true; }
                         else { newItem.Checked = false; }
                     }
                     elementSelection.Items.Add(newItem);
-                    nodeProperties.Add(newItem, key);
+                    nodeProperties.Add(newItem, property);
                 }
             }
         }

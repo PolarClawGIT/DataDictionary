@@ -42,8 +42,7 @@ namespace DataDictionary.Main.Forms.Scripting
             IScriptingEngine scriptingData = BusinessData.ScriptingEngine;
             TemporalIndex? temporalIndex = null;
 
-            public IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties { get { return scriptingData.Properties; } }
-
+            public IEnumerable<ScriptingNodeIndexName> Properties { get { return scriptingData.Properties; } }
 
             public FormBinding()
             { }

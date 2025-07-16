@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// List of Properties for each Scope.
         /// </summary>
-        IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties { get; }
+        IEnumerable<ScriptingNodeIndexName> Properties { get; }
     }
 
     /// <summary>
@@ -80,18 +80,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IXDocumentData TemplateDocuments { get { return documentValues; } }
         private readonly XDocumentData documentValues;
 
-
-        Dictionary<ScopeType, IEnumerable<XElementBuilder>> builders = new Dictionary<ScopeType, IEnumerable<XElementBuilder>>();
+        // List of the XElement Builder function for each scope.
+        Dictionary<ScopeType, Func<IEnumerable<XElementBuilder>>> builders = new Dictionary<ScopeType, Func<IEnumerable<XElementBuilder>>>();
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties
+        public IEnumerable<ScriptingNodeIndexName> Properties
         {
             get
             {
                 return builders.
-                    Select(s => new { Scope = s.Key, Properties = s.Value.Select(m => m.PropertyName) }).
-                    ToDictionary(k => k.Scope, v => v.Properties).
-                    AsReadOnly();
+                    SelectMany(s => s.Value().
+                        Select(i => new ScriptingNodeIndexName(s.Key, i.PropertyName))); 
             }
         }
 
@@ -125,11 +124,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             nodeValues = new ScriptingNodeData();
             attributeValues = new TemplateAttributeData();
 
-            // This data is static once loaded.
+            // Create the Builders. This data is static once loaded.
             builders.Clear();
-            builders.Add(ScopeType.ModelAttribute, AttributeValue.CreateXElementBuilders());
-            builders.Add(ScopeType.ModelAttributeProperty, AttributePropertyValue.CreateXElementBuilders(model.Properties));
-            builders.Add(ScopeType.ModelAttributeDefinition, AttributeDefinitionValue.CreateXElementBuilders(model.Definitions));
+            builders.Add(ScopeType.ModelAttribute, () => AttributeValue.CreateXElementBuilders());
+            builders.Add(ScopeType.ModelAttributeProperty, () => AttributePropertyValue.CreateXElementBuilders(model.Properties));
+            builders.Add(ScopeType.ModelAttributeDefinition, () => AttributeDefinitionValue.CreateXElementBuilders(model.Definitions));
             //TODO: Add all other scriptable objects.
         }
 
