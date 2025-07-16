@@ -19,13 +19,23 @@ namespace DataDictionary.Main.Forms.Scripting
         public Boolean IsOpenItem(object? item)
         { return bindingTemplate.Current is IScriptingTemplateValue current && ReferenceEquals(current, item); }
 
+        FormBinding formBinding;
 
         protected ScriptingTemplate() : base()
         {
             InitializeComponent();
 
+            formBinding = new FormBinding()
+            {
+                BindingTemplate = bindingTemplate,
+                BindingPath = bindingPath,
+                BindingNode = bindingNode,
+                BindingAttributes = bindingAttribute,
+                DoWork = base.DoWork
+            };
+
             SetRowState(
-                bindingTemplate, 
+                bindingTemplate,
                 bindingPath,
                 bindingNode,
                 bindingDocument,
@@ -176,7 +186,6 @@ namespace DataDictionary.Main.Forms.Scripting
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
 
-
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is ScriptingTemplateValue current
@@ -307,37 +316,32 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
+        Dictionary<ListViewItem, ScriptingNodeIndexName> nodeProperties = new Dictionary<ListViewItem, ScriptingNodeIndexName>();
 
-        Dictionary<ListViewItem, NodePropertyValue> nodeProperties = new Dictionary<ListViewItem, NodePropertyValue>();
         private void ElementSelection_Load()
         {
             elementSelection.Groups.Clear();
             elementSelection.Items.Clear();
-            nodeProperties.Clear();
             schemaNodeLayout.Enabled = false;
 
-            foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
+            foreach (var properties in formBinding.Properties)
             {
-                ListViewGroup newGroup = new ListViewGroup(NavigationEnumeration.Cast(groups.Key).Name);
+                ListViewGroup newGroup = new ListViewGroup(ScopeEnumeration.Cast(properties.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
-                foreach (NodePropertyValue item in groups)
+                foreach (var property in properties.Value)
                 {
-                    ListViewItem newItem = new ListViewItem(item.PropertyName, newGroup);
+                    ListViewItem newItem = new ListViewItem(property, newGroup);
+                    ScriptingNodeIndexName key = new ScriptingNodeIndexName(properties.Key, property);
 
-
-                    if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes)
+                    if (formBinding.TemplateNodes.FirstOrDefault(w => key.Equals(w)) is ScriptingNodeValue node)
                     {
-                        NodePropertyIndex nodeKey = new NodePropertyIndex(item);
-                        ScriptingNodeValue? node = nodes.FirstOrDefault(w => nodeKey.Equals(new NodePropertyIndex(w)));
-
                         if (node is ScriptingNodeValue)
                         { newItem.Checked = true; }
                         else { newItem.Checked = false; }
                     }
-
                     elementSelection.Items.Add(newItem);
-                    nodeProperties.Add(newItem, item);
+                    nodeProperties.Add(newItem, key);
                 }
             }
         }
@@ -374,7 +378,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && nodeProperties.ContainsKey(item)
                 && bindingTemplate.Current is ScriptingTemplateValue template)
             {
-                NodePropertyValue element = nodeProperties[item];
+                ScriptingNodeIndexName element = nodeProperties[item];
                 if (e.NewValue == CheckState.Checked)
                 {
                     // Duplicate check. Here just in case something unexpected happens.

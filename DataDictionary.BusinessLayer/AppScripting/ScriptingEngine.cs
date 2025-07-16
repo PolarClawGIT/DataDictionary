@@ -7,6 +7,7 @@ using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -44,9 +45,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IXDocumentData TemplateDocuments { get; }
 
         /// <summary>
-        /// List of Scripting Engine Column definitions
+        /// List of Properties for each Scope.
         /// </summary>
-        INodePropertyData Properties { get; }
+        IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties { get; }
     }
 
     /// <summary>
@@ -57,7 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required Model Model { get; init; }
+        public Model Model { get; private set; }
 
         /// <inheritdoc/>
         public IScriptingTemplateData Templates { get { return templateValues; } }
@@ -79,9 +80,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IXDocumentData TemplateDocuments { get { return documentValues; } }
         private readonly XDocumentData documentValues;
 
+
+        Dictionary<ScopeType, IEnumerable<XElementBuilder>> builders = new Dictionary<ScopeType, IEnumerable<XElementBuilder>>();
+
         /// <inheritdoc/>
-        public INodePropertyData Properties { get { return propertyValues; } }
-        private readonly NodePropertyData propertyValues;
+        public IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties
+        {
+            get
+            {
+                return builders.
+                    Select(s => new { Scope = s.Key, Properties = s.Value.Select(m => m.PropertyName) }).
+                    ToDictionary(k => k.Scope, v => v.Properties).
+                    AsReadOnly();
+            }
+        }
 
         /// <inheritdoc/>
         public Boolean RaiseListChangedEvents
@@ -104,14 +116,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-        public ScriptingEngine() : base()
+        public ScriptingEngine(Model model) : base()
         {
+            Model = model;
             templateValues = new ScriptingTemplateData() { Scripting = this };
             pathValues = new ScriptingPathData();
             documentValues = new XDocumentData();
             nodeValues = new ScriptingNodeData();
             attributeValues = new TemplateAttributeData();
-            propertyValues = new NodePropertyData();
+
+            // This data is static once loaded.
+            builders.Clear();
+            builders.Add(ScopeType.ModelAttribute, AttributeValue.CreateXElementBuilders());
+            builders.Add(ScopeType.ModelAttributeProperty, AttributePropertyValue.CreateXElementBuilders(model.Properties));
+            builders.Add(ScopeType.ModelAttributeDefinition, AttributeDefinitionValue.CreateXElementBuilders(model.Definitions));
+            //TODO: Add all other scriptable objects.
         }
 
         /// <inheritdoc/>

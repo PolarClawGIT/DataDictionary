@@ -56,7 +56,6 @@ namespace DataDictionary.Main.Forms.Model
             public void Init()
             {
                 // Note: C# 13 adds "field".
-                // This code could then be moved to the BindingHelpSubject init.
 
                 Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
