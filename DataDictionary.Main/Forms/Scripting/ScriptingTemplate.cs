@@ -5,6 +5,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +21,7 @@ namespace DataDictionary.Main.Forms.Scripting
         { return bindingTemplate.Current is IScriptingTemplateValue current && ReferenceEquals(current, item); }
 
         FormBinding formBinding;
+        Boolean needsData = false;
 
         protected ScriptingTemplate() : base()
         {
@@ -31,6 +33,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingPath = bindingPath,
                 BindingNode = bindingNode,
                 BindingAttributes = bindingAttribute,
+                BindingDocument = bindingDocument,
                 DoWork = base.DoWork
             };
             formBinding.Init();
@@ -50,27 +53,109 @@ namespace DataDictionary.Main.Forms.Scripting
             pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
-        public ScriptingTemplate(IScriptingTemplateValue? templateItem) : this()
+        public ScriptingTemplate(IScriptingTemplateIndex? templateItem) : this()
         {
             if (templateItem is null)
+            { templateItem = formBinding.NewValue(); }
+            else { formBinding.SetPosition(templateItem); }
+        }
+
+
+        private void ScriptingTemplate_Load(object sender, EventArgs e)
+        {
+
+            if (needsData)
+            { formBinding.Load(onCompleting); }
+            else { DoBinding(); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                templateItem = new ScriptingTemplateValue();
-                BusinessData.ScriptingEngine.Templates.Add(templateItem);
+                if (args.Error is null)
+                {
+                    DoBinding();
+                    SendMessage(new RefreshNavigation());
+                }
             }
-
-            ScriptingTemplateIndex key = new ScriptingTemplateIndex(templateItem);
-
-            bindingTemplate.DataSource = new BindingView<ScriptingTemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
-            bindingTemplate.Position = 0;
-
-
-            if (bindingTemplate.Current is IScriptingTemplateValue current)
+            void DoBinding()
             {
-                bindingPath.DataSource = new BindingView<ScriptingPathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
-                bindingNode.DataSource = new BindingView<ScriptingNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
-                bindingDocument.DataSource = new BindingView<XDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+                this.DataBindings.Add(new Binding(nameof(this.Text), bindingTemplate, nameof(IScriptingTemplateValue.TemplateTitle)));
+                templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TemplateTitle)));
+                templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TemplateDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                bindingAttribute.DataSource = null;
+                rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
+                rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
+                rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
+                rootDirectoryData.DataBindings.Add(new Binding(
+                    nameof(rootDirectoryData.SelectedValue),
+                    bindingTemplate, nameof(IScriptingTemplateValue.RootDirectory),
+                    false, DataSourceUpdateMode.OnPropertyChanged)
+                { DataSourceNullValue = TemplateDirectoryType.Null });
+
+                ScopeNameList.Load(breakOnScopeData);
+                breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(IScriptingTemplateValue.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
+
+                documentDirectoryData.DataBindings.Add(new Binding(nameof(documentDirectoryData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentPrefixData.DataBindings.Add(new Binding(nameof(documentPrefixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentSuffixData.DataBindings.Add(new Binding(nameof(documentSuffixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentExtensionData.DataBindings.Add(new Binding(nameof(documentExtensionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                scriptAsData.ValueMember = nameof(TemplateScriptAsEnumeration.Value);
+                scriptAsData.DisplayMember = nameof(TemplateScriptAsEnumeration.DisplayName);
+                scriptAsData.DataSource = TemplateScriptAsEnumeration.Members.Values.ToList();
+                scriptAsData.DataBindings.Add(new Binding(
+                    nameof(scriptAsData.SelectedValue),
+                    bindingTemplate, nameof(IScriptingTemplateValue.ScriptAs),
+                    false, DataSourceUpdateMode.OnPropertyChanged)
+                { DataSourceNullValue = TemplateScriptAsType.none });
+
+                scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                scriptingSuffixData.DataBindings.Add(new Binding(nameof(scriptingSuffixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                scriptingExtensionData.DataBindings.Add(new Binding(nameof(scriptingExtensionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                transformScriptData.DataBindings.Add(new Binding(nameof(transformScriptData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TransformScript), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                ScopeNameList.Load(propertyScopeData);
+                propertyScopeData.DataBindings.Add(new Binding(nameof(propertyScopeData.SelectedValue), bindingNode, nameof(IScriptingNodeValue.PropertyScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
+                propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(IScriptingNodeValue.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(IScriptingNodeValue.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
+                nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
+                nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Members.Values.ToList();
+                nodeValueAsData.DataBindings.Add(new Binding(
+                    nameof(nodeValueAsData.SelectedValue),
+                    bindingNode, nameof(IScriptingNodeValue.NodeValueAs),
+                    false, DataSourceUpdateMode.OnPropertyChanged)
+                { DataSourceNullValue = TemplateNodeValueAsType.none });
+
+                PropertyNameList.Load(attributePropertyColumn);
+                attributeData.AutoGenerateColumns = false;
+                attributeData.DataSource = bindingAttribute;
+
+                documentData.AutoGenerateColumns = false;
+                documentData.DataSource = bindingDocument;
+
+                documentXMLData.DataBindings.Add(new Binding(nameof(documentXMLData.Text), bindingDocument, nameof(IXDocumentValue.SourceAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentScriptData.DataBindings.Add(new Binding(nameof(documentScriptData.Text), bindingDocument, nameof(IXDocumentValue.ResultsAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(IXDocumentValue.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                // Path Handling
+                ScopeNameList.Load(nameSpaceScopeColumn);
+                ScopeNameList.Load(pathScopeData);
+
+                pathsData.AutoGenerateColumns = false;
+                pathsData.DataSource = bindingPath;
+
+                pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(IScriptingPathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+                pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(IScriptingPathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
+
+                ElementSelection_Load();
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -78,93 +163,8 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (bindingTemplate.Current is ScriptingTemplateValue current)
-            { DoWork(BusinessData.ScriptingEngine.Delete(current)); }
-        }
-
-        private void ScriptingTemplate_Load(object sender, EventArgs e)
-        {
-            IScriptingTemplateValue nameOfValues;
-            IScriptingNodeValue nameOfNode;
-            IXDocumentValue nameOfDocument;
-
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle)));
-            templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle)));
-            templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(nameOfValues.TemplateDescription), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
-            rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
-            rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
-            rootDirectoryData.DataBindings.Add(new Binding(
-                nameof(rootDirectoryData.SelectedValue),
-                bindingTemplate, nameof(nameOfValues.RootDirectory),
-                false, DataSourceUpdateMode.OnPropertyChanged)
-            { DataSourceNullValue = TemplateDirectoryType.Null });
-
-            ScopeNameList.Load(breakOnScopeData);
-            breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(nameOfValues.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
-
-            documentDirectoryData.DataBindings.Add(new Binding(nameof(documentDirectoryData.Text), bindingTemplate, nameof(nameOfValues.DocumentDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentPrefixData.DataBindings.Add(new Binding(nameof(documentPrefixData.Text), bindingTemplate, nameof(nameOfValues.DocumentPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentSuffixData.DataBindings.Add(new Binding(nameof(documentSuffixData.Text), bindingTemplate, nameof(nameOfValues.DocumentSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentExtensionData.DataBindings.Add(new Binding(nameof(documentExtensionData.Text), bindingTemplate, nameof(nameOfValues.DocumentExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-            scriptAsData.ValueMember = nameof(TemplateScriptAsEnumeration.Value);
-            scriptAsData.DisplayMember = nameof(TemplateScriptAsEnumeration.DisplayName);
-            scriptAsData.DataSource = TemplateScriptAsEnumeration.Members.Values.ToList();
-            scriptAsData.DataBindings.Add(new Binding(
-                nameof(scriptAsData.SelectedValue),
-                bindingTemplate, nameof(nameOfValues.ScriptAs),
-                false, DataSourceUpdateMode.OnPropertyChanged)
-            { DataSourceNullValue = TemplateScriptAsType.none });
-
-            scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(nameOfValues.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(nameOfValues.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            scriptingSuffixData.DataBindings.Add(new Binding(nameof(scriptingSuffixData.Text), bindingTemplate, nameof(nameOfValues.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            scriptingExtensionData.DataBindings.Add(new Binding(nameof(scriptingExtensionData.Text), bindingTemplate, nameof(nameOfValues.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-            transformScriptData.DataBindings.Add(new Binding(nameof(transformScriptData.Text), bindingTemplate, nameof(nameOfValues.TransformScript), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTemplate, nameof(nameOfValues.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-            ScopeNameList.Load(propertyScopeData);
-            propertyScopeData.DataBindings.Add(new Binding(nameof(propertyScopeData.SelectedValue), bindingNode, nameof(nameOfNode.PropertyScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
-            propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(nameOfNode.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(nameOfNode.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-            nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
-            nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
-            nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Members.Values.ToList();
-            nodeValueAsData.DataBindings.Add(new Binding(
-                nameof(nodeValueAsData.SelectedValue),
-                bindingNode, nameof(nameOfNode.NodeValueAs),
-                false, DataSourceUpdateMode.OnPropertyChanged)
-            { DataSourceNullValue = TemplateNodeValueAsType.none });
-
-
-            PropertyNameList.Load(attributePropertyColumn);
-            attributeData.AutoGenerateColumns = false;
-            attributeData.DataSource = bindingAttribute;
-
-            documentData.AutoGenerateColumns = false;
-            documentData.DataSource = bindingDocument;
-
-            documentXMLData.DataBindings.Add(new Binding(nameof(documentXMLData.Text), bindingDocument, nameof(nameOfDocument.SourceAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentScriptData.DataBindings.Add(new Binding(nameof(documentScriptData.Text), bindingDocument, nameof(nameOfDocument.ResultsAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-            // Path Handling
-            ScopeNameList.Load(nameSpaceScopeColumn);
-            ScopeNameList.Load(pathScopeData);
-
-            pathsData.AutoGenerateColumns = false;
-            pathsData.DataSource = bindingPath;
-
-            pathScopeData.DataBindings.Add(new Binding(nameof(pathScopeData.SelectedValue), bindingPath, nameof(ScriptingPathValue.NameSpaceScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
-            pathNameData.DataBindings.Add(new Binding(nameof(pathNameData.Text), bindingPath, nameof(ScriptingPathValue.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
-
-            ElementSelection_Load();
-
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTemplate.Current is not IScriptingTemplateValue);
+            formBinding.RemoveValue();
+            IsLocked(formBinding.GetLocked());
         }
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)

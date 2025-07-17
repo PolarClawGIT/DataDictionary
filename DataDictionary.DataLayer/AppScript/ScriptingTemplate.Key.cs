@@ -25,8 +25,14 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for the Primary Key of the Scripting Template.
         /// </summary>
+        public ScriptingTemplateKey () : base ()
+        { }
+
+        /// <summary>
+        /// Constructor for the Primary Key of the Scripting Template.
+        /// </summary>
         /// <param name="source"></param>
-        public ScriptingTemplateKey(IScriptingTemplateKey source) : base()
+        public ScriptingTemplateKey(IScriptingTemplateKey source) : this()
         {
             if (source.TemplateId is Guid) { TemplateId = source.TemplateId; }
             else { TemplateId = Guid.Empty; }
@@ -35,7 +41,7 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(ScriptingTemplateKey? other)
-        { return other is ScriptingTemplateKey && EqualityComparer<Guid?>.Default.Equals(TemplateId, other.TemplateId); }
+        { return other is ScriptingTemplateKey key && key.TemplateId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TemplateId, other.TemplateId); }
 
         /// <inheritdoc/>
         public Boolean Equals(IScriptingTemplateKey? other)

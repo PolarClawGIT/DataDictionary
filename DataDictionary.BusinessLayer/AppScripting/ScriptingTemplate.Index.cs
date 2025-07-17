@@ -12,6 +12,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class ScriptingTemplateIndex : ScriptingTemplateKey, IScriptingTemplateIndex,
         IKeyEquality<IScriptingTemplateIndex>, IKeyEquality<ScriptingTemplateIndex>
     {
+        /// <inheritdoc cref="ScriptingTemplateKey()"/>
+        public ScriptingTemplateIndex() : base() { }
+
         /// <inheritdoc cref="ScriptingTemplateKey(IScriptingTemplateKey)"/>
         public ScriptingTemplateIndex(IScriptingTemplateIndex source) : base(source)
         { }
