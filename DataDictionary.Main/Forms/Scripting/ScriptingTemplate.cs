@@ -470,10 +470,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void BindingNode_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            if (bindingTemplate.Current is IScriptingTemplateValue template)
-            { e.NewObject = new ScriptingNodeValue(template); }
-        }
+        { e.NewObject = formBinding.NewNode(); }
 
         private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
         {

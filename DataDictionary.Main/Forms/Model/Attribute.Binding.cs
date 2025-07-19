@@ -172,7 +172,6 @@ namespace DataDictionary.Main.Forms.Model
                 if (TryGetValue(out AttributeValue? value))
                 { return new AttributeAliasValue(value); }
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
-                throw new NotImplementedException();
             }
 
             public void AddSubjectArea(ISubjectAreaIndex subject)

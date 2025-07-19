@@ -19,6 +19,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class ScriptingTemplate
     {
+        //TODO: Think this form needs to be rebuilt completely.
         class FormBinding
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
@@ -71,7 +72,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingAttributes.DataSource = TemplateAttributes;
                 BindingDocument.DataSource = TemplateDocuments;
             }
-
 
             public void SetPosition(IScriptingTemplateIndex template)
             {
@@ -133,7 +133,31 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
-            public ScriptingTemplateValue NewValue()
+            public Boolean TryGetValue([NotNullWhen(true)] out ScriptingNodeValue? result)
+            {
+                if (BindingNode.Position >= 0
+                    && BindingNode.Current is ScriptingNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetValue(IScriptingNodeIndexName index, [NotNullWhen(true)] out ScriptingNodeValue? result)
+            {
+                ScriptingNodeIndexName key = new ScriptingNodeIndexName(index);
+                if (TemplateNodes.FirstOrDefault(w => key.Equals(w)) is ScriptingNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetValue(IScriptingNodeIndex index, [NotNullWhen(true)] out ScriptingNodeValue? result)
+            {
+                ScriptingNodeIndex key = new ScriptingNodeIndex(index);
+                if (TemplateNodes.FirstOrDefault(w => key.Equals(w)) is ScriptingNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public IScriptingTemplateValue NewValue()
             {
                 ScriptingTemplateValue newValue = new ScriptingTemplateValue();
                 scriptingData.Templates.Add(newValue);
@@ -141,6 +165,22 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 return newValue;
             }
+
+            public IScriptingNodeValue NewNode()
+            {
+                if (TryGetValue(out ScriptingTemplateValue? template))
+                { return new ScriptingNodeValue(template); }
+                else { throw new InvalidOperationException("Current ScriptingTemplateValue not defined"); }
+            }
+
+            public IScriptingPathValue NewPath()
+            {
+                if (TryGetValue(out ScriptingTemplateValue? template))
+                { return new ScriptingPathValue(template); }
+                else { throw new InvalidOperationException("Current ScriptingTemplateValue not defined"); }
+            }
+
+
 
             public void RemoveValue()
             {
