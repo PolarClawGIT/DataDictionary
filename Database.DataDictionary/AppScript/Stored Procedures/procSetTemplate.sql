@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetScriptingTemplate]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplate]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttScriptingTemplate] ReadOnly
+		@Data [AppScript].[udttTemplate] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -79,15 +79,17 @@ Begin Try
 				Where	@TemplateId is Not Null)
 
 	-- Apply Changes
-	Delete From [AppScript].[ScriptingPath]
-	From	[AppScript].[ScriptingPath] T
+	Delete From [AppScript].[TemplateAttribute]
+	From	[AppScript].[TemplateAttribute] T
+			Inner Join [AppScript].[TemplateNode] N
+			On	T.[NodeId] = N.[NodeId]
 			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
+			On	N.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
-			T.[TemplateId] In (
+			N.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[TemplateNode]
 	From	[AppScript].[TemplateNode] T
@@ -97,7 +99,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingModel]
 	From	[AppScript].[ScriptingModel] T
@@ -118,7 +120,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[Template]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[TemplateId],
@@ -172,7 +174,7 @@ Begin Try
 		From	[AppScript].[Template] T
 				Inner Join [Delta] S
 				On	T.[TemplateId] = S.[TemplateId]
-	Print FormatMessage ('Update [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[Template]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[Template] (
 			[TemplateId],
@@ -209,7 +211,7 @@ Begin Try
 			Left Join [AppScript].[Template] T
 			On	S.[TemplateId] = T.[TemplateId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[Template]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingModel] (
 			[ModelId],
@@ -222,10 +224,6 @@ Begin Try
 				@ModelId = T.[ModelId]
 	Where	T.[TemplateId] Is Null
 	Print FormatMessage ('Insert [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-
-	-- Tracking statement, example
-	Print FormatMessage ('Set [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

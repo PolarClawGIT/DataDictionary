@@ -1,4 +1,6 @@
-﻿CREATE VIEW [AppScript].[ScriptingNameSpaceHs] As
+﻿
+/* Obsolete
+CREATE VIEW [AppScript].[ScriptingNameSpaceHs] As
 With [Data] As (
 	Select	[NameSpaceId],
 			[MemberName],
@@ -70,3 +72,4 @@ From	[Data] D
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
 GO
+*/

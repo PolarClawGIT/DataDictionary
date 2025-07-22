@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE [AppScript].[procGetScriptingPath]
+﻿/* Obsolete
+
+CREATE PROCEDURE [AppScript].[procGetScriptingPath]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -30,3 +32,4 @@ Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUt
 			From	[AppScript].[ScriptingModel] -- TODO: For System_Time As of @AsOfUtcDate
 			Where	D.[TemplateId] = [TemplateId]))
 GO
+*/

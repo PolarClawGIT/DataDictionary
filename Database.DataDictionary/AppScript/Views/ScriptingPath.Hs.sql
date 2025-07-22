@@ -1,4 +1,6 @@
-﻿CREATE VIEW [AppScript].[ScriptingPathHs] As
+﻿/* Obsolete
+
+CREATE VIEW [AppScript].[ScriptingPathHs] As
 -- Temporal View
 With [Dates] As (
 	Select	[TemplateId],
@@ -66,3 +68,4 @@ From	[AppScript].[ScriptingPath] D
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FN
 GO
+*/

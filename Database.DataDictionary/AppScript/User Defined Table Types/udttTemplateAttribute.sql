@@ -1,11 +1,11 @@
-﻿CREATE TYPE [AppScript].[udttScriptingNode] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplateAttribute] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
-	[NodeId]				UniqueIdentifier NULL,
-	[PropertyScope]         [AppGeneral].[uddtScopeName] Null,
-	[PropertyName]          [AppGeneral].[uddtNameSpaceMember] Null,
-	[NodeName]				[AppGeneral].[uddtNameSpaceMember] Null,
-	[NodeValueAs]			NVarChar(50) Not Null,
+	[NodeId]	            UniqueIdentifier NULL,
+	[AttributeId]			UniqueIdentifier NULL,
+	[AttributeName]			NVarChar(50) NULL,
+	[AttributeValue]		NVarChar(250) NULL,
+	[PropertyId]			UniqueIdentifier NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

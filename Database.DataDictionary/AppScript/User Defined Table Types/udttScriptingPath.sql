@@ -1,4 +1,5 @@
-﻿CREATE TYPE [AppScript].[udttScriptingPath] AS TABLE
+﻿/* Obsolete
+CREATE TYPE [AppScript].[udttScriptingPath] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[NameSpace]             [AppGeneral].[uddtNameSpacePath] NULL,
@@ -13,3 +14,4 @@
 	[IsDeleted]             Bit Null,
 	[IsCurrent]             Bit Null
 );
+*/

@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetScriptingAttribute]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplateAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttScriptingAttribute] ReadOnly
+		@Data [AppScript].[udttTemplateAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued

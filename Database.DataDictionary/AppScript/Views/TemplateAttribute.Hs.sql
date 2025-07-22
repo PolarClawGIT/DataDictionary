@@ -1,31 +1,23 @@
-﻿CREATE VIEW [AppScript].[ScriptingTemplateHs] As
+﻿CREATE VIEW [AppScript].[TemplateAttributeHs] As
 -- Temporal View
 With [Dates] As (
-	Select	[TemplateId],
+	Select	[AttributeId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[Template]
+	From	[AppScript].[TemplateAttribute]
 	/*Union -- TODO: Temporal not yet implemented
-	Select	[TemplateId],
+	Select	[AttributeId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[ScriptingTemplate]
+	From	[HsScript].[ScriptingAttribute]
 	Where	[SysStart] != [SysEnd]*/)
-Select	D.[TemplateId],
-		D.[TemplateTitle],
-		D.[TemplateDescription],
-		D.[BreakOnScope],
-		D.[TransformScript],
-		D.[RootDirectory],
-		D.[DocumentDirectory],
-		D.[DocumentPrefix],
-		D.[DocumentSuffix],
-		D.[DocumentExtension],
-		D.[ScriptAs],
-		D.[ScriptDirectory],
-		D.[ScriptPrefix],
-		D.[ScriptSuffix],
-		D.[ScriptExtension],
+Select	D.[AttributeId],
+		D.[NodeId],
+		FT.[TemplateId],
+		FT.[TemplateTitle],
+		D.[AttributeName],
+		D.[AttributeValue],
+		D.[PropertyId],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -37,19 +29,38 @@ Select	D.[TemplateId],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[Template] D
+From	[AppScript].[TemplateAttribute] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
-			Where	[TemplateId] = D.[TemplateId] And
+			Where	[AttributeId] = D.[AttributeId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
-			Where	[TemplateId] = D.[TemplateId] And
+			Where	[AttributeId] = D.[AttributeId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
+		-- Not specifying a For System_Time returns the current value
+		-- For System_Time <some date> returns the value for that date
+		-- Otherwise the last value is returned
+		Outer Apply (
+			Select	Top 1
+					[NodeId],
+					[TemplateId]
+			From	[AppScript].[TemplateNode]
+			Where	[NodeId] = D.[NodeId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FN
+		Outer Apply (
+			Select	Top 1
+					[TemplateId],
+					[TemplateTitle]
+			From	[AppScript].[Template]
+			Where	[TemplateId] = FN.[TemplateId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FT
 GO

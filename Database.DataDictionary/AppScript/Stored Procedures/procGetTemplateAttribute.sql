@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppScript].[procGetScriptingAttribute]
+﻿CREATE PROCEDURE [AppScript].[procGetTemplateAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AttributeId UniqueIdentifier = Null,
@@ -26,7 +26,7 @@ Select	[TemplateId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[ScriptingAttributeHs] D -- TODO: For System_Time All D
+From	[AppScript].[TemplateAttributeHs] D -- TODO: For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@AttributeId is Null Or @AttributeId = [AttributeId]) And

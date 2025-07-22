@@ -1,7 +1,7 @@
-﻿CREATE TABLE [AppScript].[ScriptingNameSpace]
-(
-	-- TODO: Obsolete, Replace with Data Source/Item
+﻿/* Obsolete
 
+CREATE TABLE [AppScript].[ScriptingNameSpace]
+(
 	[NameSpaceId]			UniqueIdentifier Not Null CONSTRAINT [DF_NameSpaceId] DEFAULT (newid()),
 	[MemberName]			[AppGeneral].[uddtNameSpaceMember] Not Null, -- The Item Name to be scripted. Combined to create a NameSpace.
 	[ParentNameSpaceId]		UniqueIdentifier Null,
@@ -13,3 +13,4 @@
 	--CONSTRAINT [FK_ItemNameSpace_Parent] FOREIGN KEY ([ParentNameSpaceId]) REFERENCES [AppScript].[ScriptingNameSpace] ([NameSpaceId]),
 
 )
+*/

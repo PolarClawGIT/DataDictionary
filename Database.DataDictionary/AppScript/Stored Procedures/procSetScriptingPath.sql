@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE [AppScript].[procSetScriptingPath]
+﻿/*Obsolete
+
+CREATE PROCEDURE [AppScript].[procSetScriptingPath]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@Data [AppScript].[udttScriptingPath] ReadOnly
@@ -154,3 +156,4 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
+*/

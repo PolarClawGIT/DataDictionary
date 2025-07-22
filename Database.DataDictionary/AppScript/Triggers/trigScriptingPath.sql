@@ -1,4 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigScriptingPath]
+﻿/* Obsolete
+CREATE TRIGGER [AppScript].[trigScriptingPath]
 	ON [AppScript].[ScriptingPath]
 	FOR DELETE, INSERT, UPDATE
 	AS
@@ -6,3 +7,4 @@
 	-- Set Transaction Log
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 	END
+*/

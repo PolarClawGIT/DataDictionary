@@ -1,4 +1,5 @@
-﻿CREATE FUNCTION [AppScript].[funcNameSpace](@NameSpaceId UniqueIdentifier)
+﻿/* Obsolete
+CREATE FUNCTION [AppScript].[funcNameSpace](@NameSpaceId UniqueIdentifier)
 -- This takes the NameSpaceId and rebuilds them into a Scripting NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
@@ -28,3 +29,4 @@ Where	[ParentNameSpaceId] is Null
 Return	@Result
 END
 GO
+*/

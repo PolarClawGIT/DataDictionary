@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[udttScriptingTemplate] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplate] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,

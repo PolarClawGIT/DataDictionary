@@ -1,7 +1,7 @@
-﻿CREATE TABLE [AppScript].[ScriptingPath]
-(
-	-- TODO: Obsolete, Replace with Data Source/Item
+﻿/* Obsolete
 
+CREATE TABLE [AppScript].[ScriptingPath]
+(
 	[TemplateId]        UniqueIdentifier NOT NULL,
 	[NameSpaceId]       UniqueIdentifier NOT NULL,
 	[NameSpaceScope]    [AppGeneral].[uddtScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
@@ -14,3 +14,4 @@
 	--CONSTRAINT [FK_ScriptingPathTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	--CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppScript].[ScriptingNameSpace] ([NameSpaceId]),
 )
+*/
