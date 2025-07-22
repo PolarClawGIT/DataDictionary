@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigScriptingAttribute]
-	ON [AppScript].[ScriptingAttribute]
+﻿CREATE TRIGGER [AppScript].[trigDataSource]
+	ON [AppScript].[DataSource]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN

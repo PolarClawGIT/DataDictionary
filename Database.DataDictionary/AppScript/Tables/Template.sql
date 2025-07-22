@@ -1,6 +1,6 @@
-﻿CREATE TABLE [AppScript].[ScriptingTemplate]
+﻿CREATE TABLE [AppScript].[Template]
 (
-	[TemplateId]            UniqueIdentifier Not Null CONSTRAINT [DF_ScriptingTemplateId] DEFAULT (newid()),
+	[TemplateId]            UniqueIdentifier Not Null CONSTRAINT [DF_TemplateId] DEFAULT (newid()),
 	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
 	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
 	-- Transform Settings, refers to the XSLT and the document produced.
@@ -32,10 +32,10 @@
 	[ScriptSuffix]			NVarChar(50) Null,
 	[ScriptExtension]		NVarChar(10) Null,
 	-- TODO: Add System Version later once the schema is locked down
-	[ModifiedBy] SysName Not Null CONSTRAINT [DF_ScriptingTemplate_ModifiedBy] DEFAULT (original_login()),
-	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ScriptingTemplate_SysStart] DEFAULT (sysdatetime()),
-	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ScriptingTemplate_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+	[ModifiedBy] SysName Not Null CONSTRAINT [DF_Template_ModifiedBy] DEFAULT (original_login()),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Template_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Template_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
-	CONSTRAINT [PK_ScriptingTemplate] PRIMARY KEY CLUSTERED ([TemplateId] ASC),
-	CONSTRAINT [CK_ScriptingTemplateScriptAs] CHECK ([ScriptAs]='XML' OR [ScriptAs]='Text'),
+	CONSTRAINT [PK_Template] PRIMARY KEY CLUSTERED ([TemplateId] ASC),
+	CONSTRAINT [CK_TemplateScriptAs] CHECK ([ScriptAs]='XML' OR [ScriptAs]='Text'),
 )

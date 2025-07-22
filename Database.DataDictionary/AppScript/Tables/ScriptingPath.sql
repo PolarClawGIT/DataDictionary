@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [AppScript].[ScriptingPath]
 (
-	-- TODO: Obsolete, Replace with Scripting Item
+	-- TODO: Obsolete, Replace with Data Source/Item
 
 	[TemplateId]        UniqueIdentifier NOT NULL,
 	[NameSpaceId]       UniqueIdentifier NOT NULL,
@@ -11,6 +11,6 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ScriptingPath_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingPath] PRIMARY KEY CLUSTERED ([TemplateId] ASC, [NameSpaceId] ASC),
-	CONSTRAINT [FK_ScriptingPathTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[ScriptingTemplate] ([TemplateId]),
-	CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppScript].[ScriptingNameSpace] ([NameSpaceId]),
+	--CONSTRAINT [FK_ScriptingPathTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
+	--CONSTRAINT [FK_ScriptingPathNameSpace] FOREIGN KEY ([NameSpaceId]) REFERENCES [AppScript].[ScriptingNameSpace] ([NameSpaceId]),
 )

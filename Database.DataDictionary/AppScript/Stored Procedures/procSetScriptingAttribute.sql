@@ -37,9 +37,9 @@ Begin Try
 			Cross apply (Select	Coalesce(D.[AttributeId], NewId()) As [AttributeId]) X
 
 	-- Apply Changes
-	Delete From [AppScript].[ScriptingAttribute]
-	From	[AppScript].[ScriptingNode] P
-			Inner Join [AppScript].[ScriptingAttribute] T
+	Delete From [AppScript].[TemplateAttribute]
+	From	[AppScript].[TemplateNode] P
+			Inner Join [AppScript].[TemplateAttribute] T
 			On	P.[NodeId] = T.[NodeId]
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
@@ -66,17 +66,17 @@ Begin Try
 				[AttributeName],
 				[AttributeValue],
 				[PropertyId]
-		From	[AppScript].[ScriptingAttribute])
-	Update [AppScript].[ScriptingAttribute]
+		From	[AppScript].[TemplateAttribute])
+	Update [AppScript].[TemplateAttribute]
 	Set		[AttributeName] = S.[AttributeName],
 			[AttributeValue] = S.[AttributeValue],
 			[PropertyId] = S.[PropertyId]
-	From	[AppScript].[ScriptingAttribute] T
+	From	[AppScript].[TemplateAttribute] T
 			Inner Join [Delta] S
 			On	T.[AttributeId] = S.[AttributeId]
 	Print FormatMessage ('Update [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[ScriptingAttribute] (
+	Insert Into [AppScript].[TemplateAttribute] (
 			[AttributeId],
 			[NodeId],
 			[AttributeName],
@@ -88,7 +88,7 @@ Begin Try
 			S.[AttributeValue],
 			S.[PropertyId]
 	From	@Values S
-			Left Join [AppScript].[ScriptingAttribute] T
+			Left Join [AppScript].[TemplateAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

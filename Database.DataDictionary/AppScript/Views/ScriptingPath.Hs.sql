@@ -53,7 +53,7 @@ From	[AppScript].[ScriptingPath] D
 			Select	Top 1
 					[TemplateId],
 					[TemplateTitle]
-			From	[AppScript].[ScriptingTemplate]
+			From	[AppScript].[Template]
 			Where	[TemplateId] = D.[TemplateId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FT

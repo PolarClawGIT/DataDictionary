@@ -4402,4 +4402,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[NameSpaceScope]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9944a54b-397d-4bf1-a8ad-055307dc0cc6" ChangeDateTime="07/22/2025 15:15:20">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Template]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="11cd956f-f575-4d7c-ad74-913c2cf66fbc" ChangeDateTime="07/22/2025 15:16:56">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e15a7ac4-d8ed-4fe7-b468-247134e32378" ChangeDateTime="07/22/2025 15:18:39">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="17cc104e-db10-4ab7-9893-35345f51604e" ChangeDateTime="07/22/2025 15:26:58">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[TemplateAttribute]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dd0fcadb-7e80-4069-b864-8ec4528ba5b0" ChangeDateTime="07/22/2025 15:28:07">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingNode]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[TemplateNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="eb410025-f12a-4d55-825b-7d8d5a1f59b7" ChangeDateTime="07/22/2025 15:28:53">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[Template]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplate]" />
+  </Operation>
 </Operations>

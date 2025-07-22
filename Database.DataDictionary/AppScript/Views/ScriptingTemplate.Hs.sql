@@ -4,7 +4,7 @@ With [Dates] As (
 	Select	[TemplateId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[ScriptingTemplate]
+	From	[AppScript].[Template]
 	/*Union -- TODO: Temporal not yet implemented
 	Select	[TemplateId],
 			[SysStart],
@@ -37,7 +37,7 @@ Select	D.[TemplateId],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[ScriptingTemplate] D
+From	[AppScript].[Template] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

@@ -66,7 +66,7 @@ Begin Try
 
 	Insert Into @Delete
 	Select	T.[TemplateId]
-	From	[AppScript].[ScriptingTemplate] T
+	From	[AppScript].[Template] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
@@ -89,8 +89,8 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[ScriptingNode]
-	From	[AppScript].[ScriptingNode] T
+	Delete From [AppScript].[TemplateNode]
+	From	[AppScript].[TemplateNode] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
@@ -110,8 +110,8 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[ScriptingTemplate]
-	From	[AppScript].[ScriptingTemplate] T
+	Delete From [AppScript].[Template]
+	From	[AppScript].[Template] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
@@ -153,8 +153,8 @@ Begin Try
 				[ScriptPrefix],
 				[ScriptSuffix],
 				[ScriptExtension]
-		From	[AppScript].[ScriptingTemplate])
-	Update [AppScript].[ScriptingTemplate]
+		From	[AppScript].[Template])
+	Update [AppScript].[Template]
 		Set		[TemplateTitle] = S.[TemplateTitle],
 				[TemplateDescription] = S.[TemplateDescription],
 				[BreakOnScope] = S.[BreakOnScope],
@@ -169,12 +169,12 @@ Begin Try
 				[ScriptPrefix] = S.[ScriptPrefix],
 				[ScriptSuffix] = S.[ScriptSuffix],
 				[ScriptExtension] = S.[ScriptExtension]
-		From	[AppScript].[ScriptingTemplate] T
+		From	[AppScript].[Template] T
 				Inner Join [Delta] S
 				On	T.[TemplateId] = S.[TemplateId]
 	Print FormatMessage ('Update [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[ScriptingTemplate] (
+	Insert Into [AppScript].[Template] (
 			[TemplateId],
 			[TemplateTitle],
 			[TemplateDescription],
@@ -206,7 +206,7 @@ Begin Try
 			S.[ScriptSuffix],
 			S.[ScriptExtension]
 	From	@Values S
-			Left Join [AppScript].[ScriptingTemplate] T
+			Left Join [AppScript].[Template] T
 			On	S.[TemplateId] = T.[TemplateId]
 	Where	T.[TemplateId] is Null
 	Print FormatMessage ('Insert [AppScript].[ScriptingTemplate]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

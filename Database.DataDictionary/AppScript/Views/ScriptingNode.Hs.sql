@@ -4,7 +4,7 @@ With [Dates] As (
 	Select	[TemplateId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[ScriptingNode]
+	From	[AppScript].[TemplateNode]
 	/*Union -- TODO: Temporal not yet implemented
 	Select	[TemplateId],
 			[SysStart],
@@ -29,7 +29,7 @@ Select	D.[NodeId],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[ScriptingNode] D
+From	[AppScript].[TemplateNode] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
@@ -51,7 +51,7 @@ From	[AppScript].[ScriptingNode] D
 			Select	Top 1
 					[TemplateId],
 					[TemplateTitle]
-			From	[AppScript].[ScriptingTemplate]
+			From	[AppScript].[Template]
 			Where	[TemplateId] = D.[TemplateId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FT

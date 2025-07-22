@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigScriptingTemplate]
-	ON [AppScript].[ScriptingTemplate]
+﻿CREATE TRIGGER [AppScript].[trigTemplateAttribute]
+	ON [AppScript].[TemplateAttribute]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN

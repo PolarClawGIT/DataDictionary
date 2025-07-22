@@ -39,9 +39,9 @@ Begin Try
 			Cross apply (Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
 
 	-- Apply Changes
-	Delete From [AppScript].[ScriptingAttribute]
-	From	[AppScript].[ScriptingNode] P
-			Inner Join [AppScript].[ScriptingAttribute] T
+	Delete From [AppScript].[TemplateAttribute]
+	From	[AppScript].[TemplateNode] P
+			Inner Join [AppScript].[TemplateAttribute] T
 			On	P.[NodeId] = T.[NodeId]
 			Left Join @Values S
 			On	T.[NodeId] = S.[NodeId]
@@ -55,8 +55,8 @@ Begin Try
 				Where	@TemplateId is Not Null)
 	Print FormatMessage ('Delete [AppScript].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[ScriptingNode]
-	From	[AppScript].[ScriptingNode] T
+	Delete From [AppScript].[TemplateNode]
+	From	[AppScript].[TemplateNode] T
 			Left Join @Values S
 			On	T.[NodeId] = S.[NodeId]
 	Where	S.[NodeId] is Null And
@@ -84,18 +84,18 @@ Begin Try
 				[PropertyName],
 				[NodeName],
 				[NodeValueAs]
-		From	[AppScript].[ScriptingNode])
-	Update [AppScript].[ScriptingNode]
+		From	[AppScript].[TemplateNode])
+	Update [AppScript].[TemplateNode]
 	Set		[PropertyScope] = S.[PropertyScope],
 			[PropertyName] = S.[PropertyName],
 			[NodeName] = S.[NodeName],
 			[NodeValueAs] = S.[NodeValueAs]
-	From	[AppScript].[ScriptingNode] T
+	From	[AppScript].[TemplateNode] T
 			Inner Join [Delta] S
 			On	T.[NodeId] = S.[NodeId]
 	Print FormatMessage ('Update [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[ScriptingNode] (
+	Insert Into [AppScript].[TemplateNode] (
 			[NodeId],
 			[TemplateId],
 			[PropertyScope],
@@ -109,7 +109,7 @@ Begin Try
 			S.[NodeName],
 			S.[NodeValueAs]
 	From	@Values S
-			Left Join [AppScript].[ScriptingNode] T
+			Left Join [AppScript].[TemplateNode] T
 			On	S.[NodeId] = T.[NodeId]
 	Where	T.[TemplateId] is Null
 	Print FormatMessage ('Insert [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

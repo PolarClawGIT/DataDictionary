@@ -436,10 +436,10 @@
     <Build Include="AppModel\Stored Procedures\procSetProcessArgument.sql" />
     <Build Include="AppLibrary\Tables\LibraryMember.sql" />
     <Build Include="AppLibrary\Tables\LibrarySource.sql" />
-    <Build Include="AppScript\Tables\ScriptingAttribute.sql" />
-    <Build Include="AppScript\Tables\ScriptingNode.sql" />
+    <Build Include="AppScript\Tables\TemplateAttribute.sql" />
+    <Build Include="AppScript\Tables\TemplateNode.sql" />
     <Build Include="AppScript\Tables\ScriptingPath.sql" />
-    <Build Include="AppScript\Tables\ScriptingTemplate.sql" />
+    <Build Include="AppScript\Tables\Template.sql" />
     <Build Include="AppLibrary\Tables\LibraryModel.sql" />
     <Build Include="AppCatalog\Tables\CatalogModel.sql" />
     <Build Include="AppScript\Tables\ScriptingModel.sql" />
@@ -467,10 +467,10 @@
     <Build Include="AppLibrary\Triggers\trigLibrarySource.sql" />
     <Build Include="AppLibrary\Triggers\trigLibraryModel.sql" />
     <Build Include="AppLibrary\Triggers\trigLibraryMember.sql" />
-    <Build Include="AppScript\Triggers\trigScriptingNode.sql" />
-    <Build Include="AppScript\Triggers\trigScriptingTemplate.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateNode.sql" />
+    <Build Include="AppScript\Triggers\trigTemplate.sql" />
     <Build Include="AppScript\Triggers\trigScriptingModel.sql" />
-    <Build Include="AppScript\Triggers\trigScriptingAttribute.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateAttribute.sql" />
     <Build Include="AppScript\Triggers\trigScriptingPath.sql" />
     <Build Include="AppModel\User Defined Table Types\udttAlias.sql" />
     <Build Include="AppModel\User Defined Table Types\udttAttribute.sql" />
@@ -518,6 +518,10 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtScopeName.sql" />
     <Build Include="AppGeneral\User Defined Data Types\uddtQualifiedName.sql" />
     <Build Include="AppModel\User Defined Data Types\uddtPropertyValue.sql" />
+    <Build Include="AppScript\Tables\DataSource.sql" />
+    <Build Include="AppScript\Tables\DataItem.sql" />
+    <Build Include="AppScript\Triggers\trigDataSource.sql" />
+    <Build Include="AppScript\Triggers\trigDataItem.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
