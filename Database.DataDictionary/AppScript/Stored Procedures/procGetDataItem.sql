@@ -4,11 +4,12 @@
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
 		@IncludeHistory Bit = 0 -- History is included
 As
+/* Description: Performs Get on DataItem.
+*/
+Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
+
 Select	[DataSourceId],
-		[DataItemId],
-		[DataItemMember],
-		[DataNameSpace],
-		[HierarchyId],
+		[DataPath],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

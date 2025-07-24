@@ -526,6 +526,9 @@
     <Build Include="AppScript\Stored Procedures\procGetDataSource.sql" />
     <Build Include="AppScript\Stored Procedures\procGetDataItem.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateData.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDataItem.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDataSource.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplateData.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

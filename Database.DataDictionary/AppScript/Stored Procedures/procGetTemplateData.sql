@@ -5,6 +5,10 @@
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
 		@IncludeHistory Bit = 0 -- History is included
 As
+/* Description: Performs Get on TemplateData.
+*/
+Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
+
 Select	[TemplateId],
 		[DataSourceId],
 		-- Temporal Data

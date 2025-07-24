@@ -5,7 +5,7 @@ With [Data] As (
 			[DataItemId],
 			[DataItemMember],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[DataItemMember])) As [DataNameSpace],
+				FormatMessage('[%s]',[DataItemMember])) As [DataPath],
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
 					Dense_Rank() Over (Order By [DataItemMember])))
@@ -19,7 +19,7 @@ With [Data] As (
 			H.[DataItemId],
 			H.[DataItemMember],
 			Convert(NVarChar(Max),
-				FormatMessage('%s.[%s]',D.[DataNameSpace], H.[DataItemMember])) As [DataNameSpace],
+				FormatMessage('%s.[%s]',D.[DataPath], H.[DataItemMember])) As [DataPath],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
 				Row_Number() Over (Partition By D.[DataItemId] Order By H.[DataItemMember])))
 				As [HierarchyId],
@@ -47,7 +47,7 @@ With [Data] As (
 Select	D.[DataSourceId], -- PK
 		D.[DataItemId], -- PK
 		D.[DataItemMember],
-		D.[DataNameSpace], --AK
+		D.[DataPath], --AK
 		D.[HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
