@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetDataItem]
+﻿CREATE PROCEDURE [AppScript].[procSetDataObject]
 		@ModelId UniqueIdentifier = Null,
 		@DataSourceId UniqueIdentifier = Null,
-		@Data [AppScript].[udttDataItem] ReadOnly
+		@Data [AppScript].[udttDataObject] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -26,27 +26,27 @@ Begin Try
 	Throw 601020, 'DataSource Not Authorized', 2;
 
 	Declare @Values Table (
-		[DataItemId]		UniqueIdentifier Not Null,
+		[DataObjectId]		UniqueIdentifier Not Null,
 		[DataSourceId]		UniqueIdentifier Not Null,
-		[DataItemMember]	[AppGeneral].[uddtNameSpaceMember] Not Null,
-		--[ParentItemId]		UniqueIdentifier Null,
+		[DataMember]		[AppGeneral].[uddtNameSpaceMember] Not Null,
+		--[ParentObjectId]		UniqueIdentifier Null,
 		-- Temporary
 		[DataNameSpace]		[AppGeneral].[uddtNameSpacePath] Not Null,
 		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
-		Primary Key ([DataItemId]))
+		Primary Key ([DataObjectId]))
 		
 	;With [Data] As (
 		Select	[DataSourceId],
-				[MemberName] As [DataItemMember],
+				[MemberName] As [DataMember],
 				[QualifiedName] As [DataNameSpace],
 				[ParentName] As [ParentNameSpace],
 				Row_Number() Over (Partition By [QualifiedName] Order By IIF([DataSourceId] is not null,0,1)) As [RankIndex]
 		From	@Data D
 				Cross Apply [AppGeneral].[funcParseName](D.[DataNameSpace])) 
 	Insert Into @Values
-	Select	Coalesce([AppScript].[funcDataItemId]([DataNameSpace]), NewId()) As [DataItemId],
+	Select	Coalesce([AppScript].[funcDataObjectId]([DataNameSpace]), NewId()) As [DataObjectId],
 			[DataSourceId],
-			[DataItemMember],
+			[DataMember],
 			[DataNameSpace],
 			[ParentNameSpace]
 	From	[Data] D
@@ -57,12 +57,12 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 		
 	-- Apply Changes
-	Delete From [AppScript].[DataItem]
-	From	[AppScript].[DataItem] T
+	Delete From [AppScript].[DataObject]
+	From	[AppScript].[DataObject] T
 			Left Join @Values S
-			On	T.[DataItemId] = S.[DataItemId]
+			On	T.[DataObjectId] = S.[DataObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DataSourceId], 1)
-	Where	S.[DataItemId] is Null And
+	Where	S.[DataObjectId] is Null And
 			(@DataSourceId is Not Null Or @ModelId is Not Null) And
 			(@DataSourceId is Null Or @DataSourceId = T.[DataSourceId])  And
 			(@ModelId is Null Or T.[DataSourceId] In (
@@ -71,22 +71,22 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[DataItem]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[DataItem] (
-			[DataItemId],
+	Insert Into [AppScript].[DataObject] (
+			[DataObjectId],
 			[DataSourceId],
-			[DataItemMember],
-			[ParentItemId])
-	Select	S.[DataItemId],
+			[DataMember],
+			[ParentObjectId])
+	Select	S.[DataObjectId],
 			S.[DataSourceId],
-			S.[DataItemMember],
-			P.[DataItemId] As [ParentItemId]
+			S.[DataMember],
+			P.[DataObjectId] As [ParentObjectId]
 	From	@Values S
 			Left Join @Values P
 			On	S.[ParentNameSpace] = P.[DataNameSpace]
-			Left Join [AppScript].[DataItem] T
-			On	S.[DataItemId] = T.[DataItemId]
+			Left Join [AppScript].[DataObject] T
+			On	S.[DataObjectId] = T.[DataObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[DataSourceId], 1)
-	Where	T.[DataItemId] is Null
+	Where	T.[DataObjectId] is Null
 	Print FormatMessage ('Insert [AppScript].[DataItem]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

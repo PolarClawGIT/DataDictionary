@@ -85,8 +85,8 @@ Begin Try
 			T.[DataSourceId] In (Select [DataSourceId] From @Delete)
 	Print FormatMessage ('Delete [AppScript].[ScriptingModel] (DataSource): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[DataItem]
-	From	[AppScript].[DataItem] T
+	Delete From [AppScript].[DataObject]
+	From	[AppScript].[DataObject] T
 			Left Join @Values S
 			On	T.[DataSourceId] = S.[DataSourceId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DataSourceId], 1)

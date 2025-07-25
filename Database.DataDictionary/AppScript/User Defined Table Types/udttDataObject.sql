@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[udttDataItem] AS TABLE
+﻿CREATE TYPE [AppScript].[udttDataObject] AS TABLE
 (
 	[DataSourceId]			UniqueIdentifier Not Null,
 	[DataNameSpace]			[AppGeneral].[uddtNameSpacePath] Null,

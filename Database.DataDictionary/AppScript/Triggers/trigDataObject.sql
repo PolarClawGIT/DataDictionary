@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigDataItem]
-	ON [AppScript].[DataItem]
+﻿CREATE TRIGGER [AppScript].[trigDataObject]
+	ON [AppScript].[DataObject]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN

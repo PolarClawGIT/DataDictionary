@@ -1,52 +1,52 @@
-﻿CREATE VIEW [AppScript].[DataItemHs]As
+﻿CREATE VIEW [AppScript].[DataObjectHs]As
 -- Temporal View
 With [Data] As (
 	Select	[DataSourceId],
-			[DataItemId],
-			[DataItemMember],
+			[DataObjectId],
+			[DataMember],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[DataItemMember])) As [DataPath],
+				FormatMessage('[%s]',[DataMember])) As [DataPath],
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
-					Dense_Rank() Over (Order By [DataItemMember])))
+					Dense_Rank() Over (Order By [DataMember])))
 				As [HierarchyId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[DataItem]
-	Where	[ParentItemId] is Null
+	From	[AppScript].[DataObject]
+	Where	[ParentObjectId] is Null
 	Union All
 	Select	H.[DataSourceId],
-			H.[DataItemId],
-			H.[DataItemMember],
+			H.[DataObjectId],
+			H.[DataMember],
 			Convert(NVarChar(Max),
-				FormatMessage('%s.[%s]',D.[DataPath], H.[DataItemMember])) As [DataPath],
+				FormatMessage('%s.[%s]',D.[DataPath], H.[DataMember])) As [DataPath],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
-				Row_Number() Over (Partition By D.[DataItemId] Order By H.[DataItemMember])))
+				Row_Number() Over (Partition By D.[DataObjectId] Order By H.[DataMember])))
 				As [HierarchyId],
 			Greatest(D.[SysStart], H.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], H.[SysEnd]) As [SysEnd]
 	From	[Data] D
-			Inner Join [AppScript].[DataItem] H
-			On	D.[DataItemId] = H.[ParentItemId] And
+			Inner Join [AppScript].[DataObject] H
+			On	D.[DataObjectId] = H.[ParentObjectId] And
 			-- Temporal, multiple rows could be returned. Do not have confidence in this.
 			((D.[SysStart] >= H.[SysStart] And D.[SysStart] < H.[SysEnd]) Or
 			 (H.[SysStart] >= D.[SysStart] And H.[SysStart] < D.[SysEnd]))),
 [Dates] As (
 	Select	[DataSourceId],
-			[DataItemId],
+			[DataObjectId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[DataItem]
+	From	[AppScript].[DataObject]
 	/*Union -- Temporal, not yet implemented
 	Select	[DataSourceId],
-			[DataItemId],
+			[DataObjectId],
 			[SysStart],
 			[SysEnd]
 	From	]HsScript].[DataItem]
 	Where	[SysStart] != [SysEnd]*/)
 Select	D.[DataSourceId], -- PK
-		D.[DataItemId], -- PK
-		D.[DataItemMember],
+		D.[DataObjectId], -- PK
+		D.[DataMember],
 		D.[DataPath], --AK
 		D.[HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
@@ -64,12 +64,12 @@ From	[Data] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
-			Where	[DataItemId] = D.[DataItemId] And
+			Where	[DataObjectId] = D.[DataObjectId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
-			Where	[DataItemId] = D.[DataItemId] And
+			Where	[DataObjectId] = D.[DataObjectId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
