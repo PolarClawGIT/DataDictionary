@@ -42,7 +42,7 @@ Begin Try
 				[ParentName] As [ParentNameSpace],
 				Row_Number() Over (Partition By [QualifiedName] Order By IIF([DataSourceId] is not null,0,1)) As [RankIndex]
 		From	@Data D
-				Cross Apply [AppGeneral].[funcParseName](D.[DataNameSpace])) 
+				Cross Apply [AppGeneral].[funcParseName](D.[DataPath])) 
 	Insert Into @Values
 	Select	Coalesce([AppScript].[funcDataObjectId]([DataNameSpace]), NewId()) As [DataObjectId],
 			[DataSourceId],
