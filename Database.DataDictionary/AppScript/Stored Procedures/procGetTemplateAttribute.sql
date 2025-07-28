@@ -11,9 +11,8 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
-Select	[TemplateId],
+Select	[AttributeId],
 		[NodeId],
-		[AttributeId],
 		[AttributeName],
 		[AttributeValue],
 		[PropertyId],
