@@ -22,6 +22,11 @@
     static class DataSource
     {
         /// <summary>  
+        /// The parameter name for the template ID.  
+        /// </summary>  
+        public const String DataSourceId = "@DataSourceId";
+
+        /// <summary>  
         /// The stored procedure used to retrieve scripting Data Source.  
         /// </summary>  
         public const String GetProcedure = "[AppScript].[procGetDataSource]";

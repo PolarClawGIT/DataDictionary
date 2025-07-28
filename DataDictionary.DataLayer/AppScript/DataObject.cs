@@ -5,11 +5,6 @@
     /// </summary>  
     static class DataObject
     {
-        /// <summary>
-        /// Identifier for the Scripting Data Source.
-        /// </summary>
-        public const String DataSourceId = "@DataSourceId";
-
         /// <summary>  
         /// The stored procedure used to retrieve scripting Data Object.  
         /// </summary>  
