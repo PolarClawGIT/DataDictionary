@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// Root Node should be- xsl:stylesheet
         /// XML NameSpace- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         /// </remarks>
-        XElement TransformScript { get; }
+        String? TransformScript { get; }
 
         /// <summary>
         /// Name of the Special Directory used as the Root Directory.
@@ -91,6 +91,11 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>  
     static class Template
     {
+        /// <summary>  
+        /// The parameter name for the Scripting Template ID.  
+        /// </summary>  
+        public const String TemplateId = "@TemplateId";
+
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template.  
         /// </summary>  

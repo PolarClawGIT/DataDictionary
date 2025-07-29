@@ -22,7 +22,7 @@
     static class DataSource
     {
         /// <summary>  
-        /// The parameter name for the template ID.  
+        /// The parameter name for the Scripting Data Source ID.  
         /// </summary>  
         public const String DataSourceId = "@DataSourceId";
 
