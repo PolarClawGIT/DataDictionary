@@ -1,22 +1,26 @@
-﻿CREATE VIEW [AppScript].[TemplateAttributeHs] As
+﻿CREATE VIEW [AppScript].[TemplateAttributeOwnerHs] AS
 -- Temporal View
 With [Dates] As (
-	Select	[AttributeId],
+	Select	[TemplateId],
+			[AttributeId],
+			[NodeId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[TemplateAttribute]
+	From	[AppScript].[TemplateAttributeOwner]
 	/*Union -- TODO: Temporal not yet implemented
-	Select	[AttributeId],
+	Select	[TemplateId],
+			[AttributeId],
+			[NodeId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[ScriptingAttribute]
+	From	[HsScript].[TemplateAttributeOwner]
 	Where	[SysStart] != [SysEnd]*/)
-Select	D.[AttributeId],
-		D.[TemplateId],
+Select	D.[TemplateId],
 		FT.[TemplateTitle],
-		D.[AttributeName],
-		D.[AttributeValue],
-		D.[PropertyId],
+		D.[AttributeId],
+		FA.[AttributeName],
+		D.[NodeId],
+		FN.[NodeName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -28,16 +32,20 @@ Select	D.[AttributeId],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[TemplateAttribute] D
+From	[AppScript].[TemplateAttributeOwner] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
-			Where	[AttributeId] = D.[AttributeId] And
+			Where	[TemplateId] = D.[TemplateId] And
+					[AttributeId] = D.[AttributeId] And
+					[NodeId] = D.[NodeId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
-			Where	[AttributeId] = D.[AttributeId] And
+			Where	[TemplateId] = D.[TemplateId] And
+					[AttributeId] = D.[AttributeId] And
+					[NodeId] = D.[NodeId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -54,4 +62,20 @@ From	[AppScript].[TemplateAttribute] D
 			Where	[TemplateId] = D.[TemplateId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FT
+		Outer Apply (
+			Select	Top 1
+					[AttributeId],
+					[AttributeName]
+			From	[AppScript].[TemplateAttribute]
+			Where	[AttributeId] = D.[AttributeId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FA
+		Outer Apply (
+			Select	Top 1
+					[NodeId],
+					IsNull([NodeName], [PropertyName]) As [NodeName]
+			From	[AppScript].[TemplateNode]
+			Where	[NodeId] = D.[NodeId] And
+					[SysStart] <= D.[SysEnd]
+			Order By [SysStart] Desc) FN
 GO

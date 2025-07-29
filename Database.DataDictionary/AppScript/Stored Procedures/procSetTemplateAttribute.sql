@@ -21,7 +21,7 @@ Begin Try
 
 	Declare @Values Table (
 		[AttributeId]			UniqueIdentifier NOT NULL,
-		[NodeId]	            UniqueIdentifier NOT NULL,
+		[TemplateId]			UniqueIdentifier NOT NULL,
 		[AttributeName]			NVarChar(50) NOT NULL,
 		[AttributeValue]		NVarChar(250) NULL,
 		[PropertyId]			UniqueIdentifier NULL,
@@ -29,40 +29,52 @@ Begin Try
 
 	Insert Into @Values
 	Select	X.[AttributeId],
-			[NodeId],
-			NullIf(Trim([AttributeName]),'') As [AttributeName],
-			NullIf(Trim([AttributeValue]),'') As [AttributeValue],
+			IsNull([TemplateId], @TemplateId) As [TemplateId],
+			NullIf(Trim([AttributeName]), '') As [AttributeName],
+			NullIf(Trim([AttributeValue]), '') As [AttributeValue],
 			[PropertyId]
 	From	@Data D
 			Cross apply (Select	Coalesce(D.[AttributeId], NewId()) As [AttributeId]) X
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateAttribute]
-	From	[AppScript].[TemplateNode] P
-			Inner Join [AppScript].[TemplateAttribute] T
-			On	P.[NodeId] = T.[NodeId]
+	Delete From [AppScript].[TemplateAttributeOwner]
+	From	[AppScript].[TemplateAttributeOwner] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
-	Where	S.[NodeId] is Null And
-			P.[TemplateId] In (
+	Where	S.[AttributeId] is Null And
+			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
 				Where	[ModelId] = @ModelId
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [AppScript].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppScript].[TemplateAttribute]
+	From	[AppScript].[TemplateAttribute] T
+			Left Join @Values S
+			On	T.[AttributeId] = S.[AttributeId]
+	Where	S.[AttributeId] is Null And
+			T.[TemplateId] In (
+				Select	[TemplateId]
+				From	[AppScript].[ScriptingModel]
+				Where	[ModelId] = @ModelId
+				Union
+				Select	@TemplateId As [TemplateId]
+				Where	@TemplateId is Not Null)
+	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[AttributeId],
-				[NodeId],
+				[TemplateId],
 				[AttributeName],
 				[AttributeValue],
 				[PropertyId]
 		From	@Values
 		Except
 		Select	[AttributeId],
-				[NodeId],
+				[TemplateId],
 				[AttributeName],
 				[AttributeValue],
 				[PropertyId]
@@ -78,12 +90,12 @@ Begin Try
 
 	Insert Into [AppScript].[TemplateAttribute] (
 			[AttributeId],
-			[NodeId],
+			[TemplateId],
 			[AttributeName],
 			[AttributeValue],
 			[PropertyId])
 	Select	S.[AttributeId],
-			S.[NodeId],
+			S.[TemplateId],
 			S.[AttributeName],
 			S.[AttributeValue],
 			S.[PropertyId]

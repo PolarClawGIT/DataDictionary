@@ -1,10 +1,8 @@
-﻿CREATE TYPE [AppScript].[udttTemplateAttribute] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplateAttributeOwner] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[AttributeId]			UniqueIdentifier NULL,
-	[AttributeName]			NVarChar(50) NULL,
-	[AttributeValue]		NVarChar(250) NULL,
-	[PropertyId]			UniqueIdentifier NULL,
+	[NodeId]				UniqueIdentifier NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

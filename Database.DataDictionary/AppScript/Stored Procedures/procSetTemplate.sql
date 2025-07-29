@@ -79,14 +79,22 @@ Begin Try
 				Where	@TemplateId is Not Null)
 
 	-- Apply Changes
+	Delete From [AppScript].[TemplateAttributeOwner]
+	From	[AppScript].[TemplateAttributeOwner] T
+			Left Join @Values S
+			On	T.[TemplateId] = S.[TemplateId]
+	Where	S.[TemplateId] is Null And
+			T.[TemplateId] In (
+				Select	[TemplateId]
+				From	@Delete)
+	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppScript].[TemplateAttribute]
 	From	[AppScript].[TemplateAttribute] T
-			Inner Join [AppScript].[TemplateNode] N
-			On	T.[NodeId] = N.[NodeId]
 			Left Join @Values S
-			On	N.[TemplateId] = S.[TemplateId]
+			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
-			N.[TemplateId] In (
+			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -110,7 +118,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[ScriptingModel]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[Template]
 	From	[AppScript].[Template] T
@@ -223,7 +231,7 @@ Begin Try
 			On	S.[TemplateId] = T.[TemplateId] And
 				@ModelId = T.[ModelId]
 	Where	T.[TemplateId] Is Null
-	Print FormatMessage ('Insert [AppScript].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[ScriptingModel]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -265,56 +273,3 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
-/*
-Begin Try;
-	Begin Transaction;
-	Set NoCount On;
-
-	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [AppScript].[Model] Where [ModelTitle] = 'Unit Test')
-	Declare @Data [AppScript].[typeScriptingTemplate]
-
-	Insert Into @Data ([TemplateId], [TemplateTitle])
-	Values (NewId(),'Test Template')
-
-	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
-
-	Update @Data
-	Set	[TransformScript] = '<Good/>'
-
-	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
-
-	Delete From @Data
-
-	Exec [AppScript].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
-
-	Select	*
-	From	[AppScript].[ScriptingTemplate]
-
-
-	-- By default, throw and error and exit without committing
-;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
-	
-	Commit Transaction;
-	Print 'Commit Issued';
-End Try
-Begin Catch
-	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID));
-	Print FormatMessage (' Message- %s', ERROR_MESSAGE());
-	Print FormatMessage (' Number- %i', ERROR_NUMBER());
-	Print FormatMessage (' Severity- %i', ERROR_SEVERITY());
-	Print FormatMessage (' State- %i', ERROR_STATE());
-	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE());
-	Print FormatMessage (' Line- %i', ERROR_LINE());
-	Print FormatMessage (' @@TranCount - %i', @@TranCount);
-	Print FormatMessage (' @@NestLevel - %i', @@NestLevel);
-	Print FormatMessage (' Original_Login - %s', Original_Login());
-	Print FormatMessage (' Current_User - %s', Current_User);
-	Print FormatMessage (' XAct_State - %i', XAct_State());
-	Print '--- Debug Data ---';
-
-	-- Rollback Transaction
-	Print 'Rollback Issued';
-	Rollback Transaction;
-	--Throw;
-End Catch;
-*/

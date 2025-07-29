@@ -530,6 +530,11 @@
     <Build Include="AppScript\Stored Procedures\procSetDataObject.sql" />
     <Build Include="AppScript\Stored Procedures\procSetDataSource.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateData.sql" />
+    <Build Include="AppScript\Tables\TemplateAttributeOwner.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTemplateAttributeOwner.sql" />
+    <Build Include="AppScript\Views\TemplateAttributeOwner.Hs.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTemplateAttributeOwner.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplateAttributeOwner.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

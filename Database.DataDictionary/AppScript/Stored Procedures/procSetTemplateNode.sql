@@ -30,7 +30,7 @@ Begin Try
 
 	Insert Into @Values
 	Select	X.[NodeId],
-			[TemplateId],
+			IsNull([TemplateId], @TemplateId) As [TemplateId],
 			NullIf(Trim([PropertyScope]),'') As [PropertyScope],
 			NullIf(Trim([PropertyName]),'') As [PropertyName],
 			NullIf(Trim([NodeName]),'') As [NodeName],
@@ -39,27 +39,11 @@ Begin Try
 			Cross apply (Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateAttribute]
-	From	[AppScript].[TemplateNode] P
-			Inner Join [AppScript].[TemplateAttribute] T
-			On	P.[NodeId] = T.[NodeId]
+	Delete From [AppScript].[TemplateAttributeOwner]
+	From	[AppScript].[TemplateAttributeOwner] T
 			Left Join @Values S
 			On	T.[NodeId] = S.[NodeId]
-	Where	S.[NodeId] is Null And
-			P.[TemplateId] In (
-				Select	[TemplateId]
-				From	[AppScript].[ScriptingModel]
-				Where	[ModelId] = @ModelId
-				Union
-				Select	@TemplateId As [TemplateId]
-				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [AppScript].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppScript].[TemplateNode]
-	From	[AppScript].[TemplateNode] T
-			Left Join @Values S
-			On	T.[NodeId] = S.[NodeId]
-	Where	S.[NodeId] is Null And
+	Where	S.[TemplateId] is Null And
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
@@ -67,7 +51,21 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [AppScript].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppScript].[TemplateNode]
+	From	[AppScript].[TemplateNode] T
+			Left Join @Values S
+			On	T.[NodeId] = S.[NodeId]
+	Where	S.[TemplateId] is Null And
+			T.[TemplateId] In (
+				Select	[TemplateId]
+				From	[AppScript].[ScriptingModel]
+				Where	[ModelId] = @ModelId
+				Union
+				Select	@TemplateId As [TemplateId]
+				Where	@TemplateId is Not Null)
+	Print FormatMessage ('Delete [AppScript].[TemplateNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[NodeId],
