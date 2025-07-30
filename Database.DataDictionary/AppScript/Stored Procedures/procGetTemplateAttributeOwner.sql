@@ -12,7 +12,7 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
 Select	[TemplateId],
 		[AttributeId],
-		[NodeId],
+		[ElementId],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

@@ -1,8 +1,15 @@
-﻿CREATE TYPE [AppScript].[udttTemplateAttributeOwner] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplateElement] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
-	[AttributeId]			UniqueIdentifier NULL,
 	[ElementId]				UniqueIdentifier NULL,
+	[ElementName]			[AppGeneral].[uddtQualifiedName] NULL,
+	[ElementPath]			[AppGeneral].[uddtNameSpacePath] Null,
+	[RenderOrder]			Int Null,
+	[RenderValueAs]			NVarChar(10) Not Null,
+	[FixedValue]			NVarChar(250) NULL,
+	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
+	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
+	[ModelPropertyId]		UniqueIdentifier NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

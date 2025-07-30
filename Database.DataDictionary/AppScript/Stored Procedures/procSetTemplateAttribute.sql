@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [AppScript].[procSetTemplateAttribute]
+﻿/*
+CREATE PROCEDURE [AppScript].[procSetTemplateAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@Data [AppScript].[udttTemplateAttribute] ReadOnly
@@ -76,13 +77,13 @@ Begin Try
 		Select	[AttributeId],
 				[TemplateId],
 				[AttributeName],
-				[AttributeValue],
-				[PropertyId]
+				[FixedValue],
+				[ModelPropertyId]
 		From	[AppScript].[TemplateAttribute])
 	Update [AppScript].[TemplateAttribute]
 	Set		[AttributeName] = S.[AttributeName],
-			[AttributeValue] = S.[AttributeValue],
-			[PropertyId] = S.[PropertyId]
+			[FixedValue] = S.[AttributeValue],
+			[ModelPropertyId] = S.[PropertyId]
 	From	[AppScript].[TemplateAttribute] T
 			Inner Join [Delta] S
 			On	T.[AttributeId] = S.[AttributeId]
@@ -92,8 +93,8 @@ Begin Try
 			[AttributeId],
 			[TemplateId],
 			[AttributeName],
-			[AttributeValue],
-			[PropertyId])
+			[FixedValue],
+			[ModelPropertyId])
 	Select	S.[AttributeId],
 			S.[TemplateId],
 			S.[AttributeName],
@@ -145,3 +146,4 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
+*/

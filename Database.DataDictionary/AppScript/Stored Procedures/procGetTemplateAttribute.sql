@@ -14,8 +14,8 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[TemplateId],
 		[AttributeId],
 		[AttributeName],
-		[AttributeValue],
-		[PropertyId],
+		[FixedValue],
+		[ModelPropertyId],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],

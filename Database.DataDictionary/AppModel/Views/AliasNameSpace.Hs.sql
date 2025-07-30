@@ -43,7 +43,7 @@ With [Data] As (
 Select	D.[AliasId], -- PK
 		D.[AliasMember],
 		D.[AliasNameSpace], --AK
-		D.[HierarchyId], -- Values is not guaranteed between executions.
+		Convert(HierarchyId, D.[HierarchyId]) As [HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

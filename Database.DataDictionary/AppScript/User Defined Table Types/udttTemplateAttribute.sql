@@ -2,9 +2,13 @@
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[AttributeId]			UniqueIdentifier NULL,
-	[AttributeName]			NVarChar(50) NULL,
-	[AttributeValue]		NVarChar(250) NULL,
-	[PropertyId]			UniqueIdentifier NULL,
+	[AttributeName]			[AppGeneral].[uddtQualifiedName] NULL,
+	[RenderOrder]			Int Null,
+	[RenderValueAs]			NVarChar(10) Not Null,
+	[FixedValue]			NVarChar(250) NULL,
+	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
+	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
+	[ModelPropertyId]		UniqueIdentifier NULL,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

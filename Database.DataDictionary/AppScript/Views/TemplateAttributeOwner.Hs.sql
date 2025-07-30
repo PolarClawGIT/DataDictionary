@@ -3,7 +3,7 @@
 With [Dates] As (
 	Select	[TemplateId],
 			[AttributeId],
-			[NodeId],
+			[ElementId],
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[TemplateAttributeOwner]
@@ -19,8 +19,7 @@ Select	D.[TemplateId],
 		FT.[TemplateTitle],
 		D.[AttributeId],
 		FA.[AttributeName],
-		D.[NodeId],
-		FN.[NodeName],
+		D.[ElementId],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -38,14 +37,14 @@ From	[AppScript].[TemplateAttributeOwner] D
 			From	[Dates]
 			Where	[TemplateId] = D.[TemplateId] And
 					[AttributeId] = D.[AttributeId] And
-					[NodeId] = D.[NodeId] And
+					[ElementId] = D.[ElementId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
 			Where	[TemplateId] = D.[TemplateId] And
 					[AttributeId] = D.[AttributeId] And
-					[NodeId] = D.[NodeId] And
+					[ElementId] = D.[ElementId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]
@@ -70,12 +69,4 @@ From	[AppScript].[TemplateAttributeOwner] D
 			Where	[AttributeId] = D.[AttributeId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FA
-		Outer Apply (
-			Select	Top 1
-					[NodeId],
-					IsNull([NodeName], [PropertyName]) As [NodeName]
-			From	[AppScript].[TemplateNode]
-			Where	[NodeId] = D.[NodeId] And
-					[SysStart] <= D.[SysEnd]
-			Order By [SysStart] Desc) FN
 GO

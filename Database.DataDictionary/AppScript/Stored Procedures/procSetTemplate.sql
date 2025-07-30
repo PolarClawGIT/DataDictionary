@@ -99,16 +99,6 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[TemplateNode]
-	From	[AppScript].[TemplateNode] T
-			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
-	Where	S.[TemplateId] is Null And
-			T.[TemplateId] In (
-				Select	[TemplateId]
-				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [AppScript].[ScriptingModel]
 	From	[AppScript].[ScriptingModel] T
 			Left Join @Values S

@@ -48,7 +48,7 @@ Select	D.[DataSourceId], -- PK
 		D.[DataObjectId], -- PK
 		D.[DataMember],
 		D.[DataPath], --AK
-		D.[HierarchyId], -- Values is not guaranteed between executions.
+		Convert(HierarchyId, D.[HierarchyId]) As [HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
