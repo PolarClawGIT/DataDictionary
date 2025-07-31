@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [AppScript].[procSetTemplateAttribute]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplateElement]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttTemplateAttribute] ReadOnly
-As
+		@Data [AppScript].[udttTemplateElement] ReadOnly
+AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ScriptingAttribute.
+/* Description: Performs Set on TemplateElement.
 */
 
 -- Transaction Handling
@@ -27,21 +27,23 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-			[AttributeId]			UniqueIdentifier NOT NULL,
+			[ElementId]				UniqueIdentifier NOT NULL,
 			[TemplateId]            UniqueIdentifier NOT NULL,
-			[AttributeName]			[AppGeneral].[uddtQualifiedName] Not Null,
+			[ParentElementId]		UniqueIdentifier NULL,
+			[ElementName]			[AppGeneral].[uddtQualifiedName] Not Null,
 			[RenderOrder]			Int Not Null,
 			[RenderValueAs]			NVarChar(10) Not Null,
 			[FixedValue]			NVarChar(250) NULL,
 			[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 			[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
 			[ModelPropertyId]		UniqueIdentifier NULL,
-		Primary Key ([AttributeId]))
+		Primary Key ([ElementId]))
 
 	Insert Into @Values
-	Select	IsNull([AttributeId], NewId()) As [AttributeId],
+	Select	IsNull([ElementId], NewId()) As [ElementId],
 			IsNull([TemplateId], @TemplateId) As [TemplateId],
-			NullIf(Trim([AttributeName]),'') As [AttributeName],
+			[ParentElementId],
+			NullIf(Trim([ElementName]),'') As [ElementName],
 			IIF(IsNull([RenderOrder],0) < 0, 0, IsNull([RenderOrder],0)) As [RenderOrder],
 			IsNull([RenderValueAs],'Text') As [RenderValueAs],
 			NullIf(Trim([FixedValue]),'') As [FixedValue],
@@ -60,8 +62,8 @@ Begin Try
 	Delete From [AppScript].[TemplateAttributeOwner]
 	From	[AppScript].[TemplateAttributeOwner] T
 			Left Join @Values S
-			On	T.[AttributeId] = S.[AttributeId]
-	Where	S.[AttributeId] is Null And
+			On	T.[ElementId] = S.[ElementId]
+	Where	S.[ElementId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
 			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
 			(@ModelId is Null Or T.[TemplateId] In (
@@ -70,22 +72,23 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[TemplateAttribute]
-	From	[AppScript].[TemplateAttribute] T
+	Delete From [AppScript].[TemplateElement]
+	From	[AppScript].[TemplateElement] T
 			Left Join @Values S
-			On	T.[AttributeId] = S.[AttributeId]
-	Where	S.[AttributeId] is Null And
+			On	T.[ElementId] = S.[ElementId]
+	Where	S.[ElementId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
 			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
 			(@ModelId is Null Or T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 	
 	;With [Delta] As (
-		Select	[AttributeId],
-				[AttributeName],
+		Select	[ElementId],
+				[ParentElementId],
+				[ElementName],
 				[RenderOrder],
 				[RenderValueAs],
 				[FixedValue],
@@ -94,41 +97,45 @@ Begin Try
 				[ModelPropertyId]
 		From	@Values
 		Except
-		Select	[AttributeId],
-				[AttributeName],
+		Select	[ElementId],
+				[ParentElementId],
+				[ElementName],
 				[RenderOrder],
 				[RenderValueAs],
 				[FixedValue],
 				[ObjectScope],
 				[ObjectProperty],
 				[ModelPropertyId]
-		From	[AppScript].[TemplateAttribute])
-	Update	[AppScript].[TemplateAttribute]
-	Set		[AttributeName] = S.[AttributeName],
+		From	[AppScript].[TemplateElement])
+	Update	[AppScript].[TemplateElement]
+	Set		[ParentElementId] = S.[ParentElementId],
+			[ElementName] = S.[ElementName],
 			[RenderOrder] = S.[RenderOrder],
 			[RenderValueAs] = S.[RenderValueAs],
 			[FixedValue] = S.[FixedValue],
 			[ObjectScope] = S.[ObjectScope],
 			[ObjectProperty] = S.[ObjectProperty],
 			[ModelPropertyId] = S.[ModelPropertyId]
-	From	[AppScript].[TemplateAttribute] T
+	From	[AppScript].[TemplateElement] T
 			Inner Join [Delta] S
-			On	T.[AttributeId] = S.[AttributeId]
-	Print FormatMessage ('Update [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[ElementId] = S.[ElementId]
+	Print FormatMessage ('Update [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[TemplateAttribute] (
-			[AttributeId],
+	Insert Into [AppScript].[TemplateElement] (
+			[ElementId],
 			[TemplateId],
-			[AttributeName],
+			[ParentElementId],
+			[ElementName],
 			[RenderOrder],
 			[RenderValueAs],
 			[FixedValue],
 			[ObjectScope],
 			[ObjectProperty],
 			[ModelPropertyId])
-	Select	S.[AttributeId],
+	Select	S.[ElementId],
 			S.[TemplateId],
-			S.[AttributeName],
+			S.[ParentElementId],
+			S.[ElementName],
 			S.[RenderOrder],
 			S.[RenderValueAs],
 			S.[FixedValue],
@@ -136,10 +143,10 @@ Begin Try
 			S.[ObjectProperty],
 			S.[ModelPropertyId]
 	From	@Values S
-			Left Join [AppScript].[TemplateAttribute] T
-			On	S.[AttributeId] = T.[AttributeId]
-	Where	T.[AttributeId] is Null
-	Print FormatMessage ('Insert [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Left Join [AppScript].[TemplateElement] T
+			On	S.[ElementId] = T.[ElementId]
+	Where	T.[ElementId] is Null
+	Print FormatMessage ('Insert [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -50,7 +50,9 @@ Begin Try
 			[DataNameSpace],
 			[ParentNameSpace]
 	From	[Data] D
-	Where	[RankIndex] = 1
+	Where	[RankIndex] = 1 And
+			(@DataSourceId is Null And [DataSourceId] is Not Null) Or
+			(@DataSourceId is Not Null And IsNull([DataSourceId], @DataSourceId) = @DataSourceId)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log

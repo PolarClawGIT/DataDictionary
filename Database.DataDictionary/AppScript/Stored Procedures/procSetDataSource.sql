@@ -41,8 +41,8 @@ Begin Try
 	From	@Data D
 			Cross Apply (
 				Select	Coalesce(D.[DataSourceId], @DataSourceId, NewId()) As [DataSourceId]) X
-	Where	--(@ModelId is Null Or @ModelId = IsNull(H.[ModelId], @ModelId)) And
-			(@DataSourceId is Null Or @DataSourceId = X.[DataSourceId])
+	Where	(@DataSourceId is Null And X.[DataSourceId] is Not Null) Or
+			(@DataSourceId is Not Null And IsNull(X.[DataSourceId], @DataSourceId) = @DataSourceId)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into @Delete

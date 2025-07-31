@@ -21,6 +21,7 @@
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_TemplateElement] PRIMARY KEY CLUSTERED ([ElementId] ASC),
 	CONSTRAINT [AK_TemplateElement] UNIQUE ([TemplateId] ASC, [ElementId] ASC),
+	CONSTRAINT [AK_TemplateElement_ElementName] UNIQUE ([ParentElementId] ASC, [ElementName] ASC),
 	CONSTRAINT [FK_TemplateElementTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_TemplateElementParent] FOREIGN KEY ([TemplateId], [ParentElementId]) REFERENCES [AppScript].[TemplateElement] ([TemplateId], [ElementId]),
 	CONSTRAINT [FK_TemplateElementProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),

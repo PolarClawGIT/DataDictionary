@@ -535,6 +535,8 @@
     <Build Include="AppScript\User Defined Table Types\udttTemplateElement.sql" />
     <Build Include="AppScript\Views\TemplateElement.Hs.sql" />
     <Build Include="AppScript\Views\TemplateNode.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTemplateElement.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplateElement.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

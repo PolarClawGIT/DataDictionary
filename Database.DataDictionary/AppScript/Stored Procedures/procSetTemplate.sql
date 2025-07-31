@@ -19,6 +19,12 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	If Exists (
+		Select	1
+		From	@Data D
+				Cross Apply [AppSecurity].[funcScriptingAuthorization](IsNull([TemplateId],@TemplateId), 0))
+	Throw 601020, 'Template Not Authorized', 2;
+
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 			[TemplateId]            UniqueIdentifier NOT NULL,
@@ -63,6 +69,9 @@ Begin Try
 			NullIf(Trim(D.[ScriptExtension]),'') As [ScriptExtension]
 	From	@Data D
 			Cross apply (Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId]) X
+	Where	(@TemplateId is Null And X.[TemplateId] is Not Null) Or
+			(@TemplateId is Not Null And IsNull(X.[TemplateId], @TemplateId) = @TemplateId)
+	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into @Delete
 	Select	T.[TemplateId]
@@ -77,6 +86,7 @@ Begin Try
 				Union
 				Select	@TemplateId
 				Where	@TemplateId is Not Null)
+	Print FormatMessage ('Insert @Delete: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
 	Delete From [AppScript].[TemplateAttributeOwner]
@@ -98,6 +108,16 @@ Begin Try
 				Select	[TemplateId]
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [AppScript].[TemplateElement]
+	From	[AppScript].[TemplateElement] T
+			Left Join @Values S
+			On	T.[TemplateId] = S.[TemplateId]
+	Where	S.[TemplateId] is Null And
+			T.[TemplateId] In (
+				Select	[TemplateId]
+				From	@Delete)
+	Print FormatMessage ('Delete [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[ScriptingModel]
 	From	[AppScript].[ScriptingModel] T
@@ -220,7 +240,8 @@ Begin Try
 			Left Join [AppScript].[ScriptingModel] T
 			On	S.[TemplateId] = T.[TemplateId] And
 				@ModelId = T.[ModelId]
-	Where	T.[TemplateId] Is Null
+	Where	T.[TemplateId] Is Null And
+			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppScript].[ScriptingModel]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

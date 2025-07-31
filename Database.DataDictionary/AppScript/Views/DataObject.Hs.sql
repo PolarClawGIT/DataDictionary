@@ -42,7 +42,7 @@ With [Data] As (
 			[DataObjectId],
 			[SysStart],
 			[SysEnd]
-	From	]HsScript].[DataItem]
+	From	[HsScript].[DataItem]
 	Where	[SysStart] != [SysEnd]*/)
 Select	D.[DataSourceId], -- PK
 		D.[DataObjectId], -- PK
