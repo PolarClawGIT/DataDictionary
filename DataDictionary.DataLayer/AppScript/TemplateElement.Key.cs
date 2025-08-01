@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Template Node Id of the Scripting Template Node.
         /// </summary>
-        Guid? NodeId { get; }
+        Guid? ElementId { get; }
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.AppScript
         IKeyEquality<ITemplateElementKey>, IKeyEquality<TemplateElementKey>
     {
         /// <inheritdoc/>
-        public Guid? NodeId { get; init; } = Guid.Empty;
+        public Guid? ElementId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Primary Key of the Scripting Template Node.
@@ -28,14 +28,14 @@ namespace DataDictionary.DataLayer.AppScript
         /// <param name="source"></param>
         public TemplateElementKey(ITemplateElementKey source) : base()
         {
-            if (source.NodeId is Guid) { NodeId = source.NodeId; }
-            else { NodeId = Guid.Empty; }
+            if (source.ElementId is Guid) { ElementId = source.ElementId; }
+            else { ElementId = Guid.Empty; }
         }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TemplateElementKey? other)
-        { return other is TemplateElementKey key && key.NodeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(NodeId, other.NodeId); }
+        { return other is TemplateElementKey key && key.ElementId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(ElementId, other.ElementId); }
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateElementKey? other)
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public override Int32 GetHashCode()
         {
-            if (NodeId is Guid) { return NodeId.GetHashCode(); }
+            if (ElementId is Guid) { return ElementId.GetHashCode(); }
             else { return Guid.Empty.GetHashCode(); }
         }
         #endregion

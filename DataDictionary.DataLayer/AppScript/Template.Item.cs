@@ -11,14 +11,14 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Scripting Data Source data.
+    /// Interface for the Scripting Template data.
     /// </summary>
     public interface ITemplateItem : ITemplateKey, ITemplate,
         ITemporalItem
     { }
 
     /// <summary>
-    /// Implementation for the Scripting Data Source data.
+    /// Implementation for the Scripting Template data.
     /// </summary>
     [Serializable]
     public class TemplateItem : BindingTableRow, ITemplateItem, ISerializable

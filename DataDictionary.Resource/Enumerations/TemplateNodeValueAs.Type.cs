@@ -31,7 +31,14 @@ public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
     ElementXML,
 
     /// <summary>
-    /// Render value as an Attribute Text. Attribute Name = Data
+    /// Render value as an Attribute, value as Text.
     /// </summary>
-    Attribute
+    AttributeText,
+
+    /// <summary>
+    /// Render value as an Attribute, value as CData.
+    /// </summary>
+    AttributeCData,
+
+
 }
