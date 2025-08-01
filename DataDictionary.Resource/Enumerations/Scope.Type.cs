@@ -310,6 +310,16 @@
         Scripting,
 
         /// <summary>
+        /// Scripting Data Source
+        /// </summary>
+        ScriptingData,
+
+        /// <summary>
+        /// Scripting Data Source Object
+        /// </summary>
+        ScriptingDataObject,
+
+        /// <summary>
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,
@@ -317,17 +327,34 @@
         /// <summary>
         /// Scripting Template Path
         /// </summary>
+        [Obsolete]
         ScriptingTemplatePath,
 
         /// <summary>
         /// Scripting Template Node
         /// </summary>
+        [Obsolete]
         ScriptingTemplateNode,
 
         /// <summary>
-        /// Scripting Template Node Attribute
+        /// Scripting Template Attribute
         /// </summary>
         ScriptingTemplateAttribute,
+
+        /// <summary>
+        /// Scripting Template Element
+        /// </summary>
+        ScriptingTemplateElement,
+
+        /// <summary>
+        /// Scripting Template Node Owner
+        /// </summary>
+        ScriptingTemplateNodeOwner,
+
+        /// <summary>
+        /// Scripting Template Data
+        /// </summary>
+        ScriptingTemplateData,
 
         /// <summary>
         /// Scripting Template Document

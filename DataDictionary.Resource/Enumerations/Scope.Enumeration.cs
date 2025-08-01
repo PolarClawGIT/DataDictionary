@@ -92,16 +92,20 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ModelProcessSubjectArea,    ScopeType.ModelProcess,    "Model.Process.SubjectArea"),
             new ScopeEnumeration(ScopeType.ModelProcessArgument,       ScopeType.ModelProcess,    "Model.Process.Argument"),
 
-            new ScopeEnumeration(ScopeType.Security,                  "Security"),
+            new ScopeEnumeration(ScopeType.Security,                   "Security"),
             new ScopeEnumeration(ScopeType.SecurityPrincipal,          ScopeType.Security,         "Security.Principal"),
             new ScopeEnumeration(ScopeType.SecurityRole,               ScopeType.Security,         "Security.Role"),
             new ScopeEnumeration(ScopeType.SecuritySecurable,          ScopeType.Security,         "Security.Securable"),
-
             new ScopeEnumeration(ScopeType.Scripting,                  "Scripting"),
+            new ScopeEnumeration(ScopeType.ScriptingData,              ScopeType.Scripting,         "Scripting.Data"),
+            new ScopeEnumeration(ScopeType.ScriptingDataObject,        ScopeType.ScriptingData,     "Scripting.Data.Object"),
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
             new ScopeEnumeration(ScopeType.ScriptingTemplatePath,      ScopeType.ScriptingTemplate, "Scripting.Template.Path"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.ScriptingTemplate, "Scripting.Template.Node"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateAttribute, ScopeType.ScriptingTemplate, "Scripting.Template.Attribute"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateElement,   ScopeType.ScriptingTemplate, "Scripting.Template.Element"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateNodeOwner, ScopeType.ScriptingTemplate, "Scripting.Template.NodeOwner"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateData,      ScopeType.ScriptingTemplate, "Scripting.Template.Data"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateDocument,  ScopeType.ScriptingTemplate, "Scripting.Template.Document"),
 
         };
