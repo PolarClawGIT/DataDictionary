@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.AppScript
 {
-    public class TemplateNodeCollection
+    public class TemplateElementCollection
     {
     }
 }
