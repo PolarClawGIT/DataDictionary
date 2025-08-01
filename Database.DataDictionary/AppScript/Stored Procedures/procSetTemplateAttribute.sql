@@ -31,7 +31,7 @@ Begin Try
 			[TemplateId]            UniqueIdentifier NOT NULL,
 			[AttributeName]			[AppGeneral].[uddtQualifiedName] Not Null,
 			[RenderOrder]			Int Not Null,
-			[RenderValueAs]			NVarChar(10) Not Null,
+			[RenderValueAs]			NVarChar(20) Not Null,
 			[FixedValue]			NVarChar(250) NULL,
 			[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 			[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,

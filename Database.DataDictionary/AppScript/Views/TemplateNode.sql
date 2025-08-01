@@ -56,7 +56,7 @@ Select	IsNull(T.[NodeId], 0x0) As [NodeId],
 		IsNull(T.[NodePath], '') As [NodePath],
 		Convert(HierarchyId, T.[HierarchyId]) As [HierarchyId],  -- Values is not guaranteed between executions.
 		IsNull(IsNull(E.[RenderOrder], A.[RenderOrder]), 0) As [RenderOrder],
-		IsNull('Element.' + E.[RenderValueAs], 'Attribute.' + A.[RenderValueAs]) As [RenderValueAs],
+		IsNull(E.[RenderValueAs], A.[RenderValueAs]) As [RenderValueAs],
 		IsNull(E.[FixedValue], A.[FixedValue]) As [FixedValue],
 		IsNull(E.[ObjectScope], A.[ObjectScope]) As [ObjectScope],
 		IsNull(E.[ObjectProperty], A.[ObjectProperty]) As [ObjectProperty],

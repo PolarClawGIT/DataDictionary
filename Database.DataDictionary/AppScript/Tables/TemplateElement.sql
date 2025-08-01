@@ -7,7 +7,7 @@
 	-- Render As
 	[ElementName]			[AppGeneral].[uddtQualifiedName] Not Null, -- Name to be used XML Element. Name of the Property is used if Null.
 	[RenderOrder]			Int Not Null CONSTRAINT [Df_TemplateElementOrder] DEFAULT (0), -- Render the values elements in this order.
-	[RenderValueAs]			NVarChar(10) Not Null, -- How to render the Value
+	[RenderValueAs]			NVarChar(20) Not Null, -- How to render the Value
 	-- Constant Value
 	[FixedValue]			NVarChar(250) NULL, -- Fixed/Constant value for the node
 	-- Object Property Value
@@ -25,5 +25,5 @@
 	CONSTRAINT [FK_TemplateElementTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_TemplateElementParent] FOREIGN KEY ([TemplateId], [ParentElementId]) REFERENCES [AppScript].[TemplateElement] ([TemplateId], [ElementId]),
 	CONSTRAINT [FK_TemplateElementProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
-	CONSTRAINT [CK_TemplateElementValueAs] CHECK ([RenderValueAs]='Text' OR [RenderValueAs]='XML' OR [RenderValueAs]='CData'),
+	CONSTRAINT [CK_TemplateElementValueAs] CHECK ([RenderValueAs]='Element' OR [RenderValueAs]='Element.Text' OR [RenderValueAs]='Element.XML' OR [RenderValueAs]='Element.CData'),
 )

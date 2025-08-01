@@ -4,7 +4,7 @@
 	[AttributeId]			UniqueIdentifier NULL,
 	[AttributeName]			[AppGeneral].[uddtQualifiedName] NULL,
 	[RenderOrder]			Int Null,
-	[RenderValueAs]			NVarChar(10) Null,
+	[RenderValueAs]			NVarChar(20) Null,
 	[FixedValue]			NVarChar(250) NULL,
 	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,

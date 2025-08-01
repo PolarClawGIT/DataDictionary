@@ -6,7 +6,7 @@
 	-- Script As
 	[AttributeName]			NVarChar(50) Not Null, -- Name of the XML Attribute
 	[RenderOrder]			Int Not Null CONSTRAINT [Df_TemplateAttributeOrder] DEFAULT (0), -- Render the values elements in this order.
-	[RenderValueAs]			NVarChar(10) Not Null, -- How to render the Value
+	[RenderValueAs]			NVarChar(20) Not Null, -- How to render the Value
 	-- Constant Value
 	[FixedValue]			NVarChar(250) NULL, -- Fixed/Constant value for the node
 	-- Object Property Value
@@ -22,6 +22,6 @@
 	CONSTRAINT [AK_TemplateAttribute] UNIQUE ([TemplateId] ASC, [AttributeId] ASC),
 	CONSTRAINT [FK_TemplateAttributeProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
 	CONSTRAINT [FK_TemplateAttributeTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
-	CONSTRAINT [CK_TemplateAttributeValueAs] CHECK ([RenderValueAs]='Text' OR [RenderValueAs]='CData'),
+	CONSTRAINT [CK_TemplateAttributeValueAs] CHECK ([RenderValueAs]='Attribute.Text' OR [RenderValueAs]='Attribute.CData'),
 )
 GO
