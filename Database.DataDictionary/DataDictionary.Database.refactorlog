@@ -4605,4 +4605,39 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procGetDataObject]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="83438810-ff68-461b-ad00-9a9fc545fb79" ChangeDateTime="08/01/2025 13:50:47">
+    <Property Name="ElementName" Value="[AppScript].[TemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="60a231b5-c247-4758-94ee-368f46455b8b" ChangeDateTime="08/01/2025 13:52:37">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5b5d2d6e-b62b-404e-9872-1556c1c042f9" ChangeDateTime="08/01/2025 13:53:28">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6a4b4b6d-eab8-48aa-b2c0-271ced773480" ChangeDateTime="08/01/2025 13:55:33">
+    <Property Name="ElementName" Value="[AppScript].[TemplateAttributeOwnerHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNodeOwnerHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f4e5b171-3336-4797-9211-e279f4e3f465" ChangeDateTime="08/01/2025 13:56:13">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetTemplateNodeOwner]" />
+  </Operation>
 </Operations>

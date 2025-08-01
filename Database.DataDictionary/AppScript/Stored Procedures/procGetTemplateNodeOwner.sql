@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppScript].[procGetTemplateAttributeOwner]
+﻿CREATE PROCEDURE [AppScript].[procGetTemplateNodeOwner]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -22,7 +22,7 @@ Select	[TemplateId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[TemplateAttributeOwnerHs] D -- TODO: For System_Time All D
+From	[AppScript].[TemplateNodeOwnerHs] D -- TODO: For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (

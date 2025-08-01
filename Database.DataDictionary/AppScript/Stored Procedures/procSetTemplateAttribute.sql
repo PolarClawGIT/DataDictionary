@@ -57,8 +57,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateAttributeOwner]
-	From	[AppScript].[TemplateAttributeOwner] T
+	Delete From [AppScript].[TemplateNodeOwner]
+	From	[AppScript].[TemplateNodeOwner] T
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
 	Where	S.[AttributeId] is Null And
@@ -68,7 +68,7 @@ Begin Try
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[TemplateAttribute]
 	From	[AppScript].[TemplateAttribute] T

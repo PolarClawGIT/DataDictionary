@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigTemplateAttributeOwner]
-	ON [AppScript].[TemplateAttributeOwner]
+﻿CREATE TRIGGER [AppScript].[trigTemplateNodeOwner]
+	ON [AppScript].[TemplateNodeOwner]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN

@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetTemplateAttributeOwner]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplateNodeOwner]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttTemplateAttributeOwner] ReadOnly
+		@Data [AppScript].[udttTemplateNodeOwner] ReadOnly
 AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -45,8 +45,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateAttributeOwner]
-	From	[AppScript].[TemplateAttributeOwner] T
+	Delete From [AppScript].[TemplateNodeOwner]
+	From	[AppScript].[TemplateNodeOwner] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId] And
 				T.[AttributeId] = S.[AttributeId] And
@@ -58,9 +58,9 @@ Begin Try
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[TemplateAttributeOwner] (
+	Insert Into [AppScript].[TemplateNodeOwner] (
 			[TemplateId],
 			[AttributeId],
 			[ElementId])
@@ -68,12 +68,12 @@ Begin Try
 			S.[AttributeId],
 			S.[ElementId]
 	From	@Values S
-			Left Join [AppScript].[TemplateAttributeOwner] T
+			Left Join [AppScript].[TemplateNodeOwner] T
 			On	S.[TemplateId] = T.[TemplateId] And
 				S.[AttributeId] = T.[AttributeId] And
 				S.[ElementId] = T.[ElementId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [AppScript].[TemplateAttributeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

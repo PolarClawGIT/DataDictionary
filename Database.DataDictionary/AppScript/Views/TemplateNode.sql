@@ -15,7 +15,7 @@ With [Data] As (
 			A.[SysStart],
 			A.[SysEnd]
 	From	[AppScript].[TemplateAttribute] A
-			Left Join [AppScript].[TemplateAttributeOwner] O
+			Left Join [AppScript].[TemplateNodeOwner] O
 			On	A.[AttributeId] = O.[AttributeId]),
 [Tree] As (
 	Select	D.[NodeId],

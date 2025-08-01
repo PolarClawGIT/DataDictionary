@@ -1,4 +1,4 @@
-﻿CREATE TYPE [AppScript].[udttTemplateAttributeOwner] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplateNodeOwner] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[AttributeId]			UniqueIdentifier NULL,

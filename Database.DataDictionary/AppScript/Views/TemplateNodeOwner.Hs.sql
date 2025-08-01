@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppScript].[TemplateAttributeOwnerHs] AS
+﻿CREATE VIEW [AppScript].[TemplateNodeOwnerHs] AS
 -- Temporal View
 With [Dates] As (
 	Select	[TemplateId],
@@ -6,7 +6,7 @@ With [Dates] As (
 			[ElementId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[TemplateAttributeOwner]
+	From	[AppScript].[TemplateNodeOwner]
 	/*Union -- TODO: Temporal not yet implemented
 	Select	[TemplateId],
 			[AttributeId],
@@ -31,7 +31,7 @@ Select	D.[TemplateId],
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[TemplateAttributeOwner] D
+From	[AppScript].[TemplateNodeOwner] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
