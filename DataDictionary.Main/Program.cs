@@ -28,9 +28,6 @@ namespace DataDictionary.Main
 
             Worker.WorkException += WorkerQueue_WorkException;
 
-            // Static Data
-            BusinessData.ScriptingEngine.Properties.Load();
-
             Application.Run(new Main());
         }
 

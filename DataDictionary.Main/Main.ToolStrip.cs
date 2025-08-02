@@ -225,7 +225,7 @@ namespace DataDictionary.Main
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <TemplateValue, Forms.Scripting.ScriptingTemplate>
+                <ScriptingTemplateValue, Forms.Scripting.ScriptingTemplate>
                 (ScopeType.ScriptingTemplate, BusinessData.ScriptingEngine.Templates)
             { SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) });
         }

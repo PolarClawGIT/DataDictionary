@@ -65,7 +65,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc cref="AppCatalog.IPropertyData.GetProperty(ITableColumnIndexName)"/>
         public required Func<ITableColumnIndexName, IEnumerable<AppCatalog.IPropertyValue>> GetCatalogProperty { get; init; }
 
-        /// <inheritdoc cref="AppModel.IPropertyData.GetProperty(AppCatalog.IPropertyValue)"/>
+        /// <inheritdoc cref="AppModel.IPropertyGetValue.GetValue(IPropertyIndex)"/>
         public required Func<AppCatalog.IPropertyValue, AppModel.IPropertyValue?> GetModelProperty { get; init; }
 
         /// <summary>

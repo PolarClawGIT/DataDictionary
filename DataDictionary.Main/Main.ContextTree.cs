@@ -131,7 +131,7 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(modelItem));
         }
 
-        void OpenForm(TemplateValue templateValue)
+        void OpenForm(ScriptingTemplateValue templateValue)
         {
             Activate(
                 () => new Forms.Scripting.ScriptingTemplate(templateValue),

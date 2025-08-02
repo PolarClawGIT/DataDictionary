@@ -27,10 +27,15 @@ namespace DataDictionary.DataLayer.AppScript
         public String PropertyName { get; protected set; } = String.Empty;
 
         /// <summary>
-        /// Constructor for the Unique Key on Property for the Scripting Template Node.
+        /// Constructor for the Unique Key on Property for the Scripting Node.
+        /// </summary>
+        protected ScriptingNodeKeyName() : base() { }
+
+        /// <summary>
+        /// Constructor for the Unique Key on Property for the Scripting Node.
         /// </summary>
         /// <param name="source"></param>
-        public ScriptingNodeKeyName(IScriptingNodeKeyName source) : base()
+        public ScriptingNodeKeyName(IScriptingNodeKeyName source) : this()
         {
             PropertyScope = source.PropertyScope;
 

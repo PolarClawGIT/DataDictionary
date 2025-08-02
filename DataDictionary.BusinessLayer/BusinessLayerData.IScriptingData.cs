@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="templateKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> BuildDocuments(ITemplateIndex templateKey)
+        public IReadOnlyList<WorkItem> BuildDocuments(IScriptingTemplateIndex templateKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             ScriptingWork scripting = new ScriptingWork(templateKey, ScriptingEngine);
@@ -37,10 +37,10 @@ namespace DataDictionary.BusinessLayer
                 {
                     Int32 totlaWork = scripting.Paths.Count();
                     Int32 completeWork = 0;
-                    TemplateDocumentValue? doc = null;
+                    XDocumentValue? doc = null;
                     XElement? rootElement = null;
 
-                    foreach (TemplatePathValue item in scripting.Paths)
+                    foreach (ScriptingPathValue item in scripting.Paths)
                     {
                         PathIndex path = new PathIndex(PathIndex.Parse(item.NameSpace).ToArray());
 
@@ -55,13 +55,13 @@ namespace DataDictionary.BusinessLayer
                             {
                                 rootElement = BuildElement(scripting, data);
 
-                                doc = new TemplateDocumentValue(scripting.Template, rootElement) { ElementName = elementName };
+                                doc = new XDocumentValue(scripting.Template, rootElement) { ElementName = elementName };
                                 scripting.Documents.Add(doc);
                             }
                             else if (doc is null)
                             {
                                 rootElement = new XElement(ScopeEnumeration.Cast(Model.Scope).Name);
-                                doc = new TemplateDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
+                                doc = new XDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
 
                                 try
                                 { rootElement.Add(BuildElement(scripting, data)); }
@@ -106,7 +106,7 @@ namespace DataDictionary.BusinessLayer
                     Int32 totlaWork = scripting.Documents.Count();
                     Int32 completeWork = 0;
 
-                    foreach (TemplateDocumentValue doc in scripting.Documents)
+                    foreach (XDocumentValue doc in scripting.Documents)
                     {
                         doc.ApplyTransform();
 

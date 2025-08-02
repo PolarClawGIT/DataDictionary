@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             AttributeIndex key = new AttributeIndex(index);
             if (data.Values.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
             {
-                foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
+                foreach (ScriptingNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
                 {
                     XObject? value = null;
 
@@ -73,13 +73,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         public static IReadOnlyList<XAttribute> GetXAttributes(
             this IEnumerable<PropertyValue> data,
-            ScriptingWork scripting, TemplateNodeValue node,
+            ScriptingWork scripting, ScriptingNodeValue node,
             IEnumerable<IProperty> properties)
         {
             List<XAttribute> result = new List<XAttribute>();
 
-            TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
-            foreach (TemplateAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
+            ScriptingNodeIndex nodeKey = new ScriptingNodeIndex(node);
+            foreach (ScriptingAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
             {
                 XAttribute? attrib = null;
                 PropertyIndex propertyKey = new PropertyIndex(templateAttrib);

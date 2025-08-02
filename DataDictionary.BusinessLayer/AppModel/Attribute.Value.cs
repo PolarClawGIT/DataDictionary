@@ -61,6 +61,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             };
         }
 
+        [Obsolete]
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttribute;

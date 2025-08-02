@@ -84,9 +84,6 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        //public ScopeType Scope { get; } = ScopeType.ScriptingTemplateNode;
-
-        /// <inheritdoc/>
         public ITemporal Temporal { get; }
 
         /// <summary>

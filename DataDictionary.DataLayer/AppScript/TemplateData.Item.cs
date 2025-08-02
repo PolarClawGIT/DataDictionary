@@ -1,0 +1,90 @@
+﻿using System.Data;
+using System.Runtime.Serialization;
+using Toolbox.BindingTable;
+
+namespace DataDictionary.DataLayer.AppScript
+{
+    /// <summary>
+    /// Interface for the Scripting Template Data Source.
+    /// </summary>
+    public interface ITemplateDataItem :
+        ITemplateKey, IDataSourceKey,
+        ITemporalItem
+    { }
+
+    /// <summary>
+    /// Implementation for the Scripting Template Data Source.
+    /// </summary>
+    [Serializable]
+    public class TemplateDataItem : BindingTableRow, ITemplateDataItem, ISerializable
+    {
+        /// <inheritdoc/>
+        public Guid? TemplateId
+        {
+            get { return GetValue<Guid>(nameof(TemplateId)); }
+            protected set { SetValue(nameof(TemplateId), value); }
+        }
+
+        /// <inheritdoc/>
+        public Guid? DataSourceId
+        {
+            get { return GetValue<Guid>(nameof(DataSourceId)); }
+            protected set { SetValue(nameof(DataSourceId), value); }
+        }
+
+        /// <inheritdoc/>
+        public ITemporal Temporal { get; }
+
+        /// <summary>
+        /// Constructor for Scripting Template Data
+        /// </summary>
+        protected TemplateDataItem() : base()
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
+
+        /// <summary>
+        /// Constructor for Scripting Template Data
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="dataSource"></param>
+        public TemplateDataItem(ITemplateKey template, IDataSourceKey dataSource) : this()
+        {
+            TemplateId = template.TemplateId;
+            DataSourceId = dataSource.DataSourceId;
+        }
+
+        static readonly IReadOnlyList<DataColumn> columnDefinitions =
+        [
+            new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = false},
+            ..TemporalItem.columnDefinitions,
+        ];
+
+        /// <inheritdoc/>
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
+        { return columnDefinitions; }
+
+        #region ISerializable
+        /// <summary>
+        /// Serialization Constructor
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected TemplateDataItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        {
+            Temporal = new TemporalItem()
+            {
+                GetBoolean = (name) => GetValue<Boolean>(name, BindingItemParsers.BooleanTryParse),
+                GetDate = GetValue<DateTime>,
+                GetString = GetValue,
+            };
+        }
+        #endregion
+    }
+}

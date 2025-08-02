@@ -11,6 +11,11 @@ public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
     none,
 
     /// <summary>
+    /// Render as Element without a Value
+    /// </summary>
+    Element,
+
+    /// <summary>
     /// Render value as an Element Text
     /// </summary>
     ElementText,
@@ -26,7 +31,14 @@ public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
     ElementXML,
 
     /// <summary>
-    /// Render value as an Attribute Text. Attribute Name = Data
+    /// Render value as an Attribute, value as Text.
     /// </summary>
-    Attribute
+    AttributeText,
+
+    /// <summary>
+    /// Render value as an Attribute, value as CData.
+    /// </summary>
+    AttributeCData,
+
+
 }

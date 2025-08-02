@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         internal EntityAliasValue(IEntityKey key) : base(key) { }
 
         /// <inheritdoc cref="EntityAliasItem.AliasPath"/>
-        public new PathIndex AliasPath
+        public PathIndex AliasName
         {
             get { return new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
             set { base.AliasPath = value.MemberFullPath; }

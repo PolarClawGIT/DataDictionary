@@ -16,11 +16,13 @@ public class TemplateNodeValueAsEnumeration : Enumeration<TemplateNodeValueAsTyp
     {
         List<TemplateNodeValueAsEnumeration> data = new List<TemplateNodeValueAsEnumeration>()
         {
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.none,         String.Empty){ DisplayName = "not defined" },
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementText,  "Element.Text"),
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementCData, "Element.CData"),
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementXML,   "Element.XML"),
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.Attribute,    "Attribute"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.none,           String.Empty){ DisplayName = "not defined" },
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.Element,        "Element"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementText,    "Element.Text"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementCData,   "Element.CData"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementXML,     "Element.XML"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.AttributeText,  "Attribute.Text"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.AttributeCData, "Attribute.CData"),
         };
 
         BuildDictionary(data);

@@ -4402,4 +4402,242 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[NameSpaceScope]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9944a54b-397d-4bf1-a8ad-055307dc0cc6" ChangeDateTime="07/22/2025 15:15:20">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Template]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="11cd956f-f575-4d7c-ad74-913c2cf66fbc" ChangeDateTime="07/22/2025 15:16:56">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e15a7ac4-d8ed-4fe7-b468-247134e32378" ChangeDateTime="07/22/2025 15:18:39">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="17cc104e-db10-4ab7-9893-35345f51604e" ChangeDateTime="07/22/2025 15:26:58">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[TemplateAttribute]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dd0fcadb-7e80-4069-b864-8ec4528ba5b0" ChangeDateTime="07/22/2025 15:28:07">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingNode]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[TemplateNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="eb410025-f12a-4d55-825b-7d8d5a1f59b7" ChangeDateTime="07/22/2025 15:28:53">
+    <Property Name="ElementName" Value="[AppScript].[trigScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[Template]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1d8556fd-07c7-4ec4-94d0-604be5b5ef3e" ChangeDateTime="07/22/2025 16:10:36">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingAttributeHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateAttributeHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e8835a4f-f89e-428e-a4e2-c1655bb4861b" ChangeDateTime="07/22/2025 16:11:26">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingTemplateHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5d263980-7020-4123-992a-a304be53d833" ChangeDateTime="07/22/2025 16:12:10">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingNodeHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNodeHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="63a84c0a-d8b2-4df1-b360-09ad58bca15a" ChangeDateTime="07/22/2025 16:32:30">
+    <Property Name="ElementName" Value="[AppScript].[procGetScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetTemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="afd3f7c3-8b06-4868-9b6f-451d07d901fc" ChangeDateTime="07/22/2025 16:34:11">
+    <Property Name="ElementName" Value="[AppScript].[procGetScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetTemplate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2372737e-6ebf-4e4d-8a4f-09506f86fd72" ChangeDateTime="07/22/2025 16:34:48">
+    <Property Name="ElementName" Value="[AppScript].[procSetScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="db8a79a3-76b1-40d1-b066-da94e26ea726" ChangeDateTime="07/22/2025 16:35:36">
+    <Property Name="ElementName" Value="[AppScript].[procSetScriptingNode]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7184a962-50f3-4d34-872d-6425253d6baf" ChangeDateTime="07/22/2025 16:36:41">
+    <Property Name="ElementName" Value="[AppScript].[procSetScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="989531d7-ed4b-405d-907d-215086f10f87" ChangeDateTime="07/22/2025 16:38:01">
+    <Property Name="ElementName" Value="[AppScript].[udttScriptingAttribute]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplateAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1af2a45c-79f0-4820-9a90-1231a6e8bb08" ChangeDateTime="07/22/2025 16:38:52">
+    <Property Name="ElementName" Value="[AppScript].[udttScriptingTemplate]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fb0333d9-6efc-462a-a435-e5f9ddb288b9" ChangeDateTime="07/22/2025 16:39:15">
+    <Property Name="ElementName" Value="[AppScript].[udttScriptingNode]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplateNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="72ae7047-a1b9-44c3-a860-ea3ba34a5cb5" ChangeDateTime="07/25/2025 14:16:10">
+    <Property Name="ElementName" Value="[AppScript].[DataItem]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DataObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b743d4c6-762d-4918-8512-1b852718147c" ChangeDateTime="07/25/2025 14:16:21">
+    <Property Name="ElementName" Value="[AppScript].[DataObject].[DataItemId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataObjectId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5f33e6ae-0fbb-4626-b988-8931a34ef38d" ChangeDateTime="07/25/2025 14:16:34">
+    <Property Name="ElementName" Value="[AppScript].[DataObject].[DataItemMember]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataObjectMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8f0efbc7-f476-4a5a-84d0-32af8bed88a7" ChangeDateTime="07/25/2025 14:16:46">
+    <Property Name="ElementName" Value="[AppScript].[DataObject].[ParentItemId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ParentObjectId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8130c620-cce5-4f3d-8c1c-46683bb1f60e" ChangeDateTime="07/25/2025 14:17:27">
+    <Property Name="ElementName" Value="[AppScript].[DataObject].[DataObjectMember]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="190ca01b-3a6f-45f8-ab6b-b84f611b7754" ChangeDateTime="07/25/2025 14:18:40">
+    <Property Name="ElementName" Value="[AppScript].[funcDataItemId]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcDataObjectId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="92a84328-2e05-48b6-85c9-11a56efc0bdf" ChangeDateTime="07/25/2025 14:19:44">
+    <Property Name="ElementName" Value="[AppScript].[funcDataItemPath]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcDataObjectPath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f0b72bd8-7ded-4990-98bd-7bc5063faa3b" ChangeDateTime="07/25/2025 14:20:51">
+    <Property Name="ElementName" Value="[AppScript].[trigDataItem]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigDataObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4ef7ffac-d08e-49a5-a617-e636c234e624" ChangeDateTime="07/25/2025 14:21:59">
+    <Property Name="ElementName" Value="[AppScript].[DataItemHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DataObjectHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="061c503e-cbf6-4e1f-87a3-1c787d59b302" ChangeDateTime="07/25/2025 14:23:15">
+    <Property Name="ElementName" Value="[AppScript].[udttDataItem]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttDataObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0e3bab32-3a77-4744-9afe-ab51d9f0b487" ChangeDateTime="07/25/2025 14:24:22">
+    <Property Name="ElementName" Value="[AppScript].[procSetDataItem]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetDataObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2914847d-8b57-4952-8a1f-27334965068b" ChangeDateTime="07/25/2025 14:26:40">
+    <Property Name="ElementName" Value="[AppScript].[procGetDataItem]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetDataObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="83438810-ff68-461b-ad00-9a9fc545fb79" ChangeDateTime="08/01/2025 13:50:47">
+    <Property Name="ElementName" Value="[AppScript].[TemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="60a231b5-c247-4758-94ee-368f46455b8b" ChangeDateTime="08/01/2025 13:52:37">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5b5d2d6e-b62b-404e-9872-1556c1c042f9" ChangeDateTime="08/01/2025 13:53:28">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplateNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6a4b4b6d-eab8-48aa-b2c0-271ced773480" ChangeDateTime="08/01/2025 13:55:33">
+    <Property Name="ElementName" Value="[AppScript].[TemplateAttributeOwnerHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNodeOwnerHs]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f4e5b171-3336-4797-9211-e279f4e3f465" ChangeDateTime="08/01/2025 13:56:13">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplateAttributeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetTemplateNodeOwner]" />
+  </Operation>
 </Operations>

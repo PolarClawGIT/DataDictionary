@@ -15,11 +15,11 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IAliasSubType : IAliasKey, IBindingPropertyChanged
     {
-        String? IAliasKeyName.AliasPath { get { return AliasPath.MemberFullPath; } }
+        String? IAliasKeyName.AliasPath { get { return AliasName.MemberFullPath; } }
         ScopeType IAliasKey.AliasScope { get { return AliasScope; } }
 
         /// <inheritdoc cref="IAliasKeyName.AliasPath"/>
-        new PathIndex AliasPath { get; set; }
+        PathIndex AliasName { get; set; }
 
         /// <inheritdoc cref="IAliasKey.AliasScope"/>
         new ScopeType AliasScope { get; set; }

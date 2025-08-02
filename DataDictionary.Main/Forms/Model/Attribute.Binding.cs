@@ -1,11 +1,15 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -52,7 +56,6 @@ namespace DataDictionary.Main.Forms.Model
             public void Init()
             {
                 // Note: C# 13 adds "field".
-                // This code could then be moved to the BindingHelpSubject init.
 
                 Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
@@ -169,7 +172,6 @@ namespace DataDictionary.Main.Forms.Model
                 if (TryGetValue(out AttributeValue? value))
                 { return new AttributeAliasValue(value); }
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
-                throw new NotImplementedException();
             }
 
             public void AddSubjectArea(ISubjectAreaIndex subject)
@@ -201,7 +203,7 @@ namespace DataDictionary.Main.Forms.Model
                 }
                 else
                 {
-                    attributeData = IAttribute.Create();
+                    attributeData = IAttribute.Create(BusinessData.Model.Properties, BusinessData.Model.Definitions);
                     work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
                 }
 
@@ -274,7 +276,16 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
+            public XElement GetXElement()
+            {
+                AttributeValue attributeValue = attributeData.Values.First();
 
+                XElement result = AttributeValue.CreateXElementBuilders().Build(attributeValue);
+                result.Add(AttributePropertyValue.CreateXElementBuilders(BusinessData.Model.Properties).Build(attributeData.Properties));
+                result.Add(AttributeDefinitionValue.CreateXElementBuilders(BusinessData.Model.Definitions).Build(attributeData.Definitions));
+
+                return result;
+            }
         }
     }
 }
