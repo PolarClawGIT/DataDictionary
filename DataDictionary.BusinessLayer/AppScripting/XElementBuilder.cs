@@ -237,7 +237,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         fragementEx.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
                         throw;
                     }
-                case TemplateNodeValueAsType.Attribute:
+                case TemplateNodeValueAsType.AttributeText:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XAttribute(NodeName, nodeValue);
                 default:

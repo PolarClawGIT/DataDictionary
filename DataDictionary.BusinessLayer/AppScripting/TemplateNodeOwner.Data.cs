@@ -1,0 +1,80 @@
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
+using DataDictionary.DataLayer.AppScript;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Toolbox.Threading;
+
+namespace DataDictionary.BusinessLayer.AppScripting
+{
+    /// <summary>
+    /// Interface component for the Scripting Template NodeOwner
+    /// </summary>
+    public interface ITemplateNodeOwnerData : IBindingData<TemplateNodeOwnerValue>
+    { }
+
+    class TemplateNodeOwnerData : TemplateNodeOwnerCollection<TemplateNodeOwnerValue>, ITemplateNodeOwnerData,
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+    {
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateSave(this, (ITemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Scripting Template NodeOwner", DoWork = () => { Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove Scripting Template NodeOwner", DoWork = () => { Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
+        { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public void Remove(IModelIndex dataKey)
+        { Clear(); }
+    }
+}

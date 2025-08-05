@@ -22,6 +22,6 @@
 	CONSTRAINT [AK_TemplateAttribute] UNIQUE ([TemplateId] ASC, [AttributeId] ASC),
 	CONSTRAINT [FK_TemplateAttributeProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
 	CONSTRAINT [FK_TemplateAttributeTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
-	CONSTRAINT [CK_TemplateAttributeValueAs] CHECK ([RenderValueAs]='Attribute.Text' OR [RenderValueAs]='Attribute.CData'),
+	CONSTRAINT [CK_TemplateAttributeValueAs] CHECK ([RenderValueAs]='Attribute.Text'),
 )
 GO

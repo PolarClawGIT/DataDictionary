@@ -116,7 +116,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case TemplateNodeValueAsType.Attribute:
+                                case TemplateNodeValueAsType.AttributeText:
                                     newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
                                     aliasObject = newAttribute;
                                     break;

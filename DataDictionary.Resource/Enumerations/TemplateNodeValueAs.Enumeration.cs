@@ -22,7 +22,6 @@ public class TemplateNodeValueAsEnumeration : Enumeration<TemplateNodeValueAsTyp
             new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementCData,   "Element.CData"),
             new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementXML,     "Element.XML"),
             new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.AttributeText,  "Attribute.Text"),
-            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.AttributeCData, "Attribute.CData"),
         };
 
         BuildDictionary(data);

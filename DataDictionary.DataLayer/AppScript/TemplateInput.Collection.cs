@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Generic Base class for Scripting Template Input Data Source
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    public class TemplateDataCollection<TItem> : BindingTable<TItem>,
+    public class TemplateInputCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>

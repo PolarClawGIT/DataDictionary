@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         fragementEx.Data.Add(nameof(PropertyName), PropertyName);
                         throw;
                     }
-                case TemplateNodeValueAsType.Attribute:
+                case TemplateNodeValueAsType.AttributeText:
                     return new XAttribute(nodeName, nodeValue);
                 default:
                     Exception ex = new InvalidOperationException("Unknown NodeValueAsType");
