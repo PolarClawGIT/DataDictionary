@@ -11,10 +11,12 @@ using DataDictionary.DataLayer.AppScript;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingAttributeValue : IScriptingAttributeItem, IScriptingTemplateIndex, IScriptingNodeIndex, IPropertyIndex
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingAttributeValue : ScriptingAttributeItem, IScriptingAttributeValue
     {
         /// <inheritdoc/>

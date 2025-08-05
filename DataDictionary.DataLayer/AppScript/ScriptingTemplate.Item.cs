@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateItem : 
         IScriptingTemplateKey, IScriptingTemplateKeyName, 
         IScriptAsType, ITemplateDirectory,
@@ -73,6 +74,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Implementation for the Scripting Template data.
     /// </summary>
     [Serializable]
+    [Obsolete("replace", true)]
     public class ScriptingTemplateItem : BindingTableRow, IScriptingTemplateItem, ISerializable
     {
         /// <inheritdoc/>

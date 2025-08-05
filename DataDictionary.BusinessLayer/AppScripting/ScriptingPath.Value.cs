@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingPathValue : IScriptingPathItem, IScriptingTemplateIndex
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingPathValue : ScriptingPathItem, IScriptingPathValue
     {
         /// <inheritdoc/>

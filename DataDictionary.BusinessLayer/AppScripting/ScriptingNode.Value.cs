@@ -11,10 +11,12 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeValue : IScriptingNodeItem, IScriptingTemplateIndex, IScriptingNodeIndex, IScriptingNodeIndexName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingNodeValue : ScriptingNodeItem, IScriptingNodeValue
     {
         /// <inheritdoc/>

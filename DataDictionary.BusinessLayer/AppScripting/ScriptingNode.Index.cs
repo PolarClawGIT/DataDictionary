@@ -4,10 +4,12 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeIndex : IScriptingNodeKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingNodeIndex : ScriptingNodeKey, IScriptingNodeIndex,
         IKeyEquality<IScriptingNodeIndex>, IKeyEquality<ScriptingNodeIndex>
     {

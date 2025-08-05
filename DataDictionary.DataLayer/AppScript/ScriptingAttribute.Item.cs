@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Node Attribute data.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingAttributeItem :
         IScriptingAttributeKey, IScriptingNodeKey, IScriptingTemplateKey, IPropertyKey,
         ITemporalItem
@@ -28,6 +29,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Implementation for the Scripting Template Node Attribute data.
     /// </summary>
     [Serializable]
+    [Obsolete("replace", true)]
     public class ScriptingAttributeItem : BindingTableRow, IScriptingAttributeItem, ISerializable
     {
         /// <inheritdoc/>

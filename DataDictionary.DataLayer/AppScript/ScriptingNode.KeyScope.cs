@@ -6,6 +6,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Key on Property Scope for the Scripting Template Node.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeKeyScope : IKey
     {
         /// <summary>
@@ -17,6 +18,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Key on Property Scope for the Scripting Template Node.
     /// </summary>
+    [Obsolete("replace", true)]
     public class ScriptingNodeKeyScope : IScriptingNodeKeyScope,
         IKeyComparable<IScriptingNodeKeyScope>, IKeyComparable<ScriptingNodeKeyScope>
     {

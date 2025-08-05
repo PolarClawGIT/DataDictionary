@@ -11,10 +11,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateName : IScriptingTemplateKeyName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingTemplateName : ScriptingTemplateKeyName, IScriptingTemplateName,
         IKeyEquality<IScriptingTemplateName>, IKeyEquality<ScriptingTemplateName>
     {

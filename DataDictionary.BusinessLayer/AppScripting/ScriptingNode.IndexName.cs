@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeIndexName : IScriptingNodeKeyName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingNodeIndexName : ScriptingNodeKeyName, IScriptingNodeIndexName,
         IKeyEquality<IScriptingNodeIndexName>, IKeyEquality<ScriptingNodeIndexName>
     {

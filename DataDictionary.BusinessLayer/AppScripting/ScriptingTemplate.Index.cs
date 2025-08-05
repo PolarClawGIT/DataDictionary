@@ -5,10 +5,12 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateIndex : IScriptingTemplateKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingTemplateIndex : ScriptingTemplateKey, IScriptingTemplateIndex,
         IKeyEquality<IScriptingTemplateIndex>, IKeyEquality<ScriptingTemplateIndex>
     {

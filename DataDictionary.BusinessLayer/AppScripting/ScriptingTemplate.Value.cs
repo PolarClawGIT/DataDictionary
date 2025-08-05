@@ -8,6 +8,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateValue : IScriptingTemplateItem, IScriptingTemplateIndex, IScriptingTemplateName
     {
         /// <summary>
@@ -27,6 +28,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingTemplateValue : ScriptingTemplateItem, IScriptingTemplateValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
