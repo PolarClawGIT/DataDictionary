@@ -1,6 +1,6 @@
-﻿CREATE VIEW [AppScript].[TemplateDataHs] As
+﻿CREATE VIEW [AppScript].[TemplateInputHs] As
 -- Temporal View
--- Template Data (M:N for Template and DataSource) only has meaning within a Model.
+-- Template Input Data (M:N for Template and DataSource) only has meaning within a Model.
 With [Dates] As (
 	Select	IsNull([TemplateId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [TemplateId],
 			IsNull([DataSourceId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [DataSourceId],
