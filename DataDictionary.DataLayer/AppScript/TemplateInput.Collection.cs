@@ -6,14 +6,14 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Generic Base class for Scripting Template Data
+    /// Generic Base class for Scripting Template Input Data Source
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     public class TemplateDataCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>
-        where TItem : BindingTableRow, ITemplateDataItem, new()
+        where TItem : BindingTableRow, ITemplateInputItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -37,7 +37,7 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = TemplateData.GetProcedure;
+            command.CommandText = TemplateInput.GetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(Template.TemplateId, templateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
@@ -57,13 +57,13 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = TemplateData.SetProcedure;
+            command.CommandText = TemplateInput.SetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(Template.TemplateId, templateId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (templateId is null || w.TemplateId == templateId));
-            command.AddParameter(WriteData.Data, TemplateData.TableType, data);
+            command.AddParameter(WriteData.Data, TemplateInput.TableType, data);
             return command;
         }
 

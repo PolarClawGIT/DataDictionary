@@ -5,18 +5,18 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Scripting Template Data Source.
+    /// Interface for the Scripting Template Input Data Source.
     /// </summary>
-    public interface ITemplateDataItem :
+    public interface ITemplateInputItem :
         ITemplateKey, IDataSourceKey,
         ITemporalItem
     { }
 
     /// <summary>
-    /// Implementation for the Scripting Template Data Source.
+    /// Implementation for the Scripting Template Input Data Source.
     /// </summary>
     [Serializable]
-    public class TemplateDataItem : BindingTableRow, ITemplateDataItem, ISerializable
+    public class TemplateInputItem : BindingTableRow, ITemplateInputItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? TemplateId
@@ -38,7 +38,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Template Data
         /// </summary>
-        protected TemplateDataItem() : base()
+        protected TemplateInputItem() : base()
         {
             Temporal = new TemporalItem()
             {
@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// </summary>
         /// <param name="template"></param>
         /// <param name="dataSource"></param>
-        public TemplateDataItem(ITemplateKey template, IDataSourceKey dataSource) : this()
+        public TemplateInputItem(ITemplateKey template, IDataSourceKey dataSource) : this()
         {
             TemplateId = template.TemplateId;
             DataSourceId = dataSource.DataSourceId;
@@ -76,7 +76,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected TemplateDataItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected TemplateInputItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
             Temporal = new TemporalItem()
             {
