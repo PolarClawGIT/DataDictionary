@@ -28,6 +28,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate).ToList(); }
+
+
+        /// <inheritdoc/>
         /// <remarks>ScriptingDataObject</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDataSourceIndex dataKey)
         { return factory.CreateLoad(this, (IDataSourceKey)dataKey).ToList(); }

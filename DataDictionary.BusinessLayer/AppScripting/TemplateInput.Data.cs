@@ -69,6 +69,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplateInput</remarks>
+        public void Remove(IDataSourceIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateInput</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
     }

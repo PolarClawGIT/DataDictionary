@@ -8,6 +8,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -16,38 +17,46 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public interface IScriptingEngine :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IBindListChanged
     {
         /// <summary>
         /// List of Scripting Engine Templates.
         /// </summary>
-        IScriptingTemplateData Templates { get; }
+        ITemplateData Templates { get; }
 
         /// <summary>
-        /// List of Scripting Nodes for the Template
+        /// List of Scripting Elements for the Template
         /// </summary>
-        IScriptingNodeData TemplateNodes { get; }
+        ITemplateElementData Elements { get; }
 
         /// <summary>
         /// List of Scripting Attributes for the Template
         /// </summary>
-        ITemplateAttributeData TemplateAttributes { get; }
+        ITemplateAttributeData Attributes { get; }
 
         /// <summary>
-        /// List of Scripting Paths for the Template
+        /// List of Scripting Node/Attribute owners for the Template.
         /// </summary>
-        IScriptingPathData TemplatePaths { get; }
+        ITemplateNodeOwnerData AttributeOwners { get; }
 
         /// <summary>
-        /// List of Scripting Documents (output) for the Template
+        /// List of Scripting Data Sources
         /// </summary>
-        IXDocumentData TemplateDocuments { get; }
+        IDataSourceData DataSources { get; }
 
         /// <summary>
-        /// List of Properties for each Scope.
+        /// List of Scripting Data Objects within a Data Source.
         /// </summary>
-        IEnumerable<ScriptingNodeIndexName> Properties { get; }
+        IDataObjectData DataObjects { get; }
+
+        /// <summary>
+        /// List of Scripting Data Sources asscoated with a Templates.
+        /// </summary>
+        ITemplateInputData TemplateSources { get; }
+
+
+        //IXDocumentData Documents { get; }
     }
 
     /// <summary>
@@ -55,80 +64,49 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
-        /// <summary>
-        /// Reference to the containing Model
-        /// </summary>
-        public Model Model { get; private set; }
+        /// <inheritdoc/>
+        public ITemplateData Templates { get { return templateValues; } }
+        TemplateData templateValues = new TemplateData();
 
         /// <inheritdoc/>
-        public IScriptingTemplateData Templates { get { return templateValues; } }
-        private readonly ScriptingTemplateData templateValues;
+        public ITemplateElementData Elements { get { return templateElements; } }
+        TemplateElementData templateElements = new TemplateElementData();
 
         /// <inheritdoc/>
-        public IScriptingNodeData TemplateNodes { get { return nodeValues; } }
-        private readonly ScriptingNodeData nodeValues;
+        public ITemplateAttributeData Attributes { get { return templateAttributes; } }
+        TemplateAttributeData templateAttributes = new TemplateAttributeData();
 
         /// <inheritdoc/>
-        public ITemplateAttributeData TemplateAttributes { get { return attributeValues; } }
-        private readonly TemplateAttributeData attributeValues;
+        public ITemplateNodeOwnerData AttributeOwners { get { return templateNodeOwners; } }
+        TemplateNodeOwnerData templateNodeOwners = new TemplateNodeOwnerData();
 
         /// <inheritdoc/>
-        public IScriptingPathData TemplatePaths { get { return pathValues; } }
-        private readonly ScriptingPathData pathValues;
+        public IDataSourceData DataSources { get { return sourceValues; } }
+        DataSourceData sourceValues = new DataSourceData();
 
         /// <inheritdoc/>
-        public IXDocumentData TemplateDocuments { get { return documentValues; } }
-        private readonly XDocumentData documentValues;
+        public IDataObjectData DataObjects { get { return sourceObjects; } }
+        DataObjectData sourceObjects = new DataObjectData();
+
+        /// <inheritdoc/>
+        public ITemplateInputData TemplateSources { get { return templateSources; } }
+        TemplateInputData templateSources = new TemplateInputData();
 
         // List of the XElement Builder function for each scope.
         Dictionary<ScopeType, Func<IEnumerable<XElementBuilder>>> builders = new Dictionary<ScopeType, Func<IEnumerable<XElementBuilder>>>();
 
-        /// <inheritdoc/>
-        public IEnumerable<ScriptingNodeIndexName> Properties
+        /// <summary>
+        /// Constructor for the SpriptingEngine.
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <param name="definitions"></param>
+        public ScriptingEngine(IPropertyData properties, IDefinitionData definitions) : base()
         {
-            get
-            {
-                return builders.
-                    SelectMany(s => s.Value().
-                        Select(i => new ScriptingNodeIndexName(s.Key, i.PropertyName))); 
-            }
-        }
-
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return templateValues.RaiseListChangedEvents
-                    && nodeValues.RaiseListChangedEvents
-                    && attributeValues.RaiseListChangedEvents
-                    && pathValues.RaiseListChangedEvents
-                    && documentValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                templateValues.RaiseListChangedEvents = value;
-                nodeValues.RaiseListChangedEvents = value;
-                attributeValues.RaiseListChangedEvents = value;
-                pathValues.RaiseListChangedEvents = value;
-                documentValues.RaiseListChangedEvents = value;
-            }
-        }
-
-        public ScriptingEngine(Model model) : base()
-        {
-            Model = model;
-            templateValues = new ScriptingTemplateData() { Scripting = this };
-            pathValues = new ScriptingPathData();
-            documentValues = new XDocumentData();
-            nodeValues = new ScriptingNodeData();
-            attributeValues = new TemplateAttributeData();
-
             // Create the Builders. This data is static once loaded.
             builders.Clear();
             builders.Add(ScopeType.ModelAttribute, () => AttributeValue.CreateXElementBuilders());
-            builders.Add(ScopeType.ModelAttributeProperty, () => AttributePropertyValue.CreateXElementBuilders(model.Properties));
-            builders.Add(ScopeType.ModelAttributeDefinition, () => AttributeDefinitionValue.CreateXElementBuilders(model.Definitions));
+            builders.Add(ScopeType.ModelAttributeProperty, () => AttributePropertyValue.CreateXElementBuilders(properties));
+            builders.Add(ScopeType.ModelAttributeDefinition, () => AttributeDefinitionValue.CreateXElementBuilders(definitions));
             //TODO: Add all other scriptable objects.
         }
 
@@ -136,95 +114,42 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>Scripting</remarks>
         public IReadOnlyList<DataTable> Export()
         {
-            List<DataTable> result = new List<DataTable>();
-            result.Add(templateValues.ToDataTable());
-            result.Add(pathValues.ToDataTable());
-            result.Add(nodeValues.ToDataTable());
-            result.Add(attributeValues.ToDataTable());
-            return result;
+            List<DataTable> work = new List<DataTable>();
+            work.Add(templateValues.ToDataTable());
+            work.Add(templateElements.ToDataTable());
+            work.Add(templateAttributes.ToDataTable());
+            work.Add(templateNodeOwners.ToDataTable());
+            work.Add(sourceValues.ToDataTable());
+            work.Add(sourceObjects.ToDataTable());
+            work.Add(templateSources.ToDataTable());
+            return work;
         }
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
         public void Import(DataSet source)
         {
+            templateValues.Load(GetTable(templateValues.BindingName));
+            templateElements.Load(GetTable(templateElements.BindingName));
+            templateAttributes.Load(GetTable(templateAttributes.BindingName));
+            templateNodeOwners.Load(GetTable(templateNodeOwners.BindingName));
+            sourceValues.Load(GetTable(sourceValues.BindingName));
+            sourceObjects.Load(GetTable(sourceObjects.BindingName));
+            templateSources.Load(GetTable(templateSources.BindingName));
 
-            if (source.Tables.Contains(templateValues.BindingName)
-                && source.Tables[templateValues.BindingName] is DataTable transformTable)
-            { templateValues.Load(transformTable.CreateDataReader()); }
-
-            if (source.Tables.Contains(pathValues.BindingName)
-                && source.Tables[pathValues.BindingName] is DataTable pathTable)
-            { pathValues.Load(pathTable.CreateDataReader()); }
-
-            if (source.Tables.Contains(nodeValues.BindingName)
-                && source.Tables[nodeValues.BindingName] is DataTable nodeTable)
-            { pathValues.Load(nodeTable.CreateDataReader()); }
-
-            if (source.Tables.Contains(attributeValues.BindingName)
-                && source.Tables[attributeValues.BindingName] is DataTable attributeTable)
-            { pathValues.Load(attributeTable.CreateDataReader()); }
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(templateValues.Delete());
-            work.AddRange(pathValues.Delete());
-            work.AddRange(nodeValues.Delete());
-            work.AddRange(attributeValues.Delete());
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(templateValues.Delete(dataKey));
-            work.AddRange(pathValues.Delete(dataKey));
-            work.AddRange(nodeValues.Delete(dataKey));
-            work.AddRange(attributeValues.Delete(dataKey));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateIndex dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(templateValues.Delete(dataKey));
-            work.AddRange(pathValues.Delete(dataKey));
-            work.AddRange(nodeValues.Delete(dataKey));
-            work.AddRange(attributeValues.Delete(dataKey));
-            return work;
-        }
-
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(templateValues.Save(factory, dataKey));
-            work.AddRange(pathValues.Save(factory, dataKey));
-            work.AddRange(nodeValues.Save(factory, dataKey));
-            work.AddRange(attributeValues.Save(factory, dataKey));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(templateValues.Save(factory, dataKey));
-            work.AddRange(pathValues.Save(factory, dataKey));
-            work.AddRange(nodeValues.Save(factory, dataKey));
-            work.AddRange(attributeValues.Save(factory, dataKey));
-            return work;
+            DataTableReader GetTable(String tableName)
+            {
+                if (source.Tables.Contains(tableName) && source.Tables[tableName] is DataTable sourceTable)
+                { return sourceTable.CreateDataReader(); }
+                else
+                {
+                    Exception ex = new IndexOutOfRangeException();
+                    ex.Data.Add(nameof(tableName), tableName);
+                    ex.Data.Add(nameof(source.Tables),
+                        String.Join(",", source.Tables.OfType<DataTable>().Select(s => s.TableName)));
+                    throw ex;
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -233,9 +158,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
-            work.AddRange(pathValues.Load(factory, dataKey));
-            work.AddRange(nodeValues.Load(factory, dataKey));
-            work.AddRange(attributeValues.Load(factory, dataKey));
+            work.AddRange(templateElements.Load(factory, dataKey));
+            work.AddRange(templateAttributes.Load(factory, dataKey));
+            work.AddRange(templateNodeOwners.Load(factory, dataKey));
+            work.AddRange(sourceValues.Load(factory, dataKey));
+            work.AddRange(sourceObjects.Load(factory, dataKey));
+            work.AddRange(templateSources.Load(factory, dataKey));
             return work;
         }
 
@@ -245,43 +173,122 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(pathValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(nodeValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateElements.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateAttributes.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateNodeOwners.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(sourceValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(sourceObjects.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateSources.Load(factory, dataKey, asOfUtcDate));
             return work;
         }
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
-            work.AddRange(pathValues.Load(factory, dataKey));
-            work.AddRange(nodeValues.Load(factory, dataKey));
-            work.AddRange(attributeValues.Load(factory, dataKey));
+            work.AddRange(templateElements.Load(factory, dataKey));
+            work.AddRange(templateAttributes.Load(factory, dataKey));
+            work.AddRange(templateNodeOwners.Load(factory, dataKey));
+            work.AddRange(sourceValues.Load(factory, dataKey));
+            work.AddRange(sourceObjects.Load(factory, dataKey));
+            work.AddRange(templateSources.Load(factory, dataKey));
             return work;
         }
 
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(pathValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(nodeValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(attributeValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateElements.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateAttributes.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateNodeOwners.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(sourceValues.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(sourceObjects.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateSources.Load(factory, dataKey, asOfUtcDate));
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Save(factory, dataKey));
+            work.AddRange(templateElements.Save(factory, dataKey));
+            work.AddRange(templateAttributes.Save(factory, dataKey));
+            work.AddRange(templateNodeOwners.Save(factory, dataKey));
+            work.AddRange(sourceValues.Save(factory, dataKey));
+            work.AddRange(sourceObjects.Save(factory, dataKey));
+            work.AddRange(templateSources.Save(factory, dataKey));
+            return work;
+        }
 
-            work.AddRange(NameSpaceSource.Load<ScriptingTemplateData, ScriptingTemplateValue>(templateValues, addNamedScope));
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Save(factory, dataKey));
+            work.AddRange(templateElements.Save(factory, dataKey));
+            work.AddRange(templateAttributes.Save(factory, dataKey));
+            work.AddRange(templateNodeOwners.Save(factory, dataKey));
+            //work.AddRange(sourceValues.Save(factory, dataKey));
+            //work.AddRange(sourceObjects.Save(factory, dataKey));
+            work.AddRange(templateSources.Save(factory, dataKey));
+            return work;
+        }
 
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(templateElements.Delete(dataKey));
+            work.AddRange(templateAttributes.Delete(dataKey));
+            work.AddRange(templateNodeOwners.Delete(dataKey));
+            //work.AddRange(sourceValues.Delete(dataKey));
+            //work.AddRange(sourceObjects.Delete(dataKey));
+            work.AddRange(templateSources.Delete(dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(templateElements.Delete(dataKey));
+            work.AddRange(templateAttributes.Delete(dataKey));
+            work.AddRange(templateNodeOwners.Delete(dataKey));
+            work.AddRange(sourceValues.Delete(dataKey));
+            work.AddRange(sourceObjects.Delete(dataKey));
+            work.AddRange(templateSources.Delete(dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Delete());
+            work.AddRange(templateValues.Delete());
+            work.AddRange(templateElements.Delete());
+            work.AddRange(templateAttributes.Delete());
+            work.AddRange(templateNodeOwners.Delete());
+            work.AddRange(sourceValues.Delete());
+            work.AddRange(sourceObjects.Delete());
+            work.AddRange(templateSources.Delete());
             return work;
         }
 
@@ -289,36 +296,103 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Remove(IModelIndex dataKey)
         {
             templateValues.Remove(dataKey);
-            pathValues.Remove(dataKey);
-            nodeValues.Remove(dataKey);
-            attributeValues.Remove(dataKey);
+            templateElements.Remove(dataKey);
+            templateAttributes.Remove(dataKey);
+            templateNodeOwners.Remove(dataKey);
+            sourceValues.Remove(dataKey);
+            sourceObjects.Remove(dataKey);
+            templateSources.Remove(dataKey);
         }
 
         /// <inheritdoc/>
-        public void Remove(IScriptingTemplateIndex dataKey)
+        public void Remove(ITemplateIndex dataKey)
         {
             templateValues.Remove(dataKey);
-            pathValues.Remove(dataKey);
-            nodeValues.Remove(dataKey);
-            attributeValues.Remove(dataKey);
+            templateElements.Remove(dataKey);
+            templateAttributes.Remove(dataKey);
+            templateNodeOwners.Remove(dataKey);
+            //sourceValues.Remove(dataKey);
+            //sourceObjects.Remove(dataKey);
+            templateSources.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDataSourceIndex dataKey)
+        {
+            //templateValues.Remove(dataKey);
+            //templateElements.Remove(dataKey);
+            //templateAttributes.Remove(dataKey);
+            //templateNodeOwners.Remove(dataKey);
+            sourceValues.Remove(dataKey);
+            sourceObjects.Remove(dataKey);
+            templateSources.Remove(dataKey);
+        }
+
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
+
+            work.AddRange(NameSpaceSource.Load<TemplateAttributeData, TemplateAttributeValue>(templateAttributes, addNamedScope,
+                (parent) => templateValues.FirstOrDefault(w => new TemplateIndex(parent).Equals(w))));
+
+
+            return work;
         }
 
         /// <inheritdoc/>
         public void Clear()
         {
             templateValues.Clear();
-            pathValues.Clear();
-            nodeValues.Clear();
-            attributeValues.Clear();
+            templateElements.Clear();
+            templateAttributes.Clear();
+            templateNodeOwners.Clear();
+            sourceValues.Clear();
+            sourceObjects.Clear();
+            templateSources.Clear();
         }
 
         /// <inheritdoc/>
         public void ResetBindings()
         {
             templateValues.ResetBindings();
-            pathValues.ResetBindings();
-            nodeValues.ResetBindings();
-            attributeValues.ResetBindings();
+            templateElements.ResetBindings();
+            templateAttributes.ResetBindings();
+            templateNodeOwners.ResetBindings();
+            sourceValues.ResetBindings();
+            sourceObjects.ResetBindings();
+            templateSources.ResetBindings();
+        }
+
+
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return templateValues.RaiseListChangedEvents
+                    && templateElements.RaiseListChangedEvents
+                    && templateAttributes.RaiseListChangedEvents
+                    && templateNodeOwners.RaiseListChangedEvents
+                    && sourceValues.RaiseListChangedEvents
+                    && sourceObjects.RaiseListChangedEvents
+                    && templateSources.RaiseListChangedEvents;
+            }
+            set
+            {
+                templateValues.RaiseListChangedEvents = value;
+                templateElements.RaiseListChangedEvents = value;
+                templateAttributes.RaiseListChangedEvents = value;
+                templateNodeOwners.RaiseListChangedEvents = value;
+                sourceValues.RaiseListChangedEvents = value;
+                sourceObjects.RaiseListChangedEvents = value;
+                templateSources.RaiseListChangedEvents = value;
+            }
         }
     }
 }
