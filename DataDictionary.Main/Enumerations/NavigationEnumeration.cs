@@ -219,7 +219,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
 
-                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
+                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XMLFile, Resources.XMLFile) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
@@ -228,9 +228,9 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Select, Resources.SelectXPath),
                     new(CommandImageType.Add, Resources.NewXPath)),
                 //Resources.XPath) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
+                new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XMLFile) ,
 
-                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
+                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XMLFile, Resources.XMLFile) ,
 
                 new NavigationEnumeration(ScopeType.Security,                   Resources.Icon_User, Resources.User),
                 new NavigationEnumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User,   

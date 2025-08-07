@@ -1123,9 +1123,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Icon_XmlFile {
+        internal static System.Drawing.Icon Icon_XMLFile {
             get {
-                object obj = ResourceManager.GetObject("Icon_XmlFile", resourceCulture);
+                object obj = ResourceManager.GetObject("Icon_XMLFile", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -2213,9 +2213,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap XmlFile {
+        internal static System.Drawing.Bitmap XMLFile {
             get {
-                object obj = ResourceManager.GetObject("XmlFile", resourceCulture);
+                object obj = ResourceManager.GetObject("XMLFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

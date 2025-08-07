@@ -994,7 +994,7 @@
             // 
             // menuScriptingDocument
             // 
-            menuScriptingDocument.Image = Properties.Resources.XmlFile;
+            menuScriptingDocument.Image = Properties.Resources.XMLFile;
             menuScriptingDocument.Name = "menuScriptingDocument";
             menuScriptingDocument.Size = new Size(228, 22);
             menuScriptingDocument.Text = "browse Template Documents";
