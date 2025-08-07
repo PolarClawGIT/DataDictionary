@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for Scripting Engine Template Document 
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IXDocumentValue : IScriptingTemplateIndex, IBindingPropertyChanged
     {
         /// <summary>
@@ -69,6 +70,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Scripting Engine Template Document
     /// </summary>
+    [Obsolete("replace", true)]
     public class XDocumentValue : IXDocumentValue
     {
         /// <inheritdoc/>

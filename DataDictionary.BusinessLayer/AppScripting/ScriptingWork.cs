@@ -5,6 +5,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Used to build a Scripting Engine WorkItem
     /// </summary>
+    [Obsolete("replace", true)]
     public class ScriptingWork
     {
         /// <inheritdoc cref="ScriptingEngine.Templates"/>
@@ -24,20 +25,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         internal ScriptingWork(IScriptingTemplateIndex template, IScriptingEngine source)
         {
-            ScriptingTemplateIndex key = new ScriptingTemplateIndex(template);
+            throw new InvalidOperationException();
 
-            if (source.Templates.FirstOrDefault(w => key.Equals(w)) is ScriptingTemplateValue value)
-            { Template = value; }
-            else
-            {
-                Template = new ScriptingTemplateValue();
-                key = new ScriptingTemplateIndex(Template);
-            }
+            //ScriptingTemplateIndex key = new ScriptingTemplateIndex(template);
 
-            Attributes = new BindingView<ScriptingAttributeValue>(source.TemplateAttributes, w => key.Equals(w));
-            Nodes = new BindingView<ScriptingNodeValue>(source.TemplateNodes, w => key.Equals(w));
-            Paths = new BindingView<ScriptingPathValue>(source.TemplatePaths, w => key.Equals(w));
-            Documents = new BindingView<XDocumentValue>(source.TemplateDocuments, w => key.Equals(w));
+            //if (source.Templates.FirstOrDefault(w => key.Equals(w)) is ScriptingTemplateValue value)
+            //{ Template = value; }
+            //else
+            //{
+            //    Template = new ScriptingTemplateValue();
+            //    key = new ScriptingTemplateIndex(Template);
+            //}
+
+            //Attributes = new BindingView<ScriptingAttributeValue>(source.TemplateAttributes, w => key.Equals(w));
+            //Nodes = new BindingView<ScriptingNodeValue>(source.TemplateNodes, w => key.Equals(w));
+            //Paths = new BindingView<ScriptingPathValue>(source.TemplatePaths, w => key.Equals(w));
+            //Documents = new BindingView<XDocumentValue>(source.TemplateDocuments, w => key.Equals(w));
         }
 
     }

@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Template Element item.
     /// </summary>
     public interface ITemplateElementItem :
-        ITemplateKey, ITemplateElementKey, ITemplateNode,
+        ITemplateKey, ITemplateElementKey, ITemplateNodeItem,
         ITemporalItem
     {
         /// <summary>
@@ -63,7 +63,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        String? ITemplateNode.NodeName { get { return ElementName; } }
+        Guid? ITemplateNodeKey.NodeId { get { return ElementId; } }
+
+        /// <inheritdoc/>
+        String? ITemplateNodeItem.NodeName { get { return ElementName; } }
 
         /// <inheritdoc/>
         public Int32? RenderOrder

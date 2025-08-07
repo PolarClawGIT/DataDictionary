@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template Document
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IXDocumentData :
         ICollection<XDocumentValue>, IBindingList<XDocumentValue>
     {
@@ -23,6 +24,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         Boolean Remove(IScriptingTemplateIndex template);
     }
 
+    [Obsolete("replace", true)]
     class XDocumentData : BindingList<XDocumentValue>, IXDocumentData
     {
         /// <inheritdoc/>

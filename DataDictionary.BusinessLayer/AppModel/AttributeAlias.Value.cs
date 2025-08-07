@@ -53,7 +53,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             set { base.AliasPath = value.MemberFullPath; }
         }
 
-
+        [Obsolete("replace", true)]
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeAlias;
@@ -68,6 +68,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             return result;
         }
 
+        [Obsolete("replace", true)]
         internal XElement? GetXElement(ScriptingWork scripting, Func<ScriptingNodeValue, IReadOnlyList<XAttribute>> getAttributes)
         {
             XElement? result = null;

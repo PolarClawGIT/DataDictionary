@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
+    [Obsolete("replace", true)]
     static class ScriptingHelper
     {
         public static XElement? GetXElement(

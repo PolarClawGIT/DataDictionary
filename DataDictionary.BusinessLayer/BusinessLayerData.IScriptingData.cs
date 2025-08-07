@@ -13,7 +13,9 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Catalog (database) Data
         /// </summary>
+        [Obsolete("replace", true)]
         public IScriptingEngine ScriptingEngine { get { return scriptingValues; } }
+        [Obsolete("replace", true)]
         private readonly ScriptingEngine scriptingValues;
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="templateKey"></param>
         /// <returns></returns>
+        [Obsolete("replace", true)]
         public IReadOnlyList<WorkItem> BuildDocuments(IScriptingTemplateIndex templateKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -128,6 +131,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="scripting"></param>
         /// <param name="data"></param>
         /// <returns></returns>
+        [Obsolete("replace", true)]
         XElement? BuildElement(ScriptingWork scripting, Object data)
         {
             Exception ex = new ArgumentException("Missing BuildWork method");
@@ -152,6 +156,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="scripting"></param>
         /// <param name="data"></param>
         /// <returns></returns>
+        [Obsolete("replace", true)]
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
         { return modelValues.Attributes.GetXElement(modelValues.Properties, scripting, data); }
 

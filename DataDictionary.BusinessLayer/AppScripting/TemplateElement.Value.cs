@@ -5,7 +5,8 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITemplateElementValue : ITemplateElementItem,
+    public interface ITemplateElementValue : 
+        ITemplateElementItem, ITemplateNodeValue,
         ITemplateElementIndex, ITemplateIndex,
         IScopeType, ITemporal
     { }

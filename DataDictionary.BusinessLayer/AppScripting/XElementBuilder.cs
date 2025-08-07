@@ -320,6 +320,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <param name="nodes">The collection of <see cref="XElementBuilder"/> objects to update.</param>
         /// <param name="templates">A collection of <see cref="IScriptingNodeValue"/> objects used to update the nodes. Each template is matched to a node by the <see cref="XElementBuilder.PropertyName"/> property.</param>
+        [Obsolete("replace", true)]
         public static void Set(this IEnumerable<XElementBuilder> nodes, IEnumerable<IScriptingNodeValue> templates)
         {
             foreach (XElementBuilder node in nodes)
