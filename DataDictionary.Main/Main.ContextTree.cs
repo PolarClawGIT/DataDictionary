@@ -131,6 +131,7 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(modelItem));
         }
 
+        [Obsolete("replace", true)]
         void OpenForm(ScriptingTemplateValue templateValue)
         {
             Activate(

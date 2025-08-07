@@ -50,21 +50,28 @@ namespace DataDictionary.Main.Forms.Scripting
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             ScriptingTemplateIndex templateIndex = new ScriptingTemplateIndex();
-            IScriptingEngine scriptingData = BusinessData.ScriptingEngine;
+            //IScriptingEngine scriptingData = BusinessData.ScriptingEngine;
             TemporalIndex? temporalIndex = null;
 
-            public IEnumerable<ScriptingNodeIndexName> Properties { get { return scriptingData.Properties; } }
+            public IEnumerable<ScriptingNodeIndexName> Properties
+            {
+                get
+                {
+                    return new List<ScriptingNodeIndexName>();
+                    //return scriptingData.Properties;
+                }
+            }
 
             public FormBinding()
             { }
 
             public void Init()
             {
-                Templates = new BindingView<ScriptingTemplateValue>(scriptingData.Templates);
-                TemplateNodes = new BindingView<ScriptingNodeValue>(scriptingData.TemplateNodes);
-                TemplatePaths = new BindingView<ScriptingPathValue>(scriptingData.TemplatePaths);
-                TemplateAttributes = new BindingView<ScriptingAttributeValue>(scriptingData.TemplateAttributes);
-                TemplateDocuments = new BindingView<XDocumentValue>(scriptingData.TemplateDocuments);
+                //Templates = new BindingView<ScriptingTemplateValue>(scriptingData.Templates);
+                //TemplateNodes = new BindingView<ScriptingNodeValue>(scriptingData.TemplateNodes);
+                //TemplatePaths = new BindingView<ScriptingPathValue>(scriptingData.TemplatePaths);
+                //TemplateAttributes = new BindingView<ScriptingAttributeValue>(scriptingData.TemplateAttributes);
+                //TemplateDocuments = new BindingView<XDocumentValue>(scriptingData.TemplateDocuments);
 
                 BindingTemplate.DataSource = Templates;
                 BindingNode.DataSource = TemplateNodes;
@@ -89,11 +96,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateAttributes.RaiseListChangedEvents = false;
                 TemplateDocuments.RaiseListChangedEvents = false;
 
-                Templates = new BindingView<ScriptingTemplateValue>(scriptingData.Templates, w => templateIndex.Equals(w));
-                TemplateNodes = new BindingView<ScriptingNodeValue>(scriptingData.TemplateNodes, w => templateIndex.Equals(w));
-                TemplatePaths = new BindingView<ScriptingPathValue>(scriptingData.TemplatePaths, w => templateIndex.Equals(w));
-                TemplateAttributes = new BindingView<ScriptingAttributeValue>(scriptingData.TemplateAttributes, w => templateIndex.Equals(w));
-                TemplateDocuments = new BindingView<XDocumentValue>(scriptingData.TemplateDocuments, w => templateIndex.Equals(w));
+                //Templates = new BindingView<ScriptingTemplateValue>(scriptingData.Templates, w => templateIndex.Equals(w));
+                //TemplateNodes = new BindingView<ScriptingNodeValue>(scriptingData.TemplateNodes, w => templateIndex.Equals(w));
+                //TemplatePaths = new BindingView<ScriptingPathValue>(scriptingData.TemplatePaths, w => templateIndex.Equals(w));
+                //TemplateAttributes = new BindingView<ScriptingAttributeValue>(scriptingData.TemplateAttributes, w => templateIndex.Equals(w));
+                //TemplateDocuments = new BindingView<XDocumentValue>(scriptingData.TemplateDocuments, w => templateIndex.Equals(w));
 
                 if (Templates.Count > 0)
                 {
@@ -160,7 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public IScriptingTemplateValue NewValue()
             {
                 ScriptingTemplateValue newValue = new ScriptingTemplateValue();
-                scriptingData.Templates.Add(newValue);
+                //scriptingData.Templates.Add(newValue);
                 SetPosition(newValue);
 
                 return newValue;
@@ -186,8 +193,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (TryGetValue(out ScriptingTemplateValue? value))
                 {
-                    scriptingData.RaiseListChangedEvents = false;
-                    scriptingData.Remove(value);
+                    //scriptingData.RaiseListChangedEvents = false;
+                    //scriptingData.Remove(value);
                     SetPosition(value);
                 }
             }
@@ -201,9 +208,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (temporalIndex is null)
                 {
-                    scriptingData = BusinessData.ScriptingEngine;
-                    work.AddRange(scriptingData.Delete());
-                    work.AddRange(scriptingData.Load(factory, BusinessData.Model.ModelIndex));
+                    //scriptingData = BusinessData.ScriptingEngine;
+                    //work.AddRange(scriptingData.Delete());
+                    //work.AddRange(scriptingData.Load(factory, BusinessData.Model.ModelIndex));
                 }
                 else
                 {

@@ -220,38 +220,46 @@ namespace DataDictionary.Main
         }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(static () => new Forms.Scripting.ScriptingTemplate(null)); }
+        { 
+            //TODO: Fix
+            //Activate(static () => new Forms.Scripting.ScriptingTemplate(null));
+        }
 
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
-            Activate(static () => new DetailDataView
-                <ScriptingTemplateValue, Forms.Scripting.ScriptingTemplate>
-                (ScopeType.ScriptingTemplate, BusinessData.ScriptingEngine.Templates)
-            { SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) });
+            //TODO: Fix
+            //Activate(static () => new DetailDataView
+            //    <ScriptingTemplateValue, Forms.Scripting.ScriptingTemplate>
+            //    (ScopeType.ScriptingTemplate, BusinessData.ScriptingEngine.Templates)
+            //{ SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) });
         }
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
+            //TODO: Fix
+            //Activate(static () => new DetailDataView
+            //    (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
         }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplateDocument, BusinessData.ScriptingEngine.TemplateDocuments));
+            //TODO: Fix
+            //Activate(static () => new DetailDataView
+            //    (ScopeType.ScriptingTemplateDocument, BusinessData.ScriptingEngine.TemplateDocuments));
         }
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
+            //TODO: Fix
+            //Activate(static () => new DetailDataView
+            //    (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
         }
 
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
         {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
+            //TODO: Fix
+            //Activate(static () => new DetailDataView
+            //    (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
         }
 
         private void SecurityPrincipal_Click(object sender, EventArgs e)

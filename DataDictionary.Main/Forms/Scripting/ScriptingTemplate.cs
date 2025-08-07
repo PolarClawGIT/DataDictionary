@@ -15,6 +15,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("replace", true)]
     partial class ScriptingTemplate : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
@@ -410,7 +411,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
-                        bindingAttribute.DataSource = new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
+                        bindingAttribute.DataSource = null; // new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                         attributeData.DataSource = bindingAttribute;
 
                         schemaNodeLayout.Enabled = true;
@@ -429,8 +430,8 @@ namespace DataDictionary.Main.Forms.Scripting
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
 
-                        while (BusinessData.ScriptingEngine.TemplateAttributes.FirstOrDefault(w => key.Equals(w)) is ScriptingAttributeValue attribute)
-                        { BusinessData.ScriptingEngine.TemplateAttributes.Remove(attribute); }
+                        //while (BusinessData.ScriptingEngine.TemplateAttributes.FirstOrDefault(w => key.Equals(w)) is ScriptingAttributeValue attribute)
+                        //{ BusinessData.ScriptingEngine.TemplateAttributes.Remove(attribute); }
 
                         schemaNodeLayout.Enabled = false;
                     }
@@ -456,7 +457,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     attributeData.DataSource = null;
                     bindingAttribute.DataSource = null;
-                    bindingAttribute.DataSource = new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
+                    bindingAttribute.DataSource = null;// new BindingView<ScriptingAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                     attributeData.DataSource = bindingAttribute;
                 }
                 else
@@ -486,7 +487,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingDocument.SuspendBinding();
                 documentData.DataSource = null;
                 //bindingDocument.DataSource = null;
-                BusinessData.ScriptingEngine.TemplateDocuments.Remove(current);
+                //BusinessData.ScriptingEngine.TemplateDocuments.Remove(current);
                 documentStatus.Text = "working";
 
                 DoWork(BusinessData.BuildDocuments(current), onComplete);
@@ -495,7 +496,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (args.Error is null)
                     {
-                        bindingDocument.DataSource = new BindingView<XDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+                        bindingDocument.DataSource = null;// new BindingView<XDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
                         documentData.DataSource = bindingDocument;
                         bindingDocument.ResumeBinding();
                     }
