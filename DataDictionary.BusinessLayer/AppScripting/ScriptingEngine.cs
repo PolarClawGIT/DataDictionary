@@ -15,6 +15,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface representing Scripting Engine data
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingEngine :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
@@ -62,6 +63,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
+    [Obsolete("replace", true)]
     class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <inheritdoc/>
@@ -331,18 +333,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-
-            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
-
-            work.AddRange(NameSpaceSource.Load<TemplateAttributeData, TemplateAttributeValue>(templateAttributes, addNamedScope,
-                (parent) => templateValues.FirstOrDefault(w => new TemplateIndex(parent).Equals(w))));
-
-
-            return work;
-        }
+        {   throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public void Clear()
