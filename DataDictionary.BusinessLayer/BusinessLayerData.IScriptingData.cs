@@ -11,12 +11,16 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData
     {
         /// <summary>
-        /// Wrapper for the Catalog (database) Data
+        /// Wrapper for the Scripting Templates.
         /// </summary>
-        [Obsolete("replace", true)]
-        public IScriptingEngine ScriptingEngine { get { return scriptingValues; } }
-        [Obsolete("replace", true)]
-        private readonly ScriptingEngine scriptingValues;
+        public ITemplate ScriptingTemplate { get { return templateValues; } }
+        private readonly Template templateValues;
+
+        /// <summary>
+        /// Wrapper for the Scripting DataSources.
+        /// </summary>
+        public IDataSource ScriptingDataSource { get { return templateDataSource; } }
+        private readonly DataSource templateDataSource;
 
         /// <summary>
         /// Builds the XML and Script documents for the Template.
@@ -26,8 +30,9 @@ namespace DataDictionary.BusinessLayer
         [Obsolete("replace", true)]
         public IReadOnlyList<WorkItem> BuildDocuments(IScriptingTemplateIndex templateKey)
         {
+            ScriptingEngine engine = new ScriptingEngine(Model.Properties, Model.Definitions);
             List<WorkItem> work = new List<WorkItem>();
-            ScriptingWork scripting = new ScriptingWork(templateKey, ScriptingEngine);
+            ScriptingWork scripting = new ScriptingWork(templateKey, engine);
             Action<Int32, Int32> onBuildProgress = (x, y) => { };
             Action<Int32, Int32> onTransformProgress = (x, y) => { };
             Boolean cancelWork = false;

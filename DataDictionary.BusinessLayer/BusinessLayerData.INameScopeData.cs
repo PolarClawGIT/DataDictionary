@@ -31,8 +31,8 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(modelValues.LoadNamedScope(namedScopeValues.Add));
             work.AddRange(catalogValue.LoadNamedScope(namedScopeValues.Add));
             work.AddRange(libraryValues.LoadNamedScope(namedScopeValues.Add));
-            work.AddRange(scriptingValues.LoadNamedScope(namedScopeValues.Add));
-
+            //work.AddRange(scriptingValues.LoadNamedScope(namedScopeValues.Add));
+            // TODO: Add Scripting Templates
             return work;
         }
     }
