@@ -257,6 +257,18 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
+        /// Add a Toolsript to the main form toolstirp.
+        /// </summary>
+        /// <param name="commands"></param>
+        /// <remarks>
+        /// Uses ToolStripManager.Merge
+        /// Set the MergeIndex to 0 of each item of the incoming toolstrip to add to front.
+        /// The MergeAction should be Append or Insert, but does not seem to effect this.
+        /// </remarks>
+        protected void AddCommands(ToolStrip commands)
+        { ToolStripManager.Merge(commands, toolStrip); }
+
+        /// <summary>
         /// Set the IsEnabled based on security function.
         /// </summary>
         /// <param name="getAuthorization"></param>

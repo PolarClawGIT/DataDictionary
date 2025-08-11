@@ -107,9 +107,9 @@
             textEditorToolStripMenuItem = new ToolStripMenuItem();
             securityToolStripMenuItem = new ToolStripMenuItem();
             securityContextMenu = new ContextMenuStrip(components);
+            securityAuthorization = new ToolStripMenuItem();
             securityPrincipal = new ToolStripMenuItem();
             securityRole = new ToolStripMenuItem();
-            securityAuthorization = new ToolStripMenuItem();
             windowToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
@@ -136,11 +136,12 @@
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
             menuScriptingTemplate = new ToolStripMenuItem();
-            menuScriptingPath = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
-            menuScriptingNode = new ToolStripMenuItem();
             menuScriptingAttribute = new ToolStripMenuItem();
             bindingModel = new BindingSource(components);
+            menuScriptingElement = new ToolStripMenuItem();
+            menuScriptingDataSource = new ToolStripMenuItem();
+            menuScriptingDataObject = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -763,13 +764,23 @@
             // 
             securityContextMenu.Items.AddRange(new ToolStripItem[] { securityAuthorization, securityPrincipal, securityRole });
             securityContextMenu.Name = "securityContextMenu";
-            securityContextMenu.Size = new Size(181, 92);
+            securityContextMenu.OwnerItem = securityToolStripMenuItem;
+            securityContextMenu.Size = new Size(147, 70);
+            // 
+            // securityAuthorization
+            // 
+            securityAuthorization.Image = Properties.Resources.Permission;
+            securityAuthorization.Name = "securityAuthorization";
+            securityAuthorization.Size = new Size(146, 22);
+            securityAuthorization.Text = "Authorization";
+            securityAuthorization.ToolTipText = "View current users Authorization";
+            securityAuthorization.Click += SecurityAuthorization_Click;
             // 
             // securityPrincipal
             // 
             securityPrincipal.Image = Properties.Resources.User;
             securityPrincipal.Name = "securityPrincipal";
-            securityPrincipal.Size = new Size(187, 22);
+            securityPrincipal.Size = new Size(146, 22);
             securityPrincipal.Text = "Principal";
             securityPrincipal.Click += SecurityPrincipal_Click;
             // 
@@ -777,18 +788,9 @@
             // 
             securityRole.Image = Properties.Resources.ApplicationRole;
             securityRole.Name = "securityRole";
-            securityRole.Size = new Size(187, 22);
+            securityRole.Size = new Size(146, 22);
             securityRole.Text = "Role";
             securityRole.Click += SecurityRole_Click;
-            // 
-            // securityAuthorization
-            // 
-            securityAuthorization.Image = Properties.Resources.Permission;
-            securityAuthorization.Name = "securityAuthorization";
-            securityAuthorization.Size = new Size(180, 22);
-            securityAuthorization.Text = "Authorization";
-            securityAuthorization.ToolTipText = "View current users Authorization";
-            securityAuthorization.Click += SecurityAuthorization_Click;
             // 
             // windowToolStripMenuItem
             // 
@@ -962,7 +964,7 @@
             // 
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.DropDown = scriptingContextMenu;
-            manageScriptingCommand.Image = Properties.Resources.NewXSLTransform;
+            manageScriptingCommand.Image = Properties.Resources.XSLTransform;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
@@ -971,10 +973,9 @@
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingAttribute, menuScriptingElement, menuScriptingDocument, menuScriptingDataSource, menuScriptingDataObject });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(229, 114);
+            scriptingContextMenu.Size = new Size(229, 136);
             // 
             // menuScriptingTemplate
             // 
@@ -984,14 +985,6 @@
             menuScriptingTemplate.Text = "browse Templates";
             menuScriptingTemplate.Click += menuScriptingTemplates_Click;
             // 
-            // menuScriptingPath
-            // 
-            menuScriptingPath.Image = Properties.Resources.XPath;
-            menuScriptingPath.Name = "menuScriptingPath";
-            menuScriptingPath.Size = new Size(228, 22);
-            menuScriptingPath.Text = "browse Template Paths";
-            menuScriptingPath.Click += menuScriptingPath_Click;
-            // 
             // menuScriptingDocument
             // 
             menuScriptingDocument.Image = Properties.Resources.XMLFile;
@@ -999,14 +992,6 @@
             menuScriptingDocument.Size = new Size(228, 22);
             menuScriptingDocument.Text = "browse Template Documents";
             menuScriptingDocument.Click += menuScriptingDocument_Click;
-            // 
-            // menuScriptingNode
-            // 
-            menuScriptingNode.Image = Properties.Resources.XMLElement;
-            menuScriptingNode.Name = "menuScriptingNode";
-            menuScriptingNode.Size = new Size(228, 22);
-            menuScriptingNode.Text = "browse Template Nodes";
-            menuScriptingNode.Click += menuScriptingNode_Click;
             // 
             // menuScriptingAttribute
             // 
@@ -1019,6 +1004,27 @@
             // bindingModel
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
+            // 
+            // menuScriptingElement
+            // 
+            menuScriptingElement.Image = Properties.Resources.XMLElement;
+            menuScriptingElement.Name = "menuScriptingElement";
+            menuScriptingElement.Size = new Size(228, 22);
+            menuScriptingElement.Text = "browse Template Elements";
+            // 
+            // menuScriptingDataSource
+            // 
+            menuScriptingDataSource.Image = Properties.Resources.XPath;
+            menuScriptingDataSource.Name = "menuScriptingDataSource";
+            menuScriptingDataSource.Size = new Size(228, 22);
+            menuScriptingDataSource.Text = "browse Data Sources";
+            menuScriptingDataSource.Click += menuScriptingPath_Click;
+            // 
+            // menuScriptingDataObject
+            // 
+            menuScriptingDataObject.Name = "menuScriptingDataObject";
+            menuScriptingDataObject.Size = new Size(228, 22);
+            menuScriptingDataObject.Text = "browse Data Objects";
             // 
             // Main
             // 
@@ -1150,9 +1156,7 @@
         private ToolStripMenuItem menuModelProperty;
         private ToolStripMenuItem menuModelDefinition;
         private ToolStripMenuItem menuScriptingTemplate;
-        private ToolStripMenuItem menuScriptingPath;
         private ToolStripMenuItem menuScriptingDocument;
-        private ToolStripMenuItem menuScriptingNode;
         private ToolStripMenuItem menuScriptingAttribute;
         private ToolStripMenuItem windowToolStripMenuItem;
         private ToolStripMenuItem menuEntityAttributes;
@@ -1171,5 +1175,8 @@
         private ToolStripMenuItem menuProcessDefinition;
         private ToolStripMenuItem menuProcessProperty;
         private ToolStripMenuItem securityAuthorization;
+        private ToolStripMenuItem menuScriptingDataSource;
+        private ToolStripMenuItem menuScriptingElement;
+        private ToolStripMenuItem menuScriptingDataObject;
     }
 }

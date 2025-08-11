@@ -12,13 +12,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Data Source
     /// </summary>
-    public interface ITemplateData : IBindingData<TemplateValue>
-    { }
+    public interface ITemplateData : IBindingData<TemplateValue>,
+        ILoadData
+    {
+        /// <summary>
+        /// Creates an empty ITemplateData.
+        /// </summary>
+        /// <returns></returns>
+        static ITemplateData Create()
+        { return new TemplateData(); }
+    }
 
     class TemplateData : TemplateCollection<TemplateValue>, ITemplateData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplate</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
+
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)

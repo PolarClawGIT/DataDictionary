@@ -220,10 +220,7 @@ namespace DataDictionary.Main
         }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { 
-            //TODO: Fix
-            //Activate(static () => new Forms.Scripting.ScriptingTemplate(null));
-        }
+        { Activate(static () => new Forms.Scripting.TemplateManager()); }
 
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
