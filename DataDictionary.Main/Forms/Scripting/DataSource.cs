@@ -12,20 +12,19 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class Template : ApplicationData, IApplicationDataForm
+    partial class DataSource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return true; } // TODO: rig to current value
 
-
-        public Template() : base()
+        public DataSource() : base()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingTemplate);
+            SetIcon(ScopeType.ScriptingData);
         }
 
-        public Template(ITemplateIndex? template) : this()
+        public DataSource(IDataSourceIndex? dataSource): this()
         {
 
         }

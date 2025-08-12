@@ -100,8 +100,6 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ScriptingData,              ScopeType.Scripting,         "Scripting.Data"),
             new ScopeEnumeration(ScopeType.ScriptingDataObject,        ScopeType.ScriptingData,     "Scripting.Data.Object"),
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplatePath,      ScopeType.ScriptingTemplate, "Scripting.Template.Path"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.ScriptingTemplate, "Scripting.Template.Node"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateAttribute, ScopeType.ScriptingTemplate, "Scripting.Template.Attribute"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateElement,   ScopeType.ScriptingTemplate, "Scripting.Template.Element"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateNodeOwner, ScopeType.ScriptingTemplate, "Scripting.Template.NodeOwner"),

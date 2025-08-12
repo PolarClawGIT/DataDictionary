@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,17 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
 
             SetIcon(ScopeType.Scripting);
+            SetCommand(
+                ScopeType.Scripting,
+                CommandImageType.Open);
+            newTemplate.SetImage(ScopeType.ScriptingTemplate, CommandImageType.Add);
+            newDataSource.SetImage(ScopeType.ScriptingData, CommandImageType.Add);
+
             AddCommands(templateCommands);
 
             formBinding = new FormBinding()
             {
-                //BindingAlias = bindingAlias,
-                //BindingAttribute = bindingAttribute,
-                //BindingSubjectArea = bindingSubjectArea,
-                //BindingProperty = bindingProperty,
-                //BindingDefinition = bindingDefinition,
+                ManagerBinding = bindingManager,
                 DoWork = base.DoWork
             };
         }
@@ -40,9 +43,31 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void doBinding(RunWorkerCompletedEventArgs args)
             {
-                //throw new NotImplementedException();
+                managerData.AutoGenerateColumns = false;
+                managerData.DataSource = bindingManager;
+
+                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingManager, nameof(BindingValue.Title)));
+                descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingManager, nameof(BindingValue.Description)));
             }
         }
 
+        private void NewTemplate_Click(object sender, EventArgs e)
+        { Activate(() => new Template(null)); }
+
+        private void NewDataSource_Click(object sender, EventArgs e)
+        { Activate(() => new DataSource(null)); }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+
+            if (formBinding.TryGetValue(out BindingValue? value))
+            {
+                if (value.TryGetIndex(out DataSourceIndex? dataSource))
+                { Activate(() => new DataSource(dataSource)); }
+                else if (value.TryGetIndex(out TemplateIndex? template))
+                { Activate(() => new Template(template)); }
+            }
+        }
     }
 }

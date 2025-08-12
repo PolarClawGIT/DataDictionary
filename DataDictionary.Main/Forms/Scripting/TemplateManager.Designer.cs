@@ -30,27 +30,29 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel templateManagerLayout;
-            templatData = new DataGridView();
+            managerData = new DataGridView();
+            titleColumn = new DataGridViewTextBoxColumn();
+            itemTypeColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabaseColumn = new DataGridViewCheckBoxColumn();
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateCommands = new ContextMenuStrip(components);
             newTemplate = new ToolStripMenuItem();
             newDataSource = new ToolStripMenuItem();
-            titleColumn = new DataGridViewTextBoxColumn();
-            itemTypeColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewCheckBoxColumn();
-            inDatabaseColumn = new DataGridViewCheckBoxColumn();
+            bindingManager = new BindingSource(components);
             templateManagerLayout = new TableLayoutPanel();
             templateManagerLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)templatData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)managerData).BeginInit();
             templateCommands.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingManager).BeginInit();
             SuspendLayout();
             // 
             // templateManagerLayout
             // 
             templateManagerLayout.ColumnCount = 1;
             templateManagerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            templateManagerLayout.Controls.Add(templatData, 0, 0);
+            templateManagerLayout.Controls.Add(managerData, 0, 0);
             templateManagerLayout.Controls.Add(titleData, 0, 1);
             templateManagerLayout.Controls.Add(descriptionData, 0, 2);
             templateManagerLayout.Dock = DockStyle.Fill;
@@ -63,69 +65,17 @@
             templateManagerLayout.Size = new Size(610, 447);
             templateManagerLayout.TabIndex = 4;
             // 
-            // templatData
+            // managerData
             // 
-            templatData.AllowUserToAddRows = false;
-            templatData.AllowUserToDeleteRows = false;
-            templatData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            templatData.Columns.AddRange(new DataGridViewColumn[] { titleColumn, itemTypeColumn, inModelColumn, inDatabaseColumn });
-            templatData.Dock = DockStyle.Fill;
-            templatData.Location = new Point(3, 3);
-            templatData.Name = "templatData";
-            templatData.Size = new Size(604, 232);
-            templatData.TabIndex = 0;
-            // 
-            // titleData
-            // 
-            titleData.AutoSize = true;
-            titleData.Dock = DockStyle.Fill;
-            titleData.HeaderText = "Title";
-            titleData.Location = new Point(3, 241);
-            titleData.Multiline = false;
-            titleData.Name = "titleData";
-            titleData.ReadOnly = true;
-            titleData.Size = new Size(604, 44);
-            titleData.TabIndex = 1;
-            titleData.WordWrap = true;
-            // 
-            // descriptionData
-            // 
-            descriptionData.AutoSize = true;
-            descriptionData.Dock = DockStyle.Fill;
-            descriptionData.HeaderText = "Description";
-            descriptionData.Location = new Point(3, 291);
-            descriptionData.Multiline = true;
-            descriptionData.Name = "descriptionData";
-            descriptionData.ReadOnly = true;
-            descriptionData.Size = new Size(604, 153);
-            descriptionData.TabIndex = 2;
-            descriptionData.WordWrap = true;
-            // 
-            // templateCommands
-            // 
-            templateCommands.Items.AddRange(new ToolStripItem[] { newTemplate, newDataSource });
-            templateCommands.Name = "templateCommands";
-            templateCommands.Size = new Size(163, 48);
-            // 
-            // newTemplate
-            // 
-            newTemplate.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newTemplate.Image = Properties.Resources.NewXSLTransform;
-            newTemplate.MergeAction = MergeAction.Insert;
-            newTemplate.MergeIndex = 0;
-            newTemplate.Name = "newTemplate";
-            newTemplate.Size = new Size(162, 22);
-            newTemplate.Text = "new Template";
-            // 
-            // newDataSource
-            // 
-            newDataSource.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newDataSource.Image = Properties.Resources.NewXPath;
-            newDataSource.MergeAction = MergeAction.Insert;
-            newDataSource.MergeIndex = 0;
-            newDataSource.Name = "newDataSource";
-            newDataSource.Size = new Size(162, 22);
-            newDataSource.Text = "new Data Source";
+            managerData.AllowUserToAddRows = false;
+            managerData.AllowUserToDeleteRows = false;
+            managerData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            managerData.Columns.AddRange(new DataGridViewColumn[] { titleColumn, itemTypeColumn, inModelColumn, inDatabaseColumn });
+            managerData.Dock = DockStyle.Fill;
+            managerData.Location = new Point(3, 3);
+            managerData.Name = "managerData";
+            managerData.Size = new Size(604, 232);
+            managerData.TabIndex = 0;
             // 
             // titleColumn
             // 
@@ -155,6 +105,62 @@
             inDatabaseColumn.Name = "inDatabaseColumn";
             inDatabaseColumn.ReadOnly = true;
             // 
+            // titleData
+            // 
+            titleData.AutoSize = true;
+            titleData.Dock = DockStyle.Fill;
+            titleData.HeaderText = "Title";
+            titleData.Location = new Point(3, 241);
+            titleData.Multiline = false;
+            titleData.Name = "titleData";
+            titleData.ReadOnly = true;
+            titleData.Size = new Size(604, 44);
+            titleData.TabIndex = 1;
+            titleData.WordWrap = true;
+            // 
+            // descriptionData
+            // 
+            descriptionData.AutoSize = true;
+            descriptionData.Dock = DockStyle.Fill;
+            descriptionData.HeaderText = "Description";
+            descriptionData.Location = new Point(3, 291);
+            descriptionData.Multiline = true;
+            descriptionData.Name = "descriptionData";
+            descriptionData.ReadOnly = true;
+            descriptionData.Size = new Size(604, 153);
+            descriptionData.TabIndex = 2;
+            descriptionData.WordWrap = true;
+            // 
+            // templateCommands
+            // 
+            templateCommands.Items.AddRange(new ToolStripItem[] { newDataSource, newTemplate });
+            templateCommands.Name = "templateCommands";
+            templateCommands.Size = new Size(181, 70);
+            // 
+            // newTemplate
+            // 
+            newTemplate.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newTemplate.Image = Properties.Resources.NewXSLTransform;
+            newTemplate.MergeAction = MergeAction.Insert;
+            newTemplate.MergeIndex = 0;
+            newTemplate.Name = "newTemplate";
+            newTemplate.Size = new Size(180, 22);
+            newTemplate.Text = "new Template";
+            newTemplate.ToolTipText = "Create a new Template";
+            newTemplate.Click += NewTemplate_Click;
+            // 
+            // newDataSource
+            // 
+            newDataSource.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newDataSource.Image = Properties.Resources.NewXPath;
+            newDataSource.MergeAction = MergeAction.Insert;
+            newDataSource.MergeIndex = 0;
+            newDataSource.Name = "newDataSource";
+            newDataSource.Size = new Size(180, 22);
+            newDataSource.Text = "new Data Source";
+            newDataSource.ToolTipText = "Create a new Data Source";
+            newDataSource.Click += NewDataSource_Click;
+            // 
             // TemplateManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -167,15 +173,16 @@
             Controls.SetChildIndex(templateManagerLayout, 0);
             templateManagerLayout.ResumeLayout(false);
             templateManagerLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)templatData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)managerData).EndInit();
             templateCommands.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingManager).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private DataGridView templatData;
+        private DataGridView managerData;
         private Controls.TextBoxData titleData;
         private Controls.TextBoxData descriptionData;
         private ContextMenuStrip templateCommands;
@@ -185,5 +192,6 @@
         private DataGridViewTextBoxColumn itemTypeColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabaseColumn;
+        private BindingSource bindingManager;
     }
 }

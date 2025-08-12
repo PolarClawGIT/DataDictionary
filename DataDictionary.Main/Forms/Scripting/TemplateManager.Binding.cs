@@ -2,13 +2,8 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -18,14 +13,16 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            public required BindingSource ManagerBinding { private get; init; }
+            BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
 
-            BindingList<BindingValue> Bindings = new BindingList<BindingValue>();
+            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 var templates = ITemplateData.Create();
                 var sources = IDataSourceData.Create();
+                ManagerBinding.RaiseListChangedEvents = false;
 
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -41,14 +38,28 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
+                    BuildData(templates, sources);
+
+                    BusinessData.ScriptingTemplate.Templates.ListChanged += ListChanged;
+                    BusinessData.ScriptingDataSource.DataSources.ListChanged += ListChanged;
+
+                    ManagerBinding.DataSource = managerData;
+                    ManagerBinding.RaiseListChangedEvents = true;
+                    if (onComplete is not null) { onComplete(args); }
+                }
+
+                void BuildData(ITemplateData templates, IDataSourceData sources)
+                {
+                    managerData.Clear();
+
                     BindingCompare bindingCompare = new BindingCompare();
-                    Bindings.AddRange(
+                    managerData.AddRange(
                         BusinessData.ScriptingTemplate.Templates.Select(s => new BindingValue(s)).
                         Union(templates.Select(s => new BindingValue(s)), bindingCompare).
                         Union(BusinessData.ScriptingDataSource.DataSources.Select(s => new BindingValue(s)), bindingCompare).
                         Union(sources.Select(s => new BindingValue(s)), bindingCompare));
 
-                    foreach (var item in Bindings)
+                    foreach (var item in managerData)
                     {
                         if (BusinessData.ScriptingTemplate.Templates.Any(a => item.Equals(a))
                             || BusinessData.ScriptingDataSource.DataSources.Any(a => item.Equals(a)))
@@ -58,9 +69,22 @@ namespace DataDictionary.Main.Forms.Scripting
                             || sources.Any(a => item.Equals(a)))
                         { item.InDatabase = true; }
                     }
-
-                    if (onComplete is not null) { onComplete(args); }
                 }
+
+                void ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    ManagerBinding.RaiseListChangedEvents = false;
+                    BuildData(templates, sources);
+                    ManagerBinding.RaiseListChangedEvents = true;
+                    ManagerBinding.ResetBindings(false);
+                }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out BindingValue? result)
+            {
+                if (ManagerBinding.Position >= 0 && ManagerBinding.Current is BindingValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
             }
         }
 
@@ -163,7 +187,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 value.PropertyChanged += Value_PropertyChanged;
             }
 
-
             public event PropertyChangedEventHandler? PropertyChanged;
 
             private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
@@ -189,6 +212,20 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                     else { }
                 }
+            }
+
+            public Boolean TryGetIndex([NotNullWhen(true)] out DataSourceIndex? result)
+            {
+                if (dataSource is IDataSourceValue value)
+                { result = new DataSourceIndex(value); return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetIndex([NotNullWhen(true)] out TemplateIndex? result)
+            {
+                if (dataSource is ITemplateValue value)
+                { result = new TemplateIndex(value); return true; }
+                else { result = null; return false; }
             }
 
             #region IEquatable

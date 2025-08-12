@@ -50,8 +50,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
-            pathAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
-            pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
+            //pathAddCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Add);
+            //pathSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingTemplatePath, CommandImageType.Select);
         }
 
         public ScriptingTemplate(IScriptingTemplateIndex? templateItem) : this()
