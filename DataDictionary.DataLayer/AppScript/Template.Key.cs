@@ -23,6 +23,13 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? TemplateId { get; init; } = Guid.Empty;
 
         /// <summary>
+        /// Constructor for the Blank/Empty Template Key
+        /// </summary>
+        /// <remarks>Empty Key is never equal to anything.</remarks>
+        public TemplateKey() : base()
+        { }
+
+        /// <summary>
         /// Constructor for the Primary Key of the Scripting Template.
         /// </summary>
         /// <param name="source"></param>
