@@ -9,5 +9,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ITemplateNodeValue : ITemplateNodeItem, ITemplateNodeIndex
-    { }
+    {
+        /// <inheritdoc cref="ITemplateElementItem.ParentElementId"/>
+        Guid? ParentElementId { get; }
+    }
 }
