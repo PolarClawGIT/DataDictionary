@@ -14,18 +14,13 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Template Element item.
     /// </summary>
     public interface ITemplateElementItem :
-        ITemplateKey, ITemplateElementKey, ITemplateNodeItem,
+        ITemplateKey, ITemplateElementKey, ITemplateElementKeyParent, ITemplateNodeItem,
         ITemporalItem
     {
         /// <summary>
         /// Name of the XML Element.
         /// </summary>
         String? ElementName { get; }
-
-        /// <summary>
-        /// Element ID of the Parent Element.
-        /// </summary>
-        Guid? ParentElementId { get; }
     }
 
     /// <summary>

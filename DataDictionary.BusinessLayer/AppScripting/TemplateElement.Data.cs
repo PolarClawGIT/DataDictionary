@@ -13,7 +13,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Interface component for the Scripting Template Element
     /// </summary>
     public interface ITemplateElementData : IBindingData<TemplateElementValue>
-    { }
+    {
+        /// <summary>
+        /// Given the Element, return the Path of that element.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        PathIndex GetPath(ITemplateElementIndex element);
+    }
 
     class TemplateElementData : TemplateElementCollection<TemplateElementValue>, ITemplateElementData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
@@ -73,5 +80,25 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingTemplateElement</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/>
+        public PathIndex GetPath(ITemplateElementIndex element)
+        {   //TODO: Unit Test
+            TemplateElementIndex key = new TemplateElementIndex(element);
+            PathIndex result = new PathIndex();
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is TemplateElementValue value)
+            {
+                if (value.ParentElementId is null)
+                {
+                    ITemplateElementIndex parent = new TemplateElementIndexParent(value);
+                    result.Merge(GetPath(parent));
+                }
+                else
+                { result.Merge(new PathIndex(value.ElementName)); }
+            }
+
+            return result;
+        }
     }
 }

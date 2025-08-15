@@ -7,7 +7,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ITemplateElementValue : 
         ITemplateElementItem, ITemplateNodeValue,
-        ITemplateElementIndex, ITemplateIndex,
+        ITemplateElementIndex, ITemplateIndex, ITemplateElementIndexParent,
         IScopeType, ITemporal
     { }
 

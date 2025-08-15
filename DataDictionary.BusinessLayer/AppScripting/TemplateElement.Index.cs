@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     /// <inheritdoc/>
     public class TemplateElementIndex : TemplateElementKey, ITemplateElementIndex,
-        IKeyEquality<ITemplateElementIndex>, IKeyEquality<TemplateElementIndex>
+        IKeyEquality<ITemplateElementIndex>//, IKeyEquality<TemplateElementIndex>
     {
         /// <inheritdoc cref="TemplateElementKey(ITemplateElementKey)"/>
         public TemplateElementIndex(ITemplateElementIndex source) : base(source)
