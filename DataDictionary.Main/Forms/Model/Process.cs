@@ -85,28 +85,28 @@ namespace DataDictionary.Main.Forms.Model
 
             void DoBinding()
             {
-                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingProcess, nameof(IProcessValue.ProcessTitle)));
-                descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingProcess, nameof(IProcessValue.ProcessDescription)));
+                titleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingProcess, nameof(IProcessValue.ProcessTitle)));
+                descriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingProcess, nameof(IProcessValue.ProcessDescription)));
 
-                memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingProcess, nameof(IProcessValue.ProcessName), false, DataSourceUpdateMode.OnPropertyChanged));
+                memberNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingProcess, nameof(IProcessValue.ProcessName), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 // Argument Handling
                 argumentData.AutoGenerateColumns = false;
                 argumentData.DataSource = bindingArgument;
 
-                argumentKnownAsData.DataBindings.Add(new Binding(nameof(argumentKnownAsData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentKnownAs)));
-                argumentNameData.DataBindings.Add(new Binding(nameof(argumentNameData.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentName)));
-                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(argumentOrdinalPositionData.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                argumentKnownAsData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentKnownAs)));
+                argumentNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingArgument, nameof(IProcessArgumentValue.ArgumentName)));
+                argumentOrdinalPositionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingArgument, nameof(IProcessArgumentValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-                argumentIsPassedData.DataBindings.Add(new Binding(nameof(argumentIsPassedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsPassed), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentIsReturnedData.DataBindings.Add(new Binding(nameof(argumentIsReturnedData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsReturned), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentIsContributorData.DataBindings.Add(new Binding(nameof(argumentIsContributorData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsContributor), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentIsAlteredData.DataBindings.Add(new Binding(nameof(argumentIsAlteredData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsAltered), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentAsValueData.DataBindings.Add(new Binding(nameof(argumentAsValueData.Checked), bindingArgument, nameof(IProcessArgumentValue.AsValue), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentAsReferenceData.DataBindings.Add(new Binding(nameof(argumentAsReferenceData.Checked), bindingArgument, nameof(IProcessArgumentValue.AsReference), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsPassedData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsPassed), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsReturnedData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsReturned), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsContributorData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsContributor), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsAlteredData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsAltered), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentAsValueData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.AsValue), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentAsReferenceData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.AsReference), true, DataSourceUpdateMode.OnPropertyChanged, false));
 
-                argumentIsInputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsInput), true, DataSourceUpdateMode.OnPropertyChanged, false));
-                argumentIsOutputData.DataBindings.Add(new Binding(nameof(argumentIsOutputData.Checked), bindingArgument, nameof(IProcessArgumentValue.IsOutput), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsInputData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsInput), true, DataSourceUpdateMode.OnPropertyChanged, false));
+                argumentIsOutputData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingArgument, nameof(IProcessArgumentValue.IsOutput), true, DataSourceUpdateMode.OnPropertyChanged, false));
 
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);

@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.Model.Controls
             ScopeNameList.Load(aliaseScopeColumn);
             ScopeNameList.Load(aliasScopeData);
 
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), dataBinding, nameof(IAliasSubType.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
+            aliasScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), dataBinding, nameof(IAliasSubType.AliasScope), false, DataSourceUpdateMode.OnPropertyChanged) { DataSourceNullValue = ScopeNameList.NullValue });
             // Binding does not work on complex types such as a Class. Must be done manually.
             //aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), dataBinding, nameof(IAliasSubType.AliasPath), false, DataSourceUpdateMode.OnPropertyChanged));
 

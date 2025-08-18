@@ -29,8 +29,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
             PropertyNameList.Load(propertyTypeData, Properties);
             PropertyNameList.Load(propertyIdColumn, Properties);
 
-            propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
+            propertyTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
+            propertyValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
 
             propertyGrid.AutoGenerateColumns = false;
             propertyGrid.DataSource = dataBinding;

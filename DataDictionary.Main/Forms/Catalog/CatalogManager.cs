@@ -55,11 +55,11 @@ namespace DataDictionary.Main.Forms.Catalog
                 catalogNavigation.AutoGenerateColumns = false;
                 catalogNavigation.DataSource = catalogBinding;
 
-                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogTitle)));
-                catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogDescription), false, DataSourceUpdateMode.OnPropertyChanged));
-                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, nameof(CatalogSynchronizeValue.ServerName)));
-                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, nameof(CatalogSynchronizeValue.DatabaseName)));
-                sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, nameof(CatalogSynchronizeValue.SourceDate)));
+                catalogTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogTitle)));
+                catalogDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+                sourceServerNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.ServerName)));
+                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.DatabaseName)));
+                sourceDateData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.SourceDate)));
             }
         }
 

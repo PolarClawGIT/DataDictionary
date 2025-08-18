@@ -46,9 +46,9 @@ namespace DataDictionary.Main.Forms.Model
         private void Model_Load(object sender, EventArgs e)
         {
             IModelValue nameBinding;
-            DataBindings.Add(new Binding(nameof(Text), bindingModel, nameof(nameBinding.ModelTitle)));
-            modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), bindingModel, nameof(nameBinding.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), bindingModel, nameof(nameBinding.ModelDescription)));
+            DataBindings.Add(new Binding(nameof(Form.Text), bindingModel, nameof(nameBinding.ModelTitle)));
+            modelTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingModel, nameof(nameBinding.ModelTitle)));
+            modelDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingModel, nameof(nameBinding.ModelDescription)));
         }
     }
 }

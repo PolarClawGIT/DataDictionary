@@ -26,13 +26,11 @@ namespace DataDictionary.Main.Forms.Library
 
         private void LibrarySource_Load(object sender, EventArgs e)
         {
-            ILibrarySourceValue bindingNames;
-
-            libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), bindingSource, nameof(bindingNames.LibraryTitle)));
-            libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), bindingSource, nameof(bindingNames.LibraryDescription)));
-            asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), bindingSource, nameof(bindingNames.AssemblyName)));
-            sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), bindingSource, nameof(bindingNames.SourceFile)));
-            sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), bindingSource, nameof(bindingNames.SourceDate)));
+            libraryTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ILibrarySourceValue.LibraryTitle)));
+            libraryDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ILibrarySourceValue.LibraryDescription)));
+            asseblyNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ILibrarySourceValue.AssemblyName)));
+            sourceFileNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ILibrarySourceValue.SourceFile)));
+            sourceFileDate.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ILibrarySourceValue.SourceDate)));
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ILibrarySourceValue);
         }

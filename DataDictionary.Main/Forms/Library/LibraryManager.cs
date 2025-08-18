@@ -49,18 +49,17 @@ namespace DataDictionary.Main.Forms.Library
 
             void BindData()
             {
-                LibrarySynchronizeValue libraryNames;
                 libraryBinding.DataSource = libraries;
-                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(libraryNames.Source), name); };
+                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(LibrarySynchronizeValue.Source), name); };
 
                 libraryNavigation.AutoGenerateColumns = false;
                 libraryNavigation.DataSource = libraryBinding;
 
-                libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryTitle))));
-                libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
-                asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.AssemblyName))));
-                sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceFile))));
-                sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceDate))));
+                libraryTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, FormatName(nameof(LibrarySynchronizeValue.Source.LibraryTitle))));
+                libraryDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, FormatName(nameof(LibrarySynchronizeValue.Source.LibraryDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
+                asseblyNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, FormatName(nameof(LibrarySynchronizeValue.Source.AssemblyName))));
+                sourceFileNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, FormatName(nameof(LibrarySynchronizeValue.Source.SourceFile))));
+                sourceFileDate.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, FormatName(nameof(LibrarySynchronizeValue.Source.SourceDate))));
             }
         }
 

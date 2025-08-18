@@ -85,24 +85,24 @@ namespace DataDictionary.Main.Forms.Model
 
             void DoBinding()
             {
-                titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
-                descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
+                titleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
+                descriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
 
-                memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
+                memberNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingEntity, nameof(IEntityValue.EntityName), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 // Attribute Handling
                 attributeData.AutoGenerateColumns = false;
                 attributeData.DataSource = bindingAttribute;
 
-                attributeNameData.DataBindings.Add(new Binding(nameof(attributeNameData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
-                attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                attributeKnownAsData.DataBindings.Add(new Binding(nameof(attributeKnownAsData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
-                attributeNullable.DataBindings.Add(new Binding(nameof(attributeNullable.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
-                attributePrimaryKey.DataBindings.Add(new Binding(nameof(attributePrimaryKey.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
+                attributeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeName)));
+                attributeOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                attributeKnownAsData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeKnownAs)));
+                attributeNullable.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
+                attributePrimaryKey.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingAttribute, nameof(IEntityAttributeValue.IsPrimaryKey), true, DataSourceUpdateMode.OnValidation, false));
 
-                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
-                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
-                attributeInModelData.DataBindings.Add(new Binding(nameof(attributeInModelData.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
+                attributeTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IEntityAttributeValue.AttributeDescription)));
+                attributeInModelData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingAttribute, nameof(IEntityAttributeValue.InModel), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 // Specialized Control Binding
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
