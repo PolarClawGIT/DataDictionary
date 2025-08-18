@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class Template : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return true; } // TODO: rig to current value
+        { return item is ITemplateIndex template && templateIndex.Equals(template); }
 
         FormBinding formBinding;
         TemplateIndex templateIndex = new TemplateIndex();
@@ -33,7 +33,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding = bindingTemplate,
                 DoWork = base.DoWork
             };
-
 
             SetIcon(ScopeType.ScriptingTemplate);
             SetTitle(bindingTemplate);

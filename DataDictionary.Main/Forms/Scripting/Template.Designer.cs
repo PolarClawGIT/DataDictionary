@@ -135,7 +135,7 @@
             mainLayout.RowStyles.Add(new RowStyle());
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            mainLayout.Size = new Size(545, 459);
+            mainLayout.Size = new Size(545, 526);
             mainLayout.TabIndex = 4;
             // 
             // templateTitleData
@@ -160,7 +160,7 @@
             templateDescriptionData.Multiline = true;
             templateDescriptionData.Name = "templateDescriptionData";
             templateDescriptionData.ReadOnly = false;
-            templateDescriptionData.Size = new Size(539, 116);
+            templateDescriptionData.Size = new Size(539, 136);
             templateDescriptionData.TabIndex = 1;
             templateDescriptionData.WordWrap = true;
             // 
@@ -171,10 +171,10 @@
             templateOptionsTab.Controls.Add(transformTab);
             templateOptionsTab.Controls.Add(documentTab);
             templateOptionsTab.Dock = DockStyle.Fill;
-            templateOptionsTab.Location = new Point(3, 175);
+            templateOptionsTab.Location = new Point(3, 195);
             templateOptionsTab.Name = "templateOptionsTab";
             templateOptionsTab.SelectedIndex = 0;
-            templateOptionsTab.Size = new Size(539, 281);
+            templateOptionsTab.Size = new Size(539, 328);
             templateOptionsTab.TabIndex = 2;
             // 
             // dataSourceTab
@@ -333,7 +333,7 @@
             transformTab.Controls.Add(transformLayout);
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
-            transformTab.Size = new Size(192, 72);
+            transformTab.Size = new Size(531, 300);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transform (XSLT)";
             // 
@@ -349,9 +349,9 @@
             transformLayout.Name = "transformLayout";
             transformLayout.RowCount = 3;
             transformLayout.RowStyles.Add(new RowStyle());
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            transformLayout.Size = new Size(192, 72);
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            transformLayout.Size = new Size(531, 300);
             transformLayout.TabIndex = 0;
             // 
             // transformExceptionData
@@ -359,11 +359,11 @@
             transformExceptionData.AutoSize = true;
             transformExceptionData.Dock = DockStyle.Fill;
             transformExceptionData.HeaderText = "Exception(s)";
-            transformExceptionData.Location = new Point(3, 60);
+            transformExceptionData.Location = new Point(3, 193);
             transformExceptionData.Multiline = true;
             transformExceptionData.Name = "transformExceptionData";
             transformExceptionData.ReadOnly = true;
-            transformExceptionData.Size = new Size(186, 9);
+            transformExceptionData.Size = new Size(525, 104);
             transformExceptionData.TabIndex = 1;
             transformExceptionData.WordWrap = true;
             // 
@@ -376,7 +376,7 @@
             transformScriptData.Multiline = true;
             transformScriptData.Name = "transformScriptData";
             transformScriptData.ReadOnly = false;
-            transformScriptData.Size = new Size(186, 26);
+            transformScriptData.Size = new Size(525, 159);
             transformScriptData.TabIndex = 0;
             transformScriptData.WordWrap = false;
             // 
@@ -385,7 +385,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton4 });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(192, 25);
+            transformToolStrip.Size = new Size(531, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "Transform";
             // 
@@ -724,7 +724,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(545, 484);
+            ClientSize = new Size(545, 551);
             Controls.Add(mainLayout);
             Name = "Template";
             Text = "Template";
