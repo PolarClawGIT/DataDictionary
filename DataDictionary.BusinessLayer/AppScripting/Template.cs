@@ -38,9 +38,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// List of Scripting Data Sources asscoated with a Templates.
         /// </summary>
         ITemplateInputData TemplateSources { get; }
+
+        /// <summary>
+        /// Creates an empty instance of ITemplate
+        /// </summary>
+        public static ITemplate Create()
+        { return new Template(); }
     }
 
-    class Template: ITemplate
+    class Template : ITemplate
     {
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValues; } }

@@ -224,15 +224,15 @@ namespace DataDictionary.Main
 
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    <ScriptingTemplateValue, Forms.Scripting.ScriptingTemplate>
-            //    (ScopeType.ScriptingTemplate, BusinessData.ScriptingEngine.Templates)
-            //{ SelectedForm = (data) => new Forms.Scripting.ScriptingTemplate(data) });
+            Activate(static () => new DetailDataView
+                <TemplateValue, Forms.Scripting.Template>
+                (ScopeType.ScriptingTemplate, BusinessData.ScriptingTemplate.Templates)
+            { SelectedForm = (data) => new Forms.Scripting.Template(data) });
         }
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
             //TODO: Fix
             //Activate(static () => new DetailDataView
             //    (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
@@ -240,6 +240,7 @@ namespace DataDictionary.Main
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
             //TODO: Fix
             //Activate(static () => new DetailDataView
             //    (ScopeType.ScriptingTemplateDocument, BusinessData.ScriptingEngine.TemplateDocuments));
@@ -247,6 +248,7 @@ namespace DataDictionary.Main
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
             //TODO: Fix
             //Activate(static () => new DetailDataView
             //    (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
@@ -254,6 +256,7 @@ namespace DataDictionary.Main
 
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException();
             //TODO: Fix
             //Activate(static () => new DetailDataView
             //    (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
