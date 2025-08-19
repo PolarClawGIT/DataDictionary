@@ -1,27 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributePropertyValue : IXElementFactory<IPropertyGetValue>
+    partial class AttributePropertyValue : IXElementFactory<IPropertyIndex, IPropertyValue>
     {
         /// <inheritdoc/>
-        public static IEnumerable<XElementBuilder> CreateXElementBuilders(IPropertyGetValue propertyGet)
+        public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IPropertyIndex, IPropertyValue> propertyGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
-            result.Add(new XElementBuilder(propertyGet));
             result.AddRange(XElementBuilder.Create(typeof(AttributePropertyValue)));
+            result.AddRange(AppModel.PropertyValue.CreateXElements(propertyGet));
 
-            result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(PropertyId)).NodeValueAs = TemplateNodeValueAsType.none;
-            
+            result.GetValue(nameof(IAttributePropertyValue.AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributePropertyValue.Scope)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributePropertyValue.Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributePropertyValue.PropertyId)).NodeValueAs = TemplateNodeValueAsType.none;
+
             return result;
         }
     }

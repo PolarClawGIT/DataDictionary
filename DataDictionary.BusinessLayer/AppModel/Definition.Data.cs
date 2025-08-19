@@ -10,28 +10,13 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
-    /// Provides methods to retrieve definition values.
-    /// </summary>
-    public interface IDefinitionGetValue
-    {
-        /// <summary>
-        /// Attempts to retrieve the Definition value associated with the specified definition index.
-        /// </summary>
-        /// <param name="definitionIndex">The index of the definition to retrieve.</param>
-        /// <param name="definitionValue">When this method returns, contains the definition value associated with the specified index, if the index is found; otherwise, null.</param>
-        /// <returns>True if the definition value is found; otherwise, false.</returns>
-        Boolean TryGetValue(IDefinitionIndex definitionIndex, [NotNullWhen(true)] out IDefinitionValue? definitionValue);
-    }
-
-
-    /// <summary>
     /// Interface component for the Definition data
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IDefinitionData :
         IBindingData<DefinitionValue>,
         ILoadData, ILoadData<IDefinitionIndex>, ISaveData<IDefinitionIndex>,
-        IDefinitionGetValue
+        ITryGetValue<IDefinitionIndex, IDefinitionValue>
     { }
 
     /// <inheritdoc/>

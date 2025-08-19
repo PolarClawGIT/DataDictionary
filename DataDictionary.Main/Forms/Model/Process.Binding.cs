@@ -50,7 +50,7 @@ namespace DataDictionary.Main.Forms.Model
 
             ProcessIndex processIndex = new ProcessIndex();
             TemporalIndex? temporalIndex = null;
-            IProcess processData = BusinessData.Model.Processes;
+            IProcess processData = BusinessData.Model.Process;
 
             public FormBinding()
             { }
@@ -59,7 +59,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 // Note: C# 13 (Nov 2025?) adds "field". Allows code to be applied to "Init".
 
-                Process = new BindingView<ProcessValue>(processData.Values, w => processIndex.Equals(w));
+                Process = new BindingView<ProcessValue>(processData.Processes, w => processIndex.Equals(w));
                 Properties = new BindingView<ProcessPropertyValue>(processData.Properties, w => processIndex.Equals(w));
                 Aliases = new BindingView<ProcessAliasValue>(processData.Aliases, w => processIndex.Equals(w));
                 SubjectAreas = new BindingView<ProcessSubjectAreaValue>(processData.SubjectArea, w => processIndex.Equals(w));
@@ -77,7 +77,7 @@ namespace DataDictionary.Main.Forms.Model
             public IProcessIndex? Create()
             {
                 ProcessValue newValue = new ProcessValue();
-                processData.Values.Add(newValue);
+                processData.Processes.Add(newValue);
                 SetPosition(newValue);
 
                 return newValue;
@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Process = new BindingView<ProcessValue>(processData.Values, w => processIndex.Equals(w));
+                Process = new BindingView<ProcessValue>(processData.Processes, w => processIndex.Equals(w));
                 Properties = new BindingView<ProcessPropertyValue>(processData.Properties, w => processIndex.Equals(w));
                 Aliases = new BindingView<ProcessAliasValue>(processData.Aliases, w => processIndex.Equals(w));
                 SubjectAreas = new BindingView<ProcessSubjectAreaValue>(processData.SubjectArea, w => processIndex.Equals(w));
@@ -278,7 +278,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
-                    processData = BusinessData.Model.Processes;
+                    processData = BusinessData.Model.Process;
                     work.AddRange(processData.Delete(processIndex));
                     work.AddRange(processData.Load(factory, processIndex));
                 }

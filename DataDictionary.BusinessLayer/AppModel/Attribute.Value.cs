@@ -3,9 +3,24 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
+    /// <summary>
+    /// Provides methods to retrieve attribute values.
+    /// </summary>
+    public interface IAttributeGetValue
+    {
+        /// <summary>
+        /// Attempts to retrieve the Attribute value associated with the specified attribute index.
+        /// </summary>
+        /// <param name="attributeIndex">The index of the attribute to retrieve.</param>
+        /// <param name="attributeValue">When this method returns, contains the attribute value associated with the specified index, if the index is found; otherwise, null.</param>
+        /// <returns>True if the attribute value is found; otherwise, false.</returns>
+        Boolean TryGetValue(IAttributeIndex attributeIndex, [NotNullWhen(true)] out IAttributeValue? attributeValue);
+    }
+
     /// <inheritdoc/>
     public interface IAttributeValue : IAttributeItem, IAttributeIndex, IAttributeIndexName,
         IScopeType, ITemporal
@@ -59,36 +74,6 @@ namespace DataDictionary.BusinessLayer.AppModel
                 IsPathChanged = (e) => e.PropertyName is nameof(AttributeTitle) or nameof(AttributeName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(AttributeTitle)
             };
-        }
-
-        [Obsolete]
-        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
-        {
-            ScopeType scope = ScopeType.ModelAttribute;
-            IAttributeValue attributeNames;
-            List<NodePropertyValue> result = new List<NodePropertyValue>()
-            {
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeId),          DataType = typeof(Guid),    AllowDBNull = false, PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeTitle),       DataType = typeof(String),  AllowDBNull = false, PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeDescription), DataType = typeof(String),  AllowDBNull = true,  PropertyScope = scope},
-
-              //new ColumnItem() {ColumnName = nameof(attributeNames.IsCompositeType),      DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsSimpleType),         DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
-
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsDerived),            DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
-              //new ColumnItem() {ColumnName = nameof(attributeNames.IsIntegral),           DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsKey),                DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
-                //new ColumnItem() {ColumnName = nameof(attributeNames.IsNonKey),             DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-
-              //new ColumnItem() {ColumnName = nameof(attributeNames.IsMultiValue),         DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsSingleValue),        DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
-
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsNullable),           DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
-              //new ColumnItem() {ColumnName = nameof(attributeNames.IsValued),             DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-            };
-
-            return result;
         }
 
     }

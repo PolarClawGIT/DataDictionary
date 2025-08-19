@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<WorkItem> work = new List<WorkItem>();
             String workName = "Adding NamedScopes (Entities)";
 
-            foreach (EntityValue item in data.Values)
+            foreach (EntityValue item in data.Entities)
             {
                 Boolean hasParent = false;
 
@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             {
                 EntityIndex key = new EntityIndex(index);
 
-                return data.Values.
+                return data.Entities.
                     Where(w => key.Equals(w)).
                     Join(data.SubjectArea,
                         entity => new EntityIndex(entity),

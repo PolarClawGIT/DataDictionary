@@ -107,11 +107,11 @@ namespace DataDictionary.Main.Forms.Catalog
                 {
                     GetAlias = BusinessData.CatalogModel.DbTables.GetAlias,
                     GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
-                    GetModelProperty = BusinessData.Model.Properties.GetValue,
+                    GetModelProperty = BusinessData.Model.Properties.TryGetValue,
                     GetColumns = BusinessData.CatalogModel.DbTables.GetColumns
                 };
 
-                IEntityValue entity = BusinessData.Model.Entities.Import(tableEntity);
+                IEntityValue entity = BusinessData.Model.Entity.Import(tableEntity);
 
                 Activate(() => new Forms.Model.Entity(entity));
                 SendMessage(new RefreshNavigation());

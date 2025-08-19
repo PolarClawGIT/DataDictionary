@@ -41,7 +41,7 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 <AttributeValue, Forms.Model.Attribute>
-                (ScopeType.ModelAttribute, BusinessData.Model.Attributes.Values)
+                (ScopeType.ModelAttribute, BusinessData.Model.Attribute.Attributes)
             { SelectedForm = (data) => new Forms.Model.Attribute(data) });
         }
 
@@ -160,51 +160,51 @@ namespace DataDictionary.Main
         private void menuAttributeProperties_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelAttributeProperty, BusinessData.Model.Attributes.Properties));
+                (ScopeType.ModelAttributeProperty, BusinessData.Model.Attribute.Properties));
         }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelAttributeAlias, BusinessData.Model.Attributes.Aliases));
+                (ScopeType.ModelAttributeAlias, BusinessData.Model.Attribute.Aliases));
         }
 
         private void menuAttributeDefinitions_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelAttributeDefinition, BusinessData.Model.Attributes.Definitions));
+                (ScopeType.ModelAttributeDefinition, BusinessData.Model.Attribute.Definitions));
         }
 
         private void menuEntities_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
                 <EntityValue, Forms.Model.Entity>
-                (ScopeType.ModelEntity, BusinessData.Model.Entities.Values)
+                (ScopeType.ModelEntity, BusinessData.Model.Entity.Entities)
             { SelectedForm = (data) => new Forms.Model.Entity(data) });
         }
 
         private void menuEntityProperties_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelEntityProperty, BusinessData.Model.Entities.Properties));
+                (ScopeType.ModelEntityProperty, BusinessData.Model.Entity.Properties));
         }
 
         private void menuEntityDefinitions_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelEntityDefinition, BusinessData.Model.Entities.Definitions));
+                (ScopeType.ModelEntityDefinition, BusinessData.Model.Entity.Definitions));
         }
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelEntityAlias, BusinessData.Model.Entities.Aliases));
+                (ScopeType.ModelEntityAlias, BusinessData.Model.Entity.Aliases));
         }
 
         private void menuEntityAttributes_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelEntityAttribute, BusinessData.Model.Entities.Attributes));
+                (ScopeType.ModelEntityAttribute, BusinessData.Model.Entity.Attributes));
         }
 
         private void menuModelProperty_Click(object sender, EventArgs e)
@@ -272,32 +272,32 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 <ProcessValue, Forms.Model.Process>
-                (ScopeType.ModelProcess, BusinessData.Model.Processes.Values)
+                (ScopeType.ModelProcess, BusinessData.Model.Process.Processes)
             { SelectedForm = (data) => new Forms.Model.Process(data) });
         }
 
         private void MenuProcessAlias_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelProcessAlias, BusinessData.Model.Processes.Aliases));
+                (ScopeType.ModelProcessAlias, BusinessData.Model.Process.Aliases));
         }
 
         private void MenuProcessArgument_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelProcessArgument, BusinessData.Model.Processes.Arguments));
+                (ScopeType.ModelProcessArgument, BusinessData.Model.Process.Arguments));
         }
 
         private void MenuProcessDefinition_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelProcessDefinition, BusinessData.Model.Processes.Definitions));
+                (ScopeType.ModelProcessDefinition, BusinessData.Model.Process.Definitions));
         }
 
         private void MenuProcessProperty_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ModelProcessProperty, BusinessData.Model.Processes.Properties));
+                (ScopeType.ModelProcessProperty, BusinessData.Model.Process.Properties));
         }
 
         private void NewProcessCommand_ButtonClick(object sender, EventArgs e)

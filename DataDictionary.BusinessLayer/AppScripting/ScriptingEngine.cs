@@ -106,10 +106,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             // Create the Builders. This data is static once loaded.
             builders.Clear();
-            builders.Add(ScopeType.ModelAttribute, () => AttributeValue.CreateXElementBuilders());
-            builders.Add(ScopeType.ModelAttributeProperty, () => AttributePropertyValue.CreateXElementBuilders(properties));
-            builders.Add(ScopeType.ModelAttributeDefinition, () => AttributeDefinitionValue.CreateXElementBuilders(definitions));
-            //TODO: Add all other scriptable objects.
+            //builders.Add(ScopeType.ModelAttribute, () => AttributeValue.CreateXElementBuilders());
+            //builders.Add(ScopeType.ModelAttributeProperty, () => AttributePropertyValue.CreateXElementBuilders(properties));
+            //builders.Add(ScopeType.ModelAttributeDefinition, () => AttributeDefinitionValue.CreateXElementBuilders(definitions));
+         
         }
 
         /// <inheritdoc/>

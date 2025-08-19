@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
         {
             BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
 
-            foreach (AttributeNameList item in BusinessData.Model.Attributes.Values.
+            foreach (AttributeNameList item in BusinessData.Model.Attribute.Attributes.
                 Select(s => new AttributeNameList()
                 {
                     AttributeId = s.AttributeId,
@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
         {
             BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
 
-            foreach (AttributeNameList item in BusinessData.Model.Attributes.Values.
+            foreach (AttributeNameList item in BusinessData.Model.Attribute.Attributes.
                 Select(s => new AttributeNameList()
                 {
                     AttributeId = s.AttributeId,

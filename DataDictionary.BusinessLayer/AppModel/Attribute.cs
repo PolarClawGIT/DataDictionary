@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// List of Attributes within the Model.
         /// </summary>
-        IAttributeData Values { get; }
+        IAttributeData Attributes { get; }
 
         /// <summary>
         /// List of Aliases for the Attributes within the Model.
@@ -65,17 +65,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Creates an empty instance of IAttribute with specified property and definition getters.
         /// </summary>
-        /// <param name="propertyGet">The property getter delegate.</param>
-        /// <param name="definitionGet">The definition getter delegate.</param>
+        /// <param name="properties">The property getter delegate.</param>
+        /// <param name="definitions">The definition getter delegate.</param>
         /// <returns>An instance of IAttribute.</returns>
-        public static IAttribute Create(IPropertyGetValue propertyGet, IDefinitionGetValue definitionGet)
-        { return new Attribute(propertyGet, definitionGet); }
+        public static IAttribute Create(IPropertyData properties, IDefinitionData definitions)
+        { return new Attribute(properties, definitions); }
     }
 
     class Attribute : IAttribute, IDataTableFile
     {
         /// <inheritdoc/>
-        public IAttributeData Values { get { return attributeValues; } }
+        public IAttributeData Attributes { get { return attributeValues; } }
         private readonly AttributeData attributeValues;
 
         /// <inheritdoc/>
@@ -115,14 +115,20 @@ namespace DataDictionary.BusinessLayer.AppModel
             }
         }
 
-        public Attribute(IPropertyGetValue propertyGet, IDefinitionGetValue definitionGet) : base()
+        public Attribute(
+            TryGetValue<IPropertyIndex,IPropertyValue> properties,
+            TryGetValue<IDefinitionIndex,IDefinitionValue> definitions) :
+            base()
         {
             attributeValues = new AttributeData();
             aliasValues = new AttributeAliasData();
-            propertyValues = new AttributePropertyData(propertyGet);
-            definitionValues = new AttributeDefinitionData(definitionGet);
+            propertyValues = new AttributePropertyData(properties);
+            definitionValues = new AttributeDefinitionData(definitions);
             subjectAreaValues = new AttributeSubjectAreaData();
         }
+
+        public Attribute (IPropertyData properties, IDefinitionData definitions) : 
+            this(properties.TryGetValue, definitions.TryGetValue) { }
 
         #region ILoadData, ISaveData
         /// <inheritdoc/>
@@ -276,7 +282,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             AliasIndexName key = new AliasIndexName(aliasIndex);
             return
-                Values.Join(
+                Attributes.Join(
                     Aliases.Where(w => key.Equals(w)),
                     attribute => new AttributeIndex(attribute),
                     alias => new AttributeIndex(alias),

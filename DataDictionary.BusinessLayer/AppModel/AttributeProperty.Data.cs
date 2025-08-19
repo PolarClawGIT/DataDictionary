@@ -16,15 +16,24 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Delegate to attempt retrieving a property value based on a key.
         /// </summary>
-        TryGetProperty TryGetProperty { get; }
+        Boolean TryGetProperty(IAttributeIndex value, out IPropertyValue? property);
     }
 
-    class AttributePropertyData(IPropertyGetValue property) : AttributePropertyCollection<AttributePropertyValue>(), IAttributePropertyData,
+    class AttributePropertyData(TryGetValue<IPropertyIndex, IPropertyValue> getProperty) :
+        AttributePropertyCollection<AttributePropertyValue>(), IAttributePropertyData,
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        TryGetValue<IPropertyIndex, IPropertyValue> tryGetProperty = getProperty;
+
         /// <inheritdoc/>
-        public TryGetProperty TryGetProperty { get; init; } = property.TryGetValue;
+        public Boolean TryGetProperty(IAttributeIndex value, out IPropertyValue? property)
+        {
+            AttributeIndex key = new AttributeIndex(value);
+            if (this.FirstOrDefault(w => key.Equals(w)) is IAttributePropertyValue attribute)
+            { return tryGetProperty(attribute, out property); }
+            else { property = null; return false; }
+        }
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>

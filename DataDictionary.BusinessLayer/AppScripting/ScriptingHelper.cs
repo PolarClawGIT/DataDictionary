@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             XElement? result = null;
             AttributeIndex key = new AttributeIndex(index);
-            if (data.Values.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
+            if (data.Attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
             {
                 foreach (ScriptingNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
                 {

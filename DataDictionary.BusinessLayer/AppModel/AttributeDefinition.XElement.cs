@@ -1,27 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributeDefinitionValue : IXElementFactory<IDefinitionGetValue>
+    partial class AttributeDefinitionValue: IXElementFactory<IDefinitionIndex, IDefinitionValue>
     {
         /// <inheritdoc/>
-        public static IEnumerable<XElementBuilder> CreateXElementBuilders(IDefinitionGetValue definitionGet)
+        public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
-            result.Add(new XElementBuilder(definitionGet));
             result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
+            result.AddRange(AppModel.DefinitionValue.CreateXElements(definitionGet));
 
-            result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionText)).NodeValueAs = TemplateNodeValueAsType.ElementCData;
+            result.GetValue(nameof(IAttributeDefinitionValue.AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributeDefinitionValue.Scope)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributeDefinitionValue.Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributeDefinitionValue.DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(IAttributeDefinitionValue.DefinitionText)).NodeValueAs = TemplateNodeValueAsType.ElementCData;
 
             return result;
         }

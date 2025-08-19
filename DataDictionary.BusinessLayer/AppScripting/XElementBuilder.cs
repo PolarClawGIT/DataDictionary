@@ -19,10 +19,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </remarks>
     public class XElementBuilder
     {
-        /// <inheritdoc cref="IScriptingNodeItem.NodeName"/>
+        /// <summary>
+        /// Name to apply to the Node (default is PropertyName)
+        /// </summary>
         public String NodeName { get; set; }
 
-        /// <inheritdoc cref="IScriptingNodeKeyName.PropertyName"/>
+        /// <summary>
+        ///Name of the Property (column) of the Node (used to select the item to render).
+        /// </summary>
         public String PropertyName { get; init; }
 
         /// <inheritdoc cref="INodeValueAsType.NodeValueAs"/>
@@ -66,52 +70,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Initializes a new instance of the <see cref="XElementBuilder"/> class,
         /// configuring how property values are retrieved and rendered.
         /// </summary>
-        /// <remarks>
-        /// This constructor sets up the node to retrieve property titles from the provided <paramref name="propertyGet"/> instance.
-        /// If the input value is an <see cref="IPropertyIndex"/> and the
-        /// property retrieval is successful, the property title is returned.
-        /// Otherwise, the value is set to <c>null</c>.
-        /// </remarks>
-        /// <param name="propertyGet">An object that provides access to property values. Must implement <see cref="IPropertyGetValue"/>.</param>
-        /// <param name="renderAs">Specifies how the property value should be rendered. Defaults to <see cref="TemplateNodeValueAsType.ElementText"/>.</param>
+        /// <param name="name"></param>
+        /// <param name="getValue"></param>
+        /// <param name="renderAs"></param>
         public XElementBuilder(
-            IPropertyGetValue propertyGet,
-            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
-            : this(nameof(IPropertyValue.PropertyTitle), renderAs)
-        {
-            GetValue = (value) =>
-            {
-                if (value is IPropertyIndex index
-                    && propertyGet.TryGetValue(index, out IPropertyValue? result))
-                { return result.PropertyTitle; }
-                else { return null; }
-            };
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XElementBuilder"/> class,
-        /// configuring how the node retrieves and renders values.
-        /// </summary>
-        /// <remarks>
-        /// This constructor sets up the node to retrieve the title of a definition using the
-        /// provided <paramref name="definitionGet"/> object. If the input value is an <see cref="IDefinitionIndex"/>
-        /// and a corresponding definition is found, the node will render the definition's title.
-        /// </remarks>
-        /// <param name="definitionGet">An object that provides access to definitions and their values. Must implement <see cref="IDefinitionGetValue"/>.</param>
-        /// <param name="renderAs">Specifies how the node's value should be rendered. Defaults to <see cref="TemplateNodeValueAsType.ElementText"/>.</param>
-        public XElementBuilder(
-            IDefinitionGetValue definitionGet,
-            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.ElementText)
-            : this(nameof(IDefinitionValue.DefinitionTitle), renderAs)
-        {
-            GetValue = (value) =>
-            {
-                if (value is IDefinitionIndex index
-                    && definitionGet.TryGetValue(index, out IDefinitionValue? result))
-                { return result.DefinitionTitle; }
-                else { return null; }
-            };
-        }
+            String name,
+            Func<Object, String> getValue,
+            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            : this(name)
+        { GetValue = getValue; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XElementBuilder"/> class with the specified scope.

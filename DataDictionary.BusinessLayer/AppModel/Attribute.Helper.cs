@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<WorkItem> work = new List<WorkItem>();
             String workName = "Adding NamedScopes (Attributes)";
 
-            foreach (AttributeValue item in data.Values)
+            foreach (AttributeValue item in data.Attributes)
             {
                 Boolean hasParent = false;
 
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                 AttributeIndex key = new AttributeIndex(index);
 
-                return data.Values.
+                return data.Attributes.
                     Where(w => key.Equals(w)).
                     Join(data.SubjectArea,
                         attribute => new AttributeIndex(attribute),

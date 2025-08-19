@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
                 foreach (AppCatalog.IPropertyValue databaseProperty in GetCatalogProperty(sourceColumn))
                 {
-                    if (GetModelProperty(databaseProperty) is AppModel.IPropertyValue modelProperty)
+                    if (GetModelProperty(databaseProperty, out AppModel.IPropertyValue? modelProperty))
                     {
                         result.Add(new AttributePropertyValue(Attribute, modelProperty)
                         { PropertyValue = databaseProperty.PropertyValue });
@@ -65,8 +65,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc cref="AppCatalog.IPropertyData.GetProperty(ITableColumnIndexName)"/>
         public required Func<ITableColumnIndexName, IEnumerable<AppCatalog.IPropertyValue>> GetCatalogProperty { get; init; }
 
-        /// <inheritdoc cref="AppModel.IPropertyGetValue.GetValue(IPropertyIndex)"/>
-        public required Func<AppCatalog.IPropertyValue, AppModel.IPropertyValue?> GetModelProperty { get; init; }
+        /// <summary>
+        /// Delegate to be use to Get the Model Properties.
+        /// </summary>
+        public required TryGetValue<AppCatalog.IPropertyValue, AppModel.IPropertyValue> GetModelProperty { get; init; }
 
         /// <summary>
         /// Create a new TableColumnAttribute

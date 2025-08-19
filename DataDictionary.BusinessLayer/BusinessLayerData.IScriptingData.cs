@@ -163,7 +163,7 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         [Obsolete("replace", true)]
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
-        { return modelValues.Attributes.GetXElement(modelValues.Properties, scripting, data); }
+        { return modelValues.Attribute.GetXElement(modelValues.Properties, scripting, data); }
 
     }
 }

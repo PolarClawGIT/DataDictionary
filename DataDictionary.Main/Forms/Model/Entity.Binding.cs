@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Model
 
             EntityIndex entityIndex = new EntityIndex();
             TemporalIndex? temporalIndex = null;
-            IEntity entityData = BusinessData.Model.Entities;
+            IEntity entityData = BusinessData.Model.Entity;
 
             public FormBinding()
             { }
@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Model
                 // Note: C# 13 adds "field".
                 // This code could then be moved to the BindingHelpSubject init.
 
-                Entity = new BindingView<EntityValue>(entityData.Values, w => entityIndex.Equals(w));
+                Entity = new BindingView<EntityValue>(entityData.Entities, w => entityIndex.Equals(w));
                 Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
                 Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
                 SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
@@ -99,7 +99,7 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Entity = new BindingView<EntityValue>(entityData.Values, w => entityIndex.Equals(w));
+                Entity = new BindingView<EntityValue>(entityData.Entities, w => entityIndex.Equals(w));
                 Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
                 Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
                 SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
@@ -164,7 +164,7 @@ namespace DataDictionary.Main.Forms.Model
             public EntityValue NewValue()
             {
                 EntityValue newValue = new EntityValue();
-                entityData.Values.Add(newValue);
+                entityData.Entities.Add(newValue);
                 SetPosition(newValue);
 
                 return newValue;
@@ -179,7 +179,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
-                    entityData = BusinessData.Model.Entities;
+                    entityData = BusinessData.Model.Entity;
                     work.AddRange(entityData.Delete(entityIndex));
                     work.AddRange(entityData.Load(factory, entityIndex));
                 }

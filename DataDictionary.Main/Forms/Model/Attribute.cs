@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 memberNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IAttributeValue.AttributeName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                DataTypeList.Load(dataTypeData, BusinessData.Model.Attributes.Values.Select(s => s.DataType).OfType<String>().Distinct());
+                DataTypeList.Load(dataTypeData, BusinessData.Model.Attribute.Attributes.Select(s => s.DataType).OfType<String>().Distinct());
                 dataTypeData.DataBindings.Add(new Binding(nameof(ComboBox.Text), bindingAttribute, nameof(IAttributeValue.DataType), false, DataSourceUpdateMode.OnPropertyChanged));
                 dataLengthData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IAttributeValue.DataLength), false, DataSourceUpdateMode.OnPropertyChanged));
                 dataPrecisionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingAttribute, nameof(IAttributeValue.DataPrecision), false, DataSourceUpdateMode.OnPropertyChanged));

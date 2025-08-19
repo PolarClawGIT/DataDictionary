@@ -44,12 +44,12 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IEnumerable<IEntityPropertyValue> Properties
         {
             get
-            {
+            { 
                 List<EntityPropertyValue> result = new List<EntityPropertyValue>();
 
                 foreach (AppCatalog.IPropertyValue databaseProperty in GetCatalogProperty(sourceTable))
                 {
-                    if (GetModelProperty(databaseProperty) is AppModel.IPropertyValue modelProperty)
+                    if (GetModelProperty(databaseProperty, out AppModel.IPropertyValue? modelProperty))
                     {
                         result.Add(new EntityPropertyValue(Entity, modelProperty)
                         { PropertyValue = databaseProperty.PropertyValue });
@@ -93,8 +93,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <inheritdoc cref="AppCatalog.IPropertyData.GetProperty(ITableIndexName)"/>
         public required Func<ITableIndexName, IEnumerable<AppCatalog.IPropertyValue>> GetCatalogProperty { get; init; }
 
-        /// <inheritdoc cref="AppModel.IPropertyGetValue.GetValue(IPropertyIndex)"/>
-        public required Func<AppCatalog.IPropertyValue, AppModel.IPropertyValue?> GetModelProperty { get; init; }
+        /// <summary>
+        /// Delegate to be use to Get the Model Properties.
+        /// </summary>
+        public required TryGetValue<AppCatalog.IPropertyValue, AppModel.IPropertyValue> GetModelProperty { get; init; }
 
         /// <inheritdoc cref="ITableData.GetColumns(ITableIndexName)"/>
         public required Func<ITableIndexName, IEnumerable<ITableColumnValue>> GetColumns { get; init; }
