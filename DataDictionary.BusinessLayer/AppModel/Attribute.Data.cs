@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     public interface IAttributeData :
         IBindingData<AttributeValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<IAttributeIndex>,
-        IAttributeGetValue
+        ITryGetValue<IAttributeIndex, IAttributeValue>
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
@@ -99,13 +99,14 @@ namespace DataDictionary.BusinessLayer.AppModel
         { Clear(); }
 
         /// <inheritdoc/> 
-        public Boolean TryGetValue(IAttributeIndex attributeIndex, [NotNullWhen(true)] out IAttributeValue? attributeValue)
+        /// <remarks>Attribute</remarks>
+        public Boolean TryGetValue(IAttributeIndex index, [NotNullWhen(true)] out IAttributeValue? value)
         {
-            AttributeIndex key = new AttributeIndex(attributeIndex);
+            AttributeIndex key = new AttributeIndex(index);
 
-            if (this.FirstOrDefault(w => key.Equals(w)) is IAttributeValue value)
-            { attributeValue = value; return true; }
-            else { attributeValue = null; return false; }
+            if (this.FirstOrDefault(w => key.Equals(w)) is IAttributeValue attribute)
+            { value = attribute; return true; }
+            else { value = null; return false; }
         }
     }
 }

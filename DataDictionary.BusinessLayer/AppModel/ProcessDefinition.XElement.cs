@@ -3,7 +3,7 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributeDefinitionValue: IXElementFactory<IDefinitionIndex, IDefinitionValue>
+    partial class ProcessDefinitionValue : IXElementFactory<IDefinitionIndex, IDefinitionValue>
     {
         /// <inheritdoc/>
         public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
             result.AddRange(AppModel.DefinitionValue.CreateXElements(definitionGet));
 
-            result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(ProcessId)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
             result.GetValue(nameof(DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;

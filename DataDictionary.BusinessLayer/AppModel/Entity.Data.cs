@@ -1,11 +1,9 @@
 ﻿// Ignore Spelling: Utc
 
-using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
-using Toolbox.BindingTable;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -15,7 +13,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IEntityData :
         IBindingData<EntityValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<IEntityIndex>
+        IGetTemporal<IModelIndex>, IGetTemporal<IEntityIndex>,
+        ITryGetValue<IEntityIndex, IEntityValue>
     { }
 
     class EntityData : EntityCollection<EntityValue>, IEntityData,
@@ -94,6 +93,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             return new TemporalData<EntityData, EntityValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IEntityKey)key) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public Boolean TryGetValue(IEntityIndex index, [NotNullWhen(true)] out IEntityValue? value)
+        {
+            EntityIndex key = new EntityIndex(index);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is IEntityValue entity)
+            { value = entity; return true; }
+            else { value = null; return false; }
         }
     }
 }

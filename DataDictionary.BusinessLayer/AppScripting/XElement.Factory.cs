@@ -1,11 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
+using Attribute = DataDictionary.BusinessLayer.AppModel.Attribute;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -57,7 +54,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     {
         // TODO: This replaces Scripting Engine.
 
-        Dictionary<ScopeType, IEnumerable<XElementBuilder>> builders = new Dictionary<ScopeType, IEnumerable<XElementBuilder>>();
+        XElementBuilderList builders = new XElementBuilderList();
 
         public required TryGetValue<IDefinitionIndex,IDefinitionValue> DefinitionGet { private get; init; }
         public required TryGetValue<IPropertyIndex, IPropertyValue> PropertyGet { private get; init; }
@@ -79,9 +76,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Load()
         {
             builders.Clear();
-            builders.Add(ScopeType.ModelAttribute, AttributeValue.CreateXElements());
-            builders.Add(ScopeType.ModelAttributeProperty, AttributePropertyValue.CreateXElements(PropertyGet));
-            builders.Add(ScopeType.ModelAttributeDefinition, AttributeDefinitionValue.CreateXElements(DefinitionGet));
+            builders.AddRange(Attribute.CreateXElements(PropertyGet, DefinitionGet));
+            builders.AddRange(Entity.CreateXElements(PropertyGet, DefinitionGet));
+            builders.AddRange(Process.CreateXElements(PropertyGet, DefinitionGet));
         }
 
         public XElement Build(IScopeType value)

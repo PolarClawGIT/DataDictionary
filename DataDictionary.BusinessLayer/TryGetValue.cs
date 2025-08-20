@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-
     /// <summary>
     /// Delegate representing a TryGetValue function.
     /// </summary>
@@ -27,7 +26,7 @@ namespace DataDictionary.BusinessLayer
     public interface ITryGetValue<TIndex, TValue>
     {
         /// <summary>
-        /// Implmentation of the TryGetValue delegate.
+        /// Attempts to find a TValue matching the TIndex and return the value.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>

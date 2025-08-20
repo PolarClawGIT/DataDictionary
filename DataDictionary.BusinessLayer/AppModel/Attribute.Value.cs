@@ -1,28 +1,13 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    /// <summary>
-    /// Provides methods to retrieve attribute values.
-    /// </summary>
-    public interface IAttributeGetValue
-    {
-        /// <summary>
-        /// Attempts to retrieve the Attribute value associated with the specified attribute index.
-        /// </summary>
-        /// <param name="attributeIndex">The index of the attribute to retrieve.</param>
-        /// <param name="attributeValue">When this method returns, contains the attribute value associated with the specified index, if the index is found; otherwise, null.</param>
-        /// <returns>True if the attribute value is found; otherwise, false.</returns>
-        Boolean TryGetValue(IAttributeIndex attributeIndex, [NotNullWhen(true)] out IAttributeValue? attributeValue);
-    }
-
     /// <inheritdoc/>
-    public interface IAttributeValue : IAttributeItem, IAttributeIndex, IAttributeIndexName,
+    public interface IAttributeValue : IAttributeItem, 
+        IAttributeIndex, IAttributeIndexName,
         IScopeType, ITemporal
     { }
 

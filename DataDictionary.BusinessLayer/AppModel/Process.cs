@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new Process(); }
     }
 
-    class Process : IProcess, IDataTableFile
+    partial class Process : IProcess, IDataTableFile
     {
         /// <inheritdoc/>
         public IProcessData Processes { get { return ProcessValues; } }

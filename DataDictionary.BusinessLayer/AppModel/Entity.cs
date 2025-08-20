@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new Entity(); }
     }
 
-    class Entity : IEntity, IDataTableFile
+    partial class Entity : IEntity, IDataTableFile
     {
         /// <inheritdoc/>
         public IEntityData Entities { get { return entityValues; } }

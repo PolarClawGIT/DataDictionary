@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new Attribute(properties, definitions); }
     }
 
-    class Attribute : IAttribute, IDataTableFile
+    partial class Attribute : IAttribute, IDataTableFile
     {
         /// <inheritdoc/>
         public IAttributeData Attributes { get { return attributeValues; } }

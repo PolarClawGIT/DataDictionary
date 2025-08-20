@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -12,7 +13,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IProcessData :
         IBindingData<ProcessValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<IProcessIndex>
+        IGetTemporal<IModelIndex>, IGetTemporal<IProcessIndex>,
+        ITryGetValue<IProcessIndex, IProcessValue>
     { }
 
     class ProcessData : ProcessCollection<ProcessValue>, IProcessData,
@@ -91,6 +93,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             return new TemporalData<ProcessData, ProcessValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IProcessKey)key) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Process</remarks>
+        public Boolean TryGetValue(IProcessIndex index, [NotNullWhen(true)] out IProcessValue? value)
+        {
+            ProcessIndex key = new ProcessIndex(index);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is IProcessValue process)
+            { value = process; return true; }
+            else { value = null; return false; }
         }
     }
 }

@@ -9,6 +9,18 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
+    /// Interface for results of the factory method that builds the XElement Builders.
+    /// </summary>
+    public interface IXElementBuilderList : IReadOnlyDictionary<ScopeType, IEnumerable<XElementBuilder>>
+    { }
+
+    /// <summary>
+    /// Base Class used for the factory method that builds the XElement Builders.
+    /// </summary>
+    class XElementBuilderList : Dictionary<ScopeType, IEnumerable<XElementBuilder>>, IXElementBuilderList 
+    { }
+
+    /// <summary>
     /// Represents a node in an XML structure with customizable behavior for rendering and value retrieval.
     /// </summary>
     /// <remarks>
