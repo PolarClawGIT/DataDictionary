@@ -43,6 +43,7 @@
             TableLayoutPanel optionsLayout;
             TabPage documentPreTransformTab;
             TableLayoutPanel documentGroupLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
             Label documentPlaceholder;
             TabPage documentPostTransformTab;
             TableLayoutPanel scriptLayout;
@@ -51,9 +52,9 @@
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateOptionsTab = new TabControl();
             modelToolStrip = new ToolStrip();
-            toolStripButton2 = new ToolStripButton();
+            newDataSourceCommand = new ToolStripButton();
             nodeToolStrip = new ToolStrip();
-            toolStripButton1 = new ToolStripButton();
+            newNodeCommand = new ToolStripButton();
             nodeTreeView = new TreeView();
             nodeGroup = new GroupBox();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
@@ -61,22 +62,25 @@
             transformExceptionData = new DataDictionary.Main.Controls.TextBoxData();
             transformScriptData = new DataDictionary.Main.Controls.TextBoxData();
             transformToolStrip = new ToolStrip();
-            toolStripButton4 = new ToolStripButton();
+            transformCommand = new ToolStripButton();
             documentToolStrip = new ToolStrip();
-            toolStripButton3 = new ToolStripButton();
+            documentCommand = new ToolStripButton();
             documentRoot = new TabPage();
-            physicalDirectory = new DataDictionary.Main.Controls.TextBoxData();
+            rootPhysicalDirectory = new DataDictionary.Main.Controls.TextBoxData();
             rootDirectoryData = new DataDictionary.Main.Controls.ComboBoxData();
             breakOnScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            documentDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            documentDirectoryData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentPrefixData = new DataDictionary.Main.Controls.TextBoxData();
+            documentPhysicalDirectory = new DataDictionary.Main.Controls.TextBoxData();
             documentSuffixData = new DataDictionary.Main.Controls.TextBoxData();
             documentExtensionData = new DataDictionary.Main.Controls.TextBoxData();
-            scriptingDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptingDirectoryData = new DataDictionary.Main.Controls.SelectTextBoxData();
             scriptingPrefixData = new DataDictionary.Main.Controls.TextBoxData();
             scriptingSuffixData = new DataDictionary.Main.Controls.TextBoxData();
+            scriptingPhysicalDirectory = new DataDictionary.Main.Controls.TextBoxData();
             scriptingExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
+            folderBrowserDialog = new FolderBrowserDialog();
             mainLayout = new TableLayoutPanel();
             dataSourceTab = new TabPage();
             modelLayout = new TableLayoutPanel();
@@ -183,7 +187,7 @@
             dataSourceTab.Controls.Add(modelLayout);
             dataSourceTab.Location = new Point(4, 24);
             dataSourceTab.Name = "dataSourceTab";
-            dataSourceTab.Size = new Size(531, 253);
+            dataSourceTab.Size = new Size(531, 300);
             dataSourceTab.TabIndex = 1;
             dataSourceTab.Text = "Model (data source)";
             // 
@@ -199,26 +203,26 @@
             modelLayout.RowStyles.Add(new RowStyle());
             modelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             modelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            modelLayout.Size = new Size(531, 253);
+            modelLayout.Size = new Size(531, 300);
             modelLayout.TabIndex = 0;
             // 
             // modelToolStrip
             // 
-            modelToolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton2 });
+            modelToolStrip.Items.AddRange(new ToolStripItem[] { newDataSourceCommand });
             modelToolStrip.Location = new Point(0, 0);
             modelToolStrip.Name = "modelToolStrip";
             modelToolStrip.Size = new Size(531, 25);
             modelToolStrip.TabIndex = 0;
             modelToolStrip.Text = "Data Source";
             // 
-            // toolStripButton2
+            // newDataSourceCommand
             // 
-            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton2.Image = Properties.Resources.NewXPath;
-            toolStripButton2.ImageTransparentColor = Color.Magenta;
-            toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(23, 22);
-            toolStripButton2.Text = "toolStripButton2";
+            newDataSourceCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newDataSourceCommand.Image = Properties.Resources.NewXPath;
+            newDataSourceCommand.ImageTransparentColor = Color.Magenta;
+            newDataSourceCommand.Name = "newDataSourceCommand";
+            newDataSourceCommand.Size = new Size(23, 22);
+            newDataSourceCommand.Text = "New Data Source";
             // 
             // nodeTab
             // 
@@ -226,7 +230,7 @@
             nodeTab.Controls.Add(nodeLayout);
             nodeTab.Location = new Point(4, 24);
             nodeTab.Name = "nodeTab";
-            nodeTab.Size = new Size(192, 72);
+            nodeTab.Size = new Size(531, 300);
             nodeTab.TabIndex = 4;
             nodeTab.Text = "Nodes (XSD)";
             // 
@@ -244,43 +248,43 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeLayout.Size = new Size(192, 72);
+            nodeLayout.Size = new Size(531, 300);
             nodeLayout.TabIndex = 0;
             // 
             // nodeToolStrip
             // 
             nodeLayout.SetColumnSpan(nodeToolStrip, 2);
-            nodeToolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton1 });
+            nodeToolStrip.Items.AddRange(new ToolStripItem[] { newNodeCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(192, 25);
+            nodeToolStrip.Size = new Size(531, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "Node";
             // 
-            // toolStripButton1
+            // newNodeCommand
             // 
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = Properties.Resources.NewXMLSchema;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(23, 22);
-            toolStripButton1.Text = "toolStripButton1";
+            newNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newNodeCommand.Image = Properties.Resources.NewXMLSchema;
+            newNodeCommand.ImageTransparentColor = Color.Magenta;
+            newNodeCommand.Name = "newNodeCommand";
+            newNodeCommand.Size = new Size(23, 22);
+            newNodeCommand.Text = "New Node";
             // 
             // nodeTreeView
             // 
             nodeTreeView.Dock = DockStyle.Fill;
             nodeTreeView.Location = new Point(3, 28);
             nodeTreeView.Name = "nodeTreeView";
-            nodeTreeView.Size = new Size(51, 41);
+            nodeTreeView.Size = new Size(153, 269);
             nodeTreeView.TabIndex = 1;
             // 
             // nodeGroup
             // 
             nodeGroup.Controls.Add(nodeDetailLayout);
             nodeGroup.Dock = DockStyle.Fill;
-            nodeGroup.Location = new Point(60, 28);
+            nodeGroup.Location = new Point(162, 28);
             nodeGroup.Name = "nodeGroup";
-            nodeGroup.Size = new Size(129, 41);
+            nodeGroup.Size = new Size(366, 269);
             nodeGroup.TabIndex = 2;
             nodeGroup.TabStop = false;
             nodeGroup.Text = "Node";
@@ -298,7 +302,7 @@
             nodeDetailLayout.RowCount = 2;
             nodeDetailLayout.RowStyles.Add(new RowStyle());
             nodeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeDetailLayout.Size = new Size(123, 19);
+            nodeDetailLayout.Size = new Size(360, 247);
             nodeDetailLayout.TabIndex = 0;
             // 
             // nodeNameData
@@ -310,7 +314,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = true;
-            nodeNameData.Size = new Size(80, 46);
+            nodeNameData.Size = new Size(246, 46);
             nodeNameData.TabIndex = 0;
             nodeNameData.WordWrap = true;
             // 
@@ -321,10 +325,10 @@
             nodeRenderAs.Dock = DockStyle.Fill;
             nodeRenderAs.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeRenderAs.HeaderText = "Render As";
-            nodeRenderAs.Location = new Point(89, 3);
+            nodeRenderAs.Location = new Point(255, 3);
             nodeRenderAs.Name = "nodeRenderAs";
             nodeRenderAs.ReadOnly = true;
-            nodeRenderAs.Size = new Size(31, 46);
+            nodeRenderAs.Size = new Size(102, 46);
             nodeRenderAs.TabIndex = 1;
             // 
             // transformTab
@@ -382,21 +386,21 @@
             // 
             // transformToolStrip
             // 
-            transformToolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton4 });
+            transformToolStrip.Items.AddRange(new ToolStripItem[] { transformCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
             transformToolStrip.Size = new Size(531, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "Transform";
             // 
-            // toolStripButton4
+            // transformCommand
             // 
-            toolStripButton4.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton4.Image = Properties.Resources.XSLTransform;
-            toolStripButton4.ImageTransparentColor = Color.Magenta;
-            toolStripButton4.Name = "toolStripButton4";
-            toolStripButton4.Size = new Size(23, 22);
-            toolStripButton4.Text = "toolStripButton4";
+            transformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformCommand.Image = Properties.Resources.XSLTransform;
+            transformCommand.ImageTransparentColor = Color.Magenta;
+            transformCommand.Name = "transformCommand";
+            transformCommand.Size = new Size(23, 22);
+            transformCommand.Text = "Transform";
             // 
             // documentTab
             // 
@@ -404,7 +408,7 @@
             documentTab.Controls.Add(documentLayout);
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
-            documentTab.Size = new Size(531, 253);
+            documentTab.Size = new Size(531, 300);
             documentTab.TabIndex = 2;
             documentTab.Text = "Document (result)";
             // 
@@ -420,27 +424,27 @@
             documentLayout.RowCount = 2;
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            documentLayout.Size = new Size(531, 253);
+            documentLayout.Size = new Size(531, 300);
             documentLayout.TabIndex = 0;
             // 
             // documentToolStrip
             // 
             documentLayout.SetColumnSpan(documentToolStrip, 2);
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { toolStripButton3 });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
             documentToolStrip.Size = new Size(531, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "Document";
             // 
-            // toolStripButton3
+            // documentCommand
             // 
-            toolStripButton3.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton3.Image = Properties.Resources.XMLFile;
-            toolStripButton3.ImageTransparentColor = Color.Magenta;
-            toolStripButton3.Name = "toolStripButton3";
-            toolStripButton3.Size = new Size(23, 22);
-            toolStripButton3.Text = "toolStripButton3";
+            documentCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentCommand.Image = Properties.Resources.XMLFile;
+            documentCommand.ImageTransparentColor = Color.Magenta;
+            documentCommand.Name = "documentCommand";
+            documentCommand.Size = new Size(23, 22);
+            documentCommand.Text = "Document";
             // 
             // documentTabs
             // 
@@ -451,7 +455,7 @@
             documentTabs.Location = new Point(3, 28);
             documentTabs.Name = "documentTabs";
             documentTabs.SelectedIndex = 0;
-            documentTabs.Size = new Size(525, 222);
+            documentTabs.Size = new Size(525, 269);
             documentTabs.TabIndex = 7;
             // 
             // documentRoot
@@ -461,7 +465,7 @@
             documentRoot.Location = new Point(4, 24);
             documentRoot.Name = "documentRoot";
             documentRoot.Padding = new Padding(3);
-            documentRoot.Size = new Size(517, 194);
+            documentRoot.Size = new Size(517, 241);
             documentRoot.TabIndex = 4;
             documentRoot.Text = "Root";
             // 
@@ -472,7 +476,7 @@
             optionsLayout.ColumnCount = 2;
             optionsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
             optionsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
-            optionsLayout.Controls.Add(physicalDirectory, 0, 1);
+            optionsLayout.Controls.Add(rootPhysicalDirectory, 0, 1);
             optionsLayout.Controls.Add(rootDirectoryData, 0, 0);
             optionsLayout.Controls.Add(breakOnScopeData, 1, 0);
             optionsLayout.Dock = DockStyle.Fill;
@@ -482,23 +486,23 @@
             optionsLayout.RowStyles.Add(new RowStyle());
             optionsLayout.RowStyles.Add(new RowStyle());
             optionsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            optionsLayout.Size = new Size(511, 188);
+            optionsLayout.Size = new Size(511, 235);
             optionsLayout.TabIndex = 2;
             // 
-            // physicalDirectory
+            // rootPhysicalDirectory
             // 
-            physicalDirectory.AutoSize = true;
-            physicalDirectory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            optionsLayout.SetColumnSpan(physicalDirectory, 2);
-            physicalDirectory.Dock = DockStyle.Fill;
-            physicalDirectory.HeaderText = "Phyiscal Directory";
-            physicalDirectory.Location = new Point(3, 55);
-            physicalDirectory.Multiline = false;
-            physicalDirectory.Name = "physicalDirectory";
-            physicalDirectory.ReadOnly = true;
-            physicalDirectory.Size = new Size(505, 44);
-            physicalDirectory.TabIndex = 0;
-            physicalDirectory.WordWrap = true;
+            rootPhysicalDirectory.AutoSize = true;
+            rootPhysicalDirectory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            optionsLayout.SetColumnSpan(rootPhysicalDirectory, 2);
+            rootPhysicalDirectory.Dock = DockStyle.Fill;
+            rootPhysicalDirectory.HeaderText = "Phyiscal Directory";
+            rootPhysicalDirectory.Location = new Point(3, 55);
+            rootPhysicalDirectory.Multiline = false;
+            rootPhysicalDirectory.Name = "rootPhysicalDirectory";
+            rootPhysicalDirectory.ReadOnly = true;
+            rootPhysicalDirectory.Size = new Size(505, 44);
+            rootPhysicalDirectory.TabIndex = 0;
+            rootPhysicalDirectory.WordWrap = true;
             // 
             // rootDirectoryData
             // 
@@ -512,6 +516,8 @@
             rootDirectoryData.ReadOnly = false;
             rootDirectoryData.Size = new Size(351, 46);
             rootDirectoryData.TabIndex = 1;
+            rootDirectoryData.SelectedIndexChanged += RootDirectoryData_SelectedIndexChanged;
+            rootDirectoryData.SelectionChangeCommitted += RootDirectoryData_SelectionChangeCommitted;
             // 
             // breakOnScopeData
             // 
@@ -545,10 +551,11 @@
             documentGroupLayout.ColumnStyles.Add(new ColumnStyle());
             documentGroupLayout.ColumnStyles.Add(new ColumnStyle());
             documentGroupLayout.Controls.Add(documentDirectoryData, 0, 0);
-            documentGroupLayout.Controls.Add(documentPrefixData, 0, 1);
-            documentGroupLayout.Controls.Add(documentSuffixData, 2, 1);
-            documentGroupLayout.Controls.Add(documentExtensionData, 3, 1);
-            documentGroupLayout.Controls.Add(documentPlaceholder, 1, 1);
+            documentGroupLayout.Controls.Add(documentPlaceholder, 1, 2);
+            documentGroupLayout.Controls.Add(documentPrefixData, 0, 2);
+            documentGroupLayout.Controls.Add(documentPhysicalDirectory, 0, 1);
+            documentGroupLayout.Controls.Add(documentSuffixData, 2, 2);
+            documentGroupLayout.Controls.Add(documentExtensionData, 3, 2);
             documentGroupLayout.Dock = DockStyle.Fill;
             documentGroupLayout.Location = new Point(0, 0);
             documentGroupLayout.Name = "documentGroupLayout";
@@ -562,66 +569,80 @@
             // documentDirectoryData
             // 
             documentDirectoryData.AutoSize = true;
+            documentDirectoryData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             documentGroupLayout.SetColumnSpan(documentDirectoryData, 4);
             documentDirectoryData.Dock = DockStyle.Fill;
-            documentDirectoryData.HeaderText = "XML Directory";
+            documentDirectoryData.HeaderText = "XML Documents directory";
             documentDirectoryData.Location = new Point(3, 3);
-            documentDirectoryData.Multiline = false;
             documentDirectoryData.Name = "documentDirectoryData";
             documentDirectoryData.ReadOnly = false;
+            documentDirectoryData.SelectIcon = (Image)resources.GetObject("documentDirectoryData.SelectIcon");
             documentDirectoryData.Size = new Size(186, 44);
-            documentDirectoryData.TabIndex = 1;
-            documentDirectoryData.WordWrap = true;
+            documentDirectoryData.TabIndex = 6;
+            documentDirectoryData.Validated += DocumentDirectoryData_Validated;
+            documentDirectoryData.SelectCommand += DocumentDirectoryData_SelectCommand;
+            // 
+            // documentPlaceholder
+            // 
+            documentPlaceholder.AutoSize = true;
+            documentPlaceholder.Dock = DockStyle.Top;
+            documentPlaceholder.Location = new Point(129, 100);
+            documentPlaceholder.Name = "documentPlaceholder";
+            documentPlaceholder.Size = new Size(1, 1);
+            documentPlaceholder.TabIndex = 5;
+            documentPlaceholder.Text = "<element name/>";
+            documentPlaceholder.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // documentPrefixData
             // 
             documentPrefixData.AutoSize = true;
             documentPrefixData.Dock = DockStyle.Fill;
             documentPrefixData.HeaderText = "Prefix";
-            documentPrefixData.Location = new Point(3, 53);
+            documentPrefixData.Location = new Point(3, 103);
             documentPrefixData.Multiline = false;
             documentPrefixData.Name = "documentPrefixData";
             documentPrefixData.ReadOnly = false;
-            documentPrefixData.Size = new Size(120, 44);
+            documentPrefixData.Size = new Size(120, 1);
             documentPrefixData.TabIndex = 2;
             documentPrefixData.WordWrap = true;
+            // 
+            // documentPhysicalDirectory
+            // 
+            documentPhysicalDirectory.AutoSize = true;
+            documentGroupLayout.SetColumnSpan(documentPhysicalDirectory, 4);
+            documentPhysicalDirectory.Dock = DockStyle.Fill;
+            documentPhysicalDirectory.HeaderText = "Physical Directory";
+            documentPhysicalDirectory.Location = new Point(3, 53);
+            documentPhysicalDirectory.Multiline = false;
+            documentPhysicalDirectory.Name = "documentPhysicalDirectory";
+            documentPhysicalDirectory.ReadOnly = true;
+            documentPhysicalDirectory.Size = new Size(186, 44);
+            documentPhysicalDirectory.TabIndex = 7;
+            documentPhysicalDirectory.WordWrap = true;
             // 
             // documentSuffixData
             // 
             documentSuffixData.AutoSize = true;
-            documentSuffixData.Dock = DockStyle.Fill;
             documentSuffixData.HeaderText = "Suffix";
-            documentSuffixData.Location = new Point(-57, 53);
+            documentSuffixData.Location = new Point(-57, 103);
             documentSuffixData.Multiline = false;
             documentSuffixData.Name = "documentSuffixData";
             documentSuffixData.ReadOnly = false;
-            documentSuffixData.Size = new Size(120, 44);
+            documentSuffixData.Size = new Size(120, 1);
             documentSuffixData.TabIndex = 3;
             documentSuffixData.WordWrap = true;
             // 
             // documentExtensionData
             // 
             documentExtensionData.AutoSize = true;
-            documentExtensionData.Dock = DockStyle.Fill;
             documentExtensionData.HeaderText = "Extension";
-            documentExtensionData.Location = new Point(69, 53);
+            documentExtensionData.Location = new Point(69, 103);
             documentExtensionData.Multiline = false;
             documentExtensionData.Name = "documentExtensionData";
             documentExtensionData.ReadOnly = false;
-            documentExtensionData.Size = new Size(120, 44);
+            documentExtensionData.Size = new Size(120, 1);
             documentExtensionData.TabIndex = 4;
             documentExtensionData.WordWrap = true;
-            // 
-            // documentPlaceholder
-            // 
-            documentPlaceholder.AutoSize = true;
-            documentPlaceholder.Dock = DockStyle.Fill;
-            documentPlaceholder.Location = new Point(129, 50);
-            documentPlaceholder.Name = "documentPlaceholder";
-            documentPlaceholder.Size = new Size(1, 50);
-            documentPlaceholder.TabIndex = 5;
-            documentPlaceholder.Text = "<element name/>";
-            documentPlaceholder.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // documentPostTransformTab
             // 
@@ -629,7 +650,7 @@
             documentPostTransformTab.Controls.Add(scriptLayout);
             documentPostTransformTab.Location = new Point(4, 24);
             documentPostTransformTab.Name = "documentPostTransformTab";
-            documentPostTransformTab.Size = new Size(517, 194);
+            documentPostTransformTab.Size = new Size(192, 72);
             documentPostTransformTab.TabIndex = 3;
             documentPostTransformTab.Text = "Post-Transform (script)";
             // 
@@ -641,11 +662,12 @@
             scriptLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             scriptLayout.ColumnStyles.Add(new ColumnStyle());
             scriptLayout.ColumnStyles.Add(new ColumnStyle());
-            scriptLayout.Controls.Add(scriptPlaceHolder, 1, 1);
             scriptLayout.Controls.Add(scriptingDirectoryData, 0, 0);
-            scriptLayout.Controls.Add(scriptingPrefixData, 0, 1);
-            scriptLayout.Controls.Add(scriptingSuffixData, 2, 1);
-            scriptLayout.Controls.Add(scriptingExtensionData, 3, 1);
+            scriptLayout.Controls.Add(scriptingPrefixData, 0, 2);
+            scriptLayout.Controls.Add(scriptPlaceHolder, 1, 2);
+            scriptLayout.Controls.Add(scriptingSuffixData, 2, 2);
+            scriptLayout.Controls.Add(scriptingPhysicalDirectory, 0, 1);
+            scriptLayout.Controls.Add(scriptingExtensionData, 3, 2);
             scriptLayout.Dock = DockStyle.Fill;
             scriptLayout.Location = new Point(0, 0);
             scriptLayout.Name = "scriptLayout";
@@ -653,70 +675,83 @@
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptLayout.Size = new Size(517, 194);
+            scriptLayout.Size = new Size(192, 72);
             scriptLayout.TabIndex = 8;
-            // 
-            // scriptPlaceHolder
-            // 
-            scriptPlaceHolder.AutoSize = true;
-            scriptPlaceHolder.Dock = DockStyle.Fill;
-            scriptPlaceHolder.Location = new Point(129, 50);
-            scriptPlaceHolder.Name = "scriptPlaceHolder";
-            scriptPlaceHolder.Size = new Size(133, 50);
-            scriptPlaceHolder.TabIndex = 6;
-            scriptPlaceHolder.Text = "<element name/>";
-            scriptPlaceHolder.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // scriptingDirectoryData
             // 
             scriptingDirectoryData.AutoSize = true;
+            scriptingDirectoryData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             scriptLayout.SetColumnSpan(scriptingDirectoryData, 4);
             scriptingDirectoryData.Dock = DockStyle.Fill;
             scriptingDirectoryData.HeaderText = "Script Directory";
             scriptingDirectoryData.Location = new Point(3, 3);
-            scriptingDirectoryData.Multiline = false;
             scriptingDirectoryData.Name = "scriptingDirectoryData";
             scriptingDirectoryData.ReadOnly = false;
-            scriptingDirectoryData.Size = new Size(511, 44);
-            scriptingDirectoryData.TabIndex = 1;
-            scriptingDirectoryData.WordWrap = true;
+            scriptingDirectoryData.SelectIcon = (Image)resources.GetObject("scriptingDirectoryData.SelectIcon");
+            scriptingDirectoryData.Size = new Size(186, 44);
+            scriptingDirectoryData.TabIndex = 7;
+            scriptingDirectoryData.Validated += ScriptingDirectoryData_Validated;
+            scriptingDirectoryData.SelectCommand += ScriptingDirectoryData_SelectCommand;
             // 
             // scriptingPrefixData
             // 
             scriptingPrefixData.AutoSize = true;
-            scriptingPrefixData.Dock = DockStyle.Fill;
             scriptingPrefixData.HeaderText = "Prefix";
-            scriptingPrefixData.Location = new Point(3, 53);
+            scriptingPrefixData.Location = new Point(3, 103);
             scriptingPrefixData.Multiline = false;
             scriptingPrefixData.Name = "scriptingPrefixData";
             scriptingPrefixData.ReadOnly = false;
-            scriptingPrefixData.Size = new Size(120, 44);
+            scriptingPrefixData.Size = new Size(120, 1);
             scriptingPrefixData.TabIndex = 2;
             scriptingPrefixData.WordWrap = true;
+            // 
+            // scriptPlaceHolder
+            // 
+            scriptPlaceHolder.AutoSize = true;
+            scriptPlaceHolder.Dock = DockStyle.Top;
+            scriptPlaceHolder.Location = new Point(129, 100);
+            scriptPlaceHolder.Name = "scriptPlaceHolder";
+            scriptPlaceHolder.Size = new Size(1, 1);
+            scriptPlaceHolder.TabIndex = 6;
+            scriptPlaceHolder.Text = "<element name/>";
+            scriptPlaceHolder.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // scriptingSuffixData
             // 
             scriptingSuffixData.AutoSize = true;
-            scriptingSuffixData.Dock = DockStyle.Fill;
             scriptingSuffixData.HeaderText = "Suffix";
-            scriptingSuffixData.Location = new Point(268, 53);
+            scriptingSuffixData.Location = new Point(-57, 103);
             scriptingSuffixData.Multiline = false;
             scriptingSuffixData.Name = "scriptingSuffixData";
             scriptingSuffixData.ReadOnly = false;
-            scriptingSuffixData.Size = new Size(120, 44);
+            scriptingSuffixData.Size = new Size(120, 1);
             scriptingSuffixData.TabIndex = 3;
             scriptingSuffixData.WordWrap = true;
+            // 
+            // scriptingPhysicalDirectory
+            // 
+            scriptingPhysicalDirectory.AutoSize = true;
+            scriptLayout.SetColumnSpan(scriptingPhysicalDirectory, 4);
+            scriptingPhysicalDirectory.Dock = DockStyle.Fill;
+            scriptingPhysicalDirectory.HeaderText = "Physical Directory";
+            scriptingPhysicalDirectory.Location = new Point(3, 53);
+            scriptingPhysicalDirectory.Multiline = false;
+            scriptingPhysicalDirectory.Name = "scriptingPhysicalDirectory";
+            scriptingPhysicalDirectory.ReadOnly = true;
+            scriptingPhysicalDirectory.Size = new Size(186, 44);
+            scriptingPhysicalDirectory.TabIndex = 8;
+            scriptingPhysicalDirectory.WordWrap = true;
             // 
             // scriptingExtensionData
             // 
             scriptingExtensionData.AutoSize = true;
-            scriptingExtensionData.Dock = DockStyle.Fill;
             scriptingExtensionData.HeaderText = "Extension";
-            scriptingExtensionData.Location = new Point(394, 53);
+            scriptingExtensionData.Location = new Point(69, 103);
             scriptingExtensionData.Multiline = false;
             scriptingExtensionData.Name = "scriptingExtensionData";
             scriptingExtensionData.ReadOnly = false;
-            scriptingExtensionData.Size = new Size(120, 44);
+            scriptingExtensionData.Size = new Size(120, 1);
             scriptingExtensionData.TabIndex = 4;
             scriptingExtensionData.WordWrap = true;
             // 
@@ -776,45 +811,39 @@
 
         #endregion
 
-        private TableLayoutPanel mainLayout;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData templateDescriptionData;
         private TabControl templateOptionsTab;
-        private TabPage transformTab;
-        private TableLayoutPanel transformLayout;
         private Controls.TextBoxData transformScriptData;
         private Controls.TextBoxData transformExceptionData;
         private ToolStrip transformToolStrip;
-        private TabPage dataSourceTab;
-        private TableLayoutPanel modelLayout;
-        private TableLayoutPanel documentLayout;
         private ToolStrip documentToolStrip;
         private ToolStrip modelToolStrip;
-        private TableLayoutPanel nodeLayout;
         private ToolStrip nodeToolStrip;
         private TreeView nodeTreeView;
         private GroupBox nodeGroup;
-        private TableLayoutPanel nodeDetailLayout;
         private Controls.TextBoxData nodeNameData;
         private Controls.ComboBoxData nodeRenderAs;
-        private ToolStripButton toolStripButton1;
-        private ToolStripButton toolStripButton2;
-        private ToolStripButton toolStripButton3;
-        private ToolStripButton toolStripButton4;
+        private ToolStripButton newNodeCommand;
+        private ToolStripButton newDataSourceCommand;
+        private ToolStripButton documentCommand;
+        private ToolStripButton transformCommand;
         private BindingSource bindingTemplate;
-        private TableLayoutPanel documentGroupLayout;
         private TabPage documentPostTransformTab;
-        private Controls.TextBoxData documentDirectoryData;
         private Controls.TextBoxData documentPrefixData;
         private Controls.TextBoxData documentSuffixData;
         private Controls.TextBoxData documentExtensionData;
-        private Controls.TextBoxData scriptingDirectoryData;
         private Controls.TextBoxData scriptingPrefixData;
         private Controls.TextBoxData scriptingSuffixData;
         private Controls.TextBoxData scriptingExtensionData;
         private TabPage documentRoot;
-        private Controls.TextBoxData physicalDirectory;
+        private Controls.TextBoxData rootPhysicalDirectory;
         private Controls.ComboBoxData rootDirectoryData;
         private Controls.ComboBoxData breakOnScopeData;
+        private Controls.SelectTextBoxData documentDirectoryData;
+        private Controls.SelectTextBoxData scriptingDirectoryData;
+        private FolderBrowserDialog folderBrowserDialog;
+        private Controls.TextBoxData documentPhysicalDirectory;
+        private Controls.TextBoxData scriptingPhysicalDirectory;
     }
 }

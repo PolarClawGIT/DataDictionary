@@ -88,12 +88,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
                 rootDirectoryData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
-                    bindingTemplate, nameof(ITemplateValue.RootDirectory),
+                    bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
                     false, DataSourceUpdateMode.OnPropertyChanged)
                 { DataSourceNullValue = TemplateDirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
-                breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(ITemplateValue.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
+                breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -106,6 +106,94 @@ namespace DataDictionary.Main.Forms.Scripting
                 scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             }
         }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+        }
+
+        private void DocumentDirectoryData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out TemplateValue? current))
+            {
+                DirectoryInfo rootDirectory = new DirectoryInfo(rootPhysicalDirectory.Text);
+                folderBrowserDialog.InitialDirectory = Path.Combine(rootDirectory.FullName, current.DocumentDirectory ?? String.Empty);
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK
+                    && folderBrowserDialog.SelectedPath.Length > rootDirectory.FullName.Length
+                    && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, rootDirectory.FullName.Length), rootDirectory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    current.DocumentDirectory = folderBrowserDialog.SelectedPath.Substring(rootDirectory.FullName.Length + 1);
+                    documentPhysicalDirectory.Text = Path.Combine(rootDirectory.FullName, current.DocumentDirectory);
+                }
+            }
+        }
+
+        private void DocumentDirectoryData_Validated(object sender, EventArgs e)
+        { documentPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, documentDirectoryData.Text); }
+
+        private void ScriptingDirectoryData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out TemplateValue? current))
+            {
+                DirectoryInfo rootDirectory = new DirectoryInfo(rootPhysicalDirectory.Text);
+                folderBrowserDialog.InitialDirectory = Path.Combine(rootDirectory.FullName, current.ScriptDirectory ?? String.Empty);
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK
+                    && folderBrowserDialog.SelectedPath.Length > rootDirectory.FullName.Length
+                    && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, rootDirectory.FullName.Length), rootDirectory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    current.ScriptDirectory = folderBrowserDialog.SelectedPath.Substring(rootDirectory.FullName.Length + 1);
+                    scriptingPhysicalDirectory.Text = Path.Combine(rootDirectory.FullName, current.ScriptDirectory);
+                }
+            }
+        }
+
+        private void ScriptingDirectoryData_Validated(object sender, EventArgs e)
+        { scriptingPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, scriptingDirectoryData.Text); }
+
+
+        private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+                && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
+            { rootPhysicalDirectory.Text = directory.FullName; }
+            else { rootPhysicalDirectory.Text = String.Empty; }
+        }
+
+        private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+                && formBinding.TryGetValue(out TemplateValue? current))
+            {
+                //Note: For reason unknown, current.TemplateDirectory has not been updated
+                //at this point. Setting the current.RootDirectory directly solves this.
+                current.RootDirectory = TemplateDirectoryEnumeration.Cast(value).Name;
+                current.DocumentDirectory = null;
+                current.ScriptDirectory = null;
+            }
+        }
+
 
     }
 }

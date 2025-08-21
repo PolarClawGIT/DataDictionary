@@ -346,7 +346,6 @@
 
         #endregion
 
-        private TableLayoutPanel attributeLayout;
         private Controls.TextBoxData templateData;
         private Controls.TextBoxData nodeNameData;
         private Controls.TextBoxData renderOrderData;
