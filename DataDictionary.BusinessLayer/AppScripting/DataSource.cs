@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// List of Scripting Data Objects within a Data Source.
         /// </summary>
         IDataObjectData DataObjects { get; }
+
+        /// <summary>
+        /// Creates an empty instance of IDataSource
+        /// </summary>
+        public static IDataSource Create()
+        { return new DataSource(); }
     }
 
     class DataSource : IDataSource
@@ -239,6 +246,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 sourceValues.RaiseListChangedEvents = value;
                 sourceObjects.RaiseListChangedEvents = value;
             }
+        }
+
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(NameSpaceSource.Load<DataSourceData, DataSourceValue>(sourceValues, addNamedScope));
+
+            return work;
         }
     }
 }

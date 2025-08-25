@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            ITemplate templateData = BusinessData.ScriptingTemplate;
+            ITemplate data = BusinessData.ScriptingTemplate;
 
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> Templates =
@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void Load(TemplateIndex template)
             {
                 TemplateBinding.RaiseListChangedEvents = false;
-                Templates = new BindingView<TemplateValue>(templateData.Templates, w => template.Equals(w));
+                Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
                 TemplateBinding.DataSource = Templates;
                 TemplateBinding.RaiseListChangedEvents = true;
                 TemplateBinding.ResetBindings(false);
@@ -45,14 +45,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
-                work.AddRange(templateData.Delete(template));
-                work.AddRange(templateData.Load(factory, template));
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.ScriptingTemplate; } });
+                work.AddRange(data.Delete(template));
+                work.AddRange(data.Load(factory, template));
 
                 DoWork(work,completing);
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Templates = new BindingView<TemplateValue>(templateData.Templates, w => template.Equals(w));
+                    Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
                     TemplateBinding.DataSource = Templates;
                     TemplateBinding.RaiseListChangedEvents = true;
                     TemplateBinding.ResetBindings(false);
@@ -68,14 +69,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { templateData = ITemplate.Create(); } });
-                work.AddRange(templateData.Load(factory, template, temporal));
+                work.Add(new WorkItem() { DoWork = () => { data = ITemplate.Create(); } });
+                work.AddRange(data.Load(factory, template, temporal));
 
                 DoWork(work, completing);
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Templates = new BindingView<TemplateValue>(templateData.Templates, w => template.Equals(w));
+                    Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
                     TemplateBinding.DataSource = Templates;
                     TemplateBinding.RaiseListChangedEvents = true;
                     TemplateBinding.ResetBindings(false);
@@ -87,7 +88,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public TemplateValue NewValue()
             {
                 TemplateValue result = new TemplateValue();
-                templateData.Templates.Add(result);
+                data.Templates.Add(result);
 
                 return result;
             }

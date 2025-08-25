@@ -52,6 +52,7 @@ namespace DataDictionary.DataLayer.AppScript
         public DataSourceItem () : base()
         {
             if (DataSourceId is null) { DataSourceId = Guid.NewGuid(); }
+            if (String.IsNullOrWhiteSpace(DataSourceTitle)) { DataSourceTitle = "(new DataSource)"; }
 
             Temporal = new TemporalItem()
             {

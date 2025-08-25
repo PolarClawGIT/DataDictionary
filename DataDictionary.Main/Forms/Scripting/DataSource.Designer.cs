@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel dataSourceLayout;
-            dataSourceTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             objectData = new DataGridView();
             DataObjectPathColumn = new DataGridViewTextBoxColumn();
-            objectPathData = new DataDictionary.Main.Controls.TextBoxData();
             isInModelData = new CheckBox();
-            selectPathCommand = new Button();
+            bindingDataSource = new BindingSource(components);
+            objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
             dataSourceLayout = new TableLayoutPanel();
             dataSourceLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDataSource).BeginInit();
             SuspendLayout();
             // 
             // dataSourceLayout
@@ -46,37 +48,35 @@
             dataSourceLayout.ColumnCount = 2;
             dataSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             dataSourceLayout.ColumnStyles.Add(new ColumnStyle());
-            dataSourceLayout.Controls.Add(dataSourceTitleData, 0, 0);
+            dataSourceLayout.Controls.Add(titleData, 0, 0);
             dataSourceLayout.Controls.Add(descriptionData, 0, 1);
             dataSourceLayout.Controls.Add(objectData, 0, 2);
-            dataSourceLayout.Controls.Add(objectPathData, 0, 3);
             dataSourceLayout.Controls.Add(isInModelData, 1, 3);
-            dataSourceLayout.Controls.Add(selectPathCommand, 1, 4);
+            dataSourceLayout.Controls.Add(objectPathData, 0, 3);
             dataSourceLayout.Dock = DockStyle.Fill;
             dataSourceLayout.Location = new Point(0, 25);
             dataSourceLayout.Name = "dataSourceLayout";
-            dataSourceLayout.RowCount = 5;
+            dataSourceLayout.RowCount = 4;
             dataSourceLayout.RowStyles.Add(new RowStyle());
             dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             dataSourceLayout.RowStyles.Add(new RowStyle());
-            dataSourceLayout.RowStyles.Add(new RowStyle());
             dataSourceLayout.Size = new Size(469, 351);
             dataSourceLayout.TabIndex = 4;
             // 
-            // dataSourceTitleData
+            // titleData
             // 
-            dataSourceTitleData.AutoSize = true;
-            dataSourceLayout.SetColumnSpan(dataSourceTitleData, 2);
-            dataSourceTitleData.Dock = DockStyle.Fill;
-            dataSourceTitleData.HeaderText = "Data Source Title";
-            dataSourceTitleData.Location = new Point(3, 3);
-            dataSourceTitleData.Multiline = false;
-            dataSourceTitleData.Name = "dataSourceTitleData";
-            dataSourceTitleData.ReadOnly = false;
-            dataSourceTitleData.Size = new Size(463, 44);
-            dataSourceTitleData.TabIndex = 0;
-            dataSourceTitleData.WordWrap = true;
+            titleData.AutoSize = true;
+            dataSourceLayout.SetColumnSpan(titleData, 2);
+            titleData.Dock = DockStyle.Fill;
+            titleData.HeaderText = "Data Source Title";
+            titleData.Location = new Point(3, 3);
+            titleData.Multiline = false;
+            titleData.Name = "titleData";
+            titleData.ReadOnly = false;
+            titleData.Size = new Size(463, 44);
+            titleData.TabIndex = 0;
+            titleData.WordWrap = true;
             // 
             // descriptionData
             // 
@@ -88,7 +88,7 @@
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = false;
-            descriptionData.Size = new Size(463, 68);
+            descriptionData.Size = new Size(463, 69);
             descriptionData.TabIndex = 1;
             descriptionData.WordWrap = true;
             // 
@@ -98,9 +98,9 @@
             objectData.Columns.AddRange(new DataGridViewColumn[] { DataObjectPathColumn });
             dataSourceLayout.SetColumnSpan(objectData, 2);
             objectData.Dock = DockStyle.Fill;
-            objectData.Location = new Point(3, 127);
+            objectData.Location = new Point(3, 128);
             objectData.Name = "objectData";
-            objectData.Size = new Size(463, 166);
+            objectData.Size = new Size(463, 169);
             objectData.TabIndex = 2;
             // 
             // DataObjectPathColumn
@@ -110,39 +110,28 @@
             DataObjectPathColumn.HeaderText = "Path";
             DataObjectPathColumn.Name = "DataObjectPathColumn";
             // 
-            // objectPathData
-            // 
-            objectPathData.AutoSize = true;
-            objectPathData.Dock = DockStyle.Fill;
-            objectPathData.HeaderText = "Path";
-            objectPathData.Location = new Point(3, 299);
-            objectPathData.Multiline = false;
-            objectPathData.Name = "objectPathData";
-            objectPathData.ReadOnly = false;
-            dataSourceLayout.SetRowSpan(objectPathData, 2);
-            objectPathData.Size = new Size(382, 49);
-            objectPathData.TabIndex = 3;
-            objectPathData.WordWrap = true;
-            // 
             // isInModelData
             // 
             isInModelData.AutoSize = true;
-            isInModelData.Location = new Point(391, 299);
+            isInModelData.Location = new Point(393, 303);
             isInModelData.Name = "isInModelData";
             isInModelData.Size = new Size(73, 19);
             isInModelData.TabIndex = 4;
             isInModelData.Text = "In Model";
             isInModelData.UseVisualStyleBackColor = true;
             // 
-            // selectPathCommand
+            // objectPathData
             // 
-            selectPathCommand.Location = new Point(391, 324);
-            selectPathCommand.Name = "selectPathCommand";
-            selectPathCommand.Size = new Size(75, 23);
-            selectPathCommand.TabIndex = 5;
-            selectPathCommand.Text = "Select";
-            selectPathCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            selectPathCommand.UseVisualStyleBackColor = true;
+            objectPathData.AutoSize = true;
+            objectPathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectPathData.Dock = DockStyle.Fill;
+            objectPathData.HeaderText = "Path";
+            objectPathData.Location = new Point(3, 303);
+            objectPathData.Name = "objectPathData";
+            objectPathData.ReadOnly = false;
+            objectPathData.SelectIcon = Properties.Resources.XPath;
+            objectPathData.Size = new Size(384, 45);
+            objectPathData.TabIndex = 5;
             // 
             // DataSource
             // 
@@ -152,22 +141,24 @@
             Controls.Add(dataSourceLayout);
             Name = "DataSource";
             Text = "DataSource";
+            Load += DataSource_Load;
             Controls.SetChildIndex(dataSourceLayout, 0);
             dataSourceLayout.ResumeLayout(false);
             dataSourceLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDataSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Controls.TextBoxData dataSourceTitleData;
+        private Controls.TextBoxData titleData;
         private Controls.TextBoxData descriptionData;
         private DataGridView objectData;
         private DataGridViewTextBoxColumn DataObjectPathColumn;
-        private Controls.TextBoxData objectPathData;
         private CheckBox isInModelData;
-        private Button selectPathCommand;
+        private BindingSource bindingDataSource;
+        private Controls.SelectTextBoxData objectPathData;
     }
 }

@@ -23,6 +23,13 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? DataSourceId { get; init; } = Guid.Empty;
 
         /// <summary>
+        /// Constructor for the Blank/Empty DataSource Key
+        /// </summary>
+        /// <remarks>Empty Key is never equal to anything.</remarks>
+        public DataSourceKey() : base()
+        { }
+
+        /// <summary>
         /// Constructor for the Primary Key of the Scripting Data Source.
         /// </summary>
         /// <param name="source"></param>

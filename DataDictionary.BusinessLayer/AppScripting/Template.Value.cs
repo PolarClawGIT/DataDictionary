@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -42,18 +43,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
     }
 
     /// <inheritdoc/>
-    public class TemplateValue : TemplateItem, ITemplateValue, IDataValue
+    public class TemplateValue : TemplateItem, ITemplateValue, INamedScopeSourceValue
     {
-        IDataValue dataValue; // Backing field for IDataValue
+        IPathValue pathValue; // Backing field for IPathValue
 
         /// <inheritdoc/>
-        DataIndex IDataValue.Index { get { return dataValue.Index; } }
+        DataIndex IDataValue.Index { get { return pathValue.Index; } }
 
         /// <inheritdoc/>
-        String IDataValue.Title { get { return dataValue.Title; } }
+        String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingData; } }
+
+        /// <inheritdoc/>
+        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
 
         /// <inheritdoc/>
         public XDocument? TransformXml { get; private set; } = null;
@@ -104,11 +108,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             PropertyChanged += TemplateValue_PropertyChanged;
 
-            dataValue = new DataValue(this)
+            pathValue = new PathValue(this)
             {
                 GetIndex = () => new TemplateIndex(this),
+                GetPath = () => new PathIndex(TemplateTitle),
                 GetScope = () => Scope,
                 GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
             };
         }
