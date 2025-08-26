@@ -234,10 +234,11 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Delete, Resources.DeleteXPath) ,
                     new(CommandImageType.Add, Resources.NewXPath) ,
                     new(CommandImageType.Select, Resources.SelectXPath)),
-
-                new NavigationEnumeration(ScopeType.ScriptingData,              Resources.Icon_XPath, Resources.XPath) ,
-                new NavigationEnumeration(ScopeType.ScriptingDataObject,        Resources.Icon_XPath, Resources.XPath) ,
-
+                new NavigationEnumeration(ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant,
+                    new(CommandImageType.Default, Resources.XMLDescendant),
+                    new(CommandImageType.Delete, Resources.DeleteXMLDescendant),
+                    new(CommandImageType.Add, Resources.NewXMLDescendant),
+                    new(CommandImageType.Select, Resources.SelectXMLDescendant)),
                 new NavigationEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLAttribute, Resources.XMLAttribute) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateElement,   Resources.Icon_XMLElement, Resources.XMLElement) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XSLTransform) ,

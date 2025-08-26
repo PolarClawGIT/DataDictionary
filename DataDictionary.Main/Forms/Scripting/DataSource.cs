@@ -39,6 +39,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandImageType.SaveDatabase,
                 CommandImageType.DeleteDatabase,
                 CommandImageType.HistoryDatabase);
+
+            newObjectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingDataObject, CommandImageType.Add);
+            selectObjectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingDataObject, CommandImageType.Select);
         }
 
         public DataSource(IDataSourceIndex? dataSource) : this()
@@ -78,6 +81,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 objectData.AutoGenerateColumns = false;
                 objectData.DataSource = bindingDataObject;
                 objectPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataObject, nameof(IDataObjectValue.DataPath)));
+                objectPathData.ReadOnly = true;
             }
         }
 
@@ -87,7 +91,34 @@ namespace DataDictionary.Main.Forms.Scripting
             objectPathData.Text = path.MemberFullPath;
         }
 
-        private void ObjectPathData_SelectCommand(object sender, EventArgs e)
+        private void BindingDataObject_AddingNew(object sender, AddingNewEventArgs e)
+        { e.NewObject = formBinding.NewObject(); }
+
+        private void BindingDataObject_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if(formBinding.TryGetValue(out INamedScopeValue? value))
+            {
+                isInModelData.Checked = true;
+                objectPathData.ReadOnly = true;
+                objectTitleData.Text = value.Title;
+            }
+            else
+            {
+                isInModelData.Checked = false;
+                objectPathData.ReadOnly = false;
+                objectTitleData.Text = String.Empty;
+            }
+        }
+
+        private void NewObjectCommand_Click(object sender, EventArgs e)
+        {
+            bindingDataObject.AddNew();
+            isInModelData.Checked = false;
+            objectPathData.ReadOnly = false;
+            objectTitleData.Text = String.Empty;
+        }
+
+        private void SelectObjectCommand_Click(object sender, EventArgs e)
         {
             using (SelectionDialog dialog = new SelectionDialog(this))
             {
@@ -98,14 +129,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 dialog.BuildData(formBinding.GetObjectPaths());
 
                 if (dialog.ShowDialog(this) is DialogResult.OK)
-                { formBinding.SetObjectPaths(dialog.SelectedByNamedScope().Select(s => s.Path)); }
+                { formBinding.AddObjectPaths(dialog.SelectedByNamedScope().Select(s => s.Path)); }
             }
         }
-
-        private void BindingDataObject_AddingNew(object sender, AddingNewEventArgs e)
-        { e.NewObject = formBinding.NewObject(); }
-
-        private void BindingDataObject_CurrentItemChanged(object sender, EventArgs e)
-        { isInModelData.Checked = formBinding.TryGetValue(out INamedScopeValue? value); }
     }
 }

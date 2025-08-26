@@ -12,7 +12,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface IDataObjectValue : IDataObjectItem, IDataSourceIndex,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// Path Index of the DataPath
+        /// </summary>
+        PathIndex ObjectPath { get; set; }
+    }
 
     /// <inheritdoc/>
     public class DataObjectValue : DataObjectItem, IDataObjectValue, IPathValue
@@ -31,9 +36,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
-        /// <summary>
-        /// Path Index of the DataPath
-        /// </summary>
+        /// <inheritdoc/>
         public PathIndex ObjectPath
         {
             get

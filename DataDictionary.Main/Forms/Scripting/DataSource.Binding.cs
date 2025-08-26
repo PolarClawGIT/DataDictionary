@@ -131,13 +131,14 @@ namespace DataDictionary.Main.Forms.Scripting
             public IEnumerable<PathIndex> GetObjectPaths()
             { return DataObjects.OfType<IPathIndex>().Select(s => s.Path); }
 
-            public void SetObjectPaths(IEnumerable<PathIndex> newValues)
+            public void AddObjectPaths(IEnumerable<PathIndex> newValues)
             {
                 var current = DataObjects.OfType<IPathIndex>().Select(s => s.Path);
 
                 foreach (DataObjectValue deleteItem in
                     DataObjects.
-                    Where(w => current.Except(newValues).Any(a => w.ObjectPath.Equals(a))).
+                    Where(w => current.Except(newValues).Any(a => w.ObjectPath.Equals(a))
+                        && BusinessData.NamedScope.PathKeys(w.ObjectPath).Count > 0).
                     ToList())
                 { DataObjects.Remove(deleteItem); }
 
