@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? DataPath
+        public virtual String? DataPath
         {
             get { return GetValue(nameof(DataPath)); }
             set { SetValue(nameof(DataPath), value); }
@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.AppScript
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(DataPath), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(DataPath), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

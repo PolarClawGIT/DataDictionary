@@ -1,17 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -31,12 +25,13 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 DataSourceBinding = bindingDataSource,
+                DataObjectBinding = bindingDataObject,
                 DoWork = base.DoWork
             };
 
             SetIcon(ScopeType.ScriptingData);
             SetTitle(bindingDataSource);
-            SetRowState(bindingDataSource);
+            SetRowState(bindingDataSource, bindingDataObject);
 
             SetCommand(ScopeType.ScriptingData,
                 CommandImageType.Delete,
@@ -80,7 +75,37 @@ namespace DataDictionary.Main.Forms.Scripting
                 titleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataSource, nameof(IDataSourceValue.DataSourceTitle)));
                 descriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataSource, nameof(IDataSourceValue.DataSourceDescription)));
 
+                objectData.AutoGenerateColumns = false;
+                objectData.DataSource = bindingDataObject;
+                objectPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataObject, nameof(IDataObjectValue.DataPath)));
             }
         }
+
+        private void ObjectPathData_Validating(object sender, CancelEventArgs e)
+        {
+            PathIndex path = new PathIndex(PathIndex.Parse(objectPathData.Text).ToArray());
+            objectPathData.Text = path.MemberFullPath;
+        }
+
+        private void ObjectPathData_SelectCommand(object sender, EventArgs e)
+        {
+            using (SelectionDialog dialog = new SelectionDialog(this))
+            {
+                dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                dialog.FilterScopes.Add(ScopeType.ModelEntity);
+                dialog.FilterScopes.Add(ScopeType.ModelProcess);
+
+                dialog.BuildData(formBinding.GetObjectPaths());
+
+                if (dialog.ShowDialog(this) is DialogResult.OK)
+                { formBinding.SetObjectPaths(dialog.SelectedByNamedScope().Select(s => s.Path)); }
+            }
+        }
+
+        private void BindingDataObject_AddingNew(object sender, AddingNewEventArgs e)
+        { e.NewObject = formBinding.NewObject(); }
+
+        private void BindingDataObject_CurrentItemChanged(object sender, EventArgs e)
+        { isInModelData.Checked = formBinding.TryGetValue(out INamedScopeValue? value); }
     }
 }

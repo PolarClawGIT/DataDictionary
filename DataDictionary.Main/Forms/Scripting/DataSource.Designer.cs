@@ -35,12 +35,14 @@
             objectData = new DataGridView();
             DataObjectPathColumn = new DataGridViewTextBoxColumn();
             isInModelData = new CheckBox();
-            bindingDataSource = new BindingSource(components);
             objectPathData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            bindingDataSource = new BindingSource(components);
+            bindingDataObject = new BindingSource(components);
             dataSourceLayout = new TableLayoutPanel();
             dataSourceLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDataSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDataObject).BeginInit();
             SuspendLayout();
             // 
             // dataSourceLayout
@@ -56,11 +58,12 @@
             dataSourceLayout.Dock = DockStyle.Fill;
             dataSourceLayout.Location = new Point(0, 25);
             dataSourceLayout.Name = "dataSourceLayout";
-            dataSourceLayout.RowCount = 4;
+            dataSourceLayout.RowCount = 5;
             dataSourceLayout.RowStyles.Add(new RowStyle());
             dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             dataSourceLayout.RowStyles.Add(new RowStyle());
+            dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dataSourceLayout.Size = new Size(469, 351);
             dataSourceLayout.TabIndex = 4;
             // 
@@ -88,7 +91,7 @@
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = false;
-            descriptionData.Size = new Size(463, 69);
+            descriptionData.Size = new Size(463, 63);
             descriptionData.TabIndex = 1;
             descriptionData.WordWrap = true;
             // 
@@ -98,9 +101,9 @@
             objectData.Columns.AddRange(new DataGridViewColumn[] { DataObjectPathColumn });
             dataSourceLayout.SetColumnSpan(objectData, 2);
             objectData.Dock = DockStyle.Fill;
-            objectData.Location = new Point(3, 128);
+            objectData.Location = new Point(3, 122);
             objectData.Name = "objectData";
-            objectData.Size = new Size(463, 169);
+            objectData.Size = new Size(463, 155);
             objectData.TabIndex = 2;
             // 
             // DataObjectPathColumn
@@ -113,7 +116,7 @@
             // isInModelData
             // 
             isInModelData.AutoSize = true;
-            isInModelData.Location = new Point(393, 303);
+            isInModelData.Location = new Point(393, 283);
             isInModelData.Name = "isInModelData";
             isInModelData.Size = new Size(73, 19);
             isInModelData.TabIndex = 4;
@@ -126,12 +129,19 @@
             objectPathData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             objectPathData.Dock = DockStyle.Fill;
             objectPathData.HeaderText = "Path";
-            objectPathData.Location = new Point(3, 303);
+            objectPathData.Location = new Point(3, 283);
             objectPathData.Name = "objectPathData";
             objectPathData.ReadOnly = false;
             objectPathData.SelectIcon = Properties.Resources.XPath;
-            objectPathData.Size = new Size(384, 45);
+            objectPathData.Size = new Size(384, 44);
             objectPathData.TabIndex = 5;
+            objectPathData.Validating += ObjectPathData_Validating;
+            objectPathData.SelectCommand += ObjectPathData_SelectCommand;
+            // 
+            // bindingDataObject
+            // 
+            bindingDataObject.AddingNew += BindingDataObject_AddingNew;
+            bindingDataObject.CurrentItemChanged += BindingDataObject_CurrentItemChanged;
             // 
             // DataSource
             // 
@@ -147,6 +157,7 @@
             dataSourceLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDataSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDataObject).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -160,5 +171,6 @@
         private CheckBox isInModelData;
         private BindingSource bindingDataSource;
         private Controls.SelectTextBoxData objectPathData;
+        private BindingSource bindingDataObject;
     }
 }

@@ -104,7 +104,7 @@ namespace DataDictionary.Main.Dialogs
             BuildData(getDescription);
 
             foreach (NamedScopeIndex item in formData.
-                Where(w => selected.Contains(w.Source.Path)).
+                Where(w => selected.Contains(w.Path)).
                 Select(s => s.Index))
             { if (!Selected.Contains(item)) { Selected.Add(item); } }
         }

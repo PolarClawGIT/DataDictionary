@@ -34,27 +34,41 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Path Index of the DataPath
         /// </summary>
-        public PathIndex DataObjectPath
+        public PathIndex ObjectPath
         {
             get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(DataPath).ToArray())); }
+            { return objectPathValue; }
             set
             {
                 DataPath = value.MemberFullPath;
-                OnPropertyChanged(nameof(DataObjectPath));
+                objectPathValue = value;
+                OnPropertyChanged(nameof(ObjectPath));
+                OnPropertyChanged(nameof(DataPath));
             }
         }
+        PathIndex objectPathValue = new PathIndex();
 
-        /// <summary>
-        /// Member name of DataPath
-        /// </summary>
-        public String DataObjectMember
-        { get { return DataObjectPath.Member; } }
+        /// <inheritdoc/>
+        public override String? DataPath
+        {
+            get { return base.DataPath; }
+            set { base.DataPath = value; OnPropertyChanged(nameof(ObjectPath)); }
+        }
 
         /// <inheritdoc/>
         public DataObjectValue() : base()
+        { 
+            pathValue = InitPath();
+            objectPathValue = new PathIndex(PathIndex.Parse(DataPath).ToArray());
+        }
+
+        /// <inheritdoc/>
+        public DataObjectValue(IDataSourceIndex dataSource) : base(dataSource)
+        { pathValue = InitPath(); }
+
+        PathValue InitPath()
         {
-            pathValue = new PathValue(this)
+            return new PathValue(this)
             {
                 GetIndex = () => new DataSourceIndex(this),
                 GetPath = () =>
@@ -64,10 +78,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     else { return new PathIndex(new PathIndex(PathIndex.Parse(DataPath).ToArray())); }
                 },
                 GetScope = () => Scope,
-                GetTitle = () => DataObjectMember ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => ObjectPath.Member ?? ScopeEnumeration.Cast(Scope).Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(DataPath),
                 IsTitleChanged = (e) => e.PropertyName is nameof(DataPath)
             };
         }
+
     }
 }
