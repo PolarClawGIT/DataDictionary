@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,32 +39,36 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public PathIndex ObjectPath
-        {
+        {   // Changing the propoerty in the base class is not always caught by the OnPropertyChanged.
+            // Extra code is needed to check if the data has changed and update the backing field.  
             get
-            { return objectPathValue; }
+            {   
+                if (!objectPathValue.MemberFullPath.Equals(DataPath))
+                { objectPathValue = new PathIndex(PathIndex.Parse(DataPath).ToArray()); }
+
+                return objectPathValue;
+            }
             set
             {
                 DataPath = value.MemberFullPath;
                 objectPathValue = value;
                 OnPropertyChanged(nameof(ObjectPath));
-                OnPropertyChanged(nameof(DataPath));
             }
         }
         PathIndex objectPathValue = new PathIndex();
 
         /// <inheritdoc/>
         public override String? DataPath
-        {
+        {   
             get { return base.DataPath; }
             set { base.DataPath = value; OnPropertyChanged(nameof(ObjectPath)); }
         }
 
         /// <inheritdoc/>
         public DataObjectValue() : base()
-        { 
-            pathValue = InitPath();
-            objectPathValue = new PathIndex(PathIndex.Parse(DataPath).ToArray());
-        }
+        { pathValue = InitPath(); }
+
+
 
         /// <inheritdoc/>
         public DataObjectValue(IDataSourceIndex dataSource) : base(dataSource)
@@ -86,6 +91,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(DataPath)
             };
         }
-
     }
 }

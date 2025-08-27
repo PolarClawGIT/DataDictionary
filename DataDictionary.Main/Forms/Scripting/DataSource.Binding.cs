@@ -1,14 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -89,6 +87,20 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public void Save(DataSourceIndex dataSource, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(data.Save(factory, dataSource));
+
+                DoWork(work, onComplete);
+            }
+
+            public void Delete(DataSourceIndex dataSource)
+            { data.Delete(dataSource); }
+
             public DataSourceValue NewValue()
             {
                 DataSourceValue result = new DataSourceValue();
@@ -144,6 +156,37 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 foreach (PathIndex addItem in newValues.Except(current))
                 { DataObjects.Add(NewObject(addItem)); }
+            }
+
+            public ITemporalData GetTemporal(DataSourceIndex dataSource)
+            { return data.GetTemporal(dataSource); }
+
+            public Boolean GetAuthorization(CommandImageType command)
+            {
+                Boolean isGrant = false;
+                SecurableIndex securable = BusinessData.Model.ModelIndex;
+                isGrant = BusinessData.Authorization.IsGrant(securable);
+
+                switch (command)
+                {
+                    case CommandImageType.Default: return true;
+                    case CommandImageType.Delete: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case CommandImageType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case CommandImageType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case CommandImageType.HistoryDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    default: return false;
+                }
+            }
+
+            public Boolean GetLocked()
+            {
+                if (TryGetValue(out DataSourceValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
             }
         }
 

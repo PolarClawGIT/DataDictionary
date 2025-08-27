@@ -82,6 +82,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 objectData.DataSource = bindingDataObject;
                 objectPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataObject, nameof(IDataObjectValue.DataPath)));
                 objectPathData.ReadOnly = true;
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -96,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingDataObject_CurrentItemChanged(object sender, EventArgs e)
         {
-            if(formBinding.TryGetValue(out INamedScopeValue? value))
+            if (formBinding.TryGetValue(out INamedScopeValue? value))
             {
                 isInModelData.Checked = true;
                 objectPathData.ReadOnly = true;
@@ -131,6 +135,47 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 { formBinding.AddObjectPaths(dialog.SelectedByNamedScope().Select(s => s.Path)); }
             }
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+            formBinding.Load(dataSourceIndex, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+            formBinding.Delete(dataSourceIndex);
+            IsLocked(formBinding.GetLocked());
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+            formBinding.Save(dataSourceIndex, onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(dataSourceIndex))
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out DataSourceValue? value))
+                    { return new DataSource(value, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to DataSourceValue"); }
+                }
+            });
+
         }
     }
 }

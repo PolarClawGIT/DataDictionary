@@ -10,7 +10,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Data Object
     /// </summary>
-    public interface IDataObjectData : IBindingData<DataObjectValue>
+    public interface IDataObjectData :
+        IBindingData<DataObjectValue>,
+        IGetTemporal<IModelIndex>, IGetTemporal<IDataSourceIndex>
     { }
 
     class DataObjectData : DataObjectCollection<DataObjectValue>, IDataObjectData,
@@ -82,5 +84,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingDataObject</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(IModelIndex model)
+        {
+            return new TemporalData<DataSourceData, DataSourceValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(IDataSourceIndex dataSource)
+        {
+            return new TemporalData<DataObjectData, DataObjectValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IDataSourceKey)dataSource) };
+        }
     }
 }

@@ -14,7 +14,8 @@ namespace DataDictionary.DataLayer.AppScript
     public abstract class DataObjectCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDataSourceKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<IDataSourceKey>,
-        IRemoveItem<IDataSourceKey>
+        IRemoveItem<IDataSourceKey>,
+        IReadTemporal<IModelKey>, IReadTemporal<IDataSourceKey>
         where TItem : BindingTableRow, IDataObjectItem, new()
     {
         /// <inheritdoc/>
@@ -40,6 +41,14 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDataSourceKey key, ITemporalKey asOfUtcDate)
         { return LoadCommand(connection, dataSourceId: key.DataSourceId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IDataSourceKey key)
+        { return LoadCommand(connection, dataSourceId: key.DataSourceId, includeHistory: true); }
 
         private Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? dataSourceId = null, Guid? templateId = null,

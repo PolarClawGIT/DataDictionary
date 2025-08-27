@@ -19,6 +19,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ILoadData<ITemplateIndex>,
         ILoadData<IDataSourceIndex>, ISaveData<IDataSourceIndex>, IDeleteData<IDataSourceIndex>,
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
+        IGetTemporal<AppModel.IModelIndex>, IGetTemporal<IDataSourceIndex>,
         IBindListChanged
     {
         /// <summary>
@@ -196,6 +197,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public ITemporalData GetTemporal(IDataSourceIndex key)
+        { return sourceValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(AppModel.IModelIndex key)
+        { return sourceValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
         /// <remarks>DataSource</remarks>
         public void Remove(AppModel.IModelIndex dataKey)
         {
@@ -256,5 +265,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             return work;
         }
+
     }
 }
