@@ -4668,4 +4668,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[udttTemplateInput]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="39c1405a-78d9-47b5-ba97-aa28dd0d1282" ChangeDateTime="08/28/2025 17:21:44">
+    <Property Name="ElementName" Value="[AppScript].[funcDataObjectId]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcDataNameId]" />
+  </Operation>
 </Operations>

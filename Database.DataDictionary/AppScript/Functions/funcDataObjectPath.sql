@@ -1,5 +1,5 @@
-﻿CREATE FUNCTION [AppScript].[funcDataObjectPath](@DataObjectId UniqueIdentifier)
--- This takes the DataItemId and rebuilds them into a Data Item NameSpace.
+﻿CREATE FUNCTION [AppScript].[funcDataObjectPath](@DataNameId UniqueIdentifier)
+-- This takes the DataNameId and rebuilds them into a Data Object NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
 RETURNS [AppGeneral].[uddtNameSpacePath] as 
@@ -7,23 +7,23 @@ BEGIN
 	Declare @Result [AppGeneral].[uddtNameSpacePath] = null
 
 	;With [Data] As (
-	Select	[DataObjectId],
-			NullIf([ParentObjectId], [DataObjectId]) As [ParentObjectId],
+	Select	[DataNameId],
+			[ParentNameId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[DataMember])) As [DataNameSpace]
-	From	[AppScript].[DataObject]
-	Where	[DataObjectId] = @DataObjectId
+				FormatMessage('[%s]',[DataMember])) As [ObjectPath]
+	From	[AppScript].[DataObjectName]
+	Where	[DataNameId] = @DataNameId
 	Union All
-	Select	D.[DataObjectId],
-			NullIf(P.[ParentObjectId], D.[DataObjectId]) As [ParentObjectId],
+	Select	D.[DataNameId],
+			NullIf(P.[ParentNameId], D.[DataNameId]) As [ParentNameId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[DataMember],D.[DataNameSpace])) As [DataNameSpace]
+				FormatMessage('[%s].%s',P.[DataMember],D.[ObjectPath])) As [ObjectPath]
 	From	[Data] D
-			Inner Join [AppScript].[DataObject] P
-			On	D.[ParentObjectId] = P.[DataObjectId])
-Select	@Result = [DataNameSpace]
+			Inner Join [AppScript].[DataObjectName] P
+			On	D.[ParentNameId] = P.[DataNameId])
+Select	@Result = [ObjectPath]
 From	[Data]
-Where	[ParentObjectId] is Null
+Where	[ParentNameId] is Null
 
 Return	@Result
 END

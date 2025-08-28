@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [AppScript].[procSetDataObject]
+﻿/*
+CREATE PROCEDURE [AppScript].[procSetDataObject]
 		@ModelId UniqueIdentifier = Null,
 		@DataSourceId UniqueIdentifier = Null,
 		@Data [AppScript].[udttDataObject] ReadOnly
@@ -131,3 +132,4 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
+*/

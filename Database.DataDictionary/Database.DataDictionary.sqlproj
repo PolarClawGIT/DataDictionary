@@ -497,8 +497,6 @@
     <Build Include="AppScript\Views\Template.Hs.sql" />
     <Build Include="AppScript\Views\TemplateAttribute.Hs.sql" />
     <Build Include="AppScript\Triggers\trigScriptingNameSpace.sql" />
-    <Build Include="AppScript\Functions\funcNameSpaceId.sql" />
-    <Build Include="AppScript\Functions\funcNameSpace.sql" />
     <Build Include="AppSecurity\Functions\funcScriptingAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyScripting.sql" />
     <Build Include="AppGeneral\Functions\funcParseName.sql" />
@@ -511,7 +509,7 @@
     <Build Include="AppScript\Triggers\trigDataObject.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDataSource.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDataObject.sql" />
-    <Build Include="AppScript\Functions\funcDataObjectId.sql" />
+    <Build Include="AppScript\Functions\funcDataNameId.sql" />
     <Build Include="AppScript\Functions\funcDataObjectPath.sql" />
     <Build Include="AppScript\Views\DataSource.Hs.sql" />
     <Build Include="AppScript\Views\DataObject.Hs.sql" />
@@ -536,6 +534,10 @@
     <Build Include="AppScript\Views\TemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateElement.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateElement.sql" />
+    <Build Include="AppScript\Tables\DataObjectName.sql" />
+    <Build Include="AppScript\Triggers\trigDataObjectName.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDataObjectName.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttDataObjectName.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
