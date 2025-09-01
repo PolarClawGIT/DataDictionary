@@ -4675,4 +4675,39 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[funcDataNameId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="ecf4fbc3-d26a-437c-aabf-7eda26afc0dc" ChangeDateTime="09/01/2025 14:34:01">
+    <Property Name="ElementName" Value="[AppScript].[DataObjectName].[DataNameId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObjectName]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ObjectNameId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1ef51e01-a0dd-47e0-934c-3e2ab46c6ecb" ChangeDateTime="09/01/2025 14:37:38">
+    <Property Name="ElementName" Value="[AppScript].[funcDataNameId]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcObjectNameId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6091d730-176e-4e4d-878d-bc3876b1c6d4" ChangeDateTime="09/01/2025 14:38:05">
+    <Property Name="ElementName" Value="[AppScript].[funcDataObjectPath]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcObjectPath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d650e043-e0e4-49db-b7c2-f0f41cc84c7e" ChangeDateTime="09/01/2025 14:40:17">
+    <Property Name="ElementName" Value="[AppScript].[DataObjectName].[DataMember]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObjectName]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ObjectMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="74fa554d-213e-46d0-b232-6dc301ec548d" ChangeDateTime="09/01/2025 14:46:23">
+    <Property Name="ElementName" Value="[AppScript].[DataObject].[DataNameId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ObjectNameId]" />
+  </Operation>
 </Operations>

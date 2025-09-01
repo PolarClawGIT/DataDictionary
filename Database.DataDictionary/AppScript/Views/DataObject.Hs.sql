@@ -1,23 +1,23 @@
 ﻿CREATE VIEW [AppScript].[DataObjectHs]As
 -- Temporal View
 With [Data] As (
-	Select	[DataNameId],
+	Select	[ObjectNameId],
 			[ParentNameId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[DataMember])) As [ObjectPath],
+				FormatMessage('[%s]',[ObjectMember])) As [ObjectPath],
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[DataObjectName]
 	Union All
-	Select	D.[DataNameId],
-			NullIf(P.[ParentNameId], D.[DataNameId]) As [ParentNameId],
+	Select	D.[ObjectNameId],
+			NullIf(P.[ParentNameId], D.[ObjectNameId]) As [ParentNameId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[DataMember],D.[ObjectPath])) As [ObjectPath],
+				FormatMessage('[%s].%s',P.[ObjectMember],D.[ObjectPath])) As [ObjectPath],
 			Greatest(D.[SysStart], P.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], P.[SysEnd]) As [SysEnd]
 	From	[Data] D
 			Inner Join [AppScript].[DataObjectName] P
-			On	D.[ParentNameId] = P.[DataNameId] And
+			On	D.[ParentNameId] = P.[ObjectNameId] And
 				-- Temporal, multiple rows could be returned. Do not have confidence in this.
 				((D.[SysStart] >= P.[SysStart] And D.[SysStart] < P.[SysEnd]) Or
 				 (P.[SysStart] >= D.[SysStart] And P.[SysStart] < P.[SysEnd]))),
@@ -49,7 +49,7 @@ Select	D.[DataSourceId],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[DataObject] D
 		Inner Join [Data] H
-		On	D.[DataNameId] = H.[DataNameId] And
+		On	D.[ObjectNameId] = H.[ObjectNameId] And
 			H.[ParentNameId] is Null And
 			-- Temporal, multiple rows could be returned. Do not have confidence in this.
 			((D.[SysStart] >= H.[SysStart] And D.[SysStart] < D.[SysEnd]) Or

@@ -509,8 +509,8 @@
     <Build Include="AppScript\Triggers\trigDataObject.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDataSource.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDataObject.sql" />
-    <Build Include="AppScript\Functions\funcDataNameId.sql" />
-    <Build Include="AppScript\Functions\funcDataObjectPath.sql" />
+    <Build Include="AppScript\Functions\funcObjectNameId.sql" />
+    <Build Include="AppScript\Functions\funcObjectPath.sql" />
     <Build Include="AppScript\Views\DataSource.Hs.sql" />
     <Build Include="AppScript\Views\DataObject.Hs.sql" />
     <Build Include="AppScript\Views\TemplateInput.Hs.sql" />

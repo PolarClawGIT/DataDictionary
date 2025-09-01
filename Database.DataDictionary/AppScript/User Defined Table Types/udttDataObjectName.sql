@@ -1,6 +1,6 @@
 ﻿CREATE TYPE [AppScript].[udttDataObjectName] AS TABLE
 (
-	[DataSourceId]			UniqueIdentifier Not Null,
+	[DataSourceId]			UniqueIdentifier Null,
 	[ObjectPath]			[AppGeneral].[uddtNameSpacePath] Null
 	-- Temporal Data (not needed, internal only)
 	/*[CreatedOn]             DateTime2 (7) Null,
