@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Path Index of the DataPath
         /// </summary>
-        PathIndex ObjectPath { get; set; }
+        new PathIndex ObjectPath { get; set; }
     }
 
     /// <inheritdoc/>
@@ -38,37 +38,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
         /// <inheritdoc/>
-        public PathIndex ObjectPath
+        public new PathIndex ObjectPath
         {   // Changing the propoerty in the base class is not always caught by the OnPropertyChanged.
             // Extra code is needed to check if the data has changed and update the backing field.  
             get
-            {   
-                if (!objectPathValue.MemberFullPath.Equals(DataPath))
-                { objectPathValue = new PathIndex(PathIndex.Parse(DataPath).ToArray()); }
+            {
+                if (!objectPathValue.MemberFullPath.Equals(base.ObjectPath))
+                { objectPathValue = new PathIndex(PathIndex.Parse(base.ObjectPath).ToArray()); }
 
                 return objectPathValue;
             }
             set
-            {
-                DataPath = value.MemberFullPath;
-                objectPathValue = value;
-                OnPropertyChanged(nameof(ObjectPath));
+            { 
+                base.ObjectPath = value.MemberFullPath;
+                objectPathValue.Set(value);
+                OnPropertyChanged(nameof(base.ObjectPath));
             }
         }
         PathIndex objectPathValue = new PathIndex();
 
         /// <inheritdoc/>
-        public override String? DataPath
-        {   
-            get { return base.DataPath; }
-            set { base.DataPath = value; OnPropertyChanged(nameof(ObjectPath)); }
-        }
-
-        /// <inheritdoc/>
         public DataObjectValue() : base()
         { pathValue = InitPath(); }
-
-
 
         /// <inheritdoc/>
         public DataObjectValue(IDataSourceIndex dataSource) : base(dataSource)
@@ -79,16 +70,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return new PathValue(this)
             {
                 GetIndex = () => new DataSourceIndex(this),
-                GetPath = () =>
-                {
-                    if (String.IsNullOrWhiteSpace(DataPath))
-                    { return new PathIndex(DataPath); }
-                    else { return new PathIndex(new PathIndex(PathIndex.Parse(DataPath).ToArray())); }
-                },
+                GetPath = () => ObjectPath,
                 GetScope = () => Scope,
                 GetTitle = () => ObjectPath.Member ?? ScopeEnumeration.Cast(Scope).Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(DataPath),
-                IsTitleChanged = (e) => e.PropertyName is nameof(DataPath)
+                IsPathChanged = (e) => e.PropertyName is nameof(ObjectPath),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ObjectPath)
             };
         }
     }

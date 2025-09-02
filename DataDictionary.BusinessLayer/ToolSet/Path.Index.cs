@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <example>
         /// var x new PathIndex(PathIndex.Parse(sourceString).ToArray())
         /// </example>
-        public PathIndex(params String?[] source)
+        public PathIndex(params String?[] source): this()
         {
             foreach (String? item in source)
             {
@@ -117,10 +117,23 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version allows multiple paths to be combined.</remarks>
-        public PathIndex(params IPathItem[] source)
+        public PathIndex(params IPathItem[] source) : this()
         {
             foreach (PathIndex item in source)
             { pathParts.AddRange(item.pathParts); }
+        }
+
+        /// <summary>
+        /// Constructor for a Path
+        /// </summary>
+        /// <param name="source"></param>
+        public PathIndex(IEnumerable<String?> source) : this()
+        {
+            foreach (String? item in source)
+            {
+                if (!String.IsNullOrWhiteSpace(item))
+                { pathParts.Add(String.Join(".", Parse(item).Select(s => s))); }
+            }
         }
 
         /// <summary>
@@ -477,6 +490,21 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <returns></returns>
         public Boolean ParentOf(PathIndex child)
         { return child.pathParts.Take(pathParts.Count).SequenceEqual(pathParts); }
+
+        /// <summary>
+        /// Sets the PathIndex to the value of passed.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>
+        /// Instead of creating a new instance of PathIndex,
+        /// this sets the existing instance to the contents of the value passed.
+        /// The result is object.ReferenceEquals does not change and the object is mutable.
+        /// </remarks>
+        public void Set(PathIndex source)
+        {
+            pathParts.Clear();
+            pathParts.AddRange(source.pathParts);
+        }
 
         /// <inheritdoc/>
         public override String ToString()

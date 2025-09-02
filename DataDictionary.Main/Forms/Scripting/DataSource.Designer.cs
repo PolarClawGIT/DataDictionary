@@ -34,7 +34,6 @@
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             objectData = new DataGridView();
-            DataObjectPathColumn = new DataGridViewTextBoxColumn();
             isInModelData = new CheckBox();
             objectPathData = new DataDictionary.Main.Controls.TextBoxData();
             objectTitleData = new DataDictionary.Main.Controls.TextBoxData();
@@ -43,6 +42,7 @@
             newObjectCommand = new Button();
             bindingDataSource = new BindingSource(components);
             bindingDataObject = new BindingSource(components);
+            DataObjectPathColumn = new DataGridViewTextBoxColumn();
             dataSourceLayout = new TableLayoutPanel();
             objectCommandLayout = new TableLayoutPanel();
             dataSourceLayout.SuspendLayout();
@@ -119,14 +119,6 @@
             objectData.Size = new Size(463, 198);
             objectData.TabIndex = 2;
             // 
-            // DataObjectPathColumn
-            // 
-            DataObjectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            DataObjectPathColumn.DataPropertyName = "DataPath";
-            DataObjectPathColumn.HeaderText = "Path";
-            DataObjectPathColumn.Name = "DataObjectPathColumn";
-            DataObjectPathColumn.ReadOnly = true;
-            // 
             // isInModelData
             // 
             isInModelData.AutoSize = true;
@@ -149,7 +141,6 @@
             objectPathData.Size = new Size(337, 44);
             objectPathData.TabIndex = 6;
             objectPathData.WordWrap = true;
-            objectPathData.Validating += ObjectPathData_Validating;
             // 
             // objectTitleData
             // 
@@ -221,6 +212,14 @@
             // 
             bindingDataObject.AddingNew += BindingDataObject_AddingNew;
             bindingDataObject.CurrentItemChanged += BindingDataObject_CurrentItemChanged;
+            // 
+            // DataObjectPathColumn
+            // 
+            DataObjectPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DataObjectPathColumn.DataPropertyName = "ObjectPath";
+            DataObjectPathColumn.HeaderText = "Path";
+            DataObjectPathColumn.Name = "DataObjectPathColumn";
+            DataObjectPathColumn.ReadOnly = true;
             // 
             // DataSource
             // 

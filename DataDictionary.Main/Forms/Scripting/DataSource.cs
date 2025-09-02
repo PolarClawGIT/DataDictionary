@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -80,19 +81,21 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 objectData.AutoGenerateColumns = false;
                 objectData.DataSource = bindingDataObject;
-                objectPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDataObject, nameof(IDataObjectValue.DataPath)));
+
+                objectPathData.DataBindings.Add(
+                    new Binding(nameof(TextBox.Text),
+                    bindingDataObject,
+                    nameof(IDataObjectValue.ObjectPath))
+                    .WithParse<PathIndex, String>(
+                        (p) => p.MemberFullPath,
+                        (s) => new PathIndex(PathIndex.Parse(s))));
+
                 objectPathData.ReadOnly = true;
 
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
             }
-        }
-
-        private void ObjectPathData_Validating(object sender, CancelEventArgs e)
-        {
-            PathIndex path = new PathIndex(PathIndex.Parse(objectPathData.Text).ToArray());
-            objectPathData.Text = path.MemberFullPath;
         }
 
         private void BindingDataObject_AddingNew(object sender, AddingNewEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.Resource.Enumerations;
+using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
@@ -13,7 +14,12 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// The NameSpace Path of the Data Object.
         /// </summary>
-        String? DataPath { get; }
+        String? ObjectPath { get; }
+
+        /// <summary>
+        /// Application Scope of the Alias.
+        /// </summary>
+        ScopeType ObjectScope { get; }
     }
 
     /// <summary>
@@ -30,10 +36,27 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public virtual String? DataPath
+        public ScopeType ObjectScope
         {
-            get { return GetValue(nameof(DataPath)); }
-            set { SetValue(nameof(DataPath), value); }
+            get
+            {
+                String value = GetValue(nameof(ObjectScope)) ?? String.Empty;
+                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                { return result.Value; }
+                else { return ScopeType.Null; }
+            }
+            set
+            {
+                if (value is ScopeType.Null) { SetValue(nameof(ObjectScope), null); }
+                else { SetValue(nameof(ObjectScope), ScopeEnumeration.Cast(value).Name); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public virtual String? ObjectPath
+        {
+            get { return GetValue(nameof(ObjectPath)); }
+            set { SetValue(nameof(ObjectPath), value); }
         }
 
         /// <inheritdoc/>
@@ -62,7 +85,7 @@ namespace DataDictionary.DataLayer.AppScript
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(DataPath), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectPath), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 
@@ -90,7 +113,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (DataPath is String) { return DataPath; }
+            if (ObjectPath is String) { return ObjectPath; }
             else { return String.Empty; }
         }
     }
