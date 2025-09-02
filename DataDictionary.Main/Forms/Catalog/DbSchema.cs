@@ -54,10 +54,9 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbSchema_Load(object sender, EventArgs e)
         {
-            ISchemaValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingSchema, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingSchema, nameof(bindingNames.SchemaName)));
-            isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), bindingSchema, nameof(bindingNames.IsSystem)));
+            catalogNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaValue.SchemaName)));
+            isSystemData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingSchema, nameof(ISchemaValue.IsSystem)));
             errorProvider.SetError(schemaNameData.ErrorControl, String.Empty);
 
             extendedPropertiesData.AutoGenerateColumns = false;

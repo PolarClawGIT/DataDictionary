@@ -325,18 +325,6 @@
         ScriptingTemplate,
 
         /// <summary>
-        /// Scripting Template Path
-        /// </summary>
-        [Obsolete]
-        ScriptingTemplatePath,
-
-        /// <summary>
-        /// Scripting Template Node
-        /// </summary>
-        [Obsolete]
-        ScriptingTemplateNode,
-
-        /// <summary>
         /// Scripting Template Attribute
         /// </summary>
         ScriptingTemplateAttribute,

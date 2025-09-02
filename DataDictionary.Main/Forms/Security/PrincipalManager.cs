@@ -60,9 +60,9 @@ namespace DataDictionary.Main.Forms.Security
                 ownershipData.DataSource = bindingOwnership;
                 principalData.Sort(principalNameColumn, ListSortDirection.Descending);
 
-                principalLoginData.DataBindings.Add(new Binding(nameof(principalLoginData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
-                principalNameData.DataBindings.Add(new Binding(nameof(principalNameData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
-                principalAnnotationData.DataBindings.Add(new Binding(nameof(principalAnnotationData.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalAnnotation), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalLoginData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalLogin), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalName), false, DataSourceUpdateMode.OnPropertyChanged));
+                principalAnnotationData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingPrincipal, nameof(IPrincipalValue.PrincipalAnnotation), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 RoleNameList.Load(roleIdColumn, securityData.Roles);
 

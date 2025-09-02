@@ -3,7 +3,8 @@
     /// <summary>  
     /// Static class containing constants related to the Scripting Path database operations.  
     /// </summary>  
-     static class ScriptingPath
+    [Obsolete("replace", true)]
+    static class ScriptingPath
     {
         /// <summary>  
         /// The stored procedure used to retrieve the scripting path.  

@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class ProcessValue : ProcessItem, IProcessValue, IPathValue, INamedScopeSourceValue
+    public partial class ProcessValue : ProcessItem, IProcessValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

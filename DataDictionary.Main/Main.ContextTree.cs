@@ -96,41 +96,56 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(memberItem));
         }
 
-        void OpenForm(AttributeValue attributeItem)
+        void OpenForm(IAttributeValue attributeItem)
         {
             Activate(
                 () => new Forms.Model.Attribute(attributeItem),
                 (form) => form.IsOpenItem(attributeItem));
         }
 
-        void OpenForm(EntityValue entityItem)
+        void OpenForm(IEntityValue entityItem)
         {
             Activate(
                 () => new Forms.Model.Entity(entityItem),
                 (form) => form.IsOpenItem(entityItem));
         }
 
-        void OpenForm(ProcessValue processItem)
+        void OpenForm(IProcessValue processItem)
         {
             Activate(
                 () => new Forms.Model.Process(processItem),
                 (form) => form.IsOpenItem(processItem));
         }
 
-        void OpenForm(SubjectAreaValue subjectItem)
+        void OpenForm(ISubjectAreaValue subjectItem)
         {
             Activate(
                 () => new Forms.Model.SubjectArea(subjectItem),
                 (form) => form.IsOpenItem(subjectItem));
         }
 
-        void OpenForm(ModelValue modelItem)
+        void OpenForm(IModelValue modelItem)
         {
             Activate(
                 () => new Forms.Model.Model(modelItem),
                 (form) => form.IsOpenItem(modelItem));
         }
 
+        void OpenForm(ITemplateValue template)
+        {
+            Activate(
+                () => new Forms.Scripting.Template(template),
+                (form) => form.IsOpenItem(template));
+        }
+
+        void OpenForm(IDataSourceValue dataSource)
+        {
+            Activate(
+                () => new Forms.Scripting.DataSource(dataSource),
+                (form) => form.IsOpenItem(dataSource));
+        }
+
+        [Obsolete("replace", true)]
         void OpenForm(ScriptingTemplateValue templateValue)
         {
             Activate(

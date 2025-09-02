@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class EntityDefinitionValue : EntityDefinitionItem, IEntityDefinitionValue
+    public partial class EntityDefinitionValue : EntityDefinitionItem, IEntityDefinitionValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntityDefinition; } }

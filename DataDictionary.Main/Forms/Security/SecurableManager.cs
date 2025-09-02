@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Security
                 RoleNameList.Load(roleIdColumn, securityData.Roles);
                 PrincipalLoginList.Load(principalIdColumn, securityData.Principals);
 
-                securableTitleData.DataBindings.Add(new Binding(nameof(securableTitleData.Text), bindingSecurable, nameof(ISecurableValue.SecurableTitle)));
+                securableTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSecurable, nameof(ISecurableValue.SecurableTitle)));
                 securablePermissionData.DataSource = bindingPermissions;
                 securableOwnerData.DataSource = bindingOwner;
 

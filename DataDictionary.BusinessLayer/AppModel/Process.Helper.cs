@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<WorkItem> work = new List<WorkItem>();
             String workName = "Adding NamedScopes (Processes)";
 
-            foreach (ProcessValue item in data.Values)
+            foreach (ProcessValue item in data.Processes)
             {
                 Boolean hasParent = false;
 
@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             {
                 ProcessIndex key = new ProcessIndex(index);
 
-                return data.Values.
+                return data.Processes.
                     Where(w => key.Equals(w)).
                     Join(data.SubjectArea,
                         Process => new ProcessIndex(Process),

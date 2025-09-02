@@ -12,6 +12,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class DataSourceIndex : DataSourceKey, IDataSourceIndex,
         IKeyEquality<IDataSourceIndex>, IKeyEquality<DataSourceIndex>
     {
+        /// <inheritdoc cref="DataSourceKey()"/>
+        public DataSourceIndex() : base()
+        { }
+
         /// <inheritdoc cref="DataSourceKey(IDataSourceKey)"/>
         public DataSourceIndex(IDataSourceIndex source) : base(source)
         { }

@@ -13,18 +13,30 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>  
     public interface IAttributeDefinitionData : IBindingData<AttributeDefinitionValue>
     {
-        /// <summary>  
-        /// Delegate to attempt retrieving a definition based on a key.  
-        /// </summary>  
-        TryGetDefinition TryGetDefinition { get; }
+        /// <summary>
+        /// Get the Definition Value for the given Attribute.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="definition"></param>
+        /// <returns></returns>
+        Boolean TryGetDefinition(IAttributeIndex value, out IDefinitionValue? definition);
     }
 
-    class AttributeDefinitionData(IDefinitionGetValue definition) : AttributeDefinitionCollection<AttributeDefinitionValue>(), IAttributeDefinitionData,
+    class AttributeDefinitionData(TryGetValue<IDefinitionIndex, IDefinitionValue> getDefinition) : 
+        AttributeDefinitionCollection<AttributeDefinitionValue>(), IAttributeDefinitionData,
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        TryGetValue<IDefinitionIndex, IDefinitionValue> tryGetDefinition = getDefinition;
+
         /// <inheritdoc/>
-        public TryGetDefinition TryGetDefinition { get; init; } = definition.TryGetValue;
+        public Boolean TryGetDefinition(IAttributeIndex value, out IDefinitionValue? definition)
+        {
+            AttributeIndex key = new AttributeIndex(value);
+            if (this.FirstOrDefault(w => key.Equals(w)) is IAttributeDefinitionValue attribute)
+            { return tryGetDefinition(attribute, out definition); }
+            else { definition = null; return false; }
+        }
 
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>

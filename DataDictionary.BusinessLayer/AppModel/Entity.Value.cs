@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class EntityValue : EntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
+    public partial class EntityValue : EntityItem, IEntityValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 

@@ -3,6 +3,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppModel
@@ -12,7 +13,8 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// </summary>
     public interface IAttributeData :
         IBindingData<AttributeValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<IAttributeIndex>
+        IGetTemporal<IModelIndex>, IGetTemporal<IAttributeIndex>,
+        ITryGetValue<IAttributeIndex, IAttributeValue>
     { }
 
     class AttributeData : AttributeCollection<AttributeValue>, IAttributeData,
@@ -95,5 +97,16 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <remarks>Attribute</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/> 
+        /// <remarks>Attribute</remarks>
+        public Boolean TryGetValue(IAttributeIndex index, [NotNullWhen(true)] out IAttributeValue? value)
+        {
+            AttributeIndex key = new AttributeIndex(index);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is IAttributeValue attribute)
+            { value = attribute; return true; }
+            else { value = null; return false; }
+        }
     }
 }

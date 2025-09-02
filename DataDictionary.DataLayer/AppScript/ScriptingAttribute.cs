@@ -3,6 +3,7 @@
     /// <summary>  
     /// Static class containing constants related to the Scripting Attribute database operations.  
     /// </summary>  
+    [Obsolete("replace",true)]
     static class ScriptingAttribute
     {
         /// <summary>  

@@ -70,9 +70,9 @@ namespace DataDictionary.Main.Forms.Model
         private void DomainSubjectArea_Load(object sender, EventArgs e)
         {
             ISubjectAreaValue bindingNames;
-            subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), bindingSubject, nameof(bindingNames.SubjectAreaTitle)));
-            subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), bindingSubject, nameof(bindingNames.SubjectAreaDescription)));
-            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingSubject, nameof(bindingNames.SubjectName)));
+            subjectAreaTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSubject, nameof(bindingNames.SubjectAreaTitle)));
+            subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSubject, nameof(bindingNames.SubjectAreaDescription)));
+            memberNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSubject, nameof(bindingNames.SubjectName)));
 
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;

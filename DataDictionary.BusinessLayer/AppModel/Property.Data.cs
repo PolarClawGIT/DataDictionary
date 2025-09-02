@@ -12,51 +12,14 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppModel
 {
     /// <summary>
-    /// Interface for retrieving property values.
-    /// </summary>
-    public interface IPropertyGetValue
-    {
-        /// <summary>
-        /// Attempts to retrieve a Property value based on the specified property index.
-        /// </summary>
-        /// <param name="propertyIndex">The index of the property to retrieve.</param>
-        /// <param name="propertyValue">The retrieved property value, or null if not found.</param>
-        /// <returns>True if the property value was found; otherwise, false.</returns>
-        Boolean TryGetValue(IPropertyIndex propertyIndex, [NotNullWhen(true)] out IPropertyValue? propertyValue);
-
-        /// <summary>
-        /// Attempts to retrieve a Property value based on the specified property index.
-        /// </summary>
-        /// <param name="propertyIndex"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException">If the index cannot be found.</exception>
-        IPropertyValue GetValue(IPropertyIndex propertyIndex);
-
-        /// <summary>
-        /// Attempts to retrieve a Property value based on the specified Catalog Property.
-        /// </summary>
-        /// <param name="catalogProperty"></param>
-        /// <param name="propertyValue"></param>
-        /// <returns></returns>
-        Boolean TryGetValue(AppCatalog.IPropertyValue catalogProperty, [NotNullWhen(true)] out IPropertyValue? propertyValue);
-
-        /// <summary>
-        /// Attempts to retrieve a Property value based on the specified Catalog Property.
-        /// </summary>
-        /// <param name="catalogProperty"></param>
-        /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException">If the index cannot be found.</exception>
-        IPropertyValue GetValue(AppCatalog.IPropertyValue catalogProperty);
-    }
-
-    /// <summary>
     /// Interface component for the Property data
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IPropertyData :
         IBindingData<PropertyValue>,
         ILoadData, ILoadData<IPropertyIndex>, ISaveData<IPropertyIndex>,
-        IPropertyGetValue
+        ITryGetValue<IPropertyIndex, IPropertyValue>,
+        ITryGetValue<AppCatalog.IPropertyValue, IPropertyValue>
     { }
 
     /// <inheritdoc/>
@@ -149,19 +112,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         }
 
         /// <inheritdoc/>
-        public IPropertyValue GetValue(IPropertyIndex propertyIndex)
-        {
-            if (TryGetValue(propertyIndex, out IPropertyValue? propertyValue))
-            { return propertyValue; }
-            else
-            {
-                Exception ex = new IndexOutOfRangeException();
-                ex.Data.Add(nameof(propertyIndex), propertyIndex);
-                throw ex;
-            }
-        }
-
-        /// <inheritdoc/>
         public Boolean TryGetValue(AppCatalog.IPropertyValue catalogProperty, [NotNullWhen(true)] out IPropertyValue? propertyValue)
         {
             if (this.FirstOrDefault(w =>
@@ -170,21 +120,5 @@ namespace DataDictionary.BusinessLayer.AppModel
             { propertyValue = result; return true; }
             else { propertyValue = null; return false; }
         }
-
-
-        /// <inheritdoc/>
-        public IPropertyValue GetValue(AppCatalog.IPropertyValue catalogProperty)
-        {
-            if (TryGetValue(catalogProperty, out IPropertyValue? propertyValue))
-            { return propertyValue; }
-            else
-            {
-                Exception ex = new IndexOutOfRangeException();
-                ex.Data.Add(nameof(catalogProperty), catalogProperty);
-                throw ex;
-            }
-        }
-
-        
     }
 }

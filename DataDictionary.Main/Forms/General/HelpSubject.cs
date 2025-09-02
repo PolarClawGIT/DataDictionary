@@ -92,10 +92,10 @@ namespace DataDictionary.Main.Forms.General
 
             void DoBinding()
             {
-                helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
-                helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
-                helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
+                helpSubjectData.DataBindings.Add(new Binding(nameof(TextBox.Text), helpBinding, nameof(HelpSubjectValue.HelpSubject), false, DataSourceUpdateMode.OnValidation));
+                helpNameSpaceData.DataBindings.Add(new Binding(nameof(TextBox.Text), helpBinding, nameof(HelpSubjectValue.NameSpace), false, DataSourceUpdateMode.OnValidation));
+                helpToolTipData.DataBindings.Add(new Binding(nameof(TextBox.Text), helpBinding, nameof(HelpSubjectValue.HelpToolTip), false, DataSourceUpdateMode.OnValidation));
+                helpTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), helpBinding, nameof(HelpSubjectValue.HelpText), false, DataSourceUpdateMode.OnValidation));
 
                 SetAuthorization(formBinding.GetAuthorization);
             }

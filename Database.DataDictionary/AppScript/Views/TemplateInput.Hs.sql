@@ -1,19 +1,23 @@
-﻿CREATE VIEW [AppScript].[TemplateDataHs] As
+﻿CREATE VIEW [AppScript].[TemplateInputHs] As
 -- Temporal View
--- Template Data (M:N for Template and DataSource) only has meaning within a Model.
+-- Template Input Data (M:N for Template and DataSource) only has meaning within a Model.
 With [Dates] As (
 	Select	IsNull([TemplateId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [TemplateId],
 			IsNull([DataSourceId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [DataSourceId],
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[ScriptingModel]
+	Where	[TemplateId] is not null And
+			[DataSourceId] is not null
 	/*Union -- TODO: Temporal not yet implemented
 	Select	IsNull([TemplateId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [TemplateId],
 			IsNull([DataSourceId], CAST(0x0 AS UNIQUEIDENTIFIER)) As [DataSourceId],
 			[SysStart],
 			[SysEnd]
 	From	[HsScript].[ScriptingModel]
-	Where	[SysStart] != [SysEnd]*/)
+	Where	[SysStart] != [SysEnd] And
+			[TemplateId] is not null And
+			[DataSourceId] is not null*/)
 Select	D.[ModelId],
 		D.[TemplateId],
 		D.[DataSourceId],
@@ -66,4 +70,6 @@ From	[AppScript].[ScriptingModel] D
 			Where	[DataSourceId] = D.[DataSourceId] And
 					[SysStart] <= D.[SysEnd]
 			Order By [SysStart] Desc) FD
+	Where	D.[TemplateId] is not null And
+			D.[DataSourceId] is not null
 GO

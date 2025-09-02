@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// List of Entities within the Model.
         /// </summary>
-        IProcessData Values { get; }
+        IProcessData Processes { get; }
 
         /// <summary>
         /// List of Aliases for the Entities within the Model.
@@ -63,10 +63,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new Process(); }
     }
 
-    class Process : IProcess, IDataTableFile
+    partial class Process : IProcess, IDataTableFile
     {
         /// <inheritdoc/>
-        public IProcessData Values { get { return ProcessValues; } }
+        public IProcessData Processes { get { return ProcessValues; } }
         private readonly ProcessData ProcessValues;
 
         /// <inheritdoc/>

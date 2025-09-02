@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateKey : IKey
     {
         /// <summary>
@@ -16,6 +17,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation of the Primary Key of the Scripting Template.
     /// </summary>
+    [Obsolete("replace", true)]
     public class ScriptingTemplateKey : IScriptingTemplateKey,
         IKeyEquality<IScriptingTemplateKey>, IKeyEquality<ScriptingTemplateKey>
     {

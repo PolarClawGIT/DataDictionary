@@ -65,12 +65,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbRoutine_Load(object sender, EventArgs e)
         {
-            IRoutineValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingRoutine, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingRoutine, nameof(bindingNames.SchemaName)));
-            routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), bindingRoutine, nameof(bindingNames.RoutineName)));
-            routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), bindingRoutine, nameof(bindingNames.RoutineType)));
-            isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), bindingRoutine, nameof(bindingNames.IsSystem)));
+            catalogNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRoutine, nameof(IRoutineValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRoutine, nameof(IRoutineValue.SchemaName)));
+            routineNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRoutine, nameof(IRoutineValue.RoutineName)));
+            routineTypeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRoutine, nameof(IRoutineValue.RoutineType)));
+            isSystemData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRoutine, nameof(IRoutineValue.IsSystem)));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;

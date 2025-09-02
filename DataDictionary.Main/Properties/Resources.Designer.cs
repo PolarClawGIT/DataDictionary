@@ -403,6 +403,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeleteXMLDescendant {
+            get {
+                object obj = ResourceManager.GetObject("DeleteXMLDescendant", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeleteXmlFile {
             get {
                 object obj = ResourceManager.GetObject("DeleteXmlFile", resourceCulture);
@@ -1113,6 +1123,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_XMLDescendant {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLDescendant", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_XMLElement {
             get {
                 object obj = ResourceManager.GetObject("Icon_XMLElement", resourceCulture);
@@ -1123,9 +1143,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Icon_XmlFile {
+        internal static System.Drawing.Icon Icon_XMLFile {
             get {
-                object obj = ResourceManager.GetObject("Icon_XmlFile", resourceCulture);
+                object obj = ResourceManager.GetObject("Icon_XMLFile", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -1473,6 +1493,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewXMLDescendant {
+            get {
+                object obj = ResourceManager.GetObject("NewXMLDescendant", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewXmlFile {
             get {
                 object obj = ResourceManager.GetObject("NewXmlFile", resourceCulture);
@@ -1556,6 +1586,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap OpenTable {
             get {
                 object obj = ResourceManager.GetObject("OpenTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap OpenXMLFile {
+            get {
+                object obj = ResourceManager.GetObject("OpenXMLFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1943,6 +1983,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SelectXMLDescendant {
+            get {
+                object obj = ResourceManager.GetObject("SelectXMLDescendant", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SelectXPath {
             get {
                 object obj = ResourceManager.GetObject("SelectXPath", resourceCulture);
@@ -2203,6 +2253,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap XMLDescendant {
+            get {
+                object obj = ResourceManager.GetObject("XMLDescendant", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap XMLElement {
             get {
                 object obj = ResourceManager.GetObject("XMLElement", resourceCulture);
@@ -2213,9 +2273,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap XmlFile {
+        internal static System.Drawing.Bitmap XMLFile {
             get {
-                object obj = ResourceManager.GetObject("XmlFile", resourceCulture);
+                object obj = ResourceManager.GetObject("XMLFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

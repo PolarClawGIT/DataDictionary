@@ -48,7 +48,7 @@ namespace DataDictionary.Main.Forms.Model
 
             AttributeIndex attributeIndex = new AttributeIndex();
             TemporalIndex? temporalIndex = null;
-            IAttribute attributeData = BusinessData.Model.Attributes;
+            IAttribute attributeData = BusinessData.Model.Attribute;
 
             public FormBinding()
             { }
@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 // Note: C# 13 adds "field".
 
-                Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
+                Attribute = new BindingView<AttributeValue>(attributeData.Attributes, w => attributeIndex.Equals(w));
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
                 Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
                 SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Attribute = new BindingView<AttributeValue>(attributeData.Values, w => attributeIndex.Equals(w));
+                Attribute = new BindingView<AttributeValue>(attributeData.Attributes, w => attributeIndex.Equals(w));
                 Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
                 Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
                 SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
@@ -147,7 +147,7 @@ namespace DataDictionary.Main.Forms.Model
             public AttributeValue NewValue()
             {
                 AttributeValue newValue = new AttributeValue();
-                attributeData.Values.Add(newValue);
+                attributeData.Attributes.Add(newValue);
                 SetPosition(newValue);
 
                 return newValue;
@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (temporalIndex is null)
                 {
-                    attributeData = BusinessData.Model.Attributes;
+                    attributeData = BusinessData.Model.Attribute;
                     work.AddRange(attributeData.Delete(attributeIndex));
                     work.AddRange(attributeData.Load(factory, attributeIndex));
                 }
@@ -278,11 +278,11 @@ namespace DataDictionary.Main.Forms.Model
 
             public XElement GetXElement()
             {
-                AttributeValue attributeValue = attributeData.Values.First();
+                AttributeValue attributeValue = attributeData.Attributes.First();
 
-                XElement result = AttributeValue.CreateXElementBuilders().Build(attributeValue);
-                result.Add(AttributePropertyValue.CreateXElementBuilders(BusinessData.Model.Properties).Build(attributeData.Properties));
-                result.Add(AttributeDefinitionValue.CreateXElementBuilders(BusinessData.Model.Definitions).Build(attributeData.Definitions));
+                XElement result = AttributeValue.CreateXElements().Build(attributeValue);
+                result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(attributeData.Properties));
+                result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(attributeData.Definitions));
 
                 return result;
             }

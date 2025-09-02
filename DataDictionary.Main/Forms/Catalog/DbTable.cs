@@ -78,12 +78,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbTable_Load(object sender, EventArgs e)
         {
-            ITableValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingTable, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingTable, nameof(bindingNames.SchemaName)));
-            tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingTable, nameof(bindingNames.TableName)));
-            tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), bindingTable, nameof(bindingNames.TableType)));
-            isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), bindingTable, nameof(bindingNames.IsSystem)));
+            catalogNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTable, nameof(ITableValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTable, nameof(ITableValue.SchemaName)));
+            tableNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTable, nameof(ITableValue.TableName)));
+            tableTypeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTable, nameof(ITableValue.TableType)));
+            isSystemData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingTable, nameof(ITableValue.IsSystem)));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;
@@ -108,11 +107,11 @@ namespace DataDictionary.Main.Forms.Catalog
                 {
                     GetAlias = BusinessData.CatalogModel.DbTables.GetAlias,
                     GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
-                    GetModelProperty = BusinessData.Model.Properties.GetValue,
+                    GetModelProperty = BusinessData.Model.Properties.TryGetValue,
                     GetColumns = BusinessData.CatalogModel.DbTables.GetColumns
                 };
 
-                IEntityValue entity = BusinessData.Model.Entities.Import(tableEntity);
+                IEntityValue entity = BusinessData.Model.Entity.Import(tableEntity);
 
                 Activate(() => new Forms.Model.Entity(entity));
                 SendMessage(new RefreshNavigation());

@@ -160,7 +160,7 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Export, Resources.ExportData)),
                 new NavigationEnumeration(ScopeType.DatabaseConstraint,         Resources.Icon_Column, Resources.Column) ,
                 new NavigationEnumeration(ScopeType.DatabaseConstraintColumn,   Resources.Icon_Key, Resources.Key) ,
-                
+
                 new NavigationEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
                 new NavigationEnumeration(ScopeType.DatabaseFunctionColumn,     Resources.Icon_Column, Resources.Column) ,
@@ -219,21 +219,34 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationEnumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new NavigationEnumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
 
-                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplatePath,      Resources.Icon_XPath,
+                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XMLFile,
+                    new(CommandImageType.Default, Resources.XMLFile),
+                    new(CommandImageType.Open, Resources.OpenXMLFile),
+                    new(CommandImageType.Save, Resources.SaveXmlFile),
+                    new(CommandImageType.Delete, Resources.DeleteXmlFile),
+                    new(CommandImageType.Add, Resources.NewXmlFile)),
+                new NavigationEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema,
+                    new(CommandImageType.Default, Resources.XMLSchema),
+                    new(CommandImageType.Delete, Resources.DeleteXMLSchema),
+                    new(CommandImageType.Add, Resources.NewXMLSchema)),
+                new NavigationEnumeration(ScopeType.ScriptingData,              Resources.Icon_XPath,
                     new(CommandImageType.Default, Resources.XPath),
-                    new(CommandImageType.Select, Resources.SelectXPath),
-                    new(CommandImageType.Add, Resources.NewXPath)),
-                //Resources.XPath) ,
-                new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
-
-                new NavigationEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
+                    new(CommandImageType.Delete, Resources.DeleteXPath) ,
+                    new(CommandImageType.Add, Resources.NewXPath) ,
+                    new(CommandImageType.Select, Resources.SelectXPath)),
+                new NavigationEnumeration(ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant,
+                    new(CommandImageType.Default, Resources.XMLDescendant),
+                    new(CommandImageType.Delete, Resources.DeleteXMLDescendant),
+                    new(CommandImageType.Add, Resources.NewXMLDescendant),
+                    new(CommandImageType.Select, Resources.SelectXMLDescendant)),
+                new NavigationEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLAttribute, Resources.XMLAttribute) ,
+                new NavigationEnumeration(ScopeType.ScriptingTemplateElement,   Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XSLTransform) ,
+                new NavigationEnumeration(ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new NavigationEnumeration(ScopeType.ScriptingTemplateData,      Resources.Icon_XPath, Resources.XPath) ,
 
                 new NavigationEnumeration(ScopeType.Security,                   Resources.Icon_User, Resources.User),
-                new NavigationEnumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User,   
+                new NavigationEnumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User,
                     new(CommandImageType.Default, Resources.User),
                     new(CommandImageType.Add, Resources.NewUser),
                     new(CommandImageType.Delete, Resources.DeleteUser)),
@@ -242,7 +255,7 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Add, Resources.NewApplicationRole),
                     new(CommandImageType.Delete, Resources.DeleteApplicationRole)),
                 new NavigationEnumeration(ScopeType.SecuritySecurable,          Resources.Icon_Permission, Resources.Permission),
-                
+
             };
 
             BuildDictionary(data);
@@ -321,5 +334,21 @@ namespace DataDictionary.Main.Enumerations
             { return Images[CommandImageType.Default]; }
             else { return defaultImage; }
         }
+    }
+
+    static class NavigationExtentions
+    {
+        /// <summary>
+        /// Sets the Image of the Menu Strip Item based on scope/command.
+        /// </summary>
+        /// <param name="menuItem"></param>
+        /// <param name="scope"></param>
+        /// <param name="command"></param>
+        /// <remarks>
+        /// The image can be set directly.
+        /// This provides a mechanism to look-up the correct image based on scope and command assocated with the Menu Strip Item.
+        /// </remarks>
+        public static void SetImage(this ToolStripMenuItem menuItem, ScopeType scope, CommandImageType command)
+        { menuItem.Image = NavigationEnumeration.GetImage(scope, command); }
     }
 }

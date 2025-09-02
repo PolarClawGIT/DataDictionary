@@ -3,6 +3,7 @@
     /// <summary>  
     /// Static class containing constants related to the Scripting Template database operations.  
     /// </summary>  
+    [Obsolete("replace", true)]
     static class ScriptingTemplate
     {
         /// <summary>  

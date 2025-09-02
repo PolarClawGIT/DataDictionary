@@ -491,7 +491,7 @@ namespace DataDictionary.Main.Forms.Model
             // xElementRenderCommand
             // 
             xElementRenderCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            xElementRenderCommand.Image = Properties.Resources.XmlFile;
+            xElementRenderCommand.Image = Properties.Resources.XMLFile;
             xElementRenderCommand.ImageTransparentColor = Color.Magenta;
             xElementRenderCommand.Name = "xElementRenderCommand";
             xElementRenderCommand.Size = new Size(23, 22);

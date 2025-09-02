@@ -15,9 +15,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingTemplateData : IBindingData<ScriptingTemplateValue>
     { }
 
+    [Obsolete("replace", true)]
     class ScriptingTemplateData : ScriptingTemplateCollection<ScriptingTemplateValue>, IScriptingTemplateData, 
         ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>

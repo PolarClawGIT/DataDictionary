@@ -12,11 +12,15 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     public class TemplateCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<ITemplateKey>,
+        IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>
         where TItem : BindingTableRow, ITemplateItem, new()
     {
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection)
+        { return LoadCommand(connection, modelId: null, templateId: null); }
+
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId); }

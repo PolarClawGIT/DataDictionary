@@ -59,20 +59,20 @@ namespace DataDictionary.Main.Forms.Security
 
                 roleData.Sort(roleNameColumn, ListSortDirection.Descending);
 
-                roleNameData.DataBindings.Add(new Binding(nameof(roleNameData.Text), bindingRole, nameof(IRoleValue.RoleName), false, DataSourceUpdateMode.OnPropertyChanged));
-                roleDescriptionData.DataBindings.Add(new Binding(nameof(roleDescriptionData.Text), bindingRole, nameof(IRoleValue.RoleDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+                roleNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRole, nameof(IRoleValue.RoleName), false, DataSourceUpdateMode.OnPropertyChanged));
+                roleDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingRole, nameof(IRoleValue.RoleDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                isSecurityAdminData.DataBindings.Add(new Binding(nameof(isSecurityAdminData.Checked), bindingRole, nameof(IRoleValue.IsSecurityAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isHelpAdminData.DataBindings.Add(new Binding(nameof(isHelpAdminData.Checked), bindingRole, nameof(IRoleValue.IsHelpAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isHelpOwnerData.DataBindings.Add(new Binding(nameof(isHelpOwnerData.Checked), bindingRole, nameof(IRoleValue.IsHelpOwner), false, DataSourceUpdateMode.OnPropertyChanged));
-                isCatalogAdminData.DataBindings.Add(new Binding(nameof(isCatalogAdminData.Checked), bindingRole, nameof(IRoleValue.IsCatalogAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isCatalogOwnerData.DataBindings.Add(new Binding(nameof(isCatalogOwnerData.Checked), bindingRole, nameof(IRoleValue.IsCatalogOwner), false, DataSourceUpdateMode.OnPropertyChanged));
-                isLibraryAdminData.DataBindings.Add(new Binding(nameof(isLibraryAdminData.Checked), bindingRole, nameof(IRoleValue.IsLibraryAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isLibraryOwnerData.DataBindings.Add(new Binding(nameof(isLibraryOwnerData.Checked), bindingRole, nameof(IRoleValue.IsLibraryOwner), false, DataSourceUpdateMode.OnPropertyChanged));
-                isModelAdminData.DataBindings.Add(new Binding(nameof(isModelAdminData.Checked), bindingRole, nameof(IRoleValue.IsModelAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isModelOwnerData.DataBindings.Add(new Binding(nameof(isModelOwnerData.Checked), bindingRole, nameof(IRoleValue.IsModelOwner), false, DataSourceUpdateMode.OnPropertyChanged));
-                isScriptAdminData.DataBindings.Add(new Binding(nameof(isScriptAdminData.Checked), bindingRole, nameof(IRoleValue.IsScriptAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
-                isScriptOwnerData.DataBindings.Add(new Binding(nameof(isScriptOwnerData.Checked), bindingRole, nameof(IRoleValue.IsScriptOwner), false, DataSourceUpdateMode.OnPropertyChanged));
+                isSecurityAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsSecurityAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isHelpAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsHelpAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isHelpOwnerData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsHelpOwner), false, DataSourceUpdateMode.OnPropertyChanged));
+                isCatalogAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsCatalogAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isCatalogOwnerData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsCatalogOwner), false, DataSourceUpdateMode.OnPropertyChanged));
+                isLibraryAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsLibraryAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isLibraryOwnerData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsLibraryOwner), false, DataSourceUpdateMode.OnPropertyChanged));
+                isModelAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsModelAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isModelOwnerData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsModelOwner), false, DataSourceUpdateMode.OnPropertyChanged));
+                isScriptAdminData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsScriptAdmin), false, DataSourceUpdateMode.OnPropertyChanged));
+                isScriptOwnerData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingRole, nameof(IRoleValue.IsScriptOwner), false, DataSourceUpdateMode.OnPropertyChanged));
 
                 PrincipalLoginList.Load(principalIdColumn, securityData.Principals);
 

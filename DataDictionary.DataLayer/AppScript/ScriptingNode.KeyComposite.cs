@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Composite Key for the Scripting Template Node.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeKeyComposite : IScriptingNodeKey, IScriptingTemplateKey
     {
     }
@@ -12,6 +13,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation of the Composite Key of the Scripting Template Node.
     /// </summary>
+    [Obsolete("replace", true)]
     public class ScriptingNodeKeyComposite : ScriptingTemplateKey, IScriptingNodeKeyComposite,
         IKeyEquality<IScriptingNodeKeyComposite>, IKeyEquality<ScriptingNodeKeyComposite>
     {

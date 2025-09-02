@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Path Key
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingPathKeyName : IKey
     {
         /// <summary>
@@ -16,6 +17,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting Template Path Key
     /// </summary>
+    [Obsolete("replace", true)]
     public class ScriptingPathKeyName : IScriptingPathKeyName,
         IKeyComparable<IScriptingPathKeyName>, IKeyComparable<ScriptingPathKeyName>
     {

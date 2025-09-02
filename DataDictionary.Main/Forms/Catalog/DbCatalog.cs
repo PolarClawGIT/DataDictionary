@@ -52,12 +52,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbCatalog_Load(object sender, EventArgs e)
         {
-            ICatalogValue bindingNames;
-            catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), bindingSource, nameof(bindingNames.CatalogTitle)));
-            catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), bindingSource, nameof(bindingNames.CatalogDescription)));
-            sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), bindingSource, nameof(bindingNames.ServerName)));
-            sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), bindingSource, nameof(bindingNames.DatabaseName)));
-            sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), bindingSource, nameof(bindingNames.SourceDate)));
+            catalogTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ICatalogValue.CatalogTitle)));
+            catalogDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ICatalogValue.CatalogDescription)));
+            sourceServerNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ICatalogValue.ServerName)));
+            sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ICatalogValue.DatabaseName)));
+            sourceDateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, nameof(ICatalogValue.SourceDate)));
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ICatalogValue);
         }

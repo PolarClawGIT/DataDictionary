@@ -61,40 +61,39 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbColumn_Load(object sender, EventArgs e)
         {
-            ITableColumnValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingColumn, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingColumn, nameof(bindingNames.SchemaName)));
-            tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingColumn, nameof(bindingNames.TableName)));
-            columnNameData.DataBindings.Add(new Binding(nameof(columnNameData.Text), bindingColumn, nameof(bindingNames.ColumnName)));
-            ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), bindingColumn, nameof(bindingNames.OrdinalPosition)));
-            columnDefaultData.DataBindings.Add(new Binding(nameof(columnDefaultData.Text), bindingColumn, nameof(bindingNames.ColumnDefault)));
-            columnComputedData.DataBindings.Add(new Binding(nameof(columnComputedData.Text), bindingColumn, nameof(bindingNames.ComputedDefinition)));
-            isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), bindingColumn, nameof(bindingNames.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
-            isComputedData.DataBindings.Add(new Binding(nameof(isComputedData.Checked), bindingColumn, nameof(bindingNames.IsComputed), true, DataSourceUpdateMode.OnValidation, false));
+            catalogNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.SchemaName)));
+            tableNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.TableName)));
+            columnNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.ColumnName)));
+            ordinalPositionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.OrdinalPosition)));
+            columnDefaultData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.ColumnDefault)));
+            columnComputedData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.ComputedDefinition)));
+            isNullableData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingColumn, nameof(ITableColumnValue.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
+            isComputedData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingColumn, nameof(ITableColumnValue.IsComputed), true, DataSourceUpdateMode.OnValidation, false));
 
-            dataTypeData.DataBindings.Add(new Binding(nameof(columnNameData.Text), bindingColumn, nameof(bindingNames.DataType)));
-            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), bindingColumn, nameof(bindingNames.CharacterMaximumLength)));
-            characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), bindingColumn, nameof(bindingNames.CharacterOctetLength)));
-            numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), bindingColumn, nameof(bindingNames.NumericPrecision)));
-            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), bindingColumn, nameof(bindingNames.NumericPrecisionRadix)));
-            numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), bindingColumn, nameof(bindingNames.NumericScale)));
-            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), bindingColumn, nameof(bindingNames.DateTimePrecision)));
+            dataTypeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.DataType)));
+            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CharacterMaximumLength)));
+            characterOctetLengthData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CharacterOctetLength)));
+            numericPrecisionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.NumericPrecision)));
+            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.NumericPrecisionRadix)));
+            numericScaleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.NumericScale)));
+            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.DateTimePrecision)));
 
-            characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), bindingColumn, nameof(bindingNames.CharacterSetCatalog)));
-            characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), bindingColumn, nameof(bindingNames.CharacterSetSchema)));
-            characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), bindingColumn, nameof(bindingNames.CharacterSetName)));
+            characterSetCatalogData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CharacterSetCatalog)));
+            characterSetSchemaData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CharacterSetSchema)));
+            characterSetNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CharacterSetName)));
 
-            collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), bindingColumn, nameof(bindingNames.CollationCatalog)));
-            collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), bindingColumn, nameof(bindingNames.CollationSchema)));
-            collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), bindingColumn, nameof(bindingNames.CollationName)));
+            collationCatalogData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CollationCatalog)));
+            collationSchemaData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CollationSchema)));
+            collationNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CollationName)));
 
-            domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), bindingColumn, nameof(bindingNames.CollationCatalog)));
-            domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), bindingColumn, nameof(bindingNames.DomainSchema)));
-            domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingColumn, nameof(bindingNames.DomainName)));
+            domainCatalogData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.CollationCatalog)));
+            domainSchemaData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.DomainSchema)));
+            domainNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.DomainName)));
 
-            generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(generatedAlwayTypeData.Text), bindingColumn, nameof(bindingNames.GeneratedAlwayType)));
-            isIdentityData.DataBindings.Add(new Binding(nameof(isIdentityData.Checked), bindingColumn, nameof(bindingNames.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
-            isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), bindingColumn, nameof(bindingNames.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
+            generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingColumn, nameof(ITableColumnValue.GeneratedAlwayType)));
+            isIdentityData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingColumn, nameof(ITableColumnValue.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
+            isHiddenData.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingColumn, nameof(ITableColumnValue.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;
@@ -110,10 +109,10 @@ namespace DataDictionary.Main.Forms.Catalog
                 {
                     GetAlias = BusinessData.CatalogModel.DbTableColumns.GetAlias,
                     GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
-                    GetModelProperty = BusinessData.Model.Properties.GetValue
+                    GetModelProperty = BusinessData.Model.Properties.TryGetValue
                 };
 
-                IAttributeValue attribute = BusinessData.Model.Attributes.Import(columnAttribute);
+                IAttributeValue attribute = BusinessData.Model.Attribute.Import(columnAttribute);
 
                 Activate(() => new Forms.Model.Attribute(attribute));
                 SendMessage(new RefreshNavigation());

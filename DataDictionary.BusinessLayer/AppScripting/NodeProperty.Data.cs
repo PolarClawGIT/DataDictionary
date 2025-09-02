@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         public void Load()
         {
-            Load(AttributeValue.GetXColumns());
+            //Load(AttributeValue.GetXColumns());
             Load(AttributePropertyValue.GetXColumns());
             Load(AttributeAliasValue.GetXColumns());
         }

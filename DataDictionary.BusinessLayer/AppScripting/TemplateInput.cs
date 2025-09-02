@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
-    internal class TemplateData
+    internal class TemplateInput
     {
     }
 }

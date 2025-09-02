@@ -55,32 +55,31 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbRoutineParameter_Load(object sender, EventArgs e)
         {
-            IRoutineParameterValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingParameter, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingParameter, nameof(bindingNames.SchemaName)));
-            routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), bindingParameter, nameof(bindingNames.RoutineName)));
-            parameterNameData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), bindingParameter, nameof(bindingNames.ParameterName)));
-            ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), bindingParameter, nameof(bindingNames.OrdinalPosition)));
+            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingParameter, nameof(IRoutineParameterValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingParameter, nameof(IRoutineParameterValue.SchemaName)));
+            routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), bindingParameter, nameof(IRoutineParameterValue.RoutineName)));
+            parameterNameData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), bindingParameter, nameof(IRoutineParameterValue.ParameterName)));
+            ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), bindingParameter, nameof(IRoutineParameterValue.OrdinalPosition)));
 
-            dataTypeData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), bindingParameter, nameof(bindingNames.DataType)));
-            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), bindingParameter, nameof(bindingNames.CharacterMaximumLength)));
-            characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), bindingParameter, nameof(bindingNames.CharacterOctetLength)));
-            numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), bindingParameter, nameof(bindingNames.NumericPrecision)));
-            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), bindingParameter, nameof(bindingNames.NumericPrecisionRadix)));
-            numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), bindingParameter, nameof(bindingNames.NumericScale)));
-            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), bindingParameter, nameof(bindingNames.DateTimePrecision)));
+            dataTypeData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), bindingParameter, nameof(IRoutineParameterValue.DataType)));
+            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), bindingParameter, nameof(IRoutineParameterValue.CharacterMaximumLength)));
+            characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), bindingParameter, nameof(IRoutineParameterValue.CharacterOctetLength)));
+            numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), bindingParameter, nameof(IRoutineParameterValue.NumericPrecision)));
+            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), bindingParameter, nameof(IRoutineParameterValue.NumericPrecisionRadix)));
+            numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), bindingParameter, nameof(IRoutineParameterValue.NumericScale)));
+            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), bindingParameter, nameof(IRoutineParameterValue.DateTimePrecision)));
 
-            characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), bindingParameter, nameof(bindingNames.CharacterSetCatalog)));
-            characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), bindingParameter, nameof(bindingNames.CharacterSetSchema)));
-            characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), bindingParameter, nameof(bindingNames.CharacterSetName)));
+            characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), bindingParameter, nameof(IRoutineParameterValue.CharacterSetCatalog)));
+            characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), bindingParameter, nameof(IRoutineParameterValue.CharacterSetSchema)));
+            characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), bindingParameter, nameof(IRoutineParameterValue.CharacterSetName)));
 
-            collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), bindingParameter, nameof(bindingNames.CollationCatalog)));
-            collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), bindingParameter, nameof(bindingNames.CollationSchema)));
-            collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), bindingParameter, nameof(bindingNames.CollationName)));
+            collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), bindingParameter, nameof(IRoutineParameterValue.CollationCatalog)));
+            collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), bindingParameter, nameof(IRoutineParameterValue.CollationSchema)));
+            collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), bindingParameter, nameof(IRoutineParameterValue.CollationName)));
 
-            domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), bindingParameter, nameof(bindingNames.CollationCatalog)));
-            domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), bindingParameter, nameof(bindingNames.DomainSchema)));
-            domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingParameter, nameof(bindingNames.DomainName)));
+            domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), bindingParameter, nameof(IRoutineParameterValue.CollationCatalog)));
+            domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), bindingParameter, nameof(IRoutineParameterValue.DomainSchema)));
+            domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingParameter, nameof(IRoutineParameterValue.DomainName)));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;

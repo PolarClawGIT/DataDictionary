@@ -59,12 +59,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void DbConstraint_Load(object sender, EventArgs e)
         {
-            IConstraintValue bindingNames;
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingConstraint, nameof(bindingNames.DatabaseName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingConstraint, nameof(bindingNames.SchemaName)));
-            constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), bindingConstraint, nameof(bindingNames.ConstraintName)));
-            constraintTypeData.DataBindings.Add(new Binding(nameof(constraintTypeData.Text), bindingConstraint, nameof(bindingNames.ConstraintType)));
-            tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingConstraint, nameof(bindingNames.TableName)));
+            catalogNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingConstraint, nameof(IConstraintValue.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingConstraint, nameof(IConstraintValue.SchemaName)));
+            constraintNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingConstraint, nameof(IConstraintValue.ConstraintName)));
+            constraintTypeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingConstraint, nameof(IConstraintValue.ConstraintType)));
+            tableNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingConstraint, nameof(IConstraintValue.TableName)));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;

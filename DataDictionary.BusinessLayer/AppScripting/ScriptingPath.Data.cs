@@ -12,10 +12,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Engine Template Path
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingPathData : IBindingData<ScriptingPathValue>
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     class ScriptingPathData : ScriptingPathCollection<ScriptingPathValue>, IScriptingPathData,
         ILoadData<IScriptingTemplateIndex>, ISaveData<IScriptingTemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>

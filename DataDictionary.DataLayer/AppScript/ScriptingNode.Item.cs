@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Node data.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeItem : 
         IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeValueAsType,
         ITemporalItem
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Implementation for the Scripting Template Node data.
     /// </summary>
     [Serializable]
+    [Obsolete("replace", true)]
     public class ScriptingNodeItem : BindingTableRow, IScriptingNodeItem, ISerializable
     {
         /// <inheritdoc/>

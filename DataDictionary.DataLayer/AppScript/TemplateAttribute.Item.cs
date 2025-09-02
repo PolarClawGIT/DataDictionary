@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Template Attribute item.
     /// </summary>
     public interface ITemplateAttributeItem :
-        ITemplateKey, ITemplateAttributeKey, ITemplateNode,
+        ITemplateKey, ITemplateAttributeKey, ITemplateNodeItem,
         ITemporalItem
     {
         /// <summary>
@@ -46,7 +46,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        String? ITemplateNode.NodeName { get { return AttributeName; } }
+        Guid? ITemplateNodeKey.NodeId { get { return AttributeId; } }
+
+        /// <inheritdoc/>
+        String? ITemplateNodeItem.NodeName { get { return AttributeName; } }
 
         /// <inheritdoc/>
         public Int32? RenderOrder
@@ -114,6 +117,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
+
 
         /// <summary>
         /// Constructor for Template Attribute Item

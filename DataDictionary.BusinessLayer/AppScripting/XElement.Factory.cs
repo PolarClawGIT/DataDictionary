@@ -1,11 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
+using Attribute = DataDictionary.BusinessLayer.AppModel.Attribute;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -18,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Builds a list of XElement Builders used to build XElements.
         /// </summary>
         /// <returns></returns>
-        static abstract IEnumerable<XElementBuilder> CreateXElementBuilders();
+        static abstract IEnumerable<XElementBuilder> CreateXElements();
     }
 
     /// <summary>
@@ -31,17 +28,39 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Builds a list of XElement Builders used to build XElements.
         /// </summary>
         /// <returns></returns>
-        static abstract IEnumerable<XElementBuilder> CreateXElementBuilders(T paramter);
+        static abstract IEnumerable<XElementBuilder> CreateXElements(T paramter);
     }
 
+    /// <summary>
+    /// Base compoents for a XElement Builder Factory that uses the TryGetValue function.
+    /// </summary>
+    /// <typeparam name="TIndex"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public interface IXElementFactory<TIndex, TValue>
+        where TValue : TIndex
+    {
+        /// <summary>
+        /// Builds a list of XElement Builders used to build XElements.
+        /// </summary>
+        /// <returns></returns>
+        static abstract IEnumerable<XElementBuilder> CreateXElements(TryGetValue<TIndex, TValue> getValue);
+    }
+
+    /// <summary>
+    /// Implemenation of the XElementFactory.
+    /// This takes XElementBuilders and builds out the XElements.
+    /// </summary>
     public class XElementFactory
     {
-        // TODO:POC code. Move to Scripting Engine.
+        // TODO: This replaces Scripting Engine.
 
-        Dictionary<ScopeType, IEnumerable<XElementBuilder>> builders = new Dictionary<ScopeType, IEnumerable<XElementBuilder>>();
+        XElementBuilderList builders = new XElementBuilderList();
 
-        public required AppModel.IDefinitionGetValue DefinitionGet { private get; init; }
-        public required AppModel.IPropertyGetValue PropertyGet { private get; init; }
+        public required TryGetValue<IDefinitionIndex,IDefinitionValue> DefinitionGet { private get; init; }
+        public required TryGetValue<IPropertyIndex, IPropertyValue> PropertyGet { private get; init; }
+        public required TryGetValue<IAttributeIndex, IAttributeValue> AttributeGet { private get; init; }
+        public required TryGetValue<IEntityIndex, IEntityValue> EntityGet { private get; init; }
+        public required TryGetValue<IProcessIndex, IProcessValue> ProcessGet { private get; init; }
 
         public IReadOnlyDictionary<ScopeType, IEnumerable<String>> Properties
         {
@@ -57,9 +76,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Load()
         {
             builders.Clear();
-            builders.Add(ScopeType.ModelAttribute, AttributeValue.CreateXElementBuilders());
-            builders.Add(ScopeType.ModelAttributeProperty, AttributePropertyValue.CreateXElementBuilders(PropertyGet));
-            builders.Add(ScopeType.ModelAttributeDefinition, AttributeDefinitionValue.CreateXElementBuilders(DefinitionGet));
+            builders.AddRange(Attribute.CreateXElements(PropertyGet, DefinitionGet));
+            builders.AddRange(Entity.CreateXElements(PropertyGet, DefinitionGet));
+            builders.AddRange(Process.CreateXElements(PropertyGet, DefinitionGet));
         }
 
         public XElement Build(IScopeType value)
@@ -88,7 +107,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             AttributeIndex key = new AttributeIndex(index);
 
-            if(attribute.Values.FirstOrDefault(w => key.Equals(w)) is IAttributeValue value)
+            if(attribute.Attributes.FirstOrDefault(w => key.Equals(w)) is IAttributeValue value)
             {
                 XElement result = Build(value);
                 result.Add(attribute.Properties.Where(w => key.Equals(w)));

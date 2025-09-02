@@ -14,18 +14,13 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Template Element item.
     /// </summary>
     public interface ITemplateElementItem :
-        ITemplateKey, ITemplateElementKey, ITemplateNode,
+        ITemplateKey, ITemplateElementKey, ITemplateElementKeyParent, ITemplateNodeItem,
         ITemporalItem
     {
         /// <summary>
         /// Name of the XML Element.
         /// </summary>
         String? ElementName { get; }
-
-        /// <summary>
-        /// Element ID of the Parent Element.
-        /// </summary>
-        Guid? ParentElementId { get; }
     }
 
     /// <summary>
@@ -63,7 +58,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        String? ITemplateNode.NodeName { get { return ElementName; } }
+        Guid? ITemplateNodeKey.NodeId { get { return ElementId; } }
+
+        /// <inheritdoc/>
+        String? ITemplateNodeItem.NodeName { get { return ElementName; } }
 
         /// <inheritdoc/>
         public Int32? RenderOrder

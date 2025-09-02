@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class PropertyValue : PropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
+    public partial class PropertyValue : PropertyItem, IPropertyValue, IPathValue, INamedScopeSourceValue
     {
         /// <summary>
         /// Provides the List of Choices for PropertyType is List

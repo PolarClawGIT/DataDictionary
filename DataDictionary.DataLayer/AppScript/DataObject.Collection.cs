@@ -12,9 +12,10 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     public abstract class DataObjectCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IDataSourceKey>,
+        IReadData<IModelKey>, IReadData<IDataSourceKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<IDataSourceKey>,
-        IRemoveItem<IDataSourceKey>
+        IRemoveItem<IDataSourceKey>,
+        IReadTemporal<IModelKey>, IReadTemporal<IDataSourceKey>
         where TItem : BindingTableRow, IDataObjectItem, new()
     {
         /// <inheritdoc/>
@@ -26,6 +27,14 @@ namespace DataDictionary.DataLayer.AppScript
         { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ITemplateKey templateKey)
+        { return LoadCommand(connection, templateId: templateKey.TemplateId); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ITemplateKey templateKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, templateId: templateKey.TemplateId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
+
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDataSourceKey dataSourceKey)
         { return LoadCommand(connection, dataSourceId: dataSourceKey.DataSourceId); }
 
@@ -33,8 +42,16 @@ namespace DataDictionary.DataLayer.AppScript
         public Command LoadCommand(IConnection connection, IDataSourceKey key, ITemporalKey asOfUtcDate)
         { return LoadCommand(connection, dataSourceId: key.DataSourceId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection, IDataSourceKey key)
+        { return LoadCommand(connection, dataSourceId: key.DataSourceId, includeHistory: true); }
+
         private Command LoadCommand(IConnection connection,
-            Guid? modelId = null, Guid? dataSourceId = null,
+            Guid? modelId = null, Guid? dataSourceId = null, Guid? templateId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
@@ -42,6 +59,7 @@ namespace DataDictionary.DataLayer.AppScript
             command.CommandText = DataObject.GetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(DataSource.DataSourceId, dataSourceId);
+            command.AddParameter(Template.TemplateId, templateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;

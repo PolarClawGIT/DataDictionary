@@ -11,10 +11,12 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public interface IScriptingNodeValue : IScriptingNodeItem, IScriptingTemplateIndex, IScriptingNodeIndex, IScriptingNodeIndexName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("replace", true)]
     public class ScriptingNodeValue : ScriptingNodeItem, IScriptingNodeValue
     {
         /// <inheritdoc/>
@@ -56,7 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         fragementEx.Data.Add(nameof(PropertyName), PropertyName);
                         throw;
                     }
-                case TemplateNodeValueAsType.Attribute:
+                case TemplateNodeValueAsType.AttributeText:
                     return new XAttribute(nodeName, nodeValue);
                 default:
                     Exception ex = new InvalidOperationException("Unknown NodeValueAsType");

@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Path data.
     /// </summary>
+    [Obsolete("replace", true)]
     public interface IScriptingPathItem : 
         IScriptingTemplateKey, IScriptingPathKeyName,
         ITemporalItem
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Implementation for the Scripting Template Path data.
     /// </summary>
     [Serializable]
+    [Obsolete("replace", true)]
     public class ScriptingPathItem : BindingTableRow, IScriptingPathItem, ISerializable
     {
         /// <inheritdoc/>

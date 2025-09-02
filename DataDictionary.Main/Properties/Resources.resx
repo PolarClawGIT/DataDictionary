@@ -220,6 +220,9 @@
   <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -433,10 +436,13 @@
   <data name="Icon_XMLAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XMLAttribute.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_XMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XMLDescendant.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XMLElement.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_XmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Icon_XMLFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XmlFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -541,6 +547,9 @@
   <data name="NewUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewUser.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -567,6 +576,9 @@
   </data>
   <data name="OpenTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OpenXMLFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\OpenXMLFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Parameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Parameter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -682,6 +694,9 @@
   <data name="SelectSynonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectSynonym.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SelectXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SelectXPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectXPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -760,10 +775,13 @@
   <data name="XMLAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XMLAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="XMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="XmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="XMLFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">

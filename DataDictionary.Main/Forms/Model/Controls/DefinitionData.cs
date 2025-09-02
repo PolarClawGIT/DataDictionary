@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
 using System;
 using System.Collections;
@@ -38,9 +39,9 @@ namespace DataDictionary.Main.Forms.Model.Controls
             DefinitionNameList.Load(definitionTypeData, Definitions);
             DefinitionNameList.Load(definitionColumn, Definitions);
 
-            definitionTypeData.DataBindings.Add(new Binding(nameof(definitionTypeData.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionTextData.DataBindings.Add(new Binding(nameof(definitionTextData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionSummaryData.DataBindings.Add(new Binding(nameof(definitionSummaryData.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionSummaryData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
             
             definitionGrid.AutoGenerateColumns = false;
             definitionGrid.DataSource = dataBinding;

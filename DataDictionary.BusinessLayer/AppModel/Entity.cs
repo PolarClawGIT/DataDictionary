@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// List of Entities within the Model.
         /// </summary>
-        IEntityData Values { get; }
+        IEntityData Entities { get; }
 
         /// <summary>
         /// List of Aliases for the Entities within the Model.
@@ -72,10 +72,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         { return new Entity(); }
     }
 
-    class Entity : IEntity, IDataTableFile
+    partial class Entity : IEntity, IDataTableFile
     {
         /// <inheritdoc/>
-        public IEntityData Values { get { return entityValues; } }
+        public IEntityData Entities { get { return entityValues; } }
         private readonly EntityData entityValues;
 
         /// <inheritdoc/>

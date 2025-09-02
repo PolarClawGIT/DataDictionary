@@ -137,6 +137,7 @@ namespace DataDictionary.DataLayer.AppScript
         public TemplateItem() : base()
         {
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
+            if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
 
             Temporal = new TemporalItem()
             {

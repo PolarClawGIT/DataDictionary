@@ -13,6 +13,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("replace", true)]
     public abstract class ScriptingNodeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IScriptingTemplateKey>,
         IWriteData<IModelKey>, IWriteData<IScriptingTemplateKey>,

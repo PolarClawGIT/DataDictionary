@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? ElementId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Primary Key of the Scripting Template Node.
+        /// Constructor for the Primary Key of the Scripting Template Element.
         /// </summary>
         /// <param name="source"></param>
         public TemplateElementKey(ITemplateElementKey source) : base()

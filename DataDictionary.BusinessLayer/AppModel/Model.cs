@@ -36,17 +36,17 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <summary>
         /// Container for Attribute within the Model.
         /// </summary>
-        IAttribute Attributes { get; }
+        IAttribute Attribute { get; }
 
         /// <summary>
         /// Container for Entity within the Model.
         /// </summary>
-        IEntity Entities { get; }
+        IEntity Entity { get; }
 
         /// <summary>
         /// Container for Process within the Model.
         /// </summary>
-        IProcess Processes { get; }
+        IProcess Process { get; }
 
         /// <summary>
         /// The Properties for the Model (includes common)
@@ -101,15 +101,15 @@ namespace DataDictionary.BusinessLayer.AppModel
         private readonly SubjectAreaData subjectValues;
 
         /// <inheritdoc/>
-        public IAttribute Attributes { get { return attributeValues; } }
+        public IAttribute Attribute { get { return attributeValues; } }
         private readonly Attribute attributeValues;
 
         /// <inheritdoc/>
-        public IEntity Entities { get { return entityValues; } }
+        public IEntity Entity { get { return entityValues; } }
         private readonly Entity entityValues;
 
         /// <inheritdoc/>
-        public IProcess Processes { get { return processValues; } }
+        public IProcess Process { get { return processValues; } }
         private readonly Process processValues;
 
         /// <inheritdoc/>
@@ -206,11 +206,11 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<IAttributeValue> result = new List<IAttributeValue>();
             PathIndex key = new PathIndex(path);
 
-            result.AddRange(attributeValues.Values.Where(w => key.Equals(w.AttributePath)));
+            result.AddRange(attributeValues.Attributes.Where(w => key.Equals(w.AttributePath)));
 
             result.AddRange(
-                attributeValues.Values.
-                Where(w => attributeValues.Values.
+                attributeValues.Attributes.
+                Where(w => attributeValues.Attributes.
                     Any(a => key.Equals(w.AttributePath))));
 
             return result.DistinctBy(d => new AttributeIndex(d));

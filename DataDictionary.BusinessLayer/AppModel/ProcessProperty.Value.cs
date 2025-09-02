@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     { }
 
     /// <inheritdoc/>
-    public class ProcessPropertyValue : ProcessPropertyItem, IProcessPropertyValue
+    public partial class ProcessPropertyValue : ProcessPropertyItem, IProcessPropertyValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelProcessProperty; } }

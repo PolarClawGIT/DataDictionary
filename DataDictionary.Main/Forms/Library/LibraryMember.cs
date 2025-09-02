@@ -29,13 +29,11 @@ namespace DataDictionary.Main.Forms.Library
 
         private void LibraryMember_Load(object sender, EventArgs e)
         {
-            ILibraryMemberValue bindingNames;
-
-            memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), bindingMember, nameof(bindingNames.MemberNameSpace)));
-            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingMember, nameof(bindingNames.MemberName)));
-            scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingMember, nameof(bindingNames.MemberType)));
-            memberData.DataBindings.Add(new Binding(nameof(memberData.Text), bindingMember, nameof(bindingNames.MemberData)));
-            assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), bindingMember, nameof(bindingNames.AssemblyName)));
+            memberNameSpaceData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingMember, nameof(ILibraryMemberValue.MemberNameSpace)));
+            memberNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingMember, nameof(ILibraryMemberValue.MemberName)));
+            scopeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingMember, nameof(ILibraryMemberValue.MemberType)));
+            memberData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingMember, nameof(ILibraryMemberValue.MemberData)));
+            assemblyNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingMember, nameof(ILibraryMemberValue.AssemblyName)));
 
             childMemberData.AutoGenerateColumns = false;
             childMemberData.DataSource = bindingChild;

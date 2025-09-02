@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
+    [Obsolete("replace", true)]
     static class ScriptingHelper
     {
         public static XElement? GetXElement(
@@ -19,7 +20,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             XElement? result = null;
             AttributeIndex key = new AttributeIndex(index);
-            if (data.Values.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
+            if (data.Attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
             {
                 foreach (ScriptingNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
                 {

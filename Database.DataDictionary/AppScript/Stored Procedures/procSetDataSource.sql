@@ -85,6 +85,15 @@ Begin Try
 			T.[DataSourceId] In (Select [DataSourceId] From @Delete)
 	Print FormatMessage ('Delete [AppScript].[ScriptingModel] (DataSource): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
+	Delete From [AppScript].[DataObjectName]
+	From	[AppScript].[DataObjectName] T
+			Left Join @Values S
+			On	T.[DataSourceId] = S.[DataSourceId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DataSourceId], 1)
+	Where	S.[DataSourceId] is Null And
+			T.[DataSourceId] In (Select [DataSourceId] From @Delete)
+	Print FormatMessage ('Delete [AppScript].[DataObjectName] (DataSource): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppScript].[DataObject]
 	From	[AppScript].[DataObject] T
 			Left Join @Values S
@@ -92,7 +101,7 @@ Begin Try
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DataSourceId], 1)
 	Where	S.[DataSourceId] is Null And
 			T.[DataSourceId] In (Select [DataSourceId] From @Delete)
-	Print FormatMessage ('Delete [AppScript].[DataItem] (DataSource): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[DataObject] (DataSource): %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[DataSource]
 	From	[AppScript].[DataSource] T

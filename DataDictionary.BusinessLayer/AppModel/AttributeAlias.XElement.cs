@@ -1,17 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
     partial class AttributeAliasValue : IXElementFactory
     {
         /// <inheritdoc/>
-        public static IEnumerable<XElementBuilder> CreateXElementBuilders()
+        public static IEnumerable<XElementBuilder> CreateXElements()
         {
             IEnumerable<XElementBuilder> result = XElementBuilder.Create(typeof(AttributeValue));
 

@@ -74,8 +74,8 @@ namespace DataDictionary.Main.Forms.General
             formData.SubjectsChanged += FormData_SubjectsChanged;
             formTree.BuildTree(formData.HelpSubjects);
 
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
-            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.RichText), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
+            helpSubjectData.DataBindings.Add(new Binding(nameof(TextBox.Text), helpBinding, nameof(BindingSubject.Title), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), helpBinding, nameof(BindingSubject.Description), false, DataSourceUpdateMode.OnValidation));
 
             if (formData.TryGetValue(out BindingSubject? current))
             { formTree.SetNode(current); }

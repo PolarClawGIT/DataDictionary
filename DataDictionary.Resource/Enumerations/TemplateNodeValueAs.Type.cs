@@ -34,11 +34,4 @@ public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
     /// Render value as an Attribute, value as Text.
     /// </summary>
     AttributeText,
-
-    /// <summary>
-    /// Render value as an Attribute, value as CData.
-    /// </summary>
-    AttributeCData,
-
-
 }

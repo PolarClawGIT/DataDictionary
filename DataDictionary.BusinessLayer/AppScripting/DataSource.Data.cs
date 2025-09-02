@@ -12,13 +12,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Data Source
     /// </summary>
-    public interface IDataSourceData : IBindingData<DataSourceValue>
-    { }
+    public interface IDataSourceData : 
+        IBindingData<DataSourceValue>,
+        IGetTemporal<IModelIndex>, IGetTemporal<IDataSourceIndex>,
+        ILoadData
+    {
+        /// <summary>
+        /// Creates an empty IDataSourceData.
+        /// </summary>
+        /// <returns></returns>
+        static IDataSourceData Create()
+        { return new DataSourceData(); }
+    }
 
     class DataSourceData : DataSourceCollection<DataSourceValue>, IDataSourceData,
         ILoadData<IDataSourceIndex>, ISaveData<IDataSourceIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
+
         /// <inheritdoc/>
         /// <remarks>ScriptingDataSource</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
@@ -38,6 +53,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingDataSource</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDataSourceIndex dataKey, ITemporalIndex asOfUtcDate)
         { return factory.CreateLoad(this, (IDataSourceKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDataSource</remarks>
@@ -73,5 +98,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingDataSource</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(IModelIndex model)
+        {
+            return new TemporalData<DataSourceData, DataSourceValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(IDataSourceIndex dataSource)
+        {
+            return new TemporalData<DataSourceData, DataSourceValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IDataSourceKey)dataSource) };
+        }
     }
 }

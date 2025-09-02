@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface IDataObjectValue : IDataObjectItem, IDataSourceIndex,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// Path Index of the DataPath
+        /// </summary>
+        new PathIndex ObjectPath { get; set; }
+    }
 
     /// <inheritdoc/>
     public class DataObjectValue : DataObjectItem, IDataObjectValue, IPathValue
@@ -31,42 +37,44 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
-        /// <summary>
-        /// Path Index of the DataPath
-        /// </summary>
-        public PathIndex DataObjectPath
-        {
+        /// <inheritdoc/>
+        public new PathIndex ObjectPath
+        {   // Changing the propoerty in the base class is not always caught by the OnPropertyChanged.
+            // Extra code is needed to check if the data has changed and update the backing field.  
             get
-            { return new PathIndex(new PathIndex(PathIndex.Parse(DataPath).ToArray())); }
-            set
             {
-                DataPath = value.MemberFullPath;
-                OnPropertyChanged(nameof(DataObjectPath));
+                if (!objectPathValue.MemberFullPath.Equals(base.ObjectPath))
+                { objectPathValue = new PathIndex(PathIndex.Parse(base.ObjectPath).ToArray()); }
+
+                return objectPathValue;
+            }
+            set
+            { 
+                base.ObjectPath = value.MemberFullPath;
+                objectPathValue.Set(value);
+                OnPropertyChanged(nameof(base.ObjectPath));
             }
         }
-
-        /// <summary>
-        /// Member name of DataPath
-        /// </summary>
-        public String DataObjectMember
-        { get { return DataObjectPath.Member; } }
+        PathIndex objectPathValue = new PathIndex();
 
         /// <inheritdoc/>
         public DataObjectValue() : base()
+        { pathValue = InitPath(); }
+
+        /// <inheritdoc/>
+        public DataObjectValue(IDataSourceIndex dataSource) : base(dataSource)
+        { pathValue = InitPath(); }
+
+        PathValue InitPath()
         {
-            pathValue = new PathValue(this)
+            return new PathValue(this)
             {
                 GetIndex = () => new DataSourceIndex(this),
-                GetPath = () =>
-                {
-                    if (String.IsNullOrWhiteSpace(DataPath))
-                    { return new PathIndex(DataPath); }
-                    else { return new PathIndex(new PathIndex(PathIndex.Parse(DataPath).ToArray())); }
-                },
+                GetPath = () => ObjectPath,
                 GetScope = () => Scope,
-                GetTitle = () => DataObjectMember ?? ScopeEnumeration.Cast(Scope).Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(DataPath),
-                IsTitleChanged = (e) => e.PropertyName is nameof(DataPath)
+                GetTitle = () => ObjectPath.Member ?? ScopeEnumeration.Cast(Scope).Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(ObjectPath),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ObjectPath)
             };
         }
     }
