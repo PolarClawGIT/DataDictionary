@@ -85,6 +85,7 @@ namespace DataDictionary.DataLayer.AppScript
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectPath), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
