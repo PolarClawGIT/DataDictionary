@@ -46,23 +46,37 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc/>
         internal AttributeAliasValue(IAttributeKey key) : base(key) { }
 
-        /// <inheritdoc cref="AttributeAliasItem.AliasPath"/>
-        public PathIndex AliasName
+        /// <inheritdoc/>
+        public new PathIndex AliasPath
         {
-            get { return new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
-            set { base.AliasPath = value.MemberFullPath; }
+            get
+            {
+                // Changing the property in the base class is not always caught by the OnPropertyChanged.
+                // Extra code is needed to check if the data has changed and update the backing field.  
+                if (!aliasPathValue.MemberFullPath.Equals(base.AliasPath))
+                { aliasPathValue = new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
+
+                return aliasPathValue;
+            }
+            set
+            {
+                base.AliasPath = value.MemberFullPath;
+                aliasPathValue.Set(value);
+                OnPropertyChanged(nameof(base.AliasPath));
+            }
         }
+        PathIndex aliasPathValue = new PathIndex();
 
         [Obsolete("replace", true)]
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeAlias;
-            IAttributeAliasValue alaisNames;
+            AttributeAliasValue alaisNames;
 
             List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
                 new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasScope), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasName),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasPath),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
                 new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
             };
             return result;
@@ -80,7 +94,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 switch (node.PropertyName)
                 {
                     case nameof(AliasScope): AddValue(node.BuildXObject(ScopeEnumeration.Cast(AliasScope).Name)); break;
-                    case nameof(AttributeAliasItem.AliasPath): AddValue(node.BuildXObject(AliasName)); break;
+                    case nameof(AttributeAliasItem.AliasPath): AddValue(node.BuildXObject(AliasPath)); break;
                     case nameof(AliasParts):
                         List<String> scopeParts = PathIndex.Parse(ScopeEnumeration.Cast(AliasScope).Name);
                         String levelValue = String.Empty;

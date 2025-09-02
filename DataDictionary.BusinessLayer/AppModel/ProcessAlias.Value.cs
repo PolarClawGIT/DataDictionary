@@ -22,6 +22,27 @@ namespace DataDictionary.BusinessLayer.AppModel
         public ScopeType Scope { get { return ScopeType.ModelProcessAlias; } }
 
         /// <inheritdoc/>
+        public new PathIndex AliasPath
+        {
+            get
+            {
+                // Changing the property in the base class is not always caught by the OnPropertyChanged.
+                // Extra code is needed to check if the data has changed and update the backing field.  
+                if (!aliasPathValue.MemberFullPath.Equals(base.AliasPath))
+                { aliasPathValue = new PathIndex(PathIndex.Parse(base.AliasPath).ToArray()); }
+
+                return aliasPathValue;
+            }
+            set
+            {
+                base.AliasPath = value.MemberFullPath;
+                aliasPathValue.Set(value);
+                OnPropertyChanged(nameof(base.AliasPath));
+            }
+        }
+        PathIndex aliasPathValue = new PathIndex();
+
+        /// <inheritdoc/>
         public ProcessAliasValue() : base() { }
 
         /// <inheritdoc cref="ProcessAliasItem(IProcessKey)"/>

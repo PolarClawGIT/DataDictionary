@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Controls
         /// <param name="toBaseType">Function that converts the TControl to a TData.</param>
         /// <returns></returns>
         /// <remarks>
-        /// This was built to handle types that Binding does not handle "as is".
+        /// This was built to handle types that Binding does not handle "as is" for two way binding.
         /// Binding will general handle strings, integers and other simple well known types.
         /// It does not handle custom types.
         /// The key is that there must be a why of converting the custom type
