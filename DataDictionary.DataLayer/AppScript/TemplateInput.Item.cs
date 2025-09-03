@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? DataSourceId
         {
             get { return GetValue<Guid>(nameof(DataSourceId)); }
-            protected set { SetValue(nameof(DataSourceId), value); }
+            set { SetValue(nameof(DataSourceId), value); }
         }
 
         /// <inheritdoc/>
@@ -52,17 +52,13 @@ namespace DataDictionary.DataLayer.AppScript
         /// Constructor for Scripting Template Data
         /// </summary>
         /// <param name="template"></param>
-        /// <param name="dataSource"></param>
-        public TemplateInputItem(ITemplateKey template, IDataSourceKey dataSource) : this()
-        {
-            TemplateId = template.TemplateId;
-            DataSourceId = dataSource.DataSourceId;
-        }
+        public TemplateInputItem(ITemplateKey template) : this()
+        { TemplateId = template.TemplateId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(DataSourceId), typeof(Guid)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

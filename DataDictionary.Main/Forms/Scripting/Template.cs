@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -31,6 +32,7 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
+                DataSourceBinding = bindingTemplateData,
                 DoWork = base.DoWork
             };
 
@@ -79,6 +81,10 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
+
+                DataSourceNameList.Load(dataSourceIdColumn);
+                templateDataSource.AutoGenerateColumns = false;
+                templateDataSource.DataSource = bindingTemplateData;
 
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -194,6 +200,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-
+        private void BindingTemplateData_AddingNew(object sender, AddingNewEventArgs e)
+        { e.NewObject = formBinding.NewDataSource(); }
     }
 }

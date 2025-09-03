@@ -39,8 +39,8 @@
             TableLayoutPanel transformLayout;
             TabPage documentTab;
             TableLayoutPanel documentLayout;
-            TabControl documentTabs;
             TableLayoutPanel optionsLayout;
+            TabControl documentTabs;
             TabPage documentPreTransformTab;
             TableLayoutPanel documentGroupLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
@@ -53,6 +53,8 @@
             templateOptionsTab = new TabControl();
             modelToolStrip = new ToolStrip();
             newDataSourceCommand = new ToolStripButton();
+            templateDataSource = new DataGridView();
+            dataSourceIdColumn = new DataGridViewComboBoxColumn();
             nodeToolStrip = new ToolStrip();
             newNodeCommand = new ToolStripButton();
             nodeTreeView = new TreeView();
@@ -80,6 +82,7 @@
             scriptingExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
+            bindingTemplateData = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             dataSourceTab = new TabPage();
             modelLayout = new TableLayoutPanel();
@@ -90,8 +93,8 @@
             transformLayout = new TableLayoutPanel();
             documentTab = new TabPage();
             documentLayout = new TableLayoutPanel();
-            documentTabs = new TabControl();
             optionsLayout = new TableLayoutPanel();
+            documentTabs = new TabControl();
             documentPreTransformTab = new TabPage();
             documentGroupLayout = new TableLayoutPanel();
             documentPlaceholder = new Label();
@@ -103,6 +106,7 @@
             dataSourceTab.SuspendLayout();
             modelLayout.SuspendLayout();
             modelToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)templateDataSource).BeginInit();
             nodeTab.SuspendLayout();
             nodeLayout.SuspendLayout();
             nodeToolStrip.SuspendLayout();
@@ -114,13 +118,14 @@
             documentTab.SuspendLayout();
             documentLayout.SuspendLayout();
             documentToolStrip.SuspendLayout();
-            documentTabs.SuspendLayout();
             optionsLayout.SuspendLayout();
+            documentTabs.SuspendLayout();
             documentPreTransformTab.SuspendLayout();
             documentGroupLayout.SuspendLayout();
             documentPostTransformTab.SuspendLayout();
             scriptLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplateData).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -194,13 +199,13 @@
             modelLayout.ColumnCount = 1;
             modelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             modelLayout.Controls.Add(modelToolStrip, 0, 0);
+            modelLayout.Controls.Add(templateDataSource, 0, 1);
             modelLayout.Dock = DockStyle.Fill;
             modelLayout.Location = new Point(0, 0);
             modelLayout.Name = "modelLayout";
             modelLayout.RowCount = 2;
             modelLayout.RowStyles.Add(new RowStyle());
-            modelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            modelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            modelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             modelLayout.Size = new Size(531, 319);
             modelLayout.TabIndex = 0;
             // 
@@ -222,13 +227,30 @@
             newDataSourceCommand.Size = new Size(23, 22);
             newDataSourceCommand.Text = "New Data Source";
             // 
+            // templateDataSource
+            // 
+            templateDataSource.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            templateDataSource.Columns.AddRange(new DataGridViewColumn[] { dataSourceIdColumn });
+            templateDataSource.Dock = DockStyle.Fill;
+            templateDataSource.Location = new Point(3, 28);
+            templateDataSource.Name = "templateDataSource";
+            templateDataSource.Size = new Size(525, 288);
+            templateDataSource.TabIndex = 1;
+            // 
+            // dataSourceIdColumn
+            // 
+            dataSourceIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataSourceIdColumn.DataPropertyName = "DataSourceId";
+            dataSourceIdColumn.HeaderText = "Data Source";
+            dataSourceIdColumn.Name = "dataSourceIdColumn";
+            // 
             // nodeTab
             // 
             nodeTab.BackColor = SystemColors.Control;
             nodeTab.Controls.Add(nodeLayout);
             nodeTab.Location = new Point(4, 24);
             nodeTab.Name = "nodeTab";
-            nodeTab.Size = new Size(531, 319);
+            nodeTab.Size = new Size(192, 72);
             nodeTab.TabIndex = 4;
             nodeTab.Text = "Nodes (XSD)";
             // 
@@ -246,7 +268,7 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeLayout.Size = new Size(531, 319);
+            nodeLayout.Size = new Size(192, 72);
             nodeLayout.TabIndex = 0;
             // 
             // nodeToolStrip
@@ -255,7 +277,7 @@
             nodeToolStrip.Items.AddRange(new ToolStripItem[] { newNodeCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(531, 25);
+            nodeToolStrip.Size = new Size(192, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "Node";
             // 
@@ -273,16 +295,16 @@
             nodeTreeView.Dock = DockStyle.Fill;
             nodeTreeView.Location = new Point(3, 28);
             nodeTreeView.Name = "nodeTreeView";
-            nodeTreeView.Size = new Size(153, 288);
+            nodeTreeView.Size = new Size(51, 41);
             nodeTreeView.TabIndex = 1;
             // 
             // nodeGroup
             // 
             nodeGroup.Controls.Add(nodeDetailLayout);
             nodeGroup.Dock = DockStyle.Fill;
-            nodeGroup.Location = new Point(162, 28);
+            nodeGroup.Location = new Point(60, 28);
             nodeGroup.Name = "nodeGroup";
-            nodeGroup.Size = new Size(366, 288);
+            nodeGroup.Size = new Size(129, 41);
             nodeGroup.TabIndex = 2;
             nodeGroup.TabStop = false;
             nodeGroup.Text = "Node";
@@ -300,7 +322,7 @@
             nodeDetailLayout.RowCount = 2;
             nodeDetailLayout.RowStyles.Add(new RowStyle());
             nodeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeDetailLayout.Size = new Size(360, 266);
+            nodeDetailLayout.Size = new Size(123, 19);
             nodeDetailLayout.TabIndex = 0;
             // 
             // nodeNameData
@@ -312,7 +334,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = true;
-            nodeNameData.Size = new Size(246, 46);
+            nodeNameData.Size = new Size(80, 46);
             nodeNameData.TabIndex = 0;
             nodeNameData.WordWrap = true;
             // 
@@ -323,10 +345,10 @@
             nodeRenderAs.Dock = DockStyle.Fill;
             nodeRenderAs.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeRenderAs.HeaderText = "Render As";
-            nodeRenderAs.Location = new Point(255, 3);
+            nodeRenderAs.Location = new Point(89, 3);
             nodeRenderAs.Name = "nodeRenderAs";
             nodeRenderAs.ReadOnly = true;
-            nodeRenderAs.Size = new Size(102, 46);
+            nodeRenderAs.Size = new Size(31, 46);
             nodeRenderAs.TabIndex = 1;
             // 
             // transformTab
@@ -335,7 +357,7 @@
             transformTab.Controls.Add(transformLayout);
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
-            transformTab.Size = new Size(531, 319);
+            transformTab.Size = new Size(192, 72);
             transformTab.TabIndex = 0;
             transformTab.Text = "Transform (XSLT)";
             // 
@@ -353,7 +375,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            transformLayout.Size = new Size(531, 319);
+            transformLayout.Size = new Size(192, 72);
             transformLayout.TabIndex = 0;
             // 
             // transformExceptionData
@@ -361,11 +383,11 @@
             transformExceptionData.AutoSize = true;
             transformExceptionData.Dock = DockStyle.Fill;
             transformExceptionData.HeaderText = "Exception(s)";
-            transformExceptionData.Location = new Point(3, 204);
+            transformExceptionData.Location = new Point(3, 56);
             transformExceptionData.Multiline = true;
             transformExceptionData.Name = "transformExceptionData";
             transformExceptionData.ReadOnly = true;
-            transformExceptionData.Size = new Size(525, 112);
+            transformExceptionData.Size = new Size(186, 13);
             transformExceptionData.TabIndex = 1;
             transformExceptionData.WordWrap = true;
             // 
@@ -379,7 +401,7 @@
             transformScriptData.Name = "transformScriptData";
             transformScriptData.Padding = new Padding(0, 3, 0, 0);
             transformScriptData.ReadOnly = false;
-            transformScriptData.Size = new Size(525, 170);
+            transformScriptData.Size = new Size(186, 22);
             transformScriptData.TabIndex = 0;
             transformScriptData.WordWrap = false;
             // 
@@ -388,7 +410,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { transformCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(531, 25);
+            transformToolStrip.Size = new Size(192, 25);
             transformToolStrip.TabIndex = 2;
             transformToolStrip.Text = "Transform";
             // 
@@ -407,7 +429,7 @@
             documentTab.Controls.Add(documentLayout);
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
-            documentTab.Size = new Size(531, 319);
+            documentTab.Size = new Size(192, 72);
             documentTab.TabIndex = 2;
             documentTab.Text = "Document (result)";
             // 
@@ -425,7 +447,7 @@
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle());
             documentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentLayout.Size = new Size(531, 319);
+            documentLayout.Size = new Size(192, 72);
             documentLayout.TabIndex = 0;
             // 
             // documentToolStrip
@@ -434,7 +456,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(531, 25);
+            documentToolStrip.Size = new Size(192, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "Document";
             // 
@@ -446,17 +468,6 @@
             documentCommand.Name = "documentCommand";
             documentCommand.Size = new Size(23, 22);
             documentCommand.Text = "Document";
-            // 
-            // documentTabs
-            // 
-            documentTabs.Controls.Add(documentPreTransformTab);
-            documentTabs.Controls.Add(documentPostTransformTab);
-            documentTabs.Dock = DockStyle.Fill;
-            documentTabs.Location = new Point(3, 136);
-            documentTabs.Name = "documentTabs";
-            documentTabs.SelectedIndex = 0;
-            documentTabs.Size = new Size(525, 180);
-            documentTabs.TabIndex = 7;
             // 
             // optionsLayout
             // 
@@ -475,7 +486,7 @@
             optionsLayout.RowStyles.Add(new RowStyle());
             optionsLayout.RowStyles.Add(new RowStyle());
             optionsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            optionsLayout.Size = new Size(525, 102);
+            optionsLayout.Size = new Size(186, 102);
             optionsLayout.TabIndex = 2;
             // 
             // rootPhysicalDirectory
@@ -489,7 +500,7 @@
             rootPhysicalDirectory.Multiline = false;
             rootPhysicalDirectory.Name = "rootPhysicalDirectory";
             rootPhysicalDirectory.ReadOnly = true;
-            rootPhysicalDirectory.Size = new Size(519, 44);
+            rootPhysicalDirectory.Size = new Size(180, 44);
             rootPhysicalDirectory.TabIndex = 0;
             rootPhysicalDirectory.WordWrap = true;
             // 
@@ -503,7 +514,7 @@
             rootDirectoryData.Location = new Point(3, 3);
             rootDirectoryData.Name = "rootDirectoryData";
             rootDirectoryData.ReadOnly = false;
-            rootDirectoryData.Size = new Size(361, 46);
+            rootDirectoryData.Size = new Size(124, 46);
             rootDirectoryData.TabIndex = 1;
             rootDirectoryData.SelectedIndexChanged += RootDirectoryData_SelectedIndexChanged;
             rootDirectoryData.SelectionChangeCommitted += RootDirectoryData_SelectionChangeCommitted;
@@ -515,11 +526,22 @@
             breakOnScopeData.Dock = DockStyle.Fill;
             breakOnScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
             breakOnScopeData.HeaderText = "New Document On";
-            breakOnScopeData.Location = new Point(370, 3);
+            breakOnScopeData.Location = new Point(133, 3);
             breakOnScopeData.Name = "breakOnScopeData";
             breakOnScopeData.ReadOnly = false;
-            breakOnScopeData.Size = new Size(152, 46);
+            breakOnScopeData.Size = new Size(50, 46);
             breakOnScopeData.TabIndex = 2;
+            // 
+            // documentTabs
+            // 
+            documentTabs.Controls.Add(documentPreTransformTab);
+            documentTabs.Controls.Add(documentPostTransformTab);
+            documentTabs.Dock = DockStyle.Fill;
+            documentTabs.Location = new Point(3, 136);
+            documentTabs.Name = "documentTabs";
+            documentTabs.SelectedIndex = 0;
+            documentTabs.Size = new Size(186, 1);
+            documentTabs.TabIndex = 7;
             // 
             // documentPreTransformTab
             // 
@@ -527,7 +549,7 @@
             documentPreTransformTab.Controls.Add(documentGroupLayout);
             documentPreTransformTab.Location = new Point(4, 24);
             documentPreTransformTab.Name = "documentPreTransformTab";
-            documentPreTransformTab.Size = new Size(517, 152);
+            documentPreTransformTab.Size = new Size(178, 0);
             documentPreTransformTab.TabIndex = 2;
             documentPreTransformTab.Text = "Pre-transform (XML)";
             // 
@@ -552,7 +574,7 @@
             documentGroupLayout.RowStyles.Add(new RowStyle());
             documentGroupLayout.RowStyles.Add(new RowStyle());
             documentGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentGroupLayout.Size = new Size(517, 152);
+            documentGroupLayout.Size = new Size(178, 0);
             documentGroupLayout.TabIndex = 1;
             // 
             // documentDirectoryData
@@ -566,7 +588,7 @@
             documentDirectoryData.Name = "documentDirectoryData";
             documentDirectoryData.ReadOnly = false;
             documentDirectoryData.SelectIcon = (Image)resources.GetObject("documentDirectoryData.SelectIcon");
-            documentDirectoryData.Size = new Size(511, 44);
+            documentDirectoryData.Size = new Size(172, 44);
             documentDirectoryData.TabIndex = 6;
             documentDirectoryData.Validated += DocumentDirectoryData_Validated;
             documentDirectoryData.SelectCommand += DocumentDirectoryData_SelectCommand;
@@ -577,7 +599,7 @@
             documentPlaceholder.Dock = DockStyle.Fill;
             documentPlaceholder.Location = new Point(129, 100);
             documentPlaceholder.Name = "documentPlaceholder";
-            documentPlaceholder.Size = new Size(133, 52);
+            documentPlaceholder.Size = new Size(1, 1);
             documentPlaceholder.TabIndex = 5;
             documentPlaceholder.Text = "<element name/>";
             documentPlaceholder.TextAlign = ContentAlignment.MiddleCenter;
@@ -591,7 +613,7 @@
             documentPrefixData.Multiline = false;
             documentPrefixData.Name = "documentPrefixData";
             documentPrefixData.ReadOnly = false;
-            documentPrefixData.Size = new Size(120, 46);
+            documentPrefixData.Size = new Size(120, 1);
             documentPrefixData.TabIndex = 2;
             documentPrefixData.WordWrap = true;
             // 
@@ -605,7 +627,7 @@
             documentPhysicalDirectory.Multiline = false;
             documentPhysicalDirectory.Name = "documentPhysicalDirectory";
             documentPhysicalDirectory.ReadOnly = true;
-            documentPhysicalDirectory.Size = new Size(511, 44);
+            documentPhysicalDirectory.Size = new Size(172, 44);
             documentPhysicalDirectory.TabIndex = 7;
             documentPhysicalDirectory.WordWrap = true;
             // 
@@ -613,11 +635,11 @@
             // 
             documentSuffixData.AutoSize = true;
             documentSuffixData.HeaderText = "Suffix";
-            documentSuffixData.Location = new Point(268, 103);
+            documentSuffixData.Location = new Point(-71, 103);
             documentSuffixData.Multiline = false;
             documentSuffixData.Name = "documentSuffixData";
             documentSuffixData.ReadOnly = false;
-            documentSuffixData.Size = new Size(120, 44);
+            documentSuffixData.Size = new Size(120, 1);
             documentSuffixData.TabIndex = 3;
             documentSuffixData.WordWrap = true;
             // 
@@ -625,11 +647,11 @@
             // 
             documentExtensionData.AutoSize = true;
             documentExtensionData.HeaderText = "Extension";
-            documentExtensionData.Location = new Point(394, 103);
+            documentExtensionData.Location = new Point(55, 103);
             documentExtensionData.Multiline = false;
             documentExtensionData.Name = "documentExtensionData";
             documentExtensionData.ReadOnly = false;
-            documentExtensionData.Size = new Size(120, 44);
+            documentExtensionData.Size = new Size(120, 1);
             documentExtensionData.TabIndex = 4;
             documentExtensionData.WordWrap = true;
             // 
@@ -639,7 +661,7 @@
             documentPostTransformTab.Controls.Add(scriptLayout);
             documentPostTransformTab.Location = new Point(4, 24);
             documentPostTransformTab.Name = "documentPostTransformTab";
-            documentPostTransformTab.Size = new Size(517, 152);
+            documentPostTransformTab.Size = new Size(178, 0);
             documentPostTransformTab.TabIndex = 3;
             documentPostTransformTab.Text = "Post-Transform (script)";
             // 
@@ -664,7 +686,7 @@
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptLayout.Size = new Size(517, 152);
+            scriptLayout.Size = new Size(178, 0);
             scriptLayout.TabIndex = 8;
             // 
             // scriptingDirectoryData
@@ -678,7 +700,7 @@
             scriptingDirectoryData.Name = "scriptingDirectoryData";
             scriptingDirectoryData.ReadOnly = false;
             scriptingDirectoryData.SelectIcon = (Image)resources.GetObject("scriptingDirectoryData.SelectIcon");
-            scriptingDirectoryData.Size = new Size(511, 44);
+            scriptingDirectoryData.Size = new Size(172, 44);
             scriptingDirectoryData.TabIndex = 7;
             scriptingDirectoryData.Validated += ScriptingDirectoryData_Validated;
             scriptingDirectoryData.SelectCommand += ScriptingDirectoryData_SelectCommand;
@@ -691,7 +713,7 @@
             scriptingPrefixData.Multiline = false;
             scriptingPrefixData.Name = "scriptingPrefixData";
             scriptingPrefixData.ReadOnly = false;
-            scriptingPrefixData.Size = new Size(120, 44);
+            scriptingPrefixData.Size = new Size(120, 1);
             scriptingPrefixData.TabIndex = 2;
             scriptingPrefixData.WordWrap = true;
             // 
@@ -701,7 +723,7 @@
             scriptPlaceHolder.Dock = DockStyle.Fill;
             scriptPlaceHolder.Location = new Point(129, 100);
             scriptPlaceHolder.Name = "scriptPlaceHolder";
-            scriptPlaceHolder.Size = new Size(133, 52);
+            scriptPlaceHolder.Size = new Size(1, 1);
             scriptPlaceHolder.TabIndex = 6;
             scriptPlaceHolder.Text = "<element name/>";
             scriptPlaceHolder.TextAlign = ContentAlignment.MiddleCenter;
@@ -710,11 +732,11 @@
             // 
             scriptingSuffixData.AutoSize = true;
             scriptingSuffixData.HeaderText = "Suffix";
-            scriptingSuffixData.Location = new Point(268, 103);
+            scriptingSuffixData.Location = new Point(-71, 103);
             scriptingSuffixData.Multiline = false;
             scriptingSuffixData.Name = "scriptingSuffixData";
             scriptingSuffixData.ReadOnly = false;
-            scriptingSuffixData.Size = new Size(120, 44);
+            scriptingSuffixData.Size = new Size(120, 1);
             scriptingSuffixData.TabIndex = 3;
             scriptingSuffixData.WordWrap = true;
             // 
@@ -728,7 +750,7 @@
             scriptingPhysicalDirectory.Multiline = false;
             scriptingPhysicalDirectory.Name = "scriptingPhysicalDirectory";
             scriptingPhysicalDirectory.ReadOnly = true;
-            scriptingPhysicalDirectory.Size = new Size(511, 44);
+            scriptingPhysicalDirectory.Size = new Size(172, 44);
             scriptingPhysicalDirectory.TabIndex = 8;
             scriptingPhysicalDirectory.WordWrap = true;
             // 
@@ -736,13 +758,17 @@
             // 
             scriptingExtensionData.AutoSize = true;
             scriptingExtensionData.HeaderText = "Extension";
-            scriptingExtensionData.Location = new Point(394, 103);
+            scriptingExtensionData.Location = new Point(55, 103);
             scriptingExtensionData.Multiline = false;
             scriptingExtensionData.Name = "scriptingExtensionData";
             scriptingExtensionData.ReadOnly = false;
-            scriptingExtensionData.Size = new Size(120, 44);
+            scriptingExtensionData.Size = new Size(120, 1);
             scriptingExtensionData.TabIndex = 4;
             scriptingExtensionData.WordWrap = true;
+            // 
+            // bindingTemplateData
+            // 
+            bindingTemplateData.AddingNew += BindingTemplateData_AddingNew;
             // 
             // Template
             // 
@@ -762,6 +788,7 @@
             modelLayout.PerformLayout();
             modelToolStrip.ResumeLayout(false);
             modelToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)templateDataSource).EndInit();
             nodeTab.ResumeLayout(false);
             nodeLayout.ResumeLayout(false);
             nodeLayout.PerformLayout();
@@ -780,9 +807,9 @@
             documentLayout.PerformLayout();
             documentToolStrip.ResumeLayout(false);
             documentToolStrip.PerformLayout();
-            documentTabs.ResumeLayout(false);
             optionsLayout.ResumeLayout(false);
             optionsLayout.PerformLayout();
+            documentTabs.ResumeLayout(false);
             documentPreTransformTab.ResumeLayout(false);
             documentPreTransformTab.PerformLayout();
             documentGroupLayout.ResumeLayout(false);
@@ -792,6 +819,7 @@
             scriptLayout.ResumeLayout(false);
             scriptLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplateData).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -831,5 +859,8 @@
         private FolderBrowserDialog folderBrowserDialog;
         private Controls.TextBoxData documentPhysicalDirectory;
         private Controls.TextBoxData scriptingPhysicalDirectory;
+        private DataGridView templateDataSource;
+        private BindingSource bindingTemplateData;
+        private DataGridViewComboBoxColumn dataSourceIdColumn;
     }
 }

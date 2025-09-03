@@ -5,13 +5,8 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template
     /// </summary>
-    public interface ITemplate
+    public interface ITemplate: ITemplateKeyName
     {
-        /// <summary>
-        /// Title of the Scripting Template
-        /// </summary>
-        String? TemplateTitle { get; }
-
         /// <summary>
         /// Description of the Scripting Template
         /// </summary>

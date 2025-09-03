@@ -26,16 +26,31 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public required BindingSource DataSourceBinding { private get; init; }
+            BindingView<TemplateInputValue> DataSources =
+                new BindingView<TemplateInputValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
             public FormBinding() : base()
             { }
 
             public void Load(TemplateIndex template)
             {
                 TemplateBinding.RaiseListChangedEvents = false;
+                DataSourceBinding.RaiseListChangedEvents = false;
+
                 Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
+
                 TemplateBinding.DataSource = Templates;
+                DataSourceBinding.DataSource = DataSources;
+
                 TemplateBinding.RaiseListChangedEvents = true;
+                DataSourceBinding.RaiseListChangedEvents = true;
+
                 TemplateBinding.ResetBindings(false);
+                DataSourceBinding.ResetBindings(false);
+
             }
 
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
@@ -49,14 +64,18 @@ namespace DataDictionary.Main.Forms.Scripting
                 work.AddRange(data.Delete(template));
                 work.AddRange(data.Load(factory, template));
 
-                DoWork(work,completing);
+                DoWork(work, completing);
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
                     Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                    DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
                     TemplateBinding.DataSource = Templates;
+                    DataSourceBinding.DataSource = DataSources;
                     TemplateBinding.RaiseListChangedEvents = true;
+                    DataSourceBinding.RaiseListChangedEvents = true;
                     TemplateBinding.ResetBindings(false);
+                    DataSourceBinding.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -77,9 +96,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 void completing(RunWorkerCompletedEventArgs args)
                 {
                     Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                    DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
                     TemplateBinding.DataSource = Templates;
+                    DataSourceBinding.DataSource = DataSources;
                     TemplateBinding.RaiseListChangedEvents = true;
+                    DataSourceBinding.RaiseListChangedEvents = true;
                     TemplateBinding.ResetBindings(false);
+                    DataSourceBinding.ResetBindings(false);
 
                     if (onComplete is not null) { onComplete(args); }
                 }
@@ -91,6 +114,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 data.Templates.Add(result);
 
                 return result;
+            }
+
+            public TemplateInputValue NewDataSource()
+            {
+                if (TryGetValue(out TemplateValue? value))
+                { return new TemplateInputValue(value); }
+                else { throw new InvalidOperationException("Current TemplateValue not defined"); }
             }
 
             public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
