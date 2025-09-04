@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            IDataSource data = BusinessData.Scripting.GetDataSource();
+            IDataSource data = BusinessData.Scripting;
 
             public required BindingSource DataSourceBinding { private get; init; }
             BindingView<DataSourceValue> DataSources =
@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 DataSourceBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting.GetDataSource(); } });
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
                 work.AddRange(data.Delete(dataSource));
                 work.AddRange(data.Load(factory, dataSource));
 

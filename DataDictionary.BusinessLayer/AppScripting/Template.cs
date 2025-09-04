@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ITemplate :
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>, IDeleteData<ITemplateIndex>,
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
+        IGetTemporal<AppModel.IModelIndex>, IGetTemporal<ITemplateIndex>,
         IBindListChanged
     {
         /// <summary>
@@ -249,6 +250,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(templateSources.Delete());
             return work;
         }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(ITemplateIndex key)
+        { return templateValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(AppModel.IModelIndex key)
+        { return templateValues.GetTemporal(key); }
 
         /// <inheritdoc/>
         public void Remove(AppModel.IModelIndex dataKey)

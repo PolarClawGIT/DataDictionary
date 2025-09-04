@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            ITemplate data = BusinessData.Scripting.GetTemplate();
+            ITemplate data = BusinessData.Scripting;
 
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> Templates =
@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting.GetTemplate(); } });
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
                 work.AddRange(data.Delete(template));
                 work.AddRange(data.Load(factory, template));
 

@@ -12,41 +12,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Interface representing Scripting
     /// </summary>
     public interface IScripting :
+        ITemplate, IDataSource, // Allows the this interface to act like it is each of the child wrappers.
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
         IBindListChanged
     {
-        /// <inheritdoc cref="IDataSource.DataSources"/>
-        IDataSourceData DataSources { get; }
-
-        /// <inheritdoc cref="IDataSource.DataObjects"/>
-        IDataObjectData DataObjects { get; }
-
-        /// <inheritdoc cref="ITemplate.Templates"/>
-        ITemplateData Templates { get; }
+        // These are re-named properties
 
         /// <inheritdoc cref="ITemplate.Elements"/>
         ITemplateElementData TemplateElements { get; }
 
         /// <inheritdoc cref="ITemplate.Attributes"/>
-        ITemplateAttributeData TemplateAttributes { get; }
+        public ITemplateAttributeData TemplateAttributes { get; }
 
         /// <inheritdoc cref="ITemplate.AttributeOwners"/>
-        ITemplateNodeOwnerData TemplateAttributeOwners { get; }
-
-        /// <inheritdoc cref="ITemplate.TemplateSources"/>
-        ITemplateInputData TemplateSources { get; }
-
-        /// <summary>
-        /// Gets the IDataSource wrapper instance.
-        /// </summary>
-        /// <returns></returns>
-        IDataSource GetDataSource();
-
-        /// <summary>
-        /// Gets the ITemplate wrapper instance.
-        /// </summary>
-        /// <returns></returns>
-        ITemplate GetTemplate();
+        public ITemplateNodeOwnerData TemplateAttributeOwners { get; }
     }
 
     class Scripting : IScripting, IDataTableFile
@@ -69,11 +48,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDataSource.DataSources"/>
         public IDataSourceData DataSources { get { return dataSourceValue.DataSources; } }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDataSource.DataObjects"/>
         public IDataObjectData DataObjects { get { return dataSourceValue.DataObjects; } }
+
+        // Not actually needed.
+        //IDataSourceData IDataSource.DataSources { get { return dataSourceValue.DataSources; } }
+        //IDataObjectData IDataSource.DataObjects { get { return dataSourceValue.DataObjects; } }
 
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValue.Templates; } }
@@ -89,6 +72,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public ITemplateInputData TemplateSources { get { return templateValue.TemplateSources; } }
+
+        //ITemplateData ITemplate.Templates { get { return templateValue.Templates; } } // Not Needed
+        ITemplateElementData ITemplate.Elements { get { return templateValue.Elements; } }
+        ITemplateAttributeData ITemplate.Attributes { get { return templateValue.Attributes; } }
+        ITemplateNodeOwnerData ITemplate.AttributeOwners { get { return templateValue.AttributeOwners; } }
+        //ITemplateInputData ITemplate.TemplateSources { get { return templateValue.TemplateSources; } } // Not Needed
 
         /// <inheritdoc/>
         public void Clear()
@@ -190,5 +179,44 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ITemplate GetTemplate()
         { return templateValue; }
+
+        IReadOnlyList<WorkItem> ISaveData<ITemplateIndex>.Save(IDatabaseWork factory, ITemplateIndex template)
+        { return templateValue.Save(factory, template); }
+
+        IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template)
+        { return templateValue.Load(factory, template); }
+
+        IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template, ITemporalIndex asOfUtcDate)
+        { return templateValue.Load(factory, template, asOfUtcDate); }
+
+        IReadOnlyList<WorkItem> IDeleteData<ITemplateIndex>.Delete(ITemplateIndex template)
+        { return templateValue.Delete(template); }
+
+        void IDeleteData<ITemplateIndex>.Remove(ITemplateIndex template)
+        { templateValue.Remove(template); }
+
+        ITemporalData IGetTemporal<ITemplateIndex>.GetTemporal(ITemplateIndex template)
+        { return templateValue.GetTemporal(template); }
+
+        IReadOnlyList<WorkItem> ISaveData<IDataSourceIndex>.Save(IDatabaseWork factory, IDataSourceIndex dataSource)
+        { return dataSourceValue.Save(factory, dataSource); }
+
+        IReadOnlyList<WorkItem> ILoadData<IDataSourceIndex>.Load(IDatabaseWork factory, IDataSourceIndex dataSource)
+        { return dataSourceValue.Load(factory, dataSource); }
+
+        IReadOnlyList<WorkItem> ILoadData<IDataSourceIndex>.Load(IDatabaseWork factory, IDataSourceIndex dataSource, ITemporalIndex asOfUtcDate)
+        { return dataSourceValue.Load(factory, dataSource, asOfUtcDate); }
+
+        IReadOnlyList<WorkItem> IDeleteData<IDataSourceIndex>.Delete(IDataSourceIndex dataSource)
+        { return dataSourceValue.Delete(dataSource); }
+
+        void IDeleteData<IDataSourceIndex>.Remove(IDataSourceIndex dataSource)
+        { dataSourceValue.Remove(dataSource); }
+
+        ITemporalData IGetTemporal<IDataSourceIndex>.GetTemporal(IDataSourceIndex dataSource)
+        { return dataSourceValue.GetTemporal(dataSource); }
+
+        ITemporalData IGetTemporal<IModelIndex>.GetTemporal(IModelIndex key)
+        { throw new InvalidOperationException("Use GetTemporal on ITemplate or IDataSource instead."); }
     }
 }
