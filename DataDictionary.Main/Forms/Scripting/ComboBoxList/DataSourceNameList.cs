@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
         {
             BindingList<DataSourceNameList> list = new BindingList<DataSourceNameList>();
 
-            foreach (DataSourceNameList item in BusinessData.ScriptingDataSource.DataSources.
+            foreach (DataSourceNameList item in BusinessData.Scripting.DataSources.
                 Select(s => new DataSourceNameList()
                 {
                     DataSourceId = s.DataSourceId,
@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
         {
             BindingList<DataSourceNameList> list = new BindingList<DataSourceNameList>();
 
-            foreach (DataSourceNameList item in BusinessData.ScriptingDataSource.DataSources.
+            foreach (DataSourceNameList item in BusinessData.Scripting.DataSources.
                 Select(s => new DataSourceNameList()
                 {
                     DataSourceId = s.DataSourceId,

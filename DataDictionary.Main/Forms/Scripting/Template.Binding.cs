@@ -1,13 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -19,7 +14,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            ITemplate data = BusinessData.ScriptingTemplate;
+            ITemplate data = BusinessData.Scripting.GetTemplate();
 
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> Templates =
@@ -60,7 +55,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.ScriptingTemplate; } });
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting.GetTemplate(); } });
                 work.AddRange(data.Delete(template));
                 work.AddRange(data.Load(factory, template));
 

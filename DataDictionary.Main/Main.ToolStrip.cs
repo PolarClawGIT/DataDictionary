@@ -226,7 +226,7 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 <TemplateValue, Forms.Scripting.Template>
-                (ScopeType.ScriptingTemplate, BusinessData.ScriptingTemplate.Templates)
+                (ScopeType.ScriptingTemplate, BusinessData.Scripting.Templates)
             { SelectedForm = (data) => new Forms.Scripting.Template(data) });
         }
 

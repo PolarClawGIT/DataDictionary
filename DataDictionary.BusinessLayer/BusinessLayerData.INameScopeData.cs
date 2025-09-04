@@ -1,10 +1,4 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
@@ -31,8 +25,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(modelValues.LoadNamedScope(namedScopeValues.Add));
             work.AddRange(catalogValue.LoadNamedScope(namedScopeValues.Add));
             work.AddRange(libraryValues.LoadNamedScope(namedScopeValues.Add));
-            work.AddRange(templateValues.LoadNamedScope(namedScopeValues.Add));
-            work.AddRange(templateDataSource.LoadNamedScope(namedScopeValues.Add));
+            work.AddRange(scriptingValue.LoadNamedScope(namedScopeValues.Add));
             return work;
         }
     }

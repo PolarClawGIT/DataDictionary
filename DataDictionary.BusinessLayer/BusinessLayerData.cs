@@ -71,8 +71,7 @@ namespace DataDictionary.BusinessLayer
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
-            templateValues = new AppScripting.Template();
-            templateDataSource = new AppScripting.DataSource();
+            scriptingValue = new AppScripting.Scripting();
         }
 
         /// <summary>
@@ -90,9 +89,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(Model.Load(factory, key));
             work.AddRange(CatalogModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
-
-            work.AddRange(ScriptingTemplate.Load(factory, key));
-            work.AddRange(ScriptingDataSource.Load(factory, key));
+            work.AddRange(Scripting.Load(factory, key));
 
             return work;
         }
@@ -106,9 +103,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(Model.Load(factory, key, asOfUtcDate));
             work.AddRange(CatalogModel.Load(factory, key, asOfUtcDate));
             work.AddRange(LibraryModel.Load(factory, key, asOfUtcDate));
-
-            work.AddRange(ScriptingTemplate.Load(factory, key));
-            work.AddRange(ScriptingDataSource.Load(factory, key));
+            work.AddRange(Scripting.Load(factory, key));
 
             return work;
         }
@@ -121,9 +116,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(Model.Save(factory, key));
             work.AddRange(CatalogModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
-
-            work.AddRange(ScriptingTemplate.Save(factory, key));
-            work.AddRange(ScriptingDataSource.Save(factory, key));
+            work.AddRange(Scripting.Save(factory, key));
 
             return work;
         }
@@ -136,9 +129,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(Model.Delete());
             work.AddRange(CatalogModel.Delete());
             work.AddRange(LibraryModel.Delete());
-
-            work.AddRange(ScriptingTemplate.Delete());
-            work.AddRange(ScriptingDataSource.Delete());
+            work.AddRange(Scripting.Delete());
 
             work.Add(new WorkItem() { DoWork = namedScopeValues.Clear });
 
@@ -182,9 +173,7 @@ namespace DataDictionary.BusinessLayer
                     modelValues.Import(workSet);
                     catalogValue.Import(workSet);
                     libraryValues.Import(workSet);
-
-                    templateValues.Import(workSet);
-                    templateDataSource.Import(workSet);
+                    scriptingValue.Import(workSet);
                 }
 
                 ModelFile = file;
@@ -207,9 +196,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.AddRange(modelValues.Export().ToArray());
                     workSet.Tables.AddRange(catalogValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValues.Export().ToArray());
-
-                    workSet.Tables.AddRange(templateValues.Export().ToArray());
-                    workSet.Tables.AddRange(templateDataSource.Export().ToArray());
+                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
@@ -224,10 +211,7 @@ namespace DataDictionary.BusinessLayer
             Model.Remove(dataKey);
             CatalogModel.Remove(dataKey);
             LibraryModel.Remove(dataKey);
-
-            ScriptingTemplate.Remove(dataKey);
-            ScriptingDataSource.Remove(dataKey);
-
+            Scripting.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -236,9 +220,7 @@ namespace DataDictionary.BusinessLayer
             Model.Clear();
             CatalogModel.Clear();
             LibraryModel.Clear();
-
-            ScriptingTemplate.Clear();
-            ScriptingDataSource.Clear();
+            Scripting.Clear();
         }
     }
 }

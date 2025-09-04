@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
         {
             BindingList<TemplateNameList> list = new BindingList<TemplateNameList>();
 
-            foreach (TemplateNameList item in BusinessData.ScriptingTemplate.Templates.
+            foreach (TemplateNameList item in BusinessData.Scripting.Templates.
                 Select(s => new TemplateNameList()
                 {
                     TemplateId = s.TemplateId,
@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
         {
             BindingList<TemplateNameList> list = new BindingList<TemplateNameList>();
 
-            foreach (TemplateNameList item in BusinessData.ScriptingTemplate.Templates.
+            foreach (TemplateNameList item in BusinessData.Scripting.Templates.
                 Select(s => new TemplateNameList()
                 {
                     TemplateId = s.TemplateId,

@@ -40,8 +40,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     BuildData(templates, sources);
 
-                    BusinessData.ScriptingTemplate.Templates.ListChanged += ListChanged;
-                    BusinessData.ScriptingDataSource.DataSources.ListChanged += ListChanged;
+                    BusinessData.Scripting.Templates.ListChanged += ListChanged;
+                    BusinessData.Scripting.DataSources.ListChanged += ListChanged;
 
                     ManagerBinding.DataSource = managerData;
                     ManagerBinding.RaiseListChangedEvents = true;
@@ -54,15 +54,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     BindingCompare bindingCompare = new BindingCompare();
                     managerData.AddRange(
-                        BusinessData.ScriptingTemplate.Templates.Select(s => new BindingValue(s)).
+                        BusinessData.Scripting.Templates.Select(s => new BindingValue(s)).
                         Union(templates.Select(s => new BindingValue(s)), bindingCompare).
-                        Union(BusinessData.ScriptingDataSource.DataSources.Select(s => new BindingValue(s)), bindingCompare).
+                        Union(BusinessData.Scripting.DataSources.Select(s => new BindingValue(s)), bindingCompare).
                         Union(sources.Select(s => new BindingValue(s)), bindingCompare));
 
                     foreach (var item in managerData)
                     {
-                        if (BusinessData.ScriptingTemplate.Templates.Any(a => item.Equals(a))
-                            || BusinessData.ScriptingDataSource.DataSources.Any(a => item.Equals(a)))
+                        if (BusinessData.Scripting.Templates.Any(a => item.Equals(a))
+                            || BusinessData.Scripting.DataSources.Any(a => item.Equals(a)))
                         { item.InModel = true; }
 
                         if (templates.Any(a => item.Equals(a))
