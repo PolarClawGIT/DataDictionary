@@ -45,6 +45,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     ManagerBinding.DataSource = managerData;
                     ManagerBinding.RaiseListChangedEvents = true;
+                    ManagerBinding.ResetBindings(false);
                     if (onComplete is not null) { onComplete(args); }
                 }
 

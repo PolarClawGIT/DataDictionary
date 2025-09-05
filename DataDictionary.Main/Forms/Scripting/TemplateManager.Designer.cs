@@ -38,8 +38,8 @@
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateCommands = new ContextMenuStrip(components);
-            newTemplate = new ToolStripMenuItem();
             newDataSource = new ToolStripMenuItem();
+            newTemplate = new ToolStripMenuItem();
             bindingManager = new BindingSource(components);
             templateManagerLayout = new TableLayoutPanel();
             templateManagerLayout.SuspendLayout();
@@ -135,19 +135,7 @@
             // 
             templateCommands.Items.AddRange(new ToolStripItem[] { newDataSource, newTemplate });
             templateCommands.Name = "templateCommands";
-            templateCommands.Size = new Size(181, 70);
-            // 
-            // newTemplate
-            // 
-            newTemplate.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newTemplate.Image = Properties.Resources.NewXSLTransform;
-            newTemplate.MergeAction = MergeAction.Insert;
-            newTemplate.MergeIndex = 0;
-            newTemplate.Name = "newTemplate";
-            newTemplate.Size = new Size(180, 22);
-            newTemplate.Text = "new Template";
-            newTemplate.ToolTipText = "Create a new Template";
-            newTemplate.Click += NewTemplate_Click;
+            templateCommands.Size = new Size(163, 48);
             // 
             // newDataSource
             // 
@@ -156,10 +144,22 @@
             newDataSource.MergeAction = MergeAction.Insert;
             newDataSource.MergeIndex = 0;
             newDataSource.Name = "newDataSource";
-            newDataSource.Size = new Size(180, 22);
+            newDataSource.Size = new Size(162, 22);
             newDataSource.Text = "new Data Source";
             newDataSource.ToolTipText = "Create a new Data Source";
             newDataSource.Click += NewDataSource_Click;
+            // 
+            // newTemplate
+            // 
+            newTemplate.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newTemplate.Image = Properties.Resources.NewXSLTransform;
+            newTemplate.MergeAction = MergeAction.Insert;
+            newTemplate.MergeIndex = 0;
+            newTemplate.Name = "newTemplate";
+            newTemplate.Size = new Size(162, 22);
+            newTemplate.Text = "new Template";
+            newTemplate.ToolTipText = "Create a new Template";
+            newTemplate.Click += NewTemplate_Click;
             // 
             // TemplateManager
             // 
