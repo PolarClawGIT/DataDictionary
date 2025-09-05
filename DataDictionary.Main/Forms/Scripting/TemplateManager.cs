@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
@@ -25,7 +26,8 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 ManagerBinding = bindingManager,
-                DoWork = base.DoWork
+                DoWork = base.DoWork,
+                OnRefresh = () => { SendMessage(new RefreshNavigation()); }
             };
         }
 

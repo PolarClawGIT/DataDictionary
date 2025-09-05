@@ -17,6 +17,7 @@ namespace DataDictionary.Main.Forms.Scripting
             BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            public required Action OnRefresh { get; init; }
 
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
@@ -40,9 +41,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     BuildData(templates, sources);
 
-                    BusinessData.Scripting.Templates.ListChanged += ListChanged;
-                    BusinessData.Scripting.DataSources.ListChanged += ListChanged;
-
                     ManagerBinding.DataSource = managerData;
                     ManagerBinding.RaiseListChangedEvents = true;
                     ManagerBinding.ResetBindings(false);
@@ -51,6 +49,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void BuildData(ITemplateData templates, IDataSourceData sources)
                 {
+                    managerData.ListChanged -= ManagerData_ListChanged;
                     managerData.Clear();
 
                     BindingCompare bindingCompare = new BindingCompare();
@@ -70,14 +69,56 @@ namespace DataDictionary.Main.Forms.Scripting
                             || sources.Any(a => item.Equals(a)))
                         { item.InDatabase = true; }
                     }
+
+                    managerData.ListChanged += ManagerData_ListChanged;
                 }
 
-                void ListChanged(Object? sender, ListChangedEventArgs e)
+                void ManagerData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    ManagerBinding.RaiseListChangedEvents = false;
-                    BuildData(templates, sources);
-                    ManagerBinding.RaiseListChangedEvents = true;
-                    ManagerBinding.ResetBindings(false);
+                    if (e.ListChangedType is ListChangedType.ItemChanged
+                        && e.NewIndex >= 0
+                        && e.NewIndex < managerData.Count)
+                    {
+                        IDatabaseWork factory = BusinessData.GetDbFactory();
+                        List<WorkItem> work = new List<WorkItem>();
+                        work.Add(factory.OpenConnection());
+
+                        if (managerData[e.NewIndex].InModel)
+                        { // Add to Model
+                            if (managerData[e.NewIndex].TryGetValue(out ITemplateValue? template))
+                            {
+                                TemplateIndex key = new TemplateIndex(template);
+                                work.AddRange(BusinessData.Scripting.Delete(key));
+                                work.AddRange(BusinessData.Scripting.Load(factory, key));
+                            }
+
+                            if (managerData[e.NewIndex].TryGetValue(out IDataSourceValue? dataSource))
+                            {
+                                DataSourceIndex key = new DataSourceIndex(dataSource);
+                                work.AddRange(BusinessData.Scripting.Delete(key));
+                                work.AddRange(BusinessData.Scripting.Load(factory, key));
+                            }
+                        }
+                        else
+                        { // Remove from Model
+                            if (managerData[e.NewIndex].TryGetValue(out ITemplateValue? template))
+                            {
+                                TemplateIndex key = new TemplateIndex(template);
+                                work.AddRange(BusinessData.Scripting.Delete(key));
+                            }
+
+                            if (managerData[e.NewIndex].TryGetValue(out IDataSourceValue? dataSource))
+                            {
+                                DataSourceIndex key = new DataSourceIndex(dataSource);
+                                work.AddRange(BusinessData.Scripting.Delete(key));
+                            }
+                        }
+
+                        DoWork(work, ModelUpdated);
+                    }
+
+                    void ModelUpdated(RunWorkerCompletedEventArgs args)
+                    { OnRefresh(); }
                 }
             }
 
@@ -226,6 +267,20 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (dataSource is ITemplateValue value)
                 { result = new TemplateIndex(value); return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out IDataSourceValue? result)
+            {
+                if (dataSource is IDataSourceValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out ITemplateValue? result)
+            {
+                if (template is ITemplateValue value)
+                { result = value; return true; }
                 else { result = null; return false; }
             }
 
