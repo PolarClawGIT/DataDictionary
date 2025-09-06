@@ -77,7 +77,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (e.ListChangedType is ListChangedType.ItemChanged
                         && e.NewIndex >= 0
-                        && e.NewIndex < managerData.Count)
+                        && e.NewIndex < managerData.Count
+                        && e.PropertyDescriptor is not null
+                        && e.PropertyDescriptor.Name is nameof(BindingValue.InModel))
                     {
                         IDatabaseWork factory = BusinessData.GetDbFactory();
                         List<WorkItem> work = new List<WorkItem>();
