@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DataSourceIndex(this),
-                GetPath = () => new PathIndex(DataSourceTitle),
+                GetPath = () => new PathIndex(Scope),
                 GetScope = () => Scope,
                 GetTitle = () => DataSourceTitle ?? ScopeEnumeration.Cast(Scope).Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(DataSourceTitle),

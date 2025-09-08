@@ -299,10 +299,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateSources.ResetBindings();
         }
 
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<TemplateValue, INamedScopeSourceValue?>? getParent)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope, getParent));
             return work;
         }
 

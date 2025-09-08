@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -149,10 +150,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            // TODO: Create parent and pass to methods.
+            if(dataSourceValue.DataSources.Count >0
+                && templateValue.Templates.Count > 0)
+            {
+                // Root Node
+                NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
+                work.Add(new WorkItem() { DoWork = () => { addNamedScope(null, new NamedScopeValue(root)); } });
 
-            work.AddRange(dataSourceValue.LoadNamedScope(addNamedScope));
-            work.AddRange(templateValue.LoadNamedScope(addNamedScope));
+                // Children
+                work.AddRange(dataSourceValue.LoadNamedScope(addNamedScope, (a) => { return root; }));
+                work.AddRange(templateValue.LoadNamedScope(addNamedScope, (a) => { return root; }));
+            }
             return work;
         }
 
