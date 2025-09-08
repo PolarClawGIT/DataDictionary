@@ -124,7 +124,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? ModelPropertyId
         {
             get { return GetValue<Guid>(nameof(ModelPropertyId)); }
-            protected set { SetValue(nameof(ModelPropertyId), value); }
+            set { SetValue(nameof(ModelPropertyId), value); }
         }
 
         /// <inheritdoc/>
