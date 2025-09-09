@@ -18,8 +18,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IKeyEquality<ITemplateNodeIndex>, IKeyEquality<TemplateNodeIndex>
     {
         /// <inheritdoc cref="TemplateNodeKey()"/>
-        //public TemplateNodeIndex() : base()
-        //{ }
+        public TemplateNodeIndex() : base()
+        { }
 
         /// <inheritdoc cref="TemplateNodeKey(ITemplateNodeKey)"/>
         public TemplateNodeIndex(ITemplateNodeIndex source) : base(source)

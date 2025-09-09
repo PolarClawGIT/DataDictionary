@@ -26,11 +26,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingData; } }
 
         /// <inheritdoc/>
-        /// <remarks>Attribute always returns null.
-        /// Use Node Owner to determine the muliple possible owners.</remarks>
-        Guid? ITemplateNodeValue.ParentElementId { get { return null; } }
-
-        /// <inheritdoc/>
         public TemplateAttributeValue() : base()
         {
             dataValue = new DataValue(this)

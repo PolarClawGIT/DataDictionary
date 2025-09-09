@@ -1,9 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -11,6 +14,109 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
+
+            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            //public required Action OnRefresh { get; init; }
+
+            public required BindingSource TemplateBinding { private get; init; }
+            BindingView<TemplateValue> templates =
+                new BindingView<TemplateValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource TemplateNodeBinding { private get; init; }
+            BindingList<BindingValue> templateNodes { get; } = new BindingList<BindingValue>();
+
+            BindingView<TemplateAttributeValue> attributeNodes =
+                new BindingView<TemplateAttributeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            BindingView<TemplateElementValue> elementNodes =
+                new BindingView<TemplateElementValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            ITemplate data = BusinessData.Scripting;
+
+            public FormBinding()
+            { }
+
+            public void Load(TemplateIndex template)
+            {
+                TemplateBinding.RaiseListChangedEvents = false;
+                TemplateNodeBinding.RaiseListChangedEvents = false;
+
+                templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                attributeNodes = new BindingView<TemplateAttributeValue>(data.Attributes, w => template.Equals(w));
+                elementNodes = new BindingView<TemplateElementValue>(data.Elements, w => template.Equals(w));
+
+                templateNodes.Clear();
+                foreach (TemplateAttributeValue item in attributeNodes)
+                { templateNodes.Add(new BindingValue(item)); }
+
+                foreach (TemplateElementValue item in elementNodes)
+                { templateNodes.Add(new BindingValue(item)); }
+
+                TemplateBinding.DataSource = templates;
+                TemplateNodeBinding.DataSource = templateNodes;
+
+                TemplateBinding.RaiseListChangedEvents = false;
+                TemplateNodeBinding.RaiseListChangedEvents = false;
+                TemplateBinding.ResetBindings(false);
+                TemplateNodeBinding.ResetBindings(false);
+            }
+
+            public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
+                work.AddRange(data.Delete(template));
+                work.AddRange(data.Load(factory, template));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(template);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public void Load(TemplateIndex template, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = ITemplate.Create(); } });
+                work.AddRange(data.Load(factory, template, temporal));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(template);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public Boolean SetPosition(ITemplateNodeIndex node)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(node);
+
+                if (templateNodes.FirstOrDefault(w => key.Equals(w)) is BindingValue value)
+                { TemplateNodeBinding.Position = templateNodes.IndexOf(value); return true; }
+                else { return false; }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out ITemplateNodeValue? result)
+            {
+                if (TemplateNodeBinding.Position >= 0
+                    && TemplateNodeBinding.Current is ITemplateNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
 
         }
 
@@ -26,15 +132,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.AttributeName; }
-                    else if (elementValue is TemplateElementValue element) { return element.ElementName; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.AttributeName; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.ElementName; }
                     else { return null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.AttributeName = value; }
-                    else if (elementValue is TemplateElementValue element) { element.ElementName = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.AttributeName = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.ElementName = value; }
                 }
             }
 
@@ -42,15 +152,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.RenderOrder; }
-                    else if (elementValue is TemplateElementValue element) { return element.RenderOrder; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.RenderOrder; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.RenderOrder; }
                     else { return null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.RenderOrder = value; }
-                    else if (elementValue is TemplateElementValue element) { element.RenderOrder = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.RenderOrder = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.RenderOrder = value; }
                 }
             }
 
@@ -58,15 +172,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.RenderValueAs; }
-                    else if (elementValue is TemplateElementValue element) { return element.RenderValueAs; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.RenderValueAs; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.RenderValueAs; }
                     else { return TemplateNodeValueAsType.none; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.RenderValueAs = value; }
-                    else if (elementValue is TemplateElementValue element) { element.RenderValueAs = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.RenderValueAs = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.RenderValueAs = value; }
                 }
             }
 
@@ -74,15 +192,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.FixedValue; }
-                    else if (elementValue is TemplateElementValue element) { return element.FixedValue; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.FixedValue; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.FixedValue; }
                     else { return null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.FixedValue = value; }
-                    else if (elementValue is TemplateElementValue element) { element.FixedValue = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.FixedValue = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.FixedValue = value; }
                 }
             }
 
@@ -90,15 +212,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.ObjectScope; }
-                    else if (elementValue is TemplateElementValue element) { return element.ObjectScope; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.ObjectScope; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.ObjectScope; }
                     else { return ScopeType.Null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.ObjectScope = value; }
-                    else if (elementValue is TemplateElementValue element) { element.ObjectScope = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.ObjectScope = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.ObjectScope = value; }
                 }
             }
 
@@ -106,15 +232,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.ObjectProperty; }
-                    else if (elementValue is TemplateElementValue element) { return element.ObjectProperty; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.ObjectProperty; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.ObjectProperty; }
                     else { return null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.ObjectProperty = value; }
-                    else if (elementValue is TemplateElementValue element) { element.ObjectProperty = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.ObjectProperty = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.ObjectProperty = value; }
                 }
             }
 
@@ -122,15 +252,19 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.ModelPropertyId; }
-                    else if (elementValue is TemplateElementValue element) { return element.ModelPropertyId; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.ModelPropertyId; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.ModelPropertyId; }
                     else { return null; }
                 }
 
                 set
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { attribute.ModelPropertyId = value; }
-                    else if (elementValue is TemplateElementValue element) { element.ModelPropertyId = value; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { attribute.ModelPropertyId = value; }
+                    else if (elementValue is TemplateElementValue element)
+                    { element.ModelPropertyId = value; }
                 }
             }
 
@@ -138,8 +272,10 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is TemplateAttributeValue attribute) { return attribute.AttributeId; }
-                    else if (elementValue is TemplateElementValue element) { return element.ElementId; }
+                    if (attributeValue is TemplateAttributeValue attribute)
+                    { return attribute.AttributeId; }
+                    else if (elementValue is TemplateElementValue element)
+                    { return element.ElementId; }
                     else { return null; }
                 }
             }
@@ -148,7 +284,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeItem attribute) { return attribute.AttributeName; }
+                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeItem attribute)
+                    { return attribute.AttributeName; }
                     else { return null; }
                 }
             }
@@ -157,7 +294,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeKey attribute) { return attribute.AttributeId; }
+                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeKey attribute)
+                    { return attribute.AttributeId; }
                     else { return null; }
                 }
             }
@@ -166,8 +304,10 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is ITemplateIndex attribute) { return attribute.TemplateId; }
-                    else if (elementValue is ITemplateIndex element) { return element.TemplateId; }
+                    if (attributeValue is ITemplateIndex attribute)
+                    { return attribute.TemplateId; }
+                    else if (elementValue is ITemplateIndex element)
+                    { return element.TemplateId; }
                     else { return null; }
                 }
             }
@@ -176,8 +316,10 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is ITemporal attribute) { return attribute.Temporal; }
-                    else if (elementValue is ITemporal element) { return element.Temporal; }
+                    if (attributeValue is ITemporal attribute)
+                    { return attribute.Temporal; }
+                    else if (elementValue is ITemporal element)
+                    { return element.Temporal; }
                     else { throw new NotImplementedException(); }
                 }
             }
@@ -186,20 +328,24 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (attributeValue is IDataValue attribute) { return attribute.Index; }
-                    else if (elementValue is IDataValue element) { return element.Index; }
+                    if (attributeValue is IDataValue attribute)
+                    { return attribute.Index; }
+                    else if (elementValue is IDataValue element)
+                    { return element.Index; }
                     else { throw new NotImplementedException(); }
                 }
             }
 
-            String IDataValue.Title { get { return NodeName??String.Empty; } }
+            String IDataValue.Title { get { return NodeName ?? String.Empty; } }
 
             public ScopeType Scope
             {
                 get
                 {
-                    if (attributeValue is IScopeType attribute) { return attribute.Scope; }
-                    else if (elementValue is IScopeType element) { return element.Scope; }
+                    if (attributeValue is IScopeType attribute)
+                    { return attribute.Scope; }
+                    else if (elementValue is IScopeType element)
+                    { return element.Scope; }
                     else { return ScopeType.Null; }
                 }
             }
@@ -208,7 +354,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element) { return element.ElementName; }
+                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
+                    { return element.ElementName; }
                     else { return null; }
                 }
             }
@@ -217,17 +364,24 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 get
                 {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element) { return element.ElementId; }
+                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
+                    { return element.ElementId; }
                     else { return null; }
                 }
             }
 
-            Guid? DataLayer.AppScript.ITemplateElementKeyParent.ParentElementId
+            public Guid? ParentElementId
             {
                 get
                 {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element) { return element.ParentElementId; }
+                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
+                    { return element.ParentElementId; }
                     else { return null; }
+                }
+                set
+                {
+                    if (elementValue is TemplateElementValue element)
+                    { element.ParentElementId = value; }
                 }
             }
 
@@ -270,7 +424,6 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             /// <inheritdoc/>
-            /// <remarks>Object</remarks>
             public override Boolean Equals(object? obj)
             {
                 return obj is BindingValue value

@@ -30,8 +30,14 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for the Primary Key of the Scripting Template Node.
         /// </summary>
+        public TemplateNodeKey() :base ()
+        { }
+
+        /// <summary>
+        /// Constructor for the Primary Key of the Scripting Template Node.
+        /// </summary>
         /// <param name="source"></param>
-        public TemplateNodeKey(ITemplateNodeKey source) : base()
+        public TemplateNodeKey(ITemplateNodeKey source) : this()
         {
             if (source.NodeId is Guid) { NodeId = source.NodeId; }
             else { NodeId = Guid.Empty; }

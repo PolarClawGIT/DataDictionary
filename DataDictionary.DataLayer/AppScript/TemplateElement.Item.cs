@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? ParentElementId
         {
             get { return GetValue<Guid>(nameof(ParentElementId)); }
-            protected set { SetValue(nameof(ParentElementId), value); }
+            set { SetValue(nameof(ParentElementId), value); }
         }
 
         /// <inheritdoc/>

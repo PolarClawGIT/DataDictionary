@@ -17,12 +17,12 @@ namespace DataDictionary.Main.Forms.Scripting
             ITemplate data = BusinessData.Scripting;
 
             public required BindingSource TemplateBinding { private get; init; }
-            BindingView<TemplateValue> Templates =
+            BindingView<TemplateValue> templates =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource DataSourceBinding { private get; init; }
-            BindingView<TemplateInputValue> DataSources =
+            BindingView<TemplateInputValue> dataSources =
                 new BindingView<TemplateInputValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
@@ -34,11 +34,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.RaiseListChangedEvents = false;
                 DataSourceBinding.RaiseListChangedEvents = false;
 
-                Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
-                DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
+                templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                dataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
 
-                TemplateBinding.DataSource = Templates;
-                DataSourceBinding.DataSource = DataSources;
+                TemplateBinding.DataSource = templates;
+                DataSourceBinding.DataSource = dataSources;
 
                 TemplateBinding.RaiseListChangedEvents = true;
                 DataSourceBinding.RaiseListChangedEvents = true;
@@ -52,7 +52,6 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
-                TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
                 work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
@@ -63,15 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
-                    DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
-                    TemplateBinding.DataSource = Templates;
-                    DataSourceBinding.DataSource = DataSources;
-                    TemplateBinding.RaiseListChangedEvents = true;
-                    DataSourceBinding.RaiseListChangedEvents = true;
-                    TemplateBinding.ResetBindings(false);
-                    DataSourceBinding.ResetBindings(false);
-
+                    Load(template);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -80,7 +71,6 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
-                TemplateBinding.RaiseListChangedEvents = false;
 
                 work.Add(factory.OpenConnection());
                 work.Add(new WorkItem() { DoWork = () => { data = ITemplate.Create(); } });
@@ -90,15 +80,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
-                    DataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
-                    TemplateBinding.DataSource = Templates;
-                    DataSourceBinding.DataSource = DataSources;
-                    TemplateBinding.RaiseListChangedEvents = true;
-                    DataSourceBinding.RaiseListChangedEvents = true;
-                    TemplateBinding.ResetBindings(false);
-                    DataSourceBinding.ResetBindings(false);
-
+                    Load(template);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }

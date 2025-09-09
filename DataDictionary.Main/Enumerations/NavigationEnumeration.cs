@@ -239,6 +239,7 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandImageType.Delete, Resources.DeleteXMLDescendant),
                     new(CommandImageType.Add, Resources.NewXMLDescendant),
                     new(CommandImageType.Select, Resources.SelectXMLDescendant)),
+                new NavigationEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_Tag, Resources.Tag) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLAttribute, Resources.XMLAttribute) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateElement,   Resources.Icon_XMLElement, Resources.XMLElement) ,
                 new NavigationEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XSLTransform) ,
@@ -349,6 +350,9 @@ namespace DataDictionary.Main.Enumerations
         /// This provides a mechanism to look-up the correct image based on scope and command assocated with the Menu Strip Item.
         /// </remarks>
         public static void SetImage(this ToolStripMenuItem menuItem, ScopeType scope, CommandImageType command)
-        { menuItem.Image = NavigationEnumeration.GetImage(scope, command); }
+        {
+            menuItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            menuItem.Image = NavigationEnumeration.GetImage(scope, command);
+        }
     }
 }

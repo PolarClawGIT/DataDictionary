@@ -325,6 +325,11 @@
         ScriptingTemplate,
 
         /// <summary>
+        /// Scripting Template Node (Attribute or Element)
+        /// </summary>
+        ScriptingTemplateNode,
+
+        /// <summary>
         /// Scripting Template Attribute
         /// </summary>
         ScriptingTemplateAttribute,
