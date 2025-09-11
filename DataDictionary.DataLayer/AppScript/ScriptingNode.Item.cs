@@ -46,11 +46,11 @@ namespace DataDictionary.DataLayer.AppScript
             get
             {
                 String value = GetValue(nameof(PropertyScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set { SetValue(nameof(PropertyScope), ScopeEnumeration.Cast(value).Name); }
+            set { SetValue(nameof(PropertyScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>

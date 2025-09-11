@@ -28,8 +28,6 @@
                 new DbLevelElementEnumeration(DbLevelElementType.Trigger,"TRIGGER"),
             };
 
-
-
             BuildDictionary(data);
         }
 

@@ -25,15 +25,7 @@ public interface IEnumeration<TEnum, TSelf> //: IParsable<TSelf>
     /// <summary>
     /// List of all values for the Enumeration
     /// </summary>
-    static abstract IReadOnlyDictionary<TEnum, TSelf> Members { get; }
-
-    /// <summary>
-    /// Given the Enum, return the Enumeration.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    /// <exception cref="IndexOutOfRangeException"/>
-    static abstract TSelf Cast(TEnum source);
+    //static abstract IReadOnlyDictionary<TEnum, TSelf> Members { get; }
 }
 
 /// <summary>
@@ -158,12 +150,12 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     /// List of all values for the Enumeration
     /// </summary>
     /// <remarks>Use BuildDictionary to add values to the list.</remarks>
-    public static IReadOnlyDictionary<TEnum, TSelf> Members
+    internal static IReadOnlyDictionary<TEnum, TSelf> Members
     { get { return enumerationValues; } }
     private static Dictionary<TEnum, TSelf> enumerationValues = new Dictionary<TEnum, TSelf>();
 
     /// <inheritdoc />
-    public static TSelf Cast(TEnum source)
+    internal static TSelf Cast(TEnum source)
     { return Members[source]; }
 
     #region IParsable
@@ -171,9 +163,9 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     // CA2260 prevent IParsable from being declared.
 
     /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)" />
-    public static TSelf Parse(String source, IFormatProvider? format)
+    internal static TSelf Parse(String source, IFormatProvider? format)
     {
-        if (TSelf.Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
+        if (Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
         { return item; }
         else
         {
@@ -185,11 +177,11 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     }
 
     /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)" />
-    public static Boolean TryParse([NotNullWhen(true)] String? source, IFormatProvider? format, [MaybeNullWhen(false)] out TSelf result)
+    internal static Boolean TryParse([NotNullWhen(true)] String? source, IFormatProvider? format, [MaybeNullWhen(false)] out TSelf result)
     {
         if (Members is null) { result = null; return false; }
 
-        if (TSelf.Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
+        if (Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
         { result = item; return true; }
         else { result = null; return false; }
     }
