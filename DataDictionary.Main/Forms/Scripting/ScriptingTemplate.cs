@@ -122,14 +122,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(IScriptingNodeValue.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(IScriptingNodeValue.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-                nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
-                nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
-                nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Members.Values.ToList();
+                //nodeValueAsData.ValueMember = nameof(NodeRenderAsEnumeration.Value);
+                //nodeValueAsData.DisplayMember = nameof(NodeRenderAsEnumeration.DisplayName);
+                //nodeValueAsData.DataSource = NodeRenderAsEnumeration.Members.Values.ToList();
                 nodeValueAsData.DataBindings.Add(new Binding(
                     nameof(nodeValueAsData.SelectedValue),
-                    bindingNode, nameof(IScriptingNodeValue.NodeValueAs),
+                    bindingNode, nameof(IScriptingNodeValue.NodeRenderAs),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateNodeValueAsType.none });
+                { DataSourceNullValue = NodeRenderAsType.none });
 
                 PropertyNameList.Load(attributePropertyColumn);
                 attributeData.AutoGenerateColumns = false;
@@ -402,7 +402,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         newNode.PropertyScope = element.PropertyScope;
                         newNode.PropertyName = element.PropertyName;
                         newNode.NodeName = element.PropertyName;
-                        newNode.NodeValueAs = TemplateNodeValueAsType.ElementText;
+                        newNode.NodeRenderAs = NodeRenderAsType.ElementText;
                         bindingNode.ResumeBinding();
 
                         if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes

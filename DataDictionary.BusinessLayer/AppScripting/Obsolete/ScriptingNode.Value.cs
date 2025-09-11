@@ -37,15 +37,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
             if (String.IsNullOrWhiteSpace(nodeValue))
             { return null; }
 
-            switch (NodeValueAs)
+            switch (NodeRenderAs)
             {
-                case TemplateNodeValueAsType.none:
+                case NodeRenderAsType.none:
                     return null;
-                case TemplateNodeValueAsType.ElementText:
+                case NodeRenderAsType.ElementText:
                     return new XElement(nodeName, value);
-                case TemplateNodeValueAsType.ElementCData:
+                case NodeRenderAsType.ElementCData:
                     return new XElement(nodeName, new XCData(nodeValue));
-                case TemplateNodeValueAsType.ElementXML:
+                case NodeRenderAsType.ElementXML:
                     try
                     {
                         if (String.IsNullOrWhiteSpace(nodeValue))
@@ -54,15 +54,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     }
                     catch (Exception fragementEx)
                     {
-                        fragementEx.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
+                        fragementEx.Data.Add(nameof(NodeRenderAs), NodeRenderAs.ToString());
                         fragementEx.Data.Add(nameof(PropertyName), PropertyName);
                         throw;
                     }
-                case TemplateNodeValueAsType.AttributeText:
+                case NodeRenderAsType.AttributeText:
                     return new XAttribute(nodeName, nodeValue);
                 default:
                     Exception ex = new InvalidOperationException("Unknown NodeValueAsType");
-                    ex.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
+                    ex.Data.Add(nameof(NodeRenderAs), NodeRenderAs.ToString());
                     ex.Data.Add(nameof(PropertyName), PropertyName);
                     throw ex;
             }

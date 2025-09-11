@@ -71,20 +71,20 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateNodeValueAsType RenderValueAs
+        public NodeRenderAsType RenderValueAs
         {
             get
             {
                 String? value = GetValue(nameof(RenderValueAs));
-                if (TemplateNodeValueAsEnumeration.TryParse(value, null, out TemplateNodeValueAsEnumeration? result))
-                { return result.Value; }
-                else { return TemplateNodeValueAsType.none; }
+                if (value.TryParse( out NodeRenderAsType result))
+                { return result; }
+                else { return NodeRenderAsType.none; }
             }
             set
             {
-                if (value is TemplateNodeValueAsType.none)
+                if (value is NodeRenderAsType.none)
                 { SetValue(nameof(RenderValueAs), null); }
-                else { SetValue(nameof(RenderValueAs), TemplateNodeValueAsEnumeration.Cast(value).Name); }
+                else { SetValue(nameof(RenderValueAs), value.GetEnumeration().Name); }
             }
         }
 

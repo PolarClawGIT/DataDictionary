@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -86,6 +87,14 @@ namespace DataDictionary.Main.Forms.Scripting
             void DoBinding()
             {
                 formBinding.SetPosition(nodeIndex);
+                templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.NodeName)));
+
+                RenderValueAsList.Load(renderValueAsData);
+                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.RenderValueAs)));
+
+
+
             }
         }
 

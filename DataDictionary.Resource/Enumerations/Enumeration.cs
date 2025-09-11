@@ -45,6 +45,13 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
         where TSelf : class, IEnumeration<TEnum, TSelf>
         where TEnum : System.Enum
 {
+    // Static Classes do not allow interfaces or be derived from other classes.
+    // Enums do not allow method or properties to be added.
+    //
+    // This is a work-around. This allows the building of a generic container
+    // for a specific Enum. It then can be extended to included methods
+    // and properties not normally part of the Enum.
+
     /// <inheritdoc />
     public String Name
     {
@@ -97,7 +104,6 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
         //The next line causes child classes static constructor to be called.
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TSelf).TypeHandle);
     }
-
 
     /// <summary>
     /// Base constructor for Enumeration

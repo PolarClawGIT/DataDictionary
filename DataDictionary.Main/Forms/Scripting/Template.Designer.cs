@@ -250,7 +250,7 @@
             nodeTab.Controls.Add(nodeLayout);
             nodeTab.Location = new Point(4, 24);
             nodeTab.Name = "nodeTab";
-            nodeTab.Size = new Size(192, 72);
+            nodeTab.Size = new Size(531, 319);
             nodeTab.TabIndex = 4;
             nodeTab.Text = "Nodes (XSD)";
             // 
@@ -268,7 +268,7 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeLayout.Size = new Size(192, 72);
+            nodeLayout.Size = new Size(531, 319);
             nodeLayout.TabIndex = 0;
             // 
             // nodeToolStrip
@@ -277,7 +277,7 @@
             nodeToolStrip.Items.AddRange(new ToolStripItem[] { newNodeCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(192, 25);
+            nodeToolStrip.Size = new Size(531, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "Node";
             // 
@@ -289,22 +289,23 @@
             newNodeCommand.Name = "newNodeCommand";
             newNodeCommand.Size = new Size(23, 22);
             newNodeCommand.Text = "New Node";
+            newNodeCommand.Click += NewNodeCommand_Click;
             // 
             // nodeTreeView
             // 
             nodeTreeView.Dock = DockStyle.Fill;
             nodeTreeView.Location = new Point(3, 28);
             nodeTreeView.Name = "nodeTreeView";
-            nodeTreeView.Size = new Size(51, 41);
+            nodeTreeView.Size = new Size(153, 288);
             nodeTreeView.TabIndex = 1;
             // 
             // nodeGroup
             // 
             nodeGroup.Controls.Add(nodeDetailLayout);
             nodeGroup.Dock = DockStyle.Fill;
-            nodeGroup.Location = new Point(60, 28);
+            nodeGroup.Location = new Point(162, 28);
             nodeGroup.Name = "nodeGroup";
-            nodeGroup.Size = new Size(129, 41);
+            nodeGroup.Size = new Size(366, 288);
             nodeGroup.TabIndex = 2;
             nodeGroup.TabStop = false;
             nodeGroup.Text = "Node";
@@ -322,7 +323,7 @@
             nodeDetailLayout.RowCount = 2;
             nodeDetailLayout.RowStyles.Add(new RowStyle());
             nodeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeDetailLayout.Size = new Size(123, 19);
+            nodeDetailLayout.Size = new Size(360, 266);
             nodeDetailLayout.TabIndex = 0;
             // 
             // nodeNameData
@@ -334,7 +335,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = true;
-            nodeNameData.Size = new Size(80, 46);
+            nodeNameData.Size = new Size(246, 46);
             nodeNameData.TabIndex = 0;
             nodeNameData.WordWrap = true;
             // 
@@ -345,10 +346,10 @@
             nodeRenderAs.Dock = DockStyle.Fill;
             nodeRenderAs.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeRenderAs.HeaderText = "Render As";
-            nodeRenderAs.Location = new Point(89, 3);
+            nodeRenderAs.Location = new Point(255, 3);
             nodeRenderAs.Name = "nodeRenderAs";
             nodeRenderAs.ReadOnly = true;
-            nodeRenderAs.Size = new Size(31, 46);
+            nodeRenderAs.Size = new Size(102, 46);
             nodeRenderAs.TabIndex = 1;
             // 
             // transformTab

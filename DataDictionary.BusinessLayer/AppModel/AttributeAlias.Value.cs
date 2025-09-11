@@ -116,22 +116,22 @@ namespace DataDictionary.BusinessLayer.AppModel
                             XElement newElement;
                             XAttribute newAttribute;
 
-                            switch (node.NodeValueAs)
+                            switch (node.NodeRenderAs)
                             {
-                                case TemplateNodeValueAsType.none: break;
-                                case TemplateNodeValueAsType.ElementText or TemplateNodeValueAsType.ElementXML:
+                                case NodeRenderAsType.none: break;
+                                case NodeRenderAsType.ElementText or NodeRenderAsType.ElementXML:
                                     newElement = new XElement(nameof(AliasParts), item);
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case TemplateNodeValueAsType.ElementCData:
+                                case NodeRenderAsType.ElementCData:
                                     newElement = new XElement(nameof(AliasParts), new XCData(item));
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case TemplateNodeValueAsType.AttributeText:
+                                case NodeRenderAsType.AttributeText:
                                     newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
                                     aliasObject = newAttribute;
                                     break;

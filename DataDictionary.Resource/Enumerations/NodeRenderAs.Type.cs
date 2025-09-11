@@ -3,7 +3,7 @@
 /// <summary>
 /// List of supported rendering methods for Node Values
 /// </summary>
-public enum TemplateNodeValueAsType // TemplateNodeValueAsEnumeration
+public enum NodeRenderAsType // NodeRenderAsTypeEnumeration
 {
     /// <summary>
     /// Not Defined or do not render

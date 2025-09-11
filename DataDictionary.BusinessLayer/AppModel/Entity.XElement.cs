@@ -11,9 +11,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             List<XElementBuilder> result = new List<XElementBuilder>();
             result.AddRange(XElementBuilder.Create(typeof(EntityValue)));
 
-            result.GetValue(nameof(EntityId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(EntityId)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Scope)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Temporal)).NodeValueAs = NodeRenderAsType.none;
 
             return result;
         }

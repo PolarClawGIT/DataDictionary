@@ -14,7 +14,6 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
-
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
             //public required Action OnRefresh { get; init; }
 
@@ -168,7 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public TemplateNodeValueAsType RenderValueAs
+            public NodeRenderAsType RenderValueAs
             {
                 get
                 {
@@ -176,7 +175,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     { return attribute.RenderValueAs; }
                     else if (elementValue is TemplateElementValue element)
                     { return element.RenderValueAs; }
-                    else { return TemplateNodeValueAsType.none; }
+                    else { return NodeRenderAsType.none; }
                 }
 
                 set

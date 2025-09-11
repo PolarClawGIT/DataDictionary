@@ -202,5 +202,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingTemplateData_AddingNew(object sender, AddingNewEventArgs e)
         { e.NewObject = formBinding.NewDataSource(); }
+
+        private void NewNodeCommand_Click(object sender, EventArgs e)
+        {
+            Activate(
+                () => new Forms.Scripting.TemplateNode(templateIndex),
+                (form) => form.IsOpenItem(templateIndex));
+        }
     }
 }

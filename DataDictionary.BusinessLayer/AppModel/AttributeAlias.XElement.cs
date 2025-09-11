@@ -10,10 +10,10 @@ namespace DataDictionary.BusinessLayer.AppModel
         {
             IEnumerable<XElementBuilder> result = XElementBuilder.Create(typeof(AttributeValue));
 
-            result.GetValue(nameof(AttributeId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(AliasPath)).NodeValueAs = TemplateNodeValueAsType.none;
+            result.GetValue(nameof(AttributeId)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Scope)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Temporal)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(AliasPath)).NodeValueAs = NodeRenderAsType.none;
 
             return result;
         }
