@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.Resource.Enumerations
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// Extensions on Scope Enum. 
@@ -16,7 +10,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static IEnumeration<ScopeType> GetEnumeration(this ScopeType value)
+        public static IScopeEnumeration GetEnumeration(this ScopeType value)
         { return ScopeEnumeration.Cast(value); }
 
         /// <summary>

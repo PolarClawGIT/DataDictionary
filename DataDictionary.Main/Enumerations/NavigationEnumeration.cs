@@ -3,34 +3,17 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.Main.Enumerations
 {
-    /// <summary>
-    /// ScopeEnumeration with Images and Icons.
-    /// Used to hold Navigation Icons and Images.
-    /// </summary>
-    class NavigationEnumeration : Enumeration<ScopeType, NavigationEnumeration>
+    interface INavigationEnumeration : IScopeEnumeration
     {
-        // This class could not be placed in base ScopeEnumeration because framework agnostic.
-        // This version is Windows WinForms specific.
-        // The System.Drawing.Icon and System.Drawing.Image does not exist in all frameworks.
-
-        /// <summary>
-        /// Parent Scope
-        /// </summary>
-        public ScopeType? Parent { get; init; } = null;
-
         /// <summary>
         /// Icon used for the ScopeType
         /// </summary>
-        public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
-        static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
+        Icon WindowIcon { get; }
 
         /// <summary>
-        /// List of Images for the Scope Type
+        /// List of Images for the Scope Type assocated with Commands.
         /// </summary>
-        public IReadOnlyDictionary<CommandImageType, Image> Images
-        { get { return images; } }
-        Dictionary<CommandImageType, Image> images { get; init; } = new Dictionary<CommandImageType, Image>();
-        static readonly Image defaultImage = Resources.UnknownMember;
+        IReadOnlyDictionary<CommandImageType, Image> Images { get; }
 
         /// <summary>
         /// Grouping behavior.
@@ -38,75 +21,101 @@ namespace DataDictionary.Main.Enumerations
         /// When False, items will not be group together and appear as individual entries.
         /// This effects navigation components.
         /// </summary>
-        public Boolean GroupBy { get; init; } = true;
+        Boolean GroupBy { get; }
 
         /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
+        /// Returns the Image list for all items using the default/Normal image.
         /// </summary>
-        /// <param name="scope"></param>
-        NavigationEnumeration(ScopeType scope) : base()
+        /// <returns></returns>
+        abstract static ImageList AsImageList();
+    }
+
+    static class NavigationExtentions
+    {
+        /// <summary>
+        /// ScopeEnumeration with Images and Icons.
+        /// Used to hold Navigation Icons and Images.
+        /// </summary>
+        class NavigationEnumeration : Enumeration<ScopeType, NavigationEnumeration>,
+        INavigationEnumeration
         {
-            ScopeEnumeration source = ScopeEnumeration.Cast(scope);
-            DisplayName = source.DisplayName;
-            Name = source.Name;
-            Value = source.Value;
-            Parent = source.Parent;
-        }
+            // This class could not be placed in base ScopeEnumeration because framework agnostic.
+            // This version is Windows WinForms specific.
+            // The System.Drawing.Icon and System.Drawing.Image does not exist in all frameworks.
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="windowIcon"></param>
-        NavigationEnumeration(ScopeType scope, Icon windowIcon) : this(scope)
-        { this.WindowIcon = windowIcon; }
+            /// <inheritdoc/>
+            public ScopeType? Parent { get; init; } = null;
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="defaultImage"></param>
-        NavigationEnumeration(ScopeType scope, Image defaultImage) : this(scope)
-        { this.images.Add(CommandImageType.Default, defaultImage); }
+            /// <inheritdoc/>
+            public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
+            static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="images"></param>
-        NavigationEnumeration(ScopeType scope, params (CommandImageType scope, Image image)[] images) : this(scope)
-        {
-            foreach ((CommandImageType scope, Image image) item in images)
-            { this.images.Add(item.scope, item.image); }
-        }
+            /// <inheritdoc/>
+            public IReadOnlyDictionary<CommandImageType, Image> Images
+            { get { return images; } }
+            Dictionary<CommandImageType, Image> images { get; init; } = new Dictionary<CommandImageType, Image>();
+            static readonly Image defaultImage = Resources.UnknownMember;
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="windowIcon"></param>
-        /// <param name="defaultImage"></param>
-        NavigationEnumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
-        { this.images.Add(CommandImageType.Default, defaultImage); }
+            /// <inheritdoc/>
+            public Boolean GroupBy { get; init; } = true;
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="windowIcon"></param>
-        /// <param name="images"></param>
-        NavigationEnumeration(ScopeType scope, Icon windowIcon, params (CommandImageType scope, Image image)[] images) : this(scope, windowIcon)
-        {
-            foreach ((CommandImageType scope, Image image) item in images)
-            { this.images.Add(item.scope, item.image); }
-        }
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            NavigationEnumeration(ScopeType scope) : base()
+            {
+                IScopeEnumeration source = scope.GetEnumeration();
+                DisplayName = source.DisplayName;
+                Name = source.Name;
+                Value = source.Value;
+                Parent = source.Parent;
+            }
 
-        /// <summary>
-        /// Constructor for the Window Form Scope Enumeration static data.
-        /// </summary>
-        static NavigationEnumeration()
-        {
-            List<NavigationEnumeration> data = new List<NavigationEnumeration>()
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="windowIcon"></param>
+            NavigationEnumeration(ScopeType scope, Icon windowIcon) : this(scope)
+            { this.WindowIcon = windowIcon; }
+
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="defaultImage"></param>
+            NavigationEnumeration(ScopeType scope, Image defaultImage) : this(scope)
+            { this.images.Add(CommandImageType.Default, defaultImage); }
+
+
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="windowIcon"></param>
+            /// <param name="defaultImage"></param>
+            NavigationEnumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
+            { this.images.Add(CommandImageType.Default, defaultImage); }
+
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="windowIcon"></param>
+            /// <param name="images"></param>
+            NavigationEnumeration(ScopeType scope, Icon windowIcon, params (CommandImageType scope, Image image)[] images) : this(scope, windowIcon)
+            {
+                foreach ((CommandImageType scope, Image image) item in images)
+                { this.images.Add(item.scope, item.image); }
+            }
+
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration static data.
+            /// </summary>
+            static NavigationEnumeration()
+            {
+                List<NavigationEnumeration> data = new List<NavigationEnumeration>()
             {
                 new NavigationEnumeration(ScopeType.Null),
 
@@ -259,100 +268,101 @@ namespace DataDictionary.Main.Enumerations
 
             };
 
-            BuildDictionary(data);
+                BuildDictionary(data);
+            }
+
+            /// <inheritdoc/>
+            public static ImageList AsImageList()
+            {
+                ImageList result = new ImageList();
+
+                foreach (NavigationEnumeration item in EnumerationValues.Values)
+                { result.Images.Add(item.Name, item.GetImage(CommandImageType.Default)); }
+
+                return result;
+            }
+
+            /// <summary>
+            /// Given the Scope, return the Icon object for it or the default Icon.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <returns></returns>
+            public static Icon GetIcon(ScopeType scope)
+            {
+                if (EnumerationValues.ContainsKey(scope))
+                { return EnumerationValues[scope].WindowIcon; }
+                else { return defaultIcon; }
+            }
+
+            /// <summary>
+            /// Given the Scope and Image, return the Image object or default Image.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="image"></param>
+            /// <returns></returns>
+            public static Image GetImage(ScopeType scope, CommandImageType image)
+            {
+                if (EnumerationValues.ContainsKey(scope))
+                { return EnumerationValues[scope].GetImage(image); }
+                else { return defaultImage; }
+            }
+
+            /// <summary>
+            /// Given the Scope and Image, return the default Image.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <returns></returns>
+            public static Image GetImage(ScopeType scope)
+            {
+                if (EnumerationValues.ContainsKey(scope))
+                { return EnumerationValues[scope].GetImage(); }
+                else { return defaultImage; }
+            }
+
+            /// <summary>
+            /// Image, return the Image object or default Image.
+            /// </summary>
+            /// <param name="image"></param>
+            /// <returns></returns>
+            public Image GetImage(CommandImageType image)
+            {
+                if (Images.ContainsKey(image))
+                { return Images[image]; }
+                else { return GetImage(); }
+            }
+
+            /// <summary>
+            /// Image, return the default Image.
+            /// </summary>
+            /// <returns></returns>
+            public Image GetImage()
+            {
+                if (Images.ContainsKey(CommandImageType.Default))
+                { return Images[CommandImageType.Default]; }
+                else { return defaultImage; }
+            }
         }
 
         /// <summary>
-        /// Returns the Image list for all items using the default/Normal image.
+        /// Gets the Navigation information for the Scope enum.
         /// </summary>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static ImageList AsImageList()
-        {
-            ImageList result = new ImageList();
-
-            foreach (NavigationEnumeration item in Members.Values)
-            { result.Images.Add(item.Name, item.GetImage(CommandImageType.Default)); }
-
-            return result;
-        }
+        public static INavigationEnumeration GetNavigation(this ScopeType value)
+        { return NavigationEnumeration.Cast(value); }
 
         /// <summary>
-        /// Given the Scope, return the Icon object for it or the default Icon.
+        /// Sets the Image List for a TreeView.
         /// </summary>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-        public static Icon GetIcon(ScopeType scope)
-        {
-            if (Members.ContainsKey(scope))
-            { return Members[scope].WindowIcon; }
-            else { return defaultIcon; }
-        }
+        /// <param name="target"></param>
+        public static void SetImageList(this TreeView target)
+        { target.ImageList = NavigationEnumeration.AsImageList(); }
 
         /// <summary>
-        /// Given the Scope and Image, return the Image object or default Image.
+        /// Sets the Image List for a ListView.
         /// </summary>
-        /// <param name="scope"></param>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        public static Image GetImage(ScopeType scope, CommandImageType image)
-        {
-            if (Members.ContainsKey(scope))
-            { return Members[scope].GetImage(image); }
-            else { return defaultImage; }
-        }
-
-        /// <summary>
-        /// Given the Scope and Image, return the default Image.
-        /// </summary>
-        /// <param name="scope"></param>
-        /// <returns></returns>
-        public static Image GetImage(ScopeType scope)
-        {
-            if (Members.ContainsKey(scope))
-            { return Members[scope].GetImage(); }
-            else { return defaultImage; }
-        }
-
-        /// <summary>
-        /// Image, return the Image object or default Image.
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        public Image GetImage(CommandImageType image)
-        {
-            if (Images.ContainsKey(image))
-            { return Images[image]; }
-            else { return GetImage(); }
-        }
-
-        /// <summary>
-        /// Image, return the default Image.
-        /// </summary>
-        /// <returns></returns>
-        public Image GetImage()
-        {
-            if (Images.ContainsKey(CommandImageType.Default))
-            { return Images[CommandImageType.Default]; }
-            else { return defaultImage; }
-        }
-    }
-
-    static class NavigationExtentions
-    {
-        /// <summary>
-        /// Sets the Image of the Menu Strip Item based on scope/command.
-        /// </summary>
-        /// <param name="menuItem"></param>
-        /// <param name="scope"></param>
-        /// <param name="command"></param>
-        /// <remarks>
-        /// The image can be set directly.
-        /// This provides a mechanism to look-up the correct image based on scope and command assocated with the Menu Strip Item.
-        /// </remarks>
-        public static void SetImage(this ToolStripMenuItem menuItem, ScopeType scope, CommandImageType command)
-        {
-            menuItem.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            menuItem.Image = NavigationEnumeration.GetImage(scope, command);
-        }
+        /// <param name="target"></param>
+        public static void SetImageList(this ListView target)
+        { target.SmallImageList = NavigationEnumeration.AsImageList(); }
     }
 }

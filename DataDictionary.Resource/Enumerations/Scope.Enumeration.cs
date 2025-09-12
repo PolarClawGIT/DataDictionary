@@ -1,14 +1,21 @@
 ﻿namespace DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 
-/// <summary>
-/// Enumeration support class for Scope Type.
-/// </summary>
-class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
+public interface IScopeEnumeration : IEnumeration<ScopeType>
 {
     /// <summary>
     /// Parent Scope
     /// </summary>
+    ScopeType? Parent { get; }
+}
+
+/// <summary>
+/// Enumeration support class for Scope Type.
+/// </summary>
+class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
+    IScopeEnumeration
+{
+    /// <inheritdoc/>
     public ScopeType? Parent { get; init; } = null;
 
     /// <summary>
