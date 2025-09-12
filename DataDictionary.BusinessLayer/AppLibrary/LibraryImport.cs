@@ -75,10 +75,9 @@ namespace DataDictionary.BusinessLayer.AppLibrary
                             //String memberType = String.Empty;
                             if (parseString.Split(':') is String[] types
                                 && types.Length > 0 
-                                && LibraryMemberEnumeration.TryParse(types[0].First(), null, out LibraryMemberEnumeration? libType)
-                                && libType is not null)
+                                && types[0].First().TryParse(out LibraryMemberType libType))
                             {
-                                memberType = libType.Value;
+                                memberType = libType;
                                 parseString = parseString.Substring(2);
                             }
 

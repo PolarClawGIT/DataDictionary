@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Speical Directory Name used to determine the Root Directory.
         /// </summary>
-        TemplateDirectoryType TemplateDirectory { get; }
+        DirectoryType TemplateDirectory { get; }
 
         /// <summary>
         /// The Scripting Break On Scope.
@@ -69,14 +69,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IEnumerable<Exception> TemplateException { get { return templateException; } }
 
         /// <inheritdoc/>
-        public TemplateDirectoryType TemplateDirectory
+        public DirectoryType TemplateDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (value.TryParse(out TemplateDirectoryType result))
+                if (value.TryParse(out DirectoryType result))
                 { return result; }
-                else { return TemplateDirectoryType.Null; }
+                else { return DirectoryType.Null; }
             }
             set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
         }

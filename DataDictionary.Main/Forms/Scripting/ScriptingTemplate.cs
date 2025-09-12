@@ -90,7 +90,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(rootDirectoryData.SelectedValue),
                     bindingTemplate, nameof(IScriptingTemplateValue.RootDirectory),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateDirectoryType.Null });
+                { DataSourceNullValue = DirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
                 breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(IScriptingTemplateValue.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -107,7 +107,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(scriptAsData.SelectedValue),
                     bindingTemplate, nameof(IScriptingTemplateValue.ScriptAs),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateScriptAsType.none });
+                { DataSourceNullValue = ScriptAsType.none });
 
                 scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
             { rootDirectoryExpanded.Text = directory.FullName; }
             else { rootDirectoryExpanded.Text = String.Empty; }
@@ -178,7 +178,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 current.RootDirectory = value; // TODO: Some reason Binding is not setting the value.
@@ -224,7 +224,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptAsData_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is ScriptingTemplateValue current
-                && scriptAsData.SelectedValue is TemplateScriptAsType value)
+                && scriptAsData.SelectedValue is ScriptAsType value)
             {
                 current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
                 current.ScriptExtension = TemplateScriptAsEnumeration.Members[value].Extension;

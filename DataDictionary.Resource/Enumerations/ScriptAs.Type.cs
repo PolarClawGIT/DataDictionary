@@ -3,7 +3,7 @@
     /// <summary>
     /// List of supported Script types.
     /// </summary>
-    public enum TemplateScriptAsType // TemplateScriptAsEnumeration
+    public enum ScriptAsType // TemplateScriptAsEnumeration
     {
         /// <summary>
         /// Not Scripted
@@ -19,7 +19,6 @@
         /// Microsoft Visual Basic code
         /// </summary>
         VBNet,
-
 
         /// <summary>
         /// Microsoft SQL script

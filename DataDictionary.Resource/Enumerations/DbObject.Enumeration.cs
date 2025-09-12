@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.Resource.Enumerations
+﻿namespace DataDictionary.Resource.Enumerations
 {
-    public class DbObjectEnumeration :Enumeration<DbObjectType, DbObjectEnumeration>
+    class DbObjectEnumeration :Enumeration<DbObjectType, DbObjectEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Database Object Enumeration

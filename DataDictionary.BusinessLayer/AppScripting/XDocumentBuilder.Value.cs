@@ -97,7 +97,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                if (templateValue.RootDirectory is TemplateDirectoryType root &&
+                if (templateValue.RootDirectory is DirectoryType root &&
                     root.GetEnumeration().Directory is DirectoryInfo folder)
                 {
                     String directoryName =
@@ -130,7 +130,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                if (templateValue.RootDirectory is TemplateDirectoryType root &&
+                if (templateValue.RootDirectory is DirectoryType root &&
                     root.GetEnumeration().Directory is DirectoryInfo folder)
                 {
                     String directoryName =
@@ -274,7 +274,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         XslCompiledTransform transformer = new XslCompiledTransform();
                         transformer.Load(transformReader);
 
-                        if (templateValue.ScriptAs is TemplateScriptAsType.Text)
+                        if (templateValue.ScriptAs is ScriptAsType.Text)
                         {
                             using (StringWriter resultText = new StringWriter())
                             {
@@ -282,7 +282,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                                 ResultsAsText = resultText.ToString();
                             }
                         }
-                        else if (templateValue.ScriptAs is TemplateScriptAsType.XML)
+                        else if (templateValue.ScriptAs is ScriptAsType.XML)
                         {
                             ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
                             using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())

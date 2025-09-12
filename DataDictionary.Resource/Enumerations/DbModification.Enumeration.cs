@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.Resource.Enumerations
+﻿namespace DataDictionary.Resource.Enumerations
 {
-    public class DbModificationEnumeration : Enumeration<DbModificationType, DbModificationEnumeration>
+    class DbModificationEnumeration : Enumeration<DbModificationType, DbModificationEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Database Row Modification Enumeration

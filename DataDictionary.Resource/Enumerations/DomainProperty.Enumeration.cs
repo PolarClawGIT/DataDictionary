@@ -4,7 +4,7 @@ namespace DataDictionary.Resource.Enumerations;
 /// <summary>
 /// Enumeration support class for DomainProperty.
 /// </summary>
-public class DomainPropertyEnumeration : Enumeration<DomainPropertyType, DomainPropertyEnumeration>
+class DomainPropertyEnumeration : Enumeration<DomainPropertyType, DomainPropertyEnumeration>
 {
     /// <summary>
     /// Internal Constructor for DomainProperty Enumeration

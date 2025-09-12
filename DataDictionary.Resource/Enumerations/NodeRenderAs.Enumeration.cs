@@ -4,7 +4,7 @@ namespace DataDictionary.Resource.Enumerations
     /// <summary>
     /// Enumeration support class for Node Render As type.
     /// </summary>
-    public class NodeRenderAsEnumeration : Enumeration<NodeRenderAsType, NodeRenderAsEnumeration>
+    class NodeRenderAsEnumeration : Enumeration<NodeRenderAsType, NodeRenderAsEnumeration>
     {
         /// <summary>
         /// Internal Constructor

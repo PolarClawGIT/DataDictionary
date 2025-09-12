@@ -3,7 +3,7 @@
 /// <summary>
 /// Enumeration support class for Database Constraint type.
 /// </summary>
-public class DbConstraintEnumeration : Enumeration<DbConstraintType, DbConstraintEnumeration>
+class DbConstraintEnumeration : Enumeration<DbConstraintType, DbConstraintEnumeration>
 {
     /// <summary>
     /// Internal Constructor for Database Constraint Enumeration

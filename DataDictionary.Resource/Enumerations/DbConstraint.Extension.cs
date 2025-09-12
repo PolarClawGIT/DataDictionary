@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DbConstraintEnumeration GetEnumeration(this DbConstraintType value)
+        public static IEnumeration<DbConstraintType> GetEnumeration(this DbConstraintType value)
         { return DbConstraintEnumeration.Cast(value); }
 
         /// <summary>

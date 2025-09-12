@@ -13,7 +13,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DbTypeEnumeration GetEnumeration(this DbType value)
+        public static IDbTypeEnumeration GetEnumeration(this DbType value)
         { return DbTypeEnumeration.Cast(value); }
 
         /// <summary>

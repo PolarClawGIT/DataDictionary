@@ -19,7 +19,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static LibraryMemberEnumeration GetEnumeration(this LibraryMemberType value)
+        public static ILibraryMemberEnumeration GetEnumeration(this LibraryMemberType value)
         { return LibraryMemberEnumeration.Cast(value); }
 
         /// <summary>
@@ -29,6 +29,19 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="result"></param>
         /// <returns></returns>
         public static Boolean TryParse(this String? value, out LibraryMemberType result)
+        {
+            if (LibraryMemberEnumeration.TryParse(value, null, out LibraryMemberEnumeration? enumeration))
+            { result = enumeration.Value; return true; }
+            else { result = LibraryMemberType.Null; return false; }
+        }
+
+        /// <summary>
+        /// Try to parse the Library Character Code into a LibraryMemberType enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryParse(this Char value, out LibraryMemberType result)
         {
             if (LibraryMemberEnumeration.TryParse(value, null, out LibraryMemberEnumeration? enumeration))
             { result = enumeration.Value; return true; }

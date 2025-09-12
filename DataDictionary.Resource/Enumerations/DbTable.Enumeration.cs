@@ -3,7 +3,7 @@
 /// <summary>
 /// Enumeration support class for Database Table type.
 /// </summary>
-public class DbTableEnumeration : Enumeration<DbTableType, DbTableEnumeration>
+class DbTableEnumeration : Enumeration<DbTableType, DbTableEnumeration>
 {
     /// <summary>
     /// Internal Constructor for Database Table Enumeration

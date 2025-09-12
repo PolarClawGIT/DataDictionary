@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static NodeRenderAsEnumeration GetEnumeration(this NodeRenderAsType value)
+        public static IEnumeration<NodeRenderAsType> GetEnumeration(this NodeRenderAsType value)
         { return NodeRenderAsEnumeration.Cast(value); }
 
         /// <summary>

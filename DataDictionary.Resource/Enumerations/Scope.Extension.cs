@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static ScopeEnumeration GetEnumeration(this ScopeType value)
+        public static IEnumeration<ScopeType> GetEnumeration(this ScopeType value)
         { return ScopeEnumeration.Cast(value); }
 
         /// <summary>

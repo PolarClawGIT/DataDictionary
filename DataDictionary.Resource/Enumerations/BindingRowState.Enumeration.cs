@@ -10,7 +10,7 @@ namespace DataDictionary.Resource.Enumerations
     /// <summary>
     /// Enumeration support class for Binding RowState.
     /// </summary>
-    public class BindingRowStateEnumeration : Enumeration<BindingRowState, BindingRowStateEnumeration>
+    class BindingRowStateEnumeration : Enumeration<BindingRowState, BindingRowStateEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Binding RowState Enumeration

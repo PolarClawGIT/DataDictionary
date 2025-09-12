@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DbLevelObjectEnumeration GetEnumeration(this DbLevelObjectType value)
+        public static IEnumeration<DbLevelObjectType> GetEnumeration(this DbLevelObjectType value)
         { return DbLevelObjectEnumeration.Cast(value); }
 
         /// <summary>

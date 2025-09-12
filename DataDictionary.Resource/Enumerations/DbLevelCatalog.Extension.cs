@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DbLevelCatalogEnumeration GetEnumeration(this DbLevelCatalogType value)
+        public static IEnumeration<DbLevelCatalogType> GetEnumeration(this DbLevelCatalogType value)
         { return DbLevelCatalogEnumeration.Cast(value); }
 
         /// <summary>

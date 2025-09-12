@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DbModificationEnumeration GetEnumeration(this DbModificationType value)
+        public static IEnumeration<DbModificationType> GetEnumeration(this DbModificationType value)
         { return DbModificationEnumeration.Cast(value); }
 
         /// <summary>

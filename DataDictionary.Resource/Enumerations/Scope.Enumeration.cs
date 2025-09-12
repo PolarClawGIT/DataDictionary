@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Enumeration support class for Scope Type.
 /// </summary>
-public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
+class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
 {
     /// <summary>
     /// Parent Scope

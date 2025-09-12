@@ -16,7 +16,7 @@ namespace DataDictionary.Resource.Enumerations
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static DomainPropertyEnumeration GetEnumeration(this DomainPropertyType value)
+        public static IEnumeration<DomainPropertyType> GetEnumeration(this DomainPropertyType value)
         { return DomainPropertyEnumeration.Cast(value); }
 
         /// <summary>

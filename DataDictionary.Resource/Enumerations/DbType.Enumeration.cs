@@ -4,30 +4,51 @@ using System.Diagnostics.CodeAnalysis;
 namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Enumeration support class for System.Data.DbType
+    /// Interface for a DbType Enumeration.
     /// </summary>
-    public class DbTypeEnumeration : Enumeration<DbType, DbTypeEnumeration>
+    public interface IDbTypeEnumeration : IEnumeration<DbType>
     {
-        public IEnumerable<String> EngineType { get; init; }
-
         /// <summary>
         /// Is the DataType a subset of Alpha Numeric data (strings)
         /// </summary>
-        public Boolean IsAlphaNumeric { get; init; } = false;
+        Boolean IsAlphaNumeric { get; }
 
         /// <summary>
         /// Is the DataType a subset of Numeric Data
         /// </summary>
-        public Boolean IsNumeric { get; init; } = false;
+        Boolean IsNumeric { get; }
 
         /// <summary>
         /// Is the DataType a Subset of Numeric Data that contains a Floating Point Value.
         /// </summary>
-        public Boolean IsFloatingPoint { get; init; } = false;
+        Boolean IsFloatingPoint { get; }
 
         /// <summary>
         /// Is the DataType a Subset of Date or DateTime.
         /// </summary>
+        Boolean IsDate { get; }
+    }
+
+    /// <summary>
+    /// Enumeration support class for System.Data.DbType
+    /// </summary>
+    class DbTypeEnumeration : Enumeration<DbType, DbTypeEnumeration>, IDbTypeEnumeration
+    {
+        /// <summary>
+        /// Database Specfic equvalent data types.
+        /// </summary>
+        public IEnumerable<String> EngineType { get; init; }
+
+        /// <inheritdoc/>
+        public Boolean IsAlphaNumeric { get; init; } = false;
+
+        /// <inheritdoc/>
+        public Boolean IsNumeric { get; init; } = false;
+
+        /// <inheritdoc/>
+        public Boolean IsFloatingPoint { get; init; } = false;
+
+        /// <inheritdoc/>
         public Boolean IsDate { get; init; } = false;
 
         // References:
@@ -57,10 +78,10 @@ namespace DataDictionary.Resource.Enumerations
                 new DbTypeEnumeration(DbType.Byte, nameof(DbType.Byte),
                     nameof(SqlDbType.TinyInt))
                     { IsNumeric = true },
-                new DbTypeEnumeration(DbType.Boolean, nameof(DbType.Boolean), 
+                new DbTypeEnumeration(DbType.Boolean, nameof(DbType.Boolean),
                     nameof(SqlDbType.Bit)),
                 new DbTypeEnumeration(DbType.Currency, nameof(DbType.Currency),
-                    nameof(SqlDbType.Money), nameof(SqlDbType.SmallMoney)) 
+                    nameof(SqlDbType.Money), nameof(SqlDbType.SmallMoney))
                     { IsNumeric = true, IsFloatingPoint=true },
                 new DbTypeEnumeration(DbType.Date, nameof(DbType.Date),
                     nameof(SqlDbType.Date))
@@ -126,7 +147,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)" />
         public static new DbTypeEnumeration Parse(String source, IFormatProvider? format)
         {
-            if (Members.Values.FirstOrDefault(w => w.EngineType.Any(a => String.Equals(a, source, StringComparison.OrdinalIgnoreCase))) is DbTypeEnumeration item)
+            if (EnumerationValues.Values.FirstOrDefault(w => w.EngineType.Any(a => String.Equals(a, source, StringComparison.OrdinalIgnoreCase))) is DbTypeEnumeration item)
             { return item; }
             else
             {
@@ -140,9 +161,9 @@ namespace DataDictionary.Resource.Enumerations
         /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)" />
         public static new Boolean TryParse([NotNullWhen(true)] String? source, IFormatProvider? format, [MaybeNullWhen(false)] out DbTypeEnumeration result)
         {
-            if (Members is null) { result = null; return false; }
+            if (EnumerationValues is null) { result = null; return false; }
 
-            if (Members.Values.FirstOrDefault(w => w.EngineType.Any(a => String.Equals(a, source, StringComparison.OrdinalIgnoreCase))) is DbTypeEnumeration item)
+            if (EnumerationValues.Values.FirstOrDefault(w => w.EngineType.Any(a => String.Equals(a, source, StringComparison.OrdinalIgnoreCase))) is DbTypeEnumeration item)
             { result = item; return true; }
             else { result = null; return false; }
         }

@@ -4,7 +4,7 @@ namespace DataDictionary.Resource.Enumerations;
 /// <summary>
 /// Enumeration support class for Database Routine type.
 /// </summary>
-public class DbRoutineEnumeration : Enumeration<DbRoutineType, DbRoutineEnumeration>
+class DbRoutineEnumeration : Enumeration<DbRoutineType, DbRoutineEnumeration>
 {
     /// <summary>
     /// Internal Constructor for Database Routine Enumeration

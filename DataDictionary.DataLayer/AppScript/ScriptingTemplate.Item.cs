@@ -119,14 +119,14 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateDirectoryType RootDirectory
+        public DirectoryType RootDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (value.TryParse(out TemplateDirectoryType result))
+                if (value.TryParse(out DirectoryType result))
                 { return result; }
-                else { return TemplateDirectoryType.Null; }
+                else { return DirectoryType.Null; }
             }
             set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
         }
@@ -160,14 +160,14 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateScriptAsType ScriptAs
+        public ScriptAsType ScriptAs
         {
             get
             {
                 String? value = GetValue(nameof(ScriptAs));
-                if (value.TryParse(out TemplateScriptAsType result))
+                if (value.TryParse(out ScriptAsType result))
                 { return result; }
-                else { return TemplateScriptAsType.none; }
+                else { return ScriptAsType.none; }
             }
             set { SetValue(nameof(ScriptAs), value.GetEnumeration().Name); }
         }
@@ -211,7 +211,7 @@ namespace DataDictionary.DataLayer.AppScript
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
             if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
-            if (RootDirectory is TemplateDirectoryType.Null) { RootDirectory = TemplateDirectoryType.MySources; }
+            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.MySources; }
 
             Temporal = new TemporalItem()
             {

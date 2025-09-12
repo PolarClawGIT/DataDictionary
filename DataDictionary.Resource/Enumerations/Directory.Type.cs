@@ -3,7 +3,7 @@
     /// <summary>
     /// Supported Scripting Folders
     /// </summary>
-    public enum TemplateDirectoryType
+    public enum DirectoryType
     {
         /// <summary>
         /// Unspecified Directory

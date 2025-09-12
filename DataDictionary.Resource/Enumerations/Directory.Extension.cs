@@ -3,15 +3,15 @@
     /// <summary>
     /// Extensions on TemplateDirectory Enum. 
     /// </summary>
-    public static class TemplateDirectoryExtension
+    public static class DirectoryExtension
     {
         /// <summary>
         /// Gets the Details for the TemplateDirectoryType enum.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static TemplateDirectoryEnumeration GetEnumeration(this TemplateDirectoryType value)
-        { return TemplateDirectoryEnumeration.Cast(value); }
+        public static IDirectoryEnumeration GetEnumeration(this DirectoryType value)
+        { return DirectoryEnumeration.Cast(value); }
 
         /// <summary>
         /// Try to parse the String into a TemplateDirectoryType enum.
@@ -19,11 +19,11 @@
         /// <param name="value"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static Boolean TryParse(this String? value, out TemplateDirectoryType result)
+        public static Boolean TryParse(this String? value, out DirectoryType result)
         {
-            if (TemplateDirectoryEnumeration.TryParse(value, null, out TemplateDirectoryEnumeration? enumeration))
+            if (DirectoryEnumeration.TryParse(value, null, out DirectoryEnumeration? enumeration))
             { result = enumeration.Value; return true; }
-            else { result = TemplateDirectoryType.Null; return false; }
+            else { result = DirectoryType.Null; return false; }
         }
     }
 }

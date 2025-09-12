@@ -96,7 +96,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ComboBox.SelectedValue),
                     bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateDirectoryType.Null });
+                { DataSourceNullValue = DirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
                 breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
             { rootPhysicalDirectory.Text = directory.FullName; }
             else { rootPhysicalDirectory.Text = String.Empty; }
@@ -189,7 +189,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && formBinding.TryGetValue(out TemplateValue? current))
             {
                 //Note: For reason unknown, current.TemplateDirectory has not been updated

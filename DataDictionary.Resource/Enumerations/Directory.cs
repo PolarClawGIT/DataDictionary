@@ -9,5 +9,5 @@ public interface ITemplateDirectory
     /// <summary>
     /// Root Directory to place documents in (must be a supported Special Folder).
     /// </summary>
-    TemplateDirectoryType RootDirectory { get; }
+    DirectoryType RootDirectory { get; }
 }
