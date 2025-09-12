@@ -11,7 +11,7 @@
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<DbLevelCatalogType> GetEnumeration(this DbLevelCatalogType value)
-        { return DbLevelCatalogEnumeration.Cast(value); }
+        { return DbLevelCatalogEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a DbLevelCatalogType enum.

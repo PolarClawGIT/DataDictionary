@@ -11,7 +11,7 @@
         /// <param name="value"></param>
         /// <returns></returns>
         public static IScopeEnumeration GetEnumeration(this ScopeType value)
-        { return ScopeEnumeration.Cast(value); }
+        { return ScopeEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a Scope enum.

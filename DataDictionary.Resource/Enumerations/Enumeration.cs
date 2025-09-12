@@ -136,6 +136,18 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum>, IEquatabl
 
         foreach (TSelf item in data.DistinctBy(d => d.Value))
         { EnumerationValues.Add(item.Value, item); }
+
+        var missingValues = result.Keys.Except(Enum.GetValues(typeof(TEnum)).OfType<TEnum>());
+        if (missingValues.Count() > 0)
+        {   // This could be real annoying during development.
+            // Forces the developer to fix missing values before the GetValue function is used.
+
+            Exception ex = new InvalidOperationException("Enum values are not defined in the Enumeration class.");
+            foreach (TEnum item in missingValues)
+            { ex.Data.Add(item, null); }
+
+            throw ex;
+        }
     }
 
     /// <summary>
@@ -143,8 +155,13 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum>, IEquatabl
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    public static TSelf Cast(TEnum source)
-    { return EnumerationValues[source]; }
+    public static TSelf GetValue(TEnum source)
+    {
+        if (EnumerationValues.ContainsKey(source))
+        { return EnumerationValues[source]; }
+        else
+        { throw new IndexOutOfRangeException(String.Format("Enum value of '{0}' is missing in Enumeration class", Enum.GetName(typeof(TEnum), source))); }
+    }
 
     /// <summary>
     /// List of Enums mapping to the Enumerations

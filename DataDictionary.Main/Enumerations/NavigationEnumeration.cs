@@ -349,7 +349,7 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static INavigationEnumeration GetNavigation(this ScopeType value)
-        { return NavigationEnumeration.Cast(value); }
+        { return NavigationEnumeration.GetValue(value); }
 
         /// <summary>
         /// Sets the Image List for a TreeView.

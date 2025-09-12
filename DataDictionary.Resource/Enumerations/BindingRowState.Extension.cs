@@ -27,7 +27,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<BindingRowState> GetEnumeration(this BindingRowState value)
-        { return BindingRowStateEnumeration.Cast(value); }
+        { return BindingRowStateEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a BindingRowState enum.

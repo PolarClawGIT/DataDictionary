@@ -17,7 +17,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<DbRoutineType> GetEnumeration(this DbRoutineType value)
-        { return DbRoutineEnumeration.Cast(value); }
+        { return DbRoutineEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a DbRoutineType enum.

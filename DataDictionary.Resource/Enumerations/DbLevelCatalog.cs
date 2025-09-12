@@ -18,5 +18,5 @@ public static class DbLevelCatalog
     { return DbLevelCatalogEnumeration.Parse(value ?? String.Empty, null).Value; }
 
     public static String GetName(this DbLevelCatalogType value)
-    { return DbLevelCatalogEnumeration.Cast(value).Name; }
+    { return DbLevelCatalogEnumeration.GetValue(value).Name; }
 }

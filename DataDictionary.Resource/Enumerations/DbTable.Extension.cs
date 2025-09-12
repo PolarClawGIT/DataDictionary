@@ -17,7 +17,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<DbTableType> GetEnumeration(this DbTableType value)
-        { return DbTableEnumeration.Cast(value); }
+        { return DbTableEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a DbTableType enum.

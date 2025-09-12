@@ -20,7 +20,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static ILibraryMemberEnumeration GetEnumeration(this LibraryMemberType value)
-        { return LibraryMemberEnumeration.Cast(value); }
+        { return LibraryMemberEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a LibraryMemberType enum.

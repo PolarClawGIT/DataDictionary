@@ -17,7 +17,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<ScriptAsType> GetEnumeration(this ScriptAsType value)
-        { return ScriptAsEnumeration.Cast(value); }
+        { return ScriptAsEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a TemplateScriptAsType enum.

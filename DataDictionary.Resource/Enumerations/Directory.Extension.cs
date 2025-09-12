@@ -11,7 +11,7 @@
         /// <param name="value"></param>
         /// <returns></returns>
         public static IDirectoryEnumeration GetEnumeration(this DirectoryType value)
-        { return DirectoryEnumeration.Cast(value); }
+        { return DirectoryEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a TemplateDirectoryType enum.

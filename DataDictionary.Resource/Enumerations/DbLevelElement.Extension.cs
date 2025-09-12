@@ -17,7 +17,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="value"></param>
         /// <returns></returns>
         public static IEnumeration<DbLevelElementType> GetEnumeration(this DbLevelElementType value)
-        { return DbLevelElementEnumeration.Cast(value); }
+        { return DbLevelElementEnumeration.GetValue(value); }
 
         /// <summary>
         /// Try to parse the String into a DbLevelElementType enum.
