@@ -101,16 +101,11 @@ namespace DataDictionary.DataLayer.AppScript
             get
             {
                 String? value = GetValue(nameof(ObjectScope));
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set
-            {
-                if (value is ScopeType.Null)
-                { SetValue(nameof(ObjectScope), null); }
-                else { SetValue(nameof(ObjectScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(ObjectScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>

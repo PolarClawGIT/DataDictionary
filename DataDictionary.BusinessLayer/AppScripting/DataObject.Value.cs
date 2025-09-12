@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetIndex = () => new DataSourceIndex(this),
                 GetPath = () => ObjectPath,
                 GetScope = () => Scope,
-                GetTitle = () => ObjectPath.Member ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => ObjectPath.Member ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(ObjectPath),
                 IsTitleChanged = (e) => e.PropertyName is nameof(ObjectPath)
             };

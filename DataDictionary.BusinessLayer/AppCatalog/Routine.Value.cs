@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 GetIndex = () => new RoutineIndex(this),
                 GetPath = () => new PathIndex(DatabaseName, SchemaName, RoutineName),
                 GetScope = () => Scope,
-                GetTitle = () => RoutineName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => RoutineName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(RoutineName)
             };

@@ -52,7 +52,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetIndex = () => new ScriptingTemplateIndex(this),
                 GetPath = () => new PathIndex(TemplateTitle),
                 GetScope = () => Scope,
-                GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => TemplateTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
             };

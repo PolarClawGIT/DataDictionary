@@ -62,12 +62,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(RoutineType));
-                if (DbRoutineEnumeration.TryParse(value, null, out DbRoutineEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbRoutineType result))
+                { return result; }
                 else { return DbRoutineType.Null; }
             }
             init
-            { SetValue(nameof(RoutineType), DbRoutineEnumeration.Cast(value).Name); }
+            { SetValue(nameof(RoutineType), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -318,8 +318,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             where TResult : RoutineColumnItem, new()
         {
             DbRoutineType routineType = DbRoutineType.Null;
-            if (DbRoutineEnumeration.TryParse(source.RoutineType, null, out DbRoutineEnumeration? result))
-            { routineType = result.Value; }
+            if (source.RoutineType.TryParse(out DbRoutineType result))
+            { routineType = result; }
 
             TResult newValue = new TResult()
             {

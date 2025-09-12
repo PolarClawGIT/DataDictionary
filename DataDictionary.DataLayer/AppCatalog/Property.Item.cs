@@ -81,8 +81,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(Level2Type));
-                if (DbLevelCatalogEnumeration.TryParse(value, null, out DbLevelCatalogEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbLevelCatalogType result))
+                { return result; }
                 else { return DbLevelCatalogType.Null; }
             }
         }
@@ -107,8 +107,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(Level2Type));
-                if (DbLevelObjectEnumeration.TryParse(value, null, out DbLevelObjectEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbLevelObjectType result))
+                { return result; }
                 else { return DbLevelObjectType.Null; }
             }
         }
@@ -133,8 +133,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(Level2Type));
-                if (DbLevelElementEnumeration.TryParse(value, null, out DbLevelElementEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbLevelElementType result))
+                { return result; }
                 else { return DbLevelElementType.Null; }
             }
         }

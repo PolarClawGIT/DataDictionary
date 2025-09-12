@@ -104,6 +104,6 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override String ToString()
-        { return ScopeEnumeration.Cast(PropertyScope).Name; }
+        { return PropertyScope.GetEnumeration().Name; }
     }
 }

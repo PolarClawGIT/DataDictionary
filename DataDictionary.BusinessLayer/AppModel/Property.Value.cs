@@ -115,7 +115,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                 GetIndex = () => new PropertyIndex(this),
                 GetPath = () => new PathIndex(PropertyTitle),
                 GetScope = () => Scope,
-                GetTitle = () => PropertyTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => PropertyTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(PropertyTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(PropertyTitle)
             };

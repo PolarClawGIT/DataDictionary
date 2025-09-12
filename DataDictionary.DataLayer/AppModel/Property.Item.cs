@@ -66,12 +66,11 @@ namespace DataDictionary.DataLayer.AppModel
             get
             {
                 String? value = GetValue(nameof(DataType));
-                if (DomainPropertyEnumeration.TryParse(value, null, out DomainPropertyEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DomainPropertyType result))
+                { return result; }
                 else { return DomainPropertyType.Null; }
             }
-            set
-            { SetValue(nameof(DataType), DomainPropertyEnumeration.Cast(value).Name); }
+            set { SetValue(nameof(PropertyType), value.GetEnumeration().Name); }
         }
 
         /// <summary>

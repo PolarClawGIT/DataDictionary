@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 GetIndex = () => new TemplateAttributeIndex(this),
                 GetScope = () => Scope,
-                GetTitle = () => this.AttributeName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => this.AttributeName ?? Scope.GetEnumeration().Name,
                 IsTitleChanged = (e) => e.PropertyName is nameof(AttributeName)
             };
         }

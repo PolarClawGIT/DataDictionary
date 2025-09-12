@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <param name="source"></param>
         internal PathIndex(ScopeType source) : this()
-        { pathParts.AddRange(Parse(ScopeEnumeration.Cast(source).Name)); }
+        { pathParts.AddRange(Parse(source.GetEnumeration().Name)); }
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a Key.

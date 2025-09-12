@@ -109,7 +109,7 @@ class TemporalItem : ITemporal
     public override String ToString()
     {
         String temporalValue;
-        temporalValue = String.Format("{0}", DbModificationEnumeration.Cast(Modification).DisplayName);
+        temporalValue = String.Format("{0}", Modification.GetEnumeration().DisplayName);
 
         if (IsCurrent == false)
         { temporalValue = String.Format("{0}/Historic", temporalValue); }

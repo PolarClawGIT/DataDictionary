@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 GetIndex = () => new DataIndex() { SystemId = SystemId },
                 GetPath = () => new PathIndex(scope),
                 GetScope = () => Scope,
-                GetTitle = () => ScopeEnumeration.Cast(scope).DisplayName,
+                GetTitle = () => scope.GetEnumeration().DisplayName,
                 IsPathChanged = (e) => false,
                 IsTitleChanged = (e) => false
             };

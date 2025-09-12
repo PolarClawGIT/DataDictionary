@@ -56,6 +56,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0} {1}", ScopeEnumeration.Cast(PropertyScope).Name, PropertyName); }
+        { return String.Format("{0} {1}", PropertyScope.GetEnumeration().Name, PropertyName); }
     }
 }

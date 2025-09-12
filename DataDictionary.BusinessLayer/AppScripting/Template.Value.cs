@@ -74,16 +74,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (TemplateDirectoryEnumeration.TryParse(value, null, out TemplateDirectoryEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out TemplateDirectoryType result))
+                { return result; }
                 else { return TemplateDirectoryType.Null; }
             }
-            set
-            {
-                if (value is TemplateDirectoryType.Null)
-                { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -92,15 +87,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             get
             {
                 String value = GetValue(nameof(BreakOnScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set
-            {
-                if (value is ScopeType.Null) { SetValue(nameof(BreakOnScope), null); }
-                else { SetValue(nameof(BreakOnScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(BreakOnScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -113,7 +104,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetIndex = () => new TemplateIndex(this),
                 GetPath = () => new PathIndex(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => TemplateTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
             };

@@ -38,7 +38,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 GetIndex = () => new ConstraintColumnIndex(this),
                 GetPath = () => new PathIndex(DatabaseName, SchemaName, ConstraintName, ColumnName),
                 GetScope = () => Scope,
-                GetTitle = () => ColumnName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => ColumnName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(ConstraintName) or nameof(ColumnName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(ColumnName)
             };

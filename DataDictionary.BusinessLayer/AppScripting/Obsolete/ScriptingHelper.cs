@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                     if (value is XObject)
                     {
-                        if (result is null) { result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name); }
+                        if (result is null) { result = new XElement(attribute.Scope.GetEnumeration().Name); }
                         result.Add(value);
 
                         IReadOnlyList<XAttribute> attributes = properties.GetXAttributes(scripting, node, data.Properties);
@@ -61,7 +61,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     XElement? aliasNode = alias.GetXElement(scripting, (node) => properties.GetXAttributes(scripting, node, data.Properties));
                     if (aliasNode is not null && result is null)
                     {
-                        result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name);
+                        result = new XElement(attribute.Scope.GetEnumeration().Name);
                         result.Add(aliasNode);
                     }
                     else if (aliasNode is not null && result is XElement)

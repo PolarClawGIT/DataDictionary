@@ -31,15 +31,12 @@ namespace DataDictionary.DataLayer.AppModel
             get
             {
                 String value = GetValue(nameof(AliasScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
             set
-            {
-                if (value is ScopeType.Null) { SetValue(nameof(AliasScope), null); }
-                else { SetValue(nameof(AliasScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            { SetValue(nameof(AliasScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>

@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                     else { return new PathIndex(new PathIndex(PathIndex.Parse(ProcessName).ToArray())); }
                 },
                 GetScope = () => Scope,
-                GetTitle = () => ProcessTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => ProcessTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(ProcessTitle) or nameof(ProcessName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(ProcessTitle)
             };

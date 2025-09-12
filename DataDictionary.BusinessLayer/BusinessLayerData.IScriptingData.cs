@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer
                             }
                             else if (doc is null)
                             {
-                                rootElement = new XElement(ScopeEnumeration.Cast(Model.Scope).Name);
+                                rootElement = new XElement(Model.Scope.GetEnumeration().Name);
                                 doc = new XDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
 
                                 try

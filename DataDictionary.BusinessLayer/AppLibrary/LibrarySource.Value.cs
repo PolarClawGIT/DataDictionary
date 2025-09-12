@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
                 GetIndex = () => new LibrarySourceIndex(this),
                 GetPath = () => new PathIndex(AssemblyName),
                 GetScope = () => Scope,
-                GetTitle = () => LibraryTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => LibraryTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(AssemblyName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
             };

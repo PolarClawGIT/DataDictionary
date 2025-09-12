@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.AppModel
                     else { return new PathIndex(new PathIndex(PathIndex.Parse(EntityName).ToArray())); }
                 },
                 GetScope = () => Scope,
-                GetTitle = () => EntityTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => EntityTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(EntityTitle) or nameof(EntityName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(EntityTitle)
             };

@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
             if (source.DatabaseType is DbType value)
             {
-                DbTypeEnumeration item = DbTypeEnumeration.Cast(value);
+                DbTypeEnumeration item = value.GetEnumeration();
 
                 if (item.IsAlphaNumeric
                     && source.CharacterMaximumLength.HasValue

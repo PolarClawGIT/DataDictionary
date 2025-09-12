@@ -97,7 +97,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <remarks>The <paramref name="scope"/> parameter is converted to its corresponding name.</remarks>
         /// <param name="scope">The scope of the node, represented as a <see cref="ScopeType"/>.</param>
-        public XElementBuilder(ScopeType scope) : this(ScopeEnumeration.Cast(scope).Name)
+        public XElementBuilder(ScopeType scope) : this(scope.GetEnumeration().Name)
         { }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="value">The <see cref="ScopeType"/> value for which to retrieve the name.</param>
         /// <returns>A <see cref="string"/> representing the name of the specified <see cref="ScopeType"/> value, or <see langword="null"/> if the value does not have an associated name.</returns>
         public virtual String? GetValueDelegate(ScopeType value)
-        { return ScopeEnumeration.Cast(value).Name; }
+        { return value.GetEnumeration().Name; }
 
         /// <summary>
         /// Retrieves a string representation of the value of the specified property from the given object.
@@ -268,7 +268,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <returns>An <see cref="XElement"/> representing the root of the constructed XML tree. The root element's name is determined by the scope of the provided <paramref name="value"/>.</returns>
         public static XElement Build(this IEnumerable<XElementBuilder> nodes, IScopeType value)
         {
-            XElement root = new XElement(ScopeEnumeration.Cast(value.Scope).Name);
+            XElement root = new XElement(value.Scope.GetEnumeration().Name);
             Append(root, value, nodes);
 
             return root;
