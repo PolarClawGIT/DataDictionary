@@ -265,11 +265,10 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(NamedScopeNode value)
         {
-            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(value.Scope);
             TreeNode result = new TreeNode(value.Title);
 
-            result.ImageKey = scopeImage.Name;
-            result.SelectedImageKey = scopeImage.Name;
+            result.ImageKey = value.Scope.GetEnumeration().Name;
+            result.SelectedImageKey = value.Scope.GetEnumeration().Name;
             result.ToolTipText = value.NamedScope.Path.MemberFullPath;
             value.NamedScope.OnTitleChanged += (source, eventArg) =>
             {
@@ -286,11 +285,10 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(PathIndex path)
         {
-            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(ScopeType.ModelNameSpace);
             TreeNode result = new TreeNode(path.Member);
 
-            result.ImageKey = scopeImage.Name;
-            result.SelectedImageKey = scopeImage.Name;
+            result.ImageKey = ScopeType.ModelNameSpace.GetEnumeration().Name;
+            result.SelectedImageKey = ScopeType.ModelNameSpace.GetEnumeration().Name;
             result.NodeFont = new Font(treeControl.Font, FontStyle.Italic);
             result.ToolTipText = path.MemberFullPath;
 
@@ -299,13 +297,12 @@ namespace DataDictionary.Main.Controls
 
         TreeNode CreateNode(ScopeType scope)
         {
-            NavigationEnumeration scopeImage = NavigationEnumeration.Cast(scope);
-            TreeNode result = new TreeNode(scopeImage.Name.Split(".").Last());
+            TreeNode result = new TreeNode(scope.GetEnumeration().Name.Split(".").Last());
 
-            result.ImageKey = scopeImage.Name;
-            result.SelectedImageKey = scopeImage.Name;
+            result.ImageKey = scope.GetEnumeration().Name;
+            result.SelectedImageKey = scope.GetEnumeration().Name;
             result.NodeFont = new Font(treeControl.Font, FontStyle.Italic);
-            result.ToolTipText = String.Format("set of {0}", scopeImage.Name);
+            result.ToolTipText = String.Format("set of {0}", scope.GetEnumeration().Name);
 
             return result;
         }

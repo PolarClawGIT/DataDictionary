@@ -35,14 +35,14 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingDataSource, bindingDataObject);
 
             SetCommand(ScopeType.ScriptingData,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase,
+                CommandType.HistoryDatabase);
 
-            newObjectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingDataObject, CommandImageType.Add);
-            selectObjectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ScriptingDataObject, CommandImageType.Select);
+            newObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Add);
+            selectObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Select);
         }
 
         public DataSource(IDataSourceIndex? dataSource) : this()

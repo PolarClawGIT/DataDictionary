@@ -42,13 +42,13 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplateNode,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
-            newAttributeCommand.SetImage(ScopeType.ScriptingTemplateAttribute, CommandImageType.Add);
-            newElementCommand.SetImage(ScopeType.ScriptingTemplateElement, CommandImageType.Add);
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.HistoryDatabase);
+            newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetImage(Enumerations.CommandType.Add);
+            newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetImage(Enumerations.CommandType.Add);
 
             AddCommands(nodeCommands);
         }

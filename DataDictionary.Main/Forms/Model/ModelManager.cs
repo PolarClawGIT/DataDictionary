@@ -20,9 +20,9 @@ namespace DataDictionary.Main.Forms.Model
 
             SetIcon(ScopeType.Model);
             SetCommand(ScopeType.Model,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase);
         }
 
         private void ModelManager_Load(object sender, EventArgs e)
@@ -159,9 +159,9 @@ namespace DataDictionary.Main.Forms.Model
 
         private void modelBinding_CurrentChanged(object sender, EventArgs e)
         {
-            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
-            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
-            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
+            CommandButtons[CommandType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
 
         private void newModelCommand_Click(object sender, EventArgs e)

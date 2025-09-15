@@ -43,11 +43,11 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea);
             SetTitle(bindingAttribute);
             SetCommand(ScopeType.ModelAttribute,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.HistoryDatabase);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()

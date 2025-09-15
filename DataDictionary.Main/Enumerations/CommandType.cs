@@ -9,7 +9,7 @@ namespace DataDictionary.Main.Enumerations
     /// <summary>
     /// List of different Images used by commands within the UI
     /// </summary>
-    enum CommandImageType
+    enum CommandType
     {
         /// <summary>
         /// Default image

@@ -20,11 +20,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetIcon(ScopeType.Database);
             SetCommand(ScopeType.Database,
-                CommandImageType.Add,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandType.Add,
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase);
         }
 
         private void CatalogManager_Load(object sender, EventArgs e)
@@ -257,11 +257,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void CatalogBinding_CurrentChanged(object sender, EventArgs e)
         {
-            CommandButtons[CommandImageType.Delete].IsEnabled = GetInModel();
+            CommandButtons[CommandType.Delete].IsEnabled = GetInModel();
 
-            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
-            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
-            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
+            CommandButtons[CommandType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

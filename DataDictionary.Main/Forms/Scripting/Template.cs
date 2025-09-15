@@ -41,11 +41,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.HistoryDatabase);
         }
 
         public Template(ITemplateIndex? template) : this()
@@ -88,10 +88,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-                rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
-                rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
-                rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
+                
+                rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
+                rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
+                rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().ToList();
                 rootDirectoryData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
                     bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
@@ -182,7 +182,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedValue is DirectoryType value
-                && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
+                && value.GetEnumeration().Directory is DirectoryInfo directory)
             { rootPhysicalDirectory.Text = directory.FullName; }
             else { rootPhysicalDirectory.Text = String.Empty; }
         }
@@ -194,7 +194,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 //Note: For reason unknown, current.TemplateDirectory has not been updated
                 //at this point. Setting the current.RootDirectory directly solves this.
-                current.RootDirectory = TemplateDirectoryEnumeration.Cast(value).Name;
+                current.RootDirectory = value.GetEnumeration().Name;
                 current.DocumentDirectory = null;
                 current.ScriptDirectory = null;
             }

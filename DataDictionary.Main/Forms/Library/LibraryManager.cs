@@ -20,11 +20,11 @@ namespace DataDictionary.Main.Forms.Library
 
             SetIcon(ScopeType.Library);
             SetCommand(ScopeType.Library,
-                CommandImageType.Add,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                CommandType.Add,
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase);
         }
 
         private void LibraryManager_Load(object sender, EventArgs e)
@@ -261,10 +261,10 @@ namespace DataDictionary.Main.Forms.Library
 
         private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
         {
-            CommandButtons[CommandImageType.Delete].IsEnabled = GetInModel();
-            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
-            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
-            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
+            CommandButtons[CommandType.Delete].IsEnabled = GetInModel();
+            CommandButtons[CommandType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

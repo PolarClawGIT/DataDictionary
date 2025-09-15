@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
                 ScopeType.ApplicationHelp,
-                CommandImageType.Open);
+                Enumerations.CommandType.Open);
 
             historyValuesData.ResizeColumns();
             historyModificationData.ResizeColumns();
@@ -71,7 +71,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 foreach (IDataValue item in groups)
                 {
                     TemporalValue lastValue = formData.GetDetails(item).Last();
-                    String modification = DbModificationEnumeration.Cast(lastValue.Modification).DisplayName;
+                    String modification = lastValue.Modification.GetEnumeration().DisplayName;
                     ListViewItem newItem = new ListViewItem([lastValue.Title, modification]);
 
                     historyValuesData.Items.Add(newItem);
@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     formData.GetDetails(group).LastOrDefault() is TemporalValue value)
                 { bindingHistory.Position = formData.IndexOf(value); }
 
-                CommandButtons[CommandImageType.Open].IsEnabled = (OpenForm is not null);
+                CommandButtons[Enumerations.CommandType.Open].IsEnabled = (OpenForm is not null);
             }
         }
 
@@ -98,7 +98,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     IReadOnlyList<TemporalValue> temporalValues = formData.GetDetails(item);
                     foreach (TemporalValue temporalItem in temporalValues)
                     {
-                        String itemModification = DbModificationEnumeration.Cast(temporalItem.Modification).DisplayName;
+                        String itemModification = temporalItem.Modification.GetEnumeration().DisplayName;
                         String itemModifiedOn;
                         if (temporalItem.CreatedOn is DateTime modifiedOnvalue)
                         { itemModifiedOn = modifiedOnvalue.ToString(); }

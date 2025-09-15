@@ -1,0 +1,172 @@
+﻿using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.Main.Enumerations
+{
+    static partial class NavigationExtention
+    {
+        partial class Enumeration
+        {
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration static data.
+            /// </summary>
+            static Enumeration()
+            {
+                List<Enumeration> data = new List<Enumeration>()
+            {
+                new Enumeration(ScopeType.Null),
+
+                new Enumeration(ScopeType.Application,                Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel),
+                new Enumeration(ScopeType.ApplicationHelp,            Resources.Icon_HelpTableOfContent,
+                    new(CommandType.Default, Resources.StatusHelp),
+                    new(CommandType.Open, Resources.OpenStatusHelp),
+                    new(CommandType.Add, Resources.NewStatusHelp),
+                    new(CommandType.Delete, Resources.DeleteStatusHelp),
+                    new(CommandType.Import, Resources.ImportStatusHelp)),
+                new Enumeration(ScopeType.ApplicationHelpPage,       Resources.Icon_HelpIndexFile,
+                    new(CommandType.Default, Resources.HelpIndexFile),
+                    new(CommandType.Add, Resources.NewStatusHelp),
+                    new(CommandType.Delete, Resources.DeleteStatusHelp)),
+                new Enumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpTableOfContents),
+                new Enumeration(ScopeType.ApplicationHelpForm,        Resources.HelpApplication),
+                new Enumeration(ScopeType.ApplicationOption,          Resources.Icon_Settings, Resources.Settings),
+
+                new Enumeration(ScopeType.Library,                    Resources.Icon_Library,
+                    new(CommandType.Default, Resources.Library),
+                    new(CommandType.Add, Resources.NewLibrary),
+                    new(CommandType.Delete, Resources.DeleteLibrary)) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryTypeEvent,           Resources.Icon_Event, Resources.Event) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryTypeField,           Resources.Icon_Field, Resources.Field) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryTypeMethod,          Resources.Icon_Method, Resources.Method) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryNameSpace,           Resources.Icon_Namespace, Resources.Namespace) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryTypeProperty,        Resources.Icon_Property, Resources.Property) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryTypeParameter,       Resources.Icon_Parameter, Resources.Parameter) { GroupBy = false},
+                new Enumeration(ScopeType.LibraryType,                Resources.Icon_Class, Resources.Class) {GroupBy = false},
+
+                new Enumeration(ScopeType.Database,                   Resources.Icon_Database,
+                    new(CommandType.Default, Resources.Database),
+                    new(CommandType.Add, Resources.NewDatabase),
+                    new(CommandType.Delete, Resources.DeleteDatabase),
+                    new(CommandType.Export, Resources.ExportData)) {GroupBy = false},
+                new Enumeration(ScopeType.DatabaseSchema,             Resources.Icon_Schema, Resources.Schema) {GroupBy = false} ,
+                new Enumeration(ScopeType.DatabaseFunction,           Resources.Icon_ScalarFunction, Resources.ScalarFunction) ,
+                new Enumeration(ScopeType.DatabaseProcedure,          Resources.Icon_Procedure, Resources.Procedure) ,
+                new Enumeration(ScopeType.DatabaseTable,              Resources.Icon_Table,
+                    new(CommandType.Default, Resources.Table),
+                    new(CommandType.Export, Resources.ExportData)),
+                new Enumeration(ScopeType.DatabaseDomain,             Resources.Icon_DomainType, Resources.DomainType) ,
+                new Enumeration(ScopeType.DatabaseView,               Resources.Icon_View,
+                    new(CommandType.Default, Resources.View),
+                    new(CommandType.Export, Resources.ExportData)),
+                new Enumeration(ScopeType.DatabaseViewColumn,         Resources.Icon_Column,
+                    new(CommandType.Default, Resources.Column),
+                    new(CommandType.Export, Resources.ExportData)),
+                new Enumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column,
+                    new(CommandType.Default, Resources.Column),
+                    new(CommandType.Export, Resources.ExportData)),
+                new Enumeration(ScopeType.DatabaseConstraint,         Resources.Icon_Column, Resources.Column) ,
+                new Enumeration(ScopeType.DatabaseConstraintColumn,   Resources.Icon_Key, Resources.Key) ,
+
+                new Enumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
+                new Enumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
+                new Enumeration(ScopeType.DatabaseFunctionColumn,     Resources.Icon_Column, Resources.Column) ,
+
+                new Enumeration(ScopeType.DatabaseReference,          Resources.Icon_Dependancy, Resources.Dependancy) ,
+                new Enumeration(ScopeType.DatabaseProperty,           Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
+
+                new Enumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
+                new Enumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
+                new Enumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
+                new Enumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new Enumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
+                new Enumeration(ScopeType.ModelAlias,                 Resources.Icon_Synonym,
+                    new(CommandType.Default, Resources.Synonym),
+                    new(CommandType.Add, Resources.NewSynonym),
+                    new(CommandType.Select, Resources.SelectSynonym)),
+
+                new Enumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute,
+                    new(CommandType.Default, Resources.Attribute),
+                    new(CommandType.Add, Resources.NewAttribute),
+                    new(CommandType.Select, Resources.SelectAttribute),
+                    new(CommandType.Delete, Resources.DeleteAttribute)) { GroupBy = false},
+                new Enumeration(ScopeType.ModelAttributeAlias,        Resources.Icon_Synonym,
+                    new(CommandType.Default, Resources.Synonym),
+                    new(CommandType.Select, Resources.SelectSynonym),
+                    new(CommandType.Add, Resources.NewSynonym)),
+                new Enumeration(ScopeType.ModelAttributeProperty,     Resources.Icon_Property, Resources.Property) ,
+                new Enumeration(ScopeType.ModelAttributeDefinition,   Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new Enumeration(ScopeType.ModelAttributeSubjectArea,  Resources.Icon_Diagram, Resources.Diagram) ,
+
+                new Enumeration(ScopeType.ModelEntity,                Resources.Icon_Entities,
+                    new(CommandType.Default, Resources.Entity),
+                    new(CommandType.Add, Resources.NewEntity),
+                    new(CommandType.Select, Resources.SelectEntity),
+                    new(CommandType.Delete, Resources.DeleteEntity)) { GroupBy = false},
+                new Enumeration(ScopeType.ModelEntityAlias,           Resources.Icon_Synonym,
+                    new(CommandType.Default, Resources.Synonym),
+                    new(CommandType.Select, Resources.SelectSynonym),
+                    new(CommandType.Add, Resources.NewSynonym)),
+                new Enumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
+                new Enumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
+                new Enumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new Enumeration(ScopeType.ModelEntitySubjectArea,     Resources.Icon_Diagram, Resources.Diagram) ,
+
+                new Enumeration(ScopeType.ModelProcess,               Resources.Icon_Process,
+                    new (CommandType.Default, Resources.Process),
+                    new (CommandType.Add, Resources.NewProcess),
+                    new (CommandType.Select, Resources.SelectProcess),
+                    new (CommandType.Delete, Resources.DeleteProcess)) { GroupBy = false},
+                new Enumeration(ScopeType.ModelProcessAlias,          Resources.Icon_Synonym,
+                    new (CommandType.Default, Resources.Synonym),
+                    new (CommandType.Select, Resources.SelectSynonym),
+                    new (CommandType.Add, Resources.NewSynonym)),
+                new Enumeration(ScopeType.ModelProcessProperty,       Resources.Icon_Property, Resources.Property) ,
+                new Enumeration(ScopeType.ModelProcessArgument,       Resources.Icon_Parameter, Resources.Parameter) ,
+                new Enumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new Enumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
+
+                new Enumeration(ScopeType.Scripting,                  Resources.Icon_XMLFile,
+                    new(CommandType.Default, Resources.XMLFile),
+                    new(CommandType.Open, Resources.OpenXMLFile),
+                    new(CommandType.Save, Resources.SaveXmlFile),
+                    new(CommandType.Delete, Resources.DeleteXmlFile),
+                    new(CommandType.Add, Resources.NewXmlFile)),
+                new Enumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema,
+                    new(CommandType.Default, Resources.XMLSchema),
+                    new(CommandType.Delete, Resources.DeleteXMLSchema),
+                    new(CommandType.Add, Resources.NewXMLSchema)),
+                new Enumeration(ScopeType.ScriptingData,              Resources.Icon_XPath,
+                    new(CommandType.Default, Resources.XPath),
+                    new(CommandType.Delete, Resources.DeleteXPath) ,
+                    new(CommandType.Add, Resources.NewXPath) ,
+                    new(CommandType.Select, Resources.SelectXPath)),
+                new Enumeration(ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant,
+                    new(CommandType.Default, Resources.XMLDescendant),
+                    new(CommandType.Delete, Resources.DeleteXMLDescendant),
+                    new(CommandType.Add, Resources.NewXMLDescendant),
+                    new(CommandType.Select, Resources.SelectXMLDescendant)),
+                new Enumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_Tag, Resources.Tag) ,
+                new Enumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLAttribute, Resources.XMLAttribute) ,
+                new Enumeration(ScopeType.ScriptingTemplateElement,   Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new Enumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XSLTransform) ,
+                new Enumeration(ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new Enumeration(ScopeType.ScriptingTemplateData,      Resources.Icon_XPath, Resources.XPath) ,
+
+                new Enumeration(ScopeType.Security,                   Resources.Icon_User, Resources.User),
+                new Enumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User,
+                    new(CommandType.Default, Resources.User),
+                    new(CommandType.Add, Resources.NewUser),
+                    new(CommandType.Delete, Resources.DeleteUser)),
+                new Enumeration(ScopeType.SecurityRole,               Resources.Icon_ApplicationRole,
+                    new(CommandType.Default, Resources.ApplicationRole),
+                    new(CommandType.Add, Resources.NewApplicationRole),
+                    new(CommandType.Delete, Resources.DeleteApplicationRole)),
+                new Enumeration(ScopeType.SecuritySecurable,          Resources.Icon_Permission, Resources.Permission),
+
+            };
+
+                BuildDictionary(data);
+            }
+        }
+    }
+}

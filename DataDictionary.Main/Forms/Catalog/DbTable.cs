@@ -26,12 +26,12 @@ namespace DataDictionary.Main.Forms.Catalog
                 bindingProperties,
                 bindingDependencies);
             SetTitle(bindingTable);
-            SetCommand(ScopeType.DatabaseTable, CommandImageType.Export);
+            SetCommand(ScopeType.DatabaseTable, Enumerations.CommandType.Export);
 
-            CommandButtons[CommandImageType.Export].Text = "to Model";
-            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+            CommandButtons[Enumerations.CommandType.Export].Text = "to Model";
+            CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
 
-            exportEntites.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
+            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.CommandType.Add);
         }
 
         public DbTable(ITableValue tableItem) : this()

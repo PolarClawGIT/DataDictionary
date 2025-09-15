@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 namespace DataDictionary.Resource.Enumerations;
 
+
 /// <summary>
 /// Enumeration support class for Template Script As type.
 /// </summary>

@@ -49,9 +49,8 @@ namespace DataDictionary.Main.ProofOfConcept
 
             if (scopes.Length == 1)
             {
-                NavigationEnumeration value = NavigationEnumeration.Cast(scopes[0]);
-                Icon = value.WindowIcon;
-                Text = value.DisplayName;
+                Icon = scopes[0].GetIcon();
+                Text = scopes[0].GetEnumeration().DisplayName;
             }
 
             Initialize();
@@ -65,7 +64,7 @@ namespace DataDictionary.Main.ProofOfConcept
             {
                 ListViewGroup? newGroup = null;
                 if (groups.Count() > 1)
-                { newGroup = new ListViewGroup(NavigationEnumeration.Cast(group.Key).DisplayName); }
+                { newGroup = new ListViewGroup(group.Key.GetEnumeration().DisplayName); }
 
                 foreach (var groupValue in group)
                 {
@@ -77,7 +76,7 @@ namespace DataDictionary.Main.ProofOfConcept
                     ListViewItem newItem = new ListViewItem(groupValue.Value.NamedScope.Title);
 
                     if (newGroup is not null) { newItem.Group = newGroup; }
-                    newItem.ImageKey = NavigationEnumeration.Cast(groupValue.Value.NamedScope.Scope).Name;
+                    newItem.ImageKey = groupValue.Value.NamedScope.Scope.GetEnumeration().Name;
 
                     listViewItems.Add(newItem, groupValue.Key);
                     selectionData.Items.Add(newItem);
@@ -152,7 +151,7 @@ namespace DataDictionary.Main.ProofOfConcept
                 NamedScopeItem selectedValue = dataSource[selectedIndex];
 
                 titleData.Text = selectedValue.NamedScope.Title;
-                scopeData.Text = NavigationEnumeration.Cast(selectedValue.NamedScope.Scope).DisplayName;
+                scopeData.Text = selectedValue.NamedScope.Scope.GetEnumeration().DisplayName;
                 pathData.Text = selectedValue.NamedScope.Path.MemberFullPath;
             }
         }

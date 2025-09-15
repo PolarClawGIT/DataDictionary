@@ -281,21 +281,21 @@ namespace DataDictionary.Main.Forms.General
             public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
 
-            public Boolean GetAuthorization(CommandImageType command)
+            public Boolean GetAuthorization(CommandType command)
             {
                 switch (command)
                 {
-                    case CommandImageType.Default: return true;
-                    case CommandImageType.Browse: return true;
-                    case CommandImageType.Select: return true;
-                    case CommandImageType.Add:
+                    case CommandType.Default: return true;
+                    case CommandType.Browse: return true;
+                    case CommandType.Select: return true;
+                    case CommandType.Add:
                         return BusinessData.Authorization.IsHelpAdmin
                             || BusinessData.Authorization.IsHelpOwner;
-                    case CommandImageType.Open: return true;
-                    case CommandImageType.OpenDatabase: return true;
-                    case CommandImageType.SaveDatabase:
+                    case CommandType.Open: return true;
+                    case CommandType.OpenDatabase: return true;
+                    case CommandType.SaveDatabase:
                         return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandImageType.SecurityDatabase:
+                    case CommandType.SecurityDatabase:
                         return BusinessData.Authorization.IsSecurityAdmin;
                     default:
                         return false;

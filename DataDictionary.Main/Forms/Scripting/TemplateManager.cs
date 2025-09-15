@@ -17,9 +17,9 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.Scripting);
             SetCommand(
                 ScopeType.Scripting,
-                CommandImageType.Open);
-            newTemplate.SetImage(ScopeType.ScriptingTemplate, CommandImageType.Add);
-            newDataSource.SetImage(ScopeType.ScriptingData, CommandImageType.Add);
+                CommandType.Open);
+            newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
+            newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
             AddCommands(templateCommands);
 

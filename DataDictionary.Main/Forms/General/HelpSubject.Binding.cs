@@ -166,7 +166,7 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
-            public Boolean GetAuthorization(CommandImageType command)
+            public Boolean GetAuthorization(CommandType command)
             {
                 Boolean isGrant = false;
 
@@ -178,13 +178,13 @@ namespace DataDictionary.Main.Forms.General
 
                 switch (command)
                 {
-                    case CommandImageType.Default: return true;
-                    case CommandImageType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandImageType.Delete: return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandImageType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandImageType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandImageType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
+                    case CommandType.Default: return true;
+                    case CommandType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandType.Delete: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case CommandType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
+                    case CommandType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
                     default: return false;
                 }
             }

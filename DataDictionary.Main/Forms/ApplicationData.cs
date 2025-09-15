@@ -121,8 +121,8 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// The set of Command Buttons
         /// </summary>
-        protected IReadOnlyDictionary<CommandImageType, CommandState> CommandButtons { get { return commandButtons; } }
-        Dictionary<CommandImageType, CommandState> commandButtons = new Dictionary<CommandImageType, CommandState>();
+        protected IReadOnlyDictionary<Enumerations.CommandType, CommandState> CommandButtons { get { return commandButtons; } }
+        Dictionary<Enumerations.CommandType, CommandState> commandButtons = new Dictionary<Enumerations.CommandType, CommandState>();
 
         /// <summary>
         /// Constructor called when in Form Design mode
@@ -138,20 +138,20 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
 
-            commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Select, new CommandState(selectCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Add, new CommandState(newCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Open, new CommandState(openCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Browse, new CommandState(browseCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Select, new CommandState(selectCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Add, new CommandState(newCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Delete, new CommandState(deleteCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Save, new CommandState(saveCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Open, new CommandState(openCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Import, new CommandState(importCommand) { IsVisible = false });
+            commandButtons.Add(Enumerations.CommandType.Export, new CommandState(exportCommand) { IsVisible = false });
             toolStripSeparator.Visible = false;
-            commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.SecurityDatabase, new CommandState(securityCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(Enumerations.CommandType.OpenDatabase, new CommandState(openFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(Enumerations.CommandType.SaveDatabase, new CommandState(saveToDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(Enumerations.CommandType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(Enumerations.CommandType.SecurityDatabase, new CommandState(securityCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(Enumerations.CommandType.HistoryDatabase, new CommandState(historyCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
@@ -232,7 +232,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>Icon is static unless SetTitle is used.</remarks>
         protected void SetIcon(ScopeType scope)
-        { Icon = scope.GetNavigation().WindowIcon; }
+        { Icon = scope.GetIcon(); }
 
         /// <summary>
         /// Sets the Icon and Command Button Images. 
@@ -240,13 +240,11 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="commands"></param>
-        protected void SetCommand(ScopeType scope, params CommandImageType[]? commands)
+        protected void SetCommand(ScopeType scope, params Enumerations.CommandType[]? commands)
         {
-            foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
+            foreach (KeyValuePair<Enumerations.CommandType, CommandState> item in commandButtons)
             {
-                item.Value.Image = scope.GetNavigation().Images[item.Key];
-                if (NavigationEnumeration.Members.ContainsKey(scope) && NavigationEnumeration.Members[scope].Images.ContainsKey(item.Key))
-                { item.Value.Image = NavigationEnumeration.GetImage(scope, item.Key); }
+                item.Value.Image = item.Value.Image = scope.GetImage(item.Key);
 
                 if (commands is not null && commands.Any(w => item.Key.Equals(w)))
                 {
@@ -273,7 +271,7 @@ namespace DataDictionary.Main.Forms
         /// Set the IsEnabled based on security function.
         /// </summary>
         /// <param name="getAuthorization"></param>
-        public virtual void SetAuthorization(Func<CommandImageType, Boolean> getAuthorization)
+        public virtual void SetAuthorization(Func<Enumerations.CommandType, Boolean> getAuthorization)
         {
             foreach (var item in CommandButtons)
             { item.Value.IsEnabled = getAuthorization(item.Key); }
@@ -354,9 +352,9 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            commandButtons[CommandImageType.OpenDatabase].Refresh();
-            commandButtons[CommandImageType.SaveDatabase].Refresh();
-            commandButtons[CommandImageType.DeleteDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.OpenDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.SaveDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.DeleteDatabase].Refresh();
         }
 
 

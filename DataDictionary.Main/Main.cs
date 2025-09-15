@@ -21,7 +21,7 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            Icon = NavigationEnumeration.GetIcon(ScopeType.Application);
+            Icon = ScopeType.Application.GetIcon();
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);

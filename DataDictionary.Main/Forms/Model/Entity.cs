@@ -47,14 +47,14 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAttribute);
             SetTitle(bindingEntity);
             SetCommand(ScopeType.ModelEntity,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.HistoryDatabase);
 
-            attributeSelectCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Select);
-            attributeNewCommand.Image = NavigationEnumeration.GetImage(ScopeType.ModelEntityAttribute, CommandImageType.Add);
+            attributeSelectCommand.Image = ScopeType.ModelEntityAttribute.GetImage(Enumerations.CommandType.Select);
+            attributeNewCommand.Image = ScopeType.ModelEntityAttribute.GetImage(Enumerations.CommandType.Add);
         }
 
         public Entity(IEntityIndex? entity) : this()

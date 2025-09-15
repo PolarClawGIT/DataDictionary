@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 DoWork(work, onComplete);
             }
 
-            public Boolean GetAuthorization(CommandImageType command)
+            public Boolean GetAuthorization(Enumerations.CommandType command)
             {
                 Boolean isGrant = false;
                 SecurableIndex securable = BusinessData.Model.ModelIndex;
@@ -243,12 +243,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 switch (command)
                 {
-                    case CommandImageType.Default: return true;
-                    case CommandImageType.Delete: return BusinessData.Authorization.IsScriptAdmin || isGrant;
-                    case CommandImageType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
-                    case CommandImageType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
-                    case CommandImageType.DeleteDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
-                    case CommandImageType.HistoryDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
+                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsScriptAdmin || isGrant;
                     default: return false;
                 }
             }
