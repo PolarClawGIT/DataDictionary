@@ -4,6 +4,7 @@ using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -111,6 +112,13 @@ namespace DataDictionary.Main.Enumerations
             /// <returns></returns>
             static Image GetImage(params BindingSource[] bindings)
             { return EnumerationValues[GetRowState(bindings)].Image; }
+
+            public static Boolean TryGet(BindingRowState rowState, [NotNullWhen(true)] out Enumeration result)
+            {
+                if (EnumerationValues.ContainsKey(rowState))
+                { result = EnumerationValues[rowState]; return true; }
+                else { result = EnumerationValues[BindingRowState.Null]; return false; }
+            }
 
             //TODO: Modify forms that have multiple binding sources to pass the them.
 

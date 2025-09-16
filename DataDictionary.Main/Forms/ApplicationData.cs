@@ -177,19 +177,109 @@ namespace DataDictionary.Main.Forms
         {
             rowStateCommand.Enabled = true;
 
-            RowStateEnumeration.SetBinding(
-                (image) => rowStateCommand.Image = image,
-                (toolTip) => rowStateCommand.ToolTipText = toolTip,
-                rowStateChanged,
-                bindings);
+            BindingRowState toolRowState = BindingRowState.Unchanged;
+            Image toolImage = BindingRowState.Null.TryGet(out IRowStateEnumeration result) ? result.Image : result.Image;
+            StringBuilder toolTip = new StringBuilder();
 
-            void rowStateChanged(DataRowState state)
+            foreach (BindingSource item in bindings)
             {
-                RowState = state;
-                if (state is DataRowState.Detached or DataRowState.Deleted)
-                { IsLocked(true); }
+                item.CurrentItemChanged += Item_CurrentItemChanged;
+                item.CurrentChanged += Item_CurrentChanged;
+                item.Disposed += Item_Disposed;
+                item.DataSourceChanged += Item_DataSourceChanged;
+
+                SetBinding(item);
             }
+
+
+            void SetBinding(BindingSource binding)
+            {
+                if (binding.Position >= 0
+                    && binding.Current is IBindingRowState bindingRow
+                    && binding.GetRowState().TryGet(out IRowStateEnumeration rowState))
+                {
+                    toolTip.AppendLine(String.Format("{0}: {1}", bindingRow.GetType().Name, rowState.DisplayName));
+
+                    if (binding.Current is ITemporal temporal
+                        && temporal.Temporal.Modification is
+                        DbModificationType.Inserted or
+                        DbModificationType.Updated or
+                        DbModificationType.Deleted)
+                    {
+                        toolTip.Append(String.Format(" {0}", temporal.Temporal.ToString()));
+                    }
+
+                    if (rowState.Value is
+                        BindingRowState.Added or
+                        BindingRowState.Deleted or
+                        BindingRowState.Modified or
+                        BindingRowState.Historic
+                        && toolRowState is BindingRowState.Unchanged)
+                    { toolImage = rowState.Image; }
+                    else if (rowState.Value is BindingRowState.Detached
+                        && bindings[0] == binding)
+                    { toolImage = rowState.Image; }
+                }
+
+
+            }
+
+            void Item_CurrentItemChanged(Object? sender, EventArgs e)
+            {
+                foreach (BindingSource item in bindings)
+                { SetBinding(item); }
+            }
+
+            void Item_CurrentChanged(Object? sender, EventArgs e)
+            {
+                foreach (BindingSource item in bindings)
+                { SetBinding(item); }
+            }
+
+            void Item_DataSourceChanged(Object? sender, EventArgs e)
+            {
+                if (sender is BindingSource binding)
+                {
+                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
+                    binding.CurrentChanged -= Item_CurrentChanged;
+                    binding.Disposed -= Item_Disposed;
+                    binding.DataSourceChanged -= Item_DataSourceChanged;
+
+                    SetBinding(binding);
+
+                    binding.CurrentItemChanged += Item_CurrentItemChanged;
+                    binding.CurrentChanged += Item_CurrentChanged;
+                    binding.Disposed += Item_Disposed;
+                    binding.DataSourceChanged += Item_DataSourceChanged;
+                }
+
+            }
+
+            void Item_Disposed(Object? sender, EventArgs e)
+            {
+                if (sender is BindingSource binding)
+                {
+                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
+                    binding.CurrentChanged -= Item_CurrentChanged;
+                    binding.Disposed -= Item_Disposed;
+                    binding.DataSourceChanged -= Item_DataSourceChanged;
+                }
+            }
+
+            //RowStateEnumeration.SetBinding(
+            //    (image) => rowStateCommand.Image = image,
+            //    (toolTip) => rowStateCommand.ToolTipText = toolTip,
+            //    rowStateChanged,
+            //    bindings);
+
+            //void rowStateChanged(DataRowState state)
+            //{
+            //    RowState = state;
+            //    if (state is DataRowState.Detached or DataRowState.Deleted)
+            //    { IsLocked(true); }
+            //}
         }
+
 
         /// <summary>
         /// Sets the Title text and Icon based on the BindingSource provided.
