@@ -41,8 +41,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandType.DeleteDatabase,
                 CommandType.HistoryDatabase);
 
-            newObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Add);
-            selectObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Select);
+            newObjectCommand.Image = ScopeType.ScriptingDataObject.GetNavigation().Images[CommandType.Add];
+            selectObjectCommand.Image = ScopeType.ScriptingDataObject.GetNavigation().Images[CommandType.Select];
         }
 
         public DataSource(IDataSourceIndex? dataSource) : this()

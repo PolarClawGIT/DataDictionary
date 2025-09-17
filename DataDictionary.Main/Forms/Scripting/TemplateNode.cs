@@ -47,8 +47,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.CommandType.SaveDatabase,
                 Enumerations.CommandType.DeleteDatabase,
                 Enumerations.CommandType.HistoryDatabase);
-            newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetImage(Enumerations.CommandType.Add);
-            newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetImage(Enumerations.CommandType.Add);
+            newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetNavigation().Images[Enumerations.CommandType.Add];
+            newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetNavigation().Images[Enumerations.CommandType.Add];
 
             AddCommands(nodeCommands);
         }

@@ -22,13 +22,6 @@ namespace DataDictionary.Main.Enumerations
         /// This effects navigation components.
         /// </summary>
         Boolean GroupBy { get; }
-
-        /// <summary>
-        /// Image, return the Image object or default Image.
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        Image GetImage(CommandType image);
     }
 
     static partial class NavigationExtention
@@ -116,68 +109,13 @@ namespace DataDictionary.Main.Enumerations
                 ImageList result = new ImageList();
 
                 foreach (Enumeration item in EnumerationValues.Values)
-                { result.Images.Add(item.Name, item.GetImage(CommandType.Default)); }
+                {
+                    if (item.Images.TryGetValue(CommandType.Default, out Image? image))
+                    { result.Images.Add(item.Name, image); }
+                    else { result.Images.Add(item.Name, defaultImage); }
+                }
 
                 return result;
-            }
-
-            /// <summary>
-            /// Given the Scope, return the Icon object for it or the default Icon.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <returns></returns>
-            [Obsolete("unused", true)]
-            public static Icon GetIcon(ScopeType scope)
-            {
-                if (EnumerationValues.ContainsKey(scope))
-                { return EnumerationValues[scope].WindowIcon; }
-                else { return defaultIcon; }
-            }
-
-            /// <summary>
-            /// Given the Scope and Image, return the Image object or default Image.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="image"></param>
-            /// <returns></returns>
-            [Obsolete("unused", true)]
-            public static Image GetImage(ScopeType scope, CommandType image)
-            {
-                if (EnumerationValues.ContainsKey(scope))
-                { return EnumerationValues[scope].GetImage(image); }
-                else { return defaultImage; }
-            }
-
-            /// <summary>
-            /// Given the Scope and Image, return the default Image.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <returns></returns>
-            [Obsolete("unused", true)]
-            public static Image GetImage(ScopeType scope)
-            {
-                if (EnumerationValues.ContainsKey(scope))
-                { return EnumerationValues[scope].GetImage(); }
-                else { return defaultImage; }
-            }
-
-            /// <inheritdoc/>
-            public Image GetImage(CommandType image)
-            {
-                if (Images.ContainsKey(image))
-                { return Images[image]; }
-                else { return GetImage(); }
-            }
-
-            /// <summary>
-            /// Image, return the default Image.
-            /// </summary>
-            /// <returns></returns>
-            public Image GetImage()
-            {
-                if (Images.ContainsKey(CommandType.Default))
-                { return Images[CommandType.Default]; }
-                else { return defaultImage; }
             }
         }
     }

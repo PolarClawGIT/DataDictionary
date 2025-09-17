@@ -334,14 +334,15 @@ namespace DataDictionary.Main.Forms
         {
             foreach (KeyValuePair<Enumerations.CommandType, CommandState> item in commandButtons)
             {
-                item.Value.Image = item.Value.Image = scope.GetImage(item.Key);
+                if (scope.GetNavigation().Images.TryGetValue(item.Key, out Image? image))
+                { commandButtons[item.Key].Image = image; }
+                // Else leave the image as is
 
                 if (commands is not null && commands.Any(w => item.Key.Equals(w)))
                 {
                     CommandButtons[item.Key].IsVisible = true;
                     CommandButtons[item.Key].IsEnabled = true;
                 }
-                // Else leave the image as is
             }
         }
 

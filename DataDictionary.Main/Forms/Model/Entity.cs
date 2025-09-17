@@ -9,6 +9,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
+using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -47,14 +48,14 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAttribute);
             SetTitle(bindingEntity);
             SetCommand(ScopeType.ModelEntity,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase,
+                CommandType.HistoryDatabase);
 
-            attributeSelectCommand.Image = ScopeType.ModelEntityAttribute.GetImage(Enumerations.CommandType.Select);
-            attributeNewCommand.Image = ScopeType.ModelEntityAttribute.GetImage(Enumerations.CommandType.Add);
+            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetNavigation().Images[CommandType.Select];
+            attributeNewCommand.Image = ScopeType.ModelAttribute.GetNavigation().Images[CommandType.Add];
         }
 
         public Entity(IEntityIndex? entity) : this()

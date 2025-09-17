@@ -121,7 +121,11 @@ namespace DataDictionary.Main.Enumerations
                     new (CommandType.Select, Resources.SelectSynonym),
                     new (CommandType.Add, Resources.NewSynonym)),
                 new Enumeration(ScopeType.ModelProcessProperty,       Resources.Icon_Property, Resources.Property) ,
-                new Enumeration(ScopeType.ModelProcessArgument,       Resources.Icon_Parameter, Resources.Parameter) ,
+                new Enumeration(ScopeType.ModelProcessArgument,       Resources.Icon_Parameter,
+                    new (CommandType.Default, Resources.Parameter),
+                    new (CommandType.Add, Resources.NewParameter),
+                    new (CommandType.Select, Resources.SelectParameter),
+                    new (CommandType.Delete, Resources.DeleteParameter)) ,
                 new Enumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new Enumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
 

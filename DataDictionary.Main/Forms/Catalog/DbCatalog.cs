@@ -34,9 +34,9 @@ namespace DataDictionary.Main.Forms.Catalog
 
             CommandButtons[Enumerations.CommandType.Export].Text = "to Model";
             CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
-            exportAll.Image = ScopeType.Model.GetImage(Enumerations.CommandType.Add);
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.CommandType.Add);
-            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.CommandType.Add);
+            exportAll.Image = ScopeType.Model.GetNavigation().Images[Enumerations.CommandType.Add];
+            exportAttributes.Image = ScopeType.ModelAttribute.GetNavigation().Images[Enumerations.CommandType.Add];
+            exportEntites.Image = ScopeType.ModelEntity.GetNavigation().Images[Enumerations.CommandType.Add];
 
             exportProcesses.Visible = false; // Disabled until processes are supported
 

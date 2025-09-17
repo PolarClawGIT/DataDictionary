@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Catalog
 
             CommandButtons[Enumerations.CommandType.Export].Text = "to Model";
             CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.CommandType.Add);
+            exportAttributes.Image = ScopeType.ModelAttribute.GetNavigation().Images[Enumerations.CommandType.Add];
         }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()

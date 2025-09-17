@@ -202,6 +202,9 @@
   <data name="DeleteLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteParameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteParameter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -523,6 +526,9 @@
   <data name="NewLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewParameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewParameter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -687,6 +693,9 @@
   </data>
   <data name="SelectEntity" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectEntity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SelectParameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SelectParameter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SelectProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

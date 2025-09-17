@@ -31,8 +31,8 @@ namespace DataDictionary.Main.Forms.Model.Controls
         {
             InitializeComponent();
 
-            aliasAddCommand.Image = ScopeType.ModelAlias.GetImage(CommandType.Add);
-            aliasSelectCommand.Image = ScopeType.ModelAlias.GetImage(CommandType.Select);
+            aliasAddCommand.Image = ScopeType.ModelAlias.GetNavigation().Images[CommandType.Add];
+            aliasSelectCommand.Image = ScopeType.ModelAlias.GetNavigation().Images[CommandType.Select];
         }
 
         public void BindTo(BindingSource binding,
