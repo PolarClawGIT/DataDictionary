@@ -18,8 +18,8 @@ namespace DataDictionary.Main.Forms.Scripting
             SetCommand(
                 ScopeType.Scripting,
                 CommandType.Open);
-            newTemplate.Image = ScopeType.ScriptingTemplate.GetNavigation().Images[CommandType.Add];
-            newDataSource.Image = ScopeType.ScriptingData.GetNavigation().Images[CommandType.Add];
+            newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
+            newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
             AddCommands(templateCommands);
 

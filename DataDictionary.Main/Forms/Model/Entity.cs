@@ -54,8 +54,8 @@ namespace DataDictionary.Main.Forms.Model
                 CommandType.DeleteDatabase,
                 CommandType.HistoryDatabase);
 
-            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetNavigation().Images[CommandType.Select];
-            attributeNewCommand.Image = ScopeType.ModelAttribute.GetNavigation().Images[CommandType.Add];
+            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Select);
+            attributeNewCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
         }
 
         public Entity(IEntityIndex? entity) : this()

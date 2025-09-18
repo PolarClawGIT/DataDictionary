@@ -51,8 +51,8 @@ namespace DataDictionary.Main.Forms.Model
                 CommandType.DeleteDatabase,
                 CommandType.HistoryDatabase);
 
-            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetNavigation().Images[CommandType.Select];
-            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetNavigation().Images[CommandType.Add];
+            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Select);
+            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Add);
         }
 
         public Process(IProcessIndex? process) : this()

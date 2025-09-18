@@ -334,7 +334,7 @@ namespace DataDictionary.Main.Forms
         {
             foreach (KeyValuePair<Enumerations.CommandType, CommandState> item in commandButtons)
             {
-                if (scope.GetNavigation().Images.TryGetValue(item.Key, out Image? image))
+                if (scope.TryGetImage(item.Key, out Image? image))
                 { commandButtons[item.Key].Image = image; }
                 // Else leave the image as is
 

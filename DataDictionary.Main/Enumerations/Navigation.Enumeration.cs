@@ -102,21 +102,6 @@ namespace DataDictionary.Main.Enumerations
                 foreach ((CommandType scope, Image image) item in images)
                 { this.images.Add(item.scope, item.image); }
             }
-
-            /// <inheritdoc/>
-            public static ImageList AsImageList()
-            {
-                ImageList result = new ImageList();
-
-                foreach (Enumeration item in EnumerationValues.Values)
-                {
-                    if (item.Images.TryGetValue(CommandType.Default, out Image? image))
-                    { result.Images.Add(item.Name, image); }
-                    else { result.Images.Add(item.Name, defaultImage); }
-                }
-
-                return result;
-            }
         }
     }
 }

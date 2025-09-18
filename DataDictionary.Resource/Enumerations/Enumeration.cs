@@ -151,16 +151,30 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum>, IEquatabl
     }
 
     /// <summary>
-    /// Finds the Enum value and returns the Enumeration
+    /// Returns the Enumeration for the Enum.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
+    /// <exception cref="IndexOutOfRangeException">Enumeration does not contain the ENum</exception>
     public static TSelf GetValue(TEnum source)
     {
-        if (EnumerationValues.ContainsKey(source))
-        { return EnumerationValues[source]; }
+        if (EnumerationValues.TryGetValue(source, out TSelf? result))
+        { return result; }
         else
         { throw new IndexOutOfRangeException(String.Format("Enum value of '{0}' is missing in Enumeration class", Enum.GetName(typeof(TEnum), source))); }
+    }
+
+    /// <summary>
+    /// Finds the Enum value and returns the Enumeration
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public static Boolean TryGetValue(TEnum source, [NotNullWhen(true)] out TSelf? result)
+    {
+        if (EnumerationValues.ContainsKey(source))
+        { result = EnumerationValues[source]; return true; }
+        else { result = null; return false; }
     }
 
     /// <summary>
