@@ -113,15 +113,6 @@ namespace DataDictionary.Main.Enumerations
             static Image GetImage(params BindingSource[] bindings)
             { return EnumerationValues[GetRowState(bindings)].Image; }
 
-            public static Boolean TryGet(BindingRowState rowState, [NotNullWhen(true)] out Enumeration result)
-            {
-                if (EnumerationValues.ContainsKey(rowState))
-                { result = EnumerationValues[rowState]; return true; }
-                else { result = EnumerationValues[BindingRowState.Null]; return false; }
-            }
-
-            //TODO: Modify forms that have multiple binding sources to pass the them.
-
             /// <summary>
             /// Sets up the Binding events for the BindingSources.
             /// </summary>

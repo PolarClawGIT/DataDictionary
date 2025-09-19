@@ -177,63 +177,99 @@ namespace DataDictionary.Main.Forms
         {
             rowStateCommand.Enabled = true;
 
-            BindingRowState toolRowState = BindingRowState.Unchanged;
-            Image toolImage = BindingRowState.Null.TryGet(out IRowStateEnumeration result) ? result.Image : result.Image;
-            StringBuilder toolTip = new StringBuilder();
-
             foreach (BindingSource item in bindings)
             {
                 item.CurrentItemChanged += Item_CurrentItemChanged;
                 item.CurrentChanged += Item_CurrentChanged;
-                item.Disposed += Item_Disposed;
                 item.DataSourceChanged += Item_DataSourceChanged;
-
-                SetBinding(item);
+                item.Disposed += Item_Disposed;
             }
 
+            rowStateCommand.Image = GetToolImage();
+            rowStateCommand.ToolTipText = GetToolTip();
 
-            void SetBinding(BindingSource binding)
+            String GetToolTip()
             {
-                if (binding.Position >= 0
-                    && binding.Current is IBindingRowState bindingRow
-                    && binding.GetRowState().TryGet(out IRowStateEnumeration rowState))
+                StringBuilder result = new StringBuilder();
+                DateTime lastChange = DateTime.MinValue;
+                String? lastTemporal = String.Empty;
+
+                foreach (BindingSource binding in bindings)
                 {
-                    toolTip.AppendLine(String.Format("{0}: {1}", bindingRow.GetType().Name, rowState.DisplayName));
-
-                    if (binding.Current is ITemporal temporal
-                        && temporal.Temporal.Modification is
-                        DbModificationType.Inserted or
-                        DbModificationType.Updated or
-                        DbModificationType.Deleted)
+                    if (binding.Position >= 0
+                        && binding.Current is not null
+                        && binding.GetRowState().TryGetValue(out IRowStateEnumeration? rowState))
                     {
-                        toolTip.Append(String.Format(" {0}", temporal.Temporal.ToString()));
-                    }
+                        if (binding.Current is IScopeType scopeType)
+                        { result.AppendLine(String.Format("{0}: {1}", scopeType.Scope.GetEnumeration().DisplayName, rowState.DisplayName)); }
+                        else
+                        { result.AppendLine(String.Format("{0}: {1}", binding.Current.GetType().Name, rowState.DisplayName)); }
 
-                    if (rowState.Value is
-                        BindingRowState.Added or
-                        BindingRowState.Deleted or
-                        BindingRowState.Modified or
-                        BindingRowState.Historic
-                        && toolRowState is BindingRowState.Unchanged)
-                    { toolImage = rowState.Image; }
-                    else if (rowState.Value is BindingRowState.Detached
-                        && bindings[0] == binding)
-                    { toolImage = rowState.Image; }
+                        if (binding.Current is ITemporal temporal
+                            && temporal.Temporal.AsOfUtcDate > lastChange
+                            && temporal.Temporal.Modification is
+                                DbModificationType.Inserted or
+                                DbModificationType.Updated or
+                                DbModificationType.Deleted)
+                        {
+                            lastChange = temporal.Temporal.AsOfUtcDate;
+
+                            if (String.IsNullOrEmpty(lastTemporal))
+                            { lastTemporal = temporal.Temporal.ToString(); }
+                            else
+                            {
+                                StringBuilder value = new StringBuilder();
+                                value.Append(DbModificationType.Updated.GetEnumeration().DisplayName);
+
+                                if (temporal.Temporal.CreatedOn is DateTime createOn)
+                                { value.Append(String.Format("on {0}", createOn)); }
+
+                                if (temporal.Temporal.CreatedBy is String createBy)
+                                { value.Append(String.Format("by {0}", createBy)); }
+                            }
+                        }
+                    }
                 }
 
+                result.AppendLine(lastTemporal);
+                return result.ToString();
+            }
 
+            Image GetToolImage()
+            {
+                BindingRowState result = BindingRowState.Null;
+
+                foreach (BindingSource binding in bindings)
+                {
+                    if (binding.Position >= 0
+                        && binding.Current is not null
+                        && binding.GetRowState().TryGetValue(out IRowStateEnumeration? rowState))
+                    {
+                        if (result is BindingRowState.Null)
+                        { result = rowState.Value; }
+                        else if (result is BindingRowState.Unchanged
+                            && rowState.Value is
+                                BindingRowState.Added or
+                                BindingRowState.Modified or
+                                BindingRowState.Deleted or
+                                BindingRowState.Detached)
+                        { result = BindingRowState.Modified; }
+                    }
+                }
+
+                return result.GetImage();
             }
 
             void Item_CurrentItemChanged(Object? sender, EventArgs e)
             {
-                foreach (BindingSource item in bindings)
-                { SetBinding(item); }
+                rowStateCommand.Image = GetToolImage();
+                rowStateCommand.ToolTipText = GetToolTip();
             }
 
             void Item_CurrentChanged(Object? sender, EventArgs e)
-            {
-                foreach (BindingSource item in bindings)
-                { SetBinding(item); }
+            {   // Item Changed occures each time Current Change occurs. Don't need to do anything.
+                //rowStateCommand.Image = GetToolImage();
+                //rowStateCommand.ToolTipText = GetToolTip();
             }
 
             void Item_DataSourceChanged(Object? sender, EventArgs e)
@@ -242,17 +278,14 @@ namespace DataDictionary.Main.Forms
                 {
                     binding.CurrentItemChanged -= Item_CurrentItemChanged;
                     binding.CurrentChanged -= Item_CurrentChanged;
-                    binding.Disposed -= Item_Disposed;
                     binding.DataSourceChanged -= Item_DataSourceChanged;
-
-                    SetBinding(binding);
+                    binding.Disposed -= Item_Disposed;
 
                     binding.CurrentItemChanged += Item_CurrentItemChanged;
                     binding.CurrentChanged += Item_CurrentChanged;
-                    binding.Disposed += Item_Disposed;
                     binding.DataSourceChanged += Item_DataSourceChanged;
+                    binding.Disposed += Item_Disposed;
                 }
-
             }
 
             void Item_Disposed(Object? sender, EventArgs e)
@@ -265,19 +298,6 @@ namespace DataDictionary.Main.Forms
                     binding.DataSourceChanged -= Item_DataSourceChanged;
                 }
             }
-
-            //RowStateEnumeration.SetBinding(
-            //    (image) => rowStateCommand.Image = image,
-            //    (toolTip) => rowStateCommand.ToolTipText = toolTip,
-            //    rowStateChanged,
-            //    bindings);
-
-            //void rowStateChanged(DataRowState state)
-            //{
-            //    RowState = state;
-            //    if (state is DataRowState.Detached or DataRowState.Deleted)
-            //    { IsLocked(true); }
-            //}
         }
 
 

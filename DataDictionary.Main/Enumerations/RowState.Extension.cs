@@ -1,29 +1,33 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Enumerations
 {
     static partial class RowStateExtension
     {
-        public static Boolean TryGet(this BindingRowState value, out IRowStateEnumeration result)
+        /// <summary>
+        /// Try/Get the RowState information for the BindingRowState enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetValue(this BindingRowState value, [NotNullWhen(true)] out IRowStateEnumeration? result)
         {
-            if (Enumeration.TryGet(value, out Enumeration enumValue))
+            if (Enumeration.TryGetValue(value, out Enumeration? enumValue))
             { result = enumValue; return true; }
-            else { result = enumValue; return false; }
+            else { result = null; return false; }
         }
 
-        static void test()
-        {
-            String value = String.Empty;
-            value = TryGet(BindingRowState.Added, out IRowStateEnumeration result) ? result.Name: value;
-        }
+        /// <summary>
+        /// Gets the Image for the BindingRowState
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException">BindingRowState is not in RowState Enumeration</exception>
+        public static Image GetImage(this BindingRowState value)
+        { return Enumeration.GetValue(value).Image; }
 
         /// <summary>
         /// Returns the BindingRowState of a BindingSource
