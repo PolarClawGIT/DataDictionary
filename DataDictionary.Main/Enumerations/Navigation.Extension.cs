@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException">Scope or Command is not in Navigation Enumeration</exception>
         public static Image GetImage(this ScopeType scope, CommandType command)
-        { return Enumeration.GetValue(scope).Images[command]; }
+        { return Enumeration.GetValue(scope).Images[command](); }
 
         /// <summary>
         /// Try/Get the Image for the Scope and Command.
@@ -49,8 +49,8 @@ namespace DataDictionary.Main.Enumerations
         public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? result)
         {
             if (Enumeration.TryGetValue(scope, out Enumeration? value)
-                && value.Images.TryGetValue(command, out Image? image))
-            { result = image; return true; }
+                && value.Images.TryGetValue(command, out Func<Image>? image))
+            { result = image(); return true; }
             else { result = null; return false; }
         }
 
@@ -65,8 +65,8 @@ namespace DataDictionary.Main.Enumerations
             foreach (ScopeType item in Enum.GetValues<ScopeType>())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
-                    && value.Images.TryGetValue(CommandType.Default, out Image? image))
-                { result.Images.Add(value.Name, image); }
+                    && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
+                { result.Images.Add(value.Name, image()); }
             }
 
             target.ImageList = result;
@@ -83,8 +83,8 @@ namespace DataDictionary.Main.Enumerations
             foreach (ScopeType item in Enum.GetValues<ScopeType>())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
-                    && value.Images.TryGetValue(CommandType.Default, out Image? image))
-                { result.Images.Add(value.Name, image); }
+                    && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
+                { result.Images.Add(value.Name, image()); }
             }
 
             target.SmallImageList = result; 

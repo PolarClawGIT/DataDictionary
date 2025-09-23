@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Enumerations
         /// <summary>
         /// List of Images for the Scope Type assocated with Commands.
         /// </summary>
-        IReadOnlyDictionary<CommandType, Image> Images { get; }
+        IReadOnlyDictionary<CommandType, Func<Image>> Images { get; }
 
         /// <summary>
         /// Grouping behavior.
@@ -45,9 +45,9 @@ namespace DataDictionary.Main.Enumerations
             static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
             /// <inheritdoc/>
-            public IReadOnlyDictionary<CommandType, Image> Images
+            public IReadOnlyDictionary<CommandType, Func<Image>> Images
             { get { return images; } }
-            Dictionary<CommandType, Image> images { get; init; } = new Dictionary<CommandType, Image>();
+            Dictionary<CommandType, Func<Image>> images { get; init; } = new Dictionary<CommandType, Func<Image>>();
             static readonly Image defaultImage = Resources.UnknownMember;
 
             /// <inheritdoc/>
@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Enumerations
             /// <param name="scope"></param>
             /// <param name="defaultImage"></param>
             Enumeration(ScopeType scope, Image defaultImage) : this(scope)
-            { this.images.Add(CommandType.Default, defaultImage); }
+            { this.images.Add(CommandType.Default, () => defaultImage); }
 
             /// <summary>
             /// Constructor for the Window Form Scope Enumeration.
@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Enumerations
             /// <param name="windowIcon"></param>
             /// <param name="defaultImage"></param>
             Enumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
-            { this.images.Add(CommandType.Default, defaultImage); }
+            { this.images.Add(CommandType.Default, () => defaultImage); }
 
             /// <summary>
             /// Constructor for the Window Form Scope Enumeration.
@@ -100,8 +100,15 @@ namespace DataDictionary.Main.Enumerations
             Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Image image)[] images) : this(scope, windowIcon)
             {
                 foreach ((CommandType scope, Image image) item in images)
-                { this.images.Add(item.scope, item.image); }
+                { this.images.Add(item.scope, () => item.image); }
             }
+
+            // TODO: Convert all to Function Based.
+            //Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Func<Image> image)[] images) : this(scope, windowIcon)
+            //{
+            //    foreach ((CommandType scope, Func<Image> image) item in images)
+            //    { this.images.Add(item.scope, item.image); }
+            //}
         }
     }
 }

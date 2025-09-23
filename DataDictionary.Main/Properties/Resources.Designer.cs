@@ -333,6 +333,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeleteItem {
+            get {
+                object obj = ResourceManager.GetObject("DeleteItem", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeleteLibrary {
             get {
                 object obj = ResourceManager.GetObject("DeleteLibrary", resourceCulture);
@@ -1443,6 +1453,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewItem {
+            get {
+                object obj = ResourceManager.GetObject("NewItem", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewLibrary {
             get {
                 object obj = ResourceManager.GetObject("NewLibrary", resourceCulture);
@@ -1923,6 +1943,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SaveItem {
+            get {
+                object obj = ResourceManager.GetObject("SaveItem", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SaveScript {
             get {
                 object obj = ResourceManager.GetObject("SaveScript", resourceCulture);
@@ -2036,6 +2066,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap SelectEntity {
             get {
                 object obj = ResourceManager.GetObject("SelectEntity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectItem {
+            get {
+                object obj = ResourceManager.GetObject("SelectItem", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
