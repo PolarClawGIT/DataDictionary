@@ -16,14 +16,14 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
 
         public Boolean IsChoice { get; init; } = false;
 
-        public static void Load(ComboBoxData control, IEnumerable<IPropertyValue> values)
+        public static void Load(ComboBoxData control, IEnumerable<IPropertyValue> values, String emptyTitle = "(select property Type)")
         {
 
             BindingList<PropertyNameList> list = new BindingList<PropertyNameList>();
             list.Add(new PropertyNameList()
             {
                 PropertyId = Guid.Empty,
-                PropertyTitle = "(select property Type)"
+                PropertyTitle = emptyTitle
             });
 
             foreach (IPropertyValue item in values)
@@ -51,10 +51,10 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
             control.DataSource = list;
         }
 
-        public static void Load(ComboBoxData control)
-        { Load(control, BusinessData.Model.Properties); }
+        public static void Load(ComboBoxData control, String emptyTitle = "(select property Type)")
+        { Load(control, BusinessData.Model.Properties, emptyTitle); }
 
-        public static void Load(DataGridViewComboBoxColumn control, IEnumerable<IPropertyValue> values)
+        public static void Load(DataGridViewComboBoxColumn control, IEnumerable<IPropertyValue> values, String emptyTitle = "(select property Type)")
         {
             PropertyNameList propertyNameDataItem = new PropertyNameList();
             BindingList<PropertyNameList> list = new BindingList<PropertyNameList>();
@@ -85,7 +85,7 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
             control.DataSource = list;
         }
 
-        public static void Load(DataGridViewComboBoxColumn control)
-        { Load(control, BusinessData.Model.Properties); }
+        public static void Load(DataGridViewComboBoxColumn control, String emptyTitle = "(select property Type)")
+        { Load(control, BusinessData.Model.Properties, emptyTitle); }
     }
 }

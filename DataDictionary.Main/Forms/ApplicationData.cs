@@ -367,16 +367,39 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Add a Toolsript to the main form toolstirp.
+        /// Add a ToolStrip to the main form ToolStrip.
         /// </summary>
         /// <param name="commands"></param>
-        /// <remarks>
-        /// Uses ToolStripManager.Merge
-        /// Set the MergeIndex to 0 of each item of the incoming toolstrip to add to front.
-        /// The MergeAction should be Append or Insert, but does not seem to effect this.
-        /// </remarks>
-        protected void AddCommands(ToolStrip commands)
-        { ToolStripManager.Merge(commands, toolStrip); }
+        /// <param name="displayStyle">default is Image and Text</param>
+        protected void AddCommands(ToolStrip commands,
+            ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText)
+        {
+            Int32 mergeIndex = -1;
+            if (toolStrip.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator separator)
+            {
+                if (commands.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator incoming)
+                {
+                    if (commands.Items.IndexOf(incoming) == 0)
+                    { // Place the items before the Database Commands
+                        mergeIndex = toolStrip.Items.IndexOf(separator);
+                        separator.Visible = true;
+                    }
+                    else { mergeIndex = 0; } // Place the items first
+                }
+                else
+                { mergeIndex = toolStrip.Items.IndexOf(separator); } // Place the items before the Database Commands
+
+            }
+
+            foreach (ToolStripItem item in commands.Items.OfType<ToolStripItem>())
+            {
+                item.DisplayStyle = displayStyle;
+                item.MergeIndex = mergeIndex++;
+                item.MergeAction = MergeAction.Insert;
+            }
+
+            ToolStripManager.Merge(commands, toolStrip);
+        }
 
         /// <summary>
         /// Set the IsEnabled based on security function.

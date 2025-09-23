@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Scripting
             newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
             newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
-            AddCommands(templateCommands);
+            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image);
 
             formBinding = new FormBinding()
             {

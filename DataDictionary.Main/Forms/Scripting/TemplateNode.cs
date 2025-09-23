@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -49,8 +51,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.CommandType.HistoryDatabase);
             newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetImage(Enumerations.CommandType.Add);
             newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetImage(Enumerations.CommandType.Add);
-
-            AddCommands(nodeCommands);
+            AddCommands(nodeCommands, ToolStripItemDisplayStyle.Image);
         }
 
         public TemplateNode(ITemplateIndex template) : this()
@@ -93,8 +94,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 RenderValueAsList.Load(renderValueAsData);
                 renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.RenderValueAs)));
 
+                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.RenderOrder)));
+                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.FixedValue)));
 
+                ScopeNameList.Load(objectScopeData);
+                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ObjectScope)));
+                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.ObjectProperty)));
 
+                PropertyNameList.Load(modelPropertyData, "(n/a)");
+                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ModelPropertyId)));
             }
         }
 
