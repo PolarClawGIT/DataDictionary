@@ -148,9 +148,9 @@ namespace DataDictionary.Main
         [Obsolete("replace", true)]
         void OpenForm(ScriptingTemplateValue templateValue)
         {
-            Activate(
-                () => new Forms.Scripting.ScriptingTemplate(templateValue),
-                (form) => form.IsOpenItem(templateValue));
+            //Activate(
+            //    () => new Forms.Scripting.ScriptingTemplate(templateValue),
+            //    (form) => form.IsOpenItem(templateValue));
         }
     }
 }

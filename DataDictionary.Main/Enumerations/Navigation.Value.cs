@@ -94,7 +94,11 @@ namespace DataDictionary.Main.Enumerations
                     new(CommandType.Select,  ImageHelper.MergeImage(Resources.SoftwareDefinitionModel, Resources.SelectItem)))
                     { GroupBy = false},
                 new Enumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
-                new Enumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
+                new Enumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram,
+                    new(CommandType.Default, Resources.Diagram),
+                    new(CommandType.Add,     ImageHelper.MergeImage(Resources.Diagram, Resources.NewItem)),
+                    new(CommandType.Delete,  ImageHelper.MergeImage(Resources.Diagram, Resources.DeleteItem)))
+                    { GroupBy = false},
                 new Enumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new Enumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
                 new Enumeration(ScopeType.ModelAlias,                 Resources.Icon_Synonym,
@@ -150,15 +154,15 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new Enumeration(ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram, Resources.Diagram) ,
 
-                new Enumeration(ScopeType.Scripting,                  Resources.Icon_XMLFile,
-                    new(CommandType.Default, Resources.XMLFile),
-                    new(CommandType.Add,     ImageHelper.MergeImage(Resources.XMLFile, Resources.NewItem)),
-                    new(CommandType.Delete,  ImageHelper.MergeImage(Resources.XMLFile, Resources.DeleteItem)),
-                    new(CommandType.Open,    ImageHelper.MergeImage(Resources.XMLFile, Resources.OpenItem)),
-                    new(CommandType.Save,    ImageHelper.MergeImage(Resources.XMLFile, Resources.SaveItem)),
-                    new(CommandType.Export,  ImageHelper.MergeImage(Resources.XMLFile, Resources.ExportItem)),
-                    new(CommandType.Import,  ImageHelper.MergeImage(Resources.XMLFile, Resources.ImportItem)),
-                    new(CommandType.Select,  ImageHelper.MergeImage(Resources.XMLFile, Resources.SelectItem)))
+                new Enumeration(ScopeType.Scripting,                  Resources.Icon_XSLTransform,
+                    new(CommandType.Default, Resources.XSLTransform),
+                    new(CommandType.Add,     ImageHelper.MergeImage(Resources.XSLTransform, Resources.NewItem)),
+                    new(CommandType.Delete,  ImageHelper.MergeImage(Resources.XSLTransform, Resources.DeleteItem)),
+                    new(CommandType.Open,    ImageHelper.MergeImage(Resources.XSLTransform, Resources.OpenItem)),
+                    new(CommandType.Save,    ImageHelper.MergeImage(Resources.XSLTransform, Resources.SaveItem)),
+                    new(CommandType.Export,  ImageHelper.MergeImage(Resources.XSLTransform, Resources.ExportItem)),
+                    new(CommandType.Import,  ImageHelper.MergeImage(Resources.XSLTransform, Resources.ImportItem)),
+                    new(CommandType.Select,  ImageHelper.MergeImage(Resources.XSLTransform, Resources.SelectItem)))
                     { GroupBy = false},
                 new Enumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema,
                     new(CommandType.Default, Resources.XMLSchema),

@@ -237,7 +237,6 @@
             // 
             newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newAttributeCommand.DropDown = attributeContextMenu;
-            newAttributeCommand.Image = Properties.Resources.NewAttribute;
             newAttributeCommand.ImageTransparentColor = Color.Magenta;
             newAttributeCommand.Name = "newAttributeCommand";
             newAttributeCommand.Size = new Size(32, 22);
@@ -295,7 +294,6 @@
             // 
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.DropDown = entityContextMenu;
-            newEntityCommand.Image = Properties.Resources.NewEntity;
             newEntityCommand.ImageTransparentColor = Color.Magenta;
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(32, 22);
@@ -321,7 +319,6 @@
             // 
             newSubjectAreaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newSubjectAreaCommand.DropDown = subjectAreaContextMenu;
-            newSubjectAreaCommand.Image = Properties.Resources.NewDiagram;
             newSubjectAreaCommand.ImageTransparentColor = Color.Magenta;
             newSubjectAreaCommand.Name = "newSubjectAreaCommand";
             newSubjectAreaCommand.Size = new Size(32, 22);
@@ -890,7 +887,6 @@
             // 
             newProcessCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newProcessCommand.DropDown = processContextMenu;
-            newProcessCommand.Image = Properties.Resources.NewProcess;
             newProcessCommand.ImageTransparentColor = Color.Magenta;
             newProcessCommand.Name = "newProcessCommand";
             newProcessCommand.Size = new Size(32, 22);
@@ -948,7 +944,6 @@
             // 
             newRelationshipCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newRelationshipCommand.Enabled = false;
-            newRelationshipCommand.Image = Properties.Resources.NewRelationship;
             newRelationshipCommand.ImageTransparentColor = Color.Magenta;
             newRelationshipCommand.Name = "newRelationshipCommand";
             newRelationshipCommand.Size = new Size(32, 22);
@@ -964,7 +959,6 @@
             // 
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.DropDown = scriptingContextMenu;
-            manageScriptingCommand.Image = Properties.Resources.XSLTransform;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);

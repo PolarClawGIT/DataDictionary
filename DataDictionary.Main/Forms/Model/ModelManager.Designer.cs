@@ -144,7 +144,6 @@
             // 
             // newModelCommand
             // 
-            newModelCommand.Image = Properties.Resources.NewSoftwareDefinitionModel;
             newModelCommand.Name = "newModelCommand";
             newModelCommand.Size = new Size(133, 22);
             newModelCommand.Text = "new Model";

@@ -5,15 +5,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -29,6 +21,9 @@ namespace DataDictionary.Main.Forms.Scripting
         public Template() : base()
         {
             InitializeComponent();
+            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
+            newNodeCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,

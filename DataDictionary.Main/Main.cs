@@ -22,6 +22,12 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
+            newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
+            newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
+            newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
+            manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
+
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);

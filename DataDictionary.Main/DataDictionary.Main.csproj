@@ -19,10 +19,19 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Forms\Scripting\ScriptingTemplate.Binding.cs" />
+    <Compile Remove="Forms\Scripting\ScriptingTemplate.cs" />
+    <Compile Remove="Forms\Scripting\ScriptingTemplate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\Icon\SoftwareDefinitionModel.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Forms\Scripting\ScriptingTemplate.Binding.cs" />
+    <None Include="Forms\Scripting\ScriptingTemplate.cs" />
+    <None Include="Forms\Scripting\ScriptingTemplate.Designer.cs" />
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -221,7 +221,6 @@
             // newDataSourceCommand
             // 
             newDataSourceCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newDataSourceCommand.Image = Properties.Resources.NewXPath;
             newDataSourceCommand.ImageTransparentColor = Color.Magenta;
             newDataSourceCommand.Name = "newDataSourceCommand";
             newDataSourceCommand.Size = new Size(23, 22);
@@ -284,7 +283,6 @@
             // newNodeCommand
             // 
             newNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newNodeCommand.Image = Properties.Resources.NewXMLSchema;
             newNodeCommand.ImageTransparentColor = Color.Magenta;
             newNodeCommand.Name = "newNodeCommand";
             newNodeCommand.Size = new Size(23, 22);

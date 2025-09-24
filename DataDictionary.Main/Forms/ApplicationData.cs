@@ -1,6 +1,4 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -8,8 +6,8 @@ using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Text;
-using Toolbox.BindingTable;
 using System.ComponentModel;
+using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms
 {
@@ -137,6 +135,17 @@ namespace DataDictionary.Main.Forms
         public ApplicationData() : base()
         {
             InitializeComponent();
+
+            newCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.NewItem);
+            deleteCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.DeleteItem);
+            openCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.OpenItem);
+            saveCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.SaveItem);
+            importCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.ImportItem);
+            exportCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.ExportItem);
+            selectCommand.Image = ImageHelper.MergeImage(Resources.Document, Resources.SelectItem);
+            securityCommand.Image = ScopeType.Security.GetImage(CommandType.Default);
+            historyCommand.Image = Resources.HistoryTable;
+            helpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
 
             openFromDatabaseCommand.Image = ScopeType.Database.GetImage(Enumerations.CommandType.OpenDatabase);
             saveToDatabaseCommand.Image = ScopeType.Database.GetImage(Enumerations.CommandType.SaveDatabase);

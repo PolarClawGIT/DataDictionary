@@ -17,6 +17,7 @@ namespace DataDictionary.Main.Forms.Model
         public ModelManager()
         {
             InitializeComponent();
+            newModelCommand.Image = ScopeType.Model.GetImage(CommandType.Add);
 
             SetIcon(ScopeType.Model);
             SetCommand(ScopeType.Model,
