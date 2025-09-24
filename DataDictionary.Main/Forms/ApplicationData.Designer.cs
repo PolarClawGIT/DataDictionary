@@ -59,7 +59,6 @@
             // 
             openFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             openFromDatabaseCommand.Enabled = false;
-            openFromDatabaseCommand.Image = Properties.Resources.OpenTable;
             openFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             openFromDatabaseCommand.Name = "openFromDatabaseCommand";
             openFromDatabaseCommand.Size = new Size(23, 22);
@@ -70,7 +69,6 @@
             // 
             saveToDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             saveToDatabaseCommand.Enabled = false;
-            saveToDatabaseCommand.Image = Properties.Resources.SaveTable;
             saveToDatabaseCommand.ImageTransparentColor = Color.Magenta;
             saveToDatabaseCommand.Name = "saveToDatabaseCommand";
             saveToDatabaseCommand.Size = new Size(23, 22);
@@ -81,7 +79,6 @@
             // 
             deleteFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             deleteFromDatabaseCommand.Enabled = false;
-            deleteFromDatabaseCommand.Image = Properties.Resources.DeleteTable;
             deleteFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             deleteFromDatabaseCommand.Name = "deleteFromDatabaseCommand";
             deleteFromDatabaseCommand.Size = new Size(23, 22);

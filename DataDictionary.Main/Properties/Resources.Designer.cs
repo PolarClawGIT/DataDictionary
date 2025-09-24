@@ -293,16 +293,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DeleteDatabase {
-            get {
-                object obj = ResourceManager.GetObject("DeleteDatabase", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap DeleteDiagram {
             get {
                 object obj = ResourceManager.GetObject("DeleteDiagram", resourceCulture);
@@ -386,16 +376,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap DeleteRichTextBox {
             get {
                 object obj = ResourceManager.GetObject("DeleteRichTextBox", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap DeleteTable {
-            get {
-                object obj = ResourceManager.GetObject("DeleteTable", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1383,16 +1363,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap NewDatabase {
-            get {
-                object obj = ResourceManager.GetObject("NewDatabase", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap NewDiagram {
             get {
                 object obj = ResourceManager.GetObject("NewDiagram", resourceCulture);
@@ -1533,16 +1503,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap NewTable {
-            get {
-                object obj = ResourceManager.GetObject("NewTable", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap NewTag {
             get {
                 object obj = ResourceManager.GetObject("NewTag", resourceCulture);
@@ -1656,16 +1616,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap OpenItem {
             get {
                 object obj = ResourceManager.GetObject("OpenItem", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap OpenTable {
-            get {
-                object obj = ResourceManager.GetObject("OpenTable", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1936,16 +1886,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap SaveSoftwareDefinitionModel {
             get {
                 object obj = ResourceManager.GetObject("SaveSoftwareDefinitionModel", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap SaveTable {
-            get {
-                object obj = ResourceManager.GetObject("SaveTable", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

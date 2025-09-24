@@ -138,6 +138,10 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
 
+            openFromDatabaseCommand.Image = ScopeType.Database.GetImage(Enumerations.CommandType.OpenDatabase);
+            saveToDatabaseCommand.Image = ScopeType.Database.GetImage(Enumerations.CommandType.SaveDatabase);
+            deleteFromDatabaseCommand.Image = ScopeType.Database.GetImage(Enumerations.CommandType.DeleteDatabase);
+
             commandButtons.Add(Enumerations.CommandType.Browse, new CommandState(browseCommand) { IsVisible = false });
             commandButtons.Add(Enumerations.CommandType.Select, new CommandState(selectCommand) { IsVisible = false });
             commandButtons.Add(Enumerations.CommandType.Add, new CommandState(newCommand) { IsVisible = false });

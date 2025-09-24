@@ -187,9 +187,6 @@
   <data name="DeleteAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DeleteDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeleteDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="DeleteDiagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteDiagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -216,9 +213,6 @@
   </data>
   <data name="DeleteRichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteRichTextBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DeleteTag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteTag.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -514,9 +508,6 @@
   <data name="NewAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NewDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NewDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NewDiagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDiagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -559,9 +550,6 @@
   <data name="NewSynonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewSynonym.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NewTag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewTag.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -597,9 +585,6 @@
   </data>
   <data name="OpenItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="OpenTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\OpenTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="OpenXMLFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenXMLFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -681,9 +666,6 @@
   </data>
   <data name="SaveSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SaveTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SaveTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SaveXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
