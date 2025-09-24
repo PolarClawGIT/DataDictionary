@@ -393,16 +393,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DeleteStatusHelp {
-            get {
-                object obj = ResourceManager.GetObject("DeleteStatusHelp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap DeleteTable {
             get {
                 object obj = ResourceManager.GetObject("DeleteTable", resourceCulture);
@@ -446,16 +436,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap DeleteXMLDescendant {
             get {
                 object obj = ResourceManager.GetObject("DeleteXMLDescendant", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap DeleteXMLElement {
-            get {
-                object obj = ResourceManager.GetObject("DeleteXMLElement", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -606,6 +586,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap ExportEntity {
             get {
                 object obj = ResourceManager.GetObject("ExportEntity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ExportItem {
+            get {
+                object obj = ResourceManager.GetObject("ExportItem", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1273,9 +1263,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ImportStatusHelp {
+        internal static System.Drawing.Bitmap ImportItem {
             get {
-                object obj = ResourceManager.GetObject("ImportStatusHelp", resourceCulture);
+                object obj = ResourceManager.GetObject("ImportItem", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1533,16 +1523,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap NewStatusHelp {
-            get {
-                object obj = ResourceManager.GetObject("NewStatusHelp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap NewSynonym {
             get {
                 object obj = ResourceManager.GetObject("NewSynonym", resourceCulture);
@@ -1596,16 +1576,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap NewXMLDescendant {
             get {
                 object obj = ResourceManager.GetObject("NewXMLDescendant", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap NewXMLElement {
-            get {
-                object obj = ResourceManager.GetObject("NewXMLElement", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1683,9 +1653,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap OpenStatusHelp {
+        internal static System.Drawing.Bitmap OpenItem {
             get {
-                object obj = ResourceManager.GetObject("OpenStatusHelp", resourceCulture);
+                object obj = ResourceManager.GetObject("OpenItem", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2103,16 +2073,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SelectStatusHelp {
-            get {
-                object obj = ResourceManager.GetObject("SelectStatusHelp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap SelectSynonym {
             get {
                 object obj = ResourceManager.GetObject("SelectSynonym", resourceCulture);
@@ -2146,16 +2106,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap SelectXMLDescendant {
             get {
                 object obj = ResourceManager.GetObject("SelectXMLDescendant", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap SelectXMLElement {
-            get {
-                object obj = ResourceManager.GetObject("SelectXMLElement", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2206,6 +2156,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap StatusHelp {
             get {
                 object obj = ResourceManager.GetObject("StatusHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StatusHelpAlt {
+            get {
+                object obj = ResourceManager.GetObject("StatusHelpAlt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -217,9 +217,6 @@
   <data name="DeleteRichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteRichTextBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DeleteStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeleteStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -234,9 +231,6 @@
   </data>
   <data name="DeleteXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DeleteXMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DeleteXMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DeleteXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -282,6 +276,9 @@
   </data>
   <data name="ExportEntity" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExportEntity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ExportScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExportScript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -481,8 +478,8 @@
   <data name="ImportDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ImportDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ImportStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ImportStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ImportItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ImportItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Italic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -559,9 +556,6 @@
   <data name="NewSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NewStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NewStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NewSynonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewSynonym.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -579,9 +573,6 @@
   </data>
   <data name="NewXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NewXMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NewXMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewXmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -604,8 +595,8 @@
   <data name="OpenFolder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenFolder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="OpenStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\OpenStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="OpenItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\OpenItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="OpenTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -730,9 +721,6 @@
   <data name="SelectProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SelectStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SelectStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="SelectSynonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectSynonym.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -744,9 +732,6 @@
   </data>
   <data name="SelectXMLDescendant" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectXMLDescendant.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SelectXMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SelectXMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SelectXPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SelectXPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -762,6 +747,9 @@
   </data>
   <data name="StatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StatusHelpAlt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StatusHelpAlt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="StatusInformation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StatusInformationOutline.15.15.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

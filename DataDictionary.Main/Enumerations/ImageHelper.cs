@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {
@@ -11,11 +7,16 @@ namespace DataDictionary.Main.Enumerations
         /// <summary>
         /// Used to merge images into a composite image.
         /// </summary>
-        /// <param name="baseImage"></param>
-        /// <param name="overlayImage"></param>
-        /// <param name="alignment"></param>
+        /// <param name="baseImage">Image to use as the base/background image.</param>
+        /// <param name="overlayImage">Image to overlay the base image with.</param>
+        /// <param name="alignment">Alignment of the overlay image. Default: Top-Left</param>
+        /// <param name="overlay">The overlay behavior of the overlay.</param>
         /// <returns></returns>
-        public static Image MergeImage(Image baseImage, Image overlayImage, ContentAlignment alignment = ContentAlignment.TopLeft)
+        public static Image MergeImage(
+            Image baseImage, 
+            Image overlayImage,
+            ContentAlignment alignment = ContentAlignment.TopLeft,
+            CompositingMode overlay = CompositingMode.SourceCopy )
         {
             using (Graphics graphics = Graphics.FromImage(baseImage))
             {
@@ -62,7 +63,7 @@ namespace DataDictionary.Main.Enumerations
                         break;
                 }
 
-                graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                graphics.CompositingMode = overlay;
                 graphics.DrawImage(overlayImage, xPosition, yPosition, overlayImage.Width, overlayImage.Height);
             }
 
