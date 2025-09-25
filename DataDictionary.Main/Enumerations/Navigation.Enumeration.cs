@@ -44,6 +44,18 @@ namespace DataDictionary.Main.Enumerations
             public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
             static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
+            // List of default overlay Images
+            static readonly Dictionary<CommandType, Image> overlayImages = new Dictionary<CommandType, Image>()
+            {
+                {CommandType.Add,    Resources.NewItem},
+                {CommandType.Open,   Resources.OpenItem},
+                {CommandType.Save,   Resources.SaveItem},
+                {CommandType.Delete, Resources.DeleteItem},
+                {CommandType.Export, Resources.ExportItem},
+                {CommandType.Import, Resources.ImportItem},
+                {CommandType.Select, Resources.SelectItem},
+            };
+
             /// <inheritdoc/>
             public IReadOnlyDictionary<CommandType, Func<Image>> Images
             { get { return images; } }
@@ -72,7 +84,32 @@ namespace DataDictionary.Main.Enumerations
             /// <param name="scope"></param>
             /// <param name="windowIcon"></param>
             Enumeration(ScopeType scope, Icon windowIcon) : this(scope)
-            { this.WindowIcon = windowIcon; }
+            {
+                this.WindowIcon = windowIcon;
+
+                images.Add(CommandType.Default,
+                    () =>
+                    {
+                        Image result;
+                        using (Icon smallIcon = new Icon(windowIcon, 16, 16))
+                        { result = smallIcon.ToBitmap(); }
+
+                        return result;
+                    });
+
+                foreach (var item in overlayImages)
+                {
+                    images.Add(item.Key, 
+                        () =>
+                        {
+                            Image result;
+                            using (Icon smallIcon = new Icon(windowIcon, 16, 16))
+                            { result = smallIcon.ToBitmap().MergeImage(item.Value); }
+
+                            return result;
+                        });
+                }
+            }
 
             /// <summary>
             /// Constructor for the Window Form Scope Enumeration.
@@ -80,35 +117,29 @@ namespace DataDictionary.Main.Enumerations
             /// <param name="scope"></param>
             /// <param name="defaultImage"></param>
             Enumeration(ScopeType scope, Image defaultImage) : this(scope)
-            { this.images.Add(CommandType.Default, () => defaultImage); }
-
-            /// <summary>
-            /// Constructor for the Window Form Scope Enumeration.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="windowIcon"></param>
-            /// <param name="defaultImage"></param>
-            Enumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
-            { this.images.Add(CommandType.Default, () => defaultImage); }
-
-            /// <summary>
-            /// Constructor for the Window Form Scope Enumeration.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="windowIcon"></param>
-            /// <param name="images"></param>
-            Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Image image)[] images) : this(scope, windowIcon)
             {
-                foreach ((CommandType scope, Image image) item in images)
-                { this.images.Add(item.scope, () => item.image); }
+                images.Add(CommandType.Default, () => defaultImage);
+
+                foreach (var item in overlayImages)
+                { images.Add(item.Key, () => defaultImage.MergeImage(item.Value)); }
             }
 
-            // TODO: Convert all to Function Based.
-            //Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Func<Image> image)[] images) : this(scope, windowIcon)
-            //{
-            //    foreach ((CommandType scope, Func<Image> image) item in images)
-            //    { this.images.Add(item.scope, item.image); }
-            //}
+            /// <summary>
+            /// Constructor for the Window Form Scope Enumeration.
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="windowIcon"></param>
+            /// <param name="imageList"></param>
+            Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Image image)[] imageList) : this(scope, windowIcon)
+            {
+                foreach ((CommandType scope, Image image) item in imageList)
+                {
+                    if (images.ContainsKey(item.scope))
+                    { images[item.scope] = () => item.image; } // Update the image
+                    else
+                    { images.Add(item.scope, () => item.image); } // Add the image
+                }
+            }
         }
     }
 }

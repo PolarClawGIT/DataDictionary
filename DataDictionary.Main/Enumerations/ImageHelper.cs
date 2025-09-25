@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using DataDictionary.Main.Properties;
+using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {
@@ -13,10 +14,10 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="overlay">The overlay behavior of the overlay.</param>
         /// <returns></returns>
         public static Image MergeImage(
-            Image baseImage, 
+            this Image baseImage,
             Image overlayImage,
             ContentAlignment alignment = ContentAlignment.TopLeft,
-            CompositingMode overlay = CompositingMode.SourceCopy )
+            CompositingMode overlay = CompositingMode.SourceCopy)
         {
             using (Graphics graphics = Graphics.FromImage(baseImage))
             {
@@ -69,6 +70,29 @@ namespace DataDictionary.Main.Enumerations
 
             return baseImage;
         }
+
+        /// <summary>
+        /// Used to merge images into a composite image.
+        /// </summary>
+        /// <param name="baseIcon">Icon (16x16) to use as the base/background image.</param>
+        /// <param name="overlayImage">Image to overlay the base image with.</param>
+        /// <param name="alignment">Alignment of the overlay image. Default: Top-Left</param>
+        /// <param name="overlay">The overlay behavior of the overlay.</param>
+        /// <returns></returns>
+        public static Image MergeImage(
+            this Icon baseIcon,
+            Image overlayImage,
+            ContentAlignment alignment = ContentAlignment.TopLeft,
+            CompositingMode overlay = CompositingMode.SourceCopy)
+        {
+            Image result;
+
+            using (Icon smallIcon = new Icon(baseIcon, 16, 16))
+            { result = MergeImage(smallIcon.ToBitmap(), overlayImage, alignment, overlay); }
+
+            return result;
+        }
+
 
     }
 }
