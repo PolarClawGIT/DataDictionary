@@ -57,27 +57,27 @@ namespace DataDictionary.Main.Enumerations
         Export,
 
         /// <summary>
-        /// Open from Model
+        /// Open the Model from the Database
         /// </summary>
         OpenDatabase,
 
         /// <summary>
-        /// Save to Model
+        /// Save the Model to the Database
         /// </summary>
         SaveDatabase,
 
         /// <summary>
-        /// Delete from Model
+        /// Delete the Model from the Database
         /// </summary>
         DeleteDatabase,
 
         /// <summary>
-        /// History from Model
+        /// History of an item in the Database.
         /// </summary>
         HistoryDatabase,
 
         /// <summary>
-        /// Security from Model
+        /// Security of an items in the Database
         /// </summary>
         SecurityDatabase,
     }

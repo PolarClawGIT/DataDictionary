@@ -46,7 +46,9 @@ class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
             new ScopeEnumeration(ScopeType.ApplicationHelpGroup,       ScopeType.ApplicationHelp,   "Application.Help.Group"),
             new ScopeEnumeration(ScopeType.ApplicationHelpForm,        ScopeType.ApplicationHelp,   "Application.Help.Form"),
             new ScopeEnumeration(ScopeType.ApplicationOption,          ScopeType.Application,       "Application.Option"),
-            
+            new ScopeEnumeration(ScopeType.Document,        ScopeType.Application,       "Application.Document"),
+            new ScopeEnumeration(ScopeType.TimeLine,        ScopeType.Application,       "Application.TimeLine"),
+
             new ScopeEnumeration(ScopeType.Library,                    "Library"),
             new ScopeEnumeration(ScopeType.LibraryNameSpace,           ScopeType.Library,           "Library.NameSpace"),
             new ScopeEnumeration(ScopeType.LibraryType,                ScopeType.Library,           "Library.NameSpace.Type"),

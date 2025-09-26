@@ -203,7 +203,6 @@
             // 
             // menuAttributes
             // 
-            menuAttributes.Image = Properties.Resources.Attribute;
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(222, 22);
             menuAttributes.Text = "browse &Attributes";
@@ -284,7 +283,6 @@
             // 
             // menuEntityAttributes
             // 
-            menuEntityAttributes.Image = Properties.Resources.Attribute;
             menuEntityAttributes.Name = "menuEntityAttributes";
             menuEntityAttributes.Size = new Size(205, 22);
             menuEntityAttributes.Text = "browse Entity Attributes";
@@ -334,7 +332,6 @@
             // 
             // menuCatalogItem
             // 
-            menuCatalogItem.Image = Properties.Resources.Database;
             menuCatalogItem.Name = "menuCatalogItem";
             menuCatalogItem.Size = new Size(222, 22);
             menuCatalogItem.Text = "browse Catalogs";
@@ -358,7 +355,6 @@
             // 
             // menuTableColumnItem
             // 
-            menuTableColumnItem.Image = Properties.Resources.Column;
             menuTableColumnItem.Name = "menuTableColumnItem";
             menuTableColumnItem.Size = new Size(222, 22);
             menuTableColumnItem.Text = "browse Table Columns";
@@ -398,7 +394,6 @@
             // 
             // menuRoutineColumnItem
             // 
-            menuRoutineColumnItem.Image = Properties.Resources.Column;
             menuRoutineColumnItem.Name = "menuRoutineColumnItem";
             menuRoutineColumnItem.Size = new Size(222, 22);
             menuRoutineColumnItem.Text = "browse Routine Columns";
@@ -422,7 +417,6 @@
             // 
             // menuReferenceItem
             // 
-            menuReferenceItem.Image = Properties.Resources.Dependancy;
             menuReferenceItem.Name = "menuReferenceItem";
             menuReferenceItem.Size = new Size(222, 22);
             menuReferenceItem.Text = "browse Reference";
@@ -432,7 +426,6 @@
             // 
             manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageDatabasesCommand.DropDown = catalogContextMenu;
-            manageDatabasesCommand.Image = Properties.Resources.Database;
             manageDatabasesCommand.ImageTransparentColor = Color.Magenta;
             manageDatabasesCommand.Name = "manageDatabasesCommand";
             manageDatabasesCommand.Size = new Size(32, 22);
@@ -456,7 +449,6 @@
             // 
             // viewLibraryMemberCommand
             // 
-            viewLibraryMemberCommand.Image = Properties.Resources.Class;
             viewLibraryMemberCommand.Name = "viewLibraryMemberCommand";
             viewLibraryMemberCommand.Size = new Size(204, 22);
             viewLibraryMemberCommand.Text = "browse Library Members";
@@ -783,7 +775,6 @@
             // 
             // securityRole
             // 
-            securityRole.Image = Properties.Resources.ApplicationRole;
             securityRole.Name = "securityRole";
             securityRole.Size = new Size(146, 22);
             securityRole.Text = "Role";

@@ -47,6 +47,7 @@ namespace DataDictionary.Main.Enumerations
             // List of default overlay Images
             static readonly Dictionary<CommandType, Image> overlayImages = new Dictionary<CommandType, Image>()
             {
+                {CommandType.Browse, Resources.BrowseItem},
                 {CommandType.Add,    Resources.NewItem},
                 {CommandType.Open,   Resources.OpenItem},
                 {CommandType.Save,   Resources.SaveItem},
@@ -60,7 +61,6 @@ namespace DataDictionary.Main.Enumerations
             public IReadOnlyDictionary<CommandType, Func<Image>> Images
             { get { return images; } }
             Dictionary<CommandType, Func<Image>> images { get; init; } = new Dictionary<CommandType, Func<Image>>();
-            static readonly Image defaultImage = Resources.UnknownMember;
 
             /// <inheritdoc/>
             public Boolean GroupBy { get; init; } = true;

@@ -1,7 +1,5 @@
 ﻿using DataDictionary.Resource.Enumerations;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace DataDictionary.Main.Enumerations
 {
@@ -37,7 +35,19 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException">Scope or Command is not in Navigation Enumeration</exception>
         public static Image GetImage(this ScopeType scope, CommandType command)
-        { return Enumeration.GetValue(scope).Images[command](); }
+        {
+            if (Enumeration.TryGetValue(scope, out Enumeration? value))
+            {
+                if (value.Images.TryGetValue(command, out Func<Image>? image))
+                { return image(); }
+                else if (value.Images.TryGetValue(CommandType.Default, out Func<Image>? defaultImage))
+                { return defaultImage(); }
+                else
+                { throw new IndexOutOfRangeException(String.Format("Command Type unkown: {0}", command.ToString())); }
+            }
+            else
+            { throw new IndexOutOfRangeException(String.Format("Scope Type unkown: {0}", scope.ToString())); }
+        }
 
         /// <summary>
         /// Try/Get the Image for the Scope and Command.
@@ -87,7 +97,7 @@ namespace DataDictionary.Main.Enumerations
                 { result.Images.Add(value.Name, image()); }
             }
 
-            target.SmallImageList = result; 
+            target.SmallImageList = result;
         }
     }
 }

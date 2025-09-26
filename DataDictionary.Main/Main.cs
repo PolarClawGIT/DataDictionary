@@ -20,13 +20,32 @@ namespace DataDictionary.Main
 
         public Main() : base()
         {
+            //TODO: Remove old images
+
+            var x = Resources.Diagram;
+            
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
+
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
             newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
             newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
             newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
+            securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
+
+            viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
+
+            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
+
+            menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
+            menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
+
+            menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
+            menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
+            menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(CommandType.Default);
+            menuRoutineColumnItem.Image = ScopeType.DatabaseFunctionColumn.GetImage(CommandType.Default);
+
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 

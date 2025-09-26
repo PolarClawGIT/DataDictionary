@@ -26,15 +26,17 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ApplicationHelpGroup,      Resources.Icon_HelpTableOfContent),
                 new Enumeration(ScopeType.ApplicationHelpForm,       Resources.HelpApplication), // TODO: Make this an Icon from base SVG file
                 new Enumeration(ScopeType.ApplicationOption,         Resources.Icon_Settings),
+                new Enumeration(ScopeType.Document,       Resources.Icon_Document),
+                new Enumeration(ScopeType.TimeLine,       Resources.Icon_TimeLine),
 
                 new Enumeration(ScopeType.Library,                    Resources.Icon_Library) {GroupBy = false},
+                new Enumeration(ScopeType.LibraryType,                Resources.Icon_Class) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryTypeEvent,           Resources.Icon_Event) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryTypeField,           Resources.Icon_Field) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryTypeMethod,          Resources.Icon_Method) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryNameSpace,           Resources.Icon_Namespace) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryTypeProperty,        Resources.Icon_Property) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryTypeParameter,       Resources.Icon_Parameter) { GroupBy = false},
-                new Enumeration(ScopeType.LibraryType,                Resources.Icon_Class) {GroupBy = false},
 
                 new Enumeration(ScopeType.Database,                   Resources.Icon_Database,
                     new(CommandType.OpenDatabase,   ImageHelper.MergeImage(Resources.Table, Resources.OpenItem)),

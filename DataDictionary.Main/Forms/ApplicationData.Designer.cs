@@ -98,7 +98,6 @@
             // 
             browseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             browseCommand.Enabled = false;
-            browseCommand.Image = Properties.Resources.BrowseDocument;
             browseCommand.ImageTransparentColor = Color.Magenta;
             browseCommand.Name = "browseCommand";
             browseCommand.Size = new Size(23, 22);

@@ -44,6 +44,16 @@
         ApplicationOption,
 
         /// <summary>
+        /// Generic Document
+        /// </summary>
+        Document,
+
+        /// <summary>
+        /// Generic History/TimeLine
+        /// </summary>
+        TimeLine,
+
+        /// <summary>
         /// Application Model
         /// </summary>
         Model,
