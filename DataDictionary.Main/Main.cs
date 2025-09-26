@@ -22,30 +22,46 @@ namespace DataDictionary.Main
         {
             //TODO: Remove old images
 
-            var x = Resources.Diagram;
+            var x = Resources.HelpApplication; // Need Icon
+            var y = Resources.Permission;
             
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
 
+            // Set the button images based on Scope.
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
             newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
             newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
             newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
+
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
             securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
 
+            // TODO: Check if correct.
+            securityAuthorization.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default); 
+
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
+            viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
+            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
             menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
+            menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
+            menuProcessArgument.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Default);
+            subjectAreaToolStripMenuItem.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
             menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
             menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(CommandType.Default);
             menuRoutineColumnItem.Image = ScopeType.DatabaseFunctionColumn.GetImage(CommandType.Default);
+            menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(CommandType.Default);
+            menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(CommandType.Default);
+            menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
+            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintColumn.GetImage(CommandType.Default);
 
+            menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 

@@ -251,7 +251,6 @@
             // 
             // menuEntities
             // 
-            menuEntities.Image = Properties.Resources.Entity;
             menuEntities.Name = "menuEntities";
             menuEntities.Size = new Size(205, 22);
             menuEntities.Text = "browse &Entities";
@@ -307,7 +306,6 @@
             // 
             // subjectAreaToolStripMenuItem
             // 
-            subjectAreaToolStripMenuItem.Image = Properties.Resources.Diagram;
             subjectAreaToolStripMenuItem.Name = "subjectAreaToolStripMenuItem";
             subjectAreaToolStripMenuItem.Size = new Size(186, 22);
             subjectAreaToolStripMenuItem.Text = "browse &Subject Areas";
@@ -362,7 +360,6 @@
             // 
             // menuConstraintItem
             // 
-            menuConstraintItem.Image = Properties.Resources.Key;
             menuConstraintItem.Name = "menuConstraintItem";
             menuConstraintItem.Size = new Size(222, 22);
             menuConstraintItem.Text = "browse Constraints";
@@ -370,7 +367,6 @@
             // 
             // menuConstraintColumnItem
             // 
-            menuConstraintColumnItem.Image = Properties.Resources.KeyColumn;
             menuConstraintColumnItem.Name = "menuConstraintColumnItem";
             menuConstraintColumnItem.Size = new Size(222, 22);
             menuConstraintColumnItem.Text = "browse Constraint Columns";
@@ -386,7 +382,6 @@
             // 
             // menuRoutineParameterItem
             // 
-            menuRoutineParameterItem.Image = Properties.Resources.Parameter;
             menuRoutineParameterItem.Name = "menuRoutineParameterItem";
             menuRoutineParameterItem.Size = new Size(222, 22);
             menuRoutineParameterItem.Text = "browse Routine Parameters";
@@ -401,7 +396,6 @@
             // 
             // menuDomainItem
             // 
-            menuDomainItem.Image = Properties.Resources.DomainType;
             menuDomainItem.Name = "menuDomainItem";
             menuDomainItem.Size = new Size(222, 22);
             menuDomainItem.Text = "browse Domains (data type)";
@@ -409,7 +403,6 @@
             // 
             // menuPropertyItem
             // 
-            menuPropertyItem.Image = Properties.Resources.ExtendedProperty;
             menuPropertyItem.Name = "menuPropertyItem";
             menuPropertyItem.Size = new Size(222, 22);
             menuPropertyItem.Text = "browse Properties";
@@ -441,7 +434,6 @@
             // 
             // viewLibrarySourceCommand
             // 
-            viewLibrarySourceCommand.Image = Properties.Resources.Library;
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(204, 22);
             viewLibrarySourceCommand.Text = "browse Library Sources";
@@ -458,7 +450,6 @@
             // 
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageLibrariesCommand.DropDown = libraryContextMenu;
-            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
             manageLibrariesCommand.Size = new Size(32, 22);
@@ -758,7 +749,6 @@
             // 
             // securityAuthorization
             // 
-            securityAuthorization.Image = Properties.Resources.Permission;
             securityAuthorization.Name = "securityAuthorization";
             securityAuthorization.Size = new Size(146, 22);
             securityAuthorization.Text = "Authorization";
@@ -909,7 +899,7 @@
             // 
             // menuProcessArgument
             // 
-            menuProcessArgument.Image = Properties.Resources.Parameter;
+            
             menuProcessArgument.Name = "menuProcessArgument";
             menuProcessArgument.Size = new Size(212, 22);
             menuProcessArgument.Text = "browse Process Argument";
