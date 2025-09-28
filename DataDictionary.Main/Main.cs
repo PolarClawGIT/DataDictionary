@@ -23,7 +23,7 @@ namespace DataDictionary.Main
             //TODO: Remove old images
 
             var x = Resources.HelpApplication; // Need Icon
-            var y = Resources.Permission;
+            //var y = Resources.Permission;
             
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();

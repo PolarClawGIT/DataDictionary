@@ -87,28 +87,10 @@ namespace DataDictionary.Main.Enumerations
             {
                 this.WindowIcon = windowIcon;
 
-                images.Add(CommandType.Default,
-                    () =>
-                    {
-                        Image result;
-                        using (Icon smallIcon = new Icon(windowIcon, 16, 16))
-                        { result = smallIcon.ToBitmap(); }
-
-                        return result;
-                    });
+                images.Add(CommandType.Default, windowIcon.GetSmallImage);
 
                 foreach (var item in overlayImages)
-                {
-                    images.Add(item.Key, 
-                        () =>
-                        {
-                            Image result;
-                            using (Icon smallIcon = new Icon(windowIcon, 16, 16))
-                            { result = smallIcon.ToBitmap().MergeImage(item.Value); }
-
-                            return result;
-                        });
-                }
+                { images.Add(item.Key, () => windowIcon.MergeImage(item.Value)); }
             }
 
             /// <summary>

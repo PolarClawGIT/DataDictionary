@@ -3,6 +3,9 @@ using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {
+    /// <summary>
+    /// Helper class for handling Icons and turning them into images.
+    /// </summary>
     static class ImageHelper
     {
         /// <summary>
@@ -84,15 +87,21 @@ namespace DataDictionary.Main.Enumerations
             Image overlayImage,
             ContentAlignment alignment = ContentAlignment.TopLeft,
             CompositingMode overlay = CompositingMode.SourceCopy)
+        { return MergeImage(baseIcon.GetSmallImage(), overlayImage, alignment, overlay); }
+
+        /// <summary>
+        /// Extract the 16x16 image from the Icon.
+        /// </summary>
+        /// <param name="baseIcon">Icon (16x16) to use as the base/background image.</param>
+        /// <returns></returns>
+        public static Image GetSmallImage(this Icon baseIcon)
         {
             Image result;
 
             using (Icon smallIcon = new Icon(baseIcon, 16, 16))
-            { result = MergeImage(smallIcon.ToBitmap(), overlayImage, alignment, overlay); }
+            { result = smallIcon.ToBitmap(); }
 
             return result;
         }
-
-
     }
 }
