@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Enumerations
             IRowStateEnumeration
         {
             /// <inheritdoc/>
-            public Image Image { get; init; } = Resources.Row;
+            public Image Image { get; init; } = Resources.Icon_Row.GetSmallImage();
 
             Enumeration(BindingRowState rowState) : base()
             {

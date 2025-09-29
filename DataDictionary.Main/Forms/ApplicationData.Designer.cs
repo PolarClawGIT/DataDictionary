@@ -211,7 +211,6 @@
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             rowStateCommand.Enabled = false;
-            rowStateCommand.Image = Properties.Resources.Row;
             rowStateCommand.Name = "rowStateCommand";
             rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";

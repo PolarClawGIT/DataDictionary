@@ -47,14 +47,14 @@ namespace DataDictionary.Main.Enumerations
             // List of default overlay Images
             static readonly Dictionary<CommandType, Image> overlayImages = new Dictionary<CommandType, Image>()
             {
-                {CommandType.Browse, Resources.BrowseItem},
-                {CommandType.Add,    Resources.NewItem},
-                {CommandType.Open,   Resources.OpenItem},
-                {CommandType.Save,   Resources.SaveItem},
-                {CommandType.Delete, Resources.DeleteItem},
-                {CommandType.Export, Resources.ExportItem},
-                {CommandType.Import, Resources.ImportItem},
-                {CommandType.Select, Resources.SelectItem},
+                {CommandType.Browse, Resources.ItemBrowse},
+                {CommandType.Add,    Resources.ItemNew},
+                {CommandType.Open,   Resources.ItemOpen},
+                {CommandType.Save,   Resources.ItemSave},
+                {CommandType.Delete, Resources.ItemDelete},
+                {CommandType.Export, Resources.ItemExport},
+                {CommandType.Import, Resources.ItemImport},
+                {CommandType.Select, Resources.ItemSelect},
             };
 
             /// <inheritdoc/>

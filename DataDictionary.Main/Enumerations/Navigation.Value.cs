@@ -18,13 +18,13 @@ namespace DataDictionary.Main.Enumerations
 
                 new Enumeration(ScopeType.Application,               Resources.Icon_SoftwareDefinitionModel),
                 new Enumeration(ScopeType.ApplicationHelp,           Resources.Icon_Help,
-                    new(CommandType.Open,    Resources.Icon_HelpOffset16.MergeImage(Resources.OpenItem)),
-                    new(CommandType.Add,     Resources.Icon_HelpOffset16.MergeImage(Resources.NewItem)),
-                    new(CommandType.Delete,  Resources.Icon_HelpOffset16.MergeImage(Resources.DeleteItem)),
-                    new(CommandType.Import,  Resources.Icon_HelpOffset16.MergeImage(Resources.ImportItem))),
+                    new(CommandType.Open,    Resources.Icon_HelpOffset16.MergeImage(Resources.ItemOpen)),
+                    new(CommandType.Add,     Resources.Icon_HelpOffset16.MergeImage(Resources.ItemNew)),
+                    new(CommandType.Delete,  Resources.Icon_HelpOffset16.MergeImage(Resources.ItemDelete)),
+                    new(CommandType.Import,  Resources.Icon_HelpOffset16.MergeImage(Resources.ItemImport))),
                 new Enumeration(ScopeType.ApplicationHelpPage,       Resources.Icon_HelpIndexFile),
                 new Enumeration(ScopeType.ApplicationHelpGroup,      Resources.Icon_HelpTableOfContent),
-                new Enumeration(ScopeType.ApplicationHelpForm,       Resources.HelpApplication), // TODO: Make this an Icon from base SVG file
+                new Enumeration(ScopeType.ApplicationHelpForm,       Resources.Icon_HelpApplication),
                 new Enumeration(ScopeType.ApplicationOption,         Resources.Icon_Settings),
                 new Enumeration(ScopeType.Document,       Resources.Icon_Document),
                 new Enumeration(ScopeType.TimeLine,       Resources.Icon_TimeLine),
@@ -39,9 +39,9 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.LibraryTypeParameter,       Resources.Icon_Parameter) { GroupBy = false},
 
                 new Enumeration(ScopeType.Database,                   Resources.Icon_Database,
-                    new(CommandType.OpenDatabase,   ImageHelper.MergeImage(Resources.Table, Resources.OpenItem)),
-                    new(CommandType.SaveDatabase,   ImageHelper.MergeImage(Resources.Table, Resources.SaveItem)),
-                    new(CommandType.DeleteDatabase, ImageHelper.MergeImage(Resources.Table, Resources.DeleteItem)))
+                    new(CommandType.OpenDatabase,   ImageHelper.MergeImage(Resources.Table, Resources.ItemOpen)),
+                    new(CommandType.SaveDatabase,   ImageHelper.MergeImage(Resources.Table, Resources.ItemSave)),
+                    new(CommandType.DeleteDatabase, ImageHelper.MergeImage(Resources.Table, Resources.ItemDelete)))
                     {GroupBy = false},
                 new Enumeration(ScopeType.DatabaseSchema,             Resources.Icon_Schema) {GroupBy = false},
                 new Enumeration(ScopeType.DatabaseFunction,           Resources.Icon_ScalarFunction),

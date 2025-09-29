@@ -16,13 +16,13 @@ namespace DataDictionary.Main.Enumerations
             {
                 List<Enumeration> data = new List<Enumeration>()
             {
-                new Enumeration(BindingRowState.Null,      Resources.Row),
-                new Enumeration(BindingRowState.Detached,  Resources.RowDetached),
-                new Enumeration(BindingRowState.Unchanged, Resources.Row),
-                new Enumeration(BindingRowState.Added,     Resources.RowAdded),
-                new Enumeration(BindingRowState.Deleted,   Resources.RowDeleted),
-                new Enumeration(BindingRowState.Modified,  Resources.RowModified),
-                new Enumeration(BindingRowState.Historic,  Resources.RowHistory),
+                new Enumeration(BindingRowState.Null,      Resources.Icon_Row.GetSmallImage()),
+                new Enumeration(BindingRowState.Detached,  Resources.Icon_Row.MergeImage(Resources.ItemDetached)),
+                new Enumeration(BindingRowState.Unchanged, Resources.Icon_Row.GetSmallImage()),
+                new Enumeration(BindingRowState.Added,     Resources.Icon_Row.MergeImage(Resources.ItemAdded)),
+                new Enumeration(BindingRowState.Deleted,   Resources.Icon_Row.MergeImage(Resources.ItemDelete)),
+                new Enumeration(BindingRowState.Modified,  Resources.Icon_Row.MergeImage(Resources.ItemModified)),
+                new Enumeration(BindingRowState.Historic,  Resources.Icon_Row.MergeImage(Resources.ItemHistory)),
             };
 
                 BuildDictionary(data);

@@ -22,8 +22,7 @@ namespace DataDictionary.Main
         {
             //TODO: Remove old images
 
-            var x = Resources.HelpApplication; // Need Icon
-            //var y = Resources.Permission;
+            var y = Resources.StatusInformation;
             
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
@@ -34,8 +33,10 @@ namespace DataDictionary.Main
             newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
             newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
 
+            manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
             securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
+            browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
 
             // TODO: Check if correct.
             securityAuthorization.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default); 
@@ -47,10 +48,23 @@ namespace DataDictionary.Main
             manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
+            menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(CommandType.Default);
+            menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(CommandType.Default);
+
             menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
             menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
+            menuEntityProperties.Image = ScopeType.ModelEntityProperty.GetImage(CommandType.Default);
+            menuEntityDefinitions.Image = ScopeType.ModelEntityDefinition.GetImage(CommandType.Default);
+
+            menuProcess.Image = ScopeType.ModelProcess.GetImage(CommandType.Default);
             menuProcessArgument.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Default);
-            subjectAreaToolStripMenuItem.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
+            menuProcessProperty.Image = ScopeType.ModelProcessProperty.GetImage(CommandType.Default);
+            menuProcessDefinition.Image = ScopeType.ModelProcessDefinition.GetImage(CommandType.Default);
+
+            menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
+            menuModelProperty.Image = ScopeType.ModelProperty.GetImage(CommandType.Default);
+            menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
+
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
             menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
@@ -61,7 +75,10 @@ namespace DataDictionary.Main
             menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
             menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintColumn.GetImage(CommandType.Default);
 
+            menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(CommandType.Default); ;
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
+
+            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default); ;
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
