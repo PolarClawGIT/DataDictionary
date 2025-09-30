@@ -210,7 +210,6 @@
             // 
             // menuAttributeAlaises
             // 
-            menuAttributeAlaises.Image = Properties.Resources.Synonym;
             menuAttributeAlaises.Name = "menuAttributeAlaises";
             menuAttributeAlaises.Size = new Size(222, 22);
             menuAttributeAlaises.Text = "browse Attribute A&laises";
@@ -256,7 +255,6 @@
             // 
             // menuEntityAlias
             // 
-            menuEntityAlias.Image = Properties.Resources.Synonym;
             menuEntityAlias.Name = "menuEntityAlias";
             menuEntityAlias.Size = new Size(205, 22);
             menuEntityAlias.Text = "browse Entity A&lias";
@@ -340,7 +338,6 @@
             // 
             // menuTableItem
             // 
-            menuTableItem.Image = Properties.Resources.Table;
             menuTableItem.Name = "menuTableItem";
             menuTableItem.Size = new Size(222, 22);
             menuTableItem.Text = "browse Tables";
@@ -750,7 +747,6 @@
             // 
             // securityPrincipal
             // 
-            securityPrincipal.Image = Properties.Resources.User;
             securityPrincipal.Name = "securityPrincipal";
             securityPrincipal.Size = new Size(146, 22);
             securityPrincipal.Text = "Principal";
@@ -880,7 +876,6 @@
             // 
             // menuProcessAlias
             // 
-            menuProcessAlias.Image = Properties.Resources.Synonym;
             menuProcessAlias.Name = "menuProcessAlias";
             menuProcessAlias.Size = new Size(212, 22);
             menuProcessAlias.Text = "browse Process Alias";
@@ -941,7 +936,6 @@
             // 
             // menuScriptingTemplate
             // 
-            menuScriptingTemplate.Image = Properties.Resources.XSLTransform;
             menuScriptingTemplate.Name = "menuScriptingTemplate";
             menuScriptingTemplate.Size = new Size(228, 22);
             menuScriptingTemplate.Text = "browse Templates";
@@ -949,7 +943,6 @@
             // 
             // menuScriptingDocument
             // 
-            menuScriptingDocument.Image = Properties.Resources.XMLFile;
             menuScriptingDocument.Name = "menuScriptingDocument";
             menuScriptingDocument.Size = new Size(228, 22);
             menuScriptingDocument.Text = "browse Template Documents";
@@ -957,7 +950,6 @@
             // 
             // menuScriptingAttribute
             // 
-            menuScriptingAttribute.Image = Properties.Resources.XMLAttribute;
             menuScriptingAttribute.Name = "menuScriptingAttribute";
             menuScriptingAttribute.Size = new Size(228, 22);
             menuScriptingAttribute.Text = "browse Template Attributes";
@@ -969,14 +961,12 @@
             // 
             // menuScriptingElement
             // 
-            menuScriptingElement.Image = Properties.Resources.XMLElement;
             menuScriptingElement.Name = "menuScriptingElement";
             menuScriptingElement.Size = new Size(228, 22);
             menuScriptingElement.Text = "browse Template Elements";
             // 
             // menuScriptingDataSource
             // 
-            menuScriptingDataSource.Image = Properties.Resources.XPath;
             menuScriptingDataSource.Name = "menuScriptingDataSource";
             menuScriptingDataSource.Size = new Size(228, 22);
             menuScriptingDataSource.Text = "browse Data Sources";

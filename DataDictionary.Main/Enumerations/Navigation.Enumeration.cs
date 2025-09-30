@@ -55,6 +55,7 @@ namespace DataDictionary.Main.Enumerations
                 {CommandType.Export, Resources.ItemExport},
                 {CommandType.Import, Resources.ItemImport},
                 {CommandType.Select, Resources.ItemSelect},
+                {CommandType.Sync,   Resources.ItemSync},
             };
 
             /// <inheritdoc/>

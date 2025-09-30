@@ -162,7 +162,9 @@ namespace DataDictionary.Main.Forms.ProofOfConcept
         public TransformEditor() : base()
         {
             InitializeComponent();
-            Icon = Resources.Icon_XSLTransform;
+
+            //transformCommand.Image = Resources.XSLTransform;
+            //Icon = Resources.Icon_XSLTransform;
         }
 
         public TransformEditor(XDocument source) : this()

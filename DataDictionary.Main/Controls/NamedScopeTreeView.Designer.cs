@@ -73,7 +73,6 @@
             // refreshCommand
             // 
             refreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            refreshCommand.Image = Properties.Resources.RefreshTree;
             refreshCommand.ImageTransparentColor = Color.Magenta;
             refreshCommand.Name = "refreshCommand";
             refreshCommand.Size = new Size(23, 22);

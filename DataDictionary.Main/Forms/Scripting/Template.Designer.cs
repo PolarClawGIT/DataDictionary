@@ -416,7 +416,6 @@
             // transformCommand
             // 
             transformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            transformCommand.Image = Properties.Resources.XSLTransform;
             transformCommand.ImageTransparentColor = Color.Magenta;
             transformCommand.Name = "transformCommand";
             transformCommand.Size = new Size(23, 22);
@@ -462,7 +461,6 @@
             // documentCommand
             // 
             documentCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            documentCommand.Image = Properties.Resources.XMLFile;
             documentCommand.ImageTransparentColor = Color.Magenta;
             documentCommand.Name = "documentCommand";
             documentCommand.Size = new Size(23, 22);

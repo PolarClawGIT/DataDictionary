@@ -42,6 +42,8 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
+            refreshCommand.Image = Properties.Resources.RefreshTree;
+
             data = new NamedScopeTreeViewData(treeViewData);
             treeViewData.SetImageList();
         }

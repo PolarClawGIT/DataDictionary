@@ -22,8 +22,9 @@ namespace DataDictionary.Main
         {
             //TODO: Remove old images
 
-            var y = Resources.StatusInformation;
-            
+            var x = Resources.ReloadTree; // TODO: Build TreeView Icon, use ItemRefresh
+            var y = Resources.RefreshTree; // TODO: Build TreeView Icon, use ItemSync
+
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
 
@@ -39,7 +40,8 @@ namespace DataDictionary.Main
             browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
 
             // TODO: Check if correct.
-            securityAuthorization.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default); 
+            securityPrincipal.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default);
+            securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default); 
 
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
             viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
@@ -48,16 +50,21 @@ namespace DataDictionary.Main
             manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
+
+            menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
             menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(CommandType.Default);
             menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(CommandType.Default);
 
-            menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
+            
             menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
+            menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
+            menuEntityAlias.Image = ScopeType.ModelEntityAlias.GetImage(CommandType.Default);
             menuEntityProperties.Image = ScopeType.ModelEntityProperty.GetImage(CommandType.Default);
             menuEntityDefinitions.Image = ScopeType.ModelEntityDefinition.GetImage(CommandType.Default);
 
             menuProcess.Image = ScopeType.ModelProcess.GetImage(CommandType.Default);
             menuProcessArgument.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Default);
+            menuProcessAlias.Image = ScopeType.ModelProcessAlias.GetImage(CommandType.Default);
             menuProcessProperty.Image = ScopeType.ModelProcessProperty.GetImage(CommandType.Default);
             menuProcessDefinition.Image = ScopeType.ModelProcessDefinition.GetImage(CommandType.Default);
 
@@ -67,18 +74,23 @@ namespace DataDictionary.Main
 
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
+            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default); 
             menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
+            menuTableItem.Image = ScopeType.DatabaseTable.GetImage(CommandType.Default);
             menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(CommandType.Default);
             menuRoutineColumnItem.Image = ScopeType.DatabaseFunctionColumn.GetImage(CommandType.Default);
             menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(CommandType.Default);
             menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(CommandType.Default);
             menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
             menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintColumn.GetImage(CommandType.Default);
-
             menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(CommandType.Default); ;
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
 
-            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default); ;
+            menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            menuScriptingAttribute.Image = ScopeType.ScriptingTemplateAttribute.GetImage(CommandType.Default);
+            menuScriptingElement.Image = ScopeType.ScriptingTemplateElement.GetImage(CommandType.Default);
+            menuScriptingDocument.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 

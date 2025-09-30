@@ -23,6 +23,8 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
             newNodeCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
 
             formBinding = new FormBinding()
             {

@@ -1,15 +1,11 @@
-﻿using DataDictionary.Main.Controls;
-using DataDictionary.Main.Enumerations;
+﻿using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
-using System.Data;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.AppScripting;
-using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -24,6 +20,9 @@ namespace DataDictionary.Main.Forms.Model
         protected Attribute() : base()
         {
             InitializeComponent();
+
+            xElementRenderCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+
             formBinding = new FormBinding()
             {
                 BindingAlias = bindingAlias,

@@ -1,14 +1,9 @@
-﻿using DataDictionary.Main.Properties;
+﻿using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Properties;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Dialogs
 {
@@ -20,6 +15,10 @@ namespace DataDictionary.Main.Dialogs
             IntegratedSecurity = true,
             UserID = String.Format("{0}\\{1}", SystemInformation.UserDomainName, SystemInformation.UserName)
         };
+
+        Image connectionOk = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusOK, ContentAlignment.BottomRight, CompositingMode.SourceOver);
+        Image connectionInfo = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusInformation, ContentAlignment.BottomRight, CompositingMode.SourceOver);
+        Image connectionInvalid = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusInvalid, ContentAlignment.BottomRight, CompositingMode.SourceOver);
 
         public List<(String ServerName, String DatabaseName)> Servers { get; } = new List<(String ServerName, String DatabaseName)>();
 
@@ -36,6 +35,9 @@ namespace DataDictionary.Main.Dialogs
         public ServerConnectionDialog()
         {
             InitializeComponent();
+
+            refreshDatabaseCommand.Image = Resources.Icon_ServerDatabase.MergeImage(Resources.ItemRefresh);
+
             this.Icon = Resources.Icon_ServerDatabase;
         }
 
@@ -62,7 +64,7 @@ namespace DataDictionary.Main.Dialogs
 
         private void serverNameData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            validateCommand.Image = Resources.StatusInformation;
+            validateCommand.Image = connectionInfo;
             databaseNameData.DataSource = Servers.Where(w => w.ServerName == ServerName).Select(s => s.DatabaseName).ToList();
         }
 
@@ -81,12 +83,12 @@ namespace DataDictionary.Main.Dialogs
                     connect.Open();
                     connect.Close();
                     result = true;
-                    validateCommand.Image = Resources.StatusOK;
+                    validateCommand.Image = connectionOk;
                 }
                 catch (Exception ex)
                 {
                     errorProvider.SetError(accountNameData.ErrorControl, ex.Message);
-                    validateCommand.Image = Resources.StatusInvalid;
+                    validateCommand.Image = connectionInvalid;
                 }
             }
             serverConnectionLayout.Enabled = true;
@@ -116,12 +118,12 @@ namespace DataDictionary.Main.Dialogs
                         { result.Add(dbName); }
                     }
 
-                    validateCommand.Image = Resources.StatusOK;
+                    validateCommand.Image = connectionOk;
                 }
                 catch (Exception ex)
                 {
                     errorProvider.SetError(accountNameData.ErrorControl, ex.Message);
-                    validateCommand.Image = Resources.StatusInvalid;
+                    validateCommand.Image = connectionInvalid;
                 }
             }
 

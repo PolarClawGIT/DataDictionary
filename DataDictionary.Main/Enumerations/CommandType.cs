@@ -47,6 +47,11 @@ namespace DataDictionary.Main.Enumerations
         Open,
 
         /// <summary>
+        /// Synchronize items 
+        /// </summary>
+        Sync,
+
+        /// <summary>
         /// Import data from an external source.
         /// </summary>
         Import,

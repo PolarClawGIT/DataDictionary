@@ -1,16 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model.Controls
@@ -29,6 +22,9 @@ namespace DataDictionary.Main.Forms.Model.Controls
         public DefinitionData()
         {
             InitializeComponent();
+
+            syncTextToSummary.Image = ScopeType.ModelDefinition.GetImage(CommandType.Sync);
+
             definitionTextData.AddTools(fullTextTools);
         }
 
