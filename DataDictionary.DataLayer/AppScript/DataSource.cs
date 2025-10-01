@@ -3,13 +3,8 @@
     /// <summary>
     /// Interface for the Scripting Data Source
     /// </summary>
-    public interface IDataSource
+    public interface IDataSource: IDataSourceKeyName
     {
-        /// <summary>
-        /// Title of the Scripting Data Source
-        /// </summary>
-        String? DataSourceTitle { get; }
-
         /// <summary>
         /// Description of the Scripting Data Source
         /// </summary>

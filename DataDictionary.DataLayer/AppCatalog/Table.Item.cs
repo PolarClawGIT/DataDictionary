@@ -84,12 +84,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(TableType));
-                if (DbTableEnumeration.TryParse(value, null, out DbTableEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbTableType result))
+                { return result; }
                 else { return DbTableType.Null; }
             }
             init
-            { SetValue(nameof(TableType), DbTableEnumeration.Cast(value).Name); }
+            { SetValue(nameof(TableType), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -129,8 +129,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             where TResult : TableItem, new()
         {
             DbTableType tableType = DbTableType.Null;
-            if (DbTableEnumeration.TryParse(source.TableType, null, out DbTableEnumeration? result))
-            { tableType = result.Value; }
+            if (source.TableType.TryParse(out DbTableType result))
+            { tableType = result; }
 
             return new TResult()
             {

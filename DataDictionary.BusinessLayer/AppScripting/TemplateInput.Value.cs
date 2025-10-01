@@ -5,7 +5,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ITemplateInputValue : ITemplateInputItem,
-        ITemplateIndex,
+        ITemplateIndex, IDataSourceIndex,
         IScopeType
     { }
 
@@ -17,6 +17,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public TemplateInputValue() : base()
+        { }
+
+        /// <inheritdoc/>
+        public TemplateInputValue(ITemplateIndex template) : base(template)
         { }
     }
 }

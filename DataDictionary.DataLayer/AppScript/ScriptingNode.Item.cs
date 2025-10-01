@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>
     [Obsolete("replace", true)]
     public interface IScriptingNodeItem : 
-        IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeValueAsType,
+        IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeRenderAs,
         ITemporalItem
     {
         /// <summary>
@@ -46,11 +46,11 @@ namespace DataDictionary.DataLayer.AppScript
             get
             {
                 String value = GetValue(nameof(PropertyScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set { SetValue(nameof(PropertyScope), ScopeEnumeration.Cast(value).Name); }
+            set { SetValue(nameof(PropertyScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -68,20 +68,20 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateNodeValueAsType NodeValueAs
+        public NodeRenderAsType NodeRenderAs
         {
             get
             {
-                String? value = GetValue(nameof(NodeValueAs));
-                if (TemplateNodeValueAsEnumeration.TryParse(value, null, out TemplateNodeValueAsEnumeration? result))
-                { return result.Value; }
-                else { return TemplateNodeValueAsType.none; }
+                String? value = GetValue(nameof(NodeRenderAs));
+                if (value.TryParse(out NodeRenderAsType result))
+                { return result; }
+                else { return NodeRenderAsType.none; }
             }
             set
             {
-                if (value is TemplateNodeValueAsType.none)
-                { SetValue(nameof(NodeValueAs), null); }
-                else { SetValue(nameof(NodeValueAs), TemplateNodeValueAsEnumeration.Cast(value).Name); }
+                if (value is NodeRenderAsType.none)
+                { SetValue(nameof(NodeRenderAs), null); }
+                else { SetValue(nameof(NodeRenderAs), value.GetEnumeration().Name); }
             }
         }
 
@@ -115,7 +115,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(PropertyScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(NodeValueAs), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeRenderAs), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

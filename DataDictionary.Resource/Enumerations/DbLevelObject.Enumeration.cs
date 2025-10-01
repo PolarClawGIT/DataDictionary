@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration support class for Database Extended Procedure Object Level type.
     /// </summary>
-    public class DbLevelObjectEnumeration : Enumeration<DbLevelObjectType, DbLevelObjectEnumeration>
+    class DbLevelObjectEnumeration : Enumeration<DbLevelObjectType, DbLevelObjectEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Database Extended Procedure Object Level Enumeration

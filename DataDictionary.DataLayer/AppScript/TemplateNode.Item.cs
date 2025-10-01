@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// How the node is to be Rendered
         /// </summary>
-        TemplateNodeValueAsType RenderValueAs { get; }
+        NodeRenderAsType RenderValueAs { get; }
 
         /// <summary>
         /// Fixed value for the Node Value.

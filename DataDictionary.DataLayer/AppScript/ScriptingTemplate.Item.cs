@@ -104,15 +104,11 @@ namespace DataDictionary.DataLayer.AppScript
             get
             {
                 String value = GetValue(nameof(BreakOnScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set
-            {
-                if (value is ScopeType.Null) { SetValue(nameof(BreakOnScope), null); }
-                else { SetValue(nameof(BreakOnScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(BreakOnScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -123,21 +119,16 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateDirectoryType RootDirectory
+        public DirectoryType RootDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (TemplateDirectoryEnumeration.TryParse(value, null, out TemplateDirectoryEnumeration? result))
-                { return result.Value; }
-                else { return TemplateDirectoryType.Null; }
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
             }
-            set
-            {
-                if (value is TemplateDirectoryType.Null)
-                { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -169,21 +160,16 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateScriptAsType ScriptAs
+        public ScriptAsType ScriptAs
         {
             get
             {
                 String? value = GetValue(nameof(ScriptAs));
-                if (TemplateScriptAsEnumeration.TryParse(value, null, out TemplateScriptAsEnumeration? result))
-                { return result.Value; }
-                else { return TemplateScriptAsType.none; }
+                if (value.TryParse(out ScriptAsType result))
+                { return result; }
+                else { return ScriptAsType.none; }
             }
-            set
-            {
-                if (value is TemplateScriptAsType.none)
-                { SetValue(nameof(ScriptAs), null); }
-                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(ScriptAs), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -225,7 +211,7 @@ namespace DataDictionary.DataLayer.AppScript
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
             if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
-            if (RootDirectory is TemplateDirectoryType.Null) { RootDirectory = TemplateDirectoryType.MySources; }
+            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.MySources; }
 
             Temporal = new TemporalItem()
             {

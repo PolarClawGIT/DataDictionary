@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration support class for Database Extended Procedure Catalog Level type.
     /// </summary>
-    public class DbLevelCatalogEnumeration : Enumeration<DbLevelCatalogType, DbLevelCatalogEnumeration>
+    class DbLevelCatalogEnumeration : Enumeration<DbLevelCatalogType, DbLevelCatalogEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Database Extended Procedure Catalog Level Enumeration

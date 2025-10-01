@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingDocument,
                 bindingAttribute);
             SetTitle(bindingTemplate);
-            SetCommand(ScopeType.ScriptingTemplate, CommandImageType.Delete);
+            SetCommand(ScopeType.ScriptingTemplate, Enumerations.CommandType.Delete);
 
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
@@ -83,14 +83,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.TemplateDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-                rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
-                rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
-                rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
+                rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
+                rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
+                rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().Select(s => s.GetEnumeration()).ToList();
                 rootDirectoryData.DataBindings.Add(new Binding(
                     nameof(rootDirectoryData.SelectedValue),
                     bindingTemplate, nameof(IScriptingTemplateValue.RootDirectory),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateDirectoryType.Null });
+                { DataSourceNullValue = DirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
                 breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(IScriptingTemplateValue.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -100,14 +100,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 documentSuffixData.DataBindings.Add(new Binding(nameof(documentSuffixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 documentExtensionData.DataBindings.Add(new Binding(nameof(documentExtensionData.Text), bindingTemplate, nameof(IScriptingTemplateValue.DocumentExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-                scriptAsData.ValueMember = nameof(TemplateScriptAsEnumeration.Value);
-                scriptAsData.DisplayMember = nameof(TemplateScriptAsEnumeration.DisplayName);
-                scriptAsData.DataSource = TemplateScriptAsEnumeration.Members.Values.ToList();
+                scriptAsData.ValueMember = nameof(IEnumeration<ScriptAsType>.Value);
+                scriptAsData.DisplayMember = nameof(IEnumeration<ScriptAsType>.DisplayName);
+                scriptAsData.DataSource = Enum.GetValues<ScriptAsType>().Select(s => s.GetEnumeration());
                 scriptAsData.DataBindings.Add(new Binding(
                     nameof(scriptAsData.SelectedValue),
                     bindingTemplate, nameof(IScriptingTemplateValue.ScriptAs),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateScriptAsType.none });
+                { DataSourceNullValue = ScriptAsType.none });
 
                 scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(IScriptingTemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -122,14 +122,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(IScriptingNodeValue.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(IScriptingNodeValue.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-                nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
-                nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
-                nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Members.Values.ToList();
+                //nodeValueAsData.ValueMember = nameof(NodeRenderAsEnumeration.Value);
+                //nodeValueAsData.DisplayMember = nameof(NodeRenderAsEnumeration.DisplayName);
+                //nodeValueAsData.DataSource = NodeRenderAsEnumeration.Members.Values.ToList();
                 nodeValueAsData.DataBindings.Add(new Binding(
                     nameof(nodeValueAsData.SelectedValue),
-                    bindingNode, nameof(IScriptingNodeValue.NodeValueAs),
+                    bindingNode, nameof(IScriptingNodeValue.NodeRenderAs),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateNodeValueAsType.none });
+                { DataSourceNullValue = NodeRenderAsType.none });
 
                 PropertyNameList.Load(attributePropertyColumn);
                 attributeData.AutoGenerateColumns = false;
@@ -170,15 +170,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
-                && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
+            if (rootDirectoryData.SelectedValue is DirectoryType value
+                && value.GetEnumeration().Directory is DirectoryInfo directory)
             { rootDirectoryExpanded.Text = directory.FullName; }
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && bindingTemplate.Current is ScriptingTemplateValue current)
             {
                 current.RootDirectory = value; // TODO: Some reason Binding is not setting the value.
@@ -190,32 +190,34 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is ScriptingTemplateValue current
-                && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
-            {
-                folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
-                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {
-                    if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
-                        && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
-                    { current.DocumentDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
-                }
-            }
+            throw new NotImplementedException();
+            //if (bindingTemplate.Current is ScriptingTemplateValue current
+            //    && ScopeType.ScriptingTemplateAttribute. TemplateDirectoryEnumeration.Cast(ScopeType.ScriptingTemplateAttribute).Directory is DirectoryInfo directory)
+            //{
+            //    folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
+            //    if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+            //    {
+            //        if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
+            //            && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
+            //        { current.DocumentDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
+            //    }
+            //}
         }
 
         private void ScriptingDirectoryPicker_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is ScriptingTemplateValue current
-                && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
-            {
-                folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
-                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
-                {
-                    if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
-                        && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
-                    { current.ScriptDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
-                }
-            }
+            throw new NotImplementedException();
+            //if (bindingTemplate.Current is ScriptingTemplateValue current
+            //    && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
+            //{
+            //    folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
+            //    if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+            //    {
+            //        if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
+            //            && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
+            //        { current.ScriptDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
+            //    }
+            //}
         }
 
         private void ScriptAsData_SelectedIndexChanged(object sender, EventArgs e)
@@ -223,12 +225,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ScriptAsData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is ScriptingTemplateValue current
-                && scriptAsData.SelectedValue is TemplateScriptAsType value)
-            {
-                current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
-                current.ScriptExtension = TemplateScriptAsEnumeration.Members[value].Extension;
-            }
+            throw new NotImplementedException();
+            //if (bindingTemplate.Current is ScriptingTemplateValue current
+            //    && scriptAsData.SelectedValue is ScriptAsType value)
+            //{
+            //    current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
+            //    current.ScriptExtension = TemplateScriptAsEnumeration.Members[value].Extension;
+            //}
         }
 
         private void TransformParseCommand_Click(object sender, EventArgs e)
@@ -248,44 +251,46 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TransformImportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is ScriptingTemplateValue current)
-            {
-                if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
-                { openFileDialog.InitialDirectory = directory.FullName; }
+            throw new NotImplementedException();
+            //if (bindingTemplate.Current is ScriptingTemplateValue current)
+            //{
+            //    if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
+            //    { openFileDialog.InitialDirectory = directory.FullName; }
 
-                openFileDialog.DefaultExt = "xslt";
-                openFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
+            //    openFileDialog.DefaultExt = "xslt";
+            //    openFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
 
-                if (openFileDialog.ShowDialog() is DialogResult.OK)
-                {
-                    transformFilePath.Text = openFileDialog.FileName;
-                    XDocument file = XDocument.Load(openFileDialog.OpenFile());
-                    if (file.Root is XElement)
-                    { current.TransformScript = file.Root.ToString(); }
-                }
-            }
+            //    if (openFileDialog.ShowDialog() is DialogResult.OK)
+            //    {
+            //        transformFilePath.Text = openFileDialog.FileName;
+            //        XDocument file = XDocument.Load(openFileDialog.OpenFile());
+            //        if (file.Root is XElement)
+            //        { current.TransformScript = file.Root.ToString(); }
+            //    }
+            //}
         }
 
         private void TransformExportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is ScriptingTemplateValue current)
-            {
-                if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
-                { saveFileDialog.InitialDirectory = directory.FullName; }
+            throw new NotImplementedException();
+            //if (bindingTemplate.Current is ScriptingTemplateValue current)
+            //{
+            //    if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
+            //    { saveFileDialog.InitialDirectory = directory.FullName; }
 
-                if (String.IsNullOrWhiteSpace(transformFilePath.Text))
-                { saveFileDialog.FileName = current.TemplateTitle; }
-                else { saveFileDialog.FileName = transformFilePath.Text; }
+            //    if (String.IsNullOrWhiteSpace(transformFilePath.Text))
+            //    { saveFileDialog.FileName = current.TemplateTitle; }
+            //    else { saveFileDialog.FileName = transformFilePath.Text; }
 
-                saveFileDialog.DefaultExt = "xslt";
-                saveFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
+            //    saveFileDialog.DefaultExt = "xslt";
+            //    saveFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
 
-                if (saveFileDialog.ShowDialog() is DialogResult.OK && current.TransformXml is not null)
-                {
-                    XDocument file = new XDocument(current.TransformXml);
-                    file.Save(saveFileDialog.FileName);
-                }
-            }
+            //    if (saveFileDialog.ShowDialog() is DialogResult.OK && current.TransformXml is not null)
+            //    {
+            //        XDocument file = new XDocument(current.TransformXml);
+            //        file.Save(saveFileDialog.FileName);
+            //    }
+            //}
         }
 
         private void TransformToolStrip_Resize(object sender, EventArgs e)
@@ -322,29 +327,30 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ElementSelection_Load()
         {
-            elementSelection.Groups.Clear();
-            elementSelection.Items.Clear();
-            schemaNodeLayout.Enabled = false;
+            throw new NotImplementedException();
+            //elementSelection.Groups.Clear();
+            //elementSelection.Items.Clear();
+            //schemaNodeLayout.Enabled = false;
 
-            foreach (var properties in formBinding.Properties.GroupBy(g => g.PropertyScope))
-            {
-                ListViewGroup newGroup = new ListViewGroup(ScopeEnumeration.Cast(properties.Key).Name);
-                elementSelection.Groups.Add(newGroup);
+            //foreach (var properties in formBinding.Properties.GroupBy(g => g.PropertyScope))
+            //{
+            //    ListViewGroup newGroup = new ListViewGroup(ScopeEnumeration.Cast(properties.Key).Name);
+            //    elementSelection.Groups.Add(newGroup);
 
-                foreach (ScriptingNodeIndexName property in properties)
-                {
-                    ListViewItem newItem = new ListViewItem(property.PropertyName, newGroup);
+            //    foreach (ScriptingNodeIndexName property in properties)
+            //    {
+            //        ListViewItem newItem = new ListViewItem(property.PropertyName, newGroup);
 
-                    if (formBinding.TemplateNodes.FirstOrDefault(w => property.Equals(w)) is ScriptingNodeValue node)
-                    {
-                        if (node is ScriptingNodeValue)
-                        { newItem.Checked = true; }
-                        else { newItem.Checked = false; }
-                    }
-                    elementSelection.Items.Add(newItem);
-                    nodeProperties.Add(newItem, property);
-                }
-            }
+            //        if (formBinding.TemplateNodes.FirstOrDefault(w => property.Equals(w)) is ScriptingNodeValue node)
+            //        {
+            //            if (node is ScriptingNodeValue)
+            //            { newItem.Checked = true; }
+            //            else { newItem.Checked = false; }
+            //        }
+            //        elementSelection.Items.Add(newItem);
+            //        nodeProperties.Add(newItem, property);
+            //    }
+            //}
         }
 
         Boolean nodesSelectReady = false; // Used to prevent ItemCheck from triggering an add or remove when not issued by the user.
@@ -391,7 +397,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
                         ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
-                        ex.Data.Add(nameof(element.PropertyScope), NavigationEnumeration.Cast(element.PropertyScope).Name);
+                        ex.Data.Add(nameof(element.PropertyScope), element.PropertyScope.GetEnumeration().Name);
                         throw ex;
                     }
 
@@ -402,7 +408,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         newNode.PropertyScope = element.PropertyScope;
                         newNode.PropertyName = element.PropertyName;
                         newNode.NodeName = element.PropertyName;
-                        newNode.NodeValueAs = TemplateNodeValueAsType.ElementText;
+                        newNode.NodeRenderAs = NodeRenderAsType.ElementText;
                         bindingNode.ResumeBinding();
 
                         if (bindingNode.DataSource is IList<ScriptingNodeValue> nodes

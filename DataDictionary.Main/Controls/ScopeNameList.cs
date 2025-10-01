@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = NavigationEnumeration.Cast(item).DisplayName;
+                String name = item.GetEnumeration().DisplayName;
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }
@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = NavigationEnumeration.Cast(item).DisplayName;
+                String name = item.GetEnumeration().DisplayName;
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }

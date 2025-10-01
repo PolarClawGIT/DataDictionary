@@ -38,8 +38,8 @@
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateCommands = new ContextMenuStrip(components);
-            newTemplate = new ToolStripMenuItem();
             newDataSource = new ToolStripMenuItem();
+            newTemplate = new ToolStripMenuItem();
             bindingManager = new BindingSource(components);
             templateManagerLayout = new TableLayoutPanel();
             templateManagerLayout.SuspendLayout();
@@ -137,22 +137,8 @@
             templateCommands.Name = "templateCommands";
             templateCommands.Size = new Size(181, 70);
             // 
-            // newTemplate
-            // 
-            newTemplate.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newTemplate.Image = Properties.Resources.NewXSLTransform;
-            newTemplate.MergeAction = MergeAction.Insert;
-            newTemplate.MergeIndex = 0;
-            newTemplate.Name = "newTemplate";
-            newTemplate.Size = new Size(180, 22);
-            newTemplate.Text = "new Template";
-            newTemplate.ToolTipText = "Create a new Template";
-            newTemplate.Click += NewTemplate_Click;
-            // 
             // newDataSource
             // 
-            newDataSource.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newDataSource.Image = Properties.Resources.NewXPath;
             newDataSource.MergeAction = MergeAction.Insert;
             newDataSource.MergeIndex = 0;
             newDataSource.Name = "newDataSource";
@@ -160,6 +146,16 @@
             newDataSource.Text = "new Data Source";
             newDataSource.ToolTipText = "Create a new Data Source";
             newDataSource.Click += NewDataSource_Click;
+            // 
+            // newTemplate
+            // 
+            newTemplate.MergeAction = MergeAction.Insert;
+            newTemplate.MergeIndex = 0;
+            newTemplate.Name = "newTemplate";
+            newTemplate.Size = new Size(180, 22);
+            newTemplate.Text = "new Template";
+            newTemplate.ToolTipText = "Create a new Template";
+            newTemplate.Click += NewTemplate_Click;
             // 
             // TemplateManager
             // 

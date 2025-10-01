@@ -27,9 +27,9 @@ namespace DataDictionary.Main.Forms.General
 
             static Dictionary<ImageKey, Image> imageList = new Dictionary<ImageKey, Image>()
             {
-                {ImageKey.HelpPage, NavigationEnumeration.GetImage(ScopeType.ApplicationHelpPage) },
-                {ImageKey.HelpGroup, NavigationEnumeration.GetImage(ScopeType.ApplicationHelpGroup) },
-                {ImageKey.HelpForm, NavigationEnumeration.GetImage(ScopeType.ApplicationHelpForm) },
+                {ImageKey.HelpPage, ScopeType.ApplicationHelpPage.GetImage(CommandType.Default)},
+                {ImageKey.HelpGroup, ScopeType.ApplicationHelpGroup.GetImage(CommandType.Default) },
+                {ImageKey.HelpForm, ScopeType.ApplicationHelpForm.GetImage(CommandType.Default) },
             };
 
             Dictionary<TreeNode, BindingSubject> subjectNodes = new Dictionary<TreeNode, BindingSubject>();

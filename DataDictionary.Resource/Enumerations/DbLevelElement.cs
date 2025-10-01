@@ -17,5 +17,5 @@ public static class DbLevelElement
     { return DbLevelElementEnumeration.Parse(value ?? String.Empty, null).Value; }
 
     public static String GetName(this DbLevelElementType value)
-    { return DbLevelElementEnumeration.Cast(value).Name; }
+    { return DbLevelElementEnumeration.GetValue(value).Name; }
 }

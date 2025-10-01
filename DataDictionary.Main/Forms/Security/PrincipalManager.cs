@@ -29,11 +29,11 @@ namespace DataDictionary.Main.Forms.Security
 
             SetIcon(ScopeType.SecurityPrincipal);
             SetCommand(ScopeType.SecurityPrincipal,
-                CommandImageType.Add,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                Enumerations.CommandType.Add,
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase);
 
             principalData.AutoGenerateColumns = false;
             membershipData.AutoGenerateColumns = false;
@@ -68,17 +68,17 @@ namespace DataDictionary.Main.Forms.Security
 
                 if (BusinessData.Authorization.IsSecurityAdmin)
                 {
-                    CommandButtons[CommandImageType.Add].IsEnabled = true;
-                    CommandButtons[CommandImageType.Delete].IsEnabled = true;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.Add].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.Delete].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = true;
                 }
                 else
                 {
-                    CommandButtons[CommandImageType.Add].IsEnabled = false;
-                    CommandButtons[CommandImageType.Delete].IsEnabled = false;
-                    CommandButtons[CommandImageType.OpenDatabase].IsEnabled = false;
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.Add].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.Delete].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.OpenDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = false;
                 }
 
                 IsLocked(false);
@@ -98,21 +98,21 @@ namespace DataDictionary.Main.Forms.Security
 
                 if (BusinessData.Authorization.IsSecurityAdmin)
                 {
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = true;
                 }
                 else
                 {
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = false;
                 }
             }
             else
             {
                 bindingMembers.DataSource = null;
                 bindingOwnership.DataSource = null;
-                CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
-                CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+                CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = false;
+                CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = false;
             }
         }
 

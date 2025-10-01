@@ -1,15 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -24,16 +17,17 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.Scripting);
             SetCommand(
                 ScopeType.Scripting,
-                CommandImageType.Open);
-            newTemplate.SetImage(ScopeType.ScriptingTemplate, CommandImageType.Add);
-            newDataSource.SetImage(ScopeType.ScriptingData, CommandImageType.Add);
+                CommandType.Open);
+            newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
+            newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
-            AddCommands(templateCommands);
+            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image);
 
             formBinding = new FormBinding()
             {
                 ManagerBinding = bindingManager,
-                DoWork = base.DoWork
+                DoWork = base.DoWork,
+                OnRefresh = () => { SendMessage(new RefreshNavigation()); }
             };
         }
 

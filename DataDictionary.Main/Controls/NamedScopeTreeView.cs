@@ -1,15 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms;
-using System;
-using System.Collections.Generic;
+using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
@@ -42,8 +34,11 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
+            refreshCommand.Image = Resources.Icon_TreeView.MergeImage(Resources.ItemRefresh);
+            reloadCommand.Image = Resources.Icon_TreeView.MergeImage(Resources.ItemSync);
+
             data = new NamedScopeTreeViewData(treeViewData);
-            treeViewData.ImageList = NavigationEnumeration.AsImageList();
+            treeViewData.SetImageList();
         }
 
         /// <summary>

@@ -2,17 +2,10 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -28,9 +21,15 @@ namespace DataDictionary.Main.Forms.Scripting
         public Template() : base()
         {
             InitializeComponent();
+            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
+            newNodeCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
+                DataSourceBinding = bindingTemplateData,
                 DoWork = base.DoWork
             };
 
@@ -39,11 +38,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.HistoryDatabase);
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.HistoryDatabase);
         }
 
         public Template(ITemplateIndex? template) : this()
@@ -80,17 +79,21 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
 
+                DataSourceNameList.Load(dataSourceIdColumn);
+                templateDataSource.AutoGenerateColumns = false;
+                templateDataSource.DataSource = bindingTemplateData;
+
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-
-                rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
-                rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
-                rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
+                
+                rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
+                rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
+                rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().ToList();
                 rootDirectoryData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
                     bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
                     false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = TemplateDirectoryType.Null });
+                { DataSourceNullValue = DirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
                 breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -175,25 +178,33 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
-                && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
+            if (rootDirectoryData.SelectedValue is DirectoryType value
+                && value.GetEnumeration().Directory is DirectoryInfo directory)
             { rootPhysicalDirectory.Text = directory.FullName; }
             else { rootPhysicalDirectory.Text = String.Empty; }
         }
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+            if (rootDirectoryData.SelectedValue is DirectoryType value
                 && formBinding.TryGetValue(out TemplateValue? current))
             {
                 //Note: For reason unknown, current.TemplateDirectory has not been updated
                 //at this point. Setting the current.RootDirectory directly solves this.
-                current.RootDirectory = TemplateDirectoryEnumeration.Cast(value).Name;
+                current.RootDirectory = value.GetEnumeration().Name;
                 current.DocumentDirectory = null;
                 current.ScriptDirectory = null;
             }
         }
 
+        private void BindingTemplateData_AddingNew(object sender, AddingNewEventArgs e)
+        { e.NewObject = formBinding.NewDataSource(); }
 
+        private void NewNodeCommand_Click(object sender, EventArgs e)
+        {
+            Activate(
+                () => new Forms.Scripting.TemplateNode(templateIndex),
+                (form) => form.IsOpenItem(templateIndex));
+        }
     }
 }

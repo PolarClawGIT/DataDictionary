@@ -72,12 +72,11 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(ConstraintType));
-                if (DbConstraintEnumeration.TryParse(value, null, out DbConstraintEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbConstraintType result))
+                { return result; }
                 else { return DbConstraintType.Null; }
             }
-            init
-            { SetValue(nameof(ConstraintType), DbConstraintEnumeration.Cast(value).Name); }
+            init { SetValue(nameof(ConstraintType), value.GetEnumeration().Name); }
         }
 
         String? IConstraintType.ConstraintType { get { return GetValue(nameof(IConstraintType.ConstraintType)); } }
@@ -121,8 +120,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             where TResult : ConstraintItem, new()
         {
             DbConstraintType constraintType = DbConstraintType.Null;
-            if (DbConstraintEnumeration.TryParse(source.ConstraintType, null, out DbConstraintEnumeration? result))
-            { constraintType = result.Value; }
+            if (source.ConstraintType.TryParse(out DbConstraintType result))
+            { constraintType = result; }
 
             return new TResult()
             {

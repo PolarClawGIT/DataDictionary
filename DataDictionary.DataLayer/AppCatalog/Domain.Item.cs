@@ -69,7 +69,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 var value = GetValue(nameof(DataType));
-                if (DbTypeEnumeration.TryParse(value, null, out DbTypeEnumeration? item))
+                if (value.TryParse(out DbType? item))
                 { return item.Value; }
                 else { return null; }
             }

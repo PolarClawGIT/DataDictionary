@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ITemplate :
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>, IDeleteData<ITemplateIndex>,
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
+        IGetTemporal<AppModel.IModelIndex>, IGetTemporal<ITemplateIndex>,
         IBindListChanged
     {
         /// <summary>
@@ -251,6 +252,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public ITemporalData GetTemporal(ITemplateIndex key)
+        { return templateValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
+        public ITemporalData GetTemporal(AppModel.IModelIndex key)
+        { return templateValues.GetTemporal(key); }
+
+        /// <inheritdoc/>
         public void Remove(AppModel.IModelIndex dataKey)
         {
             templateValues.Remove(dataKey);
@@ -290,12 +299,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateSources.ResetBindings();
         }
 
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<TemplateValue, INamedScopeSourceValue?>? getParent)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope));
-
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope, getParent));
             return work;
         }
 

@@ -55,16 +55,12 @@ namespace DataDictionary.DataLayer.AppLibrary
             get
             {
                 String? value = GetValue(nameof(MemberType));
-                if (LibraryMemberEnumeration.TryParse(value, null, out LibraryMemberEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out LibraryMemberType result))
+                { return result; }
                 else { return LibraryMemberType.Null; }
             }
             set
-            {
-                if (value is LibraryMemberType.Null)
-                { SetValue(nameof(MemberType), null); }
-                else { SetValue(nameof(MemberType), LibraryMemberEnumeration.Cast(value).Name); }
-            }
+            { SetValue(nameof(MemberType), value.GetEnumeration().Name); }
         }
 
 

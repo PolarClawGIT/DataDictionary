@@ -53,7 +53,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
                 GetIndex = () => new LibraryMemberIndex(this),
                 GetPath = () => new PathIndex(PathIndex.Parse(MemberNameSpace).ToArray()),
                 GetScope = () => Scope,
-                GetTitle = () => MemberName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => MemberName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace),
                 IsTitleChanged = (e) => e.PropertyName is nameof(MemberName)
             };

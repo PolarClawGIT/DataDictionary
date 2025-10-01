@@ -30,12 +30,12 @@ namespace DataDictionary.Main.Forms.General
             SetRowState(helpBinding);
             SetTitle(helpBinding);
             SetCommand(ScopeType.ApplicationHelpPage,
-                CommandImageType.Add,
-                CommandImageType.Delete,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase,
-                CommandImageType.SecurityDatabase);
+                Enumerations.CommandType.Add,
+                Enumerations.CommandType.Delete,
+                Enumerations.CommandType.OpenDatabase,
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase,
+                Enumerations.CommandType.SecurityDatabase);
 
             // Store and recompute column sizes for List views
             controlData.ResizeColumns();

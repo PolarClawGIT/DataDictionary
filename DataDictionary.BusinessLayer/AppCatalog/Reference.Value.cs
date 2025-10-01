@@ -38,7 +38,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 GetIndex = () => new ReferenceIndex(this),
                 GetPath = () => new PathIndex(ReferencedDatabaseName, ReferencedSchemaName, ReferencedObjectName, ReferencedColumnName),
                 GetScope = () => Scope,
-                GetTitle = () => ReferencedColumnName ?? ReferencedObjectName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => ReferencedColumnName ?? ReferencedObjectName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(ReferencedDatabaseName) or nameof(ReferencedSchemaName) or nameof(ReferencedObjectName) or nameof(ReferencedColumnName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(ReferencedObjectName) or nameof(ReferencedColumnName)
             };

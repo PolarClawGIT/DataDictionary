@@ -32,8 +32,8 @@ namespace DataDictionary.Main.Forms.Security
 
             SetIcon(ScopeType.SecuritySecurable);
             SetCommand(ScopeType.SecurityPrincipal,
-                CommandImageType.SaveDatabase,
-                CommandImageType.DeleteDatabase);
+                Enumerations.CommandType.SaveDatabase,
+                Enumerations.CommandType.DeleteDatabase);
             SetTitle(bindingSecurable);
 
             securableOwnerData.AutoGenerateColumns = false;
@@ -72,13 +72,13 @@ namespace DataDictionary.Main.Forms.Security
 
                 if (isAuthorized(securableKey))
                 {
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = true;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = true;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = true;
                 }
                 else
                 {
-                    CommandButtons[CommandImageType.SaveDatabase].IsEnabled = false;
-                    CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.SaveDatabase].IsEnabled = false;
+                    CommandButtons[Enumerations.CommandType.DeleteDatabase].IsEnabled = false;
                 }
             }
         }

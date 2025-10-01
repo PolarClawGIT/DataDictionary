@@ -34,10 +34,10 @@
             validateCommand = new Button();
             cancelCommand = new Button();
             serverConnectionLayout = new TableLayoutPanel();
-            databaseNameData = new Controls.ComboBoxData();
-            serverNameData = new Controls.ComboBoxData();
+            databaseNameData = new DataDictionary.Main.Controls.ComboBoxData();
+            serverNameData = new DataDictionary.Main.Controls.ComboBoxData();
             refreshDatabaseCommand = new Button();
-            accountNameData = new Controls.TextBoxData();
+            accountNameData = new DataDictionary.Main.Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
             serverConnectionButtonLayout = new TableLayoutPanel();
             serverConnectionButtonLayout.SuspendLayout();
@@ -76,7 +76,6 @@
             // 
             // validateCommand
             // 
-            validateCommand.Image = Properties.Resources.StatusInformation;
             validateCommand.Location = new Point(90, 3);
             validateCommand.Name = "validateCommand";
             validateCommand.Size = new Size(75, 23);
@@ -127,7 +126,7 @@
             databaseNameData.Location = new Point(3, 105);
             databaseNameData.Name = "databaseNameData";
             databaseNameData.ReadOnly = false;
-            databaseNameData.Size = new Size(323, 46);
+            databaseNameData.Size = new Size(321, 46);
             databaseNameData.TabIndex = 1;
             // 
             // serverNameData
@@ -147,13 +146,11 @@
             // 
             // refreshDatabaseCommand
             // 
-            refreshDatabaseCommand.AutoSize = true;
             refreshDatabaseCommand.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             refreshDatabaseCommand.Dock = DockStyle.Bottom;
-            refreshDatabaseCommand.Image = Properties.Resources.Refresh;
-            refreshDatabaseCommand.Location = new Point(332, 129);
+            refreshDatabaseCommand.Location = new Point(330, 127);
             refreshDatabaseCommand.Name = "refreshDatabaseCommand";
-            refreshDatabaseCommand.Size = new Size(22, 22);
+            refreshDatabaseCommand.Size = new Size(24, 24);
             refreshDatabaseCommand.TabIndex = 2;
             refreshDatabaseCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             refreshDatabaseCommand.UseVisualStyleBackColor = true;

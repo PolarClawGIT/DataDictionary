@@ -50,6 +50,22 @@ namespace DataDictionary.BusinessLayer.NamedScope
             };
         }
 
+        public NameSpaceSource(ScopeType scope)
+        {
+            SystemId = Guid.NewGuid();
+            Scope = scope;
+
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new DataIndex() { SystemId = SystemId },
+                GetPath = () => new PathIndex(scope),
+                GetScope = () => Scope,
+                GetTitle = () => scope.GetEnumeration().DisplayName,
+                IsPathChanged = (e) => false,
+                IsTitleChanged = (e) => false
+            };
+        }
+
         public override String ToString()
         { return SystemPath.MemberFullPath; }
 

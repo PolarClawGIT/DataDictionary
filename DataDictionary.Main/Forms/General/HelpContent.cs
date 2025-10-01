@@ -26,16 +26,16 @@ namespace DataDictionary.Main.Forms.General
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
                 ScopeType.ApplicationHelp,
-                CommandImageType.Add,
-                CommandImageType.Open,
-                CommandImageType.OpenDatabase,
-                CommandImageType.SaveDatabase,
-                CommandImageType.HistoryDatabase);
+                CommandType.Add,
+                CommandType.Open,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.HistoryDatabase);
 
             formTree.SetImages();
 
-            CommandButtons[CommandImageType.Add].Text = "Add new Help Subject";
-            CommandButtons[CommandImageType.Open].Text = "Open/Edit the Selected Help Subject Details";
+            CommandButtons[CommandType.Add].Text = "Add new Help Subject";
+            CommandButtons[CommandType.Open].Text = "Open/Edit the Selected Help Subject Details";
 
             OpenSubject(Settings.Default.DefaultSubject);
         }

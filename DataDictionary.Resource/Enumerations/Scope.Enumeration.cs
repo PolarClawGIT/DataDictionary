@@ -1,14 +1,21 @@
 ﻿namespace DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 
-/// <summary>
-/// Enumeration support class for Scope Type.
-/// </summary>
-public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
+public interface IScopeEnumeration : IEnumeration<ScopeType>
 {
     /// <summary>
     /// Parent Scope
     /// </summary>
+    ScopeType? Parent { get; }
+}
+
+/// <summary>
+/// Enumeration support class for Scope Type.
+/// </summary>
+class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
+    IScopeEnumeration
+{
+    /// <inheritdoc/>
     public ScopeType? Parent { get; init; } = null;
 
     /// <summary>
@@ -39,7 +46,9 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ApplicationHelpGroup,       ScopeType.ApplicationHelp,   "Application.Help.Group"),
             new ScopeEnumeration(ScopeType.ApplicationHelpForm,        ScopeType.ApplicationHelp,   "Application.Help.Form"),
             new ScopeEnumeration(ScopeType.ApplicationOption,          ScopeType.Application,       "Application.Option"),
-            
+            new ScopeEnumeration(ScopeType.Document,        ScopeType.Application,       "Application.Document"),
+            new ScopeEnumeration(ScopeType.TimeLine,        ScopeType.Application,       "Application.TimeLine"),
+
             new ScopeEnumeration(ScopeType.Library,                    "Library"),
             new ScopeEnumeration(ScopeType.LibraryNameSpace,           ScopeType.Library,           "Library.NameSpace"),
             new ScopeEnumeration(ScopeType.LibraryType,                ScopeType.Library,           "Library.NameSpace.Type"),
@@ -100,8 +109,9 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ScriptingData,              ScopeType.Scripting,         "Scripting.Data"),
             new ScopeEnumeration(ScopeType.ScriptingDataObject,        ScopeType.ScriptingData,     "Scripting.Data.Object"),
             new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateAttribute, ScopeType.ScriptingTemplate, "Scripting.Template.Attribute"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateElement,   ScopeType.ScriptingTemplate, "Scripting.Template.Element"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.Scripting,         "Scripting.Template.Node"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateAttribute, ScopeType.ScriptingTemplateNode, "Scripting.Template.Attribute"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateElement,   ScopeType.ScriptingTemplateNode, "Scripting.Template.Element"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateNodeOwner, ScopeType.ScriptingTemplate, "Scripting.Template.NodeOwner"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateData,      ScopeType.ScriptingTemplate, "Scripting.Template.Data"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateDocument,  ScopeType.ScriptingTemplate, "Scripting.Template.Document"),

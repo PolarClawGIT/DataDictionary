@@ -12,7 +12,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Data Source
     /// </summary>
-    public interface ITemplateData : IBindingData<TemplateValue>,
+    public interface ITemplateData : 
+        IBindingData<TemplateValue>,
+        IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData
     {
         /// <summary>
@@ -86,5 +88,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingTemplate</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(IModelIndex model)
+        {
+            return new TemporalData<TemplateData, TemplateValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDataSource</remarks>
+        public ITemporalData GetTemporal(ITemplateIndex template)
+        {
+            return new TemporalData<TemplateData, TemplateValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
+        }
     }
 }

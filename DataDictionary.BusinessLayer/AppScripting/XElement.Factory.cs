@@ -88,7 +88,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else
             {
                 Exception ex = new IndexOutOfRangeException();
-                ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
+                ex.Data.Add(nameof(value.Scope), value.Scope.GetEnumeration().Name);
                 throw ex;
             }
         }

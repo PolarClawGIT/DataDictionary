@@ -93,10 +93,10 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                 switch (node.PropertyName)
                 {
-                    case nameof(AliasScope): AddValue(node.BuildXObject(ScopeEnumeration.Cast(AliasScope).Name)); break;
+                    case nameof(AliasScope): AddValue(node.BuildXObject(AliasScope.GetEnumeration().Name)); break;
                     case nameof(AttributeAliasItem.AliasPath): AddValue(node.BuildXObject(AliasPath)); break;
                     case nameof(AliasParts):
-                        List<String> scopeParts = PathIndex.Parse(ScopeEnumeration.Cast(AliasScope).Name);
+                        List<String> scopeParts = PathIndex.Parse(AliasScope.GetEnumeration().Name);
                         String levelValue = String.Empty;
 
                         for (Int32 i = 0; i < AliasParts.Count; i++)
@@ -116,22 +116,22 @@ namespace DataDictionary.BusinessLayer.AppModel
                             XElement newElement;
                             XAttribute newAttribute;
 
-                            switch (node.NodeValueAs)
+                            switch (node.NodeRenderAs)
                             {
-                                case TemplateNodeValueAsType.none: break;
-                                case TemplateNodeValueAsType.ElementText or TemplateNodeValueAsType.ElementXML:
+                                case NodeRenderAsType.none: break;
+                                case NodeRenderAsType.ElementText or NodeRenderAsType.ElementXML:
                                     newElement = new XElement(nameof(AliasParts), item);
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case TemplateNodeValueAsType.ElementCData:
+                                case NodeRenderAsType.ElementCData:
                                     newElement = new XElement(nameof(AliasParts), new XCData(item));
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case TemplateNodeValueAsType.AttributeText:
+                                case NodeRenderAsType.AttributeText:
                                     newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
                                     aliasObject = newAttribute;
                                     break;
@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
                 if (values.Count > 0)
                 {
-                    if (result is null) { result = new XElement(ScopeEnumeration.Cast(Scope).Name); }
+                    if (result is null) { result = new XElement(Scope.GetEnumeration().Name); }
                     result.Add(values.ToArray());
                     result.Add(getAttributes(node).ToArray());
                 }

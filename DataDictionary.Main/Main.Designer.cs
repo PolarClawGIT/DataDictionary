@@ -48,7 +48,7 @@
             menuEntityAttributes = new ToolStripMenuItem();
             newEntityCommand = new ToolStripSplitButton();
             subjectAreaContextMenu = new ContextMenuStrip(components);
-            subjectAreaToolStripMenuItem = new ToolStripMenuItem();
+            menuSubjectArea = new ToolStripMenuItem();
             newSubjectAreaCommand = new ToolStripSplitButton();
             catalogContextMenu = new ContextMenuStrip(components);
             menuCatalogItem = new ToolStripMenuItem();
@@ -203,7 +203,6 @@
             // 
             // menuAttributes
             // 
-            menuAttributes.Image = Properties.Resources.Attribute;
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(222, 22);
             menuAttributes.Text = "browse &Attributes";
@@ -211,7 +210,6 @@
             // 
             // menuAttributeAlaises
             // 
-            menuAttributeAlaises.Image = Properties.Resources.Synonym;
             menuAttributeAlaises.Name = "menuAttributeAlaises";
             menuAttributeAlaises.Size = new Size(222, 22);
             menuAttributeAlaises.Text = "browse Attribute A&laises";
@@ -219,7 +217,6 @@
             // 
             // menuAttributeProperties
             // 
-            menuAttributeProperties.Image = Properties.Resources.Property;
             menuAttributeProperties.Name = "menuAttributeProperties";
             menuAttributeProperties.Size = new Size(222, 22);
             menuAttributeProperties.Text = "browse Attribute &Properties";
@@ -227,7 +224,6 @@
             // 
             // menuAttributeDefinitions
             // 
-            menuAttributeDefinitions.Image = Properties.Resources.RichTextBox;
             menuAttributeDefinitions.Name = "menuAttributeDefinitions";
             menuAttributeDefinitions.Size = new Size(222, 22);
             menuAttributeDefinitions.Text = "browse Attribute &Definitions";
@@ -237,7 +233,6 @@
             // 
             newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newAttributeCommand.DropDown = attributeContextMenu;
-            newAttributeCommand.Image = Properties.Resources.NewAttribute;
             newAttributeCommand.ImageTransparentColor = Color.Magenta;
             newAttributeCommand.Name = "newAttributeCommand";
             newAttributeCommand.Size = new Size(32, 22);
@@ -253,7 +248,6 @@
             // 
             // menuEntities
             // 
-            menuEntities.Image = Properties.Resources.Entity;
             menuEntities.Name = "menuEntities";
             menuEntities.Size = new Size(205, 22);
             menuEntities.Text = "browse &Entities";
@@ -261,7 +255,6 @@
             // 
             // menuEntityAlias
             // 
-            menuEntityAlias.Image = Properties.Resources.Synonym;
             menuEntityAlias.Name = "menuEntityAlias";
             menuEntityAlias.Size = new Size(205, 22);
             menuEntityAlias.Text = "browse Entity A&lias";
@@ -269,7 +262,6 @@
             // 
             // menuEntityProperties
             // 
-            menuEntityProperties.Image = Properties.Resources.Property;
             menuEntityProperties.Name = "menuEntityProperties";
             menuEntityProperties.Size = new Size(205, 22);
             menuEntityProperties.Text = "browse Entity &Properties";
@@ -277,7 +269,6 @@
             // 
             // menuEntityDefinitions
             // 
-            menuEntityDefinitions.Image = Properties.Resources.RichTextBox;
             menuEntityDefinitions.Name = "menuEntityDefinitions";
             menuEntityDefinitions.Size = new Size(205, 22);
             menuEntityDefinitions.Text = "browse Entity &Definitions";
@@ -285,7 +276,6 @@
             // 
             // menuEntityAttributes
             // 
-            menuEntityAttributes.Image = Properties.Resources.Attribute;
             menuEntityAttributes.Name = "menuEntityAttributes";
             menuEntityAttributes.Size = new Size(205, 22);
             menuEntityAttributes.Text = "browse Entity Attributes";
@@ -295,7 +285,6 @@
             // 
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.DropDown = entityContextMenu;
-            newEntityCommand.Image = Properties.Resources.NewEntity;
             newEntityCommand.ImageTransparentColor = Color.Magenta;
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(32, 22);
@@ -304,24 +293,22 @@
             // 
             // subjectAreaContextMenu
             // 
-            subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { subjectAreaToolStripMenuItem });
+            subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { menuSubjectArea });
             subjectAreaContextMenu.Name = "subjectAreaContextMenu";
             subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
             // subjectAreaToolStripMenuItem
             // 
-            subjectAreaToolStripMenuItem.Image = Properties.Resources.Diagram;
-            subjectAreaToolStripMenuItem.Name = "subjectAreaToolStripMenuItem";
-            subjectAreaToolStripMenuItem.Size = new Size(186, 22);
-            subjectAreaToolStripMenuItem.Text = "browse &Subject Areas";
-            subjectAreaToolStripMenuItem.Click += subjectAreaToolStripMenuItem_Click;
+            menuSubjectArea.Name = "subjectAreaToolStripMenuItem";
+            menuSubjectArea.Size = new Size(186, 22);
+            menuSubjectArea.Text = "browse &Subject Areas";
+            menuSubjectArea.Click += subjectAreaToolStripMenuItem_Click;
             // 
             // newSubjectAreaCommand
             // 
             newSubjectAreaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newSubjectAreaCommand.DropDown = subjectAreaContextMenu;
-            newSubjectAreaCommand.Image = Properties.Resources.NewDiagram;
             newSubjectAreaCommand.ImageTransparentColor = Color.Magenta;
             newSubjectAreaCommand.Name = "newSubjectAreaCommand";
             newSubjectAreaCommand.Size = new Size(32, 22);
@@ -337,7 +324,6 @@
             // 
             // menuCatalogItem
             // 
-            menuCatalogItem.Image = Properties.Resources.Database;
             menuCatalogItem.Name = "menuCatalogItem";
             menuCatalogItem.Size = new Size(222, 22);
             menuCatalogItem.Text = "browse Catalogs";
@@ -345,7 +331,6 @@
             // 
             // menuSchemaItem
             // 
-            menuSchemaItem.Image = Properties.Resources.Schema;
             menuSchemaItem.Name = "menuSchemaItem";
             menuSchemaItem.Size = new Size(222, 22);
             menuSchemaItem.Text = "browse Schemas";
@@ -353,7 +338,6 @@
             // 
             // menuTableItem
             // 
-            menuTableItem.Image = Properties.Resources.Table;
             menuTableItem.Name = "menuTableItem";
             menuTableItem.Size = new Size(222, 22);
             menuTableItem.Text = "browse Tables";
@@ -361,7 +345,6 @@
             // 
             // menuTableColumnItem
             // 
-            menuTableColumnItem.Image = Properties.Resources.Column;
             menuTableColumnItem.Name = "menuTableColumnItem";
             menuTableColumnItem.Size = new Size(222, 22);
             menuTableColumnItem.Text = "browse Table Columns";
@@ -369,7 +352,6 @@
             // 
             // menuConstraintItem
             // 
-            menuConstraintItem.Image = Properties.Resources.Key;
             menuConstraintItem.Name = "menuConstraintItem";
             menuConstraintItem.Size = new Size(222, 22);
             menuConstraintItem.Text = "browse Constraints";
@@ -377,7 +359,6 @@
             // 
             // menuConstraintColumnItem
             // 
-            menuConstraintColumnItem.Image = Properties.Resources.KeyColumn;
             menuConstraintColumnItem.Name = "menuConstraintColumnItem";
             menuConstraintColumnItem.Size = new Size(222, 22);
             menuConstraintColumnItem.Text = "browse Constraint Columns";
@@ -385,7 +366,6 @@
             // 
             // menuRoutineItem
             // 
-            menuRoutineItem.Image = Properties.Resources.Procedure;
             menuRoutineItem.Name = "menuRoutineItem";
             menuRoutineItem.Size = new Size(222, 22);
             menuRoutineItem.Text = "browse Routines";
@@ -393,7 +373,6 @@
             // 
             // menuRoutineParameterItem
             // 
-            menuRoutineParameterItem.Image = Properties.Resources.Parameter;
             menuRoutineParameterItem.Name = "menuRoutineParameterItem";
             menuRoutineParameterItem.Size = new Size(222, 22);
             menuRoutineParameterItem.Text = "browse Routine Parameters";
@@ -401,7 +380,6 @@
             // 
             // menuRoutineColumnItem
             // 
-            menuRoutineColumnItem.Image = Properties.Resources.Column;
             menuRoutineColumnItem.Name = "menuRoutineColumnItem";
             menuRoutineColumnItem.Size = new Size(222, 22);
             menuRoutineColumnItem.Text = "browse Routine Columns";
@@ -409,7 +387,6 @@
             // 
             // menuDomainItem
             // 
-            menuDomainItem.Image = Properties.Resources.DomainType;
             menuDomainItem.Name = "menuDomainItem";
             menuDomainItem.Size = new Size(222, 22);
             menuDomainItem.Text = "browse Domains (data type)";
@@ -417,7 +394,6 @@
             // 
             // menuPropertyItem
             // 
-            menuPropertyItem.Image = Properties.Resources.ExtendedProperty;
             menuPropertyItem.Name = "menuPropertyItem";
             menuPropertyItem.Size = new Size(222, 22);
             menuPropertyItem.Text = "browse Properties";
@@ -425,7 +401,6 @@
             // 
             // menuReferenceItem
             // 
-            menuReferenceItem.Image = Properties.Resources.Dependancy;
             menuReferenceItem.Name = "menuReferenceItem";
             menuReferenceItem.Size = new Size(222, 22);
             menuReferenceItem.Text = "browse Reference";
@@ -435,7 +410,6 @@
             // 
             manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageDatabasesCommand.DropDown = catalogContextMenu;
-            manageDatabasesCommand.Image = Properties.Resources.Database;
             manageDatabasesCommand.ImageTransparentColor = Color.Magenta;
             manageDatabasesCommand.Name = "manageDatabasesCommand";
             manageDatabasesCommand.Size = new Size(32, 22);
@@ -451,7 +425,6 @@
             // 
             // viewLibrarySourceCommand
             // 
-            viewLibrarySourceCommand.Image = Properties.Resources.Library;
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(204, 22);
             viewLibrarySourceCommand.Text = "browse Library Sources";
@@ -459,7 +432,6 @@
             // 
             // viewLibraryMemberCommand
             // 
-            viewLibraryMemberCommand.Image = Properties.Resources.Class;
             viewLibraryMemberCommand.Name = "viewLibraryMemberCommand";
             viewLibraryMemberCommand.Size = new Size(204, 22);
             viewLibraryMemberCommand.Text = "browse Library Members";
@@ -469,7 +441,6 @@
             // 
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageLibrariesCommand.DropDown = libraryContextMenu;
-            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
             manageLibrariesCommand.Size = new Size(32, 22);
@@ -720,7 +691,6 @@
             // 
             // browseHelpCommand
             // 
-            browseHelpCommand.Image = Properties.Resources.StatusHelp;
             browseHelpCommand.Name = "browseHelpCommand";
             browseHelpCommand.Size = new Size(187, 22);
             browseHelpCommand.Text = "browse Help Subjects";
@@ -769,7 +739,6 @@
             // 
             // securityAuthorization
             // 
-            securityAuthorization.Image = Properties.Resources.Permission;
             securityAuthorization.Name = "securityAuthorization";
             securityAuthorization.Size = new Size(146, 22);
             securityAuthorization.Text = "Authorization";
@@ -778,7 +747,6 @@
             // 
             // securityPrincipal
             // 
-            securityPrincipal.Image = Properties.Resources.User;
             securityPrincipal.Name = "securityPrincipal";
             securityPrincipal.Size = new Size(146, 22);
             securityPrincipal.Text = "Principal";
@@ -786,7 +754,6 @@
             // 
             // securityRole
             // 
-            securityRole.Image = Properties.Resources.ApplicationRole;
             securityRole.Name = "securityRole";
             securityRole.Size = new Size(146, 22);
             securityRole.Text = "Role";
@@ -856,7 +823,6 @@
             // 
             manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageModelCommand.DropDown = modelContextMenu;
-            manageModelCommand.Image = Properties.Resources.SoftwareDefinitionModel;
             manageModelCommand.ImageTransparentColor = Color.Magenta;
             manageModelCommand.Name = "manageModelCommand";
             manageModelCommand.Size = new Size(32, 22);
@@ -872,7 +838,6 @@
             // 
             // menuModelProperty
             // 
-            menuModelProperty.Image = Properties.Resources.Property;
             menuModelProperty.Name = "menuModelProperty";
             menuModelProperty.Size = new Size(172, 22);
             menuModelProperty.Text = "browse Properties";
@@ -880,7 +845,6 @@
             // 
             // menuModelDefinition
             // 
-            menuModelDefinition.Image = Properties.Resources.RichTextBox;
             menuModelDefinition.Name = "menuModelDefinition";
             menuModelDefinition.Size = new Size(172, 22);
             menuModelDefinition.Text = "browse Definitions";
@@ -890,7 +854,6 @@
             // 
             newProcessCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newProcessCommand.DropDown = processContextMenu;
-            newProcessCommand.Image = Properties.Resources.NewProcess;
             newProcessCommand.ImageTransparentColor = Color.Magenta;
             newProcessCommand.Name = "newProcessCommand";
             newProcessCommand.Size = new Size(32, 22);
@@ -906,7 +869,6 @@
             // 
             // menuProcess
             // 
-            menuProcess.Image = Properties.Resources.Process;
             menuProcess.Name = "menuProcess";
             menuProcess.Size = new Size(212, 22);
             menuProcess.Text = "browse Processes";
@@ -914,7 +876,6 @@
             // 
             // menuProcessAlias
             // 
-            menuProcessAlias.Image = Properties.Resources.Synonym;
             menuProcessAlias.Name = "menuProcessAlias";
             menuProcessAlias.Size = new Size(212, 22);
             menuProcessAlias.Text = "browse Process Alias";
@@ -922,7 +883,7 @@
             // 
             // menuProcessArgument
             // 
-            menuProcessArgument.Image = Properties.Resources.Parameter;
+            
             menuProcessArgument.Name = "menuProcessArgument";
             menuProcessArgument.Size = new Size(212, 22);
             menuProcessArgument.Text = "browse Process Argument";
@@ -930,7 +891,6 @@
             // 
             // menuProcessDefinition
             // 
-            menuProcessDefinition.Image = Properties.Resources.RichTextBox;
             menuProcessDefinition.Name = "menuProcessDefinition";
             menuProcessDefinition.Size = new Size(212, 22);
             menuProcessDefinition.Text = "browse Process Definition";
@@ -938,7 +898,6 @@
             // 
             // menuProcessProperty
             // 
-            menuProcessProperty.Image = Properties.Resources.Property;
             menuProcessProperty.Name = "menuProcessProperty";
             menuProcessProperty.Size = new Size(212, 22);
             menuProcessProperty.Text = "browse Process Property";
@@ -948,7 +907,6 @@
             // 
             newRelationshipCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newRelationshipCommand.Enabled = false;
-            newRelationshipCommand.Image = Properties.Resources.NewRelationship;
             newRelationshipCommand.ImageTransparentColor = Color.Magenta;
             newRelationshipCommand.Name = "newRelationshipCommand";
             newRelationshipCommand.Size = new Size(32, 22);
@@ -964,7 +922,6 @@
             // 
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.DropDown = scriptingContextMenu;
-            manageScriptingCommand.Image = Properties.Resources.XSLTransform;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
@@ -979,7 +936,6 @@
             // 
             // menuScriptingTemplate
             // 
-            menuScriptingTemplate.Image = Properties.Resources.XSLTransform;
             menuScriptingTemplate.Name = "menuScriptingTemplate";
             menuScriptingTemplate.Size = new Size(228, 22);
             menuScriptingTemplate.Text = "browse Templates";
@@ -987,7 +943,6 @@
             // 
             // menuScriptingDocument
             // 
-            menuScriptingDocument.Image = Properties.Resources.XMLFile;
             menuScriptingDocument.Name = "menuScriptingDocument";
             menuScriptingDocument.Size = new Size(228, 22);
             menuScriptingDocument.Text = "browse Template Documents";
@@ -995,7 +950,6 @@
             // 
             // menuScriptingAttribute
             // 
-            menuScriptingAttribute.Image = Properties.Resources.XMLAttribute;
             menuScriptingAttribute.Name = "menuScriptingAttribute";
             menuScriptingAttribute.Size = new Size(228, 22);
             menuScriptingAttribute.Text = "browse Template Attributes";
@@ -1007,14 +961,12 @@
             // 
             // menuScriptingElement
             // 
-            menuScriptingElement.Image = Properties.Resources.XMLElement;
             menuScriptingElement.Name = "menuScriptingElement";
             menuScriptingElement.Size = new Size(228, 22);
             menuScriptingElement.Text = "browse Template Elements";
             // 
             // menuScriptingDataSource
             // 
-            menuScriptingDataSource.Image = Properties.Resources.XPath;
             menuScriptingDataSource.Name = "menuScriptingDataSource";
             menuScriptingDataSource.Size = new Size(228, 22);
             menuScriptingDataSource.Text = "browse Data Sources";
@@ -1134,7 +1086,7 @@
         private ToolStripMenuItem menuEntityProperties;
         private ToolStripMenuItem menuEntityAlias;
         private ContextMenuStrip subjectAreaContextMenu;
-        private ToolStripMenuItem subjectAreaToolStripMenuItem;
+        private ToolStripMenuItem menuSubjectArea;
         private ContextMenuStrip libraryContextMenu;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;

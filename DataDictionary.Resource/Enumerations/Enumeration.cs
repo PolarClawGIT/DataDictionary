@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 namespace DataDictionary.Resource.Enumerations;
+
 /// <summary>
 /// Base Interface used by Enumerations.
 /// </summary>
-public interface IEnumeration<TEnum, TSelf> //: IParsable<TSelf>
-    where TSelf : class, IEnumeration<TEnum, TSelf> // The self referencing appears to need to be first.
-    where TEnum : System.Enum
+public interface IEnumeration
 {
     /// <summary>
     /// Name of the Enumeration as it appears in the Database
@@ -16,24 +15,19 @@ public interface IEnumeration<TEnum, TSelf> //: IParsable<TSelf>
     /// Name of the Enumeration as it appears in the User Interface
     /// </summary>
     String DisplayName { get; init; }
+}
 
+/// <summary>
+/// Base Interface used by Enumerations.
+/// </summary>
+public interface IEnumeration<TEnum> : IEnumeration
+    //where TSelf : class, IEnumeration<TEnum, TSelf> // The self referencing appears to need to be first.
+    where TEnum : System.Enum
+{
     /// <summary>
     /// Enum Value of the Enumeration
     /// </summary>
     TEnum Value { get; init; }
-
-    /// <summary>
-    /// List of all values for the Enumeration
-    /// </summary>
-    static abstract IReadOnlyDictionary<TEnum, TSelf> Members { get; }
-
-    /// <summary>
-    /// Given the Enum, return the Enumeration.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    /// <exception cref="IndexOutOfRangeException"/>
-    static abstract TSelf Cast(TEnum source);
 }
 
 /// <summary>
@@ -41,10 +35,17 @@ public interface IEnumeration<TEnum, TSelf> //: IParsable<TSelf>
 /// </summary>
 /// <typeparam name="TEnum"></typeparam>
 /// <typeparam name="TSelf"></typeparam>
-public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IEquatable<TSelf>
-        where TSelf : class, IEnumeration<TEnum, TSelf>
+public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum>, IEquatable<TSelf>
+        where TSelf : class, IEnumeration<TEnum>
         where TEnum : System.Enum
 {
+    // Static Classes do not allow interfaces or be derived from other classes.
+    // Enums do not allow method or properties to be added.
+    //
+    // This is a work-around. This allows the building of a generic container
+    // for a specific Enum. It then can be extended to included methods
+    // and properties not normally part of the Enum.
+
     /// <inheritdoc />
     public String Name
     {
@@ -98,7 +99,6 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TSelf).TypeHandle);
     }
 
-
     /// <summary>
     /// Base constructor for Enumeration
     /// </summary>
@@ -135,39 +135,61 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
         Dictionary<TEnum, TSelf> result = new Dictionary<TEnum, TSelf>();
 
         foreach (TSelf item in data.DistinctBy(d => d.Value))
-        { enumerationValues.Add(item.Value, item); }
+        { EnumerationValues.Add(item.Value, item); }
+
+        var missingValues = result.Keys.Except(Enum.GetValues(typeof(TEnum)).OfType<TEnum>());
+        if (missingValues.Count() > 0)
+        {   // This could be real annoying during development.
+            // Forces the developer to fix missing values before the GetValue function is used.
+
+            Exception ex = new InvalidOperationException("Enum values are not defined in the Enumeration class.");
+            foreach (TEnum item in missingValues)
+            { ex.Data.Add(item, null); }
+
+            throw ex;
+        }
     }
 
     /// <summary>
-    /// The list in the Values is cross referenced against the Enum. Any missing Enum's are returned.
+    /// Returns the Enumeration for the Enum.
     /// </summary>
+    /// <param name="source"></param>
     /// <returns></returns>
-    /// <remarks>
-    /// This is mostly for debugging.
-    /// </remarks>
-    public static IEnumerable<TEnum> MissingValues()
-    { return Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Except(Members.Values.Select(s => s.Value)); }
+    /// <exception cref="IndexOutOfRangeException">Enumeration does not contain the ENum</exception>
+    public static TSelf GetValue(TEnum source)
+    {
+        if (EnumerationValues.TryGetValue(source, out TSelf? result))
+        { return result; }
+        else
+        { throw new IndexOutOfRangeException(String.Format("Enum value of '{0}' is missing in Enumeration class", Enum.GetName(typeof(TEnum), source))); }
+    }
 
     /// <summary>
-    /// List of all values for the Enumeration
+    /// Finds the Enum value and returns the Enumeration
     /// </summary>
-    /// <remarks>Use BuildDictionary to add values to the list.</remarks>
-    public static IReadOnlyDictionary<TEnum, TSelf> Members
-    { get { return enumerationValues; } }
-    private static Dictionary<TEnum, TSelf> enumerationValues = new Dictionary<TEnum, TSelf>();
+    /// <param name="source"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public static Boolean TryGetValue(TEnum source, [NotNullWhen(true)] out TSelf? result)
+    {
+        if (EnumerationValues.ContainsKey(source))
+        { result = EnumerationValues[source]; return true; }
+        else { result = null; return false; }
+    }
 
-    /// <inheritdoc />
-    public static TSelf Cast(TEnum source)
-    { return Members[source]; }
+    /// <summary>
+    /// List of Enums mapping to the Enumerations
+    /// </summary>
+    protected static Dictionary<TEnum, TSelf> EnumerationValues = new Dictionary<TEnum, TSelf>();
 
     #region IParsable
     // This implements a IParsable<TSelf>.
     // CA2260 prevent IParsable from being declared.
 
     /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)" />
-    public static TSelf Parse(String source, IFormatProvider? format)
+    internal static TSelf Parse(String source, IFormatProvider? format)
     {
-        if (TSelf.Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
+        if (EnumerationValues.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
         { return item; }
         else
         {
@@ -179,11 +201,11 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     }
 
     /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)" />
-    public static Boolean TryParse([NotNullWhen(true)] String? source, IFormatProvider? format, [MaybeNullWhen(false)] out TSelf result)
+    internal static Boolean TryParse(String? source, IFormatProvider? format, [NotNullWhen(true)] out TSelf? result)
     {
-        if (Members is null) { result = null; return false; }
+        if (EnumerationValues is null) { result = null; return false; }
 
-        if (TSelf.Members.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
+        if (EnumerationValues.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
         { result = item; return true; }
         else { result = null; return false; }
     }

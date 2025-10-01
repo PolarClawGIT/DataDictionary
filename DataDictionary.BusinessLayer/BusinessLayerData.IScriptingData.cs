@@ -11,16 +11,10 @@ namespace DataDictionary.BusinessLayer
     partial class BusinessLayerData
     {
         /// <summary>
-        /// Wrapper for the Scripting Templates.
+        /// Wrapper for the Scripting
         /// </summary>
-        public ITemplate ScriptingTemplate { get { return templateValues; } }
-        private readonly Template templateValues;
-
-        /// <summary>
-        /// Wrapper for the Scripting DataSources.
-        /// </summary>
-        public IDataSource ScriptingDataSource { get { return templateDataSource; } }
-        private readonly DataSource templateDataSource;
+        public IScripting Scripting { get { return scriptingValue; } }
+        private readonly Scripting scriptingValue;
 
         /// <summary>
         /// Builds the XML and Script documents for the Template.
@@ -68,7 +62,7 @@ namespace DataDictionary.BusinessLayer
                             }
                             else if (doc is null)
                             {
-                                rootElement = new XElement(ScopeEnumeration.Cast(Model.Scope).Name);
+                                rootElement = new XElement(Model.Scope.GetEnumeration().Name);
                                 doc = new XDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
 
                                 try

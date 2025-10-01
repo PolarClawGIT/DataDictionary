@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IDataObjectData DataObjects { get { return sourceObjects; } }
         DataObjectData sourceObjects = new DataObjectData();
-
+        
         /// <inheritdoc/>
         /// <remarks>DataSource</remarks>
         public IReadOnlyList<DataTable> Export()
@@ -257,12 +257,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<DataSourceValue, INamedScopeSourceValue?>? getParent)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(NameSpaceSource.Load<DataSourceData, DataSourceValue>(sourceValues, addNamedScope));
-
+            work.AddRange(NameSpaceSource.Load<DataSourceData, DataSourceValue>(sourceValues, addNamedScope, getParent));
             return work;
         }
 

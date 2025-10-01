@@ -17,5 +17,5 @@ public static class DbLevelObject
     { return DbLevelObjectEnumeration.Parse(value ?? String.Empty, null).Value; }
 
     public static String GetName(this DbLevelObjectType value)
-    { return DbLevelObjectEnumeration.Cast(value).Name; }
+    { return DbLevelObjectEnumeration.GetValue(value).Name; }
 }

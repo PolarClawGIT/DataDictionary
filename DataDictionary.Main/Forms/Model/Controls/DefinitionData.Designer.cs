@@ -178,7 +178,6 @@
             // syncTextToSummary
             // 
             syncTextToSummary.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            syncTextToSummary.Image = Properties.Resources.SyncContent;
             syncTextToSummary.Name = "syncTextToSummary";
             syncTextToSummary.Size = new Size(190, 22);
             syncTextToSummary.Text = "sync Text to Summary";

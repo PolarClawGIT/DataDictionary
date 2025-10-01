@@ -71,12 +71,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(ObjectType));
-                if (DbObjectEnumeration.TryParse(value, null, out DbObjectEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbObjectType result))
+                { return result; }
                 else { return DbObjectType.Null; }
             }
             init
-            { SetValue(nameof(ObjectType), DbObjectEnumeration.Cast(value).Name); }
+            { SetValue(nameof(ObjectType), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -116,12 +116,11 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(ReferencedType));
-                if (DbObjectEnumeration.TryParse(value, null, out DbObjectEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbObjectType result))
+                { return result; }
                 else { return DbObjectType.Null; }
             }
-            init
-            { SetValue(nameof(ReferencedType), DbObjectEnumeration.Cast(value).Name); }
+            init { SetValue(nameof(ReferencedType), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -245,12 +244,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             where TResult : ReferenceItem, new()
         {
             DbObjectType objectType = DbObjectType.Null;
-            if (DbObjectEnumeration.TryParse(source.ObjectType, null, out DbObjectEnumeration? objectValue))
-            { objectType = objectValue.Value; }
+            if (source.ObjectType.TryParse(out DbObjectType objectValue))
+            { objectType = objectValue; }
 
             DbObjectType referencedType = DbObjectType.Null;
-            if (DbObjectEnumeration.TryParse(source.ReferencedType, null, out DbObjectEnumeration? refrencedValue))
-            { referencedType = refrencedValue.Value; }
+            if (source.ReferencedType.TryParse(out DbObjectType refrencedValue))
+            { referencedType = refrencedValue; }
 
             TResult newValue = new TResult()
             {

@@ -59,20 +59,20 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public TemplateNodeValueAsType RenderValueAs
+        public NodeRenderAsType RenderValueAs
         {
             get
             {
                 String? value = GetValue(nameof(RenderValueAs));
-                if (TemplateNodeValueAsEnumeration.TryParse(value, null, out TemplateNodeValueAsEnumeration? result))
-                { return result.Value; }
-                else { return TemplateNodeValueAsType.none; }
+                if (value.TryParse(out NodeRenderAsType result))
+                { return result; }
+                else { return NodeRenderAsType.none; }
             }
             set
             {
-                if (value is TemplateNodeValueAsType.none)
+                if (value is NodeRenderAsType.none)
                 { SetValue(nameof(RenderValueAs), null); }
-                else { SetValue(nameof(RenderValueAs), TemplateNodeValueAsEnumeration.Cast(value).Name); }
+                else { SetValue(nameof(RenderValueAs), value.GetEnumeration().Name); }
             }
         }
 
@@ -89,16 +89,11 @@ namespace DataDictionary.DataLayer.AppScript
             get
             {
                 String? value = GetValue(nameof(ObjectScope));
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set
-            {
-                if (value is ScopeType.Null)
-                { SetValue(nameof(ObjectScope), null); }
-                else { SetValue(nameof(ObjectScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(ObjectScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -112,7 +107,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? ModelPropertyId
         {
             get { return GetValue<Guid>(nameof(ModelPropertyId)); }
-            protected set { SetValue(nameof(ModelPropertyId), value); }
+            set { SetValue(nameof(ModelPropertyId), value); }
         }
 
         /// <inheritdoc/>

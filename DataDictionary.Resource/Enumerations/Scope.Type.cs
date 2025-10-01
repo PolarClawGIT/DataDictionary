@@ -44,6 +44,16 @@
         ApplicationOption,
 
         /// <summary>
+        /// Generic Document
+        /// </summary>
+        Document,
+
+        /// <summary>
+        /// Generic History/TimeLine
+        /// </summary>
+        TimeLine,
+
+        /// <summary>
         /// Application Model
         /// </summary>
         Model,
@@ -323,6 +333,11 @@
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,
+
+        /// <summary>
+        /// Scripting Template Node (Attribute or Element)
+        /// </summary>
+        ScriptingTemplateNode,
 
         /// <summary>
         /// Scripting Template Attribute

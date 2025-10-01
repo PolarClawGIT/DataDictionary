@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration support class for Database Extended Procedure Element Level type.
     /// </summary>
-    public class DbLevelElementEnumeration : Enumeration<DbLevelElementType, DbLevelElementEnumeration>
+    class DbLevelElementEnumeration : Enumeration<DbLevelElementType, DbLevelElementEnumeration>
     {
         /// <summary>
         /// Internal Constructor for Database Extended Procedure Element Level Enumeration
@@ -27,8 +27,6 @@
                 new DbLevelElementEnumeration(DbLevelElementType.Parameter,"PARAMETER"),
                 new DbLevelElementEnumeration(DbLevelElementType.Trigger,"TRIGGER"),
             };
-
-
 
             BuildDictionary(data);
         }

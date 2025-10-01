@@ -2,13 +2,23 @@
 namespace DataDictionary.Resource.Enumerations;
 
 /// <summary>
-/// Enumeration support class for Database Routine type.
+/// Interface for a LibraryMember Type Enumeration.
 /// </summary>
-public class LibraryMemberEnumeration : Enumeration<LibraryMemberType, LibraryMemberEnumeration>
+public interface ILibraryMemberEnumeration: IEnumeration<LibraryMemberType>
 {
     /// <summary>
     /// Code use by XML Document for the Type
     /// </summary>
+    Char Code { get; init; }
+}
+
+/// <summary>
+/// Enumeration support class for Database Routine type.
+/// </summary>
+class LibraryMemberEnumeration : Enumeration<LibraryMemberType, LibraryMemberEnumeration>,
+    ILibraryMemberEnumeration
+{
+    /// <inheritdoc/>
     public Char Code { get; init; }
 
     /// <summary>
@@ -45,11 +55,11 @@ public class LibraryMemberEnumeration : Enumeration<LibraryMemberType, LibraryMe
     /// <param name="format"></param>
     /// <param name="result"></param>
     /// <returns></returns>
-    public static Boolean TryParse([NotNullWhen(true)] Char? source, IFormatProvider? format, [MaybeNullWhen(false)] out LibraryMemberEnumeration? result)
+    public static Boolean TryParse(Char? source, IFormatProvider? format, [NotNullWhen(true)] out LibraryMemberEnumeration? result)
     {
-        if (Members is null) { result = null; return false; }
+        if (EnumerationValues is null) { result = null; return false; }
 
-        if (LibraryMemberEnumeration.Members.Values.FirstOrDefault(w => w.Code == source) is LibraryMemberEnumeration item)
+        if (EnumerationValues.Values.FirstOrDefault(w => w.Code == source) is LibraryMemberEnumeration item)
         { result = item; return true; }
         else { result = null; return false; }
 

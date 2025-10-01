@@ -12,11 +12,11 @@ namespace DataDictionary.BusinessLayer.AppModel
             result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
             result.AddRange(AppModel.DefinitionValue.CreateXElements(definitionGet));
 
-            result.GetValue(nameof(ProcessId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Scope)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(Temporal)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionId)).NodeValueAs = TemplateNodeValueAsType.none;
-            result.GetValue(nameof(DefinitionText)).NodeValueAs = TemplateNodeValueAsType.ElementCData;
+            result.GetValue(nameof(ProcessId)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Scope)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(Temporal)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(DefinitionId)).NodeValueAs = NodeRenderAsType.none;
+            result.GetValue(nameof(DefinitionText)).NodeValueAs = NodeRenderAsType.ElementCData;
 
             return result;
         }

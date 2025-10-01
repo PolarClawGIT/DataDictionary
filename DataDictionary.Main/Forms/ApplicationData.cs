@@ -1,6 +1,4 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -8,121 +6,18 @@ using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Text;
-using Toolbox.BindingTable;
 using System.ComponentModel;
+using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms
 {
     partial class ApplicationData : ApplicationBase
     {
-        protected class CommandState
-        {
-            readonly ToolStripItem Control;
-
-            /// <summary>
-            /// Is the Command Button Enabled
-            /// </summary>
-            public Boolean IsEnabled
-            {
-                get { return Control.Enabled; }
-                set
-                {
-                    Control.Enabled = value && AllowEnabled();
-                    isEnabled = value;
-                }
-            }
-            Boolean isEnabled = false; // Intended State
-            public Func<Boolean> AllowEnabled { get; init; } = () => { return true; };
-
-            public void Refresh()
-            { Control.Enabled = isEnabled && AllowEnabled(); }
-
-            /// <summary>
-            /// Is the Command Button Visible
-            /// </summary>
-            public Boolean IsVisible
-            {
-                get { return Control.Visible; }
-                set { Control.Visible = value; }
-            }
-
-            /// <summary>
-            /// Image for the Command Button
-            /// </summary>
-            public Image? Image
-            {
-                get { return Control.Image; }
-                set { Control.Image = value; }
-            }
-
-            public CommandState(ToolStripItem control)
-            {
-                Control = control;
-                control.VisibleChanged += Control_VisibleChanged;
-            }
-
-            /// <summary>
-            /// Text for the Control
-            /// </summary>
-            public String Text
-            {
-                get { return Control.Text ?? String.Empty; }
-                set { Control.Text = value; }
-            }
-
-            public ToolStripDropDown? DropDown
-            {
-                get
-                {
-                    if (Control is ToolStripDropDownButton dropButton)
-                    { return dropButton.DropDown; }
-                    else if (Control is ToolStripSplitButton splitButton)
-                    { return splitButton.DropDown; }
-                    else { return null; }
-                }
-                set
-                {
-                    if (Control is ToolStripDropDownButton dropButton)
-                    {
-                        if (value is null)
-                        { dropButton.ShowDropDownArrow = false; }
-                        else { dropButton.ShowDropDownArrow = true; }
-
-                        dropButton.DropDown = value;
-                    }
-                    else if (Control is ToolStripSplitButton splitButton)
-                    { splitButton.DropDown = value; }
-                }
-            }
-
-            private void Control_VisibleChanged(Object? sender, EventArgs e)
-            {
-                // Detects if there is anything before the separator and if not, do not show the separator.
-                if (sender is ToolStripItem caller && caller.Owner is ToolStrip tools)
-                {
-                    Int32 before = 0;
-
-                    foreach (ToolStripItem item in tools.Items)
-                    {
-                        if (item is ToolStripSeparator)
-                        {
-                            if (before > 0) { item.Visible = true; }
-                            else { item.Visible = false; }
-                            before = 0;
-                        } // Caller has not yet set the Visible flag
-                        else if (item.Visible || (item == caller && !item.Visible))
-                        { before++; }
-                    }
-
-                }
-            }
-        }
-
         /// <summary>
         /// The set of Command Buttons
         /// </summary>
-        protected IReadOnlyDictionary<CommandImageType, CommandState> CommandButtons { get { return commandButtons; } }
-        Dictionary<CommandImageType, CommandState> commandButtons = new Dictionary<CommandImageType, CommandState>();
+        protected IReadOnlyDictionary<CommandType, CommandState> CommandButtons { get { return commandButtons; } }
+        Dictionary<CommandType, CommandState> commandButtons = new Dictionary<CommandType, CommandState>();
 
         /// <summary>
         /// Constructor called when in Form Design mode
@@ -138,20 +33,106 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
 
-            commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Select, new CommandState(selectCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Add, new CommandState(newCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Open, new CommandState(openCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
+
+            helpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
+
+            new CommandState(browseCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Browse,
+                IsVisible = false,
+            }.AddTo(commandButtons);
+
+            new CommandState(selectCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Select,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(newCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Add,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(deleteCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Delete,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(saveCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Save,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(openCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Open,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(importCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Import,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
+            new CommandState(exportCommand)
+            {
+                Scope = ScopeType.Document,
+                Command = CommandType.Export,
+                IsVisible = false
+            }.AddTo(commandButtons);
+
             toolStripSeparator.Visible = false;
-            commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { IsVisible = true, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.SecurityDatabase, new CommandState(securityCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
-            commandButtons.Add(CommandImageType.HistoryDatabase, new CommandState(historyCommand) { IsVisible = false, AllowEnabled = () => Settings.Default.IsOnLineMode });
+
+            new CommandState(openFromDatabaseCommand)
+            {
+                Scope = ScopeType.Database,
+                Command = CommandType.OpenDatabase,
+                IsVisible = true,
+                AllowEnabled = () => Settings.Default.IsOnLineMode
+            }.AddTo(commandButtons);
+
+            new CommandState(saveToDatabaseCommand)
+            {
+                Scope = ScopeType.Database,
+                Command = CommandType.SaveDatabase,
+                IsVisible = true,
+                AllowEnabled = () => Settings.Default.IsOnLineMode
+            }.AddTo(commandButtons);
+
+            new CommandState(deleteFromDatabaseCommand)
+            {
+                Scope = ScopeType.Database,
+                Command = CommandType.DeleteDatabase,
+                IsVisible = true,
+                AllowEnabled = () => Settings.Default.IsOnLineMode
+            }.AddTo(commandButtons);
+
+            new CommandState(securityCommand)
+            {
+                Scope = ScopeType.Security,
+                Command = CommandType.SecurityDatabase,
+                IsVisible = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode
+            }.AddTo(commandButtons);
+
+            new CommandState(historyCommand)
+            {
+                Scope = ScopeType.TimeLine,
+                Command = CommandType.HistoryDatabase,
+                IsVisible = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode
+            }.AddTo(commandButtons);
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
@@ -177,19 +158,129 @@ namespace DataDictionary.Main.Forms
         {
             rowStateCommand.Enabled = true;
 
-            RowStateEnumeration.SetBinding(
-                (image) => rowStateCommand.Image = image,
-                (toolTip) => rowStateCommand.ToolTipText = toolTip,
-                rowStateChanged,
-                bindings);
-
-            void rowStateChanged(DataRowState state)
+            foreach (BindingSource item in bindings)
             {
-                RowState = state;
-                if (state is DataRowState.Detached or DataRowState.Deleted)
-                { IsLocked(true); }
+                item.CurrentItemChanged += Item_CurrentItemChanged;
+                item.CurrentChanged += Item_CurrentChanged;
+                item.DataSourceChanged += Item_DataSourceChanged;
+                item.Disposed += Item_Disposed;
+            }
+
+            rowStateCommand.Image = GetToolImage();
+            rowStateCommand.ToolTipText = GetToolTip();
+
+            String GetToolTip()
+            {
+                StringBuilder result = new StringBuilder();
+                DateTime lastChange = DateTime.MinValue;
+                String? lastTemporal = String.Empty;
+
+                foreach (BindingSource binding in bindings)
+                {
+                    if (binding.Position >= 0
+                        && binding.Current is not null
+                        && binding.GetRowState().TryGetValue(out IRowStateEnumeration? rowState))
+                    {
+                        if (binding.Current is IScopeType scopeType)
+                        { result.AppendLine(String.Format("{0}: {1}", scopeType.Scope.GetEnumeration().DisplayName, rowState.DisplayName)); }
+                        else
+                        { result.AppendLine(String.Format("{0}: {1}", binding.Current.GetType().Name, rowState.DisplayName)); }
+
+                        if (binding.Current is ITemporal temporal
+                            && temporal.Temporal.AsOfUtcDate > lastChange
+                            && temporal.Temporal.Modification is
+                                DbModificationType.Inserted or
+                                DbModificationType.Updated or
+                                DbModificationType.Deleted)
+                        {
+                            lastChange = temporal.Temporal.AsOfUtcDate;
+
+                            if (String.IsNullOrEmpty(lastTemporal))
+                            { lastTemporal = temporal.Temporal.ToString(); }
+                            else
+                            {
+                                StringBuilder value = new StringBuilder();
+                                value.Append(DbModificationType.Updated.GetEnumeration().DisplayName);
+
+                                if (temporal.Temporal.CreatedOn is DateTime createOn)
+                                { value.Append(String.Format("on {0}", createOn)); }
+
+                                if (temporal.Temporal.CreatedBy is String createBy)
+                                { value.Append(String.Format("by {0}", createBy)); }
+                            }
+                        }
+                    }
+                }
+
+                result.AppendLine(lastTemporal);
+                return result.ToString();
+            }
+
+            Image GetToolImage()
+            {
+                BindingRowState result = BindingRowState.Null;
+
+                foreach (BindingSource binding in bindings)
+                {
+                    if (binding.Position >= 0
+                        && binding.Current is not null
+                        && binding.GetRowState().TryGetValue(out IRowStateEnumeration? rowState))
+                    {
+                        if (result is BindingRowState.Null)
+                        { result = rowState.Value; }
+                        else if (result is BindingRowState.Unchanged
+                            && rowState.Value is
+                                BindingRowState.Added or
+                                BindingRowState.Modified or
+                                BindingRowState.Deleted or
+                                BindingRowState.Detached)
+                        { result = BindingRowState.Modified; }
+                    }
+                }
+
+                return result.GetImage();
+            }
+
+            void Item_CurrentItemChanged(Object? sender, EventArgs e)
+            {
+                rowStateCommand.Image = GetToolImage();
+                rowStateCommand.ToolTipText = GetToolTip();
+            }
+
+            void Item_CurrentChanged(Object? sender, EventArgs e)
+            {   // Item Changed occures each time Current Change occurs. Don't need to do anything.
+                //rowStateCommand.Image = GetToolImage();
+                //rowStateCommand.ToolTipText = GetToolTip();
+            }
+
+            void Item_DataSourceChanged(Object? sender, EventArgs e)
+            {
+                if (sender is BindingSource binding)
+                {
+                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
+                    binding.CurrentChanged -= Item_CurrentChanged;
+                    binding.DataSourceChanged -= Item_DataSourceChanged;
+                    binding.Disposed -= Item_Disposed;
+
+                    binding.CurrentItemChanged += Item_CurrentItemChanged;
+                    binding.CurrentChanged += Item_CurrentChanged;
+                    binding.DataSourceChanged += Item_DataSourceChanged;
+                    binding.Disposed += Item_Disposed;
+                }
+            }
+
+            void Item_Disposed(Object? sender, EventArgs e)
+            {
+                if (sender is BindingSource binding)
+                {
+                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
+                    binding.CurrentChanged -= Item_CurrentChanged;
+                    binding.Disposed -= Item_Disposed;
+                    binding.DataSourceChanged -= Item_DataSourceChanged;
+                }
             }
         }
+
 
         /// <summary>
         /// Sets the Title text and Icon based on the BindingSource provided.
@@ -232,7 +323,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>Icon is static unless SetTitle is used.</remarks>
         protected void SetIcon(ScopeType scope)
-        { Icon = NavigationEnumeration.GetIcon(scope); }
+        { Icon = scope.GetIcon(); }
 
         /// <summary>
         /// Sets the Icon and Command Button Images. 
@@ -240,39 +331,77 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="commands"></param>
-        protected void SetCommand(ScopeType scope, params CommandImageType[]? commands)
+        protected void SetCommand(ScopeType scope, params CommandType[]? commands)
         {
-            foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
+            if (commands is not null)
             {
-                if (NavigationEnumeration.Members.ContainsKey(scope) && NavigationEnumeration.Members[scope].Images.ContainsKey(item.Key))
-                { item.Value.Image = NavigationEnumeration.GetImage(scope, item.Key); }
-
-                if (commands is not null && commands.Any(w => item.Key.Equals(w)))
+                foreach (var item in commands)
                 {
-                    CommandButtons[item.Key].IsVisible = true;
-                    CommandButtons[item.Key].IsEnabled = true;
+                    if (CommandButtons.TryGetValue(item, out CommandState? value))
+                    {
+                        if (value.Scope is ScopeType.Document)
+                        { value.Scope = scope; }
+
+                        value.IsVisible = true;
+                        value.IsEnabled = true;
+                    }
                 }
-                // Else leave the image as is
             }
+
+            //foreach (KeyValuePair<CommandType, CommandState> item in commandButtons)
+            //{
+            //    if (scope.TryGetImage(item.Key, out Image? image))
+            //    { commandButtons[item.Key].Image = image; }
+            //    // Else leave the image as is
+
+            //    if (commands is not null && commands.Any(w => item.Key.Equals(w)))
+            //    {
+            //        CommandButtons[item.Key].IsVisible = true;
+            //        CommandButtons[item.Key].IsEnabled = true;
+            //    }
+            //}
         }
 
         /// <summary>
-        /// Add a Toolsript to the main form toolstirp.
+        /// Add a ToolStrip to the main form ToolStrip.
         /// </summary>
         /// <param name="commands"></param>
-        /// <remarks>
-        /// Uses ToolStripManager.Merge
-        /// Set the MergeIndex to 0 of each item of the incoming toolstrip to add to front.
-        /// The MergeAction should be Append or Insert, but does not seem to effect this.
-        /// </remarks>
-        protected void AddCommands(ToolStrip commands)
-        { ToolStripManager.Merge(commands, toolStrip); }
+        /// <param name="displayStyle">default is Image and Text</param>
+        protected void AddCommands(ToolStrip commands,
+            ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText)
+        {
+            Int32 mergeIndex = -1;
+            if (toolStrip.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator separator)
+            {
+                if (commands.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator incoming)
+                {
+                    if (commands.Items.IndexOf(incoming) == 0)
+                    { // Place the items before the Database Commands
+                        mergeIndex = toolStrip.Items.IndexOf(separator);
+                        separator.Visible = true;
+                    }
+                    else { mergeIndex = 0; } // Place the items first
+                }
+                else
+                { mergeIndex = toolStrip.Items.IndexOf(separator); } // Place the items before the Database Commands
+
+            }
+
+            foreach (ToolStripItem item in commands.Items.OfType<ToolStripItem>())
+            {
+                item.DisplayStyle = displayStyle;
+                item.MergeIndex = mergeIndex++;
+                item.MergeAction = MergeAction.Insert;
+            }
+
+            ToolStripManager.Merge(commands, toolStrip);
+        }
 
         /// <summary>
         /// Set the IsEnabled based on security function.
         /// </summary>
         /// <param name="getAuthorization"></param>
-        public virtual void SetAuthorization(Func<CommandImageType, Boolean> getAuthorization)
+        public virtual void SetAuthorization(Func<Enumerations.CommandType, Boolean> getAuthorization)
         {
             foreach (var item in CommandButtons)
             { item.Value.IsEnabled = getAuthorization(item.Key); }
@@ -353,9 +482,9 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            commandButtons[CommandImageType.OpenDatabase].Refresh();
-            commandButtons[CommandImageType.SaveDatabase].Refresh();
-            commandButtons[CommandImageType.DeleteDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.OpenDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.SaveDatabase].Refresh();
+            commandButtons[Enumerations.CommandType.DeleteDatabase].Refresh();
         }
 
 

@@ -65,12 +65,12 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 String? value = GetValue(nameof(TableType));
-                if (DbTableEnumeration.TryParse(value, null, out DbTableEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out DbTableType result))
+                { return result; }
                 else { return DbTableType.Null; }
             }
             init
-            { SetValue(nameof(TableType), DbTableEnumeration.Cast(value).Name); }
+            { SetValue(nameof(TableType), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -107,7 +107,7 @@ namespace DataDictionary.DataLayer.AppCatalog
             get
             {
                 var value = GetValue(nameof(DataType));
-                if (DbTypeEnumeration.TryParse(value, null, out DbTypeEnumeration? item))
+                if (value.TryParse(out DbType? item))
                 { return item.Value; }
                 else { return null; }
             }
@@ -321,8 +321,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             where TResult : TableColumnItem, new()
         {
             DbTableType tableType = DbTableType.Null;
-            if (DbTableEnumeration.TryParse(source.TableType, null, out DbTableEnumeration? result))
-            { tableType = result.Value; }
+            if (source.TableType.TryParse(out DbTableType result))
+            { tableType = result; }
 
             TResult newValue = new TResult()
             {
@@ -332,7 +332,6 @@ namespace DataDictionary.DataLayer.AppCatalog
                 TableName = source.TableName,
                 TableType = tableType,
                 ColumnName = source.ColumnName,
-
             };
 
             newValue.Update(source);

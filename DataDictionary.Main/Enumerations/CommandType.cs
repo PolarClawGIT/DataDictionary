@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataDictionary.Main.Enumerations
+{
+    /// <summary>
+    /// List of different Images used by commands within the UI
+    /// </summary>
+    enum CommandType
+    {
+        /// <summary>
+        /// Default image
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Browse: Browse/View the items in the collection.
+        /// </summary>
+        Browse,
+        
+        /// <summary>
+        /// Select: Select and Item(s) in the collection
+        /// </summary>
+        Select,
+
+        /// <summary>
+        /// Add: Adding/New items to the Model.
+        /// </summary>
+        Add,
+
+        /// <summary>
+        /// Delete: Delete/Remove items from the Model
+        /// </summary>
+        Delete,
+
+        /// <summary>
+        /// Save: Save the a Document
+        /// </summary>
+        Save,
+
+        /// <summary>
+        /// Open: Open the a Document
+        /// </summary>
+        Open,
+
+        /// <summary>
+        /// Synchronize items 
+        /// </summary>
+        Sync,
+
+        /// <summary>
+        /// Import data from an external source.
+        /// </summary>
+        Import,
+
+        /// <summary>
+        /// Export data to an external target.
+        /// </summary>
+        Export,
+
+        /// <summary>
+        /// Open the Model from the Database
+        /// </summary>
+        OpenDatabase,
+
+        /// <summary>
+        /// Save the Model to the Database
+        /// </summary>
+        SaveDatabase,
+
+        /// <summary>
+        /// Delete the Model from the Database
+        /// </summary>
+        DeleteDatabase,
+
+        /// <summary>
+        /// History of an item in the Database.
+        /// </summary>
+        HistoryDatabase,
+
+        /// <summary>
+        /// Security of an items in the Database
+        /// </summary>
+        SecurityDatabase,
+    }
+}

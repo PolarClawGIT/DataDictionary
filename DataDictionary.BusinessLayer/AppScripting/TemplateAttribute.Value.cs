@@ -7,7 +7,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ITemplateAttributeValue : 
         ITemplateAttributeItem, ITemplateNodeValue,
-        ITemplateAttributeIndex, ITemplateIndex,
+        ITemplateAttributeIndex, ITemplateIndex, ITemplateNodeIndex,
         IScopeType, ITemporal
     { }
 
@@ -26,18 +26,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingData; } }
 
         /// <inheritdoc/>
-        /// <remarks>Attribute always returns null.
-        /// Use Node Owner to determine the muliple possible owners.</remarks>
-        Guid? ITemplateNodeValue.ParentElementId { get { return null; } }
-
-        /// <inheritdoc/>
         public TemplateAttributeValue() : base()
         {
             dataValue = new DataValue(this)
             {
                 GetIndex = () => new TemplateAttributeIndex(this),
                 GetScope = () => Scope,
-                GetTitle = () => this.AttributeName ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => this.AttributeName ?? Scope.GetEnumeration().Name,
                 IsTitleChanged = (e) => e.PropertyName is nameof(AttributeName)
             };
         }

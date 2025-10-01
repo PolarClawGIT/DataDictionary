@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Speical Directory Name used to determine the Root Directory.
         /// </summary>
-        TemplateDirectoryType TemplateDirectory { get; }
+        DirectoryType TemplateDirectory { get; }
 
         /// <summary>
         /// The Scripting Break On Scope.
@@ -54,7 +54,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.ScriptingData; } }
+        public ScopeType Scope { get { return ScopeType.ScriptingTemplate; } }
 
         /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return pathValue.Path; } }
@@ -69,21 +69,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IEnumerable<Exception> TemplateException { get { return templateException; } }
 
         /// <inheritdoc/>
-        public TemplateDirectoryType TemplateDirectory
+        public DirectoryType TemplateDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (TemplateDirectoryEnumeration.TryParse(value, null, out TemplateDirectoryEnumeration? result))
-                { return result.Value; }
-                else { return TemplateDirectoryType.Null; }
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
             }
-            set
-            {
-                if (value is TemplateDirectoryType.Null)
-                { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -92,15 +87,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             get
             {
                 String value = GetValue(nameof(BreakOnScope)) ?? String.Empty;
-                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
-                { return result.Value; }
+                if (value.TryParse(out ScopeType result))
+                { return result; }
                 else { return ScopeType.Null; }
             }
-            set
-            {
-                if (value is ScopeType.Null) { SetValue(nameof(BreakOnScope), null); }
-                else { SetValue(nameof(BreakOnScope), ScopeEnumeration.Cast(value).Name); }
-            }
+            set { SetValue(nameof(BreakOnScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -111,9 +102,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new TemplateIndex(this),
-                GetPath = () => new PathIndex(TemplateTitle),
+                GetPath = () => new PathIndex(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => TemplateTitle ?? ScopeEnumeration.Cast(Scope).Name,
+                GetTitle = () => TemplateTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
             };

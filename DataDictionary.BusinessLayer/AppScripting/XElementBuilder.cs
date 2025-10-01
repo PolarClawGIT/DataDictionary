@@ -41,8 +41,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         public String PropertyName { get; init; }
 
-        /// <inheritdoc cref="INodeValueAsType.NodeValueAs"/>
-        public TemplateNodeValueAsType NodeValueAs { get; set; } = TemplateNodeValueAsType.none;
+        /// <inheritdoc cref="INodeRenderAs.NodeRenderAs"/>
+        public NodeRenderAsType NodeValueAs { get; set; } = NodeRenderAsType.none;
 
         /// <summary>
         /// Gets or sets the function used to retrieve a string representation of an object.
@@ -59,20 +59,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <remarks>
         /// If the <paramref name="name"/> parameter is null, empty, or consists only of
-        /// whitespace, the <see cref="NodeValueAs"/> property will be set to <see cref="TemplateNodeValueAsType.none"/>.
+        /// whitespace, the <see cref="NodeValueAs"/> property will be set to <see cref="NodeRenderAsType.none"/>.
         /// Otherwise, it will be set to the value of the <paramref name="renderAs"/> parameter.</remarks>
         /// <param name="name">The name of the node. This value is used to set both the <see cref="NodeName"/> and <see cref="PropertyName"/> properties.</param>
-        /// <param name="renderAs">Specifies how the node's value should be rendered. The default is <see cref="TemplateNodeValueAsType.Element"/>.</param>
+        /// <param name="renderAs">Specifies how the node's value should be rendered. The default is <see cref="NodeRenderAsType.Element"/>.</param>
         public XElementBuilder(
             String name,
-            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            NodeRenderAsType renderAs = NodeRenderAsType.Element)
             : base()
         {
             NodeName = name;
             PropertyName = name;
 
             if (String.IsNullOrWhiteSpace(name))
-            { NodeValueAs = TemplateNodeValueAsType.none; }
+            { NodeValueAs = NodeRenderAsType.none; }
             else { NodeValueAs = renderAs; }
 
             GetValue = (value) => GetValueDelegate((dynamic)value);
@@ -88,7 +88,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public XElementBuilder(
             String name,
             Func<Object, String> getValue,
-            TemplateNodeValueAsType renderAs = TemplateNodeValueAsType.Element)
+            NodeRenderAsType renderAs = NodeRenderAsType.Element)
             : this(name)
         { GetValue = getValue; }
 
@@ -97,7 +97,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <remarks>The <paramref name="scope"/> parameter is converted to its corresponding name.</remarks>
         /// <param name="scope">The scope of the node, represented as a <see cref="ScopeType"/>.</param>
-        public XElementBuilder(ScopeType scope) : this(ScopeEnumeration.Cast(scope).Name)
+        public XElementBuilder(ScopeType scope) : this(scope.GetEnumeration().Name)
         { }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         /// <remarks>
         /// Each <see cref="XElementBuilder"/> in the returned collection represents a property of the specified type,
-        /// with its value set to <see cref="TemplateNodeValueAsType.ElementText"/>.
+        /// with its value set to <see cref="NodeRenderAsType.ElementText"/>.
         /// </remarks>
         /// <param name="value">The <see cref="Type"/> whose properties will be used to create the <see cref="XElementBuilder"/> objects.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="XElementBuilder"/> objects,  where each node corresponds to a property of the specified type.</returns>
@@ -126,7 +126,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 result.Add(
                 new XElementBuilder(property)
-                { NodeValueAs = TemplateNodeValueAsType.ElementText });
+                { NodeValueAs = NodeRenderAsType.ElementText });
             }
 
             return result;
@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="value">The <see cref="ScopeType"/> value for which to retrieve the name.</param>
         /// <returns>A <see cref="string"/> representing the name of the specified <see cref="ScopeType"/> value, or <see langword="null"/> if the value does not have an associated name.</returns>
         public virtual String? GetValueDelegate(ScopeType value)
-        { return ScopeEnumeration.Cast(value).Name; }
+        { return value.GetEnumeration().Name; }
 
         /// <summary>
         /// Retrieves a string representation of the value of the specified property from the given object.
@@ -188,22 +188,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             String? nodeValue = GetValue(value);
 
-            if (String.IsNullOrEmpty(NodeName) || NodeValueAs is TemplateNodeValueAsType.none)
+            if (String.IsNullOrEmpty(NodeName) || NodeValueAs is NodeRenderAsType.none)
             { return null; }
 
             switch (NodeValueAs)
             {
-                case TemplateNodeValueAsType.none:
+                case NodeRenderAsType.none:
                     return null;
-                case TemplateNodeValueAsType.Element:
+                case NodeRenderAsType.Element:
                     return new XElement(NodeName);
-                case TemplateNodeValueAsType.ElementText:
+                case NodeRenderAsType.ElementText:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, nodeValue);
-                case TemplateNodeValueAsType.ElementCData:
+                case NodeRenderAsType.ElementCData:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XElement(NodeName, new XCData(nodeValue));
-                case TemplateNodeValueAsType.ElementXML:
+                case NodeRenderAsType.ElementXML:
                     try
                     {
                         if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
@@ -216,11 +216,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         fragementEx.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
                         throw;
                     }
-                case TemplateNodeValueAsType.AttributeText:
+                case NodeRenderAsType.AttributeText:
                     if (String.IsNullOrWhiteSpace(nodeValue)) { return null; }
                     return new XAttribute(NodeName, nodeValue);
                 default:
-                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(TemplateNodeValueAsType)));
+                    Exception ex = new InvalidOperationException(String.Format("Unknown {0}", nameof(NodeRenderAsType)));
                     ex.Data.Add(nameof(NodeName), NodeName);
                     ex.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
                     throw ex;
@@ -268,7 +268,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <returns>An <see cref="XElement"/> representing the root of the constructed XML tree. The root element's name is determined by the scope of the provided <paramref name="value"/>.</returns>
         public static XElement Build(this IEnumerable<XElementBuilder> nodes, IScopeType value)
         {
-            XElement root = new XElement(ScopeEnumeration.Cast(value.Scope).Name);
+            XElement root = new XElement(value.Scope.GetEnumeration().Name);
             Append(root, value, nodes);
 
             return root;
@@ -307,7 +307,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 if (templates.FirstOrDefault(w => node.PropertyName.Equals(w.PropertyName)) is IScriptingNodeValue template)
                 {
                     node.NodeName = template.NodeName ?? node.NodeName;
-                    node.NodeValueAs = template.NodeValueAs;
+                    node.NodeValueAs = template.NodeRenderAs;
                 }
             }
         }

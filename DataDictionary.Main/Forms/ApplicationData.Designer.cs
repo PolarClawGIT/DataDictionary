@@ -59,7 +59,6 @@
             // 
             openFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             openFromDatabaseCommand.Enabled = false;
-            openFromDatabaseCommand.Image = Properties.Resources.OpenTable;
             openFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             openFromDatabaseCommand.Name = "openFromDatabaseCommand";
             openFromDatabaseCommand.Size = new Size(23, 22);
@@ -70,7 +69,6 @@
             // 
             saveToDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             saveToDatabaseCommand.Enabled = false;
-            saveToDatabaseCommand.Image = Properties.Resources.SaveTable;
             saveToDatabaseCommand.ImageTransparentColor = Color.Magenta;
             saveToDatabaseCommand.Name = "saveToDatabaseCommand";
             saveToDatabaseCommand.Size = new Size(23, 22);
@@ -81,7 +79,6 @@
             // 
             deleteFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             deleteFromDatabaseCommand.Enabled = false;
-            deleteFromDatabaseCommand.Image = Properties.Resources.DeleteTable;
             deleteFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             deleteFromDatabaseCommand.Name = "deleteFromDatabaseCommand";
             deleteFromDatabaseCommand.Size = new Size(23, 22);
@@ -101,7 +98,6 @@
             // 
             browseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             browseCommand.Enabled = false;
-            browseCommand.Image = Properties.Resources.BrowseDocument;
             browseCommand.ImageTransparentColor = Color.Magenta;
             browseCommand.Name = "browseCommand";
             browseCommand.Size = new Size(23, 22);
@@ -112,7 +108,6 @@
             // 
             selectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             selectCommand.Enabled = false;
-            selectCommand.Image = Properties.Resources.SelectDocument;
             selectCommand.ImageTransparentColor = Color.Magenta;
             selectCommand.Name = "selectCommand";
             selectCommand.Size = new Size(23, 22);
@@ -123,7 +118,6 @@
             // 
             newCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newCommand.Enabled = false;
-            newCommand.Image = Properties.Resources.NewDocument;
             newCommand.ImageTransparentColor = Color.Magenta;
             newCommand.Name = "newCommand";
             newCommand.Size = new Size(23, 22);
@@ -133,8 +127,7 @@
             // deleteCommand
             // 
             deleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            deleteCommand.Enabled = false;
-            deleteCommand.Image = Properties.Resources.DeleteDocument;
+            deleteCommand.Enabled = false;;
             deleteCommand.ImageTransparentColor = Color.Magenta;
             deleteCommand.Name = "deleteCommand";
             deleteCommand.Size = new Size(23, 22);
@@ -145,7 +138,6 @@
             // 
             openCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             openCommand.Enabled = false;
-            openCommand.Image = Properties.Resources.OpenDocument;
             openCommand.ImageTransparentColor = Color.Magenta;
             openCommand.Name = "openCommand";
             openCommand.Size = new Size(23, 22);
@@ -156,7 +148,6 @@
             // 
             saveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             saveCommand.Enabled = false;
-            saveCommand.Image = Properties.Resources.SaveDocument;
             saveCommand.ImageTransparentColor = Color.Magenta;
             saveCommand.Name = "saveCommand";
             saveCommand.Size = new Size(23, 22);
@@ -167,7 +158,6 @@
             // 
             importCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             importCommand.Enabled = false;
-            importCommand.Image = Properties.Resources.ImportDocument;
             importCommand.ImageTransparentColor = Color.Magenta;
             importCommand.Name = "importCommand";
             importCommand.ShowDropDownArrow = false;
@@ -179,7 +169,6 @@
             // 
             exportCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             exportCommand.Enabled = false;
-            exportCommand.Image = Properties.Resources.ExportDocument;
             exportCommand.ImageTransparentColor = Color.Magenta;
             exportCommand.Name = "exportCommand";
             exportCommand.ShowDropDownArrow = false;
@@ -191,7 +180,6 @@
             // 
             securityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             securityCommand.Enabled = false;
-            securityCommand.Image = Properties.Resources.SecurityTable;
             securityCommand.ImageTransparentColor = Color.Magenta;
             securityCommand.Name = "securityCommand";
             securityCommand.Size = new Size(23, 22);
@@ -202,7 +190,6 @@
             // 
             historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             historyCommand.Enabled = false;
-            historyCommand.Image = Properties.Resources.HistoryTable;
             historyCommand.ImageTransparentColor = Color.Magenta;
             historyCommand.Name = "historyCommand";
             historyCommand.Size = new Size(23, 22);
@@ -213,7 +200,6 @@
             // 
             helpCommand.Alignment = ToolStripItemAlignment.Right;
             helpCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            helpCommand.Image = Properties.Resources.StatusHelp;
             helpCommand.ImageTransparentColor = Color.Magenta;
             helpCommand.Name = "helpCommand";
             helpCommand.Size = new Size(23, 22);
@@ -225,7 +211,6 @@
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             rowStateCommand.Enabled = false;
-            rowStateCommand.Image = Properties.Resources.Row;
             rowStateCommand.Name = "rowStateCommand";
             rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";
