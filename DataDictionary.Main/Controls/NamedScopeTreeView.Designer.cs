@@ -82,7 +82,6 @@
             // reloadCommand
             // 
             reloadCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            reloadCommand.Image = Properties.Resources.ReloadTree;
             reloadCommand.ImageTransparentColor = Color.Magenta;
             reloadCommand.Name = "reloadCommand";
             reloadCommand.Size = new Size(23, 22);

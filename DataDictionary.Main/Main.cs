@@ -22,9 +22,6 @@ namespace DataDictionary.Main
         {
             //TODO: Remove old images
 
-            var x = Resources.ReloadTree; // TODO: Build TreeView Icon, use ItemRefresh
-            var y = Resources.RefreshTree; // TODO: Build TreeView Icon, use ItemSync
-
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
 
@@ -50,11 +47,9 @@ namespace DataDictionary.Main
             manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
-
             menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
             menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(CommandType.Default);
             menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(CommandType.Default);
-
             
             menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
             menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
@@ -71,7 +66,6 @@ namespace DataDictionary.Main
             menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
             menuModelProperty.Image = ScopeType.ModelProperty.GetImage(CommandType.Default);
             menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
-
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
             menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default); 
