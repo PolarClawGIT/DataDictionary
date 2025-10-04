@@ -88,7 +88,7 @@ namespace DataDictionary.Main
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.DatabaseConstraintColumn, BusinessData.CatalogModel.DbConstraintColumns));
+                (ScopeType.DatabaseConstraintCheck, BusinessData.CatalogModel.DbConstraintColumns));
         }
 
         private void menuDataTypeItem_Click(object sender, EventArgs e)

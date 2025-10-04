@@ -76,7 +76,7 @@ namespace DataDictionary.Main
             menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(CommandType.Default);
             menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(CommandType.Default);
             menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
-            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintColumn.GetImage(CommandType.Default);
+            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintCheck.GetImage(CommandType.Default);
             menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(CommandType.Default); ;
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
 

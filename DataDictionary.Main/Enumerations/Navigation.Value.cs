@@ -51,12 +51,13 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.DatabaseView,               Resources.Icon_View),
                 new Enumeration(ScopeType.DatabaseViewColumn,         Resources.Icon_Column),
                 new Enumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column),
-                new Enumeration(ScopeType.DatabaseConstraint,         Resources.Icon_Column),
-                new Enumeration(ScopeType.DatabaseConstraintColumn,   Resources.Icon_Key),
+                new Enumeration(ScopeType.DatabaseConstraint,         Resources.Icon_TableRule),
+                new Enumeration(ScopeType.DatabaseConstraintKey,      Resources.Icon_TableKey),
+                new Enumeration(ScopeType.DatabaseConstraintCheck,    Resources.Icon_ColumnRule),
 
                 new Enumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter),
                 new Enumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter),
-                new Enumeration(ScopeType.DatabaseFunctionColumn,     Resources.Icon_Column),
+                new Enumeration(ScopeType.DatabaseFunctionColumn,     Resources.Icon_FunctionColumn),
 
                 new Enumeration(ScopeType.DatabaseReference,          Resources.Icon_Dependancy),
                 new Enumeration(ScopeType.DatabaseProperty,           Resources.Icon_ExtendedProperty),

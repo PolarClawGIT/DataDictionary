@@ -166,6 +166,9 @@
   <data name="Icon_Column" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Column.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_ColumnRule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\ColumnRule.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Database.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -192,6 +195,9 @@
   </data>
   <data name="Icon_Field" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Field.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_FunctionColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\FunctionColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Help" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Help.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -247,6 +253,9 @@
   <data name="Icon_Row" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Row.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_Rule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Rule.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_ScalarFunction" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\ScalarFunction.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -288,6 +297,15 @@
   </data>
   <data name="Icon_TableFunction" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\TableFunction.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_TableKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\TableKey.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_TableRule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\TableRule.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_TableScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\TableScript.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Tag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Tag.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

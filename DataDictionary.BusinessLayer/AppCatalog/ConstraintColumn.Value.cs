@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.DatabaseConstraintColumn;
+        public ScopeType Scope { get; } = ScopeType.DatabaseConstraintCheck;
 
         /// <inheritdoc/>
         public ConstraintColumnValue() : base()

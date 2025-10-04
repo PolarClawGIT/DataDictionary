@@ -263,9 +263,14 @@
         DatabaseConstraint,
 
         /// <summary>
-        /// SQL Table Constraint Column
+        /// SQL Table Key Constraint (PK, FK, UK)
         /// </summary>
-        DatabaseConstraintColumn,
+        DatabaseConstraintKey,
+
+        /// <summary>
+        /// SQL Table Column Constraint (Check)
+        /// </summary>
+        DatabaseConstraintCheck,
 
         //DatabaseSchemaTableIndex,
 

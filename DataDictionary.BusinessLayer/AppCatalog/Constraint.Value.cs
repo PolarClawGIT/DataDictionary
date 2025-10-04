@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         /// <inheritdoc/>
         PathIndex IPathIndex.Path { get { return pathValue.Path; } }
-        
+
         /// <inheritdoc/>
         DataIndex IDataValue.Index { get { return pathValue.Index; } }
 
@@ -29,7 +29,17 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.DatabaseConstraint;
+        public ScopeType Scope
+        {
+            get
+            {
+                if (ConstraintType is DbConstraintType.PrimaryKey or DbConstraintType.Unique or DbConstraintType.ForeignKey)
+                { return ScopeType.DatabaseConstraintKey; }
+                else if (ConstraintType is DbConstraintType.Check)
+                { return ScopeType.DatabaseConstraintCheck; }
+                else { return ScopeType.DatabaseConstraint; }
+            }
+        }
 
         /// <inheritdoc/>
         public ConstraintValue() : base()
