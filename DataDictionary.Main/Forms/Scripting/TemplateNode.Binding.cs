@@ -57,8 +57,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateBinding.DataSource = templates;
                 TemplateNodeBinding.DataSource = templateNodes;
 
-                TemplateBinding.RaiseListChangedEvents = false;
-                TemplateNodeBinding.RaiseListChangedEvents = false;
+                TemplateBinding.RaiseListChangedEvents = true;
+                TemplateNodeBinding.RaiseListChangedEvents = true;
                 TemplateBinding.ResetBindings(false);
                 TemplateNodeBinding.ResetBindings(false);
             }
