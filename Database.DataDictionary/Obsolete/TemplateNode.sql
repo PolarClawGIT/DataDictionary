@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppScript].[TemplateNode] As
+﻿CREATE VIEW [AppScript].[TemplateNode_Old] As
 -- Element and Attribute are Sub-Types of Node.
 -- This builds Super-Type of Node with hiearachy.
 With [Data] As (

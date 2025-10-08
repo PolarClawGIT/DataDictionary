@@ -4710,4 +4710,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ObjectNameId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="df0a56a9-6c18-45ed-b9fe-6710c0e38053" ChangeDateTime="10/07/2025 14:26:41">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNode]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNode_Old]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="72fca177-5970-42f7-94de-ca8630fedbf0" ChangeDateTime="10/07/2025 14:26:58">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNode_New]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateNode]" />
+  </Operation>
 </Operations>

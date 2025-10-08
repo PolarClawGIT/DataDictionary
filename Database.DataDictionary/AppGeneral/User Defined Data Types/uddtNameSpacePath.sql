@@ -4,4 +4,6 @@
 -- Database: [DatabaseName].[SchemaName].[TableName].[ColumnName]
 -- Library, C#: [NameSpace].[SubNameSpace].[ClassName].[PropertyName]
 -- Model: [SubjectArea].[Sub-SubjectArea].[ElementName]
-CREATE TYPE [AppGeneral].[uddtNameSpacePath] FROM NVarchar(Max)
+--
+-- Limited to 4000 characters because the use of FormatMessage to build the value.
+CREATE TYPE [AppGeneral].[uddtNameSpacePath] FROM NVarchar(4000)
