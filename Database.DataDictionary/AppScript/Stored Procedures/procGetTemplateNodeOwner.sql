@@ -1,17 +1,16 @@
-﻿CREATE PROCEDURE [AppScript].[procGetTemplateParentNode]
+﻿CREATE PROCEDURE [AppScript].[procGetTemplateNodeOwner]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
 		@IncludeHistory Bit = 0 -- History is included
 As
-/* Description: Performs Get on TemplateParentNode.
+/* Description: Performs Get on TemplateNodeOwner.
 */
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
 Select	[NodeId],
-		[ParentNodeId],
+		[NodeOwnerId],
 		[TemplateId],
-		[NodePath],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -21,7 +20,7 @@ Select	[NodeId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[TemplateNodeParentHs] D
+From	[AppScript].[TemplateNodeOwnerHs] D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or 

@@ -59,8 +59,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateNodeOwner]
-	From	[AppScript].[TemplateNodeOwner] T
+	Delete From [AppScript].[TemplateNodeOwner_Old]
+	From	[AppScript].[TemplateNodeOwner_Old] T
 			Left Join @Values S
 			On	T.[ElementId] = S.[ElementId]
 	Where	S.[ElementId] is Null And

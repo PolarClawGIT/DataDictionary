@@ -5,7 +5,7 @@
 AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on TemplateElement.
+/* Description: Performs Set on TemplateNode.
 */
 
 -- Transaction Handling
@@ -59,10 +59,10 @@ Begin Try
 	-- Apply Changes
 ;	With [Delete] As (
 		Select	P.[NodeId],
-				P.[ParentNodeId],
+				P.[NodeOwnerId],
 				P.[TemplateId]
 		From	[AppScript].[TemplateNode] T
-				Inner Join [AppScript].[TemplateParentNode] P
+				Inner Join [AppScript].[TemplateNodeOwner] P
 				On	T.[NodeId] = P.[NodeId] And
 					T.[TemplateId] = P.[TemplateId]
 				Left Join @Values S
@@ -77,17 +77,17 @@ Begin Try
 					Where	[ModelId] = @ModelId))
 		Union All
 		Select	P.[NodeId],
-				P.[ParentNodeId],
+				P.[NodeOwnerId],
 				P.[TemplateId]
 		From	[Delete] D
-				Inner Join [AppScript].[TemplateParentNode] P
-				On	D.[NodeId] = P.[ParentNodeId] and 
+				Inner Join [AppScript].[TemplateNodeOwner] P
+				On	D.[NodeId] = P.[NodeOwnerId] and 
 					D.[TemplateId] = P.[TemplateId])
-	Delete From [AppScript].[TemplateParentNode]
-	From	[AppScript].[TemplateParentNode] T
+	Delete From [AppScript].[TemplateNodeOwner]
+	From	[AppScript].[TemplateNodeOwner] T
 			Inner Join [Delete] D
 			On	T.[NodeId] = D.[NodeId] And
-				T.[ParentNodeId] = D.[ParentNodeId] And
+				T.[NodeOwnerId] = D.[NodeOwnerId] And
 				T.[TemplateId] = D.[TemplateId]
 	Print FormatMessage ('Delete [AppScript].[TemplateParentNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

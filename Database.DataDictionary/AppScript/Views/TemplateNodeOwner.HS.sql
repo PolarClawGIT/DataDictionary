@@ -1,19 +1,19 @@
-﻿CREATE VIEW [AppScript].[TemplateParentNodeHS] AS
+﻿CREATE VIEW [AppScript].[TemplateNodeOwnerHs] AS
 -- Temporal View
 With [Data] As (
 		Select	N.[NodeId],
-				P.[ParentNodeId],
+				P.[NodeOwnerId],
 				N.[TemplateId],
 				N.[NodeName],
 				Greatest(N.[SysStart], P.[SysStart]) As [SysStart],
 				Least(N.[SysEnd], P.[SysEnd]) As [SysEnd]
 		From	[AppScript].[TemplateNode] N
-				Left Join [AppScript].[TemplateParentNode] P
+				Left Join [AppScript].[TemplateNodeOwner] P
 				On	N.[NodeId] = P.[NodeId] And
 					N.[TemplateId] = P.[TemplateId]),
 	[Tree] As (
 		Select	[NodeId],
-				Convert(UNIQUEIDENTIFIER, 0x0) As[ParentNodeId],
+				Convert(UNIQUEIDENTIFIER, 0x0) As[NodeOwnerId],
 				[TemplateId],
 				FormatMessage('[%s]', [NodeName]) As [NodePath],
 				Convert(NVarChar(Max),
@@ -23,10 +23,10 @@ With [Data] As (
 				[SysStart],
 				[SysEnd]
 		From	[Data]
-		Where	[ParentNodeId] is Null
+		Where	[NodeOwnerId] is Null
 		Union All
 		Select	N.[NodeId],
-				N.[ParentNodeId],
+				N.[NodeOwnerId],
 				N.[TemplateId],
 				FormatMessage('%s.[%s]', D.[NodePath], N.[NodeName]) As [NodePath],
 				Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
@@ -36,13 +36,13 @@ With [Data] As (
 				Least(D.[SysEnd], N.[SysEnd]) As [SysEnd]
 		From	[Tree] D
 				Inner Join [Data] N
-				On	D.[NodeId] = N.[ParentNodeId] And
+				On	D.[NodeId] = N.[NodeOwnerId] And
 					D.[TemplateId] = N.[TemplateId]
 					
 					),
 	[Dates] As (
 		Select	[NodeId],
-				[ParentNodeId],
+				[NodeOwnerId],
 				[TemplateId],
 				[SysStart],
 				[SysEnd]
@@ -50,7 +50,7 @@ With [Data] As (
 		-- TODO Query for Temporal
 	)
 Select	D.[NodeId],
-		NullIf(D.[ParentNodeId],Convert(UNIQUEIDENTIFIER, 0x0)) As [ParentNodeId],
+		NullIf(D.[NodeOwnerId],Convert(UNIQUEIDENTIFIER, 0x0)) As [NodeOwnerId],
 		D.[TemplateId],
 		D.[NodePath],
 		D.[HierarchyId],
@@ -70,14 +70,14 @@ From	[Tree] D
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
 			Where	[NodeId] = D.[NodeId] And
-					[ParentNodeId] = D.[ParentNodeId] And
+					[NodeOwnerId] = D.[NodeOwnerId] And
 					[TemplateId] = D.[TemplateId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
 			Where	[NodeId] = D.[NodeId] And
-					[ParentNodeId] = D.[ParentNodeId] And
+					[NodeOwnerId] = D.[NodeOwnerId] And
 					[TemplateId] = D.[TemplateId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C

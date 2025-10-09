@@ -520,7 +520,7 @@
     <Build Include="AppScript\Stored Procedures\procSetDataObjectName.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDataObjectName.sql" />
     <Build Include="AppScript\Tables\TemplateNode.sql" />
-    <Build Include="AppScript\Tables\TemplateParentNode.sql" />
+    <Build Include="AppScript\Tables\TemplateNodeOwner.sql" />
     <Build Include="Obsolete\TemplateAttribute.sql" />
     <Build Include="Obsolete\TemplateElement.sql" />
     <Build Include="Obsolete\TemplateNodeOwner.sql" />
@@ -543,13 +543,13 @@
     <Build Include="AppScript\User Defined Table Types\udttTemplateNode.sql" />
     <Build Include="Obsolete\TemplateElement.Hs.sql" />
     <Build Include="Obsolete\TemplateAttribute.Hs.sql" />
-    <Build Include="AppScript\User Defined Table Types\udttTemplateParentNode.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTemplateNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNode.sql" />
-    <Build Include="AppScript\Stored Procedures\procSetTemplateParentNode.sql" />
-    <Build Include="AppScript\Views\TemplateParentNode.HS.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplateNodeOwner.sql" />
+    <Build Include="AppScript\Views\TemplateNodeOwner.HS.sql" />
     <Build Include="AppScript\Views\TemplateNode.Hs.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateNode.sql" />
-    <Build Include="AppScript\Stored Procedures\procGetTemplateParentNode.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTemplateNodeOwner.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

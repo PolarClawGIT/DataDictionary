@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppScript].[TemplateNodeOwner]
+﻿CREATE TABLE [AppScript].[TemplateNodeOwner_Old]
 (	-- Allows for M:N between Elements and Attributes.
 	-- An XML Attribute is Owned by an XML Element.
 	-- Un-owned Attributes are assocated to the Root Element.

@@ -1,9 +1,9 @@
-﻿CREATE TYPE [AppScript].[udttTemplateParentNode] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTemplateNodeOwner] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[NodeId]				UniqueIdentifier NULL,
-	[ParentNodeId]			UniqueIdentifier NULL,
-	[ParentPath]			[AppGeneral].[uddtNameSpacePath] Null,
+	[NodeOwnerId]			UniqueIdentifier NULL,
+	[NodeOwnerPath]			[AppGeneral].[uddtNameSpacePath] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

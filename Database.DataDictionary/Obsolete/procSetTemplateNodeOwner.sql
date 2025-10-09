@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetTemplateNodeOwner]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplateNodeOwner_Old]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttTemplateNodeOwner] ReadOnly
+		@Data [AppScript].[udttTemplateNodeOwner_Old] ReadOnly
 AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -45,8 +45,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateNodeOwner]
-	From	[AppScript].[TemplateNodeOwner] T
+	Delete From [AppScript].[TemplateNodeOwner_Old]
+	From	[AppScript].[TemplateNodeOwner_Old] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId] And
 				T.[AttributeId] = S.[AttributeId] And
@@ -60,7 +60,7 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[TemplateNodeOwner] (
+	Insert Into [AppScript].[TemplateNodeOwner_Old] (
 			[TemplateId],
 			[AttributeId],
 			[ElementId])
@@ -68,7 +68,7 @@ Begin Try
 			S.[AttributeId],
 			S.[ElementId]
 	From	@Values S
-			Left Join [AppScript].[TemplateNodeOwner] T
+			Left Join [AppScript].[TemplateNodeOwner_Old] T
 			On	S.[TemplateId] = T.[TemplateId] And
 				S.[AttributeId] = T.[AttributeId] And
 				S.[ElementId] = T.[ElementId]

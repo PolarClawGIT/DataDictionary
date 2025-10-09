@@ -1,5 +1,5 @@
 ﻿CREATE TRIGGER [AppScript].[trigTemplateParentNode]
-	ON [AppScript].[TemplateParentNode]
+	ON [AppScript].[TemplateNodeOwner]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN
