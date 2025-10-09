@@ -4815,4 +4815,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[funcCreatePath]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="6f5eb372-6211-4702-8ea8-427ad8913941" ChangeDateTime="10/09/2025 16:53:56">
+    <Property Name="ElementName" Value="[AppGeneral].[uddtNameSpacePath]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[uddtPath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d7f118f2-ebfe-4194-9c31-2d6be073e983" ChangeDateTime="10/09/2025 16:55:30">
+    <Property Name="ElementName" Value="[AppGeneral].[uddtNameSpaceMember]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[uddtMember]" />
+  </Operation>
 </Operations>

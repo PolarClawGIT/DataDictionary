@@ -485,8 +485,8 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtObjectType.sql" />
     <Build Include="AppGeneral\User Defined Data Types\uddtTitle.sql" />
     <Build Include="AppLibrary\Functions\funcGetMemberNameSpace.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\uddtNameSpaceMember.sql" />
-    <Build Include="AppGeneral\User Defined Data Types\uddtNameSpacePath.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtMember.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtPath.sql" />
     <Build Include="AppLibrary\Views\LibraryMember.Hs.sql" />
     <Build Include="AppLibrary\Views\LibrarySourceHs.sql" />
     <Build Include="AppScript\Views\Template.Hs.sql" />

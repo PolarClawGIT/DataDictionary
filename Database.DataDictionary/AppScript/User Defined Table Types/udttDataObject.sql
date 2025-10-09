@@ -2,7 +2,7 @@
 (
 	[DataSourceId]			UniqueIdentifier Not Null,
 	[ObjectScope]			[AppGeneral].[uddtScopeName] NOT NULL,
-	[ObjectPath]			[AppGeneral].[uddtNameSpacePath] Null,
+	[ObjectPath]			[AppGeneral].[uddtPath] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

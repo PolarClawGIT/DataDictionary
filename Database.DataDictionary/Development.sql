@@ -5,7 +5,7 @@ Begin Try;
 	Declare	@TemplateId UniqueIdentifier = newid(),
 			@Template [AppScript].[udttTemplate],
 			@Node [AppScript].[udttTemplateNode],
-			@Parent [AppScript].[udttTemplateParentNode]
+			@Parent [AppScript].[udttTemplateNodeOwner]
 
 	Insert Into @Template([TemplateId], [TemplateTitle])
 	Values (@TemplateId, 'Test Script')
@@ -14,9 +14,10 @@ Begin Try;
 	Values	(@TemplateId, newid(), 'Root', 'Element'),
 			(@TemplateId, newid(), 'Child1', 'Element'),
 			(@TemplateId, newid(), 'Child2', 'Element'),
-			(@TemplateId, newid(), 'GrandChild2', 'Element')
+			(@TemplateId, newid(), 'GrandChild2', 'Element'),
+			(@TemplateId, newid(), 'GrandChild3', 'Element')
 
-	Insert Into @Parent ([TemplateId], [NodeId], [ParentPath])
+	Insert Into @Parent ([TemplateId], [NodeId], [NodeOwnerPath])
 	Select	@TemplateId As [TemplateId],
 			[NodeId],
 			'[Root]'
@@ -34,11 +35,37 @@ Begin Try;
 			'[Root].[MissingChild]'
 	From	@Node
 	Where	[NodeName] In ('GrandChild2')
+	Union
+	Select	@TemplateId As [TemplateId],
+			[NodeId],
+			'[Root].[Child1]'
+	From	@Node
+	Where	[NodeName] In ('GrandChild3')
+	Union
+	Select	@TemplateId As [TemplateId],
+			[NodeId],
+			'[Root].[Child2]'
+	From	@Node
+	Where	[NodeName] In ('GrandChild3')
+
 	
 	Exec [AppScript].[procSetTemplate] @TemplateId = @TemplateId, @Data = @Template
 	Exec [AppScript].[procSetTemplateNode] @TemplateId = @TemplateId, @Data = @Node
-	Exec [AppScript].[procSetTemplateParentNode] @TemplateId = @TemplateId, @Data = @Parent
+	Exec [AppScript].[procSetTemplateNodeOwner] @TemplateId = @TemplateId, @Data = @Parent
 
+Select	'Debug', *
+From	[AppScript].[TemplateNodeHS]
+
+Select	'Debug', *
+From	[AppScript].[TemplateNodeOwnerHS]
+
+
+
+	--Delete From @Node
+	--Where	[NodeName] In ('Child2')
+
+	--Exec [AppScript].[procSetTemplateNode] @TemplateId = @TemplateId, @Data = @Node
+	--Exec [AppScript].[procSetTemplateNodeOwner] @TemplateId = @TemplateId, @Data = @Parent
 
 
 	-- By default, throw and error and exit without committing

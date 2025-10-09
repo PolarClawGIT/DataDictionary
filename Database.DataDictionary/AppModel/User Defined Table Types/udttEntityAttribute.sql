@@ -2,7 +2,7 @@
 (
     [EntityId]             UniqueIdentifier NULL,
 	[AttributeKnownAs]     [AppGeneral].[uddtTitle] Null,
-	[AttributeName]        [AppGeneral].[uddtNameSpacePath] Null,
+	[AttributeName]        [AppGeneral].[uddtPath] Null,
 	[OrdinalPosition]      Int Not Null,
 	[IsNullable]		   Bit Null,
 	[IsPrimaryKey]		   Bit Null,

@@ -2,7 +2,7 @@
 (
 	[ObjectNameId]		UniqueIdentifier Not Null CONSTRAINT [DF_DataNameId] DEFAULT (newid()),
 	[DataSourceId]		UniqueIdentifier Not Null,
-	[ObjectMember]		[AppGeneral].[uddtNameSpaceMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
+	[ObjectMember]		[AppGeneral].[uddtMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
 	[ParentNameId]		UniqueIdentifier NULL,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DataName_SysStart] DEFAULT (sysdatetime()),

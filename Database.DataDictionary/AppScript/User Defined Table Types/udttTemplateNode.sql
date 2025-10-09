@@ -2,7 +2,7 @@
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[NodeId]				UniqueIdentifier NULL,
-	[NodeName]				[AppGeneral].[uddtNameSpaceMember] NULL,
+	[NodeName]				[AppGeneral].[uddtMember] NULL,
 	[NodeOrder]			Int Null,
 	[RenderValueAs]			NVarChar(20) Null,
 	[FixedValue]			NVarChar(250) NULL,

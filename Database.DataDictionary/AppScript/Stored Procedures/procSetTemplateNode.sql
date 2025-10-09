@@ -29,7 +29,7 @@ Begin Try
 	Declare @Values Table (
 			[NodeId]				UniqueIdentifier NOT NULL,
 			[TemplateId]            UniqueIdentifier NOT NULL,
-			[NodeName]				[AppGeneral].[uddtNameSpaceMember] Not Null,
+			[NodeName]				[AppGeneral].[uddtMember] Not Null,
 			[NodeOrder]				Int Not Null,
 			[RenderValueAs]			NVarChar(20) Not Null,
 			[FixedValue]			NVarChar(250) NULL,

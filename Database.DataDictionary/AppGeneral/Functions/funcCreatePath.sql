@@ -1,7 +1,7 @@
 ﻿CREATE FUNCTION [AppGeneral].[funcCreatePath] (
-	@Path	[AppGeneral].[uddtNameSpacePath],
-	@Member [AppGeneral].[uddtNameSpaceMember] = Null)
-RETURNS [AppGeneral].[uddtNameSpacePath]
+	@Path	[AppGeneral].[uddtPath],
+	@Member [AppGeneral].[uddtMember] = Null)
+RETURNS [AppGeneral].[uddtPath]
 As
 Begin
 	/* Used to Merge MembersNames into the Path.

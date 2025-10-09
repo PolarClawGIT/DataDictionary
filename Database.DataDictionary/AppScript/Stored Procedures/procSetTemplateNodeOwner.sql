@@ -30,9 +30,9 @@ Begin Try
 			[NodeId]		UniqueIdentifier NOT NULL,
 			[NodeOwnerId]	UniqueIdentifier Not NULL,
 			[TemplateId]	UniqueIdentifier NOT NULL,
-			[NodePath]		[AppGeneral].[uddtNameSpacePath] Null,
-			[NodeOwnerPath]	[AppGeneral].[uddtNameSpacePath] Null)
-	Declare @NullPath		[AppGeneral].[uddtNameSpacePath] = null
+			[NodePath]		[AppGeneral].[uddtPath] Null,
+			[NodeOwnerPath]	[AppGeneral].[uddtPath] Null)
+	Declare @NullPath		[AppGeneral].[uddtPath] = null
 
 	-- Root Nodes
 	;With [Nodes] As (

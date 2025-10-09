@@ -2,7 +2,7 @@
 (	-- This is a Super-Type based on what type of value is being rendered.
 	[NodeId]				UniqueIdentifier NOT NULL CONSTRAINT [DF_TemplateNode] DEFAULT (newid()),
 	[TemplateId]            UniqueIdentifier NOT NULL,
-	[NodeName]				[AppGeneral].[uddtNameSpaceMember] Not Null, -- Name to be used XML Element. Name of the Property is used if Null.
+	[NodeName]				[AppGeneral].[uddtMember] Not Null, -- Name to be used XML Element. Name of the Property is used if Null.
 	[NodeOrder]				Int Not Null CONSTRAINT [Df_TemplateNodeOrder] DEFAULT (0), -- Render the values elements in this order.
 	[RenderValueAs]			NVarChar(20) Not Null, -- How to render the Value
 	-- Constant Value

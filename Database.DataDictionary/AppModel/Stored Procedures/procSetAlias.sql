@@ -26,11 +26,11 @@ Begin Try
 
 	Declare @Values Table (
 		[AliasId]			UniqueIdentifier Not Null,
-		[AliasMember]		[AppGeneral].[uddtNameSpaceMember] Not Null,
+		[AliasMember]		[AppGeneral].[uddtMember] Not Null,
 		[ParentAliasId]		UniqueIdentifier Null,
 		-- Temporary
-		[AliasNameSpace]	[AppGeneral].[uddtNameSpacePath] Not Null,
-		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
+		[AliasNameSpace]	[AppGeneral].[uddtPath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[uddtPath] Null,
 		Primary Key ([AliasId]))
 
 	;With [Data] As (
