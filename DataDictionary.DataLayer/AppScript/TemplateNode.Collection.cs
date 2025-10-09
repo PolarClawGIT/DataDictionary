@@ -6,15 +6,14 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Generic Base class for Scripting Template Node Owner
+    /// Generic Base class for Scripting Template Node
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    [Obsolete]
-    public class TemplateNodeOwnerCollection<TItem> : BindingTable<TItem>,
+    public class TemplateNodeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>
-        where TItem : BindingTableRow, ITemplateNodeOwnerItem, new()
+        where TItem : BindingTableRow, ITemplateNodeItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -38,7 +37,7 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = TemplateNodeOwner.GetProcedure;
+            command.CommandText = TemplateNode.GetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(Template.TemplateId, templateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
@@ -58,13 +57,13 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = TemplateNodeOwner.SetProcedure;
+            command.CommandText = TemplateNode.SetProcedure;
             command.AddParameter(Model.ModelId, modelId);
             command.AddParameter(Template.TemplateId, templateId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (templateId is null || w.TemplateId == templateId));
-            command.AddParameter(WriteData.Data, TemplateNodeOwner.TableType, data);
+            command.AddParameter(WriteData.Data, TemplateNode.TableType, data);
             return command;
         }
 

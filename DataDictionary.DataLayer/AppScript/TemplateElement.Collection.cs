@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Generic Base class for Scripting Template Element
     /// </summary>
+    [Obsolete]
     public class TemplateElementCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,

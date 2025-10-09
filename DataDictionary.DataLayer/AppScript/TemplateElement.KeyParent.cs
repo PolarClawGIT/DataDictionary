@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Parent Key for the Scripting Template Element.
     /// </summary>
+    [Obsolete]
     public interface ITemplateElementKeyParent : IKey
     {
         /// <summary>
@@ -17,10 +18,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// </summary>
         Guid? ParentElementId { get; }
     }
-    
+
     /// <summary>
     /// Implementation for the Parent Key for the Scripting Template Element.
     /// </summary>
+    [Obsolete]
     public class TemplateElementKeyParent : ITemplateElementKeyParent, ITemplateElementKey,
         IKeyEquality<ITemplateElementKeyParent>, IKeyEquality<ITemplateElementKey>,
         IKeyEquality<TemplateElementKeyParent>

@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Attribute item.
     /// </summary>
+    [Obsolete]
     public interface ITemplateAttributeItem :
         ITemplateKey, ITemplateAttributeKey, ITemplateNodeItem,
         ITemporalItem
@@ -21,7 +22,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting Template Attribute item.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public class TemplateAttributeItem : BindingTableRow, ITemplateAttributeItem, ISerializable
     {
         /// <inheritdoc/>

@@ -13,6 +13,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// XML Attributes are owned by XML Elements.
     /// Database allows M:N relationship where the same Atteribute can be owned by muliple Elements.
     /// </remarks>
+    [Obsolete]
     static class TemplateNodeOwner
     {
         /// <summary>  

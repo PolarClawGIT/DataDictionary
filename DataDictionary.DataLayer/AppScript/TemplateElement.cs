@@ -3,6 +3,7 @@
     /// <summary>  
     /// Static class containing constants related to the Scripting Template Element database operations.  
     /// </summary>  
+    [Obsolete]
     static class TemplateElement
     {
         /// <summary>  

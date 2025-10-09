@@ -3,6 +3,7 @@
     /// <summary>  
     /// Static class containing constants related to the Scripting Template Attribute database operations.  
     /// </summary>  
+    [Obsolete]
     static class TemplateAttribute
     {
         /// <summary>  

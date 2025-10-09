@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template Attribute.
     /// </summary>
+    [Obsolete]
     public interface ITemplateAttributeKey : IKey
     {
         /// <summary>
@@ -16,6 +17,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Primary Key for the Scripting Template Attribute.
     /// </summary>
+    [Obsolete]
     public class TemplateAttributeKey : ITemplateAttributeKey,
         IKeyEquality<ITemplateAttributeKey>, IKeyEquality<TemplateAttributeKey>
     {

@@ -7,6 +7,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Node Owner item.
     /// </summary>
+    [Obsolete]
     public interface ITemplateNodeOwnerItem :
         ITemplateKey, ITemplateAttributeKey, ITemplateElementKey,
         ITemporalItem
@@ -15,6 +16,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting Template Node Owner item.
     /// </summary>
+    [Obsolete]
     public class TemplateNodeOwnerItem : BindingTableRow, ITemplateNodeOwnerItem, ISerializable
     {
         /// <inheritdoc/>
