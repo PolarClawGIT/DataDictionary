@@ -4808,4 +4808,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procGetTemplateNodeOwner]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="3ab19851-ab26-4bb6-bb1a-51305a60c2b6" ChangeDateTime="10/09/2025 16:23:10">
+    <Property Name="ElementName" Value="[AppGeneral].[funcMergePath]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppGeneral]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcCreatePath]" />
+  </Operation>
 </Operations>

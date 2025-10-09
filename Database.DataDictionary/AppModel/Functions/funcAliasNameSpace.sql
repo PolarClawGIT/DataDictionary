@@ -9,15 +9,13 @@ BEGIN
 	;With [Data] As (
 	Select	[AliasId],
 			NullIf([ParentAliasId], [AliasId]) As [ParentAliasId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[AliasMember])) As [AliasNameSpace]
+			[AppGeneral].[funcCreatePath]([AliasMember], Null) As [AliasNameSpace]
 	From	[AppModel].[AliasNameSpace]
 	Where	[AliasId] = @AliasId
 	Union All
 	Select	D.[AliasId],
 			NullIf(P.[ParentAliasId], D.[AliasId]) As [ParentAliasId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[AliasMember],D.[AliasNameSpace])) As [AliasNameSpace]
+			[AppGeneral].[funcCreatePath](P.[AliasMember], D.[AliasNameSpace]) As [AliasNameSpace]
 	From	[Data] D
 			Inner Join [AppModel].[AliasNameSpace] P
 			On	D.[ParentAliasId] = P.[AliasId])

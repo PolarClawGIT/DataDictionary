@@ -36,7 +36,7 @@ With [Data] As (
 	Select	D.[NodeId],
 			D.[NodeName],
 			D.[ParentNodeId],
-			FormatMessage('%s.%s', T.[NodePath], N.[QualifiedName]) As [NodePath],
+			[AppGeneral].[funcCreatePath](T.[NodePath], N.[QualifiedName]) As [NodePath],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', T.[HierarchyId],
 				Row_Number() Over (Partition By D.[NodeId] Order By D.[NodeName])))
 				As [HierarchyId],

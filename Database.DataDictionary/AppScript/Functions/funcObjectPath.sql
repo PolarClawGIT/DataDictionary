@@ -9,15 +9,13 @@ BEGIN
 	;With [Data] As (
 	Select	[ObjectNameId],
 			[ParentNameId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[ObjectMember])) As [ObjectPath]
+			[AppGeneral].[funcCreatePath]([ObjectMember], Null) As [ObjectPath]
 	From	[AppScript].[DataObjectName]
 	Where	[ObjectNameId] = @ObjectNameId
 	Union All
 	Select	D.[ObjectNameId],
 			NullIf(P.[ParentNameId], D.[ObjectNameId]) As [ParentNameId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[ObjectMember],D.[ObjectPath])) As [ObjectPath]
+			[AppGeneral].[funcCreatePath](P.[ObjectMember],D.[ObjectPath]) As [ObjectPath]
 	From	[Data] D
 			Inner Join [AppScript].[DataObjectName] P
 			On	D.[ParentNameId] = P.[ObjectNameId])

@@ -6,4 +6,4 @@
 -- Model: [SubjectArea].[Sub-SubjectArea].[ElementName]
 --
 -- Limited to 4000 characters because the use of FormatMessage to build the value.
-CREATE TYPE [AppGeneral].[uddtNameSpacePath] FROM NVarchar(4000)
+CREATE TYPE [AppGeneral].[uddtNameSpacePath] FROM NVarchar(Max)

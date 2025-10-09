@@ -39,7 +39,7 @@ Begin Try
 		Select	N.[NodeId],
 				Convert(UniqueIdentifier, Null) As [NodeOwnerId],
 				N.[TemplateId],
-				FormatMessage('[%s]', N.[NodeName]) As [NodePath],
+				[AppGeneral].[funcCreatePath](N.[NodeName], Null) As [NodePath],
 				@NullPath As [NodeOwnerPath]
 		From	[AppScript].[TemplateNode] N
 				Left Join @Data D
@@ -55,7 +55,7 @@ Begin Try
 		Select	D.[NodeId],
 				D.[NodeOwnerId] As [NodeOwnerId],
 				N.[TemplateId],
-				FormatMessage('%s.[%s]', P.[QualifiedName], N.[NodeName]) As [NodePath],
+				[AppGeneral].[funcCreatePath](P.[QualifiedName], N.[NodeName]) As [NodePath],
 				P.[QualifiedName] As [NodeOwnerPath]
 		From	@Data D
 				Inner Join [AppScript].[TemplateNode] N

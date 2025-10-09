@@ -546,10 +546,11 @@
     <Build Include="AppScript\User Defined Table Types\udttTemplateNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNodeOwner.sql" />
-    <Build Include="AppScript\Views\TemplateNodeOwner.HS.sql" />
+    <Build Include="AppScript\Views\TemplateNodeOwner.Hs.sql" />
     <Build Include="AppScript\Views\TemplateNode.Hs.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateNodeOwner.sql" />
+    <Build Include="AppGeneral\Functions\funcCreatePath.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -16,7 +16,7 @@
 --      [DatabaseName].[SchemaName]
 --      [DatabaseName].[SchemaName].[TableName]
 --      [DatabaseName].[SchemaName].[TableName].[ColumnName]
-RETURNS TABLE With SchemaBinding AS RETURN (
+RETURNS TABLE AS RETURN (
 	With [Parse] As (
 		Select	@QualifiedName As [ParentName],
 				Convert(NVarChar(Max),Null) As [ChildName]
@@ -60,7 +60,7 @@ RETURNS TABLE With SchemaBinding AS RETURN (
 		Select	[MemberName],
 				[ParentName],
 				[ChildName],
-				FormatMessage('[%s]',[MemberName]) As [QualifiedName],
+				[AppGeneral].[funcCreatePath]([MemberName], Null) As [QualifiedName],
 				Convert(Int,1) As [Level]
 		From	[Format]
 		Where	[ParentName] is Null
@@ -68,7 +68,7 @@ RETURNS TABLE With SchemaBinding AS RETURN (
 		Select	F.[MemberName],
 				F.[ParentName],
 				F.[ChildName],
-				FormatMessage('%s.[%s]',T.[QualifiedName],F.[MemberName]) As [QualifiedName],
+				[AppGeneral].[funcCreatePath](T.[QualifiedName],F.[MemberName]) As [QualifiedName],
 				T.[Level] + 1 As [Level]
 		From	[Tree] T
 				Inner Join [Format] F

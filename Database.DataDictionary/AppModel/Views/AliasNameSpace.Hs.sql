@@ -3,8 +3,7 @@
 With [Data] As (
 	Select	[AliasId],
 			[AliasMember],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[AliasMember])) As [AliasNameSpace],
+			[AppGeneral].[funcCreatePath]([AliasMember], Null) As [AliasNameSpace],
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
 					Dense_Rank() Over (Order By [AliasMember])))
@@ -16,8 +15,7 @@ With [Data] As (
 	Union All
 	Select	H.[AliasId],
 			H.[AliasMember],
-			Convert(NVarChar(Max),
-				FormatMessage('%s.[%s]',D.[AliasNameSpace], H.[AliasMember])) As [AliasNameSpace],
+			[AppGeneral].[funcCreatePath](D.[AliasNameSpace], H.[AliasMember]) As [AliasNameSpace],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
 				Row_Number() Over (Partition By D.[AliasId] Order By H.[AliasMember])))
 				As [HierarchyId],
