@@ -1,28 +1,23 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ITemplateNodeOwnerValue : ITemplateNodeOwnerItem,
-        ITemplateElementIndex, ITemplateAttributeIndex, ITemplateIndex,
-        IScopeType
+        ITemplateIndex, ITemplateNodeIndex, ITemplateNodeOwnerIndex
     { }
 
     /// <inheritdoc/>
     public class TemplateNodeOwnerValue : TemplateNodeOwnerItem, ITemplateNodeOwnerValue
     {
         /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.ScriptingData; } }
+        public TemplateNodeOwnerValue() : base() { }
 
         /// <inheritdoc/>
-        public TemplateNodeOwnerValue() : base()
-        { }
+        public TemplateNodeOwnerValue(ITemplateNodeValue node) : base(node) { }
+
+        /// <inheritdoc/>
+        public TemplateNodeOwnerValue(ITemplateNodeValue node, ITemplateNodeValue owner) : base(node, owner) { }
     }
 }

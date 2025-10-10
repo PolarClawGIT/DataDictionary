@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete]
     public interface ITemplateAttributeIndex : ITemplateAttributeKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class TemplateAttributeIndex : TemplateAttributeKey, ITemplateAttributeIndex,
         IKeyEquality<ITemplateAttributeIndex>, IKeyEquality<TemplateAttributeIndex>
     {

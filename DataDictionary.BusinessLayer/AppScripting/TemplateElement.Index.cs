@@ -5,10 +5,12 @@ using DataDictionary.Resource;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete]
     public interface ITemplateElementIndex : ITemplateElementKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class TemplateElementIndex : TemplateElementKey, ITemplateElementIndex,
         IKeyEquality<ITemplateElementIndex>//, IKeyEquality<TemplateElementIndex>
     {

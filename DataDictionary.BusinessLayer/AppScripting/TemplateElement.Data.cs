@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Template Element
     /// </summary>
+    [Obsolete]
     public interface ITemplateElementData : IBindingData<TemplateElementValue>
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         PathIndex GetPath(ITemplateElementIndex element);
     }
 
+    [Obsolete]
     class TemplateElementData : TemplateElementCollection<TemplateElementValue>, ITemplateElementData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>

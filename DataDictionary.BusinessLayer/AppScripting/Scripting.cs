@@ -18,15 +18,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IBindListChanged
     {
         // These are re-named properties
+        /// <inheritdoc cref="ITemplate.Nodes"/>
+        ITemplateNodeData TemplateNodes { get; }
 
-        /// <inheritdoc cref="ITemplate.Elements"/>
-        ITemplateElementData TemplateElements { get; }
-
-        /// <inheritdoc cref="ITemplate.Attributes"/>
-        public ITemplateAttributeData TemplateAttributes { get; }
-
-        /// <inheritdoc cref="ITemplate.AttributeOwners"/>
-        public ITemplateNodeOwnerData TemplateAttributeOwners { get; }
+        /// <inheritdoc cref="ITemplate.NodeOwners"/>
+        ITemplateNodeOwnerData TemplateNodeOwners { get; }
     }
 
     class Scripting : IScripting, IDataTableFile
@@ -55,30 +51,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="IDataSource.DataObjects"/>
         public IDataObjectData DataObjects { get { return dataSourceValue.DataObjects; } }
 
-        // Not actually needed.
-        //IDataSourceData IDataSource.DataSources { get { return dataSourceValue.DataSources; } }
-        //IDataObjectData IDataSource.DataObjects { get { return dataSourceValue.DataObjects; } }
 
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValue.Templates; } }
 
         /// <inheritdoc/>
-        public ITemplateElementData TemplateElements { get { return templateValue.Elements; } }
+        public ITemplateNodeData TemplateNodes { get { return templateValue.Nodes; } }
 
         /// <inheritdoc/>
-        public ITemplateAttributeData TemplateAttributes { get { return templateValue.Attributes; } }
-
-        /// <inheritdoc/>
-        public ITemplateNodeOwnerData TemplateAttributeOwners { get { return templateValue.AttributeOwners; } }
+        public ITemplateNodeOwnerData TemplateNodeOwners { get { return templateValue.NodeOwners; } }
 
         /// <inheritdoc/>
         public ITemplateInputData TemplateSources { get { return templateValue.TemplateSources; } }
 
         //ITemplateData ITemplate.Templates { get { return templateValue.Templates; } } // Not Needed
-        ITemplateElementData ITemplate.Elements { get { return templateValue.Elements; } }
-        ITemplateAttributeData ITemplate.Attributes { get { return templateValue.Attributes; } }
-        ITemplateNodeOwnerData ITemplate.AttributeOwners { get { return templateValue.AttributeOwners; } }
         //ITemplateInputData ITemplate.TemplateSources { get { return templateValue.TemplateSources; } } // Not Needed
+        ITemplateNodeData ITemplate.Nodes { get { return templateValue.Nodes; } }
+        ITemplateNodeOwnerData ITemplate.NodeOwners { get { return templateValue.NodeOwners; } }
+
 
         /// <inheritdoc/>
         public void Clear()
