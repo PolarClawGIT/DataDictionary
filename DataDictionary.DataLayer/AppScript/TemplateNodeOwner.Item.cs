@@ -38,19 +38,8 @@ namespace DataDictionary.DataLayer.AppScript
             set { SetValue(nameof(NodeOwnerId), value); }
         }
 
-        /// <summary>
-        /// The Path of the Node Owner, as determined by Db.
-        /// Alternate way of setting the NodeOwnerId.
-        /// </summary>
-        protected String? NodeOwnerPath
-        {
-            get { return GetValue(nameof(NodeOwnerPath)); }
-            set { SetValue(nameof(NodeOwnerPath), value); }
-        }
-
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
-
 
         /// <summary>
         /// Constructor for Template Node Owner
@@ -89,7 +78,6 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeOwnerId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(NodeOwnerPath), typeof(Guid)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

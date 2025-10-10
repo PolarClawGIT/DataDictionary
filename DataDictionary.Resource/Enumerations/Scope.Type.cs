@@ -345,16 +345,6 @@
         ScriptingTemplateNode,
 
         /// <summary>
-        /// Scripting Template Attribute
-        /// </summary>
-        ScriptingTemplateAttribute,
-
-        /// <summary>
-        /// Scripting Template Element
-        /// </summary>
-        ScriptingTemplateElement,
-
-        /// <summary>
         /// Scripting Template Node Owner
         /// </summary>
         ScriptingTemplateNodeOwner,

@@ -41,8 +41,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.CommandType.SaveDatabase,
                 Enumerations.CommandType.DeleteDatabase,
                 Enumerations.CommandType.HistoryDatabase);
-            newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetImage(Enumerations.CommandType.Add);
-            newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetImage(Enumerations.CommandType.Add);
             AddCommands(nodeCommands, ToolStripItemDisplayStyle.Image);
         }
 
@@ -86,7 +84,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 RenderValueAsList.Load(renderValueAsData);
                 renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.RenderValueAs)));
 
-                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.RenderOrder)));
+                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.NodeOrder)));
                 fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.FixedValue)));
 
                 ScopeNameList.Load(objectScopeData);

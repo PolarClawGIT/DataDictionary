@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Order of the Node to be rendered.
         /// </summary>
-        Int32? RenderOrder { get; }
+        Int32? NodeOrder { get; }
 
         /// <summary>
         /// How the node is to be Rendered
@@ -76,10 +76,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Int32? RenderOrder
+        public Int32? NodeOrder
         {
-            get { return GetValue<Int32>(nameof(RenderOrder)); }
-            set { SetValue(nameof(RenderOrder), value); }
+            get { return GetValue<Int32>(nameof(NodeOrder)); }
+            set { SetValue(nameof(NodeOrder), value); }
         }
 
         /// <inheritdoc/>
@@ -166,7 +166,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = false},
-            new DataColumn(nameof(RenderOrder), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeOrder), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},

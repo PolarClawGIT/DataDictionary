@@ -94,8 +94,6 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ScriptingData,              Resources.Icon_XPath),
                 new Enumeration(ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant),
                 new Enumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_Tag),
-                new Enumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLAttribute),
-                new Enumeration(ScopeType.ScriptingTemplateElement,   Resources.Icon_XMLElement),
                 new Enumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform),
                 new Enumeration(ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement),
                 new Enumeration(ScopeType.ScriptingTemplateData,      Resources.Icon_XPath),

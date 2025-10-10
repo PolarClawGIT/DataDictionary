@@ -22,22 +22,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         String IDataValue.Title { get { return dataValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope
-        {
-            get
-            {
-                switch (RenderValueAs)
-                {
-                    case NodeRenderAsType.none: return ScopeType.ScriptingTemplateNode;
-                    case NodeRenderAsType.Element: return ScopeType.ScriptingTemplateElement;
-                    case NodeRenderAsType.ElementText: return ScopeType.ScriptingTemplateElement;
-                    case NodeRenderAsType.ElementCData: return ScopeType.ScriptingTemplateElement;
-                    case NodeRenderAsType.ElementXML: return ScopeType.ScriptingTemplateElement;
-                    case NodeRenderAsType.AttributeText: return ScopeType.ScriptingTemplateAttribute;
-                    default: return ScopeType.ScriptingTemplateNode;
-                }
-            }
-        }
+        public ScopeType Scope { get { return ScopeType.ScriptingTemplateNode; } }
 
         /// <inheritdoc/>
         public TemplateNodeValue() : base()

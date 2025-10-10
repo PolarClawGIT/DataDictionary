@@ -248,18 +248,14 @@ namespace DataDictionary.Main
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateNode, BusinessData.Scripting.TemplateNodes));
         }
 
-        private void menuScriptingAttribute_Click(object sender, EventArgs e)
+        private void menuScriptingNodeOwner_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
         }
 
         private void SecurityPrincipal_Click(object sender, EventArgs e)

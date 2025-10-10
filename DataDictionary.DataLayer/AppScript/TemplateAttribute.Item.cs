@@ -53,10 +53,10 @@ namespace DataDictionary.DataLayer.AppScript
         String? ITemplateNodeItem.NodeName { get { return AttributeName; } }
 
         /// <inheritdoc/>
-        public Int32? RenderOrder
+        public Int32? NodeOrder
         {
-            get { return GetValue<Int32>(nameof(RenderOrder)); }
-            set { SetValue(nameof(RenderOrder), value); }
+            get { return GetValue<Int32>(nameof(NodeOrder)); }
+            set { SetValue(nameof(NodeOrder), value); }
         }
 
         /// <inheritdoc/>
@@ -143,7 +143,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = false},
-            new DataColumn(nameof(RenderOrder), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeOrder), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
