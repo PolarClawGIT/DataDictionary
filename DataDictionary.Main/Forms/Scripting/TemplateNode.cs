@@ -81,20 +81,20 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.SetPosition(nodeIndex);
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.NodeName)));
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.NodeName)));
 
                 RenderValueAsList.Load(renderValueAsData);
-                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.RenderValueAs)));
+                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.RenderValueAs)));
 
-                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.RenderOrder)));
-                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.FixedValue)));
+                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.RenderOrder)));
+                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.FixedValue)));
 
                 ScopeNameList.Load(objectScopeData);
-                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ObjectScope)));
-                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.ObjectProperty)));
+                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.ObjectScope)));
+                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.ObjectProperty)));
 
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
-                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ModelPropertyId)));
+                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.ModelPropertyId)));
             }
         }
 
