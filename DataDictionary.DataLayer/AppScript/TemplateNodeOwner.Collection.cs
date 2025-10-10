@@ -9,7 +9,6 @@ namespace DataDictionary.DataLayer.AppScript
     /// Generic Base class for Scripting Template Node Owner
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    [Obsolete]
     public class TemplateNodeOwnerCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
