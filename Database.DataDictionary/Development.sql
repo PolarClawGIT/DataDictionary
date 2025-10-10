@@ -48,18 +48,13 @@ Begin Try;
 	From	@Node
 	Where	[NodeName] In ('GrandChild3')
 
-	
 	Exec [AppScript].[procSetTemplate] @TemplateId = @TemplateId, @Data = @Template
 	Exec [AppScript].[procSetTemplateNode] @TemplateId = @TemplateId, @Data = @Node
 	Exec [AppScript].[procSetTemplateNodeOwner] @TemplateId = @TemplateId, @Data = @Parent
 
-Select	'Debug', *
-From	[AppScript].[TemplateNodeHS]
+--Select	'Debug', * From	[AppScript].[TemplateNodeHS]
 
-Select	'Debug', *
-From	[AppScript].[TemplateNodeOwnerHS]
-
-
+Select	'Debug', * From	[AppScript].[TemplateNodeOwnerHS]
 
 	--Delete From @Node
 	--Where	[NodeName] In ('Child2')

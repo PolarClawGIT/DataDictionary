@@ -15,7 +15,9 @@ With [Data] As (
 		Select	[NodeId],
 				Convert(UNIQUEIDENTIFIER, 0x0) As[NodeOwnerId],
 				[TemplateId],
+				[NodeName],
 				[AppGeneral].[funcCreatePath]([NodeName], Null) As [NodePath],
+				[AppGeneral].[funcCreatePath](Null, Null) As [NodeOwnerPath],
 				Convert(NVarChar(Max),
 					FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
 					Dense_Rank() Over (Order By [NodeName])))
@@ -28,7 +30,9 @@ With [Data] As (
 		Select	N.[NodeId],
 				N.[NodeOwnerId],
 				N.[TemplateId],
+				N.[NodeName],
 				[AppGeneral].[funcCreatePath](D.[NodePath], N.[NodeName]) As [NodePath],
+				D.[NodePath] As [NodeOwnerPath],
 				Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
 					Row_Number() Over (Partition By D.[NodeId] Order By N.[NodeName])))
 					As [HierarchyId],
@@ -52,7 +56,9 @@ With [Data] As (
 Select	D.[NodeId],
 		NullIf(D.[NodeOwnerId],Convert(UNIQUEIDENTIFIER, 0x0)) As [NodeOwnerId],
 		D.[TemplateId],
+		D.[NodeName],
 		D.[NodePath],
+		D.[NodeOwnerPath],
 		D.[HierarchyId],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK

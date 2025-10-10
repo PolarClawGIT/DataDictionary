@@ -11,6 +11,9 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[NodeId],
 		[NodeOwnerId],
 		[TemplateId],
+		[NodeName], -- Informational
+		[NodePath], -- Informational
+		[NodeOwnerPath], -- Informational
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
