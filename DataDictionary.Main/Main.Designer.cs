@@ -178,6 +178,7 @@
             namedScopeData.Name = "namedScopeData";
             namedScopeData.Size = new Size(300, 616);
             namedScopeData.TabIndex = 0;
+            namedScopeData.OnNamedScopeSelected += NamedScopeData_OnNamedScopeSelected;
             // 
             // navigationSpliter
             // 
