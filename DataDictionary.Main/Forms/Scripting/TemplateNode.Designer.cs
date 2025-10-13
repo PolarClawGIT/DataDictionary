@@ -51,10 +51,6 @@
             templateData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTemplateNode = new BindingSource(components);
-            nodeCommands = new ContextMenuStrip(components);
-            toolStripSeparator = new ToolStripSeparator();
-            newAttributeCommand = new ToolStripMenuItem();
-            newElementCommand = new ToolStripMenuItem();
             attributeLayout = new TableLayoutPanel();
             nodeOptions = new TabControl();
             valueTab = new TabPage();
@@ -70,7 +66,6 @@
             ((System.ComponentModel.ISupportInitialize)ownershipData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplateNode).BeginInit();
-            nodeCommands.SuspendLayout();
             SuspendLayout();
             // 
             // attributeLayout
@@ -223,7 +218,7 @@
             ownershipTab.Location = new Point(4, 24);
             ownershipTab.Name = "ownershipTab";
             ownershipTab.Padding = new Padding(3);
-            ownershipTab.Size = new Size(587, 239);
+            ownershipTab.Size = new Size(192, 72);
             ownershipTab.TabIndex = 1;
             ownershipTab.Text = "Parent/Owner";
             // 
@@ -241,7 +236,7 @@
             ownershipLayout.RowCount = 2;
             ownershipLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             ownershipLayout.RowStyles.Add(new RowStyle());
-            ownershipLayout.Size = new Size(581, 233);
+            ownershipLayout.Size = new Size(186, 66);
             ownershipLayout.TabIndex = 1;
             // 
             // ownershipData
@@ -252,7 +247,7 @@
             ownershipData.Dock = DockStyle.Fill;
             ownershipData.Location = new Point(3, 3);
             ownershipData.Name = "ownershipData";
-            ownershipData.Size = new Size(575, 177);
+            ownershipData.Size = new Size(180, 10);
             ownershipData.TabIndex = 0;
             // 
             // elementPathColumn
@@ -266,17 +261,17 @@
             elementPathData.AutoSize = true;
             elementPathData.Dock = DockStyle.Fill;
             elementPathData.HeaderText = "Element Path";
-            elementPathData.Location = new Point(3, 186);
+            elementPathData.Location = new Point(3, 19);
             elementPathData.Multiline = false;
             elementPathData.Name = "elementPathData";
             elementPathData.ReadOnly = true;
-            elementPathData.Size = new Size(494, 44);
+            elementPathData.Size = new Size(99, 44);
             elementPathData.TabIndex = 1;
             elementPathData.WordWrap = true;
             // 
             // elementSelectCommand
             // 
-            elementSelectCommand.Location = new Point(503, 186);
+            elementSelectCommand.Location = new Point(108, 19);
             elementSelectCommand.Name = "elementSelectCommand";
             elementSelectCommand.Size = new Size(75, 23);
             elementSelectCommand.TabIndex = 2;
@@ -331,33 +326,6 @@
             templateData.TabIndex = 0;
             templateData.WordWrap = true;
             // 
-            // nodeCommands
-            // 
-            nodeCommands.Items.AddRange(new ToolStripItem[] { toolStripSeparator, newAttributeCommand, newElementCommand });
-            nodeCommands.Name = "nodeCommands";
-            nodeCommands.Size = new Size(147, 54);
-            // 
-            // toolStripSeparator
-            // 
-            toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(143, 6);
-            // 
-            // newAttributeCommand
-            // 
-            newAttributeCommand.MergeIndex = 0;
-            newAttributeCommand.Name = "newAttributeCommand";
-            newAttributeCommand.Size = new Size(146, 22);
-            newAttributeCommand.Text = "new Attribute";
-            newAttributeCommand.Click += NewAttributeCommand_Click;
-            // 
-            // newElementCommand
-            // 
-            newElementCommand.MergeIndex = 0;
-            newElementCommand.Name = "newElementCommand";
-            newElementCommand.Size = new Size(146, 22);
-            newElementCommand.Text = "new Element";
-            newElementCommand.Click += NewElementCommand_Click;
-            // 
             // TemplateNode
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -380,7 +348,6 @@
             ((System.ComponentModel.ISupportInitialize)ownershipData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplateNode).EndInit();
-            nodeCommands.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -403,9 +370,5 @@
         private TreeView nodeNavigation;
         private BindingSource bindingTemplate;
         private BindingSource bindingTemplateNode;
-        private ContextMenuStrip nodeCommands;
-        private ToolStripMenuItem newAttributeCommand;
-        private ToolStripMenuItem newElementCommand;
-        private ToolStripSeparator toolStripSeparator;
     }
 }

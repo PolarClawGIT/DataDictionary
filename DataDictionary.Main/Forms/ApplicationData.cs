@@ -347,19 +347,6 @@ namespace DataDictionary.Main.Forms
                     }
                 }
             }
-
-            //foreach (KeyValuePair<CommandType, CommandState> item in commandButtons)
-            //{
-            //    if (scope.TryGetImage(item.Key, out Image? image))
-            //    { commandButtons[item.Key].Image = image; }
-            //    // Else leave the image as is
-
-            //    if (commands is not null && commands.Any(w => item.Key.Equals(w)))
-            //    {
-            //        CommandButtons[item.Key].IsVisible = true;
-            //        CommandButtons[item.Key].IsEnabled = true;
-            //    }
-            //}
         }
 
         /// <summary>
@@ -367,24 +354,25 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="commands"></param>
         /// <param name="displayStyle">default is Image and Text</param>
+        /// <param name="positionOf">Postion the toolstrip to the Left of the command specfied</param>
         protected void AddCommands(ToolStrip commands,
-            ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText)
+            ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText,
+            CommandType positionOf = CommandType.Default)
         {
             Int32 mergeIndex = -1;
             if (toolStrip.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator separator)
             {
-                if (commands.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator incoming)
-                {
-                    if (commands.Items.IndexOf(incoming) == 0)
-                    { // Place the items before the Database Commands
-                        mergeIndex = toolStrip.Items.IndexOf(separator);
-                        separator.Visible = true;
-                    }
-                    else { mergeIndex = 0; } // Place the items first
+                if (positionOf is CommandType.Default)
+                { // Place the items before the Database Commands
+                    mergeIndex = toolStrip.Items.IndexOf(separator);
+                    separator.Visible = true;
                 }
-                else
-                { mergeIndex = toolStrip.Items.IndexOf(separator); } // Place the items before the Database Commands
-
+                else if (CommandButtons.ContainsKey(positionOf))
+                { // Position relative to the command passed.
+                    mergeIndex = CommandButtons[positionOf].IndexOf();
+                    separator.Visible = true;
+                }
+                else { mergeIndex = 0; } // Place the items first
             }
 
             foreach (ToolStripItem item in commands.Items.OfType<ToolStripItem>())

@@ -1,8 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;

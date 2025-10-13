@@ -17,11 +17,15 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.Scripting);
             SetCommand(
                 ScopeType.Scripting,
-                CommandType.Open);
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase
+                );
             newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
             newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
-            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image);
+            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image, CommandType.Add);
 
             formBinding = new FormBinding()
             {
@@ -51,17 +55,19 @@ namespace DataDictionary.Main.Forms.Scripting
         private void NewDataSource_Click(object sender, EventArgs e)
         { Activate(() => new DataSource(null)); }
 
-        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
-            base.OpenCommand_Click(sender, e);
+            base.OpenFromDatabaseCommand_Click(sender, e);
+        }
 
-            if (formBinding.TryGetValue(out BindingValue? value))
-            {
-                if (value.TryGetIndex(out DataSourceIndex? dataSource))
-                { Activate(() => new DataSource(dataSource)); }
-                else if (value.TryGetIndex(out TemplateIndex? template))
-                { Activate(() => new Template(template)); }
-            }
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
         }
     }
 }

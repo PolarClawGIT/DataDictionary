@@ -267,7 +267,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean TryGetIndex([NotNullWhen(true)] out TemplateIndex? result)
             {
-                if (dataSource is ITemplateValue value)
+                if (template is ITemplateValue value)
                 { result = new TemplateIndex(value); return true; }
                 else { result = null; return false; }
             }

@@ -36,12 +36,12 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(bindingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplateNode,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
-            AddCommands(nodeCommands, ToolStripItemDisplayStyle.Image);
+                CommandType.Add,
+                CommandType.Delete,
+                CommandType.OpenDatabase,
+                CommandType.SaveDatabase,
+                CommandType.DeleteDatabase,
+                CommandType.HistoryDatabase);
         }
 
         public TemplateNode(ITemplateIndex template) : this()
@@ -96,14 +96,9 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void NewAttributeCommand_Click(object sender, EventArgs e)
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
-
-        }
-
-        private void NewElementCommand_Click(object sender, EventArgs e)
-        {
-
+            base.AddCommand_Click(sender, e);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
