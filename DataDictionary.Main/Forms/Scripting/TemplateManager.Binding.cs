@@ -70,6 +70,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         { item.InDatabase = true; }
                     }
 
+                    
                     managerData.ListChanged += ManagerData_ListChanged;
                 }
 
@@ -130,6 +131,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 { result = value; return true; }
                 else { result = null; return false; }
             }
+
+            public void Load(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                { work.AddRange(BusinessData.Scripting.Load(factory, template)); }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                { work.AddRange(BusinessData.Scripting.Load(factory, dataSource)); }
+
+                DoWork(work, onComplete);
+            }
+
         }
 
         class BindingValue : IBindingPropertyChanged,

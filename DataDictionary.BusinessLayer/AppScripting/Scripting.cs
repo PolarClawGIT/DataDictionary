@@ -141,7 +141,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
 
             if(dataSourceValue.DataSources.Count >0
-                && templateValue.Templates.Count > 0)
+                || templateValue.Templates.Count > 0)
             {
                 // Root Node
                 NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
@@ -182,10 +182,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { return templateValue.Save(factory, template); }
 
         IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template)
-        { return templateValue.Load(factory, template); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValue.Load(factory, template));
+            work.AddRange(dataSourceValue.Load(factory, template));
+            return work;
+        }
 
         IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template, ITemporalIndex asOfUtcDate)
-        { return templateValue.Load(factory, template, asOfUtcDate); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValue.Load(factory, template, asOfUtcDate));
+            work.AddRange(dataSourceValue.Load(factory, template, asOfUtcDate));
+            return work;
+        }
 
         IReadOnlyList<WorkItem> IDeleteData<ITemplateIndex>.Delete(ITemplateIndex template)
         { return templateValue.Delete(template); }

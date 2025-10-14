@@ -232,10 +232,10 @@ namespace DataDictionary.Main
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
+            Activate(static () => new DetailDataView
+                <DataSourceValue, Forms.Scripting.DataSource>
+                (ScopeType.ScriptingData, BusinessData.Scripting.DataSources)
+            { SelectedForm = (data) => new Forms.Scripting.DataSource(data) });
         }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)

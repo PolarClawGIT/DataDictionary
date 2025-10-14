@@ -37,6 +37,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TemplateManager_Load(object sender, EventArgs e)
         {
+            CommandButtons[CommandType.Delete].IsEnabled = false;
+
+            CommandButtons[CommandType.OpenDatabase].IsEnabled = false;
+            CommandButtons[CommandType.SaveDatabase].IsEnabled = false;
+            CommandButtons[CommandType.DeleteDatabase].IsEnabled = false;
+
             formBinding.Load(doBinding);
 
             void doBinding(RunWorkerCompletedEventArgs args)
@@ -58,7 +64,14 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Load(binding, onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
+
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
@@ -68,6 +81,18 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+        }
+
+        private void BindingManager_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out BindingValue? current))
+            {
+                CommandButtons[CommandType.Delete].IsEnabled = current.InModel;
+
+                CommandButtons[CommandType.OpenDatabase].IsEnabled = current.InDatabase && !current.InModel;
+                CommandButtons[CommandType.SaveDatabase].IsEnabled = current.InModel;
+                CommandButtons[CommandType.DeleteDatabase].IsEnabled = current.InDatabase;
+            }
         }
     }
 }
