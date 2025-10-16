@@ -12,8 +12,22 @@ namespace Toolbox.BindingTable
     /// </summary>
     public interface IBindListChanged
     {
+        /// <inheritdoc cref="IBindingList.ListChanged"/>
+        event ListChangedEventHandler ListChanged;
 
-        /// <inheritdoc cref="ComponentModel.IBindingList{T}.RaiseListChangedEvents"/>
+        //<Example/>
+        //public SomeObject() : base()
+        //{
+        //    someBindingList.ListChanged += OnListChanged;
+
+        //    void OnListChanged(Object? sender, ListChangedEventArgs e)
+        //    {
+        //        if (ListChanged is ListChangedEventHandler handler)
+        //        { handler(sender, e); }
+        //    }
+        //}
+
+        /// <inheritdoc cref="BindingList{T}.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; }
 
         /// <inheritdoc cref="BindingList{T}.ResetBindings"/>

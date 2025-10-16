@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IDataObjectData DataObjects { get { return sourceObjects; } }
         DataObjectData sourceObjects = new DataObjectData();
         
+        public DataSource() : base()
+        {
+            sourceValues.ListChanged += OnListChanged;
+            sourceObjects.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
+        }
+
         /// <inheritdoc/>
         /// <remarks>DataSource</remarks>
         public IReadOnlyList<DataTable> Export()
@@ -233,6 +246,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             sourceObjects.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
         /// <inheritdoc/>
         /// <remarks>DataSource</remarks>
         public void ResetBindings()
@@ -256,6 +273,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 sourceObjects.RaiseListChangedEvents = value;
             }
         }
+        #endregion
 
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<DataSourceValue, INamedScopeSourceValue?>? getParent)
         {

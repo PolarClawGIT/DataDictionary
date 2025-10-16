@@ -7,6 +7,7 @@ using Toolbox.Threading;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.AppLibrary
 {
@@ -46,25 +47,21 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         public ILibrarySourceData LibrarySources { get { return sourceValues; } }
         private readonly LibrarySourceData sourceValues;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return memberValues.RaiseListChangedEvents
-                    && sourceValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                memberValues.RaiseListChangedEvents = value;
-                sourceValues.RaiseListChangedEvents = value;
-            }
-        }
+
 
         public LibraryModel() : base()
         {
             sourceValues = new LibrarySourceData() { Library = this };
             memberValues = new LibraryMemberData() { Library = this };
+
+            sourceValues.ListChanged += OnListChanged;
+            memberValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         /// <inheritdoc/>
@@ -247,12 +244,33 @@ namespace DataDictionary.BusinessLayer.AppLibrary
             memberValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return memberValues.RaiseListChangedEvents
+                    && sourceValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                memberValues.RaiseListChangedEvents = value;
+                sourceValues.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
             sourceValues.ResetBindings();
             memberValues.ResetBindings();
         }
+        #endregion
+
     }
 }
 

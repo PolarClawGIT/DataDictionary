@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -120,26 +121,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return attributeValues.RaiseListChangedEvents
-                    && entityValues.RaiseListChangedEvents
-                    && propertyValues.RaiseListChangedEvents
-                    && definitionValues.RaiseListChangedEvents
-                    && subjectValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                attributeValues.RaiseListChangedEvents = value;
-                entityValues.RaiseListChangedEvents = value;
-                propertyValues.RaiseListChangedEvents = value;
-                definitionValues.RaiseListChangedEvents = value;
-                subjectValues.RaiseListChangedEvents = value;
-            }
-        }
+
 
         public Model() : base()
         {
@@ -150,6 +132,20 @@ namespace DataDictionary.BusinessLayer.AppModel
             attributeValues = new Attribute(propertyValues, definitionValues);
             entityValues = new Entity();
             processValues = new Process();
+
+            modelValues.ListChanged += OnListChanged;
+            subjectValues.ListChanged += OnListChanged;
+            attributeValues.ListChanged += OnListChanged;
+            entityValues.ListChanged += OnListChanged;
+            processValues.ListChanged += OnListChanged;
+            propertyValues.ListChanged += OnListChanged;
+            definitionValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         /// <summary>
@@ -329,6 +325,31 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return attributeValues.RaiseListChangedEvents
+                    && entityValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && subjectValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                attributeValues.RaiseListChangedEvents = value;
+                entityValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                subjectValues.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -340,5 +361,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues.ResetBindings();
             definitionValues.ResetBindings();
         }
+        #endregion
+
     }
 }

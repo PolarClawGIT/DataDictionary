@@ -100,29 +100,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return entityValues.RaiseListChangedEvents
-                    && aliasValues.RaiseListChangedEvents
-                    && propertyValues.RaiseListChangedEvents
-                    && definitionValues.RaiseListChangedEvents
-                    && attributeValues.RaiseListChangedEvents
-                    && subjectAreaValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                entityValues.RaiseListChangedEvents = value;
-                aliasValues.RaiseListChangedEvents = value;
-                propertyValues.RaiseListChangedEvents = value;
-                definitionValues.RaiseListChangedEvents = value;
-                attributeValues.RaiseListChangedEvents = value;
-                subjectAreaValues.RaiseListChangedEvents = value;
-            }
-        }
-
         public Entity() : base()
         {
             entityValues = new EntityData();
@@ -131,6 +108,19 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues = new EntityPropertyData();
             attributeValues = new EntityAttributeData();
             subjectAreaValues = new EntitySubjectAreaData();
+
+            entityValues.ListChanged += OnListChanged;
+            aliasValues.ListChanged += OnListChanged;
+            definitionValues.ListChanged += OnListChanged;
+            propertyValues.ListChanged += OnListChanged;
+            attributeValues.ListChanged += OnListChanged;
+            subjectAreaValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         public FindAttributes FindAttributes
@@ -407,6 +397,33 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return entityValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && attributeValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                entityValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                attributeValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -417,6 +434,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             attributeValues.ResetBindings();
             subjectAreaValues.ResetBindings();
         }
+        #endregion
 
         public ITemporalData GetTemporal(IModelIndex key)
         { return entityValues.GetTemporal(key); }

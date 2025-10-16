@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -25,7 +26,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// List of Scripting Nodes for the Template
         /// </summary>
         ITemplateNodeData Nodes { get; }
-
 
         /// <summary>
         /// List of Scripting Node owners for the Template.
@@ -62,22 +62,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ITemplateInputData TemplateSources { get { return templateSources; } }
         TemplateInputData templateSources = new TemplateInputData();
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
+        public Template() : base()
         {
-            get
+            templateValues.ListChanged += OnListChanged;
+            templateNodes.ListChanged += OnListChanged;
+            templateNodeOwners.ListChanged += OnListChanged;
+            templateSources.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
             {
-                return templateValues.RaiseListChangedEvents
-                    && templateNodes.RaiseListChangedEvents
-                    && templateNodeOwners.RaiseListChangedEvents
-                    && templateSources.RaiseListChangedEvents;
-            }
-            set
-            {
-                templateValues.RaiseListChangedEvents = value;
-                templateNodes.RaiseListChangedEvents = value;
-                templateNodeOwners.RaiseListChangedEvents = value;
-                templateSources.RaiseListChangedEvents = value;
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
             }
         }
 
@@ -265,6 +260,36 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateSources.Clear();
         }
 
+        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<TemplateValue, INamedScopeSourceValue?>? getParent)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope, getParent));
+            return work;
+        }
+
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return templateValues.RaiseListChangedEvents
+                    && templateNodes.RaiseListChangedEvents
+                    && templateNodeOwners.RaiseListChangedEvents
+                    && templateSources.RaiseListChangedEvents;
+            }
+            set
+            {
+                templateValues.RaiseListChangedEvents = value;
+                templateNodes.RaiseListChangedEvents = value;
+                templateNodeOwners.RaiseListChangedEvents = value;
+                templateSources.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -273,13 +298,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateNodeOwners.ResetBindings();
             templateSources.ResetBindings();
         }
-
-        public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<TemplateValue, INamedScopeSourceValue?>? getParent)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(NameSpaceSource.Load<TemplateData, TemplateValue>(templateValues, addNamedScope, getParent));
-            return work;
-        }
-
+        #endregion
     }
 }

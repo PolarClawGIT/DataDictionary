@@ -91,29 +91,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IProcessSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly ProcessSubjectAreaData subjectAreaValues;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return ProcessValues.RaiseListChangedEvents
-                    && aliasValues.RaiseListChangedEvents
-                    && propertyValues.RaiseListChangedEvents
-                    && definitionValues.RaiseListChangedEvents
-                    && ArgumentValues.RaiseListChangedEvents
-                    && subjectAreaValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                ProcessValues.RaiseListChangedEvents = value;
-                aliasValues.RaiseListChangedEvents = value;
-                propertyValues.RaiseListChangedEvents = value;
-                definitionValues.RaiseListChangedEvents = value;
-                ArgumentValues.RaiseListChangedEvents = value;
-                subjectAreaValues.RaiseListChangedEvents = value;
-            }
-        }
-
         public Process() : base()
         {
             ProcessValues = new ProcessData();
@@ -122,6 +99,19 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues = new ProcessPropertyData();
             ArgumentValues = new ProcessArgumentData();
             subjectAreaValues = new ProcessSubjectAreaData();
+
+            ProcessValues.ListChanged += OnListChanged;
+            aliasValues.ListChanged += OnListChanged;
+            definitionValues.ListChanged += OnListChanged;
+            propertyValues.ListChanged += OnListChanged;
+            ArgumentValues.ListChanged += OnListChanged;
+            subjectAreaValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         /// <inheritdoc/>
@@ -317,6 +307,33 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return ProcessValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && ArgumentValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                ProcessValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                ArgumentValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -327,6 +344,9 @@ namespace DataDictionary.BusinessLayer.AppModel
             ArgumentValues.ResetBindings();
             subjectAreaValues.ResetBindings();
         }
+        #endregion
+
+
 
         public ITemporalData GetTemporal(IModelIndex key)
         { return ProcessValues.GetTemporal(key); }

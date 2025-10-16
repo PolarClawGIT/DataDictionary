@@ -2,6 +2,7 @@
 
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -94,27 +95,6 @@ namespace DataDictionary.BusinessLayer.AppModel
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return attributeValues.RaiseListChangedEvents
-                    && aliasValues.RaiseListChangedEvents
-                    && propertyValues.RaiseListChangedEvents
-                    && definitionValues.RaiseListChangedEvents
-                    && subjectAreaValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                attributeValues.RaiseListChangedEvents = value;
-                aliasValues.RaiseListChangedEvents = value;
-                propertyValues.RaiseListChangedEvents = value;
-                definitionValues.RaiseListChangedEvents = value;
-                subjectAreaValues.RaiseListChangedEvents = value;
-            }
-        }
-
         public Attribute(
             TryGetValue<IPropertyIndex,IPropertyValue> properties,
             TryGetValue<IDefinitionIndex,IDefinitionValue> definitions) :
@@ -125,6 +105,18 @@ namespace DataDictionary.BusinessLayer.AppModel
             propertyValues = new AttributePropertyData(properties);
             definitionValues = new AttributeDefinitionData(definitions);
             subjectAreaValues = new AttributeSubjectAreaData();
+
+            attributeValues.ListChanged += OnListChanged;
+            aliasValues.ListChanged += OnListChanged;
+            propertyValues.ListChanged += OnListChanged;
+            definitionValues.ListChanged += OnListChanged;
+            subjectAreaValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         public Attribute (IPropertyData properties, IDefinitionData definitions) : 
@@ -368,6 +360,31 @@ namespace DataDictionary.BusinessLayer.AppModel
             subjectAreaValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return attributeValues.RaiseListChangedEvents
+                    && aliasValues.RaiseListChangedEvents
+                    && propertyValues.RaiseListChangedEvents
+                    && definitionValues.RaiseListChangedEvents
+                    && subjectAreaValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                attributeValues.RaiseListChangedEvents = value;
+                aliasValues.RaiseListChangedEvents = value;
+                propertyValues.RaiseListChangedEvents = value;
+                definitionValues.RaiseListChangedEvents = value;
+                subjectAreaValues.RaiseListChangedEvents = value;
+            }
+        }
+        
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -377,6 +394,7 @@ namespace DataDictionary.BusinessLayer.AppModel
             definitionValues.ResetBindings();
             subjectAreaValues.ResetBindings();
         }
+        #endregion
 
         /// <inheritdoc/>
         public ITemporalData GetTemporal(IAttributeIndex key)

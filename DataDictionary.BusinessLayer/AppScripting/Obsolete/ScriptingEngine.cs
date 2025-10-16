@@ -9,6 +9,7 @@ using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -347,6 +348,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateSources.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -358,8 +363,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             sourceObjects.ResetBindings();
             templateSources.ResetBindings();
         }
-
-
 
         /// <inheritdoc/>
         public Boolean RaiseListChangedEvents
@@ -385,5 +388,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 templateSources.RaiseListChangedEvents = value;
             }
         }
+        #endregion
     }
 }

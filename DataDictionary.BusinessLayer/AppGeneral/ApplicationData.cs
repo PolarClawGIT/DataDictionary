@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -61,6 +62,26 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         public IDefinitionData Definitions { get { return definitionValues; } }
         private readonly DefinitionData definitionValues = new DefinitionData();
 
+        /// <summary>
+        /// Constructor for the Application data.
+        /// </summary>
+        public ApplicationData() : base()
+        {
+            helpSubjectValues.ListChanged += OnListChanged;
+            propertyValues.ListChanged += OnListChanged;
+            definitionValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
+        }
+
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
         /// <inheritdoc/>
         public Boolean RaiseListChangedEvents
         {
@@ -77,6 +98,15 @@ namespace DataDictionary.BusinessLayer.AppGeneral
                 definitionValues.RaiseListChangedEvents = value;
             }
         }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            helpSubjectValues.ResetBindings();
+            propertyValues.ResetBindings();
+            definitionValues.ResetBindings();
+        }
+        #endregion
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -155,12 +185,5 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             definitionValues.Clear();
         }
 
-        /// <inheritdoc/>
-        public void ResetBindings()
-        {
-            helpSubjectValues.ResetBindings();
-            propertyValues.ResetBindings();
-            definitionValues.ResetBindings();
-        }
     }
 }
