@@ -69,7 +69,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { formBinding.Load(binding, onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            {
+                SendMessage(new RefreshNavigation());
+                RefreshButtons();
+            }
         }
 
 
@@ -78,12 +81,28 @@ namespace DataDictionary.Main.Forms.Scripting
             base.SaveToDatabaseCommand_Click(sender, e);
         }
 
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            {
+                formBinding.Remove(binding);
+                SendMessage(new RefreshNavigation());
+                RefreshButtons();
+            }
+
+        }
+
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
         }
 
         private void BindingManager_CurrentChanged(object sender, EventArgs e)
+        { RefreshButtons(); }
+
+        void RefreshButtons()
         {
             if (formBinding.TryGetValue(out BindingValue? current))
             {

@@ -15,7 +15,7 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="IBindingList.ListChanged"/>
         event ListChangedEventHandler ListChanged;
 
-        //<Example/>
+        //Example:
         //public SomeObject() : base()
         //{
         //    someBindingList.ListChanged += OnListChanged;
@@ -26,6 +26,11 @@ namespace Toolbox.BindingTable
         //        { handler(sender, e); }
         //    }
         //}
+        //
+        //Note: I have had lots of issues with the ListChanged event.
+        //It does not always bubble up as expected thru interfaces or inhreted classes.
+        //Interfaces do not have an instance so I cannot put event related code in one spot.
+        //Instead the code has to be copied all over the place and is prone to errors.
 
         /// <inheritdoc cref="BindingList{T}.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; }
@@ -69,5 +74,8 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="IBindingList.Clear"/>
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
         new void Clear() { ((IBindingList)this).Clear(); }
+
+        /// <inheritdoc cref="IBindingList.ListChanged"/>
+        new event ListChangedEventHandler ListChanged;
     }
 }
