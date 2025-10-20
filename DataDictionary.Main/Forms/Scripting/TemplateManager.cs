@@ -52,6 +52,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingManager, nameof(BindingValue.Title)));
                 descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingManager, nameof(BindingValue.Description)));
+
+                // Security
+                //IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
+                newTemplate.Enabled = formBinding.GetAuthorization(CommandType.Add);
+                newDataSource.Enabled = formBinding.GetAuthorization(CommandType.Add);
             }
         }
 

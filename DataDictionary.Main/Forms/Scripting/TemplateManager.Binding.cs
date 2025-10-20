@@ -172,6 +172,20 @@ namespace DataDictionary.Main.Forms.Scripting
                     else { item.InModel = false; }
                 }
             }
+
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                switch (command)
+                {
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    default: return false;
+                }
+            }
         }
 
         class BindingValue : IBindingPropertyChanged,
