@@ -1,7 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -93,14 +95,59 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { return false; }
             }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out ITemplateNodeValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateNodeValue? result)
             {
                 if (TemplateNodeBinding.Position >= 0
-                    && TemplateNodeBinding.Current is ITemplateNodeValue value)
+                    && TemplateNodeBinding.Current is TemplateNodeValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
+            public TemplateNodeValue NewValue(TemplateIndex template)
+            {
+                TemplateNodeValue newValue = new TemplateNodeValue(template);
+                templateNodes.Add(newValue);
+                SetPosition(newValue);
+                return newValue;
+            }
+
+            public void RemoveValue()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                { templateNodes.Remove(value); }
+            }
+
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                Boolean isGrant = false;
+                Boolean isNode = TryGetValue(out _);
+                SecurableIndex securable = templateIndex;
+                isGrant = BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner
+                    || BusinessData.Authorization.IsGrant(securable);
+
+                switch (command)
+                {
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return isGrant;
+                    case Enumerations.CommandType.Delete: return isGrant && isNode;
+                    case Enumerations.CommandType.OpenDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.SaveDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.DeleteDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.HistoryDatabase: return isGrant && isNode;
+                    default: return false;
+                }
+            }
+
+            public Boolean GetLocked()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
+            }
         }
     }
 }

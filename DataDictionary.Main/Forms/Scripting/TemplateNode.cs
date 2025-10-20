@@ -77,7 +77,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.SetPosition(nodeIndex);
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.NodeName)));
 
@@ -93,17 +92,31 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
                 modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.ModelPropertyId)));
+
+                // Security
+                if (formBinding.TryGetValue(out TemplateNodeValue? value))
+                { IsLocked(formBinding.GetLocked()); }
+                else
+                { nodeLayout.Enabled = false; }
+
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            formBinding.NewValue(templateIndex);
+            IsLocked(formBinding.GetLocked());
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveValue();
+            nodeLayout.Enabled = false; 
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)

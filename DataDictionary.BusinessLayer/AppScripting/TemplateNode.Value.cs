@@ -24,8 +24,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingTemplateNode; } }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="TemplateNodeItem()"/>
         public TemplateNodeValue() : base()
+        {
+            dataValue = new DataValue(this)
+            {
+                GetIndex = () => new TemplateNodeIndex(this),
+                GetScope = () => Scope,
+                GetTitle = () => NodeName ?? Scope.GetEnumeration().Name,
+                IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
+            };
+        }
+
+        /// <inheritdoc cref="TemplateNodeItem(ITemplateKey)"/>
+        public TemplateNodeValue(TemplateIndex template): base(template)
         {
             dataValue = new DataValue(this)
             {

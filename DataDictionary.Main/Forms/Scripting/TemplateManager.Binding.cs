@@ -178,6 +178,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 switch (command)
                 {
                     case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return BusinessData.Authorization.IsScriptAdmin;
                     case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsScriptAdmin;
                     case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin;
                     case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin;

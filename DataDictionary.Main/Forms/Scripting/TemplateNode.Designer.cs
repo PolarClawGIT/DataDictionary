@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel attributeLayout;
             TabControl nodeOptions;
             TabPage valueTab;
             TableLayoutPanel nodeValueLayout;
             TabPage ownershipTab;
             TableLayoutPanel ownershipLayout;
+            nodeLayout = new TableLayoutPanel();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             fixedValueData = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -51,13 +51,12 @@
             templateData = new DataDictionary.Main.Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             bindingTemplateNode = new BindingSource(components);
-            attributeLayout = new TableLayoutPanel();
             nodeOptions = new TabControl();
             valueTab = new TabPage();
             nodeValueLayout = new TableLayoutPanel();
             ownershipTab = new TabPage();
             ownershipLayout = new TableLayoutPanel();
-            attributeLayout.SuspendLayout();
+            nodeLayout.SuspendLayout();
             nodeOptions.SuspendLayout();
             valueTab.SuspendLayout();
             nodeValueLayout.SuspendLayout();
@@ -68,29 +67,29 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplateNode).BeginInit();
             SuspendLayout();
             // 
-            // attributeLayout
+            // nodeLayout
             // 
-            attributeLayout.ColumnCount = 3;
-            attributeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
-            attributeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-            attributeLayout.ColumnStyles.Add(new ColumnStyle());
-            attributeLayout.Controls.Add(nodeNameData, 1, 1);
-            attributeLayout.Controls.Add(nodeOptions, 1, 3);
-            attributeLayout.Controls.Add(renderValueAsData, 2, 1);
-            attributeLayout.Controls.Add(renderOrderData, 2, 2);
-            attributeLayout.Controls.Add(nodeNavigation, 0, 1);
-            attributeLayout.Controls.Add(templateData, 0, 0);
-            attributeLayout.Dock = DockStyle.Fill;
-            attributeLayout.Location = new Point(0, 25);
-            attributeLayout.Name = "attributeLayout";
-            attributeLayout.RowCount = 4;
-            attributeLayout.RowStyles.Add(new RowStyle());
-            attributeLayout.RowStyles.Add(new RowStyle());
-            attributeLayout.RowStyles.Add(new RowStyle());
-            attributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            attributeLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            attributeLayout.Size = new Size(800, 425);
-            attributeLayout.TabIndex = 4;
+            nodeLayout.ColumnCount = 3;
+            nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            nodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
+            nodeLayout.ColumnStyles.Add(new ColumnStyle());
+            nodeLayout.Controls.Add(nodeNameData, 1, 1);
+            nodeLayout.Controls.Add(nodeOptions, 1, 3);
+            nodeLayout.Controls.Add(renderValueAsData, 2, 1);
+            nodeLayout.Controls.Add(renderOrderData, 2, 2);
+            nodeLayout.Controls.Add(nodeNavigation, 0, 1);
+            nodeLayout.Controls.Add(templateData, 0, 0);
+            nodeLayout.Dock = DockStyle.Fill;
+            nodeLayout.Location = new Point(0, 25);
+            nodeLayout.Name = "nodeLayout";
+            nodeLayout.RowCount = 4;
+            nodeLayout.RowStyles.Add(new RowStyle());
+            nodeLayout.RowStyles.Add(new RowStyle());
+            nodeLayout.RowStyles.Add(new RowStyle());
+            nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            nodeLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            nodeLayout.Size = new Size(800, 425);
+            nodeLayout.TabIndex = 4;
             // 
             // nodeNameData
             // 
@@ -107,7 +106,7 @@
             // 
             // nodeOptions
             // 
-            attributeLayout.SetColumnSpan(nodeOptions, 2);
+            nodeLayout.SetColumnSpan(nodeOptions, 2);
             nodeOptions.Controls.Add(valueTab);
             nodeOptions.Controls.Add(ownershipTab);
             nodeOptions.Dock = DockStyle.Fill;
@@ -308,14 +307,14 @@
             nodeNavigation.Dock = DockStyle.Fill;
             nodeNavigation.Location = new Point(3, 53);
             nodeNavigation.Name = "nodeNavigation";
-            attributeLayout.SetRowSpan(nodeNavigation, 3);
+            nodeLayout.SetRowSpan(nodeNavigation, 3);
             nodeNavigation.Size = new Size(193, 369);
             nodeNavigation.TabIndex = 12;
             // 
             // templateData
             // 
             templateData.AutoSize = true;
-            attributeLayout.SetColumnSpan(templateData, 3);
+            nodeLayout.SetColumnSpan(templateData, 3);
             templateData.Dock = DockStyle.Fill;
             templateData.HeaderText = "Template";
             templateData.Location = new Point(3, 3);
@@ -331,13 +330,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(attributeLayout);
+            Controls.Add(nodeLayout);
             Name = "TemplateNode";
             Text = "Template Node";
             Load += TemplateNode_Load;
-            Controls.SetChildIndex(attributeLayout, 0);
-            attributeLayout.ResumeLayout(false);
-            attributeLayout.PerformLayout();
+            Controls.SetChildIndex(nodeLayout, 0);
+            nodeLayout.ResumeLayout(false);
+            nodeLayout.PerformLayout();
             nodeOptions.ResumeLayout(false);
             valueTab.ResumeLayout(false);
             nodeValueLayout.ResumeLayout(false);
@@ -370,5 +369,6 @@
         private TreeView nodeNavigation;
         private BindingSource bindingTemplate;
         private BindingSource bindingTemplateNode;
+        private TableLayoutPanel nodeLayout;
     }
 }
