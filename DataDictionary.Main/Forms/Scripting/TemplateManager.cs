@@ -79,6 +79,15 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Save(binding, onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                SendMessage(new RefreshNavigation());
+                RefreshButtons();
+            }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -97,6 +106,15 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Delete(binding, onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                SendMessage(new RefreshNavigation());
+                RefreshButtons();
+            }
         }
 
         private void BindingManager_CurrentChanged(object sender, EventArgs e)

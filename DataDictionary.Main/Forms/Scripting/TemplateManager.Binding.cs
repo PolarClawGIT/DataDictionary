@@ -23,6 +23,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 var templates = ITemplateData.Create();
                 var sources = IDataSourceData.Create();
+                ManagerBinding.RaiseListChangedEvents = false;
 
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -66,7 +67,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     RefreshInModel();
                 }
-
             }
 
             public Boolean TryGetValue([NotNullWhen(true)] out BindingValue? result)
@@ -108,6 +108,58 @@ namespace DataDictionary.Main.Forms.Scripting
                 { BusinessData.Scripting.Remove(dataSource); }
 
                 RefreshInModel();
+            }
+
+            public void Save(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                { work.AddRange(BusinessData.Scripting.Save(factory, template)); }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                { work.AddRange(BusinessData.Scripting.Save(factory, dataSource)); }
+
+                DoWork(work, WorkComplete);
+
+                void WorkComplete(RunWorkerCompletedEventArgs args)
+                {
+                    RefreshInModel();
+
+                    if (onComplete is not null)
+                    { onComplete(args); }
+                }
+            }
+
+            public void Delete(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                {
+                    work.AddRange(BusinessData.Scripting.Delete(template));
+                    work.AddRange(BusinessData.Scripting.Save(factory, template));
+                }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                {
+                    work.AddRange(BusinessData.Scripting.Delete(dataSource));
+                    work.AddRange(BusinessData.Scripting.Save(factory, dataSource));
+                }
+
+                DoWork(work, WorkComplete);
+
+                void WorkComplete(RunWorkerCompletedEventArgs args)
+                {
+                    RefreshInModel();
+
+                    if (onComplete is not null)
+                    { onComplete(args); }
+                }
             }
 
             private void RefreshInModel()
