@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -21,6 +22,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public required BindingSource NodeBinding { private get; init; }
+            BindingView<TemplateNodeValue> templateNodes =
+                new BindingView<TemplateNodeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource NodeOwnerBinding { private get; init; }
+            BindingView<TemplateNodeOwnerValue> templateNodeOwners =
+                new BindingView<TemplateNodeOwnerValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
             public required BindingSource DataSourceBinding { private get; init; }
             BindingView<TemplateInputValue> dataSources =
                 new BindingView<TemplateInputValue>([])
@@ -32,20 +43,29 @@ namespace DataDictionary.Main.Forms.Scripting
             public void Load(TemplateIndex template)
             {
                 TemplateBinding.RaiseListChangedEvents = false;
+                NodeBinding.RaiseListChangedEvents = false;
+                NodeOwnerBinding.RaiseListChangedEvents = false;
                 DataSourceBinding.RaiseListChangedEvents = false;
 
                 templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
+                templateNodes = new BindingView<TemplateNodeValue>(data.Nodes, w => template.Equals(w));
+                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(data.NodeOwners, w => template.Equals(w));
                 dataSources = new BindingView<TemplateInputValue>(data.TemplateSources, w => template.Equals(w));
 
                 TemplateBinding.DataSource = templates;
+                NodeBinding.DataSource = templateNodes;
+                NodeOwnerBinding.DataSource = templateNodeOwners;
                 DataSourceBinding.DataSource = dataSources;
 
                 TemplateBinding.RaiseListChangedEvents = true;
+                NodeBinding.RaiseListChangedEvents = true;
+                NodeOwnerBinding.RaiseListChangedEvents = true;
                 DataSourceBinding.RaiseListChangedEvents = true;
 
                 TemplateBinding.ResetBindings(false);
+                NodeBinding.ResetBindings(false);
+                NodeOwnerBinding.ResetBindings(false);
                 DataSourceBinding.ResetBindings(false);
-
             }
 
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
@@ -106,6 +126,13 @@ namespace DataDictionary.Main.Forms.Scripting
                     && TemplateBinding.Current is TemplateValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+
+            public void BuildTree(TreeView tree)
+            {
+                if (TryGetValue(out TemplateValue? template))
+                { tree.BuildTree(template, templateNodes, templateNodeOwners); }
             }
         }
 

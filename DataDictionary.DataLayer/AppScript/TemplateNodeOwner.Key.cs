@@ -38,6 +38,16 @@ namespace DataDictionary.DataLayer.AppScript
             else { NodeOwnerId = Guid.Empty; }
         }
 
+        /// <summary>
+        /// Constructor for the Node Owner Key of the Scripting Template Node.
+        /// </summary>
+        /// <param name="source"></param>
+        public TemplateNodeOwnerKey(ITemplateNodeKey source): this()
+        {
+            if (source.NodeId is Guid) { NodeOwnerId = source.NodeId; }
+            else { NodeOwnerId = Guid.Empty; }
+        }
+
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TemplateNodeOwnerKey? other)

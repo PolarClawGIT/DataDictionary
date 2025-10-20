@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows.Forms.VisualStyles;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -22,9 +23,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource TemplateNodeBinding { private get; init; }
+            public required BindingSource NodeBinding { private get; init; }
             BindingView<TemplateNodeValue> templateNodes =
                 new BindingView<TemplateNodeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource NodeOwnerBinding { private get; init; }
+            BindingView<TemplateNodeOwnerValue> templateNodeOwners =
+                new BindingView<TemplateNodeOwnerValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             ITemplate data = BusinessData.Scripting;
@@ -35,18 +41,24 @@ namespace DataDictionary.Main.Forms.Scripting
             public void Load(TemplateIndex template)
             {
                 TemplateBinding.RaiseListChangedEvents = false;
-                TemplateNodeBinding.RaiseListChangedEvents = false;
+                NodeBinding.RaiseListChangedEvents = false;
+                NodeOwnerBinding.RaiseListChangedEvents = false;
 
                 templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
                 templateNodes = new BindingView<TemplateNodeValue>(data.Nodes, w => template.Equals(w));
+                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(data.NodeOwners, w => template.Equals(w));
 
                 TemplateBinding.DataSource = templates;
-                TemplateNodeBinding.DataSource = templateNodes;
+                NodeBinding.DataSource = templateNodes;
+                NodeOwnerBinding.DataSource = templateNodeOwners;
 
                 TemplateBinding.RaiseListChangedEvents = true;
-                TemplateNodeBinding.RaiseListChangedEvents = true;
+                NodeBinding.RaiseListChangedEvents = true;
+                NodeOwnerBinding.RaiseListChangedEvents = true;
+
                 TemplateBinding.ResetBindings(false);
-                TemplateNodeBinding.ResetBindings(false);
+                NodeBinding.ResetBindings(false);
+                NodeOwnerBinding.ResetBindings(false);
             }
 
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
@@ -91,14 +103,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateNodeIndex key = new TemplateNodeIndex(node);
 
                 if (templateNodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue value)
-                { TemplateNodeBinding.Position = templateNodes.IndexOf(value); return true; }
+                { NodeBinding.Position = templateNodes.IndexOf(value); return true; }
                 else { return false; }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
+            {
+                if (TemplateBinding.Position >= 0
+                    && TemplateBinding.Current is TemplateValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
             }
 
             public Boolean TryGetValue([NotNullWhen(true)] out TemplateNodeValue? result)
             {
-                if (TemplateNodeBinding.Position >= 0
-                    && TemplateNodeBinding.Current is TemplateNodeValue value)
+                if (NodeBinding.Position >= 0
+                    && NodeBinding.Current is TemplateNodeValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
@@ -120,11 +140,15 @@ namespace DataDictionary.Main.Forms.Scripting
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {
                 Boolean isGrant = false;
-                Boolean isNode = TryGetValue(out _);
-                SecurableIndex securable = templateIndex;
+                Boolean isNode = TryGetValue(out TemplateNodeValue? _);
+
+                SecurableIndex? templateKey = null;
+                if(TryGetValue(out TemplateValue? templateValue))
+                { templateKey = new TemplateIndex(templateValue); }
+
                 isGrant = BusinessData.Authorization.IsScriptAdmin
                     || BusinessData.Authorization.IsScriptOwner
-                    || BusinessData.Authorization.IsGrant(securable);
+                    || BusinessData.Authorization.IsGrant(templateKey);
 
                 switch (command)
                 {
@@ -147,6 +171,12 @@ namespace DataDictionary.Main.Forms.Scripting
                         or DataRowState.Deleted;
                 }
                 else return true;
+            }
+
+            public void BuildTree(TreeView tree)
+            {
+                if (TryGetValue(out TemplateValue? template))
+                { tree.BuildTree(template, templateNodes, templateNodeOwners); }
             }
         }
     }

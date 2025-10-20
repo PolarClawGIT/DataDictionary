@@ -25,5 +25,17 @@
             { result = enumeration.Value; return true; }
             else { result = ScopeType.Null; return false; }
         }
+
+        /// <summary>
+        /// Gets the Name of the Scope Enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static String GetName(this ScopeType value)
+        {
+            if (ScopeEnumeration.TryGetValue(value, out ScopeEnumeration? scope))
+            { return scope.Name; }
+            else { return String.Empty; }
+        }
     }
 }

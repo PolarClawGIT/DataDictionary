@@ -27,7 +27,8 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
-                TemplateNodeBinding = bindingTemplateNode,
+                NodeBinding = bindingNode,
+                NodeOwnerBinding = bindingNodeOwner,
                 DoWork = base.DoWork
             };
 
@@ -78,20 +79,20 @@ namespace DataDictionary.Main.Forms.Scripting
             void DoBinding()
             {
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.NodeName)));
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName)));
 
                 RenderValueAsList.Load(renderValueAsData);
-                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.RenderValueAs)));
+                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.RenderValueAs)));
 
-                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.NodeOrder)));
-                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.FixedValue)));
+                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeOrder)));
+                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.FixedValue)));
 
                 ScopeNameList.Load(objectScopeData);
-                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.ObjectScope)));
-                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(ITemplateNodeValue.ObjectProperty)));
+                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ObjectScope)));
+                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
 
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
-                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(ITemplateNodeValue.ModelPropertyId)));
+                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId)));
 
                 // Security
                 if (formBinding.TryGetValue(out TemplateNodeValue? value))
@@ -115,7 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
             formBinding.RemoveValue();
-            nodeLayout.Enabled = false; 
+            nodeLayout.Enabled = false;
             SetAuthorization(formBinding.GetAuthorization);
         }
 
@@ -138,5 +139,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
         }
+
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
+
+        private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
     }
 }

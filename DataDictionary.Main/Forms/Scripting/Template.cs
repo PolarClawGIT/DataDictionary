@@ -29,6 +29,8 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
+                NodeBinding = bindingNode,
+                NodeOwnerBinding = bindingNodeOwner,
                 DataSourceBinding = bindingTemplateData,
                 DoWork = base.DoWork
             };
@@ -85,7 +87,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                
+
                 rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
                 rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
                 rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().ToList();
@@ -107,6 +109,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 scriptingPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                formBinding.BuildTree(nodeTreeView);
             }
         }
 
@@ -206,5 +210,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 () => new Forms.Scripting.TemplateNode(templateIndex),
                 (form) => form.IsOpenItem(templateIndex));
         }
+
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
+
+        private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
     }
 }
