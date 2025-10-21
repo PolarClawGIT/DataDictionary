@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (formBinding.TryGetValue(out TemplateNodeValue? value))
                 { IsLocked(formBinding.GetLocked()); }
                 else
-                { nodeLayout.Enabled = false; }
+                { nodeDetailLayout.Enabled = false; }
 
                 SetAuthorization(formBinding.GetAuthorization);
             }
@@ -110,6 +110,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.AddCommand_Click(sender, e);
             formBinding.NewValue(templateIndex);
+            nodeDetailLayout.Enabled = true;
             IsLocked(formBinding.GetLocked());
             SetAuthorization(formBinding.GetAuthorization);
         }
@@ -118,7 +119,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
             formBinding.RemoveValue();
-            nodeLayout.Enabled = false;
+            nodeDetailLayout.Enabled = false;
             SetAuthorization(formBinding.GetAuthorization);
         }
 
