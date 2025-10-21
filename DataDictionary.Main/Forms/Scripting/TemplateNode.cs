@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.ScriptingTemplateNode);
             SetTitle(bindingTemplate);
-            SetRowState(bindingTemplate);
+            SetRowState(bindingNode, bindingNodeOwner);
 
             SetCommand(ScopeType.ScriptingTemplateNode,
                 CommandType.Add,
@@ -78,6 +78,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
+                formBinding.SetPosition(nodeIndex);
+
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName)));
 
@@ -145,5 +147,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
         { formBinding.BuildTree(nodeTreeView); }
+
+        private void NodeTreeView_NodeSelected(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Need to get the Hit Location itself because the flag may have been reset.
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && e.Node.TryGetValue(out TemplateNodeValue? value))
+            { formBinding.SetPosition(value); }
+        }
     }
 }

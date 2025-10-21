@@ -4,6 +4,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace DataDictionary.Main.Forms.Scripting
         /// <param name="node"></param>
         /// <param name="templateNode"></param>
         /// <returns></returns>
-        public static Boolean TryGetValue(this TreeNode node, out TemplateNodeValue? templateNode)
+        public static Boolean TryGetValue(this TreeNode node, [NotNullWhen(true)] out TemplateNodeValue? templateNode)
         {
             if (node.TreeView is TreeView tree && treeControls.ContainsKey(tree) 
                 && treeControls[tree].TryGetValue(node, out TemplateNodeValue? result))

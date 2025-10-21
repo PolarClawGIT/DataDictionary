@@ -312,6 +312,7 @@
             nodeLayout.SetRowSpan(nodeTreeView, 3);
             nodeTreeView.Size = new Size(193, 369);
             nodeTreeView.TabIndex = 12;
+            nodeTreeView.NodeMouseClick += NodeTreeView_NodeSelected;
             // 
             // templateData
             // 

@@ -216,5 +216,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
         { formBinding.BuildTree(nodeTreeView); }
+
+        private void NodeTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Need to get the Hit Location itself because the flag may have been reset.
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && e.Node.TryGetValue(out TemplateNodeValue? value))
+            {
+                Activate(
+                    () => new Forms.Scripting.TemplateNode(templateIndex, value),
+                    (form) => form.IsOpenItem(templateIndex));
+            }
+        }
     }
 }
