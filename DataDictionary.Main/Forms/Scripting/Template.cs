@@ -117,26 +117,54 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveValue();
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            formBinding.RemoveValue();
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(templateIndex))
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out TemplateValue? template))
+                    { return new Template(template, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to AttributeValue"); }
+                }
+            });
         }
 
         private void DocumentDirectoryData_SelectCommand(object sender, EventArgs e)

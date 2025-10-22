@@ -1,8 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -105,12 +107,39 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public void Save(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
+                work.AddRange(data.Save(factory, template));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(template);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public ITemporalData GetTemporal(TemplateIndex template)
+            { return data.GetTemporal(template); }
+
             public TemplateValue NewValue()
             {
                 TemplateValue result = new TemplateValue();
                 data.Templates.Add(result);
 
                 return result;
+            }
+
+            public void RemoveValue()
+            {
+                if (TryGetValue(out TemplateValue? value))
+                { templates.Remove(value); }
             }
 
             public TemplateInputValue NewDataSource()
@@ -128,6 +157,41 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                Boolean isGrant = false;
+                Boolean isNode = TryGetValue(out TemplateValue? _);
+
+                SecurableIndex? templateKey = null;
+                if (TryGetValue(out TemplateValue? templateValue))
+                { templateKey = new TemplateIndex(templateValue); }
+
+                isGrant = BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner
+                    || BusinessData.Authorization.IsGrant(templateKey);
+
+                switch (command)
+                {
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return isGrant;
+                    case Enumerations.CommandType.Delete: return isGrant && isNode;
+                    case Enumerations.CommandType.OpenDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.SaveDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.DeleteDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.HistoryDatabase: return isGrant && isNode;
+                    default: return false;
+                }
+            }
+
+            public Boolean GetLocked()
+            {
+                if (TryGetValue(out TemplateValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
+            }
 
             public void BuildTree(TreeView tree)
             {

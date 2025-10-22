@@ -126,21 +126,47 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            formBinding.RemoveValue();
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(templateIndex))
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out TemplateValue? template))
+                    { return new TemplateNode(template, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to AttributeValue"); }
+                }
+            });
         }
 
         private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)

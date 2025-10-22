@@ -98,6 +98,27 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public void Save(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
+                work.AddRange(data.Save(factory, template));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(template);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public ITemporalData GetTemporal(TemplateIndex template)
+            { return data.GetTemporal(template); }
+
             public Boolean SetPosition(ITemplateNodeIndex node)
             {
                 TemplateNodeIndex key = new TemplateNodeIndex(node);
