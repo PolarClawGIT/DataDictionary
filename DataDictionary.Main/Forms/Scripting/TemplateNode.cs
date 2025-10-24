@@ -28,8 +28,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 DoWork = base.DoWork
             };
 
-            SetIcon(ScopeType.ScriptingTemplateNode);
-            SetTitle(bindingTemplate);
+            SetIcon(ScopeType.ScriptingTemplateNode); // Set the Default,
+            SetTitle(bindingNode);
+
             SetRowState(bindingNode, bindingNodeOwner);
 
             SetCommand(ScopeType.ScriptingTemplateNode,

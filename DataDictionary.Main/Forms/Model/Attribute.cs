@@ -34,13 +34,15 @@ namespace DataDictionary.Main.Forms.Model
             };
             formBinding.Init();
 
+            SetTitle(bindingAttribute);
+
             SetRowState(
                 bindingAttribute,
                 bindingProperty,
                 bindingDefinition,
                 bindingAlias,
                 bindingSubjectArea);
-            SetTitle(bindingAttribute);
+            
             SetCommand(ScopeType.ModelAttribute,
                 Enumerations.CommandType.Delete,
                 Enumerations.CommandType.OpenDatabase,

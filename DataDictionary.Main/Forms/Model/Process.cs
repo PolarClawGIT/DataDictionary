@@ -35,6 +35,8 @@ namespace DataDictionary.Main.Forms.Model
             };
             formBinding.Init();
 
+            SetTitle(bindingProcess);
+
             SetRowState(
                 bindingProcess,
                 bindingProperty,
@@ -43,7 +45,6 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea,
                 bindingArgument);
 
-            SetTitle(bindingProcess);
             SetCommand(ScopeType.ModelProcess,
                 CommandType.Delete,
                 CommandType.OpenDatabase,

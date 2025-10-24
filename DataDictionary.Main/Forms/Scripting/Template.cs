@@ -35,7 +35,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 DoWork = base.DoWork
             };
 
-            SetIcon(ScopeType.ScriptingTemplate);
             SetTitle(bindingTemplate);
             SetRowState(bindingTemplate);
 

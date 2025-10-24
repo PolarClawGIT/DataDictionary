@@ -20,6 +20,7 @@ namespace DataDictionary.Main.Forms.Model
             newModelCommand.Image = ScopeType.Model.GetImage(CommandType.Add);
 
             SetIcon(ScopeType.Model);
+
             SetCommand(ScopeType.Model,
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase,

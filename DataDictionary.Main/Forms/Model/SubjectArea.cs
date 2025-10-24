@@ -18,8 +18,8 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
-            SetRowState(bindingSubject);
             SetTitle(bindingSubject);
+            SetRowState(bindingSubject);
             SetCommand(ScopeType.ModelSubjectArea,
                 Enumerations.CommandType.Delete);
         }

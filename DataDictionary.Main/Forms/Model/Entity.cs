@@ -39,6 +39,8 @@ namespace DataDictionary.Main.Forms.Model
             };
             formBinding.Init();
 
+            SetTitle(bindingEntity);
+
             SetRowState(
                 bindingEntity,
                 bindingProperty,
@@ -46,7 +48,7 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAlias,
                 bindingSubjectArea,
                 bindingAttribute);
-            SetTitle(bindingEntity);
+            
             SetCommand(ScopeType.ModelEntity,
                 CommandType.Delete,
                 CommandType.OpenDatabase,
