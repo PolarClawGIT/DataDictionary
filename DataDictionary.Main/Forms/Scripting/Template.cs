@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
-            newNodeCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            newNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
             documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
             transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
 
@@ -207,7 +207,6 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryData_Validated(object sender, EventArgs e)
         { scriptingPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, scriptingDirectoryData.Text); }
 
-
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedValue is DirectoryType value
@@ -235,7 +234,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void NewNodeCommand_Click(object sender, EventArgs e)
         {
             Activate(
-                () => new Forms.Scripting.TemplateNode(templateIndex),
+                () => formBinding.OpenNode((data, index) => new Forms.Scripting.TemplateNode(data, index)),
                 (form) => form.IsOpenItem(templateIndex));
         }
 
@@ -253,9 +252,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && e.Node.TryGetValue(out TemplateNodeValue? value))
             {
-                Activate(
-                    () => new Forms.Scripting.TemplateNode(templateIndex, value),
+                var nodeForm = Activate(
+                    () => formBinding.OpenNode((data,index) => new Forms.Scripting.TemplateNode(data,index)),
                     (form) => form.IsOpenItem(templateIndex));
+
+                nodeForm.SetTemplateNode(value);
             }
         }
     }

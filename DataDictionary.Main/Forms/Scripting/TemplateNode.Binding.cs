@@ -1,11 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms.VisualStyles;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -16,7 +14,6 @@ namespace DataDictionary.Main.Forms.Scripting
         class FormBinding
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-            //public required Action OnRefresh { get; init; }
 
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> templates =
@@ -33,7 +30,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateNodeOwnerValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            ITemplate data = BusinessData.Scripting;
+            public ITemplate Data { private get; set; } = BusinessData.Scripting;
 
             public FormBinding()
             { }
@@ -44,9 +41,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeBinding.RaiseListChangedEvents = false;
                 NodeOwnerBinding.RaiseListChangedEvents = false;
 
-                templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
-                templateNodes = new BindingView<TemplateNodeValue>(data.Nodes, w => template.Equals(w));
-                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(data.NodeOwners, w => template.Equals(w));
+                templates = new BindingView<TemplateValue>(Data.Templates, w => template.Equals(w));
+                templateNodes = new BindingView<TemplateNodeValue>(Data.Nodes, w => template.Equals(w));
+                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w));
 
                 TemplateBinding.DataSource = templates;
                 NodeBinding.DataSource = templateNodes;
@@ -61,65 +58,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeOwnerBinding.ResetBindings(false);
             }
 
-            public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
-                work.AddRange(data.Delete(template));
-                work.AddRange(data.Load(factory, template));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    Load(template);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public void Load(TemplateIndex template, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = ITemplate.Create(); } });
-                work.AddRange(data.Load(factory, template, temporal));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    Load(template);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public void Save(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
-                work.AddRange(data.Save(factory, template));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    Load(template);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public ITemporalData GetTemporal(TemplateIndex template)
-            { return data.GetTemporal(template); }
-
-            public Boolean SetPosition(ITemplateNodeIndex node)
+            public Boolean TrySetPosition(ITemplateNodeIndex node)
             {
                 TemplateNodeIndex key = new TemplateNodeIndex(node);
 
@@ -148,7 +87,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 TemplateNodeValue newValue = new TemplateNodeValue(template);
                 templateNodes.Add(newValue);
-                SetPosition(newValue);
+                TrySetPosition(newValue);
                 return newValue;
             }
 

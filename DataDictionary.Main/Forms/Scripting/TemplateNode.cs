@@ -1,10 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
-using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
@@ -17,8 +15,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         FormBinding formBinding;
         TemplateIndex templateIndex = new TemplateIndex();
-        TemplateNodeIndex nodeIndex = new TemplateNodeIndex();
-        TemporalIndex? temporalIndex = null;
 
         private TemplateNode()
         {
@@ -38,48 +34,25 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ScopeType.ScriptingTemplateNode,
                 CommandType.Add,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                CommandType.Delete);
         }
 
-        public TemplateNode(ITemplateIndex template) : this()
-        { templateIndex = new TemplateIndex(template); }
+        public TemplateNode(ITemplate data, ITemplateIndex template) : this()
+        {
+            formBinding.Data = data;
+            templateIndex = new TemplateIndex(template);
+        }
 
-        public TemplateNode(ITemplateIndex template, ITemplateNodeIndex node) : this(template)
-        { nodeIndex = new TemplateNodeIndex(node); }
-
-        public TemplateNode(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
-
-        public TemplateNode(ITemplateIndex template, ITemplateNodeIndex node, ITemporalIndex temporal) : this(template, node)
-        { temporalIndex = new TemporalIndex(); }
+        public void SetTemplateNode(ITemplateNodeIndex node)
+        { formBinding.TrySetPosition(node); }
 
         private void TemplateNode_Load(object sender, EventArgs e)
         {
-            if (temporalIndex is null)
-            {
-                formBinding.Load(templateIndex);
-                DoBinding();
-            }
-            else
-            { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error is null)
-                {
-                    DoBinding();
-                    SendMessage(new RefreshNavigation());
-                }
-            }
+            formBinding.Load(templateIndex);
+            DoBinding();
 
             void DoBinding()
             {
-                formBinding.SetPosition(nodeIndex);
-
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName)));
 
@@ -123,52 +96,6 @@ namespace DataDictionary.Main.Forms.Scripting
             SetAuthorization(formBinding.GetAuthorization);
         }
 
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-
-            formBinding.Load(templateIndex, onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-
-            formBinding.Save(templateIndex, onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-
-            formBinding.RemoveValue();
-            formBinding.Save(templateIndex, onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-
-            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(templateIndex))
-            {
-                OpenForm = (temporal) =>
-                {
-                    if (temporal.TryGetValue(out TemplateValue? template))
-                    { return new TemplateNode(template, new TemporalIndex(temporal)); }
-                    else { throw new InvalidOperationException("Could not convert TemporalValue back to AttributeValue"); }
-                }
-            });
-        }
-
         private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
         { formBinding.BuildTree(nodeTreeView); }
 
@@ -182,7 +109,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && e.Node.TryGetValue(out TemplateNodeValue? value))
-            { formBinding.SetPosition(value); }
+            { formBinding.TrySetPosition(value); }
         }
     }
 }
