@@ -1,15 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Controls
 {
     static class TemplateNodeTree
     {
