@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Model.Controls
+namespace DataDictionary.Main.Controls
 {
     partial class PropertyData : UserControl
     {

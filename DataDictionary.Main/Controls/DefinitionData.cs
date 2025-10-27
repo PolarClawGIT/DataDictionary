@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Model.Controls
+namespace DataDictionary.Main.Controls
 {
     partial class DefinitionData : UserControl
     {

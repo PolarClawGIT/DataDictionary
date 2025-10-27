@@ -1,5 +1,4 @@
-﻿using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Controls

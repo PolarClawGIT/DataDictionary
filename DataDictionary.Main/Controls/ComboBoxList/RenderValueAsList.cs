@@ -1,5 +1,4 @@
-﻿using DataDictionary.Main.Controls;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {

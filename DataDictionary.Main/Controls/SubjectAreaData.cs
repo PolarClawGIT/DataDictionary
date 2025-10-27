@@ -5,7 +5,7 @@ using System.Data;
 using Toolbox.BindingTable;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Model.Controls
+namespace DataDictionary.Main.Controls
 {
     partial class SubjectAreaData : UserControl
     {

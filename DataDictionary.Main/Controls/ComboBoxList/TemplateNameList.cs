@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Controls.ComboBoxList

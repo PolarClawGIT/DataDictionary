@@ -1,11 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
