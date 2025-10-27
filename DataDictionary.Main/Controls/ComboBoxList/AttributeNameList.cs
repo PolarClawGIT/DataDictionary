@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Model.ComboBoxList
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record AttributeNameList : IAttributeIndex, IAttributeIndexName
     {

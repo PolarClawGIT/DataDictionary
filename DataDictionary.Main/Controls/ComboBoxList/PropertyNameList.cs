@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Model.ComboBoxList
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record PropertyNameList : IPropertyIndex, IPropertyIndexName
     {
@@ -46,8 +46,8 @@ namespace DataDictionary.Main.Forms.Model.ComboBoxList
                 }
             }
 
-            control.ValueMember = nameof(PropertyNameList.PropertyId);
-            control.DisplayMember = nameof(PropertyNameList.PropertyTitle);
+            control.ValueMember = nameof(PropertyId);
+            control.DisplayMember = nameof(PropertyTitle);
             control.DataSource = list;
         }
 

@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Forms.Model.ComboBoxList;
+using DataDictionary.Main.Controls.ComboBoxList;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;

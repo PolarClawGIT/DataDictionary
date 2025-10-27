@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record DataSourceNameList : IDataSourceIndex, IDataSourceIndexName
     {

@@ -1,7 +1,7 @@
 ﻿using DataDictionary.Main.Controls;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record RenderValueAsList
     {

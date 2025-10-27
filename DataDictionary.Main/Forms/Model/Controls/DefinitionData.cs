@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;

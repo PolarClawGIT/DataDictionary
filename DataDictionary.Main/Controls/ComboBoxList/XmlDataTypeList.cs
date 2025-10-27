@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.Main.Controls;
 
-namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record XmlDataTypeList
     {

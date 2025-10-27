@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
