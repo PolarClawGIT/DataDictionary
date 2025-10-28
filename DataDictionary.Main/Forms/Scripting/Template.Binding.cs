@@ -158,6 +158,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateNodeValue? result)
+            {
+                if (NodeBinding.Position >= 0
+                    && NodeBinding.Current is TemplateNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {
                 Boolean isGrant = false;

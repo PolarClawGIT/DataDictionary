@@ -69,6 +69,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
                 modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId)));
 
+                ownershipData.AutoGenerateColumns = false;
+                ownershipData.DataSource = bindingNodeOwner;
+                formBinding.BindComboBox(nodeParentColumn);
+
                 // Security
                 if (formBinding.TryGetValue(out TemplateNodeValue? value))
                 { IsLocked(formBinding.GetLocked()); }
@@ -100,7 +104,12 @@ namespace DataDictionary.Main.Forms.Scripting
         { formBinding.BuildTree(nodeTreeView); }
 
         private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
-        { formBinding.BuildTree(nodeTreeView); }
+        {
+            if (e.ListChangedType is ListChangedType.ItemAdded or
+                ListChangedType.ItemDeleted or
+                ListChangedType.ItemChanged)
+            { formBinding.BuildTree(nodeTreeView); }
+        }
 
         private void NodeTreeView_NodeSelected(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -110,6 +119,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && e.Node.TryGetValue(out TemplateNodeValue? value))
             { formBinding.TrySetPosition(value); }
+        }
+
+        private void bindingNodeOwner_AddingNew(object sender, AddingNewEventArgs e)
+        { e.NewObject = formBinding.NewOwner(); }
+
+        private void ownershipData_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            //if (sender is DataGridView gridView
+            //    && gridView.Rows.Count > e.RowIndex
+            //    && gridView.Rows[e.RowIndex] is DataGridViewRow row)
+            //{
+            //    if (row.DataBoundItem is TemplateNodeOwnerValue value)
+            //    { row.ErrorText = formBinding.Validate(value); }
+            //}
+            //else
+            //{ e.Cancel = true; }
         }
     }
 }

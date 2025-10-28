@@ -40,23 +40,35 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 TemplateBinding.RaiseListChangedEvents = false;
                 NodeBinding.RaiseListChangedEvents = false;
-                NodeOwnerBinding.RaiseListChangedEvents = false;
 
                 templates = new BindingView<TemplateValue>(Data.Templates, w => template.Equals(w));
                 templateNodes = new BindingView<TemplateNodeValue>(Data.Nodes, w => template.Equals(w));
-                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w));
 
                 TemplateBinding.DataSource = templates;
                 NodeBinding.DataSource = templateNodes;
-                NodeOwnerBinding.DataSource = templateNodeOwners;
 
                 TemplateBinding.RaiseListChangedEvents = true;
                 NodeBinding.RaiseListChangedEvents = true;
-                NodeOwnerBinding.RaiseListChangedEvents = true;
 
                 TemplateBinding.ResetBindings(false);
                 NodeBinding.ResetBindings(false);
-                NodeOwnerBinding.ResetBindings(false);
+
+                NodeBinding.CurrentChanged += NodeBinding_CurrentChanged;
+
+                void NodeBinding_CurrentChanged(Object? sender, EventArgs e)
+                {
+                    NodeOwnerBinding.RaiseListChangedEvents = false;
+
+                    if (TryGetValue(out TemplateNodeValue? currentNode))
+                    {
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(currentNode);
+                        var children = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
+                        NodeOwnerBinding.DataSource = children;
+                    }
+
+                    NodeOwnerBinding.RaiseListChangedEvents = true;
+                    NodeOwnerBinding.ResetBindings(false);
+                }
             }
 
             public Boolean TrySetPosition(ITemplateNodeIndex node)
@@ -104,7 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 Boolean isNode = TryGetValue(out TemplateNodeValue? _);
 
                 SecurableIndex? templateKey = null;
-                if(TryGetValue(out TemplateValue? templateValue))
+                if (TryGetValue(out TemplateValue? templateValue))
                 { templateKey = new TemplateIndex(templateValue); }
 
                 isGrant = BusinessData.Authorization.IsScriptAdmin
@@ -138,6 +150,26 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (TryGetValue(out TemplateValue? template))
                 { tree.BuildTree(template, templateNodes, templateNodeOwners); }
+            }
+
+            public void BindComboBox(DataGridViewComboBoxColumn control)
+            {
+                control.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
+                control.ValueMember = nameof(ITemplateNodeValue.NodeId);
+                control.DisplayMember = nameof(ITemplateNodeValue.NodeName);
+                control.DataSource = templateNodes;
+            }
+
+            public TemplateNodeOwnerValue NewOwner()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                { return new TemplateNodeOwnerValue(value); }
+                else { throw new InvalidOperationException("Current TemplateNodeValue not defined"); }
+            }
+
+            public String Validate(TemplateNodeOwnerValue value)
+            {
+                return String.Empty;
             }
         }
     }
