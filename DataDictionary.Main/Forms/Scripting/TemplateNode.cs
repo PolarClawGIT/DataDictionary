@@ -30,6 +30,8 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingTemplateNode); // Set the Default,
             SetTitle(bindingNode);
 
+            parentAddCommand.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Add);
+
             SetRowState(bindingNode, bindingNodeOwner);
 
             SetCommand(ScopeType.ScriptingTemplateNode,
@@ -69,9 +71,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
                 modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId)));
 
+                TemplateNodeList.Load(nodeParentColumn, templateIndex);
                 ownershipData.AutoGenerateColumns = false;
                 ownershipData.DataSource = bindingNodeOwner;
-                formBinding.BindComboBox(nodeParentColumn);
+                nodeParentColumn.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
+
+                TemplateNodeList.Load(parentNodeData, templateIndex, "(n/a)");
+                TemplateNodeList.SelectValue(parentNodeData, null);
 
                 // Security
                 if (formBinding.TryGetValue(out TemplateNodeValue? value))
@@ -118,11 +124,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && e.Node.TryGetValue(out TemplateNodeValue? value))
-            { formBinding.TrySetPosition(value); }
+            {
+                formBinding.TrySetPosition(value);
+                TemplateNodeList.SelectValue(parentNodeData, null);
+            }
         }
 
-        private void bindingNodeOwner_AddingNew(object sender, AddingNewEventArgs e)
-        { e.NewObject = formBinding.NewOwner(); }
+        private void BindingNodeOwner_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            //e.NewObject = formBinding.NewOwner(); 
+        }
 
         private void ownershipData_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
@@ -135,6 +146,16 @@ namespace DataDictionary.Main.Forms.Scripting
             //}
             //else
             //{ e.Cancel = true; }
+        }
+
+        private void ParentAddCommand_Click(object sender, EventArgs e)
+        {
+            if (parentNodeData.SelectedItem is TemplateNodeList selected)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(selected);
+                formBinding.AddNodeOwner(key);
+                //formBinding.BuildTree(nodeTreeView);
+            }
         }
     }
 }

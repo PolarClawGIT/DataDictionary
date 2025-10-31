@@ -18,6 +18,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public TemplateNodeOwnerValue(ITemplateNodeValue node) : base(node) { }
 
         /// <inheritdoc/>
-        public TemplateNodeOwnerValue(ITemplateNodeValue node, ITemplateNodeValue owner) : base(node, owner) { }
+        public TemplateNodeOwnerValue(ITemplateNodeValue node, ITemplateNodeIndex owner) : base(node, owner) { }
     }
 }

@@ -98,7 +98,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// </summary>
         /// <param name="node"></param>
         /// <param name="owner"></param>
-        public TemplateNodeOwnerItem(ITemplateNodeItem node, ITemplateNodeItem owner) : this(node)
+        public TemplateNodeOwnerItem(ITemplateNodeItem node, ITemplateNodeKey owner) : this(node)
         { NodeOwnerId = owner.NodeId; }
 
 

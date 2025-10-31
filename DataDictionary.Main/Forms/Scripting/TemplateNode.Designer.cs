@@ -41,8 +41,8 @@
             modelPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             ownershipData = new DataGridView();
             nodeParentColumn = new DataGridViewComboBoxColumn();
-            elementPathData = new DataDictionary.Main.Controls.TextBoxData();
-            elementSelectCommand = new Button();
+            parentAddCommand = new Button();
+            parentNodeData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeLayout = new TableLayoutPanel();
             nodeTreeView = new TreeView();
             templateData = new DataDictionary.Main.Controls.TextBoxData();
@@ -194,8 +194,8 @@
             ownershipLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             ownershipLayout.ColumnStyles.Add(new ColumnStyle());
             ownershipLayout.Controls.Add(ownershipData, 0, 0);
-            ownershipLayout.Controls.Add(elementPathData, 0, 1);
-            ownershipLayout.Controls.Add(elementSelectCommand, 1, 1);
+            ownershipLayout.Controls.Add(parentAddCommand, 1, 1);
+            ownershipLayout.Controls.Add(parentNodeData, 0, 1);
             ownershipLayout.Dock = DockStyle.Fill;
             ownershipLayout.Location = new Point(3, 3);
             ownershipLayout.Name = "ownershipLayout";
@@ -207,13 +207,15 @@
             // 
             // ownershipData
             // 
+            ownershipData.AllowUserToAddRows = false;
             ownershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             ownershipData.Columns.AddRange(new DataGridViewColumn[] { nodeParentColumn });
             ownershipLayout.SetColumnSpan(ownershipData, 2);
             ownershipData.Dock = DockStyle.Fill;
             ownershipData.Location = new Point(3, 3);
             ownershipData.Name = "ownershipData";
-            ownershipData.Size = new Size(529, 171);
+            ownershipData.ReadOnly = true;
+            ownershipData.Size = new Size(529, 169);
             ownershipData.TabIndex = 0;
             ownershipData.RowValidating += ownershipData_RowValidating;
             // 
@@ -222,29 +224,32 @@
             nodeParentColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             nodeParentColumn.HeaderText = "Parent Node";
             nodeParentColumn.Name = "nodeParentColumn";
+            nodeParentColumn.ReadOnly = true;
             // 
-            // elementPathData
+            // parentAddCommand
             // 
-            elementPathData.AutoSize = true;
-            elementPathData.Dock = DockStyle.Fill;
-            elementPathData.HeaderText = "Element Path";
-            elementPathData.Location = new Point(3, 180);
-            elementPathData.Multiline = false;
-            elementPathData.Name = "elementPathData";
-            elementPathData.ReadOnly = true;
-            elementPathData.Size = new Size(448, 44);
-            elementPathData.TabIndex = 1;
-            elementPathData.WordWrap = true;
+            parentAddCommand.Dock = DockStyle.Bottom;
+            parentAddCommand.Location = new Point(457, 201);
+            parentAddCommand.Name = "parentAddCommand";
+            parentAddCommand.Size = new Size(75, 23);
+            parentAddCommand.TabIndex = 2;
+            parentAddCommand.Text = "Add";
+            parentAddCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            parentAddCommand.UseVisualStyleBackColor = true;
+            parentAddCommand.Click += ParentAddCommand_Click;
             // 
-            // elementSelectCommand
+            // parentNodeData
             // 
-            elementSelectCommand.Location = new Point(457, 180);
-            elementSelectCommand.Name = "elementSelectCommand";
-            elementSelectCommand.Size = new Size(75, 23);
-            elementSelectCommand.TabIndex = 2;
-            elementSelectCommand.Text = "Select";
-            elementSelectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            elementSelectCommand.UseVisualStyleBackColor = true;
+            parentNodeData.AutoSize = true;
+            parentNodeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            parentNodeData.Dock = DockStyle.Fill;
+            parentNodeData.DropDownStyle = ComboBoxStyle.DropDown;
+            parentNodeData.HeaderText = "Parent Node";
+            parentNodeData.Location = new Point(3, 178);
+            parentNodeData.Name = "parentNodeData";
+            parentNodeData.ReadOnly = false;
+            parentNodeData.Size = new Size(448, 46);
+            parentNodeData.TabIndex = 3;
             // 
             // nodeLayout
             // 
@@ -348,7 +353,7 @@
             // 
             // bindingNodeOwner
             // 
-            bindingNodeOwner.AddingNew += bindingNodeOwner_AddingNew;
+            bindingNodeOwner.AddingNew += BindingNodeOwner_AddingNew;
             bindingNodeOwner.ListChanged += BindingNodeOwner_ListChanged;
             // 
             // TemplateNode
@@ -395,11 +400,11 @@
         private Controls.TextBoxData objectPropertyData;
         private Controls.ComboBoxData modelPropertyData;
         private DataGridView ownershipData;
-        private Controls.TextBoxData elementPathData;
-        private Button elementSelectCommand;
+        private Button parentAddCommand;
         private Controls.TextBoxData nodeNameData;
         private Controls.TextBoxData renderOrderData;
         private Controls.ComboBoxData renderValueAsData;
         private DataGridViewComboBoxColumn nodeParentColumn;
+        private Controls.ComboBoxData parentNodeData;
     }
 }

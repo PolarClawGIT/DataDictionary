@@ -40,18 +40,22 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 TemplateBinding.RaiseListChangedEvents = false;
                 NodeBinding.RaiseListChangedEvents = false;
+                NodeOwnerBinding.RaiseListChangedEvents = false;
 
                 templates = new BindingView<TemplateValue>(Data.Templates, w => template.Equals(w));
                 templateNodes = new BindingView<TemplateNodeValue>(Data.Nodes, w => template.Equals(w));
+                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners,w => new TemplateNodeIndex().Equals(w) );
 
                 TemplateBinding.DataSource = templates;
                 NodeBinding.DataSource = templateNodes;
 
                 TemplateBinding.RaiseListChangedEvents = true;
                 NodeBinding.RaiseListChangedEvents = true;
+                NodeOwnerBinding.RaiseListChangedEvents = true;
 
                 TemplateBinding.ResetBindings(false);
                 NodeBinding.ResetBindings(false);
+                NodeOwnerBinding.ResetBindings(false);
 
                 NodeBinding.CurrentChanged += NodeBinding_CurrentChanged;
 
@@ -62,8 +66,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (TryGetValue(out TemplateNodeValue? currentNode))
                     {
                         TemplateNodeIndex nodeKey = new TemplateNodeIndex(currentNode);
-                        var children = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
-                        NodeOwnerBinding.DataSource = children;
+                        templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
+                        NodeOwnerBinding.DataSource = templateNodeOwners;
                     }
 
                     NodeOwnerBinding.RaiseListChangedEvents = true;
@@ -149,27 +153,27 @@ namespace DataDictionary.Main.Forms.Scripting
             public void BuildTree(TreeView tree)
             {
                 if (TryGetValue(out TemplateValue? template))
-                { tree.BuildTree(template, templateNodes, templateNodeOwners); }
+                {
+                    TemplateIndex key = new TemplateIndex(template);
+
+                    tree.BuildTree(template, templateNodes,
+                        // TODO: Fix on BindingView? Can both event fire after the insert?
+                        // templateNodeOwners does not have a complete list.
+                        // Data.NodeOwners may not not have the new owner.
+                        // This is caused by a the templateNodeOwners triggers the change event
+                        // before it has a chance to insert the value in the Data.NodeOwners and its chnage event occurs.
+                        Data.NodeOwners.Where(w => key.Equals(w)).Union(templateNodeOwners)); 
+                }
             }
 
-            public void BindComboBox(DataGridViewComboBoxColumn control)
-            {
-                control.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
-                control.ValueMember = nameof(ITemplateNodeValue.NodeId);
-                control.DisplayMember = nameof(ITemplateNodeValue.NodeName);
-                control.DataSource = templateNodes;
-            }
-
-            public TemplateNodeOwnerValue NewOwner()
+            public void AddNodeOwner(TemplateNodeIndex ownerNode)
             {
                 if (TryGetValue(out TemplateNodeValue? value))
-                { return new TemplateNodeOwnerValue(value); }
-                else { throw new InvalidOperationException("Current TemplateNodeValue not defined"); }
-            }
-
-            public String Validate(TemplateNodeOwnerValue value)
-            {
-                return String.Empty;
+                {
+                    TemplateNodeOwnerValue newItem = new TemplateNodeOwnerValue(value, ownerNode);
+                    templateNodeOwners.Add(newItem);
+                    //Data.NodeOwners.Add(newItem);
+                }
             }
         }
     }

@@ -17,8 +17,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc/>
         public String NodeName { get; private set; } = String.Empty;
 
-        TemplateNodeList()
-        { NodeName = "(n/a)"; }
+        TemplateNodeList(String emptyText = "(n/a)")
+        { NodeName = emptyText; }
 
         TemplateNodeList(ITemplateNodeValue value)
         {
@@ -36,32 +36,53 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             { handler(this, new PropertyChangedEventArgs(nameof(NodeName))); }
         }
 
-        public static void Load(DataGridViewComboBoxColumn control, ITemplateIndex template)
+        public static void Load(DataGridViewComboBoxColumn control, ITemplateIndex template, String? emptyText = null)
         {
             control.ValueMember = nameof(NodeId);
             control.DisplayMember = nameof(NodeName);
-            control.DataSource = BuildList(template);
+            control.DataSource = BuildList(template, emptyText);
         }
 
-        public static void Load(ComboBoxData control, ITemplateIndex template)
+        public static void Load(ComboBoxData control, ITemplateIndex template, String? emptyText = null)
         {
             control.ValueMember = nameof(NodeId);
             control.DisplayMember = nameof(NodeName);
-            control.DataSource = BuildList(template);
+            control.DataSource = BuildList(template, emptyText);
         }
 
-        static BindingList<TemplateNodeList> BuildList(ITemplateIndex template)
+        public static void SelectValue(ComboBoxData control, ITemplateNodeIndex? select)
+        {
+            if(control.Items is IList<TemplateNodeList> comboList)
+            {
+                if(select is ITemplateNodeIndex)
+                {
+                    TemplateNodeIndex key = new TemplateNodeIndex(select);
+                    if(comboList.FirstOrDefault(w => key.Equals(w)) is TemplateNodeList selectValue) 
+                    { control.SelectedItem = selectValue; }
+                    else { control.SelectedIndex = -1; }
+                }
+                else
+                {
+                    if (comboList.FirstOrDefault(w => w.NodeId == Guid.Empty) is TemplateNodeList emptyValue)
+                    { control.SelectedItem = emptyValue; }
+                    else { control.SelectedIndex = -1; }
+                }
+            }
+        }
+
+        static BindingList<TemplateNodeList> BuildList(ITemplateIndex template, String? emptyText)
         {
             TemplateIndex templateKey = new TemplateIndex(template);
 
             BindingList<TemplateNodeList> comboList = new BindingList<TemplateNodeList>();
-            comboList.Add(new TemplateNodeList());
+            if (!String.IsNullOrWhiteSpace(emptyText))
+            { comboList.Add(new TemplateNodeList()); }
 
             comboList.AddRange(
                 BusinessData.Scripting.Nodes.
                 Where(w => templateKey.Equals(w)).
                 OrderBy(o => o.NodeName).
-                Select( s=> new TemplateNodeList(s)));
+                Select(s => new TemplateNodeList(s)));
 
             BusinessData.Scripting.Nodes.ListChanged += Nodes_ListChanged;
             return comboList;
@@ -112,13 +133,13 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                     case ListChangedType.ItemChanged:
                         var changedItem = BusinessData.Scripting.Nodes[e.NewIndex];
                         var changedKey = new TemplateNodeIndex(changedItem);
-                        var changedIndex = comboList.Count;
-                        
+
                         if (templateKey.Equals(changedItem))
                         {
                             comboList.RaiseListChangedEvents = false;
 
                             comboList.RemoveRange(w => changedKey.Equals(w));
+                            var changedIndex = comboList.Count;
 
                             if (comboList.LastOrDefault(w => String.Compare(w.NodeName, changedItem.NodeName ?? String.Empty, true) < 0) is TemplateNodeList priorChangedItem)
                             { changedIndex = comboList.IndexOf(priorChangedItem); }
