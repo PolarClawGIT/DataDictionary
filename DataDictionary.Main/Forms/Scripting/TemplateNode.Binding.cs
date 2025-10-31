@@ -155,14 +155,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (TryGetValue(out TemplateValue? template))
                 {
                     TemplateIndex key = new TemplateIndex(template);
-
-                    tree.BuildTree(template, templateNodes,
-                        // TODO: Fix on BindingView? Can both event fire after the insert?
-                        // templateNodeOwners does not have a complete list.
-                        // Data.NodeOwners may not not have the new owner.
-                        // This is caused by a the templateNodeOwners triggers the change event
-                        // before it has a chance to insert the value in the Data.NodeOwners and its chnage event occurs.
-                        Data.NodeOwners.Where(w => key.Equals(w)).Union(templateNodeOwners)); 
+                    tree.BuildTree(template, Data.Nodes, Data.NodeOwners); 
                 }
             }
 
@@ -172,7 +165,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     TemplateNodeOwnerValue newItem = new TemplateNodeOwnerValue(value, ownerNode);
                     templateNodeOwners.Add(newItem);
-                    //Data.NodeOwners.Add(newItem);
                 }
             }
         }
