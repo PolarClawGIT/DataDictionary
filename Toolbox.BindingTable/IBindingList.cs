@@ -12,8 +12,27 @@ namespace Toolbox.BindingTable
     /// </summary>
     public interface IBindListChanged
     {
+        /// <inheritdoc cref="IBindingList.ListChanged"/>
+        event ListChangedEventHandler ListChanged;
 
-        /// <inheritdoc cref="ComponentModel.IBindingList{T}.RaiseListChangedEvents"/>
+        //Example:
+        //public SomeObject() : base()
+        //{
+        //    someBindingList.ListChanged += OnListChanged;
+
+        //    void OnListChanged(Object? sender, ListChangedEventArgs e)
+        //    {
+        //        if (ListChanged is ListChangedEventHandler handler)
+        //        { handler(sender, e); }
+        //    }
+        //}
+        //
+        //Note: I have had lots of issues with the ListChanged event.
+        //It does not always bubble up as expected thru interfaces or inhreted classes.
+        //Interfaces do not have an instance so I cannot put event related code in one spot.
+        //Instead the code has to be copied all over the place and is prone to errors.
+
+        /// <inheritdoc cref="BindingList{T}.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; }
 
         /// <inheritdoc cref="BindingList{T}.ResetBindings"/>
@@ -55,5 +74,8 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="IBindingList.Clear"/>
         /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
         new void Clear() { ((IBindingList)this).Clear(); }
+
+        /// <inheritdoc cref="IBindingList.ListChanged"/>
+        new event ListChangedEventHandler ListChanged;
     }
 }

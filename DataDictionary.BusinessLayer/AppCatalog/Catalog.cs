@@ -6,6 +6,7 @@ using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.AppCatalog
 {
@@ -149,40 +150,6 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public ITableColumnData DbTableColumns { get { return tableColumns; } }
         private readonly TableColumnData tableColumns;
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return catalogs.RaiseListChangedEvents
-                    && schemta.RaiseListChangedEvents
-                    && domains.RaiseListChangedEvents
-                    && properties.RaiseListChangedEvents
-                    && tables.RaiseListChangedEvents
-                    && tableColumns.RaiseListChangedEvents
-                    && routines.RaiseListChangedEvents
-                    && routineParameters.RaiseListChangedEvents
-                    && routineColumns.RaiseListChangedEvents
-                    && references.RaiseListChangedEvents
-                    && constraints.RaiseListChangedEvents
-                    && constraintColumns.RaiseListChangedEvents;
-            }
-            set
-            {
-                catalogs.RaiseListChangedEvents = value;
-                schemta.RaiseListChangedEvents = value; 
-                domains.RaiseListChangedEvents = value; 
-                properties.RaiseListChangedEvents = value; 
-                tables.RaiseListChangedEvents = value;
-                tableColumns.RaiseListChangedEvents = value; 
-                routines.RaiseListChangedEvents = value; 
-                routineParameters.RaiseListChangedEvents = value; 
-                routineColumns.RaiseListChangedEvents = value; 
-                references.RaiseListChangedEvents = value; 
-                constraints.RaiseListChangedEvents = value; 
-                constraintColumns.RaiseListChangedEvents = value;
-            }
-        }
 
         public Catalog() : base()
         {
@@ -202,6 +169,25 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             constraintColumns = new ConstraintColumnData() { Model = this };
 
             properties = new PropertyData() { Model = this };
+
+            catalogs.ListChanged += OnListChanged;
+            schemta.ListChanged += OnListChanged;
+            domains.ListChanged += OnListChanged;
+            properties.ListChanged += OnListChanged;
+            tables.ListChanged += OnListChanged;
+            tableColumns.ListChanged += OnListChanged;
+            routines.ListChanged += OnListChanged;
+            routineParameters.ListChanged += OnListChanged;
+            routineColumns.ListChanged += OnListChanged;
+            references.ListChanged += OnListChanged;
+            constraints.ListChanged += OnListChanged;
+            constraintColumns.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
         }
 
         /// <inheritdoc/>
@@ -539,7 +525,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
-            
+
             work.AddRange(NameSpaceSource.Load<CatalogData, CatalogValue>(catalogs, addNamedScope));
             work.AddRange(NameSpaceSource.Load<SchemaData, SchemaValue>(schemta, addNamedScope,
                 (parent) => catalogs.FirstOrDefault(w => new CatalogKeyName(parent).Equals(w))));
@@ -619,6 +605,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             properties.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -635,5 +625,42 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             constraints.ResetBindings();
             constraintColumns.ResetBindings();
         }
+
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return catalogs.RaiseListChangedEvents
+                    && schemta.RaiseListChangedEvents
+                    && domains.RaiseListChangedEvents
+                    && properties.RaiseListChangedEvents
+                    && tables.RaiseListChangedEvents
+                    && tableColumns.RaiseListChangedEvents
+                    && routines.RaiseListChangedEvents
+                    && routineParameters.RaiseListChangedEvents
+                    && routineColumns.RaiseListChangedEvents
+                    && references.RaiseListChangedEvents
+                    && constraints.RaiseListChangedEvents
+                    && constraintColumns.RaiseListChangedEvents;
+            }
+            set
+            {
+                catalogs.RaiseListChangedEvents = value;
+                schemta.RaiseListChangedEvents = value;
+                domains.RaiseListChangedEvents = value;
+                properties.RaiseListChangedEvents = value;
+                tables.RaiseListChangedEvents = value;
+                tableColumns.RaiseListChangedEvents = value;
+                routines.RaiseListChangedEvents = value;
+                routineParameters.RaiseListChangedEvents = value;
+                routineColumns.RaiseListChangedEvents = value;
+                references.RaiseListChangedEvents = value;
+                constraints.RaiseListChangedEvents = value;
+                constraintColumns.RaiseListChangedEvents = value;
+            }
+        }
+        #endregion
     }
 }

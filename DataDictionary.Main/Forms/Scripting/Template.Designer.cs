@@ -83,6 +83,8 @@
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
             bindingTemplateData = new BindingSource(components);
+            bindingNode = new BindingSource(components);
+            bindingNodeOwner = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             dataSourceTab = new TabPage();
             modelLayout = new TableLayoutPanel();
@@ -126,6 +128,8 @@
             scriptLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplateData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNodeOwner).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -296,6 +300,7 @@
             nodeTreeView.Name = "nodeTreeView";
             nodeTreeView.Size = new Size(153, 288);
             nodeTreeView.TabIndex = 1;
+            nodeTreeView.NodeMouseDoubleClick += NodeTreeView_NodeMouseDoubleClick;
             // 
             // nodeGroup
             // 
@@ -767,6 +772,14 @@
             // 
             bindingTemplateData.AddingNew += BindingTemplateData_AddingNew;
             // 
+            // bindingNode
+            // 
+            bindingNode.ListChanged += BindingNode_ListChanged;
+            // 
+            // bindingNodeOwner
+            // 
+            bindingNodeOwner.ListChanged += BindingNodeOwner_ListChanged;
+            // 
             // Template
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -817,6 +830,8 @@
             scriptLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplateData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNodeOwner).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -859,5 +874,7 @@
         private DataGridView templateDataSource;
         private BindingSource bindingTemplateData;
         private DataGridViewComboBoxColumn dataSourceIdColumn;
+        private BindingSource bindingNode;
+        private BindingSource bindingNodeOwner;
     }
 }

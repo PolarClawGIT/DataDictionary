@@ -7,8 +7,7 @@ With [Data] As (
 			[MemberName],
 			[MemberType],
 			[MemberData],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[MemberName])) As [MemberNameSpace],
+			[AppGeneral].[funcCreatePath]([MemberName], Null) As [MemberNameSpace],
 			Convert(NVarChar(Max),
 				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
 					Dense_Rank() Over (Order By [MemberName])))
@@ -24,8 +23,7 @@ With [Data] As (
 			H.[MemberName],
 			H.[MemberType],
 			H.[MemberData],
-			Convert(NVarChar(Max),
-				FormatMessage('%s.[%s]',D.[MemberNameSpace], H.[MemberName])) As [MemberNameSpace],
+			[AppGeneral].[funcCreatePath] (D.[MemberNameSpace], H.[MemberName]) As [MemberNameSpace],
 			Convert(NVarChar(Max), FormatMessage('%s%I64d/', D.[HierarchyId],
 				Row_Number() Over (Partition By D.[MemberId] Order By H.[MemberName])))
 				As [HierarchyId],

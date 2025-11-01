@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -18,15 +19,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IBindListChanged
     {
         // These are re-named properties
+        /// <inheritdoc cref="ITemplate.Nodes"/>
+        ITemplateNodeData TemplateNodes { get; }
 
-        /// <inheritdoc cref="ITemplate.Elements"/>
-        ITemplateElementData TemplateElements { get; }
-
-        /// <inheritdoc cref="ITemplate.Attributes"/>
-        public ITemplateAttributeData TemplateAttributes { get; }
-
-        /// <inheritdoc cref="ITemplate.AttributeOwners"/>
-        public ITemplateNodeOwnerData TemplateAttributeOwners { get; }
+        /// <inheritdoc cref="ITemplate.NodeOwners"/>
+        ITemplateNodeOwnerData TemplateNodeOwners { get; }
     }
 
     class Scripting : IScripting, IDataTableFile
@@ -34,51 +31,41 @@ namespace DataDictionary.BusinessLayer.AppScripting
         private readonly DataSource dataSourceValue = new DataSource();
         private readonly Template templateValue = new Template();
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
-        {
-            get
-            {
-                return dataSourceValue.RaiseListChangedEvents
-                    && templateValue.RaiseListChangedEvents;
-            }
-            set
-            {
-                dataSourceValue.RaiseListChangedEvents = value;
-                templateValue.RaiseListChangedEvents = value;
-            }
-        }
-
         /// <inheritdoc cref="IDataSource.DataSources"/>
         public IDataSourceData DataSources { get { return dataSourceValue.DataSources; } }
 
         /// <inheritdoc cref="IDataSource.DataObjects"/>
         public IDataObjectData DataObjects { get { return dataSourceValue.DataObjects; } }
 
-        // Not actually needed.
-        //IDataSourceData IDataSource.DataSources { get { return dataSourceValue.DataSources; } }
-        //IDataObjectData IDataSource.DataObjects { get { return dataSourceValue.DataObjects; } }
-
         /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValue.Templates; } }
 
         /// <inheritdoc/>
-        public ITemplateElementData TemplateElements { get { return templateValue.Elements; } }
+        public ITemplateNodeData TemplateNodes { get { return templateValue.Nodes; } }
 
         /// <inheritdoc/>
-        public ITemplateAttributeData TemplateAttributes { get { return templateValue.Attributes; } }
-
-        /// <inheritdoc/>
-        public ITemplateNodeOwnerData TemplateAttributeOwners { get { return templateValue.AttributeOwners; } }
+        public ITemplateNodeOwnerData TemplateNodeOwners { get { return templateValue.NodeOwners; } }
 
         /// <inheritdoc/>
         public ITemplateInputData TemplateSources { get { return templateValue.TemplateSources; } }
 
         //ITemplateData ITemplate.Templates { get { return templateValue.Templates; } } // Not Needed
-        ITemplateElementData ITemplate.Elements { get { return templateValue.Elements; } }
-        ITemplateAttributeData ITemplate.Attributes { get { return templateValue.Attributes; } }
-        ITemplateNodeOwnerData ITemplate.AttributeOwners { get { return templateValue.AttributeOwners; } }
         //ITemplateInputData ITemplate.TemplateSources { get { return templateValue.TemplateSources; } } // Not Needed
+        ITemplateNodeData ITemplate.Nodes { get { return templateValue.Nodes; } }
+        ITemplateNodeOwnerData ITemplate.NodeOwners { get { return templateValue.NodeOwners; } }
+
+
+        public Scripting() : base()
+        {
+            dataSourceValue.ListChanged += OnListChanged;
+            templateValue.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
+            {
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
+            }
+        }
 
         /// <inheritdoc/>
         public void Clear()
@@ -130,12 +117,33 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateValue.Remove(model);
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return dataSourceValue.RaiseListChangedEvents
+                    && templateValue.RaiseListChangedEvents;
+            }
+            set
+            {
+                dataSourceValue.RaiseListChangedEvents = value;
+                templateValue.RaiseListChangedEvents = value;
+            }
+        }
+        
         /// <inheritdoc/>
         public void ResetBindings()
         {
             dataSourceValue.ResetBindings();
             templateValue.ResetBindings();
         }
+        #endregion
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex model)
@@ -151,7 +159,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
 
             if(dataSourceValue.DataSources.Count >0
-                && templateValue.Templates.Count > 0)
+                || templateValue.Templates.Count > 0)
             {
                 // Root Node
                 NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
@@ -192,10 +200,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { return templateValue.Save(factory, template); }
 
         IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template)
-        { return templateValue.Load(factory, template); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValue.Load(factory, template));
+            work.AddRange(dataSourceValue.Load(factory, template));
+            return work;
+        }
 
         IReadOnlyList<WorkItem> ILoadData<ITemplateIndex>.Load(IDatabaseWork factory, ITemplateIndex template, ITemporalIndex asOfUtcDate)
-        { return templateValue.Load(factory, template, asOfUtcDate); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValue.Load(factory, template, asOfUtcDate));
+            work.AddRange(dataSourceValue.Load(factory, template, asOfUtcDate));
+            return work;
+        }
 
         IReadOnlyList<WorkItem> IDeleteData<ITemplateIndex>.Delete(ITemplateIndex template)
         { return templateValue.Delete(template); }

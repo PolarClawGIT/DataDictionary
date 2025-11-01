@@ -20,7 +20,11 @@ namespace DataDictionary.Main
 
         public Main() : base()
         {
-            //TODO: Remove old images
+            // TODO: The designer does not execute this stuff.
+            // Image in design view may not match what is in the WinFormEnumeration.
+            // Result, there are two places that the image needs to be maintained.
+            // The Form (every form) and the WinFormEnumeration. 
+            // The desire is to have only one places of "truth"
 
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
@@ -38,7 +42,7 @@ namespace DataDictionary.Main
 
             // TODO: Check if correct.
             securityPrincipal.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default);
-            securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default); 
+            securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default);
 
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
             viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
@@ -50,7 +54,7 @@ namespace DataDictionary.Main
             menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
             menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(CommandType.Default);
             menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(CommandType.Default);
-            
+
             menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
             menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
             menuEntityAlias.Image = ScopeType.ModelEntityAlias.GetImage(CommandType.Default);
@@ -68,7 +72,7 @@ namespace DataDictionary.Main
             menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
-            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default); 
+            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default);
             menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
             menuTableItem.Image = ScopeType.DatabaseTable.GetImage(CommandType.Default);
             menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(CommandType.Default);
@@ -76,13 +80,13 @@ namespace DataDictionary.Main
             menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(CommandType.Default);
             menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(CommandType.Default);
             menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
-            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintColumn.GetImage(CommandType.Default);
+            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintCheck.GetImage(CommandType.Default);
             menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(CommandType.Default); ;
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
 
             menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
-            menuScriptingAttribute.Image = ScopeType.ScriptingTemplateAttribute.GetImage(CommandType.Default);
-            menuScriptingElement.Image = ScopeType.ScriptingTemplateElement.GetImage(CommandType.Default);
+            menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
+            menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Default);
             menuScriptingDocument.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
@@ -92,18 +96,6 @@ namespace DataDictionary.Main
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
-
-            // Set the other images
-            // TODO: The designer does not execute this stuff.
-            // Image in design view may not match what is in the WinFormEnumeration.
-            // Result, there are two places that the image needs to be maintained.
-            // The Form (every form) and the WinFormEnumeration. 
-            // The desire is to have only one places of "truth"
-            //optionsToolStripMenuItem.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationOption);
-            //manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
-            //viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
-
-            //menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.Attributes);
         }
 
         #region Form
@@ -346,5 +338,6 @@ namespace DataDictionary.Main
             securityAuthorization.Enabled = true;
 
         }
+
     }
 }

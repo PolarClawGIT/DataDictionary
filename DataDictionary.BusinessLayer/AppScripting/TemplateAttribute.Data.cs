@@ -12,9 +12,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting Template Attribute
     /// </summary>
+    [Obsolete]
     public interface ITemplateAttributeData : IBindingData<TemplateAttributeValue>
     { }
 
+    [Obsolete]
     class TemplateAttributeData : TemplateAttributeCollection<TemplateAttributeValue>, ITemplateAttributeData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>

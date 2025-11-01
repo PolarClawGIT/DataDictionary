@@ -2,22 +2,20 @@
 -- This takes the Alias and rebuilds them into a Alias NameSpace.
 -- NameSpace is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
-RETURNS [AppGeneral].[uddtNameSpacePath] as 
+RETURNS [AppGeneral].[uddtPath] as 
 BEGIN
-	Declare @Result [AppGeneral].[uddtNameSpacePath] = null
+	Declare @Result [AppGeneral].[uddtPath] = null
 
 	;With [Data] As (
 	Select	[AliasId],
 			NullIf([ParentAliasId], [AliasId]) As [ParentAliasId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[AliasMember])) As [AliasNameSpace]
+			[AppGeneral].[funcCreatePath]([AliasMember], Null) As [AliasNameSpace]
 	From	[AppModel].[AliasNameSpace]
 	Where	[AliasId] = @AliasId
 	Union All
 	Select	D.[AliasId],
 			NullIf(P.[ParentAliasId], D.[AliasId]) As [ParentAliasId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[AliasMember],D.[AliasNameSpace])) As [AliasNameSpace]
+			[AppGeneral].[funcCreatePath](P.[AliasMember], D.[AliasNameSpace]) As [AliasNameSpace]
 	From	[Data] D
 			Inner Join [AppModel].[AliasNameSpace] P
 			On	D.[ParentAliasId] = P.[AliasId])

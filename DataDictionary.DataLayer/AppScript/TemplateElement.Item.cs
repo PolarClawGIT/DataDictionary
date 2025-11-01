@@ -13,6 +13,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Template Element item.
     /// </summary>
+    [Obsolete]
     public interface ITemplateElementItem :
         ITemplateKey, ITemplateElementKey, ITemplateElementKeyParent, ITemplateNodeItem,
         ITemporalItem
@@ -26,7 +27,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting Template Element item.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public class TemplateElementItem : BindingTableRow, ITemplateElementItem, ISerializable
     {
         /// <inheritdoc/>
@@ -64,10 +65,10 @@ namespace DataDictionary.DataLayer.AppScript
         String? ITemplateNodeItem.NodeName { get { return ElementName; } }
 
         /// <inheritdoc/>
-        public Int32? RenderOrder
+        public Int32? NodeOrder
         {
-            get { return GetValue<Int32>(nameof(RenderOrder)); }
-            set { SetValue(nameof(RenderOrder), value); }
+            get { return GetValue<Int32>(nameof(NodeOrder)); }
+            set { SetValue(nameof(NodeOrder), value); }
         }
 
         /// <inheritdoc/>
@@ -154,7 +155,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(ElementId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(ElementName), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(ParentElementId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(RenderOrder), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeOrder), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},

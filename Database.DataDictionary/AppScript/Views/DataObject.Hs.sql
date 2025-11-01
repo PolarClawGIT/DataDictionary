@@ -3,16 +3,14 @@
 With [Data] As (
 	Select	[ObjectNameId],
 			[ParentNameId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[ObjectMember])) As [ObjectPath],
+			[AppGeneral].[funcCreatePath]([ObjectMember], Null) As [ObjectPath],
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[DataObjectName]
 	Union All
 	Select	D.[ObjectNameId],
 			NullIf(P.[ParentNameId], D.[ObjectNameId]) As [ParentNameId],
-			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[ObjectMember],D.[ObjectPath])) As [ObjectPath],
+			[AppGeneral].[funcCreatePath](P.[ObjectMember], D.[ObjectPath]) As [ObjectPath],
 			Greatest(D.[SysStart], P.[SysStart]) As [SysStart],
 			Least(D.[SysEnd], P.[SysEnd]) As [SysEnd]
 	From	[Data] D

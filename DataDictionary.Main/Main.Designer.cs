@@ -136,12 +136,12 @@
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
             menuScriptingTemplate = new ToolStripMenuItem();
-            menuScriptingDocument = new ToolStripMenuItem();
-            menuScriptingAttribute = new ToolStripMenuItem();
-            bindingModel = new BindingSource(components);
-            menuScriptingElement = new ToolStripMenuItem();
+            menuScriptingNode = new ToolStripMenuItem();
+            menuScriptingNodeOwner = new ToolStripMenuItem();
             menuScriptingDataSource = new ToolStripMenuItem();
             menuScriptingDataObject = new ToolStripMenuItem();
+            menuScriptingDocument = new ToolStripMenuItem();
+            bindingModel = new BindingSource(components);
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -235,7 +235,7 @@
             newAttributeCommand.DropDown = attributeContextMenu;
             newAttributeCommand.ImageTransparentColor = Color.Magenta;
             newAttributeCommand.Name = "newAttributeCommand";
-            newAttributeCommand.Size = new Size(32, 22);
+            newAttributeCommand.Size = new Size(16, 22);
             newAttributeCommand.Text = "new Attribute";
             newAttributeCommand.ButtonClick += NewAttributeCommand_ButtonClick;
             // 
@@ -287,7 +287,7 @@
             newEntityCommand.DropDown = entityContextMenu;
             newEntityCommand.ImageTransparentColor = Color.Magenta;
             newEntityCommand.Name = "newEntityCommand";
-            newEntityCommand.Size = new Size(32, 22);
+            newEntityCommand.Size = new Size(16, 22);
             newEntityCommand.Text = "new Entity";
             newEntityCommand.ButtonClick += NewEntityCommand_ButtonClick;
             // 
@@ -298,9 +298,9 @@
             subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
-            // subjectAreaToolStripMenuItem
+            // menuSubjectArea
             // 
-            menuSubjectArea.Name = "subjectAreaToolStripMenuItem";
+            menuSubjectArea.Name = "menuSubjectArea";
             menuSubjectArea.Size = new Size(186, 22);
             menuSubjectArea.Text = "browse &Subject Areas";
             menuSubjectArea.Click += subjectAreaToolStripMenuItem_Click;
@@ -311,7 +311,7 @@
             newSubjectAreaCommand.DropDown = subjectAreaContextMenu;
             newSubjectAreaCommand.ImageTransparentColor = Color.Magenta;
             newSubjectAreaCommand.Name = "newSubjectAreaCommand";
-            newSubjectAreaCommand.Size = new Size(32, 22);
+            newSubjectAreaCommand.Size = new Size(16, 22);
             newSubjectAreaCommand.Text = "new Subject Area";
             newSubjectAreaCommand.ButtonClick += NewSubjectAreaCommand_ButtonClick;
             // 
@@ -412,7 +412,7 @@
             manageDatabasesCommand.DropDown = catalogContextMenu;
             manageDatabasesCommand.ImageTransparentColor = Color.Magenta;
             manageDatabasesCommand.Name = "manageDatabasesCommand";
-            manageDatabasesCommand.Size = new Size(32, 22);
+            manageDatabasesCommand.Size = new Size(16, 22);
             manageDatabasesCommand.Text = "Database Manager";
             manageDatabasesCommand.ButtonClick += manageDatabasesCommand_ButtonClick;
             // 
@@ -443,7 +443,7 @@
             manageLibrariesCommand.DropDown = libraryContextMenu;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
-            manageLibrariesCommand.Size = new Size(32, 22);
+            manageLibrariesCommand.Size = new Size(16, 22);
             manageLibrariesCommand.Text = "Library Manager";
             manageLibrariesCommand.ButtonClick += manageLibrariesCommand_ButtonClick;
             // 
@@ -825,7 +825,7 @@
             manageModelCommand.DropDown = modelContextMenu;
             manageModelCommand.ImageTransparentColor = Color.Magenta;
             manageModelCommand.Name = "manageModelCommand";
-            manageModelCommand.Size = new Size(32, 22);
+            manageModelCommand.Size = new Size(16, 22);
             manageModelCommand.Text = "Model Manager";
             manageModelCommand.ButtonClick += ManageModelCommand_ButtonClick;
             // 
@@ -856,7 +856,7 @@
             newProcessCommand.DropDown = processContextMenu;
             newProcessCommand.ImageTransparentColor = Color.Magenta;
             newProcessCommand.Name = "newProcessCommand";
-            newProcessCommand.Size = new Size(32, 22);
+            newProcessCommand.Size = new Size(16, 22);
             newProcessCommand.Text = "new Process";
             newProcessCommand.ButtonClick += NewProcessCommand_ButtonClick;
             // 
@@ -883,7 +883,6 @@
             // 
             // menuProcessArgument
             // 
-            
             menuProcessArgument.Name = "menuProcessArgument";
             menuProcessArgument.Size = new Size(212, 22);
             menuProcessArgument.Text = "browse Process Argument";
@@ -909,7 +908,7 @@
             newRelationshipCommand.Enabled = false;
             newRelationshipCommand.ImageTransparentColor = Color.Magenta;
             newRelationshipCommand.Name = "newRelationshipCommand";
-            newRelationshipCommand.Size = new Size(32, 22);
+            newRelationshipCommand.Size = new Size(16, 22);
             newRelationshipCommand.Text = "new Relationship";
             newRelationshipCommand.ButtonClick += newRelationshipCommand_ButtonClick;
             // 
@@ -924,59 +923,61 @@
             manageScriptingCommand.DropDown = scriptingContextMenu;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
-            manageScriptingCommand.Size = new Size(32, 22);
+            manageScriptingCommand.Size = new Size(16, 22);
             manageScriptingCommand.Text = "Scripting manager";
             manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingAttribute, menuScriptingElement, menuScriptingDocument, menuScriptingDataSource, menuScriptingDataObject });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.Size = new Size(229, 136);
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
+            scriptingContextMenu.Size = new Size(235, 136);
             // 
             // menuScriptingTemplate
             // 
             menuScriptingTemplate.Name = "menuScriptingTemplate";
-            menuScriptingTemplate.Size = new Size(228, 22);
+            menuScriptingTemplate.Size = new Size(234, 22);
             menuScriptingTemplate.Text = "browse Templates";
             menuScriptingTemplate.Click += menuScriptingTemplates_Click;
             // 
-            // menuScriptingDocument
+            // menuScriptingNode
             // 
-            menuScriptingDocument.Name = "menuScriptingDocument";
-            menuScriptingDocument.Size = new Size(228, 22);
-            menuScriptingDocument.Text = "browse Template Documents";
-            menuScriptingDocument.Click += menuScriptingDocument_Click;
+            menuScriptingNode.Name = "menuScriptingNode";
+            menuScriptingNode.Size = new Size(234, 22);
+            menuScriptingNode.Text = "browse Template Node";
+            menuScriptingNode.Click += menuScriptingNode_Click;
             // 
-            // menuScriptingAttribute
+            // menuScriptingNodeOwner
             // 
-            menuScriptingAttribute.Name = "menuScriptingAttribute";
-            menuScriptingAttribute.Size = new Size(228, 22);
-            menuScriptingAttribute.Text = "browse Template Attributes";
-            menuScriptingAttribute.Click += menuScriptingAttribute_Click;
-            // 
-            // bindingModel
-            // 
-            bindingModel.ListChanged += BindingModel_ListChanged;
-            // 
-            // menuScriptingElement
-            // 
-            menuScriptingElement.Name = "menuScriptingElement";
-            menuScriptingElement.Size = new Size(228, 22);
-            menuScriptingElement.Text = "browse Template Elements";
+            menuScriptingNodeOwner.Name = "menuScriptingNodeOwner";
+            menuScriptingNodeOwner.Size = new Size(234, 22);
+            menuScriptingNodeOwner.Text = "browse Template Node Owner";
+            menuScriptingNodeOwner.Click += menuScriptingNodeOwner_Click;
             // 
             // menuScriptingDataSource
             // 
             menuScriptingDataSource.Name = "menuScriptingDataSource";
-            menuScriptingDataSource.Size = new Size(228, 22);
+            menuScriptingDataSource.Size = new Size(234, 22);
             menuScriptingDataSource.Text = "browse Data Sources";
             menuScriptingDataSource.Click += menuScriptingPath_Click;
             // 
             // menuScriptingDataObject
             // 
             menuScriptingDataObject.Name = "menuScriptingDataObject";
-            menuScriptingDataObject.Size = new Size(228, 22);
+            menuScriptingDataObject.Size = new Size(234, 22);
             menuScriptingDataObject.Text = "browse Data Objects";
+            // 
+            // menuScriptingDocument
+            // 
+            menuScriptingDocument.Name = "menuScriptingDocument";
+            menuScriptingDocument.Size = new Size(234, 22);
+            menuScriptingDocument.Text = "browse Template Documents";
+            menuScriptingDocument.Click += menuScriptingDocument_Click;
+            // 
+            // bindingModel
+            // 
+            bindingModel.ListChanged += BindingModel_ListChanged;
             // 
             // Main
             // 
@@ -1109,10 +1110,9 @@
         private ToolStripMenuItem menuModelDefinition;
         private ToolStripMenuItem menuScriptingTemplate;
         private ToolStripMenuItem menuScriptingDocument;
-        private ToolStripMenuItem menuScriptingAttribute;
+        private ToolStripMenuItem menuScriptingNode;
         private ToolStripMenuItem windowToolStripMenuItem;
         private ToolStripMenuItem menuEntityAttributes;
-        private Controls.NamedScopeTreeView namedScopeData;
         private BindingSource bindingModel;
         private ToolStripStatusLabel toolStripStatusUser;
         private ContextMenuStrip securityContextMenu;
@@ -1128,7 +1128,8 @@
         private ToolStripMenuItem menuProcessProperty;
         private ToolStripMenuItem securityAuthorization;
         private ToolStripMenuItem menuScriptingDataSource;
-        private ToolStripMenuItem menuScriptingElement;
         private ToolStripMenuItem menuScriptingDataObject;
+        private ToolStripMenuItem menuScriptingNodeOwner;
+        private Controls.NamedScopeTreeView namedScopeData;
     }
 }

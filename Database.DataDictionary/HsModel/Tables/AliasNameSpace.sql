@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [HsModel].[AliasNameSpace]
 (
 	[AliasId]           UniqueIdentifier Not Null,
-	[AliasMember]       [AppGeneral].[uddtNameSpaceMember] Not Null,
+	[AliasMember]       [AppGeneral].[uddtMember] Not Null,
 	[ParentAliasId]     UniqueIdentifier NULL,
     [SysStart]          DateTime2 (7) NOT NULL,
     [SysEnd]            DateTime2 (7) NOT NULL,

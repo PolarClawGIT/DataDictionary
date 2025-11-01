@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Generic Base class for Scripting Template Attribute
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
+    [Obsolete]
     public class TemplateAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,

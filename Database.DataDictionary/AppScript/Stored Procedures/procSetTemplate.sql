@@ -89,8 +89,8 @@ Begin Try
 	Print FormatMessage ('Insert @Delete: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateNodeOwner]
-	From	[AppScript].[TemplateNodeOwner] T
+	Delete From [AppScript].[TemplateNodeOwner_Old]
+	From	[AppScript].[TemplateNodeOwner_Old] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And

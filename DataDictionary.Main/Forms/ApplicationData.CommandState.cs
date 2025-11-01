@@ -120,6 +120,18 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
+            /// <summary>
+            /// Returns the IndexOf the control for the command with the tool
+            /// </summary>
+            /// <returns></returns>
+            public Int32 IndexOf()
+            {
+                if (Control.GetCurrentParent() is ToolStrip parent)
+                { return parent.Items.IndexOf(Control); }
+                else { return -1; }
+            }
+
+
             private void Control_VisibleChanged(Object? sender, EventArgs e)
             {
                 // Detects if there is anything before the separator and if not, do not show the separator.

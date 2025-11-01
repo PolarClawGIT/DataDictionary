@@ -2,7 +2,7 @@
 (    -- TIP: This matches the C# DataTable structure and GET procedure
     [ProcessId]				UniqueIdentifier NULL,
 	[ArgumentKnownAs]		[AppGeneral].[uddtTitle] Null,
-	[ArgumentName]			[AppGeneral].[uddtNameSpacePath] Null,
+	[ArgumentName]			[AppGeneral].[uddtPath] Null,
 	[OrdinalPosition]       Int Null,
 	[IsPassed]				Bit Null,
 	[IsReturned]			Bit Null,

@@ -1,10 +1,4 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
-using Toolbox.Threading;
-
-namespace DataDictionary.Main.Controls
+﻿namespace DataDictionary.Main.Controls
 {
     static class TreeViewExtension
     {

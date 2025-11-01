@@ -53,13 +53,13 @@ namespace DataDictionary.Main.Forms.Model
             isKeyData = new CheckBox();
             dataTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyTab = new TabPage();
-            propertyData = new DataDictionary.Main.Forms.Model.Controls.PropertyData();
+            propertyData = new DataDictionary.Main.Controls.PropertyData();
             definitionTab = new TabPage();
-            definitionData = new DataDictionary.Main.Forms.Model.Controls.DefinitionData();
+            definitionData = new DataDictionary.Main.Controls.DefinitionData();
             aliasTab = new TabPage();
-            aliasData = new DataDictionary.Main.Forms.Model.Controls.AliasData();
+            aliasData = new DataDictionary.Main.Controls.AliasData();
             subjectAreaTab = new TabPage();
-            subjectArea = new DataDictionary.Main.Forms.Model.Controls.SubjectAreaData();
+            subjectArea = new DataDictionary.Main.Controls.SubjectAreaData();
             memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             xElementTab = new TabPage();
             xElementData = new DataDictionary.Main.Controls.TextBoxData();
@@ -560,14 +560,14 @@ namespace DataDictionary.Main.Forms.Model
         private Controls.SubjectAreaData subjectArea;
         private TabPage definitionTab;
         private BindingSource bindingDefinition;
-        private DataDictionary.Main.Controls.TextBoxData memberNameData;
-        private DataDictionary.Main.Controls.TextBoxData dataLengthData;
-        private DataDictionary.Main.Controls.TextBoxData dataPrecisionData;
-        private DataDictionary.Main.Controls.ComboBoxData dataTypeData;
+        private Controls.TextBoxData memberNameData;
+        private Controls.TextBoxData dataLengthData;
+        private Controls.TextBoxData dataPrecisionData;
+        private Controls.ComboBoxData dataTypeData;
         private Controls.PropertyData propertyData;
         private Controls.DefinitionData definitionData;
         private Controls.AliasData aliasData;
-        private DataDictionary.Main.Controls.TextBoxData xElementData;
+        private Controls.TextBoxData xElementData;
         private ToolStrip xElementToolStrip;
         private ToolStripButton xElementRenderCommand;
     }

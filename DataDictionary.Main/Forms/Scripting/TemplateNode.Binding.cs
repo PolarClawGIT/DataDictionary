@@ -1,9 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
+using DataDictionary.Main.Controls;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -15,25 +15,23 @@ namespace DataDictionary.Main.Forms.Scripting
         class FormBinding
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-            //public required Action OnRefresh { get; init; }
 
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> templates =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource TemplateNodeBinding { private get; init; }
-            BindingList<BindingValue> templateNodes { get; } = new BindingList<BindingValue>();
-
-            BindingView<TemplateAttributeValue> attributeNodes =
-                new BindingView<TemplateAttributeValue>([])
+            public required BindingSource NodeBinding { private get; init; }
+            BindingView<TemplateNodeValue> templateNodes =
+                new BindingView<TemplateNodeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            BindingView<TemplateElementValue> elementNodes =
-                new BindingView<TemplateElementValue>([])
+            public required BindingSource NodeOwnerBinding { private get; init; }
+            BindingView<TemplateNodeOwnerValue> templateNodeOwners =
+                new BindingView<TemplateNodeOwnerValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            ITemplate data = BusinessData.Scripting;
+            public ITemplate Data { private get; set; } = BusinessData.Scripting;
 
             public FormBinding()
             { }
@@ -41,428 +39,134 @@ namespace DataDictionary.Main.Forms.Scripting
             public void Load(TemplateIndex template)
             {
                 TemplateBinding.RaiseListChangedEvents = false;
-                TemplateNodeBinding.RaiseListChangedEvents = false;
+                NodeBinding.RaiseListChangedEvents = false;
+                NodeOwnerBinding.RaiseListChangedEvents = false;
 
-                templates = new BindingView<TemplateValue>(data.Templates, w => template.Equals(w));
-                attributeNodes = new BindingView<TemplateAttributeValue>(data.Attributes, w => template.Equals(w));
-                elementNodes = new BindingView<TemplateElementValue>(data.Elements, w => template.Equals(w));
-
-                templateNodes.Clear();
-                foreach (TemplateAttributeValue item in attributeNodes)
-                { templateNodes.Add(new BindingValue(item)); }
-
-                foreach (TemplateElementValue item in elementNodes)
-                { templateNodes.Add(new BindingValue(item)); }
+                templates = new BindingView<TemplateValue>(Data.Templates, w => template.Equals(w));
+                templateNodes = new BindingView<TemplateNodeValue>(Data.Nodes, w => template.Equals(w));
+                templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners,w => new TemplateNodeIndex().Equals(w) );
 
                 TemplateBinding.DataSource = templates;
-                TemplateNodeBinding.DataSource = templateNodes;
+                NodeBinding.DataSource = templateNodes;
 
-                TemplateBinding.RaiseListChangedEvents = false;
-                TemplateNodeBinding.RaiseListChangedEvents = false;
+                TemplateBinding.RaiseListChangedEvents = true;
+                NodeBinding.RaiseListChangedEvents = true;
+                NodeOwnerBinding.RaiseListChangedEvents = true;
+
                 TemplateBinding.ResetBindings(false);
-                TemplateNodeBinding.ResetBindings(false);
-            }
+                NodeBinding.ResetBindings(false);
+                NodeOwnerBinding.ResetBindings(false);
 
-            public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
+                NodeBinding.CurrentChanged += NodeBinding_CurrentChanged;
 
-                work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
-                work.AddRange(data.Delete(template));
-                work.AddRange(data.Load(factory, template));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
+                void NodeBinding_CurrentChanged(Object? sender, EventArgs e)
                 {
-                    Load(template);
-                    if (onComplete is not null) { onComplete(args); }
+                    NodeOwnerBinding.RaiseListChangedEvents = false;
+
+                    if (TryGetValue(out TemplateNodeValue? currentNode))
+                    {
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(currentNode);
+                        templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(Data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
+                        NodeOwnerBinding.DataSource = templateNodeOwners;
+                    }
+
+                    NodeOwnerBinding.RaiseListChangedEvents = true;
+                    NodeOwnerBinding.ResetBindings(false);
                 }
             }
 
-            public void Load(TemplateIndex template, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = ITemplate.Create(); } });
-                work.AddRange(data.Load(factory, template, temporal));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    Load(template);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public Boolean SetPosition(ITemplateNodeIndex node)
+            public Boolean TrySetPosition(ITemplateNodeIndex node)
             {
                 TemplateNodeIndex key = new TemplateNodeIndex(node);
 
-                if (templateNodes.FirstOrDefault(w => key.Equals(w)) is BindingValue value)
-                { TemplateNodeBinding.Position = templateNodes.IndexOf(value); return true; }
+                if (templateNodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue value)
+                { NodeBinding.Position = templateNodes.IndexOf(value); return true; }
                 else { return false; }
             }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out ITemplateNodeValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
             {
-                if (TemplateNodeBinding.Position >= 0
-                    && TemplateNodeBinding.Current is ITemplateNodeValue value)
+                if (TemplateBinding.Position >= 0
+                    && TemplateBinding.Current is TemplateValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
-        }
-
-        class BindingValue : IBindingPropertyChanged,
-            ITemplateNodeValue, ITemplateAttributeValue, ITemplateElementValue,
-            IKeyEquality<ITemplateNodeIndex>, // IKeyEquality<ITemplateAttributeIndex>, IKeyEquality<ITemplateElementIndex>
-            IScopeType, ITemporal
-        {
-            TemplateAttributeValue? attributeValue;
-            TemplateElementValue? elementValue;
-
-            public String? NodeName
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateNodeValue? result)
             {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.AttributeName; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.ElementName; }
-                    else { return null; }
-                }
+                if (NodeBinding.Position >= 0
+                    && NodeBinding.Current is TemplateNodeValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
 
-                set
+            public TemplateNodeValue NewValue(TemplateIndex template)
+            {
+                TemplateNodeValue newValue = new TemplateNodeValue(template);
+                templateNodes.Add(newValue);
+                TrySetPosition(newValue);
+                return newValue;
+            }
+
+            public void RemoveValue()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                { templateNodes.Remove(value); }
+            }
+
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                Boolean isGrant = false;
+                Boolean isNode = TryGetValue(out TemplateNodeValue? _);
+
+                SecurableIndex? templateKey = null;
+                if (TryGetValue(out TemplateValue? templateValue))
+                { templateKey = new TemplateIndex(templateValue); }
+
+                isGrant = BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner
+                    || BusinessData.Authorization.IsGrant(templateKey);
+
+                switch (command)
                 {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.AttributeName = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.ElementName = value; }
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return isGrant;
+                    case Enumerations.CommandType.Delete: return isGrant && isNode;
+                    case Enumerations.CommandType.OpenDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.SaveDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.DeleteDatabase: return isGrant && isNode;
+                    case Enumerations.CommandType.HistoryDatabase: return isGrant && isNode;
+                    default: return false;
                 }
             }
 
-            public Int32? RenderOrder
+            public Boolean GetLocked()
             {
-                get
+                if (TryGetValue(out TemplateNodeValue? value))
                 {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.RenderOrder; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.RenderOrder; }
-                    else { return null; }
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
                 }
+                else return true;
+            }
 
-                set
+            public void BuildTree(TreeView tree)
+            {
+                if (TryGetValue(out TemplateValue? template))
                 {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.RenderOrder = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.RenderOrder = value; }
+                    TemplateIndex key = new TemplateIndex(template);
+                    tree.BuildTree(template, Data.Nodes, Data.NodeOwners); 
                 }
             }
 
-            public NodeRenderAsType RenderValueAs
+            public void AddNodeOwner(TemplateNodeIndex ownerNode)
             {
-                get
+                if (TryGetValue(out TemplateNodeValue? value))
                 {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.RenderValueAs; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.RenderValueAs; }
-                    else { return NodeRenderAsType.none; }
-                }
-
-                set
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.RenderValueAs = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.RenderValueAs = value; }
+                    TemplateNodeOwnerValue newItem = new TemplateNodeOwnerValue(value, ownerNode);
+                    templateNodeOwners.Add(newItem);
                 }
             }
-
-            public String? FixedValue
-            {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.FixedValue; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.FixedValue; }
-                    else { return null; }
-                }
-
-                set
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.FixedValue = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.FixedValue = value; }
-                }
-            }
-
-            public ScopeType ObjectScope
-            {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.ObjectScope; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.ObjectScope; }
-                    else { return ScopeType.Null; }
-                }
-
-                set
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.ObjectScope = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.ObjectScope = value; }
-                }
-            }
-
-            public String? ObjectProperty
-            {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.ObjectProperty; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.ObjectProperty; }
-                    else { return null; }
-                }
-
-                set
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.ObjectProperty = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.ObjectProperty = value; }
-                }
-            }
-
-            public Guid? ModelPropertyId
-            {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.ModelPropertyId; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.ModelPropertyId; }
-                    else { return null; }
-                }
-
-                set
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { attribute.ModelPropertyId = value; }
-                    else if (elementValue is TemplateElementValue element)
-                    { element.ModelPropertyId = value; }
-                }
-            }
-
-            public Guid? NodeId
-            {
-                get
-                {
-                    if (attributeValue is TemplateAttributeValue attribute)
-                    { return attribute.AttributeId; }
-                    else if (elementValue is TemplateElementValue element)
-                    { return element.ElementId; }
-                    else { return null; }
-                }
-            }
-
-            String? DataLayer.AppScript.ITemplateAttributeItem.AttributeName
-            {
-                get
-                {
-                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeItem attribute)
-                    { return attribute.AttributeName; }
-                    else { return null; }
-                }
-            }
-
-            Guid? DataLayer.AppScript.ITemplateAttributeKey.AttributeId
-            {
-                get
-                {
-                    if (attributeValue is DataLayer.AppScript.ITemplateAttributeKey attribute)
-                    { return attribute.AttributeId; }
-                    else { return null; }
-                }
-            }
-
-            public Guid? TemplateId
-            {
-                get
-                {
-                    if (attributeValue is ITemplateIndex attribute)
-                    { return attribute.TemplateId; }
-                    else if (elementValue is ITemplateIndex element)
-                    { return element.TemplateId; }
-                    else { return null; }
-                }
-            }
-
-            public DataLayer.ITemporal Temporal
-            {
-                get
-                {
-                    if (attributeValue is ITemporal attribute)
-                    { return attribute.Temporal; }
-                    else if (elementValue is ITemporal element)
-                    { return element.Temporal; }
-                    else { throw new NotImplementedException(); }
-                }
-            }
-
-            DataIndex IDataValue.Index
-            {
-                get
-                {
-                    if (attributeValue is IDataValue attribute)
-                    { return attribute.Index; }
-                    else if (elementValue is IDataValue element)
-                    { return element.Index; }
-                    else { throw new NotImplementedException(); }
-                }
-            }
-
-            String IDataValue.Title { get { return NodeName ?? String.Empty; } }
-
-            public ScopeType Scope
-            {
-                get
-                {
-                    if (attributeValue is IScopeType attribute)
-                    { return attribute.Scope; }
-                    else if (elementValue is IScopeType element)
-                    { return element.Scope; }
-                    else { return ScopeType.Null; }
-                }
-            }
-
-            String? DataLayer.AppScript.ITemplateElementItem.ElementName
-            {
-                get
-                {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
-                    { return element.ElementName; }
-                    else { return null; }
-                }
-            }
-
-            Guid? DataLayer.AppScript.ITemplateElementKey.ElementId
-            {
-                get
-                {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
-                    { return element.ElementId; }
-                    else { return null; }
-                }
-            }
-
-            public Guid? ParentElementId
-            {
-                get
-                {
-                    if (elementValue is DataLayer.AppScript.ITemplateElementItem element)
-                    { return element.ParentElementId; }
-                    else { return null; }
-                }
-                set
-                {
-                    if (elementValue is TemplateElementValue element)
-                    { element.ParentElementId = value; }
-                }
-            }
-
-            public event PropertyChangedEventHandler? PropertyChanged;
-
-            public BindingValue(TemplateAttributeValue attribute)
-            {
-                attributeValue = attribute;
-                attribute.PropertyChanged += Attribute_PropertyChanged;
-
-                void Attribute_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (PropertyChanged is PropertyChangedEventHandler handler)
-                    { handler(this, new PropertyChangedEventArgs(e.PropertyName)); }
-                }
-            }
-
-            public BindingValue(TemplateElementValue element)
-            {
-                elementValue = element;
-                element.PropertyChanged += Element_PropertyChanged;
-
-                void Element_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (PropertyChanged is PropertyChangedEventHandler handler)
-                    { handler(this, new PropertyChangedEventArgs(e.PropertyName)); }
-                }
-            }
-
-            #region IEquatable
-            public Boolean Equals(ITemplateNodeIndex? other)
-            { return new TemplateNodeIndex(this).Equals(other); }
-
-            public Boolean Equals(BindingValue? other)
-            {
-                return other is BindingValue value
-                    && NodeId is Guid
-                    && value.NodeId is Guid
-                    && Guid.Equals(NodeId, value.NodeId);
-            }
-
-            /// <inheritdoc/>
-            public override Boolean Equals(object? obj)
-            {
-                return obj is BindingValue value
-                    && NodeId is Guid
-                    && value.NodeId is Guid
-                    && Guid.Equals(NodeId, value.NodeId);
-            }
-
-            /// <inheritdoc/>
-            public static Boolean operator ==(BindingValue left, IDataSourceIndex right)
-            { return left.Equals(right); }
-
-            /// <inheritdoc/>
-            public static Boolean operator !=(BindingValue left, IDataSourceIndex right)
-            { return !left.Equals(right); }
-
-            /// <inheritdoc/>
-            public static Boolean operator ==(BindingValue left, ITemplateIndex right)
-            { return left.Equals(right); }
-
-            /// <inheritdoc/>
-            public static Boolean operator !=(BindingValue left, ITemplateIndex right)
-            { return !left.Equals(right); }
-
-            /// <inheritdoc/>
-            public static Boolean operator ==(BindingValue left, BindingValue right)
-            { return left.Equals(right); }
-
-            /// <inheritdoc/>
-            public static Boolean operator !=(BindingValue left, BindingValue right)
-            { return !left.Equals(right); }
-
-            /// <inheritdoc/>
-            public override Int32 GetHashCode()
-            {
-                if (NodeId is Guid) { return NodeId.GetHashCode(); }
-                else { return Guid.Empty.GetHashCode(); }
-            }
-            #endregion
-
         }
     }
 }

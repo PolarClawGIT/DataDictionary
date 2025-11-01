@@ -5,7 +5,7 @@
 	[MemberParentId]   UniqueIdentifier Null,
 	[AssemblyName]     NVarChar(1023) Null,
 	[MemberNameSpace]  NVarChar(Max) Null,
-	[MemberName]       [AppGeneral].[uddtNameSpaceMember] Not Null,
+	[MemberName]       [AppGeneral].[uddtMember] Not Null,
 	[MemberType]       NVarChar(10) Null, 
 	[MemberData]       XML Null,
 	-- Temporal Data

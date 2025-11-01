@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete]
     public interface ITemplateElementIndexParent : ITemplateElementKeyParent
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class TemplateElementIndexParent : TemplateElementKeyParent,
         ITemplateElementIndexParent, ITemplateElementIndex
     {

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -22,19 +23,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITemplateData Templates { get; }
 
         /// <summary>
-        /// List of Scripting Elements for the Template
+        /// List of Scripting Nodes for the Template
         /// </summary>
-        ITemplateElementData Elements { get; }
+        ITemplateNodeData Nodes { get; }
 
         /// <summary>
-        /// List of Scripting Attributes for the Template
+        /// List of Scripting Node owners for the Template.
         /// </summary>
-        ITemplateAttributeData Attributes { get; }
-
-        /// <summary>
-        /// List of Scripting Node/Attribute owners for the Template.
-        /// </summary>
-        ITemplateNodeOwnerData AttributeOwners { get; }
+        ITemplateNodeOwnerData NodeOwners { get; }
 
         /// <summary>
         /// List of Scripting Data Sources asscoated with a Templates.
@@ -55,39 +51,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TemplateData templateValues = new TemplateData();
 
         /// <inheritdoc/>
-        public ITemplateElementData Elements { get { return templateElements; } }
-        TemplateElementData templateElements = new TemplateElementData();
+        public ITemplateNodeData Nodes { get { return templateNodes; } }
+        TemplateNodeData templateNodes = new TemplateNodeData();
 
         /// <inheritdoc/>
-        public ITemplateAttributeData Attributes { get { return templateAttributes; } }
-        TemplateAttributeData templateAttributes = new TemplateAttributeData();
-
-        /// <inheritdoc/>
-        public ITemplateNodeOwnerData AttributeOwners { get { return templateNodeOwners; } }
+        public ITemplateNodeOwnerData NodeOwners { get { return templateNodeOwners; } }
         TemplateNodeOwnerData templateNodeOwners = new TemplateNodeOwnerData();
 
         /// <inheritdoc/>
         public ITemplateInputData TemplateSources { get { return templateSources; } }
         TemplateInputData templateSources = new TemplateInputData();
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
+        public Template() : base()
         {
-            get
+            templateValues.ListChanged += OnListChanged;
+            templateNodes.ListChanged += OnListChanged;
+            templateNodeOwners.ListChanged += OnListChanged;
+            templateSources.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
             {
-                return templateValues.RaiseListChangedEvents
-                    && templateElements.RaiseListChangedEvents
-                    && templateAttributes.RaiseListChangedEvents
-                    && templateNodeOwners.RaiseListChangedEvents
-                    && templateSources.RaiseListChangedEvents;
-            }
-            set
-            {
-                templateValues.RaiseListChangedEvents = value;
-                templateElements.RaiseListChangedEvents = value;
-                templateAttributes.RaiseListChangedEvents = value;
-                templateNodeOwners.RaiseListChangedEvents = value;
-                templateSources.RaiseListChangedEvents = value;
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
             }
         }
 
@@ -97,8 +82,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<DataTable> work = new List<DataTable>();
             work.Add(templateValues.ToDataTable());
-            work.Add(templateElements.ToDataTable());
-            work.Add(templateAttributes.ToDataTable());
+            work.Add(templateNodes.ToDataTable());
             work.Add(templateNodeOwners.ToDataTable());
             work.Add(templateSources.ToDataTable());
             return work;
@@ -109,8 +93,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Import(DataSet source)
         {
             templateValues.Load(GetTable(templateValues.BindingName));
-            templateElements.Load(GetTable(templateElements.BindingName));
-            templateAttributes.Load(GetTable(templateAttributes.BindingName));
+            templateNodes.Load(GetTable(templateNodes.BindingName));
             templateNodeOwners.Load(GetTable(templateNodeOwners.BindingName));
             templateSources.Load(GetTable(templateSources.BindingName));
 
@@ -135,8 +118,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
-            work.AddRange(templateElements.Load(factory, dataKey));
-            work.AddRange(templateAttributes.Load(factory, dataKey));
+            work.AddRange(templateNodes.Load(factory, dataKey));
             work.AddRange(templateNodeOwners.Load(factory, dataKey));
             work.AddRange(templateSources.Load(factory, dataKey));
             return work;
@@ -149,8 +131,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(templateElements.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(templateAttributes.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateNodes.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateNodeOwners.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateSources.Load(factory, dataKey, asOfUtcDate));
             return work;
@@ -162,8 +143,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey));
-            work.AddRange(templateElements.Load(factory, dataKey));
-            work.AddRange(templateAttributes.Load(factory, dataKey));
+            work.AddRange(templateNodes.Load(factory, dataKey));
             work.AddRange(templateNodeOwners.Load(factory, dataKey));
             work.AddRange(templateSources.Load(factory, dataKey));
             return work;
@@ -176,8 +156,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateValues.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(templateElements.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(templateAttributes.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(templateNodes.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateNodeOwners.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(templateSources.Load(factory, dataKey, asOfUtcDate));
             return work;
@@ -189,8 +168,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Save(factory, dataKey));
-            work.AddRange(templateElements.Save(factory, dataKey));
-            work.AddRange(templateAttributes.Save(factory, dataKey));
+            work.AddRange(templateNodes.Save(factory, dataKey));
             work.AddRange(templateNodeOwners.Save(factory, dataKey));
             work.AddRange(templateSources.Save(factory, dataKey));
             return work;
@@ -202,8 +180,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Save(factory, dataKey));
-            work.AddRange(templateElements.Save(factory, dataKey));
-            work.AddRange(templateAttributes.Save(factory, dataKey));
+            work.AddRange(templateNodes.Save(factory, dataKey));
             work.AddRange(templateNodeOwners.Save(factory, dataKey));
             work.AddRange(templateSources.Save(factory, dataKey));
             return work;
@@ -216,8 +193,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete(dataKey));
             work.AddRange(templateValues.Delete(dataKey));
-            work.AddRange(templateElements.Delete(dataKey));
-            work.AddRange(templateAttributes.Delete(dataKey));
+            work.AddRange(templateNodes.Delete(dataKey));
             work.AddRange(templateNodeOwners.Delete(dataKey));
             work.AddRange(templateSources.Delete(dataKey));
             return work;
@@ -230,8 +206,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete(dataKey));
             work.AddRange(templateValues.Delete(dataKey));
-            work.AddRange(templateElements.Delete(dataKey));
-            work.AddRange(templateAttributes.Delete(dataKey));
+            work.AddRange(templateNodes.Delete(dataKey));
             work.AddRange(templateNodeOwners.Delete(dataKey));
             work.AddRange(templateSources.Delete(dataKey));
             return work;
@@ -244,8 +219,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValues.Delete());
             work.AddRange(templateValues.Delete());
-            work.AddRange(templateElements.Delete());
-            work.AddRange(templateAttributes.Delete());
+            work.AddRange(templateNodes.Delete());
             work.AddRange(templateNodeOwners.Delete());
             work.AddRange(templateSources.Delete());
             return work;
@@ -263,8 +237,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Remove(AppModel.IModelIndex dataKey)
         {
             templateValues.Remove(dataKey);
-            templateElements.Remove(dataKey);
-            templateAttributes.Remove(dataKey);
+            templateNodes.Remove(dataKey);
             templateNodeOwners.Remove(dataKey);
             templateSources.Remove(dataKey);
         }
@@ -273,8 +246,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Remove(ITemplateIndex dataKey)
         {
             templateValues.Remove(dataKey);
-            templateElements.Remove(dataKey);
-            templateAttributes.Remove(dataKey);
+            templateNodes.Remove(dataKey);
             templateNodeOwners.Remove(dataKey);
             templateSources.Remove(dataKey);
         }
@@ -283,20 +255,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Clear()
         {
             templateValues.Clear();
-            templateElements.Clear();
-            templateAttributes.Clear();
+            templateNodes.Clear();
             templateNodeOwners.Clear();
             templateSources.Clear();
-        }
-
-        /// <inheritdoc/>
-        public void ResetBindings()
-        {
-            templateValues.ResetBindings();
-            templateElements.ResetBindings();
-            templateAttributes.ResetBindings();
-            templateNodeOwners.ResetBindings();
-            templateSources.ResetBindings();
         }
 
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope, Func<TemplateValue, INamedScopeSourceValue?>? getParent)
@@ -306,5 +267,37 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return work;
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return templateValues.RaiseListChangedEvents
+                    && templateNodes.RaiseListChangedEvents
+                    && templateNodeOwners.RaiseListChangedEvents
+                    && templateSources.RaiseListChangedEvents;
+            }
+            set
+            {
+                templateValues.RaiseListChangedEvents = value;
+                templateNodes.RaiseListChangedEvents = value;
+                templateNodeOwners.RaiseListChangedEvents = value;
+                templateSources.RaiseListChangedEvents = value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public void ResetBindings()
+        {
+            templateValues.ResetBindings();
+            templateNodes.ResetBindings();
+            templateNodeOwners.ResetBindings();
+            templateSources.ResetBindings();
+        }
+        #endregion
     }
 }

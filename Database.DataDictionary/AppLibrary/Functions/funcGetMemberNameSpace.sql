@@ -6,22 +6,16 @@ RETURNS TABLE AS RETURN (
 	With [Data] As (
 		Select	[MemberId],
 				NullIf([MemberParentId], [MemberId]) As [MemberParentId],
-				Convert(NVarChar(Max),
-					FormatMessage('[%s]',[MemberName])) As [MemberNameSpace],
-				Convert(NVarChar(Max), Null) As [ParentNameSpace],
+				[AppGeneral].[funcCreatePath]([MemberName], Null) As [MemberNameSpace],
+				[AppGeneral].[funcCreatePath](Null, Null) As [ParentNameSpace],
 				[MemberName]
 		From	[AppLibrary].[LibraryMember]
 		Where	[MemberId] = @MemberId
 		Union All
 		Select	D.[MemberId],
 				NullIf(P.[MemberParentId], D.[MemberId]) As [MemberParentId],
-				Convert(NVarChar(Max),
-					FormatMessage('[%s].%s',P.[MemberName],D.[MemberNameSpace])) As [MemberNameSpace],
-				Convert(NVarChar(Max),
-					IIF(D.[ParentNameSpace] is Null,
-					FormatMessage('[%s]',P.[MemberName]),
-					FormatMessage('[%s].%s',P.[MemberName], D.[ParentNameSpace])))
-					As [ParentNameSpace],
+				[AppGeneral].[funcCreatePath](P.[MemberName], D.[MemberNameSpace]) As [MemberNameSpace],
+				[AppGeneral].[funcCreatePath](P.[MemberName], D.[ParentNameSpace]) As [ParentNameSpace],
 				D.[MemberName]
 		From	[Data] D
 				Inner Join [AppLibrary].[LibraryMember] P

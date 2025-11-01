@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace Toolbox.BindingTable
 {
@@ -14,10 +7,12 @@ namespace Toolbox.BindingTable
     /// </summary>
     /// <typeparam name="TRow"></typeparam>
     /// <remarks>
-    /// This class is intended to perform adds, updates, and deletes against a base BindingList.
-    /// However, it is filtered to a sub-set of the base.
+    /// This class is intended to perform adds, updates, and deletes against a base BindingList.<br/>
+    /// The list can be filtered to a sub-set of the base.<br/>
     /// The rows are pointers to the rows in the base BindingList. Updates are being applied against the same object.
-    /// Insert and Deletes are rigged to Insert and Update to both the base and the local list.
+    /// Insert and Deletes are rigged to Insert and Update to both the base and the BindingView.<br/>
+    /// ChangedList events are fired after the data has been inserted/removed in both lists.
+    /// The base BindingList occurs first followed by the BindingView events.
     /// </remarks>
     public class BindingView<TRow> : BindingList<TRow>
         where TRow : class, IBindingPropertyChanged
@@ -60,7 +55,7 @@ namespace Toolbox.BindingTable
 
             // Special handing for IBindingList
             if (baseData is IBindingList bindingList)
-            { bindingList.ListChanged += BindingList_ListChanged; }
+            { bindingList.ListChanged += BindingList_ListChanged;  }
 
         }
 
@@ -104,10 +99,7 @@ namespace Toolbox.BindingTable
         TRow? addNewCoreItem = null; // Track the extra row created by DataGridView.
         Boolean isAddNewCore = false; // Tracks if AddNewCore is being executed. We are dealing with a fake DataGridView Row.
 
-        /// <summary>
-        /// Adds a new item to the end of the collection.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         /// <remarks>
         /// This is normally called by DataGridView to create a new row that is not yet part of the DataGridView.
         /// The addNewCoreItem item tracks this row that is pending. 
@@ -127,10 +119,7 @@ namespace Toolbox.BindingTable
             return newValue;
         }
 
-        /// <summary>
-        /// Discards a pending new item.
-        /// </summary>
-        /// <param name="itemIndex"></param>
+        /// <inheritdoc/>
         /// <remarks>
         /// This is called if the DataGridView does not commit the new item.
         /// Example: closing the Form or pressing Escape on the DataGridView.
@@ -145,10 +134,7 @@ namespace Toolbox.BindingTable
             base.CancelNew(itemIndex);
         }
 
-        /// <summary>
-        /// Commits a pending new item to the collection.
-        /// </summary>
-        /// <param name="itemIndex"></param>
+        /// <inheritdoc/>
         /// <remarks>
         /// This gets called several times during the process of the DataGridView working with a new row.
         /// The first time is as part of the AddNewCore. At this point, the row is not real. Don't do anything to the row.
@@ -175,26 +161,59 @@ namespace Toolbox.BindingTable
             base.ClearItems();
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Event order:<br/>
+        /// - Insert into BindingView (no ListChanged event raised).<br/>
+        /// - Insert into Base, if BindingList the ListChanged event is raised.<br/>
+        /// - Raise the ListChanged on BindingView.
+        /// </remarks>
         protected override void InsertItem(int index, TRow item)
         {
+            Boolean raisingEvents = RaiseListChangedEvents;
+            RaiseListChangedEvents = false;
+
             if (!directAdd.Contains(item))
             { directAdd.Add(item); }
 
-            base.InsertItem(base.Count, item);
+            Int32 baseIndex = base.Count;
+            base.InsertItem(baseIndex, item);
 
+            // Causes ListChange event to occur on base.
             if (!isAddNewCore)
-            { BaseInsert(BaseCount(), item); } // Causes ListChange event to occur on base.
+            { BaseInsert(BaseCount(), item); } 
+
+            // Cuases ListChange event to occur on this.
+            RaiseListChangedEvents = raisingEvents;
+            if (raisingEvents)
+            { OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, baseIndex)); }
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Event order:<br/>
+        /// - Remove from BindingView (no ListChanged event raised).<br/>
+        /// - Remove from Base, if BindingList the ListChanged event is raised.<br/>
+        /// - Raise the ListChanged on BindingView.
+        /// </remarks>
         protected override void RemoveItem(int index)
         {
+            Boolean raisingEvents = RaiseListChangedEvents;
+            RaiseListChangedEvents = false;
+
             if (directAdd.Contains(this[index]))
             { directAdd.Remove(this[index]); }
 
             Int32 baseIndex = BaseIndexOf(this[index]);
             base.RemoveItem(index);
-            
-            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
+
+            // Causes ListChange event to occur on base.
+            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } 
+
+            // Cuases ListChange event to occur on this.
+            RaiseListChangedEvents = raisingEvents;
+            if (raisingEvents)
+            { OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, baseIndex)); }
         }
 
         /// <summary>
@@ -208,7 +227,7 @@ namespace Toolbox.BindingTable
             // The only guess I got has to do with multi-threading not raising the event as expected.
             ResetBindings();
 
-            if(RaiseListChangedEvents)
+            if (RaiseListChangedEvents)
             { OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1)); }
         }
 

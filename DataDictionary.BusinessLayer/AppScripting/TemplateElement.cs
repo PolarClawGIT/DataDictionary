@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
+    [Obsolete]
     internal class TemplateElement
     {
     }

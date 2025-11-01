@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +7,6 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Forms.Model.ComboBoxList;
 using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms.Model
@@ -39,6 +37,8 @@ namespace DataDictionary.Main.Forms.Model
             };
             formBinding.Init();
 
+            SetTitle(bindingEntity);
+
             SetRowState(
                 bindingEntity,
                 bindingProperty,
@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAlias,
                 bindingSubjectArea,
                 bindingAttribute);
-            SetTitle(bindingEntity);
+            
             SetCommand(ScopeType.ModelEntity,
                 CommandType.Delete,
                 CommandType.OpenDatabase,

@@ -11,7 +11,7 @@
 	-- An orphan is a Alias with no reference to it.
 	-- This is difficult to track and cannot be historically guaranteed.
 	[AliasId]           UniqueIdentifier Not Null CONSTRAINT [DF_AliasId] DEFAULT (newid()),
-	[AliasMember]       [AppGeneral].[uddtNameSpaceMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
+	[AliasMember]       [AppGeneral].[uddtMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
 	[ParentAliasId]     UniqueIdentifier NULL,
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Alias_SysStart] DEFAULT (sysdatetime()),

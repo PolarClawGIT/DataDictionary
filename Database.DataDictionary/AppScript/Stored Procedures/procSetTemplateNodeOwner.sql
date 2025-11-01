@@ -5,7 +5,7 @@
 AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ScriptingAttributeOwner.
+/* Description: Performs Set on TemplateNodeOwner.
 */
 
 -- Transaction Handling
@@ -27,53 +27,82 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-			[TemplateId]            UniqueIdentifier NOT NULL,
-			[AttributeId]			UniqueIdentifier NOT NULL,
-			[ElementId]				UniqueIdentifier NOT NULL,
-		Primary Key ([AttributeId], [ElementId]))
+			[NodeId]		UniqueIdentifier NOT NULL,
+			[NodeOwnerId]	UniqueIdentifier Not NULL,
+			[TemplateId]	UniqueIdentifier NOT NULL,
+			[NodePath]		[AppGeneral].[uddtPath] Null,
+			[NodeOwnerPath]	[AppGeneral].[uddtPath] Null)
+	Declare @NullPath		[AppGeneral].[uddtPath] = null
 
+	-- Root Nodes
+	;With [Nodes] As (
+		Select	N.[NodeId],
+				Convert(UniqueIdentifier, Null) As [NodeOwnerId],
+				N.[TemplateId],
+				[AppGeneral].[funcCreatePath](N.[NodeName], Null) As [NodePath],
+				@NullPath As [NodeOwnerPath]
+		From	[AppScript].[TemplateNode] N
+				Left Join @Data D
+				On	N.[NodeId] = D.[NodeId]
+		Where	D.[NodeId] is Null And
+				(@TemplateId is Not Null Or @ModelId is Not Null) And
+				(@TemplateId is Null Or @TemplateId = N.[TemplateId])  And
+				(@ModelId is Null Or N.[TemplateId] In (
+					Select	[TemplateId]
+					From	[AppScript].[ScriptingModel]
+					Where	[ModelId] = @ModelId))
+		Union -- Child Nodes
+		Select	D.[NodeId],
+				D.[NodeOwnerId] As [NodeOwnerId],
+				N.[TemplateId],
+				[AppGeneral].[funcCreatePath](P.[QualifiedName], N.[NodeName]) As [NodePath],
+				P.[QualifiedName] As [NodeOwnerPath]
+		From	@Data D
+				Inner Join [AppScript].[TemplateNode] N
+				On	D.[NodeId] = N.[NodeId]
+				Cross Apply [AppGeneral].[funcParseName](D.[NodeOwnerPath]) P
+		Where	P.[IsBase] = 1)
 	Insert Into @Values
-	Select	IsNull([TemplateId], @TemplateId) As [TemplateId],
-			[AttributeId],
-			[ElementId]
-	From	@Data D
-	Where	(@TemplateId is Null And [TemplateId] is Not Null) Or
-			(@TemplateId is Not Null And IsNull([TemplateId], @TemplateId) = @TemplateId)
+	Select	N.[NodeId],
+			IsNull(N.[NodeOwnerId], P.[NodeId]) As [NodeOwnerId],
+			N.[TemplateId],
+			N.[NodePath],
+			N.[NodeOwnerPath]
+	From	[Nodes] N
+			Inner Join [Nodes] P
+			On	N.[NodeOwnerPath] = P.[NodePath]
 	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	-- Set Transaction Log
-	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
 	Delete From [AppScript].[TemplateNodeOwner]
 	From	[AppScript].[TemplateNodeOwner] T
 			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId] And
-				T.[AttributeId] = S.[AttributeId] And
-				T.[ElementId] = S.[ElementId]
-	Where	S.[AttributeId] is Null And
+			On	T.[NodeId] = S.[NodeId] And
+				T.[NodeOwnerId] = S.[NodeOwnerId] And
+				T.[TemplateId] = S.[TemplateId]
+	Where	S.[NodeId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
 			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
 			(@ModelId is Null Or T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[ScriptingModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNodeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[TemplateNodeOwner] (
-			[TemplateId],
-			[AttributeId],
-			[ElementId])
-	Select	S.[TemplateId],
-			S.[AttributeId],
-			S.[ElementId]
+			[NodeId],
+			[NodeOwnerId],
+			[TemplateId])
+	Select	S.[NodeId],
+			S.[NodeOwnerId],
+			S.[TemplateId]
 	From	@Values S
 			Left Join [AppScript].[TemplateNodeOwner] T
-			On	S.[TemplateId] = T.[TemplateId] And
-				S.[AttributeId] = T.[AttributeId] And
-				S.[ElementId] = T.[ElementId]
-	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[NodeId] = S.[NodeId] And
+				T.[NodeOwnerId] = S.[NodeOwnerId] And
+				T.[TemplateId] = S.[TemplateId]
+	Where	T.[NodeId] is Null
+	Print FormatMessage ('Insert [AppScript].[TemplateNodeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

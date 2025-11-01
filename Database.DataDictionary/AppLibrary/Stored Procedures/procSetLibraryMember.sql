@@ -28,7 +28,7 @@ Begin Try
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
-		[MemberName]            [AppGeneral].[uddtNameSpaceMember] Not Null,
+		[MemberName]            [AppGeneral].[uddtMember] Not Null,
 		[MemberType]            [AppGeneral].[uddtObjectType] Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
@@ -36,9 +36,9 @@ Begin Try
 	Declare @NameSpace Table (
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberId]              UniqueIdentifier Not Null,
-		[MemberName]		    [AppGeneral].[uddtNameSpaceMember] Not Null,
-		[MemberNameSpace]       [AppGeneral].[uddtNameSpacePath] Null,
-		[ParentNameSpace]       [AppGeneral].[uddtNameSpacePath] Null,
+		[MemberName]		    [AppGeneral].[uddtMember] Not Null,
+		[MemberNameSpace]       [AppGeneral].[uddtPath] Null,
+		[ParentNameSpace]       [AppGeneral].[uddtPath] Null,
 		Primary Key ([MemberId]))
 
 

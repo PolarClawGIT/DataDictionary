@@ -223,6 +223,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_ColumnRule {
+            get {
+                object obj = ResourceManager.GetObject("Icon_ColumnRule", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Database {
             get {
                 object obj = ResourceManager.GetObject("Icon_Database", resourceCulture);
@@ -306,6 +316,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Field {
             get {
                 object obj = ResourceManager.GetObject("Icon_Field", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_FunctionColumn {
+            get {
+                object obj = ResourceManager.GetObject("Icon_FunctionColumn", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -493,6 +513,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Rule {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Rule", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_ScalarFunction {
             get {
                 object obj = ResourceManager.GetObject("Icon_ScalarFunction", resourceCulture);
@@ -626,6 +656,36 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_TableFunction {
             get {
                 object obj = ResourceManager.GetObject("Icon_TableFunction", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_TableKey {
+            get {
+                object obj = ResourceManager.GetObject("Icon_TableKey", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_TableRule {
+            get {
+                object obj = ResourceManager.GetObject("Icon_TableRule", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_TableScript {
+            get {
+                object obj = ResourceManager.GetObject("Icon_TableScript", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -946,26 +1006,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap OpenFolder {
             get {
                 object obj = ResourceManager.GetObject("OpenFolder", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap RefreshTree {
-            get {
-                object obj = ResourceManager.GetObject("RefreshTree", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ReloadTree {
-            get {
-                object obj = ResourceManager.GetObject("ReloadTree", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

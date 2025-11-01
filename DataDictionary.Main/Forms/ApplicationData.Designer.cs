@@ -127,7 +127,7 @@
             // deleteCommand
             // 
             deleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            deleteCommand.Enabled = false;;
+            deleteCommand.Enabled = false;
             deleteCommand.ImageTransparentColor = Color.Magenta;
             deleteCommand.Name = "deleteCommand";
             deleteCommand.Size = new Size(23, 22);

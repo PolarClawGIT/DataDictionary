@@ -88,7 +88,7 @@ namespace DataDictionary.Main
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.DatabaseConstraintColumn, BusinessData.CatalogModel.DbConstraintColumns));
+                (ScopeType.DatabaseConstraintCheck, BusinessData.CatalogModel.DbConstraintColumns));
         }
 
         private void menuDataTypeItem_Click(object sender, EventArgs e)
@@ -232,10 +232,10 @@ namespace DataDictionary.Main
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplatePath, BusinessData.ScriptingEngine.TemplatePaths));
+            Activate(static () => new DetailDataView
+                <DataSourceValue, Forms.Scripting.DataSource>
+                (ScopeType.ScriptingData, BusinessData.Scripting.DataSources)
+            { SelectedForm = (data) => new Forms.Scripting.DataSource(data) });
         }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
@@ -248,18 +248,14 @@ namespace DataDictionary.Main
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplateNode, BusinessData.ScriptingEngine.TemplateNodes));
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateNode, BusinessData.Scripting.TemplateNodes));
         }
 
-        private void menuScriptingAttribute_Click(object sender, EventArgs e)
+        private void menuScriptingNodeOwner_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplateAttribute, BusinessData.ScriptingEngine.TemplateAttributes));
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
         }
 
         private void SecurityPrincipal_Click(object sender, EventArgs e)

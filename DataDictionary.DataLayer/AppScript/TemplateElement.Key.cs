@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template Element.
     /// </summary>
+    [Obsolete]
     public interface ITemplateElementKey : IKey
     {
         /// <summary>
@@ -16,6 +17,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Primary Key for the Scripting Template Element.
     /// </summary>
+    [Obsolete]
     public class TemplateElementKey : ITemplateElementKey,
         IKeyEquality<ITemplateElementKey>, IKeyEquality<TemplateElementKey>
     {

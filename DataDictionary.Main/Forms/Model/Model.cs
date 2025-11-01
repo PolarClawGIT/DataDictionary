@@ -14,8 +14,9 @@ namespace DataDictionary.Main.Forms.Model
         public Model() : base()
         {
             InitializeComponent();
-            SetRowState(bindingModel);
+
             SetTitle(bindingModel);
+            SetRowState(bindingModel);
         }
 
         public Model(IModelValue? model) : this()

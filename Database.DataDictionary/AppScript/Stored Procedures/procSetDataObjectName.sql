@@ -29,11 +29,11 @@ Begin Try
 	Declare @Values Table (
 		[DataSourceId]			UniqueIdentifier Not Null,
 		[ObjectNameId]			UniqueIdentifier Not Null,
-		[ObjectNameMember]		[AppGeneral].[uddtNameSpaceMember] Not Null,
+		[ObjectNameMember]		[AppGeneral].[uddtMember] Not Null,
 		[ParentNameId]			UniqueIdentifier Null,
 		-- Temporary
-		[ObjectNameSpace]	[AppGeneral].[uddtNameSpacePath] Not Null,
-		[ParentNameSpace]	[AppGeneral].[uddtNameSpacePath] Null,
+		[ObjectNameSpace]	[AppGeneral].[uddtPath] Not Null,
+		[ParentNameSpace]	[AppGeneral].[uddtPath] Null,
 		Primary Key ([ObjectNameId]))
 
 	;With [Data] As (

@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppSecurity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -86,26 +87,19 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         public ISecurableData Securables { get { return securableValues; } }
         SecurableData securableValues = new SecurableData();
 
-        /// <inheritdoc/>
-        public Boolean RaiseListChangedEvents
+        public Security():base()
         {
-            get
+            principalValues.ListChanged += OnListChanged;
+            roleValues.ListChanged += OnListChanged;
+            ownerValues.ListChanged += OnListChanged;
+            membershipValues.ListChanged += OnListChanged;
+            permissionValues.ListChanged += OnListChanged;
+            securableValues.ListChanged += OnListChanged;
+
+            void OnListChanged(Object? sender, ListChangedEventArgs e)
             {
-                return principalValues.RaiseListChangedEvents
-                    && roleValues.RaiseListChangedEvents
-                    && membershipValues.RaiseListChangedEvents
-                    && ownerValues.RaiseListChangedEvents
-                    && permissionValues.RaiseListChangedEvents
-                    && securableValues.RaiseListChangedEvents;
-            }
-            set
-            {
-                principalValues.RaiseListChangedEvents = value;
-                roleValues.RaiseListChangedEvents = value;
-                membershipValues.RaiseListChangedEvents = value;
-                ownerValues.RaiseListChangedEvents = value;
-                permissionValues.RaiseListChangedEvents = value;
-                securableValues.RaiseListChangedEvents = value;
+                if (ListChanged is ListChangedEventHandler handler)
+                { handler(sender, e); }
             }
         }
 
@@ -310,6 +304,33 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             securableValues.Clear();
         }
 
+        #region IBindListChanged
+        /// <inheritdoc/>
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <inheritdoc/>
+        public Boolean RaiseListChangedEvents
+        {
+            get
+            {
+                return principalValues.RaiseListChangedEvents
+                    && roleValues.RaiseListChangedEvents
+                    && membershipValues.RaiseListChangedEvents
+                    && ownerValues.RaiseListChangedEvents
+                    && permissionValues.RaiseListChangedEvents
+                    && securableValues.RaiseListChangedEvents;
+            }
+            set
+            {
+                principalValues.RaiseListChangedEvents = value;
+                roleValues.RaiseListChangedEvents = value;
+                membershipValues.RaiseListChangedEvents = value;
+                ownerValues.RaiseListChangedEvents = value;
+                permissionValues.RaiseListChangedEvents = value;
+                securableValues.RaiseListChangedEvents = value;
+            }
+        }
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -320,5 +341,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
             permissionValues.ResetBindings();
             securableValues.ResetBindings();
         }
+        #endregion
+
     }
 }

@@ -1,20 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Model.ComboBoxList;
-using DataDictionary.Main.Forms.Scripting.ComboBoxList;
-using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -25,8 +14,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         FormBinding formBinding;
         TemplateIndex templateIndex = new TemplateIndex();
-        TemplateNodeIndex nodeIndex = new TemplateNodeIndex();
-        TemporalIndex? temporalIndex = null;
 
         private TemplateNode()
         {
@@ -35,110 +22,140 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
-                TemplateNodeBinding = bindingTemplateNode,
+                NodeBinding = bindingNode,
+                NodeOwnerBinding = bindingNodeOwner,
                 DoWork = base.DoWork
             };
 
-            SetIcon(ScopeType.ScriptingTemplateNode);
-            SetTitle(bindingTemplate);
-            SetRowState(bindingTemplate);
+            SetIcon(ScopeType.ScriptingTemplateNode); // Set the Default,
+            SetTitle(bindingNode);
+
+            parentAddCommand.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Add);
+
+            SetRowState(bindingNode, bindingNodeOwner);
 
             SetCommand(ScopeType.ScriptingTemplateNode,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
-            newAttributeCommand.Image = ScopeType.ScriptingTemplateAttribute.GetImage(Enumerations.CommandType.Add);
-            newElementCommand.Image = ScopeType.ScriptingTemplateElement.GetImage(Enumerations.CommandType.Add);
-            AddCommands(nodeCommands, ToolStripItemDisplayStyle.Image);
+                CommandType.Add,
+                CommandType.Delete);
         }
 
-        public TemplateNode(ITemplateIndex template) : this()
-        { templateIndex = new TemplateIndex(template); }
+        public TemplateNode(ITemplate data, ITemplateIndex template) : this()
+        {
+            formBinding.Data = data;
+            templateIndex = new TemplateIndex(template);
+        }
 
-        public TemplateNode(ITemplateIndex template, ITemplateNodeIndex node) : this(template)
-        { nodeIndex = new TemplateNodeIndex(node); }
-
-        public TemplateNode(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
-
-        public TemplateNode(ITemplateIndex template, ITemplateNodeIndex node, ITemporalIndex temporal) : this(template, node)
-        { temporalIndex = new TemporalIndex(); }
+        public void SetTemplateNode(ITemplateNodeIndex node)
+        { formBinding.TrySetPosition(node); }
 
         private void TemplateNode_Load(object sender, EventArgs e)
         {
-            if (temporalIndex is null)
-            {
-                formBinding.Load(templateIndex);
-                DoBinding();
-            }
-            else
-            { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error is null)
-                {
-                    DoBinding();
-                    SendMessage(new RefreshNavigation());
-                }
-            }
+            formBinding.Load(templateIndex);
+            DoBinding();
 
             void DoBinding()
             {
-                formBinding.SetPosition(nodeIndex);
                 templateData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.NodeName)));
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName)));
 
                 RenderValueAsList.Load(renderValueAsData);
-                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.RenderValueAs)));
+                renderValueAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.RenderValueAs)));
 
-                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.RenderOrder)));
-                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.FixedValue)));
+                renderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeOrder)));
+                fixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.FixedValue)));
 
                 ScopeNameList.Load(objectScopeData);
-                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ObjectScope)));
-                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplateNode, nameof(BindingValue.ObjectProperty)));
+                objectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ObjectScope)));
+                objectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
 
                 PropertyNameList.Load(modelPropertyData, "(n/a)");
-                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingTemplateNode, nameof(BindingValue.ModelPropertyId)));
+                modelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedItem), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId)));
+
+                TemplateNodeList.Load(nodeParentColumn, templateIndex);
+                ownershipData.AutoGenerateColumns = false;
+                ownershipData.DataSource = bindingNodeOwner;
+                nodeParentColumn.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
+
+                TemplateNodeList.Load(parentNodeData, templateIndex, "(n/a)");
+                TemplateNodeList.SelectValue(parentNodeData, null);
+
+                // Security
+                if (formBinding.TryGetValue(out TemplateNodeValue? value))
+                { IsLocked(formBinding.GetLocked()); }
+                else
+                { nodeDetailLayout.Enabled = false; }
+
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
-        private void NewAttributeCommand_Click(object sender, EventArgs e)
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
-
-        }
-
-        private void NewElementCommand_Click(object sender, EventArgs e)
-        {
-
+            base.AddCommand_Click(sender, e);
+            formBinding.NewValue(templateIndex);
+            nodeDetailLayout.Enabled = true;
+            IsLocked(formBinding.GetLocked());
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveValue();
+            nodeDetailLayout.Enabled = false;
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
+
+        private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
         {
-            base.OpenFromDatabaseCommand_Click(sender, e);
+            if (e.ListChangedType is ListChangedType.ItemAdded or
+                ListChangedType.ItemDeleted or
+                ListChangedType.ItemChanged)
+            { formBinding.BuildTree(nodeTreeView); }
         }
 
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        private void NodeTreeView_NodeSelected(object sender, TreeNodeMouseClickEventArgs e)
         {
-            base.SaveToDatabaseCommand_Click(sender, e);
+            // Need to get the Hit Location itself because the flag may have been reset.
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && e.Node.TryGetValue(out TemplateNodeValue? value))
+            {
+                formBinding.TrySetPosition(value);
+                TemplateNodeList.SelectValue(parentNodeData, null);
+            }
         }
 
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        private void BindingNodeOwner_AddingNew(object sender, AddingNewEventArgs e)
         {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
+            //e.NewObject = formBinding.NewOwner(); 
         }
 
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        private void ownershipData_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         {
-            base.HistoryCommand_Click(sender, e);
+            //if (sender is DataGridView gridView
+            //    && gridView.Rows.Count > e.RowIndex
+            //    && gridView.Rows[e.RowIndex] is DataGridViewRow row)
+            //{
+            //    if (row.DataBoundItem is TemplateNodeOwnerValue value)
+            //    { row.ErrorText = formBinding.Validate(value); }
+            //}
+            //else
+            //{ e.Cancel = true; }
+        }
+
+        private void ParentAddCommand_Click(object sender, EventArgs e)
+        {
+            if (parentNodeData.SelectedItem is TemplateNodeList selected)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(selected);
+                formBinding.AddNodeOwner(key);
+                //formBinding.BuildTree(nodeTreeView);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Interface for the Scripting Template Node Owner item.
     /// </summary>
     public interface ITemplateNodeOwnerItem :
-        ITemplateKey, ITemplateAttributeKey, ITemplateElementKey,
+        ITemplateKey, ITemplateNodeKey, ITemplateNodeOwnerKey,
         ITemporalItem
     { }
 
@@ -25,18 +25,47 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Guid? AttributeId
+        public Guid? NodeId
         {
-            get { return GetValue<Guid>(nameof(AttributeId)); }
-            protected set { SetValue(nameof(AttributeId), value); }
+            get { return GetValue<Guid>(nameof(NodeId)); }
+            protected set { SetValue(nameof(NodeId), value); }
         }
 
         /// <inheritdoc/>
-        public Guid? ElementId
+        public Guid? NodeOwnerId
         {
-            get { return GetValue<Guid>(nameof(ElementId)); }
-            protected set { SetValue(nameof(ElementId), value); }
+            get { return GetValue<Guid>(nameof(NodeOwnerId)); }
+            set
+            {
+                SetValue(nameof(NodeOwnerId), value);
+                SetValue(nameof(NodeName), null);
+                SetValue(nameof(NodePath), null);
+                SetValue(nameof(NodeOwnerPath), null);
+            }
         }
+
+        /// <summary>
+        /// Name of the Node.
+        /// Informational: Only avaiable when the value is gotten from the database.
+        /// </summary>
+        protected String? NodeName
+        { get { return GetValue(nameof(NodeName)); } }
+
+        /// <summary>
+        /// Path to the Node.
+        /// NodeOwnerPath + NodeName
+        /// Informational: Only avaiable when the value is gotten from the database.
+        /// </summary>
+        protected String? NodePath
+        { get { return GetValue(nameof(NodePath)); } }
+
+        /// <summary>
+        /// Path to the Owner of the Node.
+        /// Parent Path.
+        /// Informational: Only avaiable when the value is gotten from the database.
+        /// </summary>
+        protected String? NodeOwnerPath
+        { get { return GetValue(nameof(NodeOwnerPath)); } }
 
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
@@ -57,20 +86,30 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Template Node Owner
         /// </summary>
-        /// <param name="attribute"></param>
-        /// <param name="parent"></param>
-        public TemplateNodeOwnerItem(ITemplateAttributeItem attribute, ITemplateElementKey parent) : this()
+        /// <param name="node"></param>
+        public TemplateNodeOwnerItem(ITemplateNodeItem node) : this()
         {
-            TemplateId = attribute.TemplateId;
-            AttributeId = attribute.AttributeId;
-            ElementId = parent.ElementId;
+            TemplateId = node.TemplateId;
+            NodeId = node.NodeId;
         }
+
+        /// <summary>
+        /// Constructor for Template Node Owner
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="owner"></param>
+        public TemplateNodeOwnerItem(ITemplateNodeItem node, ITemplateNodeKey owner) : this(node)
+        { NodeOwnerId = owner.NodeId; }
+
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(ElementId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(NodeOwnerId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(NodePath), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeOwnerPath), typeof(Guid)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

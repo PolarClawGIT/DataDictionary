@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -22,18 +22,19 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
-            newNodeCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            newNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
             documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
             transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
 
             formBinding = new FormBinding()
             {
                 TemplateBinding = bindingTemplate,
+                NodeBinding = bindingNode,
+                NodeOwnerBinding = bindingNodeOwner,
                 DataSourceBinding = bindingTemplateData,
                 DoWork = base.DoWork
             };
 
-            SetIcon(ScopeType.ScriptingTemplate);
             SetTitle(bindingTemplate);
             SetRowState(bindingTemplate);
 
@@ -85,7 +86,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                
+
                 rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
                 rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
                 rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().ToList();
@@ -107,32 +108,62 @@ namespace DataDictionary.Main.Forms.Scripting
                 scriptingPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
                 scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                formBinding.BuildTree(nodeTreeView);
             }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveValue();
+            SetAuthorization(formBinding.GetAuthorization);
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+
+            formBinding.RemoveValue();
+            formBinding.Save(templateIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(templateIndex))
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out TemplateValue? template))
+                    { return new Template(template, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to AttributeValue"); }
+                }
+            });
         }
 
         private void DocumentDirectoryData_SelectCommand(object sender, EventArgs e)
@@ -175,7 +206,6 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryData_Validated(object sender, EventArgs e)
         { scriptingPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, scriptingDirectoryData.Text); }
 
-
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedValue is DirectoryType value
@@ -203,8 +233,30 @@ namespace DataDictionary.Main.Forms.Scripting
         private void NewNodeCommand_Click(object sender, EventArgs e)
         {
             Activate(
-                () => new Forms.Scripting.TemplateNode(templateIndex),
+                () => formBinding.OpenNode((data, index) => new Forms.Scripting.TemplateNode(data, index)),
                 (form) => form.IsOpenItem(templateIndex));
+        }
+
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
+
+        private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
+        { formBinding.BuildTree(nodeTreeView); }
+
+        private void NodeTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Need to get the Hit Location itself because the flag may have been reset.
+            if (e.Node is not null
+                && e.Node.TreeView is not null
+                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+                && e.Node.TryGetValue(out TemplateNodeValue? value))
+            {
+                var nodeForm = Activate(
+                    () => formBinding.OpenNode((data,index) => new Forms.Scripting.TemplateNode(data,index)),
+                    (form) => form.IsOpenItem(templateIndex));
+
+                nodeForm.SetTemplateNode(value);
+            }
         }
     }
 }

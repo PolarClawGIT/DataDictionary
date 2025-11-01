@@ -5,6 +5,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete]
     public interface ITemplateElementValue : 
         ITemplateElementItem, ITemplateNodeValue,
         ITemplateElementIndex, ITemplateIndex, ITemplateNodeIndex, ITemplateElementIndexParent,
@@ -12,6 +13,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     { }
 
     /// <inheritdoc/>
+    [Obsolete]
     public class TemplateElementValue : TemplateElementItem, ITemplateElementValue, IDataValue
     {
         IDataValue dataValue; // Backing field for IDataValue

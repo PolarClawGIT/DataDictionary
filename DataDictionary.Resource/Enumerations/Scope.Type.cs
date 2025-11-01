@@ -263,9 +263,14 @@
         DatabaseConstraint,
 
         /// <summary>
-        /// SQL Table Constraint Column
+        /// SQL Table Key Constraint (PK, FK, UK)
         /// </summary>
-        DatabaseConstraintColumn,
+        DatabaseConstraintKey,
+
+        /// <summary>
+        /// SQL Table Column Constraint (Check)
+        /// </summary>
+        DatabaseConstraintCheck,
 
         //DatabaseSchemaTableIndex,
 
@@ -338,16 +343,6 @@
         /// Scripting Template Node (Attribute or Element)
         /// </summary>
         ScriptingTemplateNode,
-
-        /// <summary>
-        /// Scripting Template Attribute
-        /// </summary>
-        ScriptingTemplateAttribute,
-
-        /// <summary>
-        /// Scripting Template Element
-        /// </summary>
-        ScriptingTemplateElement,
 
         /// <summary>
         /// Scripting Template Node Owner

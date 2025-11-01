@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppScript].[funcObjectNameId](@NameSpace [AppGeneral].[uddtNameSpacePath])
+﻿CREATE FUNCTION [AppScript].[funcObjectNameId](@NameSpace [AppGeneral].[uddtPath])
 -- Takes an Data Object NameSpace and gets the ObjectNameId
 -- Temporal Data NOT Supported
 RETURNS UniqueIdentifier As 

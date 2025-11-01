@@ -4,8 +4,8 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.Main.Forms.Model.ComboBoxList;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.Main.Controls.ComboBoxList;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -34,13 +34,15 @@ namespace DataDictionary.Main.Forms.Model
             };
             formBinding.Init();
 
+            SetTitle(bindingAttribute);
+
             SetRowState(
                 bindingAttribute,
                 bindingProperty,
                 bindingDefinition,
                 bindingAlias,
                 bindingSubjectArea);
-            SetTitle(bindingAttribute);
+            
             SetCommand(ScopeType.ModelAttribute,
                 Enumerations.CommandType.Delete,
                 Enumerations.CommandType.OpenDatabase,

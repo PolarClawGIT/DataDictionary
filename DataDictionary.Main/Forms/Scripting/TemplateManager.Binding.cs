@@ -49,7 +49,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void BuildData(ITemplateData templates, IDataSourceData sources)
                 {
-                    managerData.ListChanged -= ManagerData_ListChanged;
                     managerData.Clear();
 
                     BindingCompare bindingCompare = new BindingCompare();
@@ -61,66 +60,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     foreach (var item in managerData)
                     {
-                        if (BusinessData.Scripting.Templates.Any(a => item.Equals(a))
-                            || BusinessData.Scripting.DataSources.Any(a => item.Equals(a)))
-                        { item.InModel = true; }
-
                         if (templates.Any(a => item.Equals(a))
                             || sources.Any(a => item.Equals(a)))
                         { item.InDatabase = true; }
                     }
 
-                    managerData.ListChanged += ManagerData_ListChanged;
-                }
-
-                void ManagerData_ListChanged(Object? sender, ListChangedEventArgs e)
-                {
-                    if (e.ListChangedType is ListChangedType.ItemChanged
-                        && e.NewIndex >= 0
-                        && e.NewIndex < managerData.Count
-                        && e.PropertyDescriptor is not null
-                        && e.PropertyDescriptor.Name is nameof(BindingValue.InModel))
-                    {
-                        IDatabaseWork factory = BusinessData.GetDbFactory();
-                        List<WorkItem> work = new List<WorkItem>();
-                        work.Add(factory.OpenConnection());
-
-                        if (managerData[e.NewIndex].InModel)
-                        { // Add to Model
-                            if (managerData[e.NewIndex].TryGetValue(out ITemplateValue? template))
-                            {
-                                TemplateIndex key = new TemplateIndex(template);
-                                work.AddRange(BusinessData.Scripting.Delete(key));
-                                work.AddRange(BusinessData.Scripting.Load(factory, key));
-                            }
-
-                            if (managerData[e.NewIndex].TryGetValue(out IDataSourceValue? dataSource))
-                            {
-                                DataSourceIndex key = new DataSourceIndex(dataSource);
-                                work.AddRange(BusinessData.Scripting.Delete(key));
-                                work.AddRange(BusinessData.Scripting.Load(factory, key));
-                            }
-                        }
-                        else
-                        { // Remove from Model
-                            if (managerData[e.NewIndex].TryGetValue(out ITemplateValue? template))
-                            {
-                                TemplateIndex key = new TemplateIndex(template);
-                                work.AddRange(BusinessData.Scripting.Delete(key));
-                            }
-
-                            if (managerData[e.NewIndex].TryGetValue(out IDataSourceValue? dataSource))
-                            {
-                                DataSourceIndex key = new DataSourceIndex(dataSource);
-                                work.AddRange(BusinessData.Scripting.Delete(key));
-                            }
-                        }
-
-                        DoWork(work, ModelUpdated);
-                    }
-
-                    void ModelUpdated(RunWorkerCompletedEventArgs args)
-                    { OnRefresh(); }
+                    RefreshInModel();
                 }
             }
 
@@ -129,6 +74,118 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (ManagerBinding.Position >= 0 && ManagerBinding.Current is BindingValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+            public void Load(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                { work.AddRange(BusinessData.Scripting.Load(factory, template)); }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                { work.AddRange(BusinessData.Scripting.Load(factory, dataSource)); }
+
+                DoWork(work, WorkComplete);
+
+                void WorkComplete(RunWorkerCompletedEventArgs args)
+                {
+                    RefreshInModel();
+
+                    if (onComplete is not null)
+                    { onComplete(args); }
+                }
+            }
+
+            public void Remove(BindingValue binding)
+            {
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                { BusinessData.Scripting.Remove(template); }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                { BusinessData.Scripting.Remove(dataSource); }
+
+                RefreshInModel();
+            }
+
+            public void Save(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                { work.AddRange(BusinessData.Scripting.Save(factory, template)); }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                { work.AddRange(BusinessData.Scripting.Save(factory, dataSource)); }
+
+                DoWork(work, WorkComplete);
+
+                void WorkComplete(RunWorkerCompletedEventArgs args)
+                {
+                    RefreshInModel();
+
+                    if (onComplete is not null)
+                    { onComplete(args); }
+                }
+            }
+
+            public void Delete(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+                work.Add(factory.OpenConnection());
+
+                if (binding.TryGetIndex(out TemplateIndex? template))
+                {
+                    work.AddRange(BusinessData.Scripting.Delete(template));
+                    work.AddRange(BusinessData.Scripting.Save(factory, template));
+                }
+
+                if (binding.TryGetIndex(out DataSourceIndex? dataSource))
+                {
+                    work.AddRange(BusinessData.Scripting.Delete(dataSource));
+                    work.AddRange(BusinessData.Scripting.Save(factory, dataSource));
+                }
+
+                DoWork(work, WorkComplete);
+
+                void WorkComplete(RunWorkerCompletedEventArgs args)
+                {
+                    RefreshInModel();
+
+                    if (onComplete is not null)
+                    { onComplete(args); }
+                }
+            }
+
+            private void RefreshInModel()
+            {
+                foreach (var item in managerData)
+                {
+                    if (BusinessData.Scripting.Templates.Any(a => item.Equals(a))
+                        || BusinessData.Scripting.DataSources.Any(a => item.Equals(a)))
+                    { item.InModel = true; }
+                    else { item.InModel = false; }
+                }
+            }
+
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                switch (command)
+                {
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsScriptAdmin;
+                    default: return false;
+                }
             }
         }
 
@@ -267,7 +324,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean TryGetIndex([NotNullWhen(true)] out TemplateIndex? result)
             {
-                if (dataSource is ITemplateValue value)
+                if (template is ITemplateValue value)
                 { result = new TemplateIndex(value); return true; }
                 else { result = null; return false; }
             }
