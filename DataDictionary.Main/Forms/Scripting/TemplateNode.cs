@@ -77,7 +77,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeParentColumn.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
 
                 TemplateNodeList.Load(parentNodeData, templateIndex, "(n/a)");
-                TemplateNodeList.SelectValue(parentNodeData, null);
 
                 // Security
                 if (formBinding.TryGetValue(out TemplateNodeValue? value))
@@ -124,10 +123,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && e.Node.TreeView is not null
                 && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
                 && e.Node.TryGetValue(out TemplateNodeValue? value))
-            {
-                formBinding.TrySetPosition(value);
-                TemplateNodeList.SelectValue(parentNodeData, null);
-            }
+            { formBinding.TrySetPosition(value); }
         }
 
         private void BindingNodeOwner_AddingNew(object sender, AddingNewEventArgs e)
