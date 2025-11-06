@@ -60,7 +60,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             comboList.BuildList(
                 source: BusinessData.Scripting.Nodes,
                 constructor: (c) => new TemplateNodeList(c),
-                onItemChanged: (t, s) =>
+                onItemChanged: (s, t) =>
                 {
                     t.NodeName = s.NodeName ?? String.Empty;
                     t.OnPropertyChanged(nameof(NodeName));

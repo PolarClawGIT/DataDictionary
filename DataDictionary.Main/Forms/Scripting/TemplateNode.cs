@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete]
     partial class TemplateNode : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)

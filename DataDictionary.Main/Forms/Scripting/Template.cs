@@ -22,9 +22,13 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
-            newNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
+
             documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
             transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            addNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Add);
+            deleteNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Delete);
+            addNodeParentCommand.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Add);
+            nodeDetailLayout.Enabled = false;
 
             formBinding = new FormBinding()
             {
@@ -97,17 +101,39 @@ namespace DataDictionary.Main.Forms.Scripting
                 { DataSourceNullValue = DirectoryType.Null });
 
                 ScopeNameList.Load(breakOnScopeData);
-                breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
+                breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
 
-                documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                documentSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                documentExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
+                documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
+                documentSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentSuffix), true, DataSourceUpdateMode.OnValidation, String.Empty));
+                documentExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentExtension), false, DataSourceUpdateMode.OnValidation, String.Empty));
 
-                scriptingDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                scriptingPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                scriptingSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                scriptingDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
+                scriptingPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
+                scriptingSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnValidation, String.Empty));
+                scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnValidation, String.Empty));
+
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+                RenderValueAsList.Load(nodeRenderAsData);
+                nodeRenderAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.RenderValueAs)));
+
+                nodeRenderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeOrder), true, DataSourceUpdateMode.OnValidation, 0));
+                nodeFixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.FixedValue)));
+
+                ScopeNameList.Load(nodeObjectScopeData);
+                nodeObjectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ObjectScope), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
+                nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
+
+                PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
+                nodeModelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
+
+                TemplateNodeList.Load(nodeParentColumn, templateIndex);
+                nodeOwnershipData.AutoGenerateColumns = false;
+                nodeOwnershipData.DataSource = bindingNodeOwner;
+                nodeParentColumn.DataPropertyName = nameof(ITemplateNodeOwnerValue.NodeOwnerId);
+
+                TemplateNodeList.Load(nodeParentSelect, templateIndex, "(n/a)");
 
                 formBinding.BuildTree(nodeTreeView);
             }
@@ -230,32 +256,54 @@ namespace DataDictionary.Main.Forms.Scripting
         private void BindingTemplateData_AddingNew(object sender, AddingNewEventArgs e)
         { e.NewObject = formBinding.NewDataSource(); }
 
-        private void NewNodeCommand_Click(object sender, EventArgs e)
-        {
-            Activate(
-                () => formBinding.OpenNode((data, index) => new Forms.Scripting.TemplateNode(data, index)),
-                (form) => form.IsOpenItem(templateIndex));
-        }
-
         private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
         { formBinding.BuildTree(nodeTreeView); }
 
         private void BindingNodeOwner_ListChanged(object sender, ListChangedEventArgs e)
-        { formBinding.BuildTree(nodeTreeView); }
-
-        private void NodeTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            // Need to get the Hit Location itself because the flag may have been reset.
-            if (e.Node is not null
-                && e.Node.TreeView is not null
-                && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
-                && e.Node.TryGetValue(out TemplateNodeValue? value))
-            {
-                var nodeForm = Activate(
-                    () => formBinding.OpenNode((data,index) => new Forms.Scripting.TemplateNode(data,index)),
-                    (form) => form.IsOpenItem(templateIndex));
+            if (e.ListChangedType is ListChangedType.ItemAdded or
+                ListChangedType.ItemDeleted or
+                ListChangedType.ItemChanged)
+            { formBinding.BuildTree(nodeTreeView); }
+        }
 
-                nodeForm.SetTemplateNode(value);
+        private void NodeTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node is not null
+            && e.Node.TreeView is not null
+            && e.Node.TreeView.HitTest(e.Location).Location != TreeViewHitTestLocations.PlusMinus
+            && e.Node.TryGetValue(out TemplateNodeValue? value))
+            {
+                if (formBinding.TrySetPosition(value))
+                { nodeDetailLayout.Enabled = true; }
+                else
+                { nodeDetailLayout.Enabled = false; }
+            }
+        }
+
+        private void AddNodeCommand_Click(object sender, EventArgs e)
+        {
+            ITemplateNodeIndex value = formBinding.NewNodeValue(templateIndex);
+            formBinding.TrySetPosition(value);
+
+            if (formBinding.TrySetPosition(value))
+            { nodeDetailLayout.Enabled = true; }
+            else
+            { nodeDetailLayout.Enabled = false; }
+        }
+
+        private void DeleteNodeCommand_Click(object sender, EventArgs e)
+        {
+            formBinding.RemoveNodeValue();
+            nodeDetailLayout.Enabled = false;
+        }
+
+        private void AddNodeParentCommand_Click(object sender, EventArgs e)
+        {
+            if (nodeParentSelect.SelectedItem is TemplateNodeList selected)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(selected);
+                formBinding.NewNodeOwner(key);
             }
         }
     }

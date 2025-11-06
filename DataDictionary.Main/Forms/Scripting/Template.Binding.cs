@@ -69,7 +69,25 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeBinding.ResetBindings(false);
                 NodeOwnerBinding.ResetBindings(false);
                 DataSourceBinding.ResetBindings(false);
+
+                NodeBinding.CurrentChanged += NodeBinding_CurrentChanged;
+
+                void NodeBinding_CurrentChanged(Object? sender, EventArgs e)
+                {
+                    NodeOwnerBinding.RaiseListChangedEvents = false;
+
+                    if (TryGetValue(out TemplateNodeValue? currentNode))
+                    {
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(currentNode);
+                        templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
+                        NodeOwnerBinding.DataSource = templateNodeOwners;
+                    }
+
+                    NodeOwnerBinding.RaiseListChangedEvents = true;
+                    NodeOwnerBinding.ResetBindings(false);
+                }
             }
+
 
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
@@ -137,11 +155,39 @@ namespace DataDictionary.Main.Forms.Scripting
                 return result;
             }
 
+            public TemplateNodeValue NewNodeValue(TemplateIndex template)
+            {
+                TemplateNodeValue newValue = new TemplateNodeValue(template);
+                templateNodes.Add(newValue);
+
+                return newValue;
+            }
+
+            public TemplateNodeOwnerValue NewNodeOwner(TemplateNodeIndex ownerNode)
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                {
+                    TemplateNodeOwnerValue newItem = new TemplateNodeOwnerValue(value, ownerNode);
+                    templateNodeOwners.Add(newItem);
+
+                    return newItem;
+                }
+                else
+                { throw new IndexOutOfRangeException(); }
+            }
+
             public void RemoveValue()
             {
                 if (TryGetValue(out TemplateValue? value))
                 { templates.Remove(value); }
             }
+
+            public void RemoveNodeValue()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                { templateNodes.Remove(value); }
+            }
+
 
             public TemplateInputValue NewDataSource()
             {
@@ -164,6 +210,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     && NodeBinding.Current is TemplateNodeValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+            public Boolean TrySetPosition(ITemplateNodeIndex node)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(node);
+
+                if (templateNodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue value)
+                { NodeBinding.Position = templateNodes.IndexOf(value); return true; }
+                else { return false; }
             }
 
             public Boolean GetAuthorization(Enumerations.CommandType command)
