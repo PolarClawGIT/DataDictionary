@@ -262,18 +262,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (TryGetValue(out TemplateValue? template))
                 { tree.BuildTree(template, templateNodes, templateNodeOwners); }
             }
-
-            public TemplateNode OpenNode(Func<ITemplate, ITemplateIndex, TemplateNode> openNode)
-            {
-                if (TryGetValue(out TemplateValue? value))
-                { return openNode(data, value); }
-                else
-                {
-                    Exception ex = new IndexOutOfRangeException();
-                    ex.Data.Add(nameof(ITemplateIndex), data);
-                    throw new IndexOutOfRangeException();
-                }
-            }
         }
 
     }

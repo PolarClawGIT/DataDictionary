@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 scriptingSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptSuffix), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 scriptingExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.ScriptExtension), false, DataSourceUpdateMode.OnValidation, String.Empty));
 
-                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeName), false, DataSourceUpdateMode.OnValidation, String.Empty)); // TODO: Change to On Property Changed
 
                 RenderValueAsList.Load(nodeRenderAsData);
                 nodeRenderAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.RenderValueAs)));
