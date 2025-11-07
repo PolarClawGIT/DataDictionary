@@ -42,19 +42,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// Constructor for the Primary Key of the Scripting Template Node.
         /// </summary>
         /// <param name="source"></param>
-        public TemplateNodeKey(ITemplateAttributeKey source) : base ()
+        public TemplateNodeKey(ITemplateNodeOwnerKey source): this()
         {
-            if (source.AttributeId is Guid) { NodeId = source.AttributeId; }
-            else { NodeId = Guid.Empty; }
-        }
-
-        /// <summary>
-        /// Constructor for the Primary Key of the Scripting Template Node.
-        /// </summary>
-        /// <param name="source"></param>
-        public TemplateNodeKey(ITemplateElementKey source) : base()
-        {
-            if (source.ElementId is Guid) { NodeId = source.ElementId; }
+            if (source.NodeOwnerId is Guid) { NodeId = source.NodeOwnerId; }
             else { NodeId = Guid.Empty; }
         }
 
@@ -66,14 +56,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Boolean Equals(ITemplateNodeKey? other)
         { return other is ITemplateNodeKey value && Equals(new TemplateNodeKey(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ITemplateAttributeKey? other)
-        { return other is ITemplateAttributeKey value && Equals(new TemplateNodeKey(value)); }
-
-        /// <inheritdoc/>
-        public Boolean Equals(ITemplateElementKey? other)
-        { return other is ITemplateElementKey value && Equals(new TemplateNodeKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
