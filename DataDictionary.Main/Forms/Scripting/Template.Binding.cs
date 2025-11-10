@@ -260,7 +260,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void BuildTree(TreeView tree)
             {
                 if (TryGetValue(out TemplateValue? template))
-                { tree.BuildTree(template, templateNodes, templateNodeOwners); }
+                { tree.BuildTree(template, data.Nodes, data.NodeOwners); }
             }
         }
 
