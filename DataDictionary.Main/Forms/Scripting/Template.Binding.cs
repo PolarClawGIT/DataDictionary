@@ -179,13 +179,13 @@ namespace DataDictionary.Main.Forms.Scripting
             public void RemoveValue()
             {
                 if (TryGetValue(out TemplateValue? value))
-                { templates.Remove(value); }
+                { data.Remove(new TemplateIndex(value)); }
             }
 
             public void RemoveNodeValue()
             {
                 if (TryGetValue(out TemplateNodeValue? value))
-                { templateNodes.Remove(value); }
+                { data.Remove(new TemplateNodeIndex(value)); }
             }
 
 

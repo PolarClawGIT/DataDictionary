@@ -143,6 +143,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
             formBinding.RemoveValue();
+            formBinding.BuildTree(nodeTreeView);
             SetAuthorization(formBinding.GetAuthorization);
         }
 
@@ -295,6 +296,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DeleteNodeCommand_Click(object sender, EventArgs e)
         {
             formBinding.RemoveNodeValue();
+            formBinding.BuildTree(nodeTreeView);
             nodeDetailLayout.Enabled = false;
         }
 

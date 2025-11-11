@@ -26,10 +26,23 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     }
 
     /// <summary>
-    /// Interface for Create WorkItems that removes items from the collection by Key
+    /// Interface for Create WorkItems that Removes items from the collection by Key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public interface IDeleteData<TKey> : IDeleteData
+    public interface IRemoveData<TKey>
+    {
+        /// <summary>
+        /// Removes items from the collection by Key
+        /// </summary>
+        /// <param name="dataKey"></param>
+        void Remove(TKey dataKey);
+    }
+
+    /// <summary>
+    /// Interface for Create WorkItems that Deletes items from the collection by Key
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    public interface IDeleteData<TKey> : IRemoveData<TKey>, IDeleteData
         where TKey : IKey
     {
         /// <summary>
@@ -38,11 +51,5 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="dataKey"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Delete(TKey dataKey);
-
-        /// <summary>
-        /// Removes items from the collection by Key
-        /// </summary>
-        /// <param name="dataKey"></param>
-        void Remove(TKey dataKey);
     }
 }

@@ -121,7 +121,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public event ListChangedEventHandler? ListChanged;
 
-
         /// <inheritdoc/>
         public Boolean RaiseListChangedEvents
         {
@@ -136,7 +135,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 templateValue.RaiseListChangedEvents = value;
             }
         }
-        
+
         /// <inheritdoc/>
         public void ResetBindings()
         {
@@ -158,7 +157,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            if(dataSourceValue.DataSources.Count >0
+            if (dataSourceValue.DataSources.Count > 0
                 || templateValue.Templates.Count > 0)
             {
                 // Root Node
@@ -218,9 +217,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IReadOnlyList<WorkItem> IDeleteData<ITemplateIndex>.Delete(ITemplateIndex template)
         { return templateValue.Delete(template); }
 
-        void IDeleteData<ITemplateIndex>.Remove(ITemplateIndex template)
-        { templateValue.Remove(template); }
-
         ITemporalData IGetTemporal<ITemplateIndex>.GetTemporal(ITemplateIndex template)
         { return templateValue.GetTemporal(template); }
 
@@ -236,13 +232,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IReadOnlyList<WorkItem> IDeleteData<IDataSourceIndex>.Delete(IDataSourceIndex dataSource)
         { return dataSourceValue.Delete(dataSource); }
 
-        void IDeleteData<IDataSourceIndex>.Remove(IDataSourceIndex dataSource)
-        { dataSourceValue.Remove(dataSource); }
 
         ITemporalData IGetTemporal<IDataSourceIndex>.GetTemporal(IDataSourceIndex dataSource)
         { return dataSourceValue.GetTemporal(dataSource); }
 
         ITemporalData IGetTemporal<IModelIndex>.GetTemporal(IModelIndex key)
         { throw new InvalidOperationException("Use GetTemporal on ITemplate or IDataSource instead."); }
+
+        /// <inheritdoc/>
+        public void Remove(ITemplateNodeIndex dataKey)
+        { templateValue.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        public void Remove(ITemplateIndex dataKey)
+        { templateValue.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        public void Remove(IDataSourceIndex dataKey)
+        { dataSourceValue.Remove(dataKey); }
     }
 }
