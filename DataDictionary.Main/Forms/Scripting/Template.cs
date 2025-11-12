@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     false, DataSourceUpdateMode.OnPropertyChanged)
                 { DataSourceNullValue = DirectoryType.Null });
 
-                ScopeNameList.Load(breakOnScopeData);
+                ScopeNameList.Load(breakOnScopeData, formBinding.XBuilder.Keys);
                 breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeRenderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeOrder), true, DataSourceUpdateMode.OnValidation, 0));
                 nodeFixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.FixedValue)));
 
-                ScopeNameList.Load(nodeObjectScopeData);
+                ScopeNameList.Load(nodeObjectScopeData, formBinding.XBuilder.Keys);
                 nodeObjectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ObjectScope), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
                 nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
 

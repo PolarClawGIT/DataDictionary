@@ -40,6 +40,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateInputValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public IXElementBuilderList XBuilder { get; } = BusinessData.Scripting.XBuilders;
+
             public FormBinding() : base()
             { }
 

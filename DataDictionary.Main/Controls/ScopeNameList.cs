@@ -13,12 +13,32 @@ namespace DataDictionary.Main.Controls
 
         protected ScopeNameList() : base() { }
 
-        public static void Load(ComboBoxData control)
+        public static void Load(ComboBoxData control, params IEnumerable<ScopeType> scopes)
         {
             ScopeNameList scopeNameItem = new ScopeNameList();
             BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
 
-            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
+            foreach (ScopeType item in scopes)
+            {
+                String name = item.GetEnumeration().DisplayName;
+                if (!String.IsNullOrEmpty(name))
+                { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
+            }
+
+            control.DataSource = list;
+            control.ValueMember = nameof(scopeNameItem.ScopeType);
+            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+        }
+
+        public static void Load(ComboBoxData control)
+        { Load(control, Enum.GetValues<ScopeType>()); }
+
+        public static void Load(DataGridViewComboBoxColumn control, params IEnumerable<ScopeType> scopes)
+        {
+            ScopeNameList scopeNameItem = new ScopeNameList();
+            BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
+
+            foreach (ScopeType item in scopes)
             {
                 String name = item.GetEnumeration().DisplayName;
                 if (!String.IsNullOrEmpty(name))
@@ -31,20 +51,6 @@ namespace DataDictionary.Main.Controls
         }
 
         public static void Load(DataGridViewComboBoxColumn control)
-        {
-            ScopeNameList scopeNameItem = new ScopeNameList();
-            BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
-
-            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            {
-                String name = item.GetEnumeration().DisplayName;
-                if (!String.IsNullOrEmpty(name))
-                { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
-            }
-
-            control.DataSource = list;
-            control.ValueMember = nameof(scopeNameItem.ScopeType);
-            control.DisplayMember = nameof(scopeNameItem.ScopeName);
-        }
+        {   Load(control, Enum.GetValues<ScopeType>()); }
     }
 }

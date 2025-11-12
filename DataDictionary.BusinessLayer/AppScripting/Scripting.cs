@@ -24,6 +24,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc cref="ITemplate.NodeOwners"/>
         ITemplateNodeOwnerData TemplateNodeOwners { get; }
+
+        /// <inheritdoc cref="IXElementBuilderList"/>
+        IXElementBuilderList XBuilders { get; }
     }
 
     class Scripting : IScripting, IDataTableFile
@@ -54,6 +57,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITemplateNodeData ITemplate.Nodes { get { return templateValue.Nodes; } }
         ITemplateNodeOwnerData ITemplate.NodeOwners { get { return templateValue.NodeOwners; } }
 
+        /// <inheritdoc/>
+        IXElementBuilderList IScripting.XBuilders { get { return Builders; } }
+
+        /// <inheritdoc cref="IXElementBuilderList"/>
+        public XElementBuilderList Builders { get; } = new XElementBuilderList();
 
         public Scripting() : base()
         {

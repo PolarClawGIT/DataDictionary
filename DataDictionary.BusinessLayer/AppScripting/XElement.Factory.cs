@@ -50,9 +50,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Implemenation of the XElementFactory.
     /// This takes XElementBuilders and builds out the XElements.
     /// </summary>
+    [Obsolete("POC code, not in use", true)]
     public class XElementFactory
     {
-        // TODO: This replaces Scripting Engine.
+        // TODO: This replaces Scripting Engine. POC code.
 
         XElementBuilderList builders = new XElementBuilderList();
 

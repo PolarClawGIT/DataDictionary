@@ -67,11 +67,11 @@ namespace DataDictionary.BusinessLayer
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
             applicationValues = new AppGeneral.ApplicationData();
-
+            
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
-            scriptingValue = new AppScripting.Scripting();
+            scriptingValue = InitScripting();
         }
 
         /// <summary>
