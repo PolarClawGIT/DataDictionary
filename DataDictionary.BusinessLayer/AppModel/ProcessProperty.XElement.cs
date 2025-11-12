@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IPropertyIndex, IPropertyValue> propertyGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
-            result.AddRange(XElementBuilder.Create(typeof(AttributePropertyValue)));
+            result.AddRange(XElementBuilder.Create(typeof(ProcessPropertyValue)));
             result.AddRange(AppModel.PropertyValue.CreateXElements(propertyGet));
 
             result.GetValue(nameof(ProcessId)).NodeValueAs = NodeRenderAsType.none;

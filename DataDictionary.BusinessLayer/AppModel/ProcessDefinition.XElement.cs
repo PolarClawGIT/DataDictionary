@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppModel
         public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
-            result.AddRange(XElementBuilder.Create(typeof(AttributeDefinitionValue)));
+            result.AddRange(XElementBuilder.Create(typeof(ProcessDefinitionValue)));
             result.AddRange(AppModel.DefinitionValue.CreateXElements(definitionGet));
 
             result.GetValue(nameof(ProcessId)).NodeValueAs = NodeRenderAsType.none;
