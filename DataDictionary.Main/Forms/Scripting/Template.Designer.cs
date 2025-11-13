@@ -73,10 +73,10 @@
             nodeParentSelect = new DataDictionary.Main.Controls.ComboBoxData();
             addNodeParentCommand = new Button();
             nodeTabObjectValue = new TabPage();
-            selectObjectCommand = new Button();
             nodeModelPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
-            nodeObjectPropertyData = new DataDictionary.Main.Controls.TextBoxData();
             nodeObjectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodeFixedValueData = new DataDictionary.Main.Controls.TextBoxData();
+            nodeObjectPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             transformExceptionData = new DataDictionary.Main.Controls.TextBoxData();
             transformScriptData = new DataDictionary.Main.Controls.TextBoxData();
             transformToolStrip = new ToolStrip();
@@ -101,7 +101,6 @@
             bindingTemplateData = new BindingSource(components);
             bindingNode = new BindingSource(components);
             bindingNodeOwner = new BindingSource(components);
-            nodeFixedValueData = new DataDictionary.Main.Controls.TextBoxData();
             mainLayout = new TableLayoutPanel();
             dataSourceTab = new TabPage();
             modelLayout = new TableLayoutPanel();
@@ -522,7 +521,6 @@
             nodeObjectValueLayout.ColumnCount = 2;
             nodeObjectValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             nodeObjectValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            nodeObjectValueLayout.Controls.Add(selectObjectCommand, 1, 2);
             nodeObjectValueLayout.Controls.Add(nodeModelPropertyData, 0, 2);
             nodeObjectValueLayout.Controls.Add(nodeObjectScopeData, 0, 1);
             nodeObjectValueLayout.Controls.Add(nodeFixedValueData, 0, 0);
@@ -537,17 +535,6 @@
             nodeObjectValueLayout.Size = new Size(400, 204);
             nodeObjectValueLayout.TabIndex = 0;
             // 
-            // selectObjectCommand
-            // 
-            selectObjectCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            selectObjectCommand.Location = new Point(322, 178);
-            selectObjectCommand.Name = "selectObjectCommand";
-            selectObjectCommand.Size = new Size(75, 23);
-            selectObjectCommand.TabIndex = 12;
-            selectObjectCommand.Text = "Select";
-            selectObjectCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            selectObjectCommand.UseVisualStyleBackColor = true;
-            // 
             // nodeModelPropertyData
             // 
             nodeModelPropertyData.AutoSize = true;
@@ -561,19 +548,6 @@
             nodeModelPropertyData.Size = new Size(194, 46);
             nodeModelPropertyData.TabIndex = 11;
             // 
-            // nodeObjectPropertyData
-            // 
-            nodeObjectPropertyData.AutoSize = true;
-            nodeObjectPropertyData.Dock = DockStyle.Fill;
-            nodeObjectPropertyData.HeaderText = "Object Property";
-            nodeObjectPropertyData.Location = new Point(203, 103);
-            nodeObjectPropertyData.Multiline = false;
-            nodeObjectPropertyData.Name = "nodeObjectPropertyData";
-            nodeObjectPropertyData.ReadOnly = false;
-            nodeObjectPropertyData.Size = new Size(194, 46);
-            nodeObjectPropertyData.TabIndex = 8;
-            nodeObjectPropertyData.WordWrap = true;
-            // 
             // nodeObjectScopeData
             // 
             nodeObjectScopeData.AutoSize = true;
@@ -586,6 +560,33 @@
             nodeObjectScopeData.ReadOnly = false;
             nodeObjectScopeData.Size = new Size(194, 46);
             nodeObjectScopeData.TabIndex = 7;
+            // 
+            // nodeFixedValueData
+            // 
+            nodeFixedValueData.AutoSize = true;
+            nodeObjectValueLayout.SetColumnSpan(nodeFixedValueData, 2);
+            nodeFixedValueData.Dock = DockStyle.Fill;
+            nodeFixedValueData.HeaderText = "Fixed/Default Value";
+            nodeFixedValueData.Location = new Point(3, 3);
+            nodeFixedValueData.Multiline = true;
+            nodeFixedValueData.Name = "nodeFixedValueData";
+            nodeFixedValueData.ReadOnly = false;
+            nodeFixedValueData.Size = new Size(394, 94);
+            nodeFixedValueData.TabIndex = 13;
+            nodeFixedValueData.WordWrap = false;
+            // 
+            // nodeObjectPropertyData
+            // 
+            nodeObjectPropertyData.AutoSize = true;
+            nodeObjectPropertyData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeObjectPropertyData.Dock = DockStyle.Fill;
+            nodeObjectPropertyData.DropDownStyle = ComboBoxStyle.DropDown;
+            nodeObjectPropertyData.HeaderText = "Object Property";
+            nodeObjectPropertyData.Location = new Point(203, 103);
+            nodeObjectPropertyData.Name = "nodeObjectPropertyData";
+            nodeObjectPropertyData.ReadOnly = false;
+            nodeObjectPropertyData.Size = new Size(194, 46);
+            nodeObjectPropertyData.TabIndex = 14;
             // 
             // transformTab
             // 
@@ -1012,20 +1013,6 @@
             // 
             bindingNodeOwner.ListChanged += BindingNodeOwner_ListChanged;
             // 
-            // nodeFixedValueData
-            // 
-            nodeFixedValueData.AutoSize = true;
-            nodeObjectValueLayout.SetColumnSpan(nodeFixedValueData, 2);
-            nodeFixedValueData.Dock = DockStyle.Fill;
-            nodeFixedValueData.HeaderText = "Fixed/Default Value";
-            nodeFixedValueData.Location = new Point(3, 3);
-            nodeFixedValueData.Multiline = true;
-            nodeFixedValueData.Name = "nodeFixedValueData";
-            nodeFixedValueData.ReadOnly = false;
-            nodeFixedValueData.Size = new Size(394, 94);
-            nodeFixedValueData.TabIndex = 13;
-            nodeFixedValueData.WordWrap = false;
-            // 
             // Template
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1140,12 +1127,11 @@
         private Controls.ComboBoxData nodeParentSelect;
         private Button addNodeParentCommand;
         private Controls.ComboBoxData nodeObjectScopeData;
-        private Controls.TextBoxData nodeObjectPropertyData;
         private Controls.ComboBoxData nodeModelPropertyData;
-        private Button selectObjectCommand;
         private ToolStripButton addNodeCommand;
         private ToolStripButton deleteNodeCommand;
         private TableLayoutPanel nodeDetailLayout;
         private Controls.TextBoxData nodeFixedValueData;
+        private Controls.ComboBoxData nodeObjectPropertyData;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Controls
+namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record ScopeNameList
     {

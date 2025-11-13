@@ -121,9 +121,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeRenderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.NodeOrder), true, DataSourceUpdateMode.OnValidation, 0));
                 nodeFixedValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.FixedValue)));
 
-                ScopeNameList.Load(nodeObjectScopeData, formBinding.XBuilder.Keys);
+                XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.XBuilder, "(n/a)");
                 nodeObjectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ObjectScope), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
-                nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
+                nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ObjectProperty)));
 
                 PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
                 nodeModelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ITemplateNodeValue.ModelPropertyId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
