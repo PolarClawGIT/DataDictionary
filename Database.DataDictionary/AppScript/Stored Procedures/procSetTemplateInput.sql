@@ -70,7 +70,8 @@ Begin Try
 			On	@ModelId = T.[ModelId] And
 				S.[TemplateId] = T.[TemplateId] And
 				S.[DataSourceId] = T.[DataSourceId]
-	Where	T.[TemplateId] is Null
+	Where	T.[TemplateId] is Null And
+			@ModelId is Not Null
 	Print FormatMessage ('Insert [AppScript].[ScriptingModel]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 			
 

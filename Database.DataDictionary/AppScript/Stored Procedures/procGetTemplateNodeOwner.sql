@@ -11,9 +11,6 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[NodeId],
 		[NodeOwnerId],
 		[TemplateId],
-		[NodeName], -- Informational
-		[NodePath], -- Informational
-		[NodeOwnerPath], -- Informational
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -24,7 +21,8 @@ Select	[NodeId],
 		[IsDeleted],
 		[IsCurrent]
 From	[AppScript].[TemplateNodeOwnerHs] D
-Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
+Where	[NodeOwnerId] is Not Null And
+		(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or 
 		 [TemplateId] In (
