@@ -35,11 +35,11 @@
             databaseNameColumn = new DataGridViewTextBoxColumn();
             inModelColumn = new DataGridViewCheckBoxColumn();
             inDatabase = new DataGridViewCheckBoxColumn();
-            catalogTitleData = new Controls.TextBoxData();
-            catalogDescriptionData = new Controls.TextBoxData();
-            sourceDateData = new Controls.TextBoxData();
-            sourceServerNameData = new Controls.TextBoxData();
-            sourceDatabaseNameData = new Controls.TextBoxData();
+            catalogTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            catalogDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            sourceDateData = new DataDictionary.Main.Controls.TextBoxData();
+            sourceServerNameData = new DataDictionary.Main.Controls.TextBoxData();
+            sourceDatabaseNameData = new DataDictionary.Main.Controls.TextBoxData();
             catalogBinding = new BindingSource(components);
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
@@ -183,7 +183,7 @@
             // 
             // catalogBinding
             // 
-            catalogBinding.CurrentChanged += CatalogBinding_CurrentChanged;
+            catalogBinding.CurrentItemChanged += CatalogBinding_CurrentItemChanged;
             // 
             // CatalogManager
             // 

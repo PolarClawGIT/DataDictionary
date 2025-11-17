@@ -34,10 +34,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class TableData : TableCollection<TableValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, ITableData
+        ICatalogReference, ITableData
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
@@ -107,7 +107,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public BindingView<TableColumnValue> GetColumns(ITableIndexName table)
         {
             TableIndexName key = new TableIndexName(table);
-            return new BindingView<TableColumnValue>(Model.DbTableColumns, w => key.Equals(w));
+            return new BindingView<TableColumnValue>(Catalog.DbTableColumns, w => key.Equals(w));
         }
 
         /// <inheritdoc/>

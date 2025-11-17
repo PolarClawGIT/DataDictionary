@@ -13,16 +13,27 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Wrapper of Catalog Data
     /// </summary>
-    public interface ICatalogData : IBindingData<CatalogValue>
-    { }
+    public interface ICatalogData :
+        IBindingData<CatalogValue>,
+        ILoadData
+    {
+        /// <summary>
+        /// Creates an empty ICatalogData.
+        /// </summary>
+        /// <returns></returns>
+        static ICatalogData Create()
+        { return new CatalogData(); }
+    }
 
     class CatalogData : CatalogCollection<CatalogValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, ICatalogData
+        ICatalogData
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>

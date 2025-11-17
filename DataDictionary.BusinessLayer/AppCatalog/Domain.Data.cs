@@ -19,10 +19,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class DomainData : DomainCollection<DomainValue>, IDomainData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel
+        ICatalogReference
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>

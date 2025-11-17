@@ -67,10 +67,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class PropertyData : DataLayer.AppCatalog.PropertyCollection<PropertyValue>, IPropertyData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel
+        ICatalogReference
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>ExtendedProperty</remarks>

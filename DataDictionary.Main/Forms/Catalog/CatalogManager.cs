@@ -12,7 +12,8 @@ namespace DataDictionary.Main.Forms.Catalog
 {
     partial class CatalogManager : ApplicationData
     {
-        CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.CatalogModel);
+        //CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.CatalogModel);
+        FormBinding formBinding;
 
         public CatalogManager() : base()
         {
@@ -25,41 +26,35 @@ namespace DataDictionary.Main.Forms.Catalog
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase);
+
+            formBinding = new FormBinding()
+            {
+                ManagerBinding = catalogBinding,
+                DoWork = base.DoWork,
+                OnRefresh = () => { SendMessage(new RefreshNavigation()); }
+            };
         }
 
         private void CatalogManager_Load(object sender, EventArgs e)
         {
-            if (Settings.Default.IsOnLineMode)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                work.Add(factory.OpenConnection());
-                work.AddRange(catalogs.GetCatalogs(factory));
-                DoWork(work, onCompleting);
-            }
-            else { BindData(); }
+            CommandButtons[CommandType.Delete].IsEnabled = false;
 
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                catalogs.Refresh();
-                BindData();
-                IsLocked(false);
-            }
+            CommandButtons[CommandType.OpenDatabase].IsEnabled = false;
+            CommandButtons[CommandType.SaveDatabase].IsEnabled = false;
+            CommandButtons[CommandType.DeleteDatabase].IsEnabled = false;
 
-            void BindData()
-            {
-                catalogBinding.DataSource = catalogs;
-                //Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(catalogNames.Source), name); };
+            formBinding.Load(doBinding);
 
+            void doBinding(RunWorkerCompletedEventArgs args)
+            {
                 catalogNavigation.AutoGenerateColumns = false;
                 catalogNavigation.DataSource = catalogBinding;
 
-                catalogTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogTitle)));
-                catalogDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.CatalogDescription), false, DataSourceUpdateMode.OnPropertyChanged));
-                sourceServerNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.ServerName)));
-                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.DatabaseName)));
-                sourceDateData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(CatalogSynchronizeValue.SourceDate)));
+                catalogTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.CatalogTitle)));
+                catalogDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.CatalogDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+                sourceServerNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.ServerName)));
+                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.DatabaseName)));
+                sourceDateData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.SourceDate)));
             }
         }
 
@@ -114,27 +109,18 @@ namespace DataDictionary.Main.Forms.Catalog
 
                     Settings.Default.Save();
 
-                    List<WorkItem> work = new List<WorkItem>();
+                    IsLocked(true);
                     DbSchemaContext source = new BusinessLayer.DbSchemaContext()
                     {
                         ServerName = dialog.ServerName,
                         DatabaseName = dialog.DatabaseName
                     };
-
-                    IsLocked(true);
-                    work.AddRange(catalogs.ImportFromSchema(source));
-                    SuspendBinding(catalogBinding);
-                    DoWork(work, onCompleting);
+                    formBinding.Import(source, onCompleting);
                 }
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                ResumeBinding(catalogBinding);
-                catalogs.Refresh();
-                SendMessage(new RefreshNavigation());
-                IsLocked(false);
-            }
+            { IsLocked(false); }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -142,22 +128,10 @@ namespace DataDictionary.Main.Forms.Catalog
             base.DeleteCommand_Click(sender, e);
 
             catalogNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (catalogBinding.Current is CatalogSynchronizeValue value && value.Source is ICatalogValue item)
+            if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                IsLocked(true);
-                CatalogIndex catalogKey = new CatalogIndex(item);
-                work.AddRange(BusinessData.CatalogModel.Delete(catalogKey));
-
-                DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                catalogs.Refresh();
+                formBinding.Remove(binding);
                 SendMessage(new RefreshNavigation());
-                IsLocked(false);
             }
         }
 
@@ -165,25 +139,11 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Delete(binding, onComplete); }
 
-            if (catalogBinding.Current is CatalogSynchronizeValue value && value.Source is ICatalogValue item)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogIndex key = new CatalogIndex(item);
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(catalogs.DeleteFromDb(factory, key));
-                work.AddRange(catalogs.GetCatalogs(factory));
-                DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                catalogs.Refresh();
-                IsLocked(false);
-            }
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -191,24 +151,13 @@ namespace DataDictionary.Main.Forms.Catalog
             base.OpenFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
-            if (catalogBinding.Current is CatalogSynchronizeValue value && value.Source is ICatalogValue item)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogIndex key = new CatalogIndex(item);
-                work.Add(factory.OpenConnection());
-                work.AddRange(catalogs.OpenFromDb(factory, key));
+            base.OpenFromDatabaseCommand_Click(sender, e);
 
-                DoWork(work, onCompleting);
-            }
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Load(binding, onComplete); }
 
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                catalogs.Refresh();
-                SendMessage(new RefreshNavigation());
-                IsLocked(false);
-            }
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
@@ -216,52 +165,24 @@ namespace DataDictionary.Main.Forms.Catalog
             base.SaveToDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
-            if (catalogBinding.Current is CatalogSynchronizeValue value && value.Source is ICatalogValue item)
+
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Save(binding, onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
+        }
+
+        private void CatalogBinding_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogIndex key = new CatalogIndex(item);
+                CommandButtons[CommandType.Delete].IsEnabled = binding.InModel;
 
-                work.Add(factory.OpenConnection());
-
-                if (GetInModel())
-                {
-                    work.AddRange(catalogs.SaveToDb(factory, key));
-                    work.AddRange(catalogs.GetCatalogs(factory));
-                }
-
-                DoWork(work, onCompleting);
+                CommandButtons[CommandType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[CommandType.SaveDatabase].IsEnabled = binding.InModel;
+                CommandButtons[CommandType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                catalogs.Refresh();
-                IsLocked(false);
-            }
-        }
-
-        private Boolean GetInModel()
-        {
-            if (catalogBinding.Current is CatalogSynchronizeValue item)
-            { return item.InModel == true; }
-            else { return false; }
-        }
-
-        private Boolean GetInDatabase()
-        {
-            if (catalogBinding.Current is CatalogSynchronizeValue item)
-            { return item.InDatabase == true; }
-            else { return false; }
-        }
-
-        private void CatalogBinding_CurrentChanged(object sender, EventArgs e)
-        {
-            CommandButtons[CommandType.Delete].IsEnabled = GetInModel();
-
-            CommandButtons[CommandType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
-            CommandButtons[CommandType.SaveDatabase].IsEnabled = GetInModel();
-            CommandButtons[CommandType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

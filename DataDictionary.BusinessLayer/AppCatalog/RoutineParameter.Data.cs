@@ -20,10 +20,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class RoutineParameterData : RoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel
+        ICatalogReference
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>

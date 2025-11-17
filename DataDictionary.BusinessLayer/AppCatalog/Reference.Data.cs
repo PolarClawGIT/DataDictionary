@@ -18,10 +18,10 @@ public interface IReferenceData : IBindingData<ReferenceValue>
 class ReferenceData : ReferenceCollection<ReferenceValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, IReferenceData
+        ICatalogReference, IReferenceData
 {
     /// <inheritdoc/>
-    public required ICatalog Model { get; init; }
+    public required ICatalog Catalog { get; init; }
 
     /// <inheritdoc/>
     /// <remarks>Reference</remarks>

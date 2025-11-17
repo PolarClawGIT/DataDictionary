@@ -19,10 +19,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class SchemaData : SchemaCollection<SchemaValue>,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel, ISchemaData
+        ICatalogReference, ISchemaData
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
