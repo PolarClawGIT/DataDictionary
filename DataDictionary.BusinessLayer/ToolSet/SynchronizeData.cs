@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TItem"></typeparam>
     /// <typeparam name="TKey"></typeparam>
+    [Obsolete("Not Used", true)]
     public abstract class SynchronizeData<TValue, TItem, TKey> : BindingList<TValue>
         where TValue : SynchronizeValue<TItem>
         where TItem : class, IBindingRowState, IBindingPropertyChanged

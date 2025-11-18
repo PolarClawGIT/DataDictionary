@@ -1095,7 +1095,6 @@
         private ToolStripButton documentCommand;
         private ToolStripButton transformCommand;
         private BindingSource bindingTemplate;
-        private TabPage documentPostTransformTab;
         private Controls.TextBoxData documentPrefixData;
         private Controls.TextBoxData documentSuffixData;
         private Controls.TextBoxData documentExtensionData;
@@ -1121,7 +1120,6 @@
         private Controls.TextBoxData nodeNameData;
         private Controls.ComboBoxData nodeRenderAsData;
         private Controls.TextBoxData nodeRenderOrderData;
-        private TableLayoutPanel nodeParentLayout;
         private DataGridView nodeOwnershipData;
         private DataGridViewComboBoxColumn nodeParentColumn;
         private Controls.ComboBoxData nodeParentSelect;

@@ -5,22 +5,22 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Used to build a Scripting Engine WorkItem
     /// </summary>
-    [Obsolete("replace", true)]
+    [Obsolete("Not Used", true)]
     public class ScriptingWork
     {
-        /// <inheritdoc cref="ScriptingEngine.Templates"/>
+        /// <inheritdoc/>
         public ScriptingTemplateValue Template { get; protected set; }
 
-        /// <inheritdoc cref="ScriptingEngine.TemplateAttributes"/>
+        /// <inheritdoc/>
         public IReadOnlyList<ScriptingAttributeValue> Attributes { get; protected set; }
 
-        /// <inheritdoc cref="ScriptingEngine.TemplateNodes"/>
+        /// <inheritdoc/>
         public IReadOnlyList<ScriptingNodeValue> Nodes { get; protected set; }
 
-        /// <inheritdoc cref="ScriptingEngine.TemplatePaths"/>
+        /// <inheritdoc/>
         public IReadOnlyList<ScriptingPathValue> Paths { get; protected set; }
 
-        /// <inheritdoc cref="ScriptingEngine.TemplateDocuments"/>
+        /// <inheritdoc/>
         public BindingView<XDocumentValue> Documents { get; protected set; }
 
         internal ScriptingWork(IScriptingTemplateIndex template, IScriptingEngine source)
