@@ -12,7 +12,6 @@ namespace DataDictionary.Main.Forms.Catalog
 {
     partial class CatalogManager : ApplicationData
     {
-        //CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.CatalogModel);
         FormBinding formBinding;
 
         public CatalogManager() : base()
@@ -151,8 +150,6 @@ namespace DataDictionary.Main.Forms.Catalog
             base.OpenFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
-            base.OpenFromDatabaseCommand_Click(sender, e);
-
             if (formBinding.TryGetValue(out BindingValue? binding))
             { formBinding.Load(binding, onComplete); }
 
@@ -164,7 +161,6 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             base.SaveToDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
-
 
             if (formBinding.TryGetValue(out BindingValue? binding))
             { formBinding.Save(binding, onComplete); }

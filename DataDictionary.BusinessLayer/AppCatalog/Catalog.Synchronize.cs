@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize value
     /// </summary>
-    [Obsolete("Needs to be redone", true)]
+    [Obsolete("No used", true)]
     public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>//, ICatalog
     {
         /// <inheritdoc cref="ICatalog.CatalogTitle"/>
@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize to compare what Catalogs are in the Model vs the Model
     /// </summary>
-    [Obsolete("Needs to be redone")]
+    [Obsolete("No used", true)]
     public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogIndex>
     {
         /// <summary>

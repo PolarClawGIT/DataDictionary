@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
     /// <summary>
     /// Interface representing .Net Library Data
     /// </summary>
-    public interface ILibraryModel :
+    public interface ILibrary :
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IDeleteData<ILibrarySourceIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         IBindListChanged
@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile
+    class LibraryModel : ILibrary, IDataTableFile
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return memberValues; } }
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
 
         public LibraryModel() : base()
         {
-            sourceValues = new LibrarySourceData() { Library = this };
+            sourceValues = new LibrarySourceData();
             memberValues = new LibraryMemberData() { Library = this };
 
             sourceValues.ListChanged += OnListChanged;
