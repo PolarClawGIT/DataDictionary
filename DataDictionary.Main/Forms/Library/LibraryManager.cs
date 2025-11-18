@@ -46,6 +46,9 @@ namespace DataDictionary.Main.Forms.Library
                 asseblyNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding,nameof(BindingValue.AssemblyName)));
                 sourceFileNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, nameof(BindingValue.SourceFile)));
                 sourceFileDate.DataBindings.Add(new Binding(nameof(TextBox.Text), libraryBinding, nameof(BindingValue.SourceDate)));
+
+                // Security
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 

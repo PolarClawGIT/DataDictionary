@@ -134,7 +134,7 @@
             // 
             // modelBinding
             // 
-            modelBinding.CurrentChanged += modelBinding_CurrentChanged;
+            modelBinding.CurrentItemChanged += ModelBinding_CurrentItemChanged;
             // 
             // modelToolStrip
             // 
@@ -147,7 +147,7 @@
             newModelCommand.Name = "newModelCommand";
             newModelCommand.Size = new Size(133, 22);
             newModelCommand.Text = "new Model";
-            newModelCommand.Click += newModelCommand_Click;
+            newModelCommand.Click += NewModelCommand_Click;
             // 
             // ModelManager
             // 

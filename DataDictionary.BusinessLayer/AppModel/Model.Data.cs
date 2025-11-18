@@ -12,18 +12,25 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// Interface component for the Domain Model 
     /// </summary>
     public interface IModelData :
-        IBindingData<ModelValue>
+        IBindingData<ModelValue>,
+        ILoadData
     {
         /// <summary>
-        /// Create WorkItem that create a new Model instance.
+        /// Creates an empty ICatalogData.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Create();
+        static IModelData Create()
+        { return new ModelData(); }
     }
 
     class ModelData : ModelCollection<ModelValue>, IModelData,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>, IDataTableFile
     {
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
+
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)

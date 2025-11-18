@@ -36,12 +36,6 @@ namespace DataDictionary.Main.Forms.Catalog
 
         private void CatalogManager_Load(object sender, EventArgs e)
         {
-            CommandButtons[CommandType.Delete].IsEnabled = false;
-
-            CommandButtons[CommandType.OpenDatabase].IsEnabled = false;
-            CommandButtons[CommandType.SaveDatabase].IsEnabled = false;
-            CommandButtons[CommandType.DeleteDatabase].IsEnabled = false;
-
             formBinding.Load(doBinding);
 
             void doBinding(RunWorkerCompletedEventArgs args)
@@ -54,6 +48,9 @@ namespace DataDictionary.Main.Forms.Catalog
                 sourceServerNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.ServerName)));
                 sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.DatabaseName)));
                 sourceDateData.DataBindings.Add(new Binding(nameof(TextBox.Text), catalogBinding, nameof(BindingValue.SourceDate)));
+
+                // Security
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -138,6 +135,7 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
+
             if (formBinding.TryGetValue(out BindingValue? binding))
             { formBinding.Delete(binding, onComplete); }
 

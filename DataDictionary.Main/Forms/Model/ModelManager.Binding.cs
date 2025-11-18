@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppLibrary;
+﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource;
@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms.Library
+namespace DataDictionary.Main.Forms.Model
 {
-    partial class LibraryManager
+    partial class ModelManager
     {
         class FormBinding
         {
@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Library
 
             public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
-                var catalogs = ILibrarySourceData.Create();
+                var models = IModelData.Create();
                 ManagerBinding.RaiseListChangedEvents = false;
 
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Library
                 if (Settings.Default.IsOnLineMode)
                 {
                     work.Add(factory.OpenConnection());
-                    work.AddRange(catalogs.Load(factory));
+                    work.AddRange(models.Load(factory));
                 }
 
                 DoWork(work, StartBinding);
@@ -46,12 +46,12 @@ namespace DataDictionary.Main.Forms.Library
 
                     BindingCompare bindingCompare = new BindingCompare();
                     managerData.AddRange(
-                        BusinessData.LibraryModel.LibrarySources.Select(s => new BindingValue(s)).
-                        Union(catalogs.Select(s => new BindingValue(s)), bindingCompare));
+                        BusinessData.Model.Models.Select(s => new BindingValue(s)).
+                        Union(models.Select(s => new BindingValue(s)), bindingCompare));
 
                     foreach (var item in managerData)
                     {
-                        if (catalogs.Any(a => item.Equals(a)))
+                        if (models.Any(a => item.Equals(a)))
                         { item.InDatabase = true; }
                     }
 
@@ -71,14 +71,17 @@ namespace DataDictionary.Main.Forms.Library
                 else { result = null; return false; }
             }
 
+            public void Create()
+            { BusinessData.Create(); }
+
             public void Load(BindingValue binding, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
                 work.Add(factory.OpenConnection());
 
-                if (binding.TryGetIndex(out LibrarySourceIndex? library))
-                { work.AddRange(BusinessData.LibraryModel.Load(factory, library)); }
+                if (binding.TryGetIndex(out ModelIndex? model))
+                { work.AddRange(BusinessData.Load(factory, model)); }
 
                 DoWork(work, WorkComplete);
 
@@ -93,8 +96,8 @@ namespace DataDictionary.Main.Forms.Library
 
             public void Remove(BindingValue binding)
             {
-                if (binding.TryGetIndex(out LibrarySourceIndex? library))
-                { BusinessData.LibraryModel.Remove(library); }
+                if (binding.TryGetIndex(out ModelIndex? model))
+                { BusinessData.Remove(model); }
 
                 RefreshInModel();
                 OnRefresh();
@@ -106,8 +109,8 @@ namespace DataDictionary.Main.Forms.Library
                 List<WorkItem> work = new List<WorkItem>();
                 work.Add(factory.OpenConnection());
 
-                if (binding.TryGetIndex(out LibrarySourceIndex? library))
-                { work.AddRange(BusinessData.LibraryModel.Save(factory, library)); }
+                if (binding.TryGetIndex(out ModelIndex? model))
+                { work.AddRange(BusinessData.Save(factory, model)); }
 
                 DoWork(work, WorkComplete);
 
@@ -126,41 +129,16 @@ namespace DataDictionary.Main.Forms.Library
                 List<WorkItem> work = new List<WorkItem>();
                 work.Add(factory.OpenConnection());
 
-                if (binding.TryGetIndex(out LibrarySourceIndex? library))
+                if (binding.TryGetIndex(out ModelIndex? model))
                 {
-                    work.AddRange(BusinessData.LibraryModel.Delete(library));
-                    work.AddRange(BusinessData.LibraryModel.Save(factory, library));
+                    work.AddRange(BusinessData.Delete(model));
+                    work.AddRange(BusinessData.Model.Save(factory, model));
                 }
 
                 DoWork(work, WorkComplete);
 
                 void WorkComplete(RunWorkerCompletedEventArgs args)
                 {
-                    RefreshInModel();
-                    OnRefresh();
-
-                    if (onComplete is not null)
-                    { onComplete(args); }
-                }
-            }
-
-            public void Import(IEnumerable<FileInfo> file, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-
-                foreach (var item in file)
-                { work.AddRange(BusinessData.LibraryModel.Import(item)); }
-
-                DoWork(work, WorkComplete);
-
-                void WorkComplete(RunWorkerCompletedEventArgs args)
-                {
-                    BindingCompare bindingCompare = new BindingCompare();
-
-                    managerData.AddRange(
-                        BusinessData.LibraryModel.LibrarySources.Select(s => new BindingValue(s)).
-                        Except(managerData, bindingCompare));
-
                     RefreshInModel();
                     OnRefresh();
 
@@ -173,8 +151,8 @@ namespace DataDictionary.Main.Forms.Library
             {
                 foreach (var item in managerData)
                 {
-                    if (BusinessData.LibraryModel.LibrarySources.Any(a => item.Equals(a))
-                        || BusinessData.LibraryModel.LibrarySources.Any(a => item.Equals(a)))
+                    if (BusinessData.Model.Models.Any(a => item.Equals(a))
+                        || BusinessData.Model.Models.Any(a => item.Equals(a)))
                     { item.InModel = true; }
                     else { item.InModel = false; }
                 }
@@ -185,78 +163,48 @@ namespace DataDictionary.Main.Forms.Library
                 switch (command)
                 {
                     case Enumerations.CommandType.Default: return true;
-                    case Enumerations.CommandType.Add: return BusinessData.Authorization.IsLibraryAdmin;
-                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsLibraryAdmin;
-                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsLibraryAdmin;
-                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsLibraryAdmin;
-                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsLibraryAdmin;
-                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsLibraryAdmin;
+                    case Enumerations.CommandType.Add: return BusinessData.Authorization.IsModelAdmin;
+                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsModelAdmin;
+                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsModelAdmin;
+                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsModelAdmin;
+                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsModelAdmin;
+                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsModelAdmin;
                     default: return false;
                 }
             }
         }
 
         class BindingValue : IBindingPropertyChanged,
-            ILibrarySourceIndex,
-            IKeyEquality<ILibrarySourceIndex>
+            IModelIndex,
+            IKeyEquality<IModelIndex>
         {
 
-            public Guid? LibraryId
+            public Guid? ModelId
             {
                 get
                 {
-                    if (dataSource is ILibrarySourceValue sourceValue)
-                    { return sourceValue.LibraryId; }
+                    if (dataSource is IModelValue sourceValue)
+                    { return sourceValue.ModelId; }
                     else { return null; }
                 }
             }
 
-            public String? LibraryTitle
+            public String? ModelTitle
             {
                 get
                 {
-                    if (dataSource is ILibrarySourceValue value)
-                    { return value.LibraryTitle; }
+                    if (dataSource is IModelValue value)
+                    { return value.ModelTitle; }
                     else { return null; }
                 }
             }
 
-            public String? LibraryDescription
+            public String? ModelDescription
             {
                 get
                 {
-                    if (dataSource is ILibrarySourceValue value)
-                    { return value.LibraryDescription; }
-                    else { return null; }
-                }
-            }
-
-            public String? AssemblyName
-            {
-                get
-                {
-                    if (dataSource is ILibrarySourceValue value)
-                    { return value.AssemblyName; }
-                    else { return null; }
-                }
-            }
-
-            public String? SourceFile
-            {
-                get
-                {
-                    if (dataSource is ILibrarySourceValue value)
-                    { return value.SourceFile; }
-                    else { return null; }
-                }
-            }
-
-            public DateTime? SourceDate
-            {
-                get
-                {
-                    if (dataSource is ILibrarySourceValue value)
-                    { return value.SourceDate; }
+                    if (dataSource is IModelValue value)
+                    { return value.ModelDescription; }
                     else { return null; }
                 }
             }
@@ -283,9 +231,9 @@ namespace DataDictionary.Main.Forms.Library
             }
             private Boolean inDatabase;
 
-            ILibrarySourceValue? dataSource;
+            IModelValue? dataSource;
 
-            public BindingValue(ILibrarySourceValue value)
+            public BindingValue(IModelValue value)
             {
                 dataSource = value;
                 value.PropertyChanged += Value_PropertyChanged;
@@ -297,51 +245,43 @@ namespace DataDictionary.Main.Forms.Library
             {
                 if (PropertyChanged is PropertyChangedEventHandler handler)
                 {
-                    if (dataSource is ILibrarySourceValue sourceValue)
+                    if (dataSource is IModelValue sourceValue)
                     {
-                        if (e.PropertyName is nameof(ILibrarySourceValue.LibraryTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(LibraryTitle))); }
+                        if (e.PropertyName is nameof(IModelValue.ModelTitle))
+                        { handler(this, new PropertyChangedEventArgs(nameof(ModelTitle))); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.LibraryDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(LibraryDescription))); }
+                        if (e.PropertyName is nameof(IModelValue.ModelDescription))
+                        { handler(this, new PropertyChangedEventArgs(nameof(ModelDescription))); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.SourceFile))
-                        { handler(this, new PropertyChangedEventArgs(nameof(SourceFile))); }
-
-                        if (e.PropertyName is nameof(ILibrarySourceValue.AssemblyName))
-                        { handler(this, new PropertyChangedEventArgs(nameof(AssemblyName))); }
-
-                        if (e.PropertyName is nameof(ILibrarySourceValue.SourceDate))
-                        { handler(this, new PropertyChangedEventArgs(nameof(SourceDate))); }
                     }
                     else { }
                 }
             }
 
-            public Boolean TryGetIndex([NotNullWhen(true)] out LibrarySourceIndex? result)
+            public Boolean TryGetIndex([NotNullWhen(true)] out ModelIndex? result)
             {
-                if (dataSource is ILibrarySourceValue value)
-                { result = new LibrarySourceIndex(value); return true; }
+                if (dataSource is IModelValue value)
+                { result = new ModelIndex(value); return true; }
                 else { result = null; return false; }
             }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out ILibrarySourceValue? result)
+            public Boolean TryGetValue([NotNullWhen(true)] out IModelValue? result)
             {
-                if (dataSource is ILibrarySourceValue value)
+                if (dataSource is IModelValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
             #region IEquatable
-            public Boolean Equals(ILibrarySourceIndex? other)
-            { return dataSource is ILibrarySourceIndex value && new LibrarySourceIndex(value).Equals(other); }
+            public Boolean Equals(IModelIndex? other)
+            { return dataSource is IModelIndex value && new ModelIndex(value).Equals(other); }
 
             public Boolean Equals(BindingValue? other)
             {
                 return other is BindingValue value
-                    && LibraryId is Guid
-                    && value.LibraryId is Guid
-                    && Guid.Equals(LibraryId, value.LibraryId);
+                    && ModelId is Guid
+                    && value.ModelId is Guid
+                    && Guid.Equals(ModelId, value.ModelId);
             }
 
             /// <inheritdoc/>
@@ -349,17 +289,17 @@ namespace DataDictionary.Main.Forms.Library
             public override Boolean Equals(object? obj)
             {
                 return obj is BindingValue value
-                    && LibraryId is Guid
-                    && value.LibraryId is Guid
-                    && Guid.Equals(LibraryId, value.LibraryId);
+                    && ModelId is Guid
+                    && value.ModelId is Guid
+                    && Guid.Equals(ModelId, value.ModelId);
             }
 
             /// <inheritdoc/>
-            public static Boolean operator ==(BindingValue left, ILibrarySourceIndex right)
+            public static Boolean operator ==(BindingValue left, IModelIndex right)
             { return left.Equals(right); }
 
             /// <inheritdoc/>
-            public static Boolean operator !=(BindingValue left, ILibrarySourceIndex right)
+            public static Boolean operator !=(BindingValue left, IModelIndex right)
             { return !left.Equals(right); }
 
             /// <inheritdoc/>
@@ -373,7 +313,7 @@ namespace DataDictionary.Main.Forms.Library
             /// <inheritdoc/>
             public override Int32 GetHashCode()
             {
-                if (LibraryId is Guid) { return LibraryId.GetHashCode(); }
+                if (ModelId is Guid) { return ModelId.GetHashCode(); }
                 else { return Guid.Empty.GetHashCode(); }
             }
             #endregion
