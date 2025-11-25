@@ -11,52 +11,12 @@ namespace DataDictionary.Main.Controls.ComboBoxList
     /// <typeparam name="T"></typeparam>
     class BindingComboList<T> : BindingList<T>
     {
-        public Boolean TryGetSelected(ComboBox control, [NotNullWhen(true)] out T? result)
-        {
-            if (control.SelectedItem is T value)
-            { result = value; return true; }
-            else { result = default; return false; }
-        }
-
-        public Boolean TryGetSelected(ComboBoxData control, [NotNullWhen(true)] out T? result)
-        {
-            if (control.SelectedItem is T value)
-            { result = value; return true; }
-            else { result = default; return false; }
-        }
-
-        public Boolean TryGetSelected(DataGridViewComboBoxColumn control, [NotNullWhen(true)] out T? result)
-        {
-            if (control.DataGridView is DataGridView grid
-                && grid.CurrentCell is DataGridViewCell cell
-                && cell.Value is T value)
-            { result = value; return true; }
-            else { result = default; return false; }
-        }
-
-        public Boolean TrySetSelected(ComboBox control, Func<T, Boolean> selector)
-        {
-            if (this.FirstOrDefault(selector) is T value)
-            { control.SelectedItem = value; return true; }
-            else { return false; }
-        }
-
-        public Boolean TrySetSelected(ComboBoxData control, Func<T, Boolean> selector)
-        {
-            if (this.FirstOrDefault(selector) is T value)
-            { control.SelectedItem = value; return true; }
-            else { return false; }
-        }
-
-        public Boolean TrySetSelected(DataGridViewComboBoxColumn control, Func<T, Boolean> selector)
-        {
-            if (this.FirstOrDefault(selector) is T value
-                && control.DataGridView is DataGridView grid
-                && grid.CurrentCell is DataGridViewCell cell)
-            { cell.Value = value; return true; }
-            else { return false; }
-        }
-
+        /// <summary>
+        /// Binds the Combobox control
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="valueMember"></param>
+        /// <param name="displayMember"></param>
         public void BindTo(ComboBox control,
             Func<String> valueMember,
             Func<String> displayMember)
@@ -66,6 +26,12 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = this;
         }
 
+        /// <summary>
+        /// Binds the ComboboxData control
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="valueMember"></param>
+        /// <param name="displayMember"></param>
         public void BindTo(ComboBoxData control,
             Func<String> valueMember,
             Func<String> displayMember)
@@ -75,6 +41,12 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = this;
         }
 
+        /// <summary>
+        /// Binds the DataGridViewComboBoxColumn control
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="valueMember"></param>
+        /// <param name="displayMember"></param>
         public void BindTo(DataGridViewComboBoxColumn control,
             Func<String> valueMember,
             Func<String> displayMember)
@@ -84,14 +56,25 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             control.DataSource = this;
         }
 
+        /// <summary>
+        /// Fills the ComboBox List.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="constructor"></param>
+        /// <param name="onItemChanged"></param>
+        /// <param name="filterBy"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="areEquel"></param>
+        /// <param name="emptyValue"></param>
         public void BuildList<TSource>(
             IBindingList<TSource> source,
             Func<TSource, T> constructor,
-            Action<TSource, T>? onItemChanged,
-            Func<TSource, Boolean>? filterBy,
-            Func<T, Object>? orderBy,
-            Func<T, T, Boolean>? areEquel,
-            Func<T>? emptyValue)
+            Action<TSource, T>? onItemChanged = null,
+            Func<TSource, Boolean>? filterBy = null,
+            Func<T, Object>? orderBy = null,
+            Func<T, T, Boolean>? areEquel = null,
+            Func<T>? emptyValue = null)
             where TSource : IBindingPropertyChanged
         {
             filterBy = filterBy ?? (f => 1 == 1);
@@ -236,5 +219,190 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             }
         }
     }
+
+    static class BindingComboListExtension
+    {
+        /// <summary>
+        /// Trys to Get the Selected Item from the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetSelected<T>(this ComboBoxData control, [NotNullWhen(true)] out T? result)
+        {
+            if (control.SelectedItem is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+
+        /// <summary>
+        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static Boolean TrySetSelected<T>(this ComboBoxData control, Func<T, Boolean> predicate)
+        {
+            if (control.DataSource is BindingComboList<T> values &&
+                values.FirstOrDefault(w => predicate(w)) is T value)
+            { control.SelectedItem = value; return true; }
+            else { return false; }
+        }
+
+        /// <summary>
+        /// Trys to Get the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetList<T>(this ComboBoxData control, [NotNullWhen(true)] out IEnumerable<T>? result)
+        {
+            if (control.DataSource is BindingComboList<T> values)
+            { result = values; return true; }
+            else { result = null; return false; }
+        }
+
+        /// <summary>
+        /// Try to Get the first Value that matches from the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetValue<T>(this ComboBoxData control, Func<T, Boolean> predicate, [NotNullWhen(true)] out T? result)
+        {
+            if (control.DataSource is BindingComboList<T> values &&
+                values.FirstOrDefault(w => w is not null && predicate(w)) is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+
+        /// <summary>
+        /// Trys to Get the Selected Item from the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetSelected<T>(this ComboBox control, [NotNullWhen(true)] out T? result)
+        {
+            if (control.SelectedItem is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+
+        /// <summary>
+        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static Boolean TrySetSelected<T>(this ComboBox control, Func<T, Boolean> predicate)
+        {
+            if (control.DataSource is BindingComboList<T> values &&
+                values.FirstOrDefault(w => predicate(w)) is T value)
+            { control.SelectedItem = value; return true; }
+            else { return false; }
+        }
+
+        /// <summary>
+        /// Trys to Get the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetList<T>(this ComboBox control, [NotNullWhen(true)] out IEnumerable<T>? result)
+        {
+            if (control.DataSource is BindingComboList<T> values)
+            { result = values; return true; }
+            else { result = null; return false; }
+        }
+
+        /// <summary>
+        /// Try to Get the first Value that matches from the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetValue<T>(this ComboBox control, Func<T, Boolean> predicate, [NotNullWhen(true)] out T? result)
+        {
+            if (control.DataSource is BindingComboList<T> values &&
+                values.FirstOrDefault(w => w is not null && predicate(w)) is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+
+        /// <summary>
+        /// Trys to Get the Selected Item from the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetSelected<T>(this DataGridViewComboBoxColumn control, [NotNullWhen(true)] out T? result)
+        {
+            if (control.DataGridView is DataGridView grid
+                && grid.CurrentCell is DataGridViewCell cell
+                && cell.Value is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+
+        /// <summary>
+        /// Trys to Set the Selected Item of the Control to the first value that matches.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static Boolean TrySetSelected<T>(this DataGridViewComboBoxColumn control, Func<T, Boolean> predicate)
+        {
+            if (control.DataSource is BindingComboList<T> values
+                && values.FirstOrDefault(w => predicate(w)) is T value
+                && control.DataGridView is DataGridView grid
+                && grid.CurrentCell is DataGridViewCell cell)
+            { cell.Value = value; return true; }
+            else { return false; }
+        }
+
+        /// <summary>
+        /// Trys to Get the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetList<T>(this DataGridViewComboBoxColumn control, [NotNullWhen(true)] out IEnumerable<T>? result)
+        {
+            if (control.DataSource is BindingComboList<T> values)
+            { result = values; return true; }
+            else { result = null; return false; }
+        }
+
+        /// <summary>
+        /// Try to Get the first Value that matches from the list of Items of the Control.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <param name="predicate"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static Boolean TryGetValue<T>(this DataGridViewComboBoxColumn control, Func<T, Boolean> predicate, [NotNullWhen(true)] out T? result)
+        {
+            if (control.DataSource is BindingComboList<T> values &&
+                values.FirstOrDefault(w => w is not null && predicate(w)) is T value)
+            { result = value; return true; }
+            else { result = default(T); return false; }
+        }
+    }
+
 
 }

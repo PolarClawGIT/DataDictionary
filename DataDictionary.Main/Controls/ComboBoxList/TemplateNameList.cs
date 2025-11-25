@@ -1,9 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
-    record TemplateNameList : ITemplateIndex, ITemplateIndexName
+    record TemplateNameList : ITemplateIndex, ITemplateIndexName, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public Guid? TemplateId { get; private set; } = Guid.Empty;
@@ -11,39 +12,46 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc/>
         public String TemplateTitle { get; private set; } = String.Empty;
 
-        public static void Load(DataGridViewComboBoxColumn control)
+        TemplateNameList(ITemplateValue value)
         {
-            BindingList<TemplateNameList> list = new BindingList<TemplateNameList>();
-
-            foreach (TemplateNameList item in BusinessData.Scripting.Templates.
-                Select(s => new TemplateNameList()
-                {
-                    TemplateId = s.TemplateId,
-                    TemplateTitle = s.TemplateTitle ?? String.Empty
-                }).OrderBy(o => o.TemplateTitle))
-            { list.Add(item); }
-
-            control.ValueMember = nameof(TemplateId);
-            control.DisplayMember = nameof(TemplateTitle);
-            control.DataSource = list;
+            TemplateId = value.TemplateId;
+            TemplateTitle = value.TemplateTitle ?? String.Empty;
         }
 
-        public static void Load(ComboBoxData control)
+        TemplateNameList(String? emptyText = "(n/a)")
+        { TemplateTitle = emptyText ?? "(n/a)"; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public static void Load(ComboBoxData control, String? emptyText = null)
         {
-            BindingList<TemplateNameList> list = new BindingList<TemplateNameList>();
-
-            foreach (TemplateNameList item in BusinessData.Scripting.Templates.
-                Select(s => new TemplateNameList()
-                {
-                    TemplateId = s.TemplateId,
-                    TemplateTitle = s.TemplateTitle ?? String.Empty
-                }))
-            { list.Add(item); }
-
-            control.ValueMember = nameof(TemplateId);
-            control.DisplayMember = nameof(TemplateTitle);
-            control.DataSource = list;
+            BindingComboList<TemplateNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(TemplateId), () => nameof(TemplateTitle));
         }
 
+        public static void Load(DataGridViewComboBoxColumn control, String? emptyText = null)
+        {
+            BindingComboList<TemplateNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(TemplateId), () => nameof(TemplateTitle));
+        }
+
+        static BindingComboList<TemplateNameList> BuildList(String? emptyText = null)
+        {
+            BindingComboList<TemplateNameList> comboList = new BindingComboList<TemplateNameList>();
+
+            comboList.BuildList(
+                source: BusinessData.Scripting.Templates,
+                constructor: (c) => new TemplateNameList(c),
+                onItemChanged: (s, t) =>
+                {
+                    t.TemplateTitle = s.TemplateTitle ?? String.Empty;
+                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.TemplateTitle));
+                },
+                orderBy: (o) => o.TemplateTitle,
+                areEquel: (a, b) => new TemplateIndex(a).Equals(b),
+                emptyValue: () => new TemplateNameList(emptyText));
+
+            return comboList;
+        }
     }
 }

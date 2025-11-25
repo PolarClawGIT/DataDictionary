@@ -1,9 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
-    record AttributeNameList : IAttributeIndex, IAttributeIndexName
+    record AttributeNameList : IAttributeIndex, IAttributeIndexName, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; private set; } = Guid.Empty;
@@ -11,41 +12,46 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc/>
         public String AttributeTitle { get; private set; } = String.Empty;
 
-        public static void Load(DataGridViewComboBoxColumn control)
+        AttributeNameList(IAttributeValue value)
         {
-            BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
-
-            foreach (AttributeNameList item in BusinessData.Model.Attribute.Attributes.
-                Select(s => new AttributeNameList()
-                {
-                    AttributeId = s.AttributeId,
-                    AttributeTitle = s.AttributeTitle ?? String.Empty
-                }))
-            { list.Add(item); }
-            //control.DefaultCellStyle.NullValue = Guid.Empty; // This does not work
-            //control.DefaultCellStyle.DataSourceNullValue = Guid.Empty; // This does not work
-
-            control.ValueMember = nameof(AttributeId);
-            control.DisplayMember = nameof(AttributeTitle);
-            control.DataSource = list;
+            AttributeId = value.AttributeId;
+            AttributeTitle = value.AttributeTitle ?? String.Empty;
         }
 
-        public static void Load(ComboBoxData control)
+        AttributeNameList(String? emptyText = "(n/a)")
+        { AttributeTitle = emptyText ?? "(n/a)"; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public static void Load(ComboBoxData control, String? emptyText = null)
         {
-            BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
-
-            foreach (AttributeNameList item in BusinessData.Model.Attribute.Attributes.
-                Select(s => new AttributeNameList()
-                {
-                    AttributeId = s.AttributeId,
-                    AttributeTitle = s.AttributeTitle ?? String.Empty
-                }))
-            { list.Add(item); }
-
-            control.ValueMember = nameof(AttributeId);
-            control.DisplayMember = nameof(AttributeTitle);
-            control.DataSource = list;
+            BindingComboList<AttributeNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(AttributeId), () => nameof(AttributeTitle));
         }
 
+        public static void Load(DataGridViewComboBoxColumn control, String? emptyText = null)
+        {
+            BindingComboList<AttributeNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(AttributeId), () => nameof(AttributeTitle));
+        }
+
+        static BindingComboList<AttributeNameList> BuildList(String? emptyText = null)
+        {
+            BindingComboList<AttributeNameList> comboList = new BindingComboList<AttributeNameList>();
+
+            comboList.BuildList(
+                source: BusinessData.Model.Attribute.Attributes,
+                constructor: (c) => new AttributeNameList(c),
+                onItemChanged: (s, t) =>
+                {
+                    t.AttributeTitle = s.AttributeTitle ?? String.Empty;
+                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.AttributeTitle));
+                },
+                orderBy: (o) => o.AttributeTitle,
+                areEquel: (a, b) => new AttributeIndex(a).Equals(b),
+                emptyValue: () => new AttributeNameList(emptyText));
+
+            return comboList;
+        }
     }
 }

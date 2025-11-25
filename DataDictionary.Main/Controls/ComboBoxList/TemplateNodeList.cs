@@ -14,8 +14,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc/>
         public String NodeName { get; private set; } = String.Empty;
 
-        TemplateNodeList(String emptyText = "(n/a)")
-        { NodeName = emptyText; }
+        TemplateNodeList(String? emptyText = "(n/a)")
+        { NodeName = emptyText?? "(n/a)"; }
 
         TemplateNodeList(ITemplateNodeValue value)
         {
@@ -33,26 +33,17 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
         public static void Load(ComboBoxData control, ITemplateIndex template, String? emptyText = null)
         {
-            BindingComboList<TemplateNodeList> comboList = new BindingComboList<TemplateNodeList>();
-            TemplateIndex templateKey = new TemplateIndex(template);
-
-            comboList.BuildList(
-                source: BusinessData.Scripting.Nodes,
-                constructor: (c) => new TemplateNodeList(c),
-                onItemChanged: (s, t) =>
-                {
-                    t.NodeName = s.NodeName ?? String.Empty;
-                    t.OnPropertyChanged(nameof(t.NodeName));
-                },
-                filterBy: (f) => templateKey.Equals(f),
-                orderBy: (o) => o.NodeName,
-                areEquel: (a, b) => new TemplateNodeIndex(a).Equals(b),
-                emptyValue: () => new TemplateNodeList());
-
+            BindingComboList<TemplateNodeList> comboList = BuildList(template, emptyText);
             comboList.BindTo(control, () => nameof(NodeId), () => nameof(NodeName));
         }
 
         public static void Load(DataGridViewComboBoxColumn control, ITemplateIndex template, String? emptyText = null)
+        {
+            BindingComboList<TemplateNodeList> comboList = BuildList(template, emptyText);
+            comboList.BindTo(control, () => nameof(NodeId), () => nameof(NodeName));
+        }
+
+        static BindingComboList<TemplateNodeList> BuildList(ITemplateIndex template, String? emptyText = null)
         {
             BindingComboList<TemplateNodeList> comboList = new BindingComboList<TemplateNodeList>();
             TemplateIndex templateKey = new TemplateIndex(template);
@@ -70,7 +61,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                 areEquel: (a, b) => new TemplateNodeIndex(a).Equals(b),
                 emptyValue: () => new TemplateNodeList());
 
-            comboList.BindTo(control, () => nameof(NodeId), () => nameof(NodeName));
+            return comboList;
         }
 
         [Obsolete]

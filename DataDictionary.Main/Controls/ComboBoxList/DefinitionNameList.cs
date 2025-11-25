@@ -1,9 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
-    record DefinitionNameList : IDefinitionIndex, IDefinitionIndexName
+    record DefinitionNameList : IDefinitionIndex, IDefinitionIndexName, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public Guid? DefinitionId { get; set; } = Guid.Empty;
@@ -11,45 +12,46 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         /// <inheritdoc/>
         public String DefinitionTitle { get; set; } = String.Empty;
 
-        public static void Load(ComboBoxData control)
-        { Load(control, BusinessData.Model.Definitions); }
-
-        public static void Load(ComboBoxData control, IEnumerable<IDefinitionValue> values)
+        DefinitionNameList(IDefinitionValue value)
         {
-            DefinitionNameList DefinitionNameDataItem = new DefinitionNameList();
-            BindingList<DefinitionNameList> list = new BindingList<DefinitionNameList>();
-            list.Add(new DefinitionNameList() { DefinitionId = Guid.Empty, DefinitionTitle = "(select Definition Type)" });
-
-            foreach (IDefinitionValue item in values)
-            {
-                if (item.DefinitionId is Guid DefinitionId && item.DefinitionTitle is String DefinitionTitle)
-                { list.Add(new DefinitionNameList() { DefinitionId = DefinitionId, DefinitionTitle = DefinitionTitle }); }
-            }
-
-            control.ValueMember = nameof(DefinitionNameDataItem.DefinitionId);
-            control.DisplayMember = nameof(DefinitionNameDataItem.DefinitionTitle);
-            control.DataSource = list;
+            DefinitionId = value.DefinitionId;
+            DefinitionTitle = value.DefinitionTitle ?? String.Empty;
         }
 
-        public static void Load(DataGridViewComboBoxColumn control)
-        {   Load(control, BusinessData.Model.Definitions); }
+        DefinitionNameList(String? emptyText = "(n/a)")
+        { DefinitionTitle = emptyText ?? "(n/a)"; }
 
-        public static void Load(DataGridViewComboBoxColumn control, IEnumerable<IDefinitionValue> values)
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public static void Load(ComboBoxData control, String? emptyText = null)
         {
-            DefinitionNameList DefinitionNameDataItem = new DefinitionNameList();
-            BindingList<DefinitionNameList> list = new BindingList<DefinitionNameList>();
-            list.Add(new DefinitionNameList() { DefinitionId = Guid.Empty, DefinitionTitle = "(select Definition Type)" });
+            BindingComboList<DefinitionNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(DefinitionId), () => nameof(DefinitionTitle));
+        }
 
-            foreach (DefinitionValue item in values)
-            {
-                if (item.DefinitionId is Guid DefinitionId && item.DefinitionTitle is String DefinitionTitle)
-                { list.Add(new DefinitionNameList() { DefinitionId = DefinitionId, DefinitionTitle = DefinitionTitle }); }
-            }
+        public static void Load(DataGridViewComboBoxColumn control, String? emptyText = null)
+        {
+            BindingComboList<DefinitionNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(DefinitionId), () => nameof(DefinitionTitle));
+        }
 
-            control.DataSource = list;
-            control.ValueMember = nameof(DefinitionNameDataItem.DefinitionId);
-            control.DisplayMember = nameof(DefinitionNameDataItem.DefinitionTitle);
-            
+        static BindingComboList<DefinitionNameList> BuildList(String? emptyText = null)
+        {
+            BindingComboList<DefinitionNameList> comboList = new BindingComboList<DefinitionNameList>();
+
+            comboList.BuildList(
+                source: BusinessData.Model.Definitions,
+                constructor: (c) => new DefinitionNameList(c),
+                onItemChanged: (s, t) =>
+                {
+                    t.DefinitionTitle = s.DefinitionTitle ?? String.Empty;
+                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.DefinitionTitle));
+                },
+                orderBy: (o) => o.DefinitionTitle,
+                areEquel: (a, b) => new DefinitionIndex(a).Equals(b),
+                emptyValue: () => new DefinitionNameList(emptyText));
+
+            return comboList;
         }
     }
 }
