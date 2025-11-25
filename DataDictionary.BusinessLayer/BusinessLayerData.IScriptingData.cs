@@ -18,12 +18,12 @@ namespace DataDictionary.BusinessLayer
         public IScripting Scripting { get { return scriptingValue; } }
         private readonly Scripting scriptingValue;
 
-        Scripting InitScripting()
+        Scripting InitScripting(IModel model)
         {
             Scripting result = new Scripting();
-            result.Builders.AddRange(Attribute.CreateXElements(Model.Properties.TryGetValue, Model.Definitions.TryGetValue));
-            result.Builders.AddRange(Entity.CreateXElements(Model.Properties.TryGetValue, Model.Definitions.TryGetValue));
-            result.Builders.AddRange(Process.CreateXElements(Model.Properties.TryGetValue, Model.Definitions.TryGetValue));
+            result.Builders.AddRange(Attribute.CreateXElements(model.Properties.TryGetValue, model.Definitions.TryGetValue));
+            result.Builders.AddRange(Entity.CreateXElements(model.Properties.TryGetValue, model.Definitions.TryGetValue));
+            result.Builders.AddRange(Process.CreateXElements(model.Properties.TryGetValue, model.Definitions.TryGetValue));
             return result;
         }
 

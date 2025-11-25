@@ -7,23 +7,11 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-    /// <summary>
-    /// Contains a Model
-    /// </summary>
-    public interface IDomainData
+    partial class BusinessLayerData
     {
         /// <summary>
-        /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
+        /// Wrapper for the Model Data (Attribute, Entity, and Process)
         /// </summary>
-        IModel Model { get; }
-    }
-
-    partial interface IBusinessLayerData : IDomainData
-    { }
-
-    partial class BusinessLayerData: IDomainData
-    {
-        /// <inheritdoc/>
         public IModel Model { get { return modelValues; } }
         private readonly Model modelValues;
     }
