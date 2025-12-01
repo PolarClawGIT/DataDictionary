@@ -65,28 +65,29 @@ namespace DataDictionary.Main.Enumerations
         }
 
         /// <summary>
-        /// Sets the Image List for a TreeView.
+        /// Creates an Image List using the defined images for the Scopes listed.
         /// </summary>
-        /// <param name="target"></param>
-        public static void SetImageList(this TreeView target)
+        /// <param name="scopes"></param>
+        /// <returns></returns>
+        public static ImageList CreateImageList(params IEnumerable<ScopeType> scopes)
         {
             ImageList result = new ImageList();
 
-            foreach (ScopeType item in Enum.GetValues<ScopeType>())
+            foreach (ScopeType item in scopes.Distinct())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
                     && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
                 { result.Images.Add(value.Name, image()); }
             }
 
-            target.ImageList = result;
+            return result;
         }
 
         /// <summary>
-        /// Sets the Image List for a ListView.
+        /// Creates an ImageList using the defined images for all the Scopes.
         /// </summary>
-        /// <param name="target"></param>
-        public static void SetImageList(this ListView target)
+        /// <returns></returns>
+        public static ImageList CreateImageList()
         {
             ImageList result = new ImageList();
 
@@ -97,7 +98,7 @@ namespace DataDictionary.Main.Enumerations
                 { result.Images.Add(value.Name, image()); }
             }
 
-            target.SmallImageList = result;
+            return result;
         }
     }
 }

@@ -98,7 +98,7 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ScriptingTemplateNodeOwner, Resources.Icon_XMLElement),
                 new Enumeration(ScopeType.ScriptingTemplateData,      Resources.Icon_XPath),
 
-                new Enumeration(ScopeType.Security,                   Resources.Icon_Permission), // TODO: Anouther option?
+                new Enumeration(ScopeType.Security,                   Resources.Icon_Lock), // TODO: Anouther option?
                 new Enumeration(ScopeType.SecurityPrincipal,          Resources.Icon_User),
                 new Enumeration(ScopeType.SecurityRole,               Resources.Icon_ApplicationRole),
                 new Enumeration(ScopeType.SecuritySecurable,          Resources.Icon_Permission),

@@ -413,6 +413,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Lock {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Lock", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_Method {
             get {
                 object obj = ResourceManager.GetObject("Icon_Method", resourceCulture);
