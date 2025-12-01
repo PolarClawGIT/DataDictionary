@@ -10,6 +10,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
     /// <summary>
     /// LibrarySource Synchronize value
     /// </summary>
+    [Obsolete("No used",true)]
     public class LibrarySynchronizeValue : SynchronizeValue<LibrarySourceValue>
     {
         /// <inheritdoc cref="LibrarySourceItem.LibraryTitle"/>
@@ -38,6 +39,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
     /// <summary>
     /// Library Synchronize to compare what Library's are in the Model vs the Model
     /// </summary>
+    [Obsolete("No used", true)]
     public class LibrarySynchronize : SynchronizeData<LibrarySynchronizeValue, LibrarySourceValue, LibrarySourceIndex>
     {
         /// <summary>
@@ -50,7 +52,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
 
         /// <inheritdoc/>
         protected override IBindingList<LibrarySourceValue> ModelData { get { return libraryModel.LibrarySources; } }
-        ILibraryModel libraryModel;
+        ILibrary libraryModel;
 
         /// <inheritdoc/>
         protected override IBindingList<LibrarySourceValue> DatabaseData { get { return sourceData; } }
@@ -60,7 +62,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         /// Constructor 
         /// </summary>
         /// <param name="libraryModel"></param>
-        public LibrarySynchronize(ILibraryModel libraryModel) : base()
+        public LibrarySynchronize(ILibrary libraryModel) : base()
         {
             this.libraryModel = libraryModel;
 

@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
-        public required ILibraryModel Library { get; init; }
+        public required ILibrary Library { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>

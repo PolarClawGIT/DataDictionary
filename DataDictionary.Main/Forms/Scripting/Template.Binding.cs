@@ -40,6 +40,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateInputValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public IXElementBuilderList XBuilder { get; } = BusinessData.Scripting.XBuilders;
+
             public FormBinding() : base()
             { }
 
@@ -69,7 +71,25 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeBinding.ResetBindings(false);
                 NodeOwnerBinding.ResetBindings(false);
                 DataSourceBinding.ResetBindings(false);
+
+                NodeBinding.CurrentChanged += NodeBinding_CurrentChanged;
+
+                void NodeBinding_CurrentChanged(Object? sender, EventArgs e)
+                {
+                    NodeOwnerBinding.RaiseListChangedEvents = false;
+
+                    if (TryGetValue(out TemplateNodeValue? currentNode))
+                    {
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(currentNode);
+                        templateNodeOwners = new BindingView<TemplateNodeOwnerValue>(data.NodeOwners, w => template.Equals(w) && nodeKey.Equals(w));
+                        NodeOwnerBinding.DataSource = templateNodeOwners;
+                    }
+
+                    NodeOwnerBinding.RaiseListChangedEvents = true;
+                    NodeOwnerBinding.ResetBindings(false);
+                }
             }
+
 
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
@@ -137,11 +157,39 @@ namespace DataDictionary.Main.Forms.Scripting
                 return result;
             }
 
+            public TemplateNodeValue NewNodeValue(TemplateIndex template)
+            {
+                TemplateNodeValue newValue = new TemplateNodeValue(template);
+                templateNodes.Add(newValue);
+
+                return newValue;
+            }
+
+            public TemplateNodeOwnerValue NewNodeOwner(TemplateNodeIndex ownerNode)
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                {
+                    TemplateNodeOwnerValue newItem = new TemplateNodeOwnerValue(value, ownerNode);
+                    templateNodeOwners.Add(newItem);
+
+                    return newItem;
+                }
+                else
+                { throw new IndexOutOfRangeException(); }
+            }
+
             public void RemoveValue()
             {
                 if (TryGetValue(out TemplateValue? value))
-                { templates.Remove(value); }
+                { data.Remove(new TemplateIndex(value)); }
             }
+
+            public void RemoveNodeValue()
+            {
+                if (TryGetValue(out TemplateNodeValue? value))
+                { data.Remove(new TemplateNodeIndex(value)); }
+            }
+
 
             public TemplateInputValue NewDataSource()
             {
@@ -164,6 +212,15 @@ namespace DataDictionary.Main.Forms.Scripting
                     && NodeBinding.Current is TemplateNodeValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+            public Boolean TrySetPosition(ITemplateNodeIndex node)
+            {
+                TemplateNodeIndex key = new TemplateNodeIndex(node);
+
+                if (templateNodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue value)
+                { NodeBinding.Position = templateNodes.IndexOf(value); return true; }
+                else { return false; }
             }
 
             public Boolean GetAuthorization(Enumerations.CommandType command)
@@ -205,19 +262,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void BuildTree(TreeView tree)
             {
                 if (TryGetValue(out TemplateValue? template))
-                { tree.BuildTree(template, templateNodes, templateNodeOwners); }
-            }
-
-            public TemplateNode OpenNode(Func<ITemplate, ITemplateIndex, TemplateNode> openNode)
-            {
-                if (TryGetValue(out TemplateValue? value))
-                { return openNode(data, value); }
-                else
-                {
-                    Exception ex = new IndexOutOfRangeException();
-                    ex.Data.Add(nameof(ITemplateIndex), data);
-                    throw new IndexOutOfRangeException();
-                }
+                { tree.BuildTree(template, data.Nodes, data.NodeOwners); }
             }
         }
 

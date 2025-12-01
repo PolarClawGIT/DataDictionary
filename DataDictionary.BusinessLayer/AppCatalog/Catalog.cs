@@ -153,22 +153,22 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
         public Catalog() : base()
         {
-            catalogs = new CatalogData() { Model = this };
-            schemta = new SchemaData() { Model = this };
-            domains = new DomainData() { Model = this };
+            catalogs = new CatalogData();
+            schemta = new SchemaData() { Catalog = this };
+            domains = new DomainData() { Catalog = this };
 
-            tables = new TableData() { Model = this };
-            tableColumns = new TableColumnData() { Model = this };
+            tables = new TableData() { Catalog = this };
+            tableColumns = new TableColumnData() { Catalog = this };
 
-            routines = new RoutineData() { Model = this };
-            routineParameters = new RoutineParameterData() { Model = this };
-            routineColumns = new RoutineColumnData() { Model = this };
-            references = new ReferenceData() { Model = this };
+            routines = new RoutineData() { Catalog = this };
+            routineParameters = new RoutineParameterData() { Catalog = this };
+            routineColumns = new RoutineColumnData() { Catalog = this };
+            references = new ReferenceData() { Catalog = this };
 
-            constraints = new ConstraintData() { Model = this };
-            constraintColumns = new ConstraintColumnData() { Model = this };
+            constraints = new ConstraintData() { Catalog = this };
+            constraintColumns = new ConstraintColumnData() { Catalog = this };
 
-            properties = new PropertyData() { Model = this };
+            properties = new PropertyData() { Catalog = this };
 
             catalogs.ListChanged += OnListChanged;
             schemta.ListChanged += OnListChanged;

@@ -10,6 +10,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Model Synchronize value
     /// </summary>
+    [Obsolete("Not Used", true)]
     public class ModelSynchronizeValue : SynchronizeValue<ModelValue>
     {
         /// <inheritdoc cref="ModelItem.ModelTitle"/>
@@ -34,6 +35,7 @@ namespace DataDictionary.BusinessLayer.AppModel
     /// <summary>
     /// Model Synchronize to compare what Model are in the Model vs the Model
     /// </summary>
+    [Obsolete("Not Used", true)]
     public class ModelSynchronize : SynchronizeData<ModelSynchronizeValue, ModelValue, ModelIndex>
     {
         /// <summary>

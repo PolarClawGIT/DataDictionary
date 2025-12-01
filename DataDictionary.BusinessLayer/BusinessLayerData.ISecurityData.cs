@@ -1,12 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
@@ -31,5 +25,15 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> LoadAuthorization(IDatabaseWork factory)
         { return authorizationData.Load(factory); }
+
+        /// <summary>
+        /// Wrapper for the Security classes (Principal, Role, ...)
+        /// </summary>
+        /// <remarks>
+        /// The normal state of this instance is empty.
+        /// The Security screens need a common instance for Binding to work (ListChanged event).
+        /// </remarks>
+        public ISecurity Security { get { return securityValue; } }
+        private readonly Security securityValue;
     }
 }

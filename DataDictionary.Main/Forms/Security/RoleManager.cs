@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Main.Forms.Security.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;

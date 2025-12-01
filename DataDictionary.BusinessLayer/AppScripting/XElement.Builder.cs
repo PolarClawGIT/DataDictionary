@@ -1,6 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.AppScript;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -17,7 +15,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Base Class used for the factory method that builds the XElement Builders.
     /// </summary>
-    class XElementBuilderList : Dictionary<ScopeType, IEnumerable<XElementBuilder>>, IXElementBuilderList 
+    class XElementBuilderList : Dictionary<ScopeType, IEnumerable<XElementBuilder>>, IXElementBuilderList
     { }
 
     /// <summary>

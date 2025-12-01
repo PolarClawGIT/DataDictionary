@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.AppScript
     public class TemplateNodeOwnerCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
-        IRemoveItem<ITemplateKey>
+        IRemoveItem<ITemplateKey>, IRemoveItem<ITemplateNodeKey>, IRemoveItem<ITemplateNodeOwnerKey>
         where TItem : BindingTableRow, ITemplateNodeOwnerItem, new()
     {
         /// <inheritdoc/>
@@ -73,6 +73,24 @@ namespace DataDictionary.DataLayer.AppScript
             TemplateKey key = new TemplateKey(templateKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ITemplateNodeKey templateKey)
+        {
+            TemplateNodeKey key = new TemplateNodeKey(templateKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(ITemplateNodeOwnerKey templateKey)
+        {
+            TemplateNodeOwnerKey key = new TemplateNodeOwnerKey(templateKey);
+
+            foreach (TItem item in this.Where(w => key.Equals((ITemplateNodeOwnerKey)w)).ToList())
             { base.Remove(item); }
         }
     }

@@ -30,16 +30,16 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel libraryManagerLayout;
-            sourceFileDate = new Controls.TextBoxData();
+            sourceFileDate = new DataDictionary.Main.Controls.TextBoxData();
             libraryNavigation = new DataGridView();
             libraryTitleColumn = new DataGridViewTextBoxColumn();
             libraryAssemblyColumn = new DataGridViewTextBoxColumn();
             inModelColumn = new DataGridViewCheckBoxColumn();
             inDatabaseColumn = new DataGridViewCheckBoxColumn();
-            libraryTitleData = new Controls.TextBoxData();
-            libraryDescriptionData = new Controls.TextBoxData();
-            asseblyNameData = new Controls.TextBoxData();
-            sourceFileNameData = new Controls.TextBoxData();
+            libraryTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            libraryDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            asseblyNameData = new DataDictionary.Main.Controls.TextBoxData();
+            sourceFileNameData = new DataDictionary.Main.Controls.TextBoxData();
             libraryBinding = new BindingSource(components);
             errorProvider = new ErrorProvider(components);
             openFileDialog = new OpenFileDialog();
@@ -189,7 +189,7 @@
             // 
             // libraryBinding
             // 
-            libraryBinding.CurrentChanged += LibraryBinding_CurrentChanged;
+            libraryBinding.CurrentItemChanged += LibraryBinding_CurrentItemChanged;
             // 
             // errorProvider
             // 

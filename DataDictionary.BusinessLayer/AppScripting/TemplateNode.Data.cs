@@ -16,7 +16,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     class TemplateNodeData : TemplateNodeCollection<TemplateNodeValue>, ITemplateNodeData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IRemoveData<ITemplateNodeIndex>
     {
         /// <inheritdoc/>
         /// <remarks>TemplateNodeData</remarks>
@@ -66,6 +67,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         /// <remarks>TemplateNodeData</remarks>
         public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>TemplateNodeData</remarks>
+        public void Remove(ITemplateNodeIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>

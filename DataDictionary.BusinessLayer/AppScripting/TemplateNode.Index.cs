@@ -25,6 +25,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public TemplateNodeIndex(ITemplateNodeIndex source) : base(source)
         { }
 
+        /// <inheritdoc cref="TemplateNodeKey(ITemplateNodeOwnerKey)"/>
+        public TemplateNodeIndex(ITemplateNodeOwnerIndex source) : base(source)
+        { }
+
         /// <inheritdoc/>
         public Boolean Equals(ITemplateNodeIndex? other)
         { return other is ITemplateNodeKey key && Equals(new TemplateNodeKey(key)); }

@@ -1,44 +1,57 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
-    record EntityNameList : IEntityIndex, IEntityIndexName
+    record EntityNameList : IEntityIndex, IEntityIndexName, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public Guid? EntityId { get; private set; } = Guid.Empty;
 
         /// <inheritdoc/>
-        public String? EntityTitle { get; private set; } = String.Empty;
+        public String EntityTitle { get; private set; } = String.Empty;
 
-        /// <summary>
-        /// Loads the ComboBoxData with Entities.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="control"></param>
-        /// <param name="source"></param>
-        /// <param name="defaultEntityId"></param>
-        /// <param name="defaultEntityTitle"></param>
-        public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultEntityId = null, String? defaultEntityTitle = null)
-            where T : IEntityIndex, IEntityIndexName
+        EntityNameList(IEntityValue value)
         {
-            EntityNameList propertyNameDataItem = new EntityNameList();
-            BindingList<EntityNameList> list = new BindingList<EntityNameList>();
-            list.Add(new EntityNameList() { EntityId = Guid.Empty, EntityTitle = "(not specified)" });
+            EntityId = value.EntityId;
+            EntityTitle = value.EntityTitle ?? String.Empty;
+        }
 
-            if (defaultEntityId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultEntityTitle) && source.Count(w => defaultId.Equals(w.EntityId)) == 0)
-            { list.Add(new EntityNameList() { EntityId = defaultId, EntityTitle = defaultEntityTitle }); }
+        EntityNameList(String? emptyText = "(n/a)")
+        { EntityTitle = emptyText ?? "(n/a)"; }
 
-            foreach (T item in source.OrderBy(o => o.EntityTitle))
-            {
-                if (item.EntityId is Guid EntityId && EntityId != Guid.Empty && item.EntityTitle is String EntityTitle)
-                { list.Add(new EntityNameList() { EntityId = EntityId, EntityTitle = EntityTitle }); }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-            }
+        public static void Load(ComboBoxData control, String? emptyText = null)
+        {
+            BindingComboList<EntityNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(EntityId), () => nameof(EntityTitle));
+        }
 
-            control.DataSource = list;
-            control.ValueMember = nameof(propertyNameDataItem.EntityId);
-            control.DisplayMember = nameof(propertyNameDataItem.EntityTitle);
+        public static void Load(DataGridViewComboBoxColumn control, String? emptyText = null)
+        {
+            BindingComboList<EntityNameList> comboList = BuildList(emptyText);
+            comboList.BindTo(control, () => nameof(EntityId), () => nameof(EntityTitle));
+        }
+
+        static BindingComboList<EntityNameList> BuildList(String? emptyText = null)
+        {
+            BindingComboList<EntityNameList> comboList = new BindingComboList<EntityNameList>();
+
+            comboList.BuildList(
+                source: BusinessData.Model.Entity.Entities,
+                constructor: (c) => new EntityNameList(c),
+                onItemChanged: (s, t) =>
+                {
+                    t.EntityTitle = s.EntityTitle ?? String.Empty;
+                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.EntityTitle));
+                },
+                orderBy: (o) => o.EntityTitle,
+                areEquel: (a, b) => new EntityIndex(a).Equals(b),
+                emptyValue: () => new EntityNameList(emptyText));
+
+            return comboList;
         }
     }
 }

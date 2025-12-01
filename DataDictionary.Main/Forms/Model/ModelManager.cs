@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Forms.Model
 {
     partial class ModelManager : ApplicationData
     {
-        ModelSynchronize models = new ModelSynchronize(BusinessData);
+        FormBinding formBinding;
 
         public ModelManager()
         {
@@ -25,39 +25,26 @@ namespace DataDictionary.Main.Forms.Model
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase);
+
+            formBinding = new FormBinding()
+            {
+                ManagerBinding = modelBinding,
+                DoWork = base.DoWork,
+                OnRefresh = () => { SendMessage(new RefreshNavigation()); }
+            };
         }
 
         private void ModelManager_Load(object sender, EventArgs e)
         {
-            if (Settings.Default.IsOnLineMode)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                work.Add(factory.OpenConnection());
-                work.AddRange(models.GetModels(factory));
-                DoWork(work, onCompleting);
-            }
-            else { BindData(); }
+            formBinding.Load(doBinding);
 
-            void onCompleting(RunWorkerCompletedEventArgs args)
+            void doBinding(RunWorkerCompletedEventArgs args)
             {
-                models.Refresh();
-                BindData();
-                IsLocked(false);
-            }
-
-            void BindData()
-            {
-                ModelSynchronizeValue modelNames;
-                modelBinding.DataSource = models;
-                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(modelNames.Source), name); };
-
                 modelNavigation.AutoGenerateColumns = false;
                 modelNavigation.DataSource = modelBinding;
 
-                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelTitle))));
-                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
+                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, nameof(BindingValue.ModelTitle)));
+                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, nameof(BindingValue.ModelDescription), false, DataSourceUpdateMode.OnPropertyChanged));
             }
         }
 
@@ -67,24 +54,11 @@ namespace DataDictionary.Main.Forms.Model
             base.DeleteFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
-            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                ModelIndex key = new ModelIndex(item);
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Delete(binding, onComplete); }
 
-                work.Add(factory.OpenConnection());
-                work.AddRange(models.DeleteFromDb(factory, key));
-                work.AddRange(models.GetModels(factory));
-                DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                models.Refresh();
-                IsLocked(false);
-            }
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -92,25 +66,11 @@ namespace DataDictionary.Main.Forms.Model
             base.OpenFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
-            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
-            {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                ModelIndex key = new ModelIndex(item);
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Load(binding, onComplete); }
 
-                work.Add(factory.OpenConnection());
-                work.AddRange(models.OpenFromDb(factory, key));
-
-                DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                models.Refresh();
-                SendMessage(new RefreshNavigation());
-                IsLocked(false);
-            }
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
@@ -118,63 +78,26 @@ namespace DataDictionary.Main.Forms.Model
             base.SaveToDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
+            if (formBinding.TryGetValue(out BindingValue? binding))
+            { formBinding.Save(binding, onComplete); }
 
-            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
+
+        }
+
+        private void NewModelCommand_Click(object sender, EventArgs e)
+        { formBinding.Create(); }
+
+        private void ModelBinding_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                IsLocked(true);
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                ModelIndex key = new ModelIndex(item);
+                CommandButtons[CommandType.Delete].IsEnabled = binding.InModel;
 
-                work.Add(factory.OpenConnection());
-
-                if (GetInModel())
-                {
-                    work.AddRange(models.SaveToDb(factory, key));
-                    work.AddRange(models.GetModels(factory));
-                }
-
-                DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                models.Refresh();
-                IsLocked(false);
-            }
-
-        }
-
-        private Boolean GetInModel()
-        {
-            if (modelBinding.Current is ModelSynchronizeValue item)
-            { return item.InModel == true; }
-            else { return false; }
-        }
-
-        private Boolean GetInDatabase()
-        {
-            if (modelBinding.Current is ModelSynchronizeValue item)
-            { return item.InDatabase == true; }
-            else { return false; }
-        }
-
-        private void modelBinding_CurrentChanged(object sender, EventArgs e)
-        {
-            CommandButtons[CommandType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
-            CommandButtons[CommandType.SaveDatabase].IsEnabled = GetInModel();
-            CommandButtons[CommandType.DeleteDatabase].IsEnabled = GetInDatabase();
-        }
-
-        private void newModelCommand_Click(object sender, EventArgs e)
-        {
-            IsLocked(true);
-            DoWork(BusinessData.Delete(), onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                models.Refresh();
-                IsLocked(false);
+                CommandButtons[CommandType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[CommandType.SaveDatabase].IsEnabled = binding.InModel;
+                CommandButtons[CommandType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
         }
     }

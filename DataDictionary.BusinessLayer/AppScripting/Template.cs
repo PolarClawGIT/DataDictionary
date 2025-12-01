@@ -15,6 +15,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>, IDeleteData<ITemplateIndex>,
         ILoadData<AppModel.IModelIndex>, ISaveData<AppModel.IModelIndex>,
         IGetTemporal<AppModel.IModelIndex>, IGetTemporal<ITemplateIndex>,
+        IRemoveData<ITemplateNodeIndex>, IRemoveData<IDataSourceIndex>,
         IBindListChanged
     {
         /// <summary>
@@ -249,6 +250,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateNodes.Remove(dataKey);
             templateNodeOwners.Remove(dataKey);
             templateSources.Remove(dataKey);
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDataSourceIndex dataKey)
+        { templateSources.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        public void Remove(ITemplateNodeIndex dataKey)
+        {
+            TemplateNodeIndex key = new TemplateNodeIndex(dataKey);
+            TemplateNodeOwnerIndex owner = new TemplateNodeOwnerIndex(key);
+
+            templateNodeOwners.Remove(owner);
+            templateNodeOwners.Remove(key);
+            templateNodes.Remove(key);
         }
 
         /// <inheritdoc/>

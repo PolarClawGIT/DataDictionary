@@ -14,15 +14,26 @@ namespace DataDictionary.BusinessLayer.AppLibrary
     /// <summary>
     /// Interface representing Library data
     /// </summary>
-    public interface ILibrarySourceData: IBindingData<LibrarySourceValue>
-    { }
+    public interface ILibrarySourceData: 
+        IBindingData<LibrarySourceValue>,
+        ILoadData
+    {
+        /// <summary>
+        /// Creates an empty ICatalogData.
+        /// </summary>
+        /// <returns></returns>
+        static ILibrarySourceData Create()
+        { return new LibrarySourceData(); }
+    }
 
     class LibrarySourceData: LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
         ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <inheritdoc/>
-        public required ILibraryModel Library { get; init; }
+        /// <remarks>Library Source</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        { return factory.CreateLoad(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>

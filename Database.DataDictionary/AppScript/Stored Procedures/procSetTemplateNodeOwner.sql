@@ -29,48 +29,16 @@ Begin Try
 	Declare @Values Table (
 			[NodeId]		UniqueIdentifier NOT NULL,
 			[NodeOwnerId]	UniqueIdentifier Not NULL,
-			[TemplateId]	UniqueIdentifier NOT NULL,
-			[NodePath]		[AppGeneral].[uddtPath] Null,
-			[NodeOwnerPath]	[AppGeneral].[uddtPath] Null)
+			[TemplateId]	UniqueIdentifier NOT NULL)
 	Declare @NullPath		[AppGeneral].[uddtPath] = null
 
-	-- Root Nodes
-	;With [Nodes] As (
-		Select	N.[NodeId],
-				Convert(UniqueIdentifier, Null) As [NodeOwnerId],
-				N.[TemplateId],
-				[AppGeneral].[funcCreatePath](N.[NodeName], Null) As [NodePath],
-				@NullPath As [NodeOwnerPath]
-		From	[AppScript].[TemplateNode] N
-				Left Join @Data D
-				On	N.[NodeId] = D.[NodeId]
-		Where	D.[NodeId] is Null And
-				(@TemplateId is Not Null Or @ModelId is Not Null) And
-				(@TemplateId is Null Or @TemplateId = N.[TemplateId])  And
-				(@ModelId is Null Or N.[TemplateId] In (
-					Select	[TemplateId]
-					From	[AppScript].[ScriptingModel]
-					Where	[ModelId] = @ModelId))
-		Union -- Child Nodes
-		Select	D.[NodeId],
-				D.[NodeOwnerId] As [NodeOwnerId],
-				N.[TemplateId],
-				[AppGeneral].[funcCreatePath](P.[QualifiedName], N.[NodeName]) As [NodePath],
-				P.[QualifiedName] As [NodeOwnerPath]
-		From	@Data D
-				Inner Join [AppScript].[TemplateNode] N
-				On	D.[NodeId] = N.[NodeId]
-				Cross Apply [AppGeneral].[funcParseName](D.[NodeOwnerPath]) P
-		Where	P.[IsBase] = 1)
 	Insert Into @Values
-	Select	N.[NodeId],
-			IsNull(N.[NodeOwnerId], P.[NodeId]) As [NodeOwnerId],
-			N.[TemplateId],
-			N.[NodePath],
-			N.[NodeOwnerPath]
-	From	[Nodes] N
-			Inner Join [Nodes] P
-			On	N.[NodeOwnerPath] = P.[NodePath]
+	Select	[NodeId],
+			[NodeOwnerId],
+			IsNull([TemplateId], @TemplateId) As [TemplateId]
+	From	@Data D
+	Where	(@TemplateId is Null And [TemplateId] is Not Null) Or
+			(@TemplateId is Not Null And IsNull([TemplateId], @TemplateId) = @TemplateId)
 	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes

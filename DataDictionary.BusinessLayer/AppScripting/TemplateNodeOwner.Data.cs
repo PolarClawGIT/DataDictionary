@@ -15,7 +15,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     class TemplateNodeOwnerData : TemplateNodeOwnerCollection<TemplateNodeOwnerValue>, ITemplateNodeOwnerData,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        IRemoveData<ITemplateNodeIndex>, IRemoveData<ITemplateNodeOwnerIndex>
     {
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplateNodeOwner</remarks>
@@ -65,6 +66,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplateNodeOwner</remarks>
         public void Remove(ITemplateIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public void Remove(ITemplateNodeIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplateNodeOwner</remarks>
+        public void Remove(ITemplateNodeOwnerIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>

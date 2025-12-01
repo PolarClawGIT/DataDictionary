@@ -11,12 +11,6 @@ namespace DataDictionary.Main.Controls
         BindingSource? dataBinding; // Pointer to the BindingSource.
         Func<IPropertySubType>? onAddProperty; // Constructor for the Property
 
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public BindingView<PropertyValue> Properties { get; private set; } =
-            new BindingView<PropertyValue>(BusinessData.Model.Properties)
-            { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
         public PropertyData()
         {
             InitializeComponent();
@@ -26,8 +20,8 @@ namespace DataDictionary.Main.Controls
         {
             dataBinding = binding;
             onAddProperty = newProperty;
-            PropertyNameList.Load(propertyTypeData, Properties);
-            PropertyNameList.Load(propertyIdColumn, Properties);
+            PropertyNameList.Load(propertyTypeData, "(select property Type)");
+            PropertyNameList.Load(propertyIdColumn, "(select property Type)");
 
             propertyTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
             propertyValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -36,13 +30,11 @@ namespace DataDictionary.Main.Controls
             propertyGrid.DataSource = dataBinding;
 
             RebuildChoices();
-
             dataBinding.AddingNew += DataBinding_AddingNew;
             dataBinding.CurrentChanged += DataBinding_CurrentChanged;
 
             void DataBinding_AddingNew(Object? sender, AddingNewEventArgs e)
             { e.NewObject = onAddProperty(); }
-
             void DataBinding_CurrentChanged(Object? sender, EventArgs e)
             { RebuildChoices(); }
         }
@@ -73,7 +65,6 @@ namespace DataDictionary.Main.Controls
                         else { throw new InvalidOperationException("AddNew did not create a IPropertySubType"); }
                     }
                 }
-
                 RebuildChoices();
             }
             else
@@ -115,19 +106,18 @@ namespace DataDictionary.Main.Controls
             if (dataBinding is not null && dataBinding.Current is IPropertySubType current)
             { current.PropertyValue = String.Join(", ", values); }
         }
-
         private void RebuildChoices()
         {
             if (dataBinding is not null
                 && dataBinding.Current is IPropertySubType current)
             {
                 PropertyIndex key = new PropertyIndex(current);
-
-                if (Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
+                
+                if(propertyTypeData.TryGetValue(w => key.Equals(w), out PropertyNameList? property))
                 {
                     propertyChoiceData.Items.Clear();
 
-                    if (property.PropertyType is Resource.Enumerations.DomainPropertyType.List)
+                    if (property.IsChoice)
                     {
                         List<String> selected = new List<String>();
                         if (current.PropertyValue is String)

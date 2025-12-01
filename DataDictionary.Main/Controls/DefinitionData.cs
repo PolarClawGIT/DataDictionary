@@ -11,13 +11,6 @@ namespace DataDictionary.Main.Controls
     partial class DefinitionData : UserControl
     {
         BindingSource? dataBinding; // Pointer to the BindingSource.
-        Func<IDefinitionSubType>? onAddDefinition; // Constructor for the Definition
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public BindingView<DefinitionValue> Definitions { get; private set; } =
-            new BindingView<DefinitionValue>(BusinessData.Model.Definitions)
-            { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
         public DefinitionData()
         {
@@ -31,9 +24,8 @@ namespace DataDictionary.Main.Controls
         public void BindTo(BindingSource binding, Func<IDefinitionSubType> newDefinition)
         {
             dataBinding = binding;
-            onAddDefinition = newDefinition;
-            DefinitionNameList.Load(definitionTypeData, Definitions);
-            DefinitionNameList.Load(definitionColumn, Definitions);
+            DefinitionNameList.Load(definitionTypeData);
+            DefinitionNameList.Load(definitionColumn);
 
             definitionTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
             definitionTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -43,13 +35,9 @@ namespace DataDictionary.Main.Controls
             definitionGrid.DataSource = dataBinding;
 
             dataBinding.AddingNew += DataBinding_AddingNew;
-            dataBinding.CurrentChanged += DataBinding_CurrentChanged;
 
             void DataBinding_AddingNew(Object? sender, AddingNewEventArgs e)
-            { e.NewObject = onAddDefinition(); }
-
-            void DataBinding_CurrentChanged(Object? sender, EventArgs e)
-            { }
+            { e.NewObject = newDefinition(); }
 
         }
 

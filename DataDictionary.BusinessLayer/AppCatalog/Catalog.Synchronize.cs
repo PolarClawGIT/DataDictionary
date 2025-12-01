@@ -11,32 +11,32 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize value
     /// </summary>
-    [Obsolete("Needs to be redone")]
+    [Obsolete("No used", true)]
     public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>//, ICatalog
     {
-        /// <inheritdoc cref="ICatalog.CatalogTitle"/>
+        /// <inheritdoc/>
         public String CatalogTitle
         {
             get { return Source.CatalogTitle ?? String.Empty; }
             set { Source.CatalogTitle = value; }
         }
 
-        /// <inheritdoc cref="ICatalog.CatalogDescription"/>
+        /// <inheritdoc/>
         public String? CatalogDescription
         {
             get { return Source.CatalogDescription ?? String.Empty; }
             set { Source.CatalogDescription = value; }
         }
 
-        /// <inheritdoc cref="ICatalog.ServerName"/>
+        /// <inheritdoc/>
         public String ServerName
         { get { return Source.ServerName ?? String.Empty; } }
 
-        /// <inheritdoc cref="ICatalogKeyName.DatabaseName"/>
+        /// <inheritdoc/>
         public String DatabaseName
         { get { return Source.DatabaseName ?? String.Empty; } }
 
-        /// <inheritdoc cref="ICatalog.SourceDate"/>
+        /// <inheritdoc/>
         public DateTime? SourceDate
         { get { return Source.SourceDate ?? DateTime.Now; } }
 
@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <summary>
     /// Catalog Synchronize to compare what Catalogs are in the Model vs the Model
     /// </summary>
-    [Obsolete("Needs to be redone")]
+    [Obsolete("No used", true)]
     public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogIndex>
     {
         /// <summary>

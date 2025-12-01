@@ -19,10 +19,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class ConstraintColumnData : ConstraintColumnCollection<ConstraintColumnValue>, IConstraintColumnData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel
+        ICatalogReference
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>

@@ -14,6 +14,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// <summary>
     /// Interface Item/Value for Synchronize Value
     /// </summary>
+    [Obsolete("Not Used", true)]
     public interface ISynchronizeValue<TItem>
         where TItem : class, IBindingRowState, IBindingPropertyChanged
     {
@@ -37,6 +38,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// Item/Value for Synchronize Value
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
+    [Obsolete("Not Used",true)]
     public abstract class SynchronizeValue<TItem> : ISynchronizeValue<TItem>, INotifyPropertyChanged
         where TItem : class, IBindingRowState, IBindingPropertyChanged
     {

@@ -14,17 +14,10 @@ using DataDictionary.BusinessLayer.ToolSet;
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
-    /// Interface for the Business Data.
-    /// </summary>
-    public partial interface IBusinessLayerData
-    { }
-
-    /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        IBusinessLayerData
+        ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
         /// <summary>
         /// Model Context for accessing the Application Db.
@@ -67,11 +60,14 @@ namespace DataDictionary.BusinessLayer
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
             applicationValues = new AppGeneral.ApplicationData();
-
+            
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
-            scriptingValue = new AppScripting.Scripting();
+
+            scriptingValue = InitScripting(modelValues);
+
+            securityValue = new AppSecurity.Security();
         }
 
         /// <summary>

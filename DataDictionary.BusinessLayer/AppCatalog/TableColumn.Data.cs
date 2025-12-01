@@ -27,10 +27,10 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     class TableColumnData : TableColumnCollection<TableColumnValue>, ITableColumnData,
         ILoadData<ICatalogIndex>, ISaveData<ICatalogIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
-        ICatalogModel
+        ICatalogReference
     {
         /// <inheritdoc/>
-        public required ICatalog Model { get; init; }
+        public required ICatalog Catalog { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
@@ -84,9 +84,9 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             List<TableColumnIndexName> keys = new List<TableColumnIndexName>();
             TableColumnIndexName key = new TableColumnIndexName(tableColumn);
 
-            var constraints = Model.DbConstraints.
+            var constraints = Catalog.DbConstraints.
                 Where(w => w.ConstraintType is DbConstraintType.ForeignKey).
-                Join(Model.DbConstraintColumns,
+                Join(Catalog.DbConstraintColumns,
                 constraint => new ConstraintIndexName(constraint),
                 columns => new ConstraintIndexName(columns),
                 (constraint, column) => new
