@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Controls
             reloadCommand.Image = Resources.Icon_TreeView.MergeImage(Resources.ItemSync);
 
             data = new NamedScopeTreeViewData(treeViewData);
-            treeViewData.SetImageList();
+            treeViewData.ImageList = NavigationExtention.CreateImageList();
         }
 
         /// <summary>

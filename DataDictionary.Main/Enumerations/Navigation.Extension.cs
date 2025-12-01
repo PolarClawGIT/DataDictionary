@@ -64,23 +64,16 @@ namespace DataDictionary.Main.Enumerations
             else { result = null; return false; }
         }
 
-        /// <summary>
-        /// Creates an Image List using the defined images for the Scopes listed.
-        /// </summary>
-        /// <param name="scopes"></param>
-        /// <returns></returns>
-        public static ImageList CreateImageList(params IEnumerable<ScopeType> scopes)
+        public static ImageList AddImages(this ImageList target, params IEnumerable<ScopeType> scopes)
         {
-            ImageList result = new ImageList();
-
             foreach (ScopeType item in scopes.Distinct())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
                     && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
-                { result.Images.Add(value.Name, image()); }
+                { target.Images.Add(value.Name, image()); }
             }
 
-            return result;
+            return target;
         }
 
         /// <summary>

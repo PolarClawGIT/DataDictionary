@@ -38,6 +38,7 @@ namespace DataDictionary.Main
             manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
             securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
+            securitySetAuthorization.Image = ScopeType.Security.GetImage(CommandType.Default);
             browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
 
             // TODO: Check if correct.
@@ -338,6 +339,7 @@ namespace DataDictionary.Main
             securityAuthorization.Enabled = true;
 
         }
+
 
     }
 }

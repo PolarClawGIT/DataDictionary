@@ -142,6 +142,7 @@
             menuScriptingDataObject = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
             bindingModel = new BindingSource(components);
+            securitySetAuthorization = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -732,15 +733,15 @@
             // 
             // securityContextMenu
             // 
-            securityContextMenu.Items.AddRange(new ToolStripItem[] { securityAuthorization, securityPrincipal, securityRole });
+            securityContextMenu.Items.AddRange(new ToolStripItem[] { securityAuthorization, securityPrincipal, securityRole, securitySetAuthorization });
             securityContextMenu.Name = "securityContextMenu";
             securityContextMenu.OwnerItem = securityToolStripMenuItem;
-            securityContextMenu.Size = new Size(147, 70);
+            securityContextMenu.Size = new Size(181, 114);
             // 
             // securityAuthorization
             // 
             securityAuthorization.Name = "securityAuthorization";
-            securityAuthorization.Size = new Size(146, 22);
+            securityAuthorization.Size = new Size(165, 22);
             securityAuthorization.Text = "Authorization";
             securityAuthorization.ToolTipText = "View current users Authorization";
             securityAuthorization.Click += SecurityAuthorization_Click;
@@ -748,14 +749,14 @@
             // securityPrincipal
             // 
             securityPrincipal.Name = "securityPrincipal";
-            securityPrincipal.Size = new Size(146, 22);
+            securityPrincipal.Size = new Size(165, 22);
             securityPrincipal.Text = "Principal";
             securityPrincipal.Click += SecurityPrincipal_Click;
             // 
             // securityRole
             // 
             securityRole.Name = "securityRole";
-            securityRole.Size = new Size(146, 22);
+            securityRole.Size = new Size(165, 22);
             securityRole.Text = "Role";
             securityRole.Click += SecurityRole_Click;
             // 
@@ -931,7 +932,6 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
             scriptingContextMenu.Size = new Size(235, 136);
             // 
             // menuScriptingTemplate
@@ -978,6 +978,13 @@
             // bindingModel
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
+            // 
+            // securitySetAuthorization
+            // 
+            securitySetAuthorization.Name = "securitySetAuthorization";
+            securitySetAuthorization.Size = new Size(180, 22);
+            securitySetAuthorization.Text = "Set Authorization";
+            securitySetAuthorization.Click += SecuritySetAuthorization_Click;
             // 
             // Main
             // 
@@ -1131,5 +1138,6 @@
         private ToolStripMenuItem menuScriptingDataObject;
         private ToolStripMenuItem menuScriptingNodeOwner;
         private Controls.NamedScopeTreeView namedScopeData;
+        private ToolStripMenuItem securitySetAuthorization;
     }
 }

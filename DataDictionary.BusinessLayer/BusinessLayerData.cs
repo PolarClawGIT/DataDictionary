@@ -66,8 +66,6 @@ namespace DataDictionary.BusinessLayer
             libraryValues = new AppLibrary.LibraryModel();
 
             scriptingValue = InitScripting(modelValues);
-
-            securityValue = new AppSecurity.Security();
         }
 
         /// <summary>

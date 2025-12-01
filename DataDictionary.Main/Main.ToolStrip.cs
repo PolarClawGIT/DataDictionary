@@ -306,6 +306,10 @@ namespace DataDictionary.Main
             Activate(static () => new DetailDataView
                 (ScopeType.Security, BusinessData.Authorization));
         }
+
+        private void SecuritySetAuthorization_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Security.Authorization()); }
+
         private void newRelationshipCommand_ButtonClick(object sender, EventArgs e)
         {
             // Currently not used
