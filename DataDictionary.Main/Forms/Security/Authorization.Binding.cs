@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
@@ -290,7 +291,8 @@ namespace DataDictionary.Main.Forms.Security
 
             public Boolean? GetLocked()
             {
-                return !BusinessData.Authorization.IsSecurityAdmin;
+                return !BusinessData.Authorization.IsSecurityAdmin
+                    || !Settings.Default.IsOnLineMode;
             }
         }
     }

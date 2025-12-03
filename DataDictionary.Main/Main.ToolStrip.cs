@@ -258,12 +258,6 @@ namespace DataDictionary.Main
                 (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
         }
 
-        private void SecurityPrincipal_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Security.PrincipalManager()); }
-
-        private void SecurityRole_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Security.RoleManager()); }
-
         private void MenuProcess_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView

@@ -674,7 +674,6 @@
         private CheckBox isScriptAdminData;
         private CheckBox isScriptOwnerData;
         private DataGridView membershipData;
-        private DataGridViewComboBoxColumn principalIdColumn;
         private SplitContainer principalSplit;
         private DataGridView principalData;
         private DataGridViewTextBoxColumn principalNameColumn;
@@ -685,7 +684,6 @@
         private SplitContainer securableSplit;
         private DataGridView securableData;
         private DataGridViewTextBoxColumn securableNameColumn;
-        private TableLayoutPanel securableLayout;
         private DataGridView objectPermissionData;
         private DataGridView ownershipData;
         private Controls.TextBoxData securableTitleData;

@@ -37,12 +37,9 @@ namespace DataDictionary.Main
 
             manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
-            securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
             securitySetAuthorization.Image = ScopeType.Security.GetImage(CommandType.Default);
             browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
 
-            // TODO: Check if correct.
-            securityPrincipal.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default);
             securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default);
 
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
@@ -334,10 +331,11 @@ namespace DataDictionary.Main
 
         private void SetAuthorization()
         {
-            securityPrincipal.Enabled = BusinessData.Authorization.IsSecurityAdmin;
-            securityRole.Enabled = BusinessData.Authorization.IsSecurityAdmin;
+            securitySetAuthorization.Enabled = 
+                BusinessData.Authorization.IsSecurityAdmin
+                && Settings.Default.IsOnLineMode;
+            
             securityAuthorization.Enabled = true;
-
         }
 
 
