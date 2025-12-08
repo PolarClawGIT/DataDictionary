@@ -38,8 +38,10 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Loads from a DataSet.
         /// </summary>
-        /// <param name="source"></param>
-        void Load(DataSet source);
+        /// <param name="source">Datset to load the data from</param>
+        /// <param name="tableName">Tablename to Look for. If null/empty the object name is used.</param>
+        /// <param name="isSkipable">If true, do not throw and exception when the table is not found.</param>
+        void Load(DataSet source, String tableName, Boolean isSkipable);
 
         /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; }

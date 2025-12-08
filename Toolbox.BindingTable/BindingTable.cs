@@ -161,17 +161,34 @@ namespace Toolbox.BindingTable
             }
         }
 
-        public virtual void Load(DataSet source)
+        public virtual void Load(DataSet source, String? tableName = null, Boolean isSkipable = false)
         {
-            String tableName = GetType().FullName ?? GetType().Name;
+            String? fullame = GetType().FullName;
+            String shortName = GetType().Name;
+            String loadTable = String.Empty;
 
-            if (source.Tables.Contains(tableName) &&
-                source.Tables[tableName] is DataTable data)
-            { Load(data.CreateDataReader()); }
+            if(!String.IsNullOrWhiteSpace(tableName) && source.Tables.Contains(tableName))
+            { loadTable = tableName; }
+            else if (fullame is String && source.Tables.Contains(fullame))
+            { loadTable = fullame; }
+            else if(source.Tables.Contains(shortName))
+            { loadTable = shortName; }
             else
             {
+                Exception ex = new ArgumentNullException(nameof(tableName), "Could not determine table name to load");
+                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.Name), shortName);
+            }
+
+            if (!String.IsNullOrEmpty(loadTable)
+                && source.Tables[loadTable] is DataTable data)
+            { Load(data.CreateDataReader()); }
+            else if (!isSkipable)
+            {
                 Exception ex = new InvalidOperationException("Expected TableName not found");
-                ex.Data.Add(nameof(tableName), tableName);
+                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.Name), shortName);
+                ex.Data.Add(nameof(loadTable), loadTable);
                 throw ex;
             }
         }
