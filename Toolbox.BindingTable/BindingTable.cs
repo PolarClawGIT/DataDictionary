@@ -23,11 +23,6 @@ namespace Toolbox.BindingTable
         where TBindingItem : BindingTableRow, IBindingPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
-        /// Name given to the Binding Table.
-        /// </summary>
-        public String BindingName { get; init; }
-
-        /// <summary>
         /// Internal DataTable that hold the values.
         /// </summary>
         protected DataTable dataItems;
@@ -39,7 +34,6 @@ namespace Toolbox.BindingTable
         {
             dataItems = new DataTable();
             dataItems.TableName = typeof(TBindingItem).Name;
-            BindingName = typeof(TBindingItem).Name;
             dataItems.AddColumns(new TBindingItem().ColumnDefinitions());
 
             dataItems.Disposed += TableDisposed;
@@ -169,13 +163,15 @@ namespace Toolbox.BindingTable
 
         public virtual void Load(DataSet source)
         {
-            if (source.Tables.Contains(BindingName) &&
-                source.Tables[BindingName] is DataTable data)
+            String tableName = GetType().FullName ?? GetType().Name;
+
+            if (source.Tables.Contains(tableName) &&
+                source.Tables[tableName] is DataTable data)
             { Load(data.CreateDataReader()); }
             else
             {
                 Exception ex = new InvalidOperationException("Expected TableName not found");
-                ex.Data.Add(nameof(BindingName), BindingName);
+                ex.Data.Add(nameof(tableName), tableName);
                 throw ex;
             }
         }
@@ -354,7 +350,7 @@ namespace Toolbox.BindingTable
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
         /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)
-        {  base.OnListChanged(e);  }
+        { base.OnListChanged(e); }
 
         /// <summary>
         // Removes a specific items from the Binding List and Data Table

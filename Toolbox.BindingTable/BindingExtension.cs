@@ -38,7 +38,7 @@ namespace Toolbox.BindingTable
                 using (result = new DataTable())
                 {
                     if (data is IBindingTable source)
-                    { result.TableName = source.BindingName; }
+                    { result.TableName = data.GetType().FullName; }
 
                     result.AddColumns(dataColumns.ToArray()); 
                 }
@@ -48,7 +48,7 @@ namespace Toolbox.BindingTable
                 result = values.CopyToDataTable();
 
                 if (data is IBindingTable source)
-                { result.TableName = source.BindingName; }
+                { result.TableName = data.GetType().FullName; }
             }
 
 

@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
+    [Obsolete("Try to get rid of this", true)]
     public interface IBindingName
     {
         /// <summary>
         /// Name given to the Binding Table.
         /// </summary>
-        String BindingName { get; }
+        //[Obsolete("Try to get rid of this", true)]
+        //String BindingName { get; }
     }
 
     public interface IBindingDataReader
@@ -22,7 +24,7 @@ namespace Toolbox.BindingTable
         IDataReader CreateDataReader();
     }
 
-    public interface IBindingTable : IBindingName, IBindingDataReader, IBindingList, IDisposable, ICloneable
+    public interface IBindingTable : IBindingDataReader, IBindingList, IDisposable, ICloneable
     {
         /// <inheritdoc cref="DataTable.Load(IDataReader)"/>
         void Load(IDataReader reader);

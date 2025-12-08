@@ -144,13 +144,5 @@ namespace DataDictionary.Main
                 () => new Forms.Scripting.DataSource(dataSource),
                 (form) => form.IsOpenItem(dataSource));
         }
-
-        [Obsolete("replace", true)]
-        void OpenForm(ScriptingTemplateValue templateValue)
-        {
-            //Activate(
-            //    () => new Forms.Scripting.ScriptingTemplate(templateValue),
-            //    (form) => form.IsOpenItem(templateValue));
-        }
     }
 }

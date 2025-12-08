@@ -312,7 +312,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Load {0}", target.GetType().Name),
                 target: target,
                 command: target.LoadCommand);
         }
@@ -323,7 +323,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData<TKey>
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Load {0}", target.GetType().Name),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey));
         }
@@ -334,7 +334,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadData<TKey>
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Load {0}", target.GetType().Name),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey, asOfUtcDate));
         }
@@ -344,7 +344,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadTemporal
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Load {0}", target.GetType().Name),
                 target: target,
                 command: (conn) => target.HistoryCommand(conn));
         }
@@ -355,7 +355,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IReadTemporal<TKey>
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Load {0}", target.GetType().Name),
                 target: target,
                 command: (conn) => target.HistoryCommand(conn, targetKey));
         }
@@ -365,7 +365,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IWriteData
         {
             return this.CreateWork(
-                workName: String.Format("Save {0}", target.BindingName),
+                workName: String.Format("Save {0}", target.GetType().Name),
                 command: target.SaveCommand);
         }
 
@@ -375,7 +375,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IWriteData<TKey>
         {
             return this.CreateWork(
-                workName: String.Format("Save {0}", target.BindingName),
+                workName: String.Format("Save {0}", target.GetType().Name),
                 command: (conn) => target.SaveCommand(conn, targetKey));
         }
 
