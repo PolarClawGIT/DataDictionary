@@ -135,8 +135,12 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         public IReadOnlyList<System.Data.DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.Add(sourceValues.ToDataTable());
-            result.Add(memberValues.ToDataTable());
+            if (sourceValues.Count > 0)
+            {
+                result.Add(sourceValues.ToDataTable());
+                result.Add(memberValues.ToDataTable());
+            }
+               
             return result;
         }
 
@@ -144,8 +148,8 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         /// <remarks>Library</remarks>
         public void Import(System.Data.DataSet source)
         {
-            sourceValues.Load(source);
-            memberValues.Load(source);
+            if (sourceValues.Load(source, default, true))
+            { memberValues.Load(source); }
         }
 
         /// <inheritdoc />

@@ -82,10 +82,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<DataTable> Export()
         {
             List<DataTable> result = new List<DataTable>();
-            result.Add(templateValues.ToDataTable());
-            result.Add(templateNodes.ToDataTable());
-            result.Add(templateNodeOwners.ToDataTable());
-            result.Add(templateSources.ToDataTable());
+            if (templateValues.Count > 0)
+            {
+                result.Add(templateValues.ToDataTable());
+                result.Add(templateNodes.ToDataTable());
+                result.Add(templateNodeOwners.ToDataTable());
+                result.Add(templateSources.ToDataTable());
+            }
             return result;
         }
 
@@ -93,10 +96,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>Template</remarks>
         public void Import(DataSet source)
         {
-            templateValues.Load(source);
-            templateNodes.Load(source);
-            templateNodeOwners.Load(source);
-            templateSources.Load(source);
+            if(templateValues.Load(source, default, true))
+            {
+                templateNodes.Load(source);
+                templateNodeOwners.Load(source);
+                templateSources.Load(source);
+            }
         }
 
         /// <inheritdoc/>

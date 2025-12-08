@@ -340,22 +340,26 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public IReadOnlyList<System.Data.DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.Add(catalogs.ToDataTable());
-            result.Add(schemta.ToDataTable());
-            result.Add(domains.ToDataTable());
+            if (catalogs.Count > 0)
+            {
+                result.Add(catalogs.ToDataTable());
+                result.Add(schemta.ToDataTable());
+                result.Add(domains.ToDataTable());
 
-            result.Add(tables.ToDataTable());
-            result.Add(tableColumns.ToDataTable());
+                result.Add(tables.ToDataTable());
+                result.Add(tableColumns.ToDataTable());
 
-            result.Add(routines.ToDataTable());
-            result.Add(routineParameters.ToDataTable());
-            result.Add(routineColumns.ToDataTable());
-            result.Add(references.ToDataTable());
+                result.Add(routines.ToDataTable());
+                result.Add(routineParameters.ToDataTable());
+                result.Add(routineColumns.ToDataTable());
+                result.Add(references.ToDataTable());
 
-            result.Add(constraints.ToDataTable());
-            result.Add(constraintColumns.ToDataTable());
+                result.Add(constraints.ToDataTable());
+                result.Add(constraintColumns.ToDataTable());
 
-            result.Add(properties.ToDataTable());
+                result.Add(properties.ToDataTable());
+            }
+
             return result;
         }
 
@@ -363,22 +367,24 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <remarks>Catalog</remarks>
         public void Import(System.Data.DataSet source)
         {
-            catalogs.Load(source);
-            schemta.Load(source);
-            domains.Load(source);
+            if (catalogs.Load(source, default, true))
+            {
+                schemta.Load(source);
+                domains.Load(source);
 
-            tables.Load(source);
-            tableColumns.Load(source);
+                tables.Load(source);
+                tableColumns.Load(source);
 
-            routines.Load(source);
-            routineParameters.Load(source);
-            routineColumns.Load(source);
-            references.Load(source);
+                routines.Load(source);
+                routineParameters.Load(source);
+                routineColumns.Load(source);
+                references.Load(source);
 
-            constraints.Load(source);
-            constraintColumns.Load(source);
+                constraints.Load(source);
+                constraintColumns.Load(source);
 
-            properties.Load(source);
+                properties.Load(source);
+            }
         }
 
         /// <inheritdoc/>

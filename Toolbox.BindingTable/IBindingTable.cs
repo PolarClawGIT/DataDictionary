@@ -8,16 +8,6 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
-    [Obsolete("Try to get rid of this", true)]
-    public interface IBindingName
-    {
-        /// <summary>
-        /// Name given to the Binding Table.
-        /// </summary>
-        //[Obsolete("Try to get rid of this", true)]
-        //String BindingName { get; }
-    }
-
     public interface IBindingDataReader
     {
         /// <inheritdoc cref="DataTable.CreateDataReader"/>
@@ -41,7 +31,8 @@ namespace Toolbox.BindingTable
         /// <param name="source">Datset to load the data from</param>
         /// <param name="tableName">Tablename to Look for. If null/empty the object name is used.</param>
         /// <param name="isSkipable">If true, do not throw and exception when the table is not found.</param>
-        void Load(DataSet source, String tableName, Boolean isSkipable);
+        /// <returns>True if loaded. False if did not load and isSkipable.</returns>
+        Boolean Load(DataSet source, String tableName, Boolean isSkipable);
 
         /// <inheritdoc cref="BindingList.RaiseListChangedEvents"/>
         Boolean RaiseListChangedEvents { get; set; }

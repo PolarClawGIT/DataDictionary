@@ -161,28 +161,32 @@ namespace Toolbox.BindingTable
             }
         }
 
-        public virtual void Load(DataSet source, String? tableName = null, Boolean isSkipable = false)
+        public virtual Boolean Load(DataSet source, String? tableName = null, Boolean isSkipable = false)
         {
             String? fullame = GetType().FullName;
             String shortName = GetType().Name;
             String loadTable = String.Empty;
 
-            if(!String.IsNullOrWhiteSpace(tableName) && source.Tables.Contains(tableName))
+            if (!String.IsNullOrWhiteSpace(tableName) && source.Tables.Contains(tableName))
             { loadTable = tableName; }
             else if (fullame is String && source.Tables.Contains(fullame))
             { loadTable = fullame; }
-            else if(source.Tables.Contains(shortName))
+            else if (source.Tables.Contains(shortName))
             { loadTable = shortName; }
-            else
+            else if (!isSkipable)
             {
                 Exception ex = new ArgumentNullException(nameof(tableName), "Could not determine table name to load");
                 ex.Data.Add(nameof(Type.FullName), fullame);
                 ex.Data.Add(nameof(Type.Name), shortName);
+                throw ex;
             }
 
             if (!String.IsNullOrEmpty(loadTable)
                 && source.Tables[loadTable] is DataTable data)
-            { Load(data.CreateDataReader()); }
+            {
+                Load(data.CreateDataReader());
+                return true;
+            }
             else if (!isSkipable)
             {
                 Exception ex = new InvalidOperationException("Expected TableName not found");
@@ -191,6 +195,7 @@ namespace Toolbox.BindingTable
                 ex.Data.Add(nameof(loadTable), loadTable);
                 throw ex;
             }
+            else { return false; }
         }
 
         public virtual IDataReader CreateDataReader()

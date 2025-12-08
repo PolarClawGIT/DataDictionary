@@ -67,8 +67,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<DataTable> Export()
         {
             List<DataTable> result = new List<DataTable>();
-            result.Add(sourceValues.ToDataTable());
-            result.Add(sourceObjects.ToDataTable());
+
+            if (sourceValues.Count > 0)
+            {
+                result.Add(sourceValues.ToDataTable());
+                result.Add(sourceObjects.ToDataTable());
+            }
             return result;
         }
 
@@ -76,8 +80,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>DataSource</remarks>
         public void Import(DataSet source)
         {
-            sourceValues.Load(source);
-            sourceObjects.Load(source);
+            if (sourceValues.Load(source, default, true))
+            { sourceObjects.Load(source); }
         }
 
         /// <inheritdoc/>
