@@ -25,23 +25,5 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// <inheritdoc cref="AttributePropertyItem.AttributePropertyItem(IAttributeKey, IPropertyKey)"/>
         public AttributePropertyValue(IAttributeIndex attribute, IPropertyIndex property) : base(attribute, property)
         { }
-
-
-        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
-        {
-            ScopeType scope = ScopeType.ModelAttributeProperty;
-            IAttributePropertyValue attributeNames;
-            IPropertyValue propertyNames;
-            List<NodePropertyValue> result = new List<NodePropertyValue>()
-            {
-                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyTitle),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyType),   DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyData),   DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
-                new NodePropertyValue() {PropertyName = nameof(attributeNames.PropertyValue), DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
-            };
-
-            return result;
-        }
-
     }
 }
