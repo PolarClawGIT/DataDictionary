@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IDataObjectData DataObjects { get { return sourceObjects; } }
         DataObjectData sourceObjects = new DataObjectData();
-        
+
         public DataSource() : base()
         {
             sourceValues.ListChanged += OnListChanged;
@@ -66,32 +66,18 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>DataSource</remarks>
         public IReadOnlyList<DataTable> Export()
         {
-            List<DataTable> work = new List<DataTable>();
-            work.Add(sourceValues.ToDataTable());
-            work.Add(sourceObjects.ToDataTable());
-            return work;
+            List<DataTable> result = new List<DataTable>();
+            result.Add(sourceValues.ToDataTable());
+            result.Add(sourceObjects.ToDataTable());
+            return result;
         }
 
         /// <inheritdoc/>
         /// <remarks>DataSource</remarks>
         public void Import(DataSet source)
         {
-            sourceValues.Load(GetTable(sourceValues.BindingName));
-            sourceObjects.Load(GetTable(sourceObjects.BindingName));
-
-            DataTableReader GetTable(String tableName)
-            {
-                if (source.Tables.Contains(tableName) && source.Tables[tableName] is DataTable sourceTable)
-                { return sourceTable.CreateDataReader(); }
-                else
-                {
-                    Exception ex = new IndexOutOfRangeException();
-                    ex.Data.Add(nameof(tableName), tableName);
-                    ex.Data.Add(nameof(source.Tables),
-                        String.Join(",", source.Tables.OfType<DataTable>().Select(s => s.TableName)));
-                    throw ex;
-                }
-            }
+            sourceValues.Load(source);
+            sourceObjects.Load(source);
         }
 
         /// <inheritdoc/>
