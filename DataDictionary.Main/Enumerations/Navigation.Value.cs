@@ -29,6 +29,7 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ApplicationDocument,       Resources.Icon_Document),
                 new Enumeration(ScopeType.ApplicationTimeLine,       Resources.Icon_TimeLine),
                 new Enumeration(ScopeType.ApplicationLog,            Resources.Icon_Log),
+                new Enumeration(ScopeType.ApplicationConnection,     Resources.Icon_ServerDatabase),
 
                 new Enumeration(ScopeType.Library,                    Resources.Icon_Library) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryType,                Resources.Icon_Class) {GroupBy = false},

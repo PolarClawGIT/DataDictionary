@@ -38,12 +38,34 @@ namespace DataDictionary.Main.Enumerations
         {
             if (Enumeration.TryGetValue(scope, out Enumeration? value))
             {
-                if (value.Images.TryGetValue(command, out Func<Image>? image))
+                if (value.CommandImages.TryGetValue(command, out Func<Image>? image))
                 { return image(); }
-                else if (value.Images.TryGetValue(CommandType.Default, out Func<Image>? defaultImage))
+                else if (value.CommandImages.TryGetValue(CommandType.Default, out Func<Image>? defaultImage))
                 { return defaultImage(); }
                 else
                 { throw new IndexOutOfRangeException(String.Format("Command Type unkown: {0}", command.ToString())); }
+            }
+            else
+            { throw new IndexOutOfRangeException(String.Format("Scope Type unkown: {0}", scope.ToString())); }
+        }
+
+        /// <summary>
+        /// Gets the Image for the Scope and Command
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        public static Image GetImage(this ScopeType scope, StatusType status)
+        {
+            if (Enumeration.TryGetValue(scope, out Enumeration? value))
+            {
+                if (value.StatusImages.TryGetValue(status, out Func<Image>? image))
+                { return image(); }
+                else if (value.CommandImages.TryGetValue(CommandType.Default, out Func<Image>? defaultImage))
+                { return defaultImage(); }
+                else
+                { throw new IndexOutOfRangeException(String.Format("Status Type unkown: {0}", status.ToString())); }
             }
             else
             { throw new IndexOutOfRangeException(String.Format("Scope Type unkown: {0}", scope.ToString())); }
@@ -59,7 +81,15 @@ namespace DataDictionary.Main.Enumerations
         public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? result)
         {
             if (Enumeration.TryGetValue(scope, out Enumeration? value)
-                && value.Images.TryGetValue(command, out Func<Image>? image))
+                && value.CommandImages.TryGetValue(command, out Func<Image>? image))
+            { result = image(); return true; }
+            else { result = null; return false; }
+        }
+
+        public static Boolean TryGetImage(this ScopeType scope, StatusType status, [NotNullWhen(true)] out Image? result)
+        {
+            if (Enumeration.TryGetValue(scope, out Enumeration? value)
+                && value.StatusImages.TryGetValue(status, out Func<Image>? image))
             { result = image(); return true; }
             else { result = null; return false; }
         }
@@ -69,7 +99,7 @@ namespace DataDictionary.Main.Enumerations
             foreach (ScopeType item in scopes.Distinct())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
-                    && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
+                    && value.CommandImages.TryGetValue(CommandType.Default, out Func<Image>? image))
                 { target.Images.Add(value.Name, image()); }
             }
 
@@ -87,7 +117,7 @@ namespace DataDictionary.Main.Enumerations
             foreach (ScopeType item in Enum.GetValues<ScopeType>())
             {
                 if (Enumeration.TryGetValue(item, out Enumeration? value)
-                    && value.Images.TryGetValue(CommandType.Default, out Func<Image>? image))
+                    && value.CommandImages.TryGetValue(CommandType.Default, out Func<Image>? image))
                 { result.Images.Add(value.Name, image()); }
             }
 

@@ -1,5 +1,7 @@
-﻿using DataDictionary.Main.Forms;
+﻿using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Forms;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +28,7 @@ namespace DataDictionary.Main.Dialogs
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = AssemblyDescription;
 
-            Icon = Resources.Icon_Application;
+            Icon = ScopeType.Application.GetIcon();
             logoPictureBox.Image = Resources.Avatar;
             toolStrip.Hide(); // Hide base ToolStrip
             Worker.ProgressChanged += WorkerQueue_ProgressChanged;

@@ -54,9 +54,14 @@
         ApplicationTimeLine,
 
         /// <summary>
-        /// Generic Application log
+        /// Application log
         /// </summary>
         ApplicationLog,
+
+        /// <summary>
+        /// Application Connection
+        /// </summary>
+        ApplicationConnection,
 
         /// <summary>
         /// Application Model

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
+using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {
@@ -13,7 +14,7 @@ namespace DataDictionary.Main.Enumerations
         /// <summary>
         /// List of Images for the Scope Type assocated with Commands.
         /// </summary>
-        IReadOnlyDictionary<CommandType, Func<Image>> Images { get; }
+        IReadOnlyDictionary<CommandType, Func<Image>> CommandImages { get; }
 
         /// <summary>
         /// Grouping behavior.
@@ -45,23 +46,38 @@ namespace DataDictionary.Main.Enumerations
             static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
             // List of default overlay Images
-            static readonly Dictionary<CommandType, Image> overlayImages = new Dictionary<CommandType, Image>()
+            static readonly Dictionary<CommandType, Image> commandOverlay = new Dictionary<CommandType, Image>()
             {
-                {CommandType.Browse, Resources.ItemBrowse},
-                {CommandType.Add,    Resources.ItemNew},
-                {CommandType.Open,   Resources.ItemOpen},
-                {CommandType.Save,   Resources.ItemSave},
-                {CommandType.Delete, Resources.ItemDelete},
-                {CommandType.Export, Resources.ItemExport},
-                {CommandType.Import, Resources.ItemImport},
-                {CommandType.Select, Resources.ItemSelect},
-                {CommandType.Sync,   Resources.ItemSync},
+                {CommandType.Browse,  Resources.ItemBrowse},
+                {CommandType.Add,     Resources.ItemNew},
+                {CommandType.Open,    Resources.ItemOpen},
+                {CommandType.Save,    Resources.ItemSave},
+                {CommandType.Delete,  Resources.ItemDelete},
+                {CommandType.Export,  Resources.ItemExport},
+                {CommandType.Import,  Resources.ItemImport},
+                {CommandType.Refresh, Resources.ItemRefresh},
+                {CommandType.Select,  Resources.ItemSelect},
+                {CommandType.Sync,    Resources.ItemSync},
             };
 
             /// <inheritdoc/>
-            public IReadOnlyDictionary<CommandType, Func<Image>> Images
-            { get { return images; } }
-            Dictionary<CommandType, Func<Image>> images { get; init; } = new Dictionary<CommandType, Func<Image>>();
+            public IReadOnlyDictionary<CommandType, Func<Image>> CommandImages
+            { get { return commandImages; } }
+            Dictionary<CommandType, Func<Image>> commandImages { get; init; } = new Dictionary<CommandType, Func<Image>>();
+
+            static readonly Dictionary<StatusType, Image> statusOverlay = new Dictionary<StatusType, Image>()
+            {
+                {StatusType.Ok, Resources.StatusOK},
+                {StatusType.Error, Resources.StatusError},
+                {StatusType.Information, Resources.StatusInformation},
+                {StatusType.Invalid, Resources.StatusInvalid},
+                {StatusType.No, Resources.StatusNo},
+            };
+
+            public IReadOnlyDictionary<StatusType, Func<Image>> StatusImages
+            { get { return statusImages; } }
+            Dictionary<StatusType, Func<Image>> statusImages { get; init; } = new Dictionary<StatusType, Func<Image>>();
+
 
             /// <inheritdoc/>
             public Boolean GroupBy { get; init; } = true;
@@ -88,23 +104,13 @@ namespace DataDictionary.Main.Enumerations
             {
                 this.WindowIcon = windowIcon;
 
-                images.Add(CommandType.Default, windowIcon.GetSmallImage);
+                commandImages.Add(CommandType.Default, windowIcon.GetSmallImage);
 
-                foreach (var item in overlayImages)
-                { images.Add(item.Key, () => windowIcon.MergeImage(item.Value)); }
-            }
+                foreach (var item in commandOverlay)
+                { commandImages.Add(item.Key, () => windowIcon.MergeImage(item.Value)); }
 
-            /// <summary>
-            /// Constructor for the Window Form Scope Enumeration.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="defaultImage"></param>
-            Enumeration(ScopeType scope, Image defaultImage) : this(scope)
-            {
-                images.Add(CommandType.Default, () => defaultImage);
-
-                foreach (var item in overlayImages)
-                { images.Add(item.Key, () => defaultImage.MergeImage(item.Value)); }
+                foreach (var item in statusOverlay)
+                { statusImages.Add(item.Key, () => windowIcon.MergeImage(item.Value, ContentAlignment.BottomRight, CompositingMode.SourceOver)); }
             }
 
             /// <summary>
@@ -117,10 +123,10 @@ namespace DataDictionary.Main.Enumerations
             {
                 foreach ((CommandType scope, Image image) item in imageList)
                 {
-                    if (images.ContainsKey(item.scope))
-                    { images[item.scope] = () => item.image; } // Update the image
+                    if (commandImages.ContainsKey(item.scope))
+                    { commandImages[item.scope] = () => item.image; } // Update the image
                     else
-                    { images.Add(item.scope, () => item.image); } // Add the image
+                    { commandImages.Add(item.scope, () => item.image); } // Add the image
                 }
             }
         }

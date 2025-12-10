@@ -49,6 +49,7 @@ class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
             new ScopeEnumeration(ScopeType.ApplicationDocument,                   ScopeType.Application,       "Application.Document"),
             new ScopeEnumeration(ScopeType.ApplicationTimeLine,                   ScopeType.Application,       "Application.TimeLine"),
             new ScopeEnumeration(ScopeType.ApplicationLog,             ScopeType.Application,       "Application.Log"),
+            new ScopeEnumeration(ScopeType.ApplicationConnection,      ScopeType.Application,       "Application.Connection"),
 
             new ScopeEnumeration(ScopeType.Library,                    "Library"),
             new ScopeEnumeration(ScopeType.LibraryNameSpace,           ScopeType.Library,           "Library.NameSpace"),
