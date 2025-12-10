@@ -18,7 +18,16 @@ namespace Toolbox.DbContext
         /// Has an Exception occurred within the scope of this connection.
         /// </summary>
         Boolean HasException { get; }
+
+        /// <summary>
+        /// Debug information. List of any errors generated within the connection.
+        /// </summary>
         IReadOnlyList<Exception> Errors { get; }
+
+        /// <summary>
+        /// Debug infomation. List of Messages (Info and Errors) generated within the connection.
+        /// </summary>
+        IReadOnlyList<SqlError> Messages { get; }
 
         String? ServerName { get; }
         String? DatabaseName { get; }
@@ -72,6 +81,21 @@ namespace Toolbox.DbContext
         List<Exception> exceptions = new List<Exception>();
         public IReadOnlyList<Exception> Errors { get { return exceptions.AsReadOnly(); } }
 
+        List<SqlError> infoMessage = new List<SqlError>();
+        public IReadOnlyList<SqlError> Messages
+        {
+            get
+            {
+                return
+                    infoMessage.
+                    Union(Errors.
+                        OfType<SqlException>().
+                        SelectMany(s => s.Errors.OfType<SqlError>())).
+                    ToList().
+                    AsReadOnly();
+            }
+        }
+
         public String ServerName { get { return connection.DataSource; } }
         public String DatabaseName { get { return connection.Database; } }
 
@@ -80,7 +104,8 @@ namespace Toolbox.DbContext
         private SqlTransaction transaction = null!;
         private Byte[]? applicationRoleCookie = null;
 
-        public Connection() { }
+        public Connection()
+        { connection.InfoMessage += Connection_InfoMessage; }
 
         /// <summary>
         /// Wrappers the Open and Begin Transaction of the SQL Connection.
@@ -124,6 +149,9 @@ namespace Toolbox.DbContext
                 throw;
             }
         }
+
+        private void Connection_InfoMessage(Object sender, SqlInfoMessageEventArgs e)
+        { infoMessage.AddRange(e.Errors.OfType<SqlError>()); }
 
         /// <summary>
         /// Wrappers the Commit and Close of the SQL Connection.
@@ -464,6 +492,7 @@ namespace Toolbox.DbContext
             {
                 if (disposing)
                 {
+                    connection.InfoMessage -= Connection_InfoMessage;
                     if (connection is SqlConnection && connection.State != ConnectionState.Closed) { Rollback(); }
                     if (transaction is SqlTransaction) { transaction.Dispose(); }
                     if (connection is SqlConnection) { connection.Dispose(); }
