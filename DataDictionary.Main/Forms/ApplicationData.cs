@@ -38,56 +38,56 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(browseCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Browse,
                 IsVisible = false,
             }.AddTo(commandButtons);
 
             new CommandState(selectCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Select,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(newCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Add,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(deleteCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Delete,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(saveCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Save,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(openCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Open,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(importCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Import,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(exportCommand)
             {
-                Scope = ScopeType.Document,
+                Scope = ScopeType.ApplicationDocument,
                 Command = CommandType.Export,
                 IsVisible = false
             }.AddTo(commandButtons);
@@ -128,7 +128,7 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(historyCommand)
             {
-                Scope = ScopeType.TimeLine,
+                Scope = ScopeType.ApplicationTimeLine,
                 Command = CommandType.HistoryDatabase,
                 IsVisible = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode
@@ -339,7 +339,7 @@ namespace DataDictionary.Main.Forms
                 {
                     if (CommandButtons.TryGetValue(item, out CommandState? value))
                     {
-                        if (value.Scope is ScopeType.Document)
+                        if (value.Scope is ScopeType.ApplicationDocument)
                         { value.Scope = scope; }
 
                         value.IsVisible = true;

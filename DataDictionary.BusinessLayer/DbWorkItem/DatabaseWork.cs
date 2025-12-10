@@ -2,6 +2,7 @@
 
 using DataDictionary.DataLayer;
 using DataDictionary.Resource;
+using Microsoft.Data.SqlClient;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -159,6 +160,12 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         Dictionary<IWorkItem, WorkState> workItems = new Dictionary<IWorkItem, WorkState>();
 
         /// <summary>
+        /// Method to call to return the set of messages created by the database.
+        /// Executed on Commit/Rollback.
+        /// </summary>
+        public Action<IEnumerable<SqlError>> CreateMessages { get; init; } = (a) => { };
+
+        /// <summary>
         /// Work item that opens the connection on the specified context.
         /// </summary>
         /// <param name="context"></param>
@@ -293,6 +300,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             {
                 if (Connection is IConnection)
                 {
+                    CreateMessages(Connection.Messages);
                     if (Connection.HasException) { Connection.Rollback(); }
                     else { Connection.Commit(); }
                 }

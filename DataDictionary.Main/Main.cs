@@ -31,22 +31,28 @@ namespace DataDictionary.Main
 
             // Set the button images based on Scope.
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
+            newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
+            newProcessCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
+            newSubjectAreaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
             manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
+            manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
+            manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             securitySetAuthorization.Image = ScopeType.Security.GetImage(CommandType.Default);
             browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
+            databaseMessagesCommand.Image = ScopeType.ApplicationLog.GetImage(CommandType.Default);
 
             securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default);
 
+            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
+            manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
             viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
-
-            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
-            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
             menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
@@ -68,6 +74,9 @@ namespace DataDictionary.Main
             menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
             menuModelProperty.Image = ScopeType.ModelProperty.GetImage(CommandType.Default);
             menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
+
+            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
+            manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
             menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default);
@@ -331,10 +340,10 @@ namespace DataDictionary.Main
 
         private void SetAuthorization()
         {
-            securitySetAuthorization.Enabled = 
+            securitySetAuthorization.Enabled =
                 BusinessData.Authorization.IsSecurityAdmin
                 && Settings.Default.IsOnLineMode;
-            
+
             securityAuthorization.Enabled = true;
         }
 

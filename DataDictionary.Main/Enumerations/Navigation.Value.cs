@@ -26,8 +26,9 @@ namespace DataDictionary.Main.Enumerations
                 new Enumeration(ScopeType.ApplicationHelpGroup,      Resources.Icon_HelpTableOfContent),
                 new Enumeration(ScopeType.ApplicationHelpForm,       Resources.Icon_HelpApplication),
                 new Enumeration(ScopeType.ApplicationOption,         Resources.Icon_Settings),
-                new Enumeration(ScopeType.Document,       Resources.Icon_Document),
-                new Enumeration(ScopeType.TimeLine,       Resources.Icon_TimeLine),
+                new Enumeration(ScopeType.ApplicationDocument,       Resources.Icon_Document),
+                new Enumeration(ScopeType.ApplicationTimeLine,       Resources.Icon_TimeLine),
+                new Enumeration(ScopeType.ApplicationLog,            Resources.Icon_Log),
 
                 new Enumeration(ScopeType.Library,                    Resources.Icon_Library) {GroupBy = false},
                 new Enumeration(ScopeType.LibraryType,                Resources.Icon_Class) {GroupBy = false},
