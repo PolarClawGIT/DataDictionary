@@ -1,50 +1,41 @@
 ﻿using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Enumerations
 {
-    static partial class NavigationExtention
+    partial class CommandImage
     {
         /// <summary>
-        /// Gets the Image for the Scope and Command
+        /// Gets the Image (16x16) for the Scope and Command
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException">Scope or Command is not in Navigation Enumeration</exception>
         public static Image GetImage(this ScopeType scope, CommandType command)
         {
-            if (Enumeration.TryGetValue(scope, out Enumeration? value))
-            {
-                if (value.CommandImages.TryGetValue(command, out Func<Image>? image))
-                { return image(); }
-                else if (value.CommandImages.TryGetValue(CommandType.Default, out Func<Image>? defaultImage))
-                { return defaultImage(); }
-                else
-                { throw new IndexOutOfRangeException(String.Format("Command Type unkown: {0}", command.ToString())); }
+            if (scope.TryGetImage(command, out Image? result))
+            { return result; }
+            else {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(scope), scope);
+                ex.Data.Add(nameof(command), command);
+                throw ex;
             }
-            else
-            { throw new IndexOutOfRangeException(String.Format("Scope Type unkown: {0}", scope.ToString())); }
         }
 
         /// <summary>
-        /// Try/Get the Image for the Scope and Command.
+        /// Try/Get the Image (16x16) for the Scope and Command.
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="command"></param>
-        /// <param name="result"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? result)
+        public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? value)
         {
-            if (Enumeration.TryGetValue(scope, out Enumeration? value)
-                && value.CommandImages.TryGetValue(command, out Func<Image>? image))
-            { result = image(); return true; }
-            else { result = null; return false; }
+            if (scope.TryGetImage(out Image? scopeImage)
+                && commandOverlay.ContainsKey(command))
+            { value = scopeImage.MergeImage(commandOverlay[command]); return true; }
+            else { value = null; return false; }
         }
     }
 }

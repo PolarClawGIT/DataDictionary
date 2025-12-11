@@ -91,4 +91,6 @@ namespace DataDictionary.Main.Enumerations
         /// </summary>
         SecurityDatabase,
     }
+
+    static partial class CommandImage { }
 }

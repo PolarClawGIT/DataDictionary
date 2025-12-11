@@ -38,4 +38,6 @@ namespace DataDictionary.Main.Enumerations
 
 
     }
+
+    static partial class StatusImage { }
 }
