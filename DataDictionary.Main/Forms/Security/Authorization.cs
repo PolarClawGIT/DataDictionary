@@ -34,8 +34,8 @@ namespace DataDictionary.Main.Forms.Security
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase);
 
-            authorizationTab.ImageList = new ImageList().
-                AddImages(
+            authorizationTab.ImageList = new ImageList();
+            authorizationTab.ImageList.AddImages(
                 ScopeType.SecurityPrincipal,
                 ScopeType.SecurityRole,
                 ScopeType.SecuritySecurable);

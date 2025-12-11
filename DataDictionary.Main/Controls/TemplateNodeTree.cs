@@ -62,7 +62,8 @@ namespace DataDictionary.Main.Controls
             {
                 nodeDictionary = new Dictionary<TreeNode, TemplateNodeValue>();
                 treeControls.Add(tree, nodeDictionary);
-                tree.ImageList = NavigationExtention.CreateImageList();
+                tree.ImageList = new ImageList();
+                tree.ImageList.AddImages();
 
                 tree.Disposed += Tree_Disposed;
             }

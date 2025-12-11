@@ -13,6 +13,7 @@ namespace DataDictionary.Main.Enumerations
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
         {
             { ScopeType.Application,                Resources.Icon_SoftwareDefinitionModel },
+            { ScopeType.ApplicationHelp,            Resources.Icon_Help },
             { ScopeType.ApplicationHelpPage,        Resources.Icon_HelpIndexFile },
             { ScopeType.ApplicationHelpGroup,       Resources.Icon_HelpTableOfContent },
             { ScopeType.ApplicationHelpForm,        Resources.Icon_HelpApplication },

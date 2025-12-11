@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Enumerations
             public ScopeType? Parent { get; init; } = null;
 
             /// <inheritdoc/>
+            [Obsolete("Icons come from ImageType now", true)]
             public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
             static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
@@ -61,18 +62,9 @@ namespace DataDictionary.Main.Enumerations
             /// </summary>
             /// <param name="scope"></param>
             /// <param name="windowIcon"></param>
+            [Obsolete("Icons come from ImageType now", true)]
             Enumeration(ScopeType scope, Icon windowIcon) : this(scope)
-            {
-                this.WindowIcon = windowIcon;
-
-                commandImages.Add(CommandType.Default, windowIcon.GetSmallImage);
-
-                foreach (var item in commandOverlay)
-                { commandImages.Add(item.Key, () => windowIcon.MergeImage(item.Value)); }
-
-                foreach (var item in statusOverlay)
-                { statusImages.Add(item.Key, () => windowIcon.MergeImage(item.Value, ContentAlignment.BottomRight, CompositingMode.SourceOver)); }
-            }
+            { this.WindowIcon = windowIcon; }
 
             /// <summary>
             /// Constructor for the Window Form Scope Enumeration.
@@ -80,16 +72,9 @@ namespace DataDictionary.Main.Enumerations
             /// <param name="scope"></param>
             /// <param name="windowIcon"></param>
             /// <param name="imageList"></param>
+            [Obsolete("Icons come from ImageType now", true)]
             Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Image image)[] imageList) : this(scope, windowIcon)
-            {
-                foreach ((CommandType scope, Image image) item in imageList)
-                {
-                    if (commandImages.ContainsKey(item.scope))
-                    { commandImages[item.scope] = () => item.image; } // Update the image
-                    else
-                    { commandImages.Add(item.scope, () => item.image); } // Add the image
-                }
-            }
+            { }
         }
     }
 }

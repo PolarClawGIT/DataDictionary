@@ -15,7 +15,8 @@ namespace DataDictionary.Main.Enumerations
         {
             if (scope.TryGetImage(command, out Image? result))
             { return result; }
-            else {
+            else
+            {
                 Exception ex = new IndexOutOfRangeException();
                 ex.Data.Add(nameof(scope), scope);
                 ex.Data.Add(nameof(command), command);
@@ -32,9 +33,21 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? value)
         {
-            if (scope.TryGetImage(out Image? scopeImage)
-                && commandOverlay.ContainsKey(command))
-            { value = scopeImage.MergeImage(commandOverlay[command]); return true; }
+            if (scope.TryGetImage(out Image? scopeImage))
+            {
+                value = scopeImage;
+
+                if (commmandOverride.ContainsKey(scope) 
+                    && command is not CommandType.Default)
+                { value = commmandOverride[scope].GetSmallImage(); }
+
+                if (commandOverlay.ContainsKey(command))
+                { value = value.MergeImage(commandOverlay[command]); }
+
+                return true;
+            }
+
+
             else { value = null; return false; }
         }
     }

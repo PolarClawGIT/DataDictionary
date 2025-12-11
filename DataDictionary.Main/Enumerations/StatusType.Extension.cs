@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Drawing2D;
 
 namespace DataDictionary.Main.Enumerations
 {
@@ -35,7 +36,13 @@ namespace DataDictionary.Main.Enumerations
         {
             if (scope.TryGetImage(out Image? scopeImage)
                 && statusOverlay.ContainsKey(status))
-            { value = scopeImage.MergeImage(statusOverlay[status]); return true; }
+            {
+                value = scopeImage.MergeImage(
+                    statusOverlay[status],
+                    ContentAlignment.BottomRight,
+                    CompositingMode.SourceOver);
+                return true;
+            }
             else { value = null; return false; }
         }
     }

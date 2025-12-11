@@ -993,6 +993,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ItemSecurity {
+            get {
+                object obj = ResourceManager.GetObject("ItemSecurity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ItemSelect {
             get {
                 object obj = ResourceManager.GetObject("ItemSelect", resourceCulture);
