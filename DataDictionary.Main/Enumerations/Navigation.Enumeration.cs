@@ -7,11 +7,6 @@ namespace DataDictionary.Main.Enumerations
     interface INavigationEnumeration : IScopeEnumeration
     {
         /// <summary>
-        /// Icon used for the ScopeType
-        /// </summary>
-        Icon WindowIcon { get; }
-
-        /// <summary>
         /// Grouping behavior.
         /// When True, items with the same ScopeType will be group together.
         /// When False, items will not be group together and appear as individual entries.
@@ -37,11 +32,6 @@ namespace DataDictionary.Main.Enumerations
             public ScopeType? Parent { get; init; } = null;
 
             /// <inheritdoc/>
-            [Obsolete("Icons come from ImageType now", true)]
-            public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
-            static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
-
-            /// <inheritdoc/>
             public Boolean GroupBy { get; init; } = true;
 
             /// <summary>
@@ -56,25 +46,6 @@ namespace DataDictionary.Main.Enumerations
                 Value = source.Value;
                 Parent = source.Parent;
             }
-
-            /// <summary>
-            /// Constructor for the Window Form Scope Enumeration.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="windowIcon"></param>
-            [Obsolete("Icons come from ImageType now", true)]
-            Enumeration(ScopeType scope, Icon windowIcon) : this(scope)
-            { this.WindowIcon = windowIcon; }
-
-            /// <summary>
-            /// Constructor for the Window Form Scope Enumeration.
-            /// </summary>
-            /// <param name="scope"></param>
-            /// <param name="windowIcon"></param>
-            /// <param name="imageList"></param>
-            [Obsolete("Icons come from ImageType now", true)]
-            Enumeration(ScopeType scope, Icon windowIcon, params (CommandType scope, Image image)[] imageList) : this(scope, windowIcon)
-            { }
         }
     }
 }
