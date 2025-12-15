@@ -1,14 +1,9 @@
 ﻿using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Enumerations
 {
-    partial class ScopeIcons
+    partial class ScopeIcon
     {
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
         {
