@@ -11,9 +11,9 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="scope"></param>
         /// <param name="navigation"></param>
         /// <returns></returns>
-        public static Boolean TryGetValue(this ScopeType scope, [NotNullWhen(true)] INavigationEnumeration? navigation)
+        public static Boolean TryGetValue(this ScopeType scope, [NotNullWhen(true)] INavigationValue? navigation)
         {
-            if (Enumeration.TryGetValue(scope, out Enumeration? result))
+            if (NavigationValue.TryGetValue(scope, out NavigationValue? result))
             { navigation = result; return true; }
             else { navigation = null; return false; }
         }

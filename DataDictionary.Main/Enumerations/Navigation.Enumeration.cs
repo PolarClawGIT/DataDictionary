@@ -1,28 +1,15 @@
-﻿using DataDictionary.Main.Properties;
-using DataDictionary.Resource.Enumerations;
-using System.Drawing.Drawing2D;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.Main.Enumerations
 {
-    interface INavigationEnumeration : IScopeEnumeration
-    {
-        /// <summary>
-        /// Grouping behavior.
-        /// When True, items with the same ScopeType will be group together.
-        /// When False, items will not be group together and appear as individual entries.
-        /// This effects navigation components.
-        /// </summary>
-        Boolean GroupBy { get; }
-    }
-
     static partial class NavigationExtention
     {
         /// <summary>
         /// ScopeEnumeration with Images and Icons.
         /// Used to hold Navigation Icons and Images.
         /// </summary>
-        partial class Enumeration : Enumeration<ScopeType, Enumeration>,
-            INavigationEnumeration
+        partial class NavigationValue : Enumeration<ScopeType, NavigationValue>,
+            INavigationValue
         {
             // This class could not be placed in base ScopeEnumeration because framework agnostic.
             // This version is Windows WinForms specific.
@@ -38,7 +25,7 @@ namespace DataDictionary.Main.Enumerations
             /// Constructor for the Window Form Scope Enumeration.
             /// </summary>
             /// <param name="scope"></param>
-            Enumeration(ScopeType scope) : base()
+            NavigationValue(ScopeType scope) : base()
             {
                 IScopeEnumeration source = scope.GetEnumeration();
                 DisplayName = source.DisplayName;
