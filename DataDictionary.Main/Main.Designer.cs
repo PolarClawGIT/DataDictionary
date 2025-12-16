@@ -517,7 +517,7 @@
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
             openToolStripMenuItem.Size = new Size(178, 22);
             openToolStripMenuItem.Text = "&Open";
-            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
@@ -533,7 +533,7 @@
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
             saveToolStripMenuItem.Size = new Size(178, 22);
             saveToolStripMenuItem.Text = "&Save";
-            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+            saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
@@ -641,7 +641,7 @@
             peekAtClipboardToolStripMenuItem.Name = "peekAtClipboardToolStripMenuItem";
             peekAtClipboardToolStripMenuItem.Size = new Size(167, 22);
             peekAtClipboardToolStripMenuItem.Text = "Peek at Clipboard";
-            peekAtClipboardToolStripMenuItem.Click += peekAtClipboardToolStripMenuItem_Click;
+            peekAtClipboardToolStripMenuItem.Click += PeekAtClipboardToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
@@ -702,7 +702,7 @@
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
             gridViewToolStripMenuItem.Size = new Size(129, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
-            gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
+            gridViewToolStripMenuItem.Click += GridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
@@ -715,7 +715,7 @@
             textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
             textEditorToolStripMenuItem.Size = new Size(129, 22);
             textEditorToolStripMenuItem.Text = "Text Editor";
-            textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
+            textEditorToolStripMenuItem.Click += TextEditorToolStripMenuItem_Click;
             // 
             // securityToolStripMenuItem
             // 

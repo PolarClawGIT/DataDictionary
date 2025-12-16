@@ -244,16 +244,16 @@ namespace DataDictionary.Main
         }
         #endregion
 
-        private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
-        private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PeekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ClipboardView()); }
 
-        private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TextEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XML Data Dictionary|*.XML";
 
@@ -281,10 +281,10 @@ namespace DataDictionary.Main
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { SendMessage(new RefreshNavigation()); }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (BusinessData.ModelFile is FileInfo file)
             {
@@ -294,7 +294,7 @@ namespace DataDictionary.Main
             { saveAsToolStripMenuItem_Click(sender, e); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { SendMessage(new RefreshNavigation()); }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
