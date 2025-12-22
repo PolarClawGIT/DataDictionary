@@ -52,10 +52,10 @@
             referencedObjectColumn = new DataGridViewTextBoxColumn();
             referencedColumnColumn = new DataGridViewTextBoxColumn();
             referencedTypeColumn = new DataGridViewTextBoxColumn();
-            catalogNameData = new Controls.TextBoxData();
-            schemaNameData = new Controls.TextBoxData();
-            tableNameData = new Controls.TextBoxData();
-            tableTypeData = new Controls.TextBoxData();
+            catalogNameData = new DataDictionary.Main.Controls.TextBoxData();
+            schemaNameData = new DataDictionary.Main.Controls.TextBoxData();
+            tableNameData = new DataDictionary.Main.Controls.TextBoxData();
+            tableTypeData = new DataDictionary.Main.Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
             bindingTable = new BindingSource(components);
             bindingProperties = new BindingSource(components);
@@ -63,6 +63,7 @@
             bindingConstraints = new BindingSource(components);
             exportOptions = new ContextMenuStrip(components);
             exportEntites = new ToolStripMenuItem();
+            exportAttributes = new ToolStripMenuItem();
             bindingDependencies = new BindingSource(components);
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
@@ -393,17 +394,24 @@
             // 
             // exportOptions
             // 
-            exportOptions.Items.AddRange(new ToolStripItem[] { exportEntites });
+            exportOptions.Items.AddRange(new ToolStripItem[] { exportEntites, exportAttributes });
             exportOptions.Name = "contextMenuStrip1";
-            exportOptions.Size = new Size(181, 48);
+            exportOptions.Size = new Size(141, 48);
             // 
             // exportEntites
             // 
             exportEntites.Name = "exportEntites";
-            exportEntites.Size = new Size(180, 22);
+            exportEntites.Size = new Size(140, 22);
             exportEntites.Text = "to Entity";
             exportEntites.ToolTipText = "Create domain Entity from database Tables or View";
             exportEntites.Click += ExportEntites_Click;
+            // 
+            // exportAttributes
+            // 
+            exportAttributes.Name = "exportAttributes";
+            exportAttributes.Size = new Size(140, 22);
+            exportAttributes.Text = "to Attributes";
+            exportAttributes.Click += ExportAttributes_Click;
             // 
             // DbTable
             // 
@@ -470,5 +478,6 @@
         private DataGridViewTextBoxColumn referencedTypeColumn;
         private DataGridViewTextBoxColumn ConstraintNameValue;
         private DataGridViewTextBoxColumn ConstraintTypeValue;
+        private ToolStripMenuItem exportAttributes;
     }
 }

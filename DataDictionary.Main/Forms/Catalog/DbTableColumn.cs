@@ -114,7 +114,10 @@ namespace DataDictionary.Main.Forms.Catalog
 
                 IAttributeValue attribute = BusinessData.Model.Attribute.Import(columnAttribute);
 
-                Activate(() => new Forms.Model.Attribute(attribute));
+                Activate(
+                    () => new Forms.Model.Attribute(attribute),
+                    (form) => form.IsOpenItem(attribute));
+
                 SendMessage(new RefreshNavigation());
             }
         }
