@@ -258,12 +258,6 @@ namespace DataDictionary.Main
                 (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
         }
 
-        private void SecurityPrincipal_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Security.PrincipalManager()); }
-
-        private void SecurityRole_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Security.RoleManager()); }
-
         private void MenuProcess_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
@@ -306,9 +300,14 @@ namespace DataDictionary.Main
             Activate(static () => new DetailDataView
                 (ScopeType.Security, BusinessData.Authorization));
         }
-        private void newRelationshipCommand_ButtonClick(object sender, EventArgs e)
+
+        private void SecuritySetAuthorization_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Security.Authorization()); }
+
+        private void DatabaseMessagesCommand_Click(object sender, EventArgs e)
         {
-            // Currently not used
+            Activate(static () => new DetailDataView
+                (ScopeType.ApplicationLog, BusinessData.Messages));
         }
     }
 }

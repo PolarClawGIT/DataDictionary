@@ -23,11 +23,6 @@ namespace Toolbox.BindingTable
         where TBindingItem : BindingTableRow, IBindingPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
-        /// Name given to the Binding Table.
-        /// </summary>
-        public String BindingName { get; init; }
-
-        /// <summary>
         /// Internal DataTable that hold the values.
         /// </summary>
         protected DataTable dataItems;
@@ -39,7 +34,6 @@ namespace Toolbox.BindingTable
         {
             dataItems = new DataTable();
             dataItems.TableName = typeof(TBindingItem).Name;
-            BindingName = typeof(TBindingItem).Name;
             dataItems.AddColumns(new TBindingItem().ColumnDefinitions());
 
             dataItems.Disposed += TableDisposed;
@@ -167,17 +161,41 @@ namespace Toolbox.BindingTable
             }
         }
 
-        public virtual void Load(DataSet source)
+        public virtual Boolean Load(DataSet source, String? tableName = null, Boolean isSkipable = false)
         {
-            if (source.Tables.Contains(BindingName) &&
-                source.Tables[BindingName] is DataTable data)
-            { Load(data.CreateDataReader()); }
-            else
+            String? fullame = GetType().FullName;
+            String shortName = GetType().Name;
+            String loadTable = String.Empty;
+
+            if (!String.IsNullOrWhiteSpace(tableName) && source.Tables.Contains(tableName))
+            { loadTable = tableName; }
+            else if (fullame is String && source.Tables.Contains(fullame))
+            { loadTable = fullame; }
+            else if (source.Tables.Contains(shortName))
+            { loadTable = shortName; }
+            else if (!isSkipable)
             {
-                Exception ex = new InvalidOperationException("Expected TableName not found");
-                ex.Data.Add(nameof(BindingName), BindingName);
+                Exception ex = new ArgumentNullException(nameof(tableName), "Could not determine table name to load");
+                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.Name), shortName);
                 throw ex;
             }
+
+            if (!String.IsNullOrEmpty(loadTable)
+                && source.Tables[loadTable] is DataTable data)
+            {
+                Load(data.CreateDataReader());
+                return true;
+            }
+            else if (!isSkipable)
+            {
+                Exception ex = new InvalidOperationException("Expected TableName not found");
+                ex.Data.Add(nameof(Type.FullName), fullame);
+                ex.Data.Add(nameof(Type.Name), shortName);
+                ex.Data.Add(nameof(loadTable), loadTable);
+                throw ex;
+            }
+            else { return false; }
         }
 
         public virtual IDataReader CreateDataReader()
@@ -354,7 +372,7 @@ namespace Toolbox.BindingTable
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
         /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)
-        {  base.OnListChanged(e);  }
+        { base.OnListChanged(e); }
 
         /// <summary>
         // Removes a specific items from the Binding List and Data Table

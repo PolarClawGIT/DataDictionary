@@ -10,6 +10,8 @@ using DataDictionary.DataLayer.AppSecurity;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
+using DataDictionary.Resource;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -35,6 +37,15 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public FileInfo? ModelFile { get; set; }
 
+        /// <summary>
+        /// Messages from the Database Calls. Loaded after work items is complete.
+        /// </summary>
+        public BindingList<MessageItem> Messages = new BindingList<MessageItem>();
+
+        /// <summary>
+        /// Maximum Number of Messages to keep. 0 or less keeps all messages.
+        /// </summary>
+        public Int32? MaxMessages { get; init; } = 250;
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -44,7 +55,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="databaseName"></param>
         /// <param name="applicationRole"></param>
         /// <param name="ApplicationRolePassword"></param>
-        public BusinessLayerData(IIdentity identity,  String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
+        public BusinessLayerData(IIdentity identity, String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
             UserIdentity = identity;
 
@@ -60,21 +71,30 @@ namespace DataDictionary.BusinessLayer
             namedScopeValues = new NamedScopeData(LoadNamedScope);
 
             applicationValues = new AppGeneral.ApplicationData();
-            
+
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
 
             scriptingValue = InitScripting(modelValues);
-
-            securityValue = new AppSecurity.Security();
         }
 
         /// <summary>
         /// Returns a new Default factory Model Worker.
         /// </summary>
         public IDatabaseWork GetDbFactory()
-        { return new DatabaseWork(DbConnection); }
+        {
+            return new DatabaseWork(DbConnection)
+            {
+                CreateMessages = (m) =>
+                {
+                    Messages.AddRange(m.Select(s => new MessageItem(s)));
+
+                    while (MaxMessages > 0 && Messages.Count > MaxMessages)
+                    { Messages.RemoveAt(0); }
+                }
+            };
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex key)

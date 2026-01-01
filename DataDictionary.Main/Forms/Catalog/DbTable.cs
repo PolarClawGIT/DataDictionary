@@ -32,6 +32,7 @@ namespace DataDictionary.Main.Forms.Catalog
             CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
 
             exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.CommandType.Add);
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.CommandType.Add);
         }
 
         public DbTable(ITableValue tableItem) : this()
@@ -113,9 +114,38 @@ namespace DataDictionary.Main.Forms.Catalog
 
                 IEntityValue entity = BusinessData.Model.Entity.Import(tableEntity);
 
-                Activate(() => new Forms.Model.Entity(entity));
+                Activate(
+                    () => new Forms.Model.Entity(entity),
+                    (form) => form.IsOpenItem(entity));
+
                 SendMessage(new RefreshNavigation());
             }
+        }
+
+        private void ExportAttributes_Click(object sender, EventArgs e)
+        {
+            if(bindingColumns.DataSource is IEnumerable<TableColumnValue> columns)
+            {
+                foreach (TableColumnValue item in columns)
+                {
+                    TableColumnAttribute columnAttribute = new TableColumnAttribute(item)
+                    {
+                        GetAlias = BusinessData.CatalogModel.DbTableColumns.GetAlias,
+                        GetCatalogProperty = BusinessData.CatalogModel.DbProperties.GetProperty,
+                        GetModelProperty = BusinessData.Model.Properties.TryGetValue
+                    };
+
+                    IAttributeValue attribute = BusinessData.Model.Attribute.Import(columnAttribute);
+
+                    Activate(
+                        () => new Forms.Model.Attribute(attribute),
+                        (form) => form.IsOpenItem(attribute));
+                }
+
+                SendMessage(new RefreshNavigation());
+            }
+
+
         }
     }
 }

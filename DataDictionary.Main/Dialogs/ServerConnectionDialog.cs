@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel;
 using System.Data;
@@ -16,9 +17,9 @@ namespace DataDictionary.Main.Dialogs
             UserID = String.Format("{0}\\{1}", SystemInformation.UserDomainName, SystemInformation.UserName)
         };
 
-        Image connectionOk = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusOK, ContentAlignment.BottomRight, CompositingMode.SourceOver);
-        Image connectionInfo = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusInformation, ContentAlignment.BottomRight, CompositingMode.SourceOver);
-        Image connectionInvalid = Resources.Icon_ServerDatabase.MergeImage(Resources.StatusInvalid, ContentAlignment.BottomRight, CompositingMode.SourceOver);
+        Image connectionOk = ScopeType.ApplicationConnection.GetImage(StatusType.Ok);
+        Image connectionInfo = ScopeType.ApplicationConnection.GetImage(StatusType.Information);
+        Image connectionInvalid = ScopeType.ApplicationConnection.GetImage(StatusType.Invalid);
 
         public List<(String ServerName, String DatabaseName)> Servers { get; } = new List<(String ServerName, String DatabaseName)>();
 
@@ -35,10 +36,8 @@ namespace DataDictionary.Main.Dialogs
         public ServerConnectionDialog()
         {
             InitializeComponent();
-
-            refreshDatabaseCommand.Image = Resources.Icon_ServerDatabase.MergeImage(Resources.ItemRefresh);
-
-            this.Icon = Resources.Icon_ServerDatabase;
+            refreshDatabaseCommand.Image = ScopeType.ApplicationConnection.GetImage(Enumerations.CommandType.Refresh);
+            this.Icon = ScopeType.ApplicationConnection.GetIcon();
         }
 
         private void ServerConnectionDialog_Load(object sender, EventArgs e)

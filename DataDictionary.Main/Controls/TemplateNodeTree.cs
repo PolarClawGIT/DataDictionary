@@ -62,7 +62,8 @@ namespace DataDictionary.Main.Controls
             {
                 nodeDictionary = new Dictionary<TreeNode, TemplateNodeValue>();
                 treeControls.Add(tree, nodeDictionary);
-                tree.SetImageList();
+                tree.ImageList = new ImageList();
+                tree.ImageList.AddImages();
 
                 tree.Disposed += Tree_Disposed;
             }
@@ -168,127 +169,5 @@ namespace DataDictionary.Main.Controls
                 { treeControls.Remove(disposed); }
             }
         }
-
-        [Obsolete("Old code", true)]
-        static void BuildTree_Old(this TreeView tree,
-            ITemplateValue template,
-            IEnumerable<TemplateNodeValue> nodes,
-            IEnumerable<TemplateNodeOwnerValue> owners)
-        {
-            Dictionary<TreeNode, TemplateNodeValue> nodeDictionary;
-            List<TemplateNodeIndex> expanded = new List<TemplateNodeIndex>();
-            TemplateNodeIndex? selected = null;
-            TemplateNodeIndex rootKey = new TemplateNodeIndex();
-            List<(TemplateNodeIndex parent, TemplateNodeIndex child)> parentChild = new List<(TemplateNodeIndex parent, TemplateNodeIndex child)>();
-
-            tree.BeginUpdate();
-
-            if (treeControls.ContainsKey(tree))
-            { nodeDictionary = treeControls[tree]; }
-            else
-            {
-                nodeDictionary = new Dictionary<TreeNode, TemplateNodeValue>();
-                treeControls.Add(tree, nodeDictionary);
-                tree.Disposed += Tree_Disposed;
-            }
-
-            // Get the Selected Tree Node
-            if (tree.SelectedNode is not null
-                && nodeDictionary.ContainsKey(tree.SelectedNode))
-            { selected = new TemplateNodeIndex(nodeDictionary[tree.SelectedNode]); }
-
-            // Get list of Expanded Tree Nodes
-            foreach (TreeNode node in tree.Nodes.GetNodes(w => w.IsExpanded))
-            {
-                if (nodeDictionary.TryGetValue(node, out TemplateNodeValue? value))
-                {
-                    TemplateNodeIndex key = new TemplateNodeIndex(value);
-                    if (!expanded.Contains(key))
-                    { expanded.Add(key); }
-                }
-                else
-                {
-                    if (!expanded.Contains(rootKey))
-                    { expanded.Add(rootKey); }
-                }
-            }
-
-            // Clear Nodes
-            tree.Nodes.Clear();
-            nodeDictionary.Clear();
-            if (tree.ImageList is null)
-            { tree.SetImageList(); }
-
-            // Create Tree Root Node
-            TreeNode root = new TreeNode(template.Title);
-            root.ImageKey = template.Scope.GetName();
-            root.SelectedImageKey = template.Scope.GetName();
-            tree.Nodes.Add(root);
-
-            //var x = nodes.Where(w => !owners.Any(a => new TemplateNodeIndex(w).Equals(a))).ToList();
-            //var y = nodes.Where(w => !owners.Any(a => new TemplateNodeOwnerIndex(w).Equals(a))).ToList();
-
-            // Add TemplateNodes to Tree Root Node
-            foreach (TemplateNodeValue item in nodes.
-                Where(w => !owners.Any(a => new TemplateNodeIndex(w).Equals(a))).
-                OrderBy(o => o.NodeOrder).
-                ThenBy(o => o.NodeName).
-                ToList())
-            { BuildNode(root, item); }
-
-            //TODO: Recusrive relations not working. These are lost.
-            var x = nodes.Where(w => !nodeDictionary.Any(a => new TemplateNodeIndex(w).Equals(a.Value))).ToList();
-
-            // Restore selected
-            if (selected is not null
-                && nodeDictionary.Where(w => selected.Equals(w.Value)).
-                    Select(s => s.Key).
-                    FirstOrDefault() is TreeNode treeNode)
-            { tree.SelectedNode = treeNode; }
-
-            // Restore Expanded Tree Nodes
-            if (expanded.Count > 0)
-            { root.ExpandParent(); }
-
-            foreach (var item in nodeDictionary.Where(w => expanded.Any(a => a.Equals(w.Value))))
-            { item.Key.ExpandParent(); }
-
-            tree.EndUpdate();
-
-            void BuildNode(TreeNode parent, TemplateNodeValue parentNode)
-            {
-                TreeNode result = new TreeNode(parentNode.NodeName);
-                result.ImageKey = parentNode.Scope.GetName();
-                result.SelectedImageKey = parentNode.Scope.GetName();
-                parent.Nodes.Add(result);
-                nodeDictionary.Add(result, parentNode);
-
-                foreach (TemplateNodeOwnerValue owner in owners.
-                    Where(w => new TemplateNodeOwnerIndex(parentNode).Equals(w)).
-                    ToList())
-                {
-                    //TODO: Detect recursive relationship?
-                    foreach (TemplateNodeValue childNode in nodes.
-                        Where(w => new TemplateNodeIndex((ITemplateNodeIndex)owner).Equals(w)).
-                        OrderBy(o => o.NodeOrder).
-                        ThenBy(o => o.NodeName).
-                        ToList())
-                    {
-                        var x = parentChild.Where(w => w.parent.Equals(parentNode) && w.child.Equals(childNode)).ToList();
-
-
-                        parentChild.Add(new(new TemplateNodeIndex(parentNode), new TemplateNodeIndex(childNode)));
-                        BuildNode(result, childNode);
-                    }
-                }
-            }
-
-            void Tree_Disposed(Object? sender, EventArgs e)
-            {
-                if (sender is TreeView disposed && treeControls.ContainsKey(disposed))
-                { treeControls.Remove(disposed); }
-            }
-        }
-
     }
 }

@@ -182,10 +182,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IReadOnlyList<DataTable> Export()
         {
-            List<DataTable> work = new List<DataTable>();
-            dataSourceValue.Export();
-            templateValue.Export();
-            return work;
+            List<DataTable> result = new List<DataTable>();
+            result.AddRange(dataSourceValue.Export());
+            result.AddRange(templateValue.Export());
+            return result;
         }
 
         /// <inheritdoc/>

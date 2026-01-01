@@ -192,28 +192,18 @@ namespace Toolbox.BindingTable
         /// <inheritdoc/>
         /// <remarks>
         /// Event order:<br/>
-        /// - Remove from BindingView (no ListChanged event raised).<br/>
+        /// - Remove from BindingView, ListChanged event raised.<br/>
         /// - Remove from Base, if BindingList the ListChanged event is raised.<br/>
-        /// - Raise the ListChanged on BindingView.
         /// </remarks>
         protected override void RemoveItem(int index)
         {
-            Boolean raisingEvents = RaiseListChangedEvents;
-            RaiseListChangedEvents = false;
-
             if (directAdd.Contains(this[index]))
             { directAdd.Remove(this[index]); }
 
             Int32 baseIndex = BaseIndexOf(this[index]);
-            base.RemoveItem(index);
+            base.RemoveItem(index); // causes ListChange to occur on this, before it is removed from the base.
 
-            // Causes ListChange event to occur on base.
-            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } 
-
-            // Cuases ListChange event to occur on this.
-            RaiseListChangedEvents = raisingEvents;
-            if (raisingEvents)
-            { OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, baseIndex)); }
+            if (baseIndex >= 0) { BaseRemoveAt(baseIndex); } // Causes ListChange event to occur on base.
         }
 
         /// <summary>

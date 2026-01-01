@@ -79,8 +79,6 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                 return String.Format("Data: {0}<{1}>", typeName, argsString);
             }
-            else if (data is IBindingName tableName)
-            { return String.Format("Data: {0}", tableName.BindingName); }
             else { return String.Format("Data: {0}", dataType.Name); }
         }
 

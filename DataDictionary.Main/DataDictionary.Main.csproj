@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>© 2025 William Howard, All Rights Reserved</Copyright>
-    <ApplicationIcon>Resources\Icon\SoftwareDefinitionModel.ico</ApplicationIcon>
+    <ApplicationIcon>Properties\Icon\SoftwareDefinitionModel.ico</ApplicationIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Description>A Data Dictionary application that works with meta-data provided by MS SQL and Visual Studio.
 Allows entry of MS Description and custom properties for Entities and Attributes.</Description>
@@ -25,7 +25,7 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icon\SoftwareDefinitionModel.ico" />
+    <Content Include="Properties\Icon\SoftwareDefinitionModel.ico" />
   </ItemGroup>
 
   <ItemGroup>

@@ -45,7 +45,8 @@ namespace DataDictionary.Main.Dialogs
         {
             InitializeComponent();
             formData = new SelectionDialogData(FilterScopes, FilterPaths);
-            selectionData.SetImageList();
+            selectionData.SmallImageList = new ImageList();
+            selectionData.SmallImageList.AddImages();
         }
 
         public SelectionDialog(Form source) : this()

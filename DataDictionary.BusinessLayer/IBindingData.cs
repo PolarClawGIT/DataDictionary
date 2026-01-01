@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Interface for Data BindingList objects
     /// </summary>
-    public interface IBindingData : IBindingList, IBindingName, IBindingDataReader, IBindListChanged
+    public interface IBindingData : IBindingList, IBindingDataReader, IBindListChanged
     { }
 
     /// <summary>

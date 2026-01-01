@@ -47,6 +47,11 @@ namespace DataDictionary.Main.Enumerations
         Open,
 
         /// <summary>
+        /// Refresh the data.
+        /// </summary>
+        Refresh,
+
+        /// <summary>
         /// Synchronize items 
         /// </summary>
         Sync,
@@ -86,4 +91,6 @@ namespace DataDictionary.Main.Enumerations
         /// </summary>
         SecurityDatabase,
     }
+
+    static partial class CommandImage { }
 }

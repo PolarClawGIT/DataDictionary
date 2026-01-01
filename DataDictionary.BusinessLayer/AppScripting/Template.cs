@@ -81,35 +81,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>Template</remarks>
         public IReadOnlyList<DataTable> Export()
         {
-            List<DataTable> work = new List<DataTable>();
-            work.Add(templateValues.ToDataTable());
-            work.Add(templateNodes.ToDataTable());
-            work.Add(templateNodeOwners.ToDataTable());
-            work.Add(templateSources.ToDataTable());
-            return work;
+            List<DataTable> result = new List<DataTable>();
+            if (templateValues.Count > 0)
+            {
+                result.Add(templateValues.ToDataTable());
+                result.Add(templateNodes.ToDataTable());
+                result.Add(templateNodeOwners.ToDataTable());
+                result.Add(templateSources.ToDataTable());
+            }
+            return result;
         }
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
         public void Import(DataSet source)
         {
-            templateValues.Load(GetTable(templateValues.BindingName));
-            templateNodes.Load(GetTable(templateNodes.BindingName));
-            templateNodeOwners.Load(GetTable(templateNodeOwners.BindingName));
-            templateSources.Load(GetTable(templateSources.BindingName));
-
-            DataTableReader GetTable(String tableName)
+            if(templateValues.Load(source, default, true))
             {
-                if (source.Tables.Contains(tableName) && source.Tables[tableName] is DataTable sourceTable)
-                { return sourceTable.CreateDataReader(); }
-                else
-                {
-                    Exception ex = new IndexOutOfRangeException();
-                    ex.Data.Add(nameof(tableName), tableName);
-                    ex.Data.Add(nameof(source.Tables),
-                        String.Join(",", source.Tables.OfType<DataTable>().Select(s => s.TableName)));
-                    throw ex;
-                }
+                templateNodes.Load(source);
+                templateNodeOwners.Load(source);
+                templateSources.Load(source);
             }
         }
 

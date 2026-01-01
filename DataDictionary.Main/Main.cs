@@ -31,24 +31,28 @@ namespace DataDictionary.Main
 
             // Set the button images based on Scope.
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
+            newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
+            newProcessCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
+            newSubjectAreaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
             manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
+            manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
-            securityRole.Image = ScopeType.SecurityRole.GetImage(CommandType.Default);
+            manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            securitySetAuthorization.Image = ScopeType.Security.GetImage(CommandType.Default);
             browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
+            databaseMessagesCommand.Image = ScopeType.ApplicationLog.GetImage(CommandType.Default);
 
-            // TODO: Check if correct.
-            securityPrincipal.Image = ScopeType.SecurityPrincipal.GetImage(CommandType.Default);
             securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default);
 
+            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
+            manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
             viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
-
-            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
-            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
 
             menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
             menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
@@ -70,6 +74,9 @@ namespace DataDictionary.Main
             menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
             menuModelProperty.Image = ScopeType.ModelProperty.GetImage(CommandType.Default);
             menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
+
+            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
+            manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
             menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
             menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default);
@@ -237,16 +244,16 @@ namespace DataDictionary.Main
         }
         #endregion
 
-        private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
-        private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PeekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ClipboardView()); }
 
-        private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TextEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XML Data Dictionary|*.XML";
 
@@ -274,10 +281,10 @@ namespace DataDictionary.Main
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { SendMessage(new RefreshNavigation()); }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (BusinessData.ModelFile is FileInfo file)
             {
@@ -287,7 +294,7 @@ namespace DataDictionary.Main
             { saveAsToolStripMenuItem_Click(sender, e); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { }
+            { SendMessage(new RefreshNavigation()); }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -333,11 +340,13 @@ namespace DataDictionary.Main
 
         private void SetAuthorization()
         {
-            securityPrincipal.Enabled = BusinessData.Authorization.IsSecurityAdmin;
-            securityRole.Enabled = BusinessData.Authorization.IsSecurityAdmin;
-            securityAuthorization.Enabled = true;
+            securitySetAuthorization.Enabled =
+                BusinessData.Authorization.IsSecurityAdmin
+                && Settings.Default.IsOnLineMode;
 
+            securityAuthorization.Enabled = true;
         }
+
 
     }
 }

@@ -46,12 +46,22 @@
         /// <summary>
         /// Generic Document
         /// </summary>
-        Document,
+        ApplicationDocument,
 
         /// <summary>
         /// Generic History/TimeLine
         /// </summary>
-        TimeLine,
+        ApplicationTimeLine,
+
+        /// <summary>
+        /// Application log
+        /// </summary>
+        ApplicationLog,
+
+        /// <summary>
+        /// Application Connection
+        /// </summary>
+        ApplicationConnection,
 
         /// <summary>
         /// Application Model

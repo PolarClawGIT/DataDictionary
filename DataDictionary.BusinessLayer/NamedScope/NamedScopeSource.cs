@@ -54,6 +54,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             SystemId = Guid.NewGuid();
             Scope = scope;
+            SystemPath = new PathIndex(scope.GetName());
 
             pathValue = new PathValue(this)
             {
