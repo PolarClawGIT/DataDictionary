@@ -19,37 +19,51 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingEntity { private get; init; }
+            public required BindingSource BindingEntity
+            { private get; init { field = value; field.DataSource = Entity; } }
+
             public BindingView<EntityValue> Entity { get; private set; } =
                 new BindingView<EntityValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias { private get; init; }
+            public required BindingSource BindingAlias
+            { private get; init { field = value; field.DataSource = Aliases; } }
+
             public BindingView<EntityAliasValue> Aliases { get; private set; } =
                 new BindingView<EntityAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea { private get; init; }
+            public required BindingSource BindingSubjectArea
+            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+
             public BindingView<EntitySubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<EntitySubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty { private get; init; }
+            public required BindingSource BindingProperty
+            { private get; init { field = value; field.DataSource = Properties; } }
+
             public BindingView<EntityPropertyValue> Properties { get; private set; } =
                 new BindingView<EntityPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition { private get; init; }
+            public required BindingSource BindingDefinition
+            { private get; init { field = value; field.DataSource = Definitions; } }
+
             public BindingView<EntityDefinitionValue> Definitions { get; private set; } =
                 new BindingView<EntityDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAttribute { private get; init; }
+            public required BindingSource BindingAttribute
+            { private get; init { field = value; field.DataSource = Attributes; } }
+
             public BindingView<EntityAttributeValue> Attributes { get; private set; } =
                 new BindingView<EntityAttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAttributeDetail { private get; init; }
+            public required BindingSource BindingAttributeDetail
+            { private get; init { field = value; field.DataSource = AttributeDetails; } }
+
             public BindingView<AttributeValue> AttributeDetails { get; private set; } =
                 new BindingView<AttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
@@ -60,26 +74,6 @@ namespace DataDictionary.Main.Forms.Model
 
             public FormBinding()
             { }
-
-            public void Init()
-            {
-                // Note: C# 13 adds "field".
-                // This code could then be moved to the BindingHelpSubject init.
-
-                Entity = new BindingView<EntityValue>(entityData.Entities, w => entityIndex.Equals(w));
-                Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
-                Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
-                SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
-                Definitions = new BindingView<EntityDefinitionValue>(entityData.Definitions, w => entityIndex.Equals(w));
-                Attributes = new BindingView<EntityAttributeValue>(entityData.Attributes, w => entityIndex.Equals(w));
-
-                BindingEntity.DataSource = Entity;
-                BindingProperty.DataSource = Properties;
-                BindingAlias.DataSource = Aliases;
-                BindingSubjectArea.DataSource = SubjectAreas;
-                BindingDefinition.DataSource = Definitions;
-                BindingAttribute.DataSource = Attributes;
-            }
 
             public void SetPosition(IEntityIndex entity)
             {

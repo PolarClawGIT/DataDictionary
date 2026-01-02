@@ -33,7 +33,6 @@ namespace DataDictionary.Main.Forms.Model
                 BindingArgument = bindingArgument,
                 DoWork = base.DoWork
             };
-            formBinding.Init();
 
             SetTitle(bindingProcess);
 

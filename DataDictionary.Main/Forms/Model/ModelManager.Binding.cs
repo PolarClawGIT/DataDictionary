@@ -2,13 +2,8 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -18,7 +13,9 @@ namespace DataDictionary.Main.Forms.Model
     {
         class FormBinding
         {
-            public required BindingSource ManagerBinding { private get; init; }
+            public required BindingSource ManagerBinding
+            { private get; init { field = value; field.DataSource = managerData; } }
+
             BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }

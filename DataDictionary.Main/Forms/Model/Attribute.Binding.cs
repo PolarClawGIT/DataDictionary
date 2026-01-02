@@ -3,9 +3,6 @@ using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -21,27 +18,37 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingAttribute { private get; init; }
+            public required BindingSource BindingAttribute
+            { private get; init { field = value; field.DataSource = Attribute; } }
+
             public BindingView<AttributeValue> Attribute { get; private set; } =
                 new BindingView<AttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias { private get; init; }
+            public required BindingSource BindingAlias
+            { private get; init { field = value; field.DataSource = Aliases; } }
+
             public BindingView<AttributeAliasValue> Aliases { get; private set; } =
                 new BindingView<AttributeAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea { private get; init; }
+            public required BindingSource BindingSubjectArea
+            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+
             public BindingView<AttributeSubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<AttributeSubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty { private get; init; }
+            public required BindingSource BindingProperty
+            { private get; init { field = value; field.DataSource = Properties; } }
+
             public BindingView<AttributePropertyValue> Properties { get; private set; } =
                 new BindingView<AttributePropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition { private get; init; }
+            public required BindingSource BindingDefinition
+            { private get; init { field = value; field.DataSource = Definitions; } }
+
             public BindingView<AttributeDefinitionValue> Definitions { get; private set; } =
                 new BindingView<AttributeDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
@@ -52,23 +59,6 @@ namespace DataDictionary.Main.Forms.Model
 
             public FormBinding()
             { }
-
-            public void Init()
-            {
-                // Note: C# 13 adds "field".
-
-                Attribute = new BindingView<AttributeValue>(attributeData.Attributes, w => attributeIndex.Equals(w));
-                Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
-                Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
-                SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
-                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
-
-                BindingAttribute.DataSource = Attribute;
-                BindingProperty.DataSource = Properties;
-                BindingAlias.DataSource = Aliases;
-                BindingSubjectArea.DataSource = SubjectAreas;
-                BindingDefinition.DataSource = Definitions;
-            }
 
             public void SetPosition(IAttributeIndex attribute)
             {

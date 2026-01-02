@@ -32,7 +32,6 @@ namespace DataDictionary.Main.Forms.Model
                 BindingDefinition = bindingDefinition,
                 DoWork = base.DoWork
             };
-            formBinding.Init();
 
             SetTitle(bindingAttribute);
 

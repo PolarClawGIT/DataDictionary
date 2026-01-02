@@ -2,8 +2,6 @@
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -18,32 +16,44 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingProcess { private get; init; }
+            public required BindingSource BindingProcess
+            { private get; init { field = value; field.DataSource = Process; } }
+
             public BindingView<ProcessValue> Process { get; private set; } =
                 new BindingView<ProcessValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias { private get; init; }
+            public required BindingSource BindingAlias
+            { private get; init { field = value; field.DataSource = Aliases; } }
+
             public BindingView<ProcessAliasValue> Aliases { get; private set; } =
                 new BindingView<ProcessAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea { private get; init; }
+            public required BindingSource BindingSubjectArea
+            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+
             public BindingView<ProcessSubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<ProcessSubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty { private get; init; }
+            public required BindingSource BindingProperty
+            { private get; init { field = value; field.DataSource = Properties; } }
+
             public BindingView<ProcessPropertyValue> Properties { get; private set; } =
                 new BindingView<ProcessPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition { private get; init; }
+            public required BindingSource BindingDefinition
+            { private get; init { field = value; field.DataSource = Definitions; } }
+
             public BindingView<ProcessDefinitionValue> Definitions { get; private set; } =
                 new BindingView<ProcessDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingArgument { private get; init; }
+            public required BindingSource BindingArgument
+            { private get; init { field = value; field.DataSource = Arguments; } }
+
             public BindingView<ProcessArgumentValue> Arguments { get; private set; } =
                 new BindingView<ProcessArgumentValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
@@ -54,25 +64,6 @@ namespace DataDictionary.Main.Forms.Model
 
             public FormBinding()
             { }
-
-            public void Init()
-            {
-                // Note: C# 13 (Nov 2025?) adds "field". Allows code to be applied to "Init".
-
-                Process = new BindingView<ProcessValue>(processData.Processes, w => processIndex.Equals(w));
-                Properties = new BindingView<ProcessPropertyValue>(processData.Properties, w => processIndex.Equals(w));
-                Aliases = new BindingView<ProcessAliasValue>(processData.Aliases, w => processIndex.Equals(w));
-                SubjectAreas = new BindingView<ProcessSubjectAreaValue>(processData.SubjectArea, w => processIndex.Equals(w));
-                Definitions = new BindingView<ProcessDefinitionValue>(processData.Definitions, w => processIndex.Equals(w));
-                Arguments = new BindingView<ProcessArgumentValue>(processData.Arguments, w => processIndex.Equals(w));
-
-                BindingProcess.DataSource = Process;
-                BindingProperty.DataSource = Properties;
-                BindingAlias.DataSource = Aliases;
-                BindingSubjectArea.DataSource = SubjectAreas;
-                BindingDefinition.DataSource = Definitions;
-                BindingArgument.DataSource = Arguments;
-            }
 
             public IProcessIndex? Create()
             {
