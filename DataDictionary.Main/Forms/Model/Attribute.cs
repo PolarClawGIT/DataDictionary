@@ -12,10 +12,11 @@ namespace DataDictionary.Main.Forms.Model
     partial class Attribute : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
+        { return item is IAttributeIndex attribute && attributeIndex.Equals(attribute); }
 
         FormBinding formBinding;
-        Boolean needsData = false;
+        AttributeIndex attributeIndex = new AttributeIndex();
+        TemporalIndex? temporalIndex = null;
 
         protected Attribute() : base()
         {
@@ -52,19 +53,24 @@ namespace DataDictionary.Main.Forms.Model
 
         public Attribute(IAttributeIndex? attribute) : this()
         {
-            if (attribute is null)
-            { attribute = formBinding.NewValue(); }
-            else { formBinding.Load(attribute); }
+            if (attribute is IAttributeIndex)
+            { attributeIndex = new AttributeIndex(attribute); }
+            else { attributeIndex = new AttributeIndex(formBinding.NewValue()); }
         }
 
         public Attribute(IAttributeIndex attribute, ITemporalIndex temporal) : this(attribute)
-        { formBinding.Load(attribute, temporal); needsData = true; }
+        { temporalIndex = new TemporalIndex(); }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            if (needsData)
-            { formBinding.Load(onCompleting); }
-            else { DoBinding(); }
+            if (temporalIndex is null)
+            {
+                formBinding.Load(attributeIndex);
+                DoBinding();
+            }
+            else
+            { formBinding.Load(attributeIndex, temporalIndex, onCompleting); }
+
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -102,9 +108,9 @@ namespace DataDictionary.Main.Forms.Model
                 propertyData.BindTo(bindingProperty, formBinding.NewProperty);
                 definitionData.BindTo(bindingDefinition, formBinding.NewDefinition);
                 subjectArea.BindTo(formBinding.SubjectAreas.ToList, formBinding.AddSubjectArea, formBinding.RemoveSubjectArea);
-                aliasData.BindTo(bindingAlias, formBinding.NewAlias, ScopeType.DatabaseFunction,
+                aliasData.BindTo(bindingAlias, formBinding.NewAlias, 
                     ScopeType.ModelAttribute,
-                    ScopeType.DatabaseTableColumn, ScopeType.DatabaseViewColumn,
+                    ScopeType.DatabaseTableColumn, ScopeType.DatabaseViewColumn, ScopeType.DatabaseFunction,
                     ScopeType.LibraryTypeField, ScopeType.LibraryTypeProperty);
 
                 // Security
@@ -117,7 +123,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteCommand_Click(sender, e);
 
-            formBinding.RemoveValue();
+            formBinding.RemoveValue(attributeIndex);
             IsLocked(formBinding.GetLocked());
         }
 
@@ -125,7 +131,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            formBinding.Load(onCompleting);
+            formBinding.Load(attributeIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -135,8 +141,8 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            formBinding.RemoveValue();
-            formBinding.Save(onCompleting);
+            formBinding.RemoveValue(attributeIndex);
+            formBinding.Save(attributeIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -146,7 +152,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            formBinding.Save(onCompleting);
+            formBinding.Save(attributeIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -156,7 +162,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.HistoryCommand_Click(sender, e);
 
-            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(attributeIndex))
             {
                 OpenForm = (temporal) =>
                 {

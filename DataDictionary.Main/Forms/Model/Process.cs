@@ -12,11 +12,12 @@ namespace DataDictionary.Main.Forms.Model
 {
     partial class Process : ApplicationData, IApplicationDataForm
     {
-        FormBinding formBinding;
-        Boolean needsData = false;
-
         public Boolean IsOpenItem(object? item)
-        { return item is IProcessValue value && formBinding is not null && formBinding.GetIsOpen(value); }
+        { return item is IProcessIndex attribute && processIndex.Equals(attribute); }
+
+        FormBinding formBinding;
+        ProcessIndex processIndex = new ProcessIndex();
+        TemporalIndex? temporalIndex = null; 
 
         public Process()
         {
@@ -57,22 +58,23 @@ namespace DataDictionary.Main.Forms.Model
 
         public Process(IProcessIndex? process) : this()
         {
-            if (process is null)
-            { process = formBinding.Create(); }
-            else { formBinding.Load(process); }
+            if (process is IProcessIndex)
+            { processIndex = new ProcessIndex(process); }
+            else { processIndex = new ProcessIndex(formBinding.NewValue()); }
         }
 
         public Process(IProcessIndex process, ITemporalIndex temporal) : this(process)
-        {
-            formBinding.Load(process, temporal);
-            needsData = true;
-        }
+        { temporalIndex = new TemporalIndex(); }
 
         private void Process_Load(object sender, EventArgs e)
         {
-            if (needsData)
-            { formBinding.Load(onCompleting); }
-            else { DoBinding(); }
+            if (temporalIndex is null)
+            {
+                formBinding.Load(processIndex);
+                DoBinding();
+            }
+            else
+            { formBinding.Load(processIndex, temporalIndex, onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -127,7 +129,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteCommand_Click(sender, e);
 
-            formBinding.Remove();
+            formBinding.Remove(processIndex);
             IsLocked(formBinding.GetLocked());
         }
 
@@ -135,8 +137,8 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            formBinding.Remove();
-            formBinding.Save(onCompleting);
+            formBinding.Remove(processIndex);
+            formBinding.Save(processIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -146,7 +148,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            formBinding.Load(onCompleting);
+            formBinding.Load(processIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -156,7 +158,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            formBinding.Save(onCompleting);
+            formBinding.Save(processIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -166,7 +168,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.HistoryCommand_Click(sender, e);
 
-            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(processIndex))
             {
                 OpenForm = (temporal) =>
                 {

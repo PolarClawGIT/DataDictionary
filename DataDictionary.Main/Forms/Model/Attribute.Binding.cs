@@ -48,17 +48,13 @@ namespace DataDictionary.Main.Forms.Model
                 new BindingView<AttributeDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            AttributeIndex attributeIndex = new AttributeIndex();
-            TemporalIndex? temporalIndex = null;
-            IAttribute attributeData = BusinessData.Model.Attribute;
+            IAttribute data = BusinessData.Model.Attribute;
 
             public FormBinding()
             { }
 
-            public void Load(IAttributeIndex attribute)
+            public void Load(AttributeIndex attribute)
             {
-                attributeIndex = new AttributeIndex(attribute);
-
                 Attribute.ListChanged -= OnListChanged;
                 BindingAttribute.RaiseListChangedEvents = false;
                 BindingProperty.RaiseListChangedEvents = false;
@@ -72,11 +68,11 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Attribute = new BindingView<AttributeValue>(attributeData.Attributes, w => attributeIndex.Equals(w));
-                Properties = new BindingView<AttributePropertyValue>(attributeData.Properties, w => attributeIndex.Equals(w));
-                Aliases = new BindingView<AttributeAliasValue>(attributeData.Aliases, w => attributeIndex.Equals(w));
-                SubjectAreas = new BindingView<AttributeSubjectAreaValue>(attributeData.SubjectArea, w => attributeIndex.Equals(w));
-                Definitions = new BindingView<AttributeDefinitionValue>(attributeData.Definitions, w => attributeIndex.Equals(w));
+                Attribute = new BindingView<AttributeValue>(data.Attributes, w => attribute.Equals(w));
+                Properties = new BindingView<AttributePropertyValue>(data.Properties, w => attribute.Equals(w));
+                Aliases = new BindingView<AttributeAliasValue>(data.Aliases, w => attribute.Equals(w));
+                SubjectAreas = new BindingView<AttributeSubjectAreaValue>(data.SubjectArea, w => attribute.Equals(w));
+                Definitions = new BindingView<AttributeDefinitionValue>(data.Definitions, w => attribute.Equals(w));
 
                 if (Attribute.Count > 0)
                 {
@@ -108,10 +104,42 @@ namespace DataDictionary.Main.Forms.Model
                 BindingAttribute.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void Load(IAttributeIndex attribute, ITemporalIndex temporal)
+            public void Load(AttributeIndex attribute, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
-                Load(attribute);
-                temporalIndex = new TemporalIndex(temporal);
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Model.Attribute; } });
+                work.AddRange(data.Delete(attribute));
+                work.AddRange(data.Load(factory, attribute));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(attribute);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public void Load(AttributeIndex attribute, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = IAttribute.Create(BusinessData.Model.Properties, BusinessData.Model.Definitions); } });
+                work.AddRange(data.Load(factory, attribute, temporal));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(attribute);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
 
             private void OnListChanged(Object? sender, ListChangedEventArgs e)
@@ -132,8 +160,7 @@ namespace DataDictionary.Main.Forms.Model
             public AttributeValue NewValue()
             {
                 AttributeValue newValue = new AttributeValue();
-                attributeData.Attributes.Add(newValue);
-                Load(newValue);
+                data.Attributes.Add(newValue);
 
                 return newValue;
             }
@@ -173,47 +200,19 @@ namespace DataDictionary.Main.Forms.Model
                 { SubjectAreas.Remove(item); }
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public void Save(AttributeIndex attribute, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-
-                if (temporalIndex is null)
-                {
-                    attributeData = BusinessData.Model.Attribute;
-                    work.AddRange(attributeData.Delete(attributeIndex));
-                    work.AddRange(attributeData.Load(factory, attributeIndex));
-                }
-                else
-                {
-                    attributeData = IAttribute.Create(BusinessData.Model.Properties, BusinessData.Model.Definitions);
-                    work.AddRange(attributeData.Load(factory, attributeIndex, temporalIndex));
-                }
-
-                DoWork(work, StartBinding);
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    Load(attributeIndex);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(attributeData.Save(factory, attributeIndex));
+                work.AddRange(data.Save(factory, attribute));
 
                 DoWork(work, onComplete);
             }
 
-            public ITemporalData GetTemporal()
-            { return attributeData.GetTemporal(attributeIndex); }
+            public ITemporalData GetTemporal(AttributeIndex attribute)
+            { return data.GetTemporal(attribute); }
 
             public Boolean TryGetValue([NotNullWhen(true)] out AttributeValue? result)
             {
@@ -223,15 +222,8 @@ namespace DataDictionary.Main.Forms.Model
                 else { result = null; return false; }
             }
 
-            public void RemoveValue()
-            {
-                if (TryGetValue(out AttributeValue? value))
-                {
-                    attributeData.RaiseListChangedEvents = false;
-                    attributeData.Remove(value);
-                    Load(value);
-                }
-            }
+            public void RemoveValue(AttributeIndex attribute)
+            { data.Remove(attribute); }
 
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {
@@ -263,11 +255,11 @@ namespace DataDictionary.Main.Forms.Model
 
             public XElement GetXElement()
             {
-                AttributeValue attributeValue = attributeData.Attributes.First();
+                AttributeValue attributeValue = data.Attributes.First();
 
                 XElement result = AttributeValue.CreateXElements().Build(attributeValue);
-                result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(attributeData.Properties));
-                result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(attributeData.Definitions));
+                result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
+                result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
 
                 return result;
             }

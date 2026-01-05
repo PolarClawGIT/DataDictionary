@@ -14,10 +14,11 @@ namespace DataDictionary.Main.Forms.Model
     partial class Entity : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
+        { return item is IEntityIndex entity && entityIndex.Equals(entity); }
 
         FormBinding formBinding;
-        Boolean needsData = false;
+        EntityIndex entityIndex = new EntityIndex();
+        TemporalIndex? temporalIndex = null;
 
         protected Entity() : base()
         {
@@ -59,20 +60,23 @@ namespace DataDictionary.Main.Forms.Model
 
         public Entity(IEntityIndex? entity) : this()
         {
-            if (entity is null)
-            { entity = formBinding.NewValue(); }
-            else { formBinding.Load(entity); }
+            if (entity is IEntityIndex)
+            { entityIndex = new EntityIndex(entity); }
+            else { entityIndex = new EntityIndex(formBinding.NewValue()); }
         }
 
         public Entity(IEntityIndex entity, ITemporalIndex temporal) : this(entity)
-        { formBinding.Load(entity, temporal); needsData = true; }
+        { temporalIndex = new TemporalIndex(); }
 
         private void Form_Load(object sender, EventArgs e)
         {
-
-            if (needsData)
-            { formBinding.Load(onCompleting); }
-            else { DoBinding(); }
+            if (temporalIndex is null)
+            {
+                formBinding.Load(entityIndex);
+                DoBinding();
+            }
+            else
+            { formBinding.Load(entityIndex, temporalIndex, onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
@@ -123,7 +127,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteCommand_Click(sender, e);
 
-            formBinding.RemoveValue();
+            formBinding.RemoveValue(entityIndex);
             IsLocked(formBinding.GetLocked());
         }
 
@@ -131,7 +135,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            formBinding.Load(onCompleting);
+            formBinding.Load(entityIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -141,8 +145,8 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            formBinding.RemoveValue();
-            formBinding.Save(onCompleting);
+            formBinding.RemoveValue(entityIndex);
+            formBinding.Save(entityIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -152,7 +156,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            formBinding.Save(onCompleting);
+            formBinding.Save(entityIndex, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -162,7 +166,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             base.HistoryCommand_Click(sender, e);
 
-            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal(entityIndex))
             {
                 OpenForm = (temporal) =>
                 {
