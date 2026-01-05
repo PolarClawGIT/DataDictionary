@@ -54,11 +54,11 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (attribute is null)
             { attribute = formBinding.NewValue(); }
-            else { formBinding.SetPosition(attribute); }
+            else { formBinding.Load(attribute); }
         }
 
         public Attribute(IAttributeIndex attribute, ITemporalIndex temporal) : this(attribute)
-        { formBinding.SetPosition(attribute, temporal); needsData = true; }
+        { formBinding.Load(attribute, temporal); needsData = true; }
 
         private void Form_Load(object sender, EventArgs e)
         {

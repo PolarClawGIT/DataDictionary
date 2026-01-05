@@ -59,12 +59,12 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (process is null)
             { process = formBinding.Create(); }
-            else { formBinding.SetPosition(process); }
+            else { formBinding.Load(process); }
         }
 
         public Process(IProcessIndex process, ITemporalIndex temporal) : this(process)
         {
-            formBinding.SetPosition(process, temporal);
+            formBinding.Load(process, temporal);
             needsData = true;
         }
 

@@ -93,7 +93,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();

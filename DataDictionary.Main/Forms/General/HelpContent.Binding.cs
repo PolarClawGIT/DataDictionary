@@ -110,11 +110,8 @@ namespace DataDictionary.Main.Forms.General
             public FormBinding()
             { }
 
-            public void Init()
+            public void Load()
             {
-                // Note: C# 13 adds "field".
-                // This code could then be moved to the BindingHelpSubject init.
-
                 subjectData = BusinessData.ApplicationData.HelpSubjects;
                 subjects.Clear();
                 subjects.AddRange(subjectData.Select(s => new BindingSubject(s)));

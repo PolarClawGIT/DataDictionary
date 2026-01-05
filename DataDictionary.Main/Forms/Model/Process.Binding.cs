@@ -16,36 +16,31 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingProcess
-            { private get; init { field = value; field.DataSource = Process; } }
+            public required BindingSource BindingProcess { private get; init; }
 
             public BindingView<ProcessValue> Process { get; private set; } =
                 new BindingView<ProcessValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias
-            { private get; init { field = value; field.DataSource = Aliases; } }
+            public required BindingSource BindingAlias { private get; init; }
 
             public BindingView<ProcessAliasValue> Aliases { get; private set; } =
                 new BindingView<ProcessAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea
-            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+            public required BindingSource BindingSubjectArea { private get; init; }
 
             public BindingView<ProcessSubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<ProcessSubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty
-            { private get; init { field = value; field.DataSource = Properties; } }
+            public required BindingSource BindingProperty { private get; init; }
 
             public BindingView<ProcessPropertyValue> Properties { get; private set; } =
                 new BindingView<ProcessPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition
-            { private get; init { field = value; field.DataSource = Definitions; } }
+            public required BindingSource BindingDefinition { private get; init; }
 
             public BindingView<ProcessDefinitionValue> Definitions { get; private set; } =
                 new BindingView<ProcessDefinitionValue>([])
@@ -69,12 +64,12 @@ namespace DataDictionary.Main.Forms.Model
             {
                 ProcessValue newValue = new ProcessValue();
                 processData.Processes.Add(newValue);
-                SetPosition(newValue);
+                Load(newValue);
 
                 return newValue;
             }
 
-            public void SetPosition(IProcessIndex process)
+            public void Load(IProcessIndex process)
             {
                 processIndex = new ProcessIndex(process);
 
@@ -236,9 +231,9 @@ namespace DataDictionary.Main.Forms.Model
                 return TryGetValue(out ProcessValue? current) && key.Equals(current);
             }
 
-            public void SetPosition(IProcessIndex process, ITemporalIndex temporal)
+            public void Load(IProcessIndex process, ITemporalIndex temporal)
             {
-                SetPosition(process);
+                Load(process);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -283,7 +278,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(processIndex);
+                    Load(processIndex);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -294,7 +289,7 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     processData.RaiseListChangedEvents = false;
                     processData.Remove(value);
-                    SetPosition(value);
+                    Load(value);
                 }
             }
 

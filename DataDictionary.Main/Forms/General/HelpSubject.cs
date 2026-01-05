@@ -43,10 +43,10 @@ namespace DataDictionary.Main.Forms.General
         }
 
         public HelpSubject(IHelpSubjectIndex helpSubject) : this()
-        { formBinding.SetPosition(helpSubject); }
+        { formBinding.Load(helpSubject); }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, ITemporalIndex temporal) : this(helpSubject)
-        { formBinding.SetPosition(helpSubject, temporal); needsData = true; }
+        { formBinding.Load(helpSubject, temporal); needsData = true; }
 
         public HelpSubject(IHelpSubjectIndex helpSubject, IEnumerable<HelpControlValue> source) : this(helpSubject)
         {

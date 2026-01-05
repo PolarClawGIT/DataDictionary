@@ -61,11 +61,11 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (entity is null)
             { entity = formBinding.NewValue(); }
-            else { formBinding.SetPosition(entity); }
+            else { formBinding.Load(entity); }
         }
 
         public Entity(IEntityIndex entity, ITemporalIndex temporal) : this(entity)
-        { formBinding.SetPosition(entity, temporal); needsData = true; }
+        { formBinding.Load(entity, temporal); needsData = true; }
 
         private void Form_Load(object sender, EventArgs e)
         {

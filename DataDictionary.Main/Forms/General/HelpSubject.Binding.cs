@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
-            public void SetPosition(IHelpSubjectIndex helpSubject)
+            public void Load(IHelpSubjectIndex helpSubject)
             {
                 subjectIndex = new HelpSubjectIndex(helpSubject);
                 HelpSubjects.ListChanged -= OnListChanged;
@@ -74,9 +74,9 @@ namespace DataDictionary.Main.Forms.General
                 BindingHelpSubject.MoveFirst();  // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
+            public void Load(IHelpSubjectIndex helpSubject, ITemporalIndex temporal)
             {
-                SetPosition(helpSubject);
+                Load(helpSubject);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -84,7 +84,7 @@ namespace DataDictionary.Main.Forms.General
             {
                 HelpSubjectValue newValue = new HelpSubjectValue();
                 subjectData.Add(newValue);
-                SetPosition(newValue);
+                Load(newValue);
 
                 return newValue;
             }
@@ -112,7 +112,7 @@ namespace DataDictionary.Main.Forms.General
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(subjectIndex);
+                    Load(subjectIndex);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -162,7 +162,7 @@ namespace DataDictionary.Main.Forms.General
                 if (TryGetValue(out HelpSubjectValue? value))
                 {
                     HelpSubjects.Remove(value);
-                    SetPosition(value);
+                    Load(value);
                 }
             }
 

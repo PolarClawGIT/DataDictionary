@@ -18,36 +18,31 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingAttribute
-            { private get; init { field = value; field.DataSource = Attribute; } }
+            public required BindingSource BindingAttribute { private get; init; }
 
             public BindingView<AttributeValue> Attribute { get; private set; } =
                 new BindingView<AttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias
-            { private get; init { field = value; field.DataSource = Aliases; } }
+            public required BindingSource BindingAlias { private get; init; }
 
             public BindingView<AttributeAliasValue> Aliases { get; private set; } =
                 new BindingView<AttributeAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea
-            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+            public required BindingSource BindingSubjectArea { private get; init; }
 
             public BindingView<AttributeSubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<AttributeSubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty
-            { private get; init { field = value; field.DataSource = Properties; } }
+            public required BindingSource BindingProperty { private get; init; }
 
             public BindingView<AttributePropertyValue> Properties { get; private set; } =
                 new BindingView<AttributePropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition
-            { private get; init { field = value; field.DataSource = Definitions; } }
+            public required BindingSource BindingDefinition { private get; init; }
 
             public BindingView<AttributeDefinitionValue> Definitions { get; private set; } =
                 new BindingView<AttributeDefinitionValue>([])
@@ -60,7 +55,7 @@ namespace DataDictionary.Main.Forms.Model
             public FormBinding()
             { }
 
-            public void SetPosition(IAttributeIndex attribute)
+            public void Load(IAttributeIndex attribute)
             {
                 attributeIndex = new AttributeIndex(attribute);
 
@@ -113,9 +108,9 @@ namespace DataDictionary.Main.Forms.Model
                 BindingAttribute.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IAttributeIndex attribute, ITemporalIndex temporal)
+            public void Load(IAttributeIndex attribute, ITemporalIndex temporal)
             {
-                SetPosition(attribute);
+                Load(attribute);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -138,7 +133,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 AttributeValue newValue = new AttributeValue();
                 attributeData.Attributes.Add(newValue);
-                SetPosition(newValue);
+                Load(newValue);
 
                 return newValue;
             }
@@ -201,7 +196,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(attributeIndex);
+                    Load(attributeIndex);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -234,7 +229,7 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     attributeData.RaiseListChangedEvents = false;
                     attributeData.Remove(value);
-                    SetPosition(value);
+                    Load(value);
                 }
             }
 

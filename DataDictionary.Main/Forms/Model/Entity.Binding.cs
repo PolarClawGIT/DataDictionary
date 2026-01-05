@@ -19,50 +19,43 @@ namespace DataDictionary.Main.Forms.Model
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource BindingEntity
-            { private get; init { field = value; field.DataSource = Entity; } }
+            public required BindingSource BindingEntity { private get; init; }
 
             public BindingView<EntityValue> Entity { get; private set; } =
                 new BindingView<EntityValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAlias
-            { private get; init { field = value; field.DataSource = Aliases; } }
+            public required BindingSource BindingAlias { private get; init; }
 
             public BindingView<EntityAliasValue> Aliases { get; private set; } =
                 new BindingView<EntityAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingSubjectArea
-            { private get; init { field = value; field.DataSource = SubjectAreas; } }
+            public required BindingSource BindingSubjectArea { private get; init; }
 
             public BindingView<EntitySubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<EntitySubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingProperty
-            { private get; init { field = value; field.DataSource = Properties; } }
+            public required BindingSource BindingProperty { private get; init; }
 
             public BindingView<EntityPropertyValue> Properties { get; private set; } =
                 new BindingView<EntityPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingDefinition
-            { private get; init { field = value; field.DataSource = Definitions; } }
+            public required BindingSource BindingDefinition { private get; init; }
 
             public BindingView<EntityDefinitionValue> Definitions { get; private set; } =
                 new BindingView<EntityDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAttribute
-            { private get; init { field = value; field.DataSource = Attributes; } }
+            public required BindingSource BindingAttribute { private get; init; }
 
             public BindingView<EntityAttributeValue> Attributes { get; private set; } =
                 new BindingView<EntityAttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingAttributeDetail
-            { private get; init { field = value; field.DataSource = AttributeDetails; } }
+            public required BindingSource BindingAttributeDetail { private get; init; }
 
             public BindingView<AttributeValue> AttributeDetails { get; private set; } =
                 new BindingView<AttributeValue>([])
@@ -75,7 +68,7 @@ namespace DataDictionary.Main.Forms.Model
             public FormBinding()
             { }
 
-            public void SetPosition(IEntityIndex entity)
+            public void Load(IEntityIndex entity)
             {
                 entityIndex = new EntityIndex(entity);
 
@@ -134,9 +127,9 @@ namespace DataDictionary.Main.Forms.Model
                 BindingEntity.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IEntityIndex entity, ITemporalIndex temporal)
+            public void Load(IEntityIndex entity, ITemporalIndex temporal)
             {
-                SetPosition(entity);
+                Load(entity);
                 temporalIndex = new TemporalIndex(temporal);
             }
 
@@ -159,7 +152,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 EntityValue newValue = new EntityValue();
                 entityData.Entities.Add(newValue);
-                SetPosition(newValue);
+                Load(newValue);
 
                 return newValue;
             }
@@ -187,7 +180,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 void StartBinding(RunWorkerCompletedEventArgs args)
                 {
-                    SetPosition(entityIndex);
+                    Load(entityIndex);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -236,7 +229,7 @@ namespace DataDictionary.Main.Forms.Model
                 {
                     entityData.RaiseListChangedEvents = false;
                     entityData.Remove(value);
-                    SetPosition(value);
+                    Load(value);
                 }
             }
 

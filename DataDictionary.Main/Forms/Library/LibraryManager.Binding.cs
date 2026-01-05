@@ -13,8 +13,7 @@ namespace DataDictionary.Main.Forms.Library
     {
         class FormBinding
         {
-            public required BindingSource ManagerBinding
-            { private get; init { field = value; field.DataSource = managerData; } }
+            public required BindingSource ManagerBinding { private get; init; }
 
             BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
 
