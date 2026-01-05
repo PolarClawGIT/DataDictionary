@@ -20,6 +20,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             ITemplate data = BusinessData.Scripting;
 
+            //TODO: C# 13 Init fields fixed to mimic other classes.
+            //Currently, the ListChange Event is firing before the object is assigned to a property.
+
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> templates =
                 new BindingView<TemplateValue>([])
