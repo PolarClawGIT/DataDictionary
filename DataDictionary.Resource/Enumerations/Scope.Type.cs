@@ -345,6 +345,11 @@
         ScriptingDataObject,
 
         /// <summary>
+        /// Scripting Document
+        /// </summary>
+        ScriptingDocument,
+
+        /// <summary>
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,

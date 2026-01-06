@@ -95,6 +95,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ScriptingTemplate),
                 new NavigationValue(ScopeType.ScriptingData),
                 new NavigationValue(ScopeType.ScriptingDataObject),
+                new NavigationValue(ScopeType.ScriptingDocument),
                 new NavigationValue(ScopeType.ScriptingTemplateNode),
                 new NavigationValue(ScopeType.ScriptingTemplateDocument),
                 new NavigationValue(ScopeType.ScriptingTemplateNodeOwner),
