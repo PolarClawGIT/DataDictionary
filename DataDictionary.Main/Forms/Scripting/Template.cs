@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class Template : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return item is ITemplateIndex template && templateIndex.Equals(template); }
+        { return templateIndex.Equals(item); }
 
         FormBinding formBinding;
         TemplateIndex templateIndex = new TemplateIndex();

@@ -20,15 +20,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
             IDataSource data = BusinessData.Scripting;
 
-            public required BindingSource DataSourceBinding
-            { private get; init { field = value; field.DataSource = DataSources; } }
+            public required BindingSource DataSourceBinding { private get; init; }
 
             BindingView<DataSourceValue> DataSources =
                 new BindingView<DataSourceValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource DataObjectBinding
-            { private get; init { field = value; field.DataSource = DataObjects; } }
+            public required BindingSource DataObjectBinding { private get; init; }
 
             BindingView<DataObjectValue> DataObjects =
                 new BindingView<DataObjectValue>([])

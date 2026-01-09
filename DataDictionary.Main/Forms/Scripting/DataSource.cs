@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class DataSource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return true; } // TODO: rig to current value
+        { return dataSourceIndex.Equals(item); }
 
         FormBinding formBinding;
         DataSourceIndex dataSourceIndex = new DataSourceIndex();
