@@ -9,7 +9,7 @@ using System.Text;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface IDocumentValue : IDocumentItem, IDocumentIndex,
+    public interface IDocumentValue : IDocumentItem, IDocumentIndex, ITemplateIndex,
         IScopeType, ITemporal
     { }
 

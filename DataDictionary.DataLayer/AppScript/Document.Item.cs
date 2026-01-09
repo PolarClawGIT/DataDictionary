@@ -34,11 +34,6 @@ namespace DataDictionary.DataLayer.AppScript
         String? SpecialFolder { get; }
 
         /// <summary>
-        /// Root Directory either as an absolute path or relative to the Special Folder.
-        /// </summary>
-        String? RootDirectory { get; }
-
-        /// <summary>
         /// Input Directory off of the Root Directory where the XML Input file is located.
         /// </summary>
         String? InputDirectory { get; }
@@ -102,13 +97,6 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RootDirectory
-        {
-            get { return GetValue(nameof(RootDirectory)); }
-            set { SetValue(nameof(RootDirectory), value); }
-        }
-
-        /// <inheritdoc/>
         public String? InputDirectory
         {
             get { return GetValue(nameof(InputDirectory)); }
@@ -162,7 +150,6 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(SpecialFolder), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RootDirectory), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(InputDirectory), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(InputFile), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OutputDirectory), typeof(String)){ AllowDBNull = true},

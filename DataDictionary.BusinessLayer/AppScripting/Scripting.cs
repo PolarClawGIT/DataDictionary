@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +26,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="ITemplate.NodeOwners"/>
         ITemplateNodeOwnerData TemplateNodeOwners { get; }
 
+        /// <inheritdoc cref="IDocumentData"/>
+        IDocumentData Documents { get; }
+
         /// <inheritdoc cref="IXElementBuilderList"/>
         IXElementBuilderList XBuilders { get; }
     }
@@ -33,6 +37,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     {
         private readonly DataSource dataSourceValue = new DataSource();
         private readonly Template templateValue = new Template();
+        private readonly DocumentData documentValue = new DocumentData();
 
         /// <inheritdoc cref="IDataSource.DataSources"/>
         public IDataSourceData DataSources { get { return dataSourceValue.DataSources; } }
@@ -51,6 +56,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public ITemplateInputData TemplateSources { get { return templateValue.TemplateSources; } }
+
+        /// <inheritdoc/>
+        public IDocumentData Documents { get { return documentValue; } }
 
         //ITemplateData ITemplate.Templates { get { return templateValue.Templates; } } // Not Needed
         //ITemplateInputData ITemplate.TemplateSources { get { return templateValue.TemplateSources; } } // Not Needed
@@ -80,6 +88,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             dataSourceValue.Clear();
             templateValue.Clear();
+            documentValue.Clear();
         }
 
         /// <inheritdoc/>
@@ -88,6 +97,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dataSourceValue.Delete(model));
             work.AddRange(templateValue.Delete(model));
+            work.AddRange(documentValue.Delete(model));
             return work;
         }
 
@@ -97,6 +107,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dataSourceValue.Delete());
             work.AddRange(templateValue.Delete());
+            work.AddRange(documentValue.Delete());
             return work;
         }
 
@@ -106,6 +117,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dataSourceValue.Load(factory, model));
             work.AddRange(templateValue.Load(factory, model));
+            work.AddRange(documentValue.Load(factory, model));
             return work;
         }
 
@@ -115,6 +127,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dataSourceValue.Load(factory, model, asOfUtcDate));
             work.AddRange(templateValue.Load(factory, model, asOfUtcDate));
+            work.AddRange(documentValue.Load(factory, model, asOfUtcDate));
             return work;
         }
 
@@ -123,6 +136,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             dataSourceValue.Remove(model);
             templateValue.Remove(model);
+            documentValue.Remove(model);
         }
 
         #region IBindListChanged
@@ -149,6 +163,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             dataSourceValue.ResetBindings();
             templateValue.ResetBindings();
+            documentValue.ResetBindings();
         }
         #endregion
 
@@ -158,24 +173,39 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dataSourceValue.Save(factory, model));
             work.AddRange(templateValue.Save(factory, model));
+            work.AddRange(documentValue.Save(factory, model));
             return work;
         }
 
         public IReadOnlyList<WorkItem> LoadNamedScope(Action<INamedScopeSourceValue?, NamedScopeValue> addNamedScope)
         {
             List<WorkItem> work = new List<WorkItem>();
+            NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
 
+            // Root
             if (dataSourceValue.DataSources.Count > 0
-                || templateValue.Templates.Count > 0)
-            {
-                // Root Node
-                NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
-                work.Add(new WorkItem() { DoWork = () => { addNamedScope(null, new NamedScopeValue(root)); } });
+                || templateValue.Templates.Count > 0
+                || documentValue.Count > 0)
+            { work.Add(new WorkItem() { DoWork = () => { addNamedScope(null, new NamedScopeValue(root)); } }); }
 
-                // Children
-                work.AddRange(dataSourceValue.LoadNamedScope(addNamedScope, (a) => { return root; }));
-                work.AddRange(templateValue.LoadNamedScope(addNamedScope, (a) => { return root; }));
+            // Children
+            if (dataSourceValue.DataSources.Count > 0)
+            { work.AddRange(dataSourceValue.LoadNamedScope(addNamedScope, (child) => { return root; })); }
+
+            if (templateValue.Templates.Count > 0)
+            { work.AddRange(templateValue.LoadNamedScope(addNamedScope, (child) => { return root; })); }
+
+            if (documentValue.Count > 0)
+            {
+                work.AddRange(NameSpaceSource.Load<DocumentData, DocumentValue>(documentValue, addNamedScope,
+                    (child) =>
+                    {
+                        if (templateValue.Templates.FirstOrDefault(w => new TemplateIndex(child).Equals(w)) is TemplateValue parent)
+                        { return parent; }
+                        else { return root; }
+                    }));
             }
+
             return work;
         }
 
@@ -185,6 +215,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<DataTable> result = new List<DataTable>();
             result.AddRange(dataSourceValue.Export());
             result.AddRange(templateValue.Export());
+
+            if (documentValue.Count > 0)
+            { result.AddRange(documentValue.ToDataTable()); }
+
             return result;
         }
 
@@ -193,6 +227,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             dataSourceValue.Import(source);
             templateValue.Import(source);
+            documentValue.Load(source, isSkipable: true);
         }
 
         /// <inheritdoc/>
@@ -211,6 +246,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValue.Load(factory, template));
             work.AddRange(dataSourceValue.Load(factory, template));
+            work.AddRange(documentValue.Load(factory, template));
             return work;
         }
 
@@ -219,6 +255,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(templateValue.Load(factory, template, asOfUtcDate));
             work.AddRange(dataSourceValue.Load(factory, template, asOfUtcDate));
+            work.AddRange(documentValue.Load(factory, template, asOfUtcDate));
             return work;
         }
 

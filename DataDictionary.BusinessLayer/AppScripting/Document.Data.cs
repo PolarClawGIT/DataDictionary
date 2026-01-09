@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.AppScript;
+using System.Data;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -12,8 +13,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public interface IDocumentData :
         IBindingData<DocumentValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<IDocumentIndex>,
-        ILoadData
+        IGetTemporal<IModelIndex>, IGetTemporal<IDocumentIndex>
     {
         /// <summary>
         /// Creates an empty IDocumentData.
@@ -25,13 +25,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     class DocumentData : DocumentCollection<DocumentValue>, IDocumentData,
         ILoadData<IDocumentIndex>, ISaveData<IDocumentIndex>,
+        ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         ILoadData<IModelIndex>, ISaveData<IModelIndex>
     {
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        { return factory.CreateLoad(this).ToList(); }
-
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
@@ -54,8 +50,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
+        { return factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDocumentIndex dataKey)
         { return factory.CreateSave(this, (IDocumentKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
+        { return factory.CreateSave(this, (ITemplateKey)dataKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
@@ -65,6 +76,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
         public IReadOnlyList<WorkItem> Delete(IDocumentIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
         { return new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
@@ -80,6 +96,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
         public void Remove(IDocumentIndex dataKey)
+        { base.Remove(dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
+        public void Remove(ITemplateIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
