@@ -117,7 +117,6 @@ class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>,
             new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.Scripting,         "Scripting.Template.Node"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateNodeOwner, ScopeType.ScriptingTemplate, "Scripting.Template.NodeOwner"),
             new ScopeEnumeration(ScopeType.ScriptingTemplateData,      ScopeType.ScriptingTemplate, "Scripting.Template.Data"),
-            new ScopeEnumeration(ScopeType.ScriptingTemplateDocument,  ScopeType.ScriptingTemplate, "Scripting.Template.Document"),
 
         };
 

@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
-            xElementRenderCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            xElementRenderCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
 
             formBinding = new FormBinding()
             {

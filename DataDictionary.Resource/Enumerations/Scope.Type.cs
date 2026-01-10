@@ -369,11 +369,6 @@
         /// </summary>
         ScriptingTemplateData,
 
-        /// <summary>
-        /// Scripting Template Document
-        /// </summary>
-        ScriptingTemplateDocument,
-
     }
 
 }

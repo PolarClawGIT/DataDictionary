@@ -240,10 +240,10 @@ namespace DataDictionary.Main
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //TODO: Fix
-            //Activate(static () => new DetailDataView
-            //    (ScopeType.ScriptingTemplateDocument, BusinessData.ScriptingEngine.TemplateDocuments));
+            Activate(static () => new DetailDataView
+                <DocumentValue, Forms.Scripting.Document>
+                (ScopeType.ScriptingDocument, BusinessData.Scripting.Documents)
+            { SelectedForm = (data) => new Forms.Scripting.Document(data) });
         }
 
         private void menuScriptingNode_Click(object sender, EventArgs e)

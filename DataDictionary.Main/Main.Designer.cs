@@ -946,7 +946,7 @@
             // 
             menuScriptingDocument.Name = "menuScriptingDocument";
             menuScriptingDocument.Size = new Size(234, 22);
-            menuScriptingDocument.Text = "browse Template Documents";
+            menuScriptingDocument.Text = "browse Documents";
             menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
             // bindingModel

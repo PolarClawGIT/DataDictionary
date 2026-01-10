@@ -94,7 +94,7 @@ namespace DataDictionary.Main
             menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
             menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
             menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Default);
-            menuScriptingDocument.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control

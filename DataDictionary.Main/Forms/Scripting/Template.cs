@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
-            documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            documentCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
             transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
             addNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Add);
             deleteNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Delete);
