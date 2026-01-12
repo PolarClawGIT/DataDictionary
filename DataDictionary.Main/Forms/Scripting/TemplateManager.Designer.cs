@@ -38,8 +38,9 @@
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateCommands = new ContextMenuStrip(components);
-            newDataSource = new ToolStripMenuItem();
-            newTemplate = new ToolStripMenuItem();
+            newDataSourceCommand = new ToolStripMenuItem();
+            newTemplateCommand = new ToolStripMenuItem();
+            newDocumentCommand = new ToolStripMenuItem();
             bindingManager = new BindingSource(components);
             templateManagerLayout = new TableLayoutPanel();
             templateManagerLayout.SuspendLayout();
@@ -133,29 +134,36 @@
             // 
             // templateCommands
             // 
-            templateCommands.Items.AddRange(new ToolStripItem[] { newDataSource, newTemplate });
+            templateCommands.Items.AddRange(new ToolStripItem[] { newDataSourceCommand, newTemplateCommand, newDocumentCommand });
             templateCommands.Name = "templateCommands";
-            templateCommands.Size = new Size(163, 48);
+            templateCommands.Size = new Size(163, 70);
             // 
-            // newDataSource
+            // newDataSourceCommand
             // 
-            newDataSource.MergeAction = MergeAction.Insert;
-            newDataSource.MergeIndex = 0;
-            newDataSource.Name = "newDataSource";
-            newDataSource.Size = new Size(162, 22);
-            newDataSource.Text = "new Data Source";
-            newDataSource.ToolTipText = "Create a new Data Source";
-            newDataSource.Click += NewDataSource_Click;
+            newDataSourceCommand.MergeAction = MergeAction.Insert;
+            newDataSourceCommand.MergeIndex = 0;
+            newDataSourceCommand.Name = "newDataSourceCommand";
+            newDataSourceCommand.Size = new Size(162, 22);
+            newDataSourceCommand.Text = "new Data Source";
+            newDataSourceCommand.ToolTipText = "Create a new Data Source";
+            newDataSourceCommand.Click += NewDataSource_Click;
             // 
-            // newTemplate
+            // newTemplateCommand
             // 
-            newTemplate.MergeAction = MergeAction.Insert;
-            newTemplate.MergeIndex = 0;
-            newTemplate.Name = "newTemplate";
-            newTemplate.Size = new Size(162, 22);
-            newTemplate.Text = "new Template";
-            newTemplate.ToolTipText = "Create a new Template";
-            newTemplate.Click += NewTemplate_Click;
+            newTemplateCommand.MergeAction = MergeAction.Insert;
+            newTemplateCommand.MergeIndex = 0;
+            newTemplateCommand.Name = "newTemplateCommand";
+            newTemplateCommand.Size = new Size(162, 22);
+            newTemplateCommand.Text = "new Template";
+            newTemplateCommand.ToolTipText = "Create a new Template";
+            newTemplateCommand.Click += NewTemplate_Click;
+            // 
+            // newDocumentCommand
+            // 
+            newDocumentCommand.Name = "newDocumentCommand";
+            newDocumentCommand.Size = new Size(162, 22);
+            newDocumentCommand.Text = "new Document";
+            newDocumentCommand.Click += NewDocument_Click;
             // 
             // bindingManager
             // 
@@ -186,12 +194,13 @@
         private Controls.TextBoxData titleData;
         private Controls.TextBoxData descriptionData;
         private ContextMenuStrip templateCommands;
-        private ToolStripMenuItem newTemplate;
-        private ToolStripMenuItem newDataSource;
+        private ToolStripMenuItem newTemplateCommand;
+        private ToolStripMenuItem newDataSourceCommand;
         private DataGridViewTextBoxColumn titleColumn;
         private DataGridViewTextBoxColumn itemTypeColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabaseColumn;
         private BindingSource bindingManager;
+        private ToolStripMenuItem newDocumentCommand;
     }
 }

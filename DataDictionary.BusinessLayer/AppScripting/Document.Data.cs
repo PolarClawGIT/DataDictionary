@@ -14,14 +14,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface IDocumentData :
         IBindingData<DocumentValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<IDocumentIndex>
-    {
-        /// <summary>
-        /// Creates an empty IDocumentData.
-        /// </summary>
-        /// <returns></returns>
-        static IDocumentData Create()
-        { return new DocumentData(); }
-    }
+    { }
 
     class DocumentData : DocumentCollection<DocumentValue>, IDocumentData,
         ILoadData<IDocumentIndex>, ISaveData<IDocumentIndex>,

@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITemplateNodeOwnerData TemplateNodeOwners { get; }
 
         /// <inheritdoc cref="IDocumentData"/>
-        IDocumentData Documents { get; }
+        IDocument Documents { get; }
 
         /// <inheritdoc cref="IXElementBuilderList"/>
         IXElementBuilderList XBuilders { get; }
@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     {
         private readonly DataSource dataSourceValue = new DataSource();
         private readonly Template templateValue = new Template();
-        private readonly DocumentData documentValue = new DocumentData();
+        private readonly Document documentValue = new Document();
 
         /// <inheritdoc cref="IDataSource.DataSources"/>
         public IDataSourceData DataSources { get { return dataSourceValue.DataSources; } }
@@ -58,7 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ITemplateInputData TemplateSources { get { return templateValue.TemplateSources; } }
 
         /// <inheritdoc/>
-        public IDocumentData Documents { get { return documentValue; } }
+        public IDocument Documents { get { return documentValue; } }
 
         //ITemplateData ITemplate.Templates { get { return templateValue.Templates; } } // Not Needed
         //ITemplateInputData ITemplate.TemplateSources { get { return templateValue.TemplateSources; } } // Not Needed

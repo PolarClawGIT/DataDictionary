@@ -22,8 +22,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase
                 );
-            newTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
-            newDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
+            newTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
+            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
+            newDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Add);
 
             AddCommands(templateCommands, ToolStripItemDisplayStyle.Image, CommandType.Add);
 
@@ -55,8 +56,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Security
                 SetAuthorization(formBinding.GetAuthorization);
-                newTemplate.Enabled = formBinding.GetAuthorization(CommandType.Add);
-                newDataSource.Enabled = formBinding.GetAuthorization(CommandType.Add);
+                newTemplateCommand.Enabled = formBinding.GetAuthorization(CommandType.Add);
+                newDataSourceCommand.Enabled = formBinding.GetAuthorization(CommandType.Add);
             }
         }
 
@@ -65,6 +66,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void NewDataSource_Click(object sender, EventArgs e)
         { Activate(() => new DataSource(null)); }
+
+        private void NewDocument_Click(object sender, EventArgs e)
+        { Activate(() => new Document(null)); }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
@@ -136,5 +140,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandButtons[CommandType.DeleteDatabase].IsEnabled = current.InDatabase;
             }
         }
+
+
     }
 }

@@ -13,11 +13,16 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
+            IDocument data = BusinessData.Scripting.Documents;
+
             public required BindingSource DocumentBinding { private get; init; }
 
             public DocumentValue NewValue()
             {
-                throw new NotImplementedException();
+                DocumentValue result = new DocumentValue();
+                data.Add(result);
+
+                return result;
             }
         }
     }
