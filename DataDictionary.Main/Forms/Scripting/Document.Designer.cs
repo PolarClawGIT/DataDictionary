@@ -52,7 +52,7 @@
             transformToolStrip = new ToolStrip();
             openTransformCommand = new ToolStripButton();
             saveTransformCommand = new ToolStripButton();
-            getTemplateTransform = new ToolStripButton();
+            getTransformCommand = new ToolStripButton();
             templateData = new DataDictionary.Main.Controls.ComboBoxData();
             transformData = new DataDictionary.Main.Controls.TextBoxData();
             resultTab = new TabPage();
@@ -332,7 +332,7 @@
             // 
             // transformToolStrip
             // 
-            transformToolStrip.Items.AddRange(new ToolStripItem[] { openTransformCommand, saveTransformCommand, getTemplateTransform });
+            transformToolStrip.Items.AddRange(new ToolStripItem[] { openTransformCommand, saveTransformCommand, getTransformCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
             transformToolStrip.Size = new Size(606, 25);
@@ -357,14 +357,14 @@
             saveTransformCommand.Size = new Size(23, 22);
             saveTransformCommand.Text = "Save Transform to File";
             // 
-            // getTemplateTransform
+            // getTransformCommand
             // 
-            getTemplateTransform.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            getTemplateTransform.Image = (Image)resources.GetObject("getTemplateTransform.Image");
-            getTemplateTransform.ImageTransparentColor = Color.Magenta;
-            getTemplateTransform.Name = "getTemplateTransform";
-            getTemplateTransform.Size = new Size(23, 22);
-            getTemplateTransform.Text = "Get Template Transform";
+            getTransformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            getTransformCommand.Image = (Image)resources.GetObject("getTransformCommand.Image");
+            getTransformCommand.ImageTransparentColor = Color.Magenta;
+            getTransformCommand.Name = "getTransformCommand";
+            getTransformCommand.Size = new Size(23, 22);
+            getTransformCommand.Text = "Get Template Transform";
             // 
             // templateData
             // 
@@ -496,6 +496,7 @@
             Controls.Add(mainLayout);
             Name = "Document";
             Text = "Document";
+            Load += Document_Load;
             Controls.SetChildIndex(mainLayout, 0);
             mainLayout.ResumeLayout(false);
             mainLayout.PerformLayout();
@@ -543,7 +544,7 @@
         private ToolStrip transformToolStrip;
         private ToolStripButton openTransformCommand;
         private ToolStripButton saveTransformCommand;
-        private ToolStripButton getTemplateTransform;
+        private ToolStripButton getTransformCommand;
         private Controls.ComboBoxData templateData;
         private Controls.TextBoxData transformData;
         private Controls.TextBoxData inputDirectoryData;

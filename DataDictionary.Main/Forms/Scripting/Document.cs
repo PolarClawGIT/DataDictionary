@@ -1,7 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -17,6 +20,16 @@ namespace DataDictionary.Main.Forms.Scripting
         public Document()
         {
             InitializeComponent();
+
+            inputOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Open);
+            inputSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Save);
+
+            openTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Open);
+            saveTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Save);
+            getTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Import);
+
+            saveResultCommand.Image = ScopeType.ApplicationDocument.GetImage(CommandType.Save);
+            refreshResultCommand.Image = ScopeType.ApplicationDocument.GetImage(CommandType.Refresh);
 
             SetIcon(ScopeType.ScriptingDocument);
 
@@ -48,5 +61,37 @@ namespace DataDictionary.Main.Forms.Scripting
 
         public Document(DocumentIndex document, ITemporalIndex temporal) : this(document)
         { temporalIndex = new TemporalIndex(); }
+
+        private void Document_Load(object sender, EventArgs e)
+        {
+            if (temporalIndex is null)
+            {
+                formBinding.Load(documentIndex);
+                DoBinding();
+            }
+            else
+            { formBinding.Load(documentIndex, temporalIndex, onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is null)
+                {
+                    DoBinding();
+                    SendMessage(new RefreshNavigation());
+                }
+            }
+
+            void DoBinding()
+            {
+                documentTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentTitle)));
+                
+                DirectoryTypeList.Load(specialFolderData);
+                rootDirectoryData.DataBindings.Add(new Binding(
+                    nameof(ComboBox.SelectedValue),
+                    bindingDocument, nameof(IDocumentValue.SpecialDirectory),
+                    false, DataSourceUpdateMode.OnPropertyChanged)
+                { DataSourceNullValue = DirectoryType.Null });
+            }
+        }
     }
 }

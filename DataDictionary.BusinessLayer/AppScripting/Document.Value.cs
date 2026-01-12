@@ -11,7 +11,33 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface IDocumentValue : IDocumentItem, IDocumentIndex, ITemplateIndex,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// Speical Directory Name used to determine the Root Directory.
+        /// </summary>
+        DirectoryType SpecialDirectory { get; }
+
+        /// <summary>
+        /// Input XML data
+        /// </summary>
+        /// 
+        String? InputData { get; }
+
+        /// <summary>
+        /// Results of the XML Transform
+        /// </summary>
+        String? ResultData { get; }
+
+        /// <summary>
+        /// Exception to the XML Transform or other processing errors.
+        /// </summary>
+        String? ExceptionData { get; }
+
+        /// <summary>
+        /// Executes the XML Transform, filling Results and Exception.
+        /// </summary>
+        void DoTransform();
+    }
 
     /// <inheritdoc/>
     public class DocumentValue : DocumentItem, IDocumentValue, INamedScopeSourceValue
@@ -31,6 +57,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
+        public DirectoryType SpecialDirectory
+        {
+            get
+            {
+                String? value = GetValue(nameof(SpecialFolder));
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
+            }
+            set { SetValue(nameof(SpecialFolder), value.GetEnumeration().Name); }
+        }
+
+        /// <inheritdoc/>
+        public String? InputData { get; set; }
+
+        /// <inheritdoc/>
+        public String? ResultData { get; }
+
+        /// <inheritdoc/>
+        public String? ExceptionData { get; }
+
+        /// <inheritdoc/>
         public DocumentValue() : base()
         {
             pathValue = new PathValue(this)
@@ -42,6 +90,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(DocumentTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(DocumentTitle)
             };
+        }
+
+        /// <inheritdoc/>
+        public void DoTransform()
+        {
+
         }
     }
 }
