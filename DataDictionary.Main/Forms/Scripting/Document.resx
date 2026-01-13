@@ -123,18 +123,9 @@
   <metadata name="mainLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="rootDirectoryData.SelectIcon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABDUlE
-        QVQ4T2NgIBXE7CphiN7tgC5MPIjdbcMQu+slQ8xOJ3Qp3CB0FRtQUycQPwPi/xC88yq6MtwgdmcHEG9h
-        iNsjDXZ+zK5XKN6YkcfwYGY+w38k/HF6PgNCQezOpwzR22TAbGxhANZUwCAJw9PyGIKn5zF8BYmDFYCc
-        DFKXx3AfRSMMoBuAE8MMRAdUMWBWCYMBkP6AFha4cR7DThQDgAHZBqRXggIPF56Wz1AAooGuWQg0YAqK
-        AUCBR7PyGRLQNaEbMKWIwRmo9uWsAgZtVAPyGc6ha0DHYBfkMlTPymM4AdcMM2BGAUMbugZ0DDIA6NWj
-        QBfEoxgwI5/hHkYg4cBAtY97Cxk4UQwYUAAANSDaALZMfGIAAAAASUVORK5CYII=
-</value>
-  </data>
+  <metadata name="generalLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <metadata name="dataTab.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
@@ -144,6 +135,7 @@
   <metadata name="inputToolstrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>374, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="inputOpenCommand.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8

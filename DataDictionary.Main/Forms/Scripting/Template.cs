@@ -94,12 +94,18 @@ namespace DataDictionary.Main.Forms.Scripting
                 DirectoryTypeList.Load(rootDirectoryData);
                 rootDirectoryData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
-                    bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
-                    false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = DirectoryType.Null });
+                    bindingTemplate,
+                    nameof(ITemplateValue.RootFolder),
+                    true, DataSourceUpdateMode.OnValidation,
+                    DirectoryTypeList.NullValue));
 
                 ScopeNameList.Load(breakOnScopeData, formBinding.XBuilder.Keys);
-                breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
+                breakOnScopeData.DataBindings.Add(new Binding(
+                    nameof(ComboBox.SelectedValue),
+                    bindingTemplate,
+                    nameof(ITemplateValue.TemplateBreakOn),
+                    true, DataSourceUpdateMode.OnValidation,
+                    ScopeNameList.NullValue));
 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
@@ -241,14 +247,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is DirectoryType value
-                && formBinding.TryGetValue(out TemplateValue? current))
+            if (formBinding.TryGetValue(out TemplateValue? current))
             {
-                //Note: For reason unknown, current.TemplateDirectory has not been updated
-                //at this point. Setting the current.RootDirectory directly solves this.
-                current.RootDirectory = value.GetEnumeration().Name;
-                current.DocumentDirectory = null;
-                current.ScriptDirectory = null;
+                // TODO: For reasons unknown, the RootFolder is not being updated.
+                // Same code works fine on the Document form.
+                // This code is forcing the update.
+                current.RootFolder = rootDirectoryData.SelectedValue is DirectoryType value
+                    ? value
+                    : DirectoryType.Null;
+                current.DocumentDirectory = String.Empty;
+                current.ScriptDirectory = String.Empty;
             }
         }
 

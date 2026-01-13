@@ -4829,4 +4829,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[uddtMember]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="8900d797-9d07-4fa2-8f60-dcaf1c61a888" ChangeDateTime="01/13/2026 15:55:00">
+    <Property Name="ElementName" Value="[AppScript].[Document].[SpecialFolder]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[Document]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RootFolder]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9b048fbb-76f4-4e44-bd0b-1ca2f3960630" ChangeDateTime="01/13/2026 15:57:03">
+    <Property Name="ElementName" Value="[AppScript].[Template].[RootDirectory]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[Template]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[RootFolder]" />
+  </Operation>
 </Operations>

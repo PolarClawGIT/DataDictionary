@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.AppScript
@@ -29,9 +27,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// Name of the Special Folder used as the Root Directory.
         /// </summary>
         /// <remarks>
-        /// This uses an Enum that repensts locations in: Environment.SpecialFolder.UserProfile
+        /// This uses an Enum that represents locations in: Environment.SpecialFolder.UserProfile
         /// </remarks>
-        String? SpecialFolder { get; }
+        DirectoryType RootFolder { get; }
 
         /// <summary>
         /// Input Directory off of the Root Directory where the XML Input file is located.
@@ -90,11 +88,19 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? SpecialFolder
+        public DirectoryType RootFolder
         {
-            get { return GetValue(nameof(SpecialFolder)); }
-            set { SetValue(nameof(SpecialFolder), value); }
+            get
+            {
+                String? value = GetValue(nameof(RootFolder));
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
+            }
+            set
+            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
         }
+
 
         /// <inheritdoc/>
         public String? InputDirectory
@@ -149,7 +155,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(DocumentTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(SpecialFolder), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(InputDirectory), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(InputFile), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OutputDirectory), typeof(String)){ AllowDBNull = true},

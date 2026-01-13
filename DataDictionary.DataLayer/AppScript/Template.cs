@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.AppScript
 {
@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <remarks>
         /// This uses an Enum that repensts locations in: Environment.SpecialFolder.UserProfile
         /// </remarks>
-        String? RootDirectory { get; }
+        DirectoryType RootFolder { get; }
 
         /// <summary>
         /// From the Root Directory, the directory for the XML Document files.

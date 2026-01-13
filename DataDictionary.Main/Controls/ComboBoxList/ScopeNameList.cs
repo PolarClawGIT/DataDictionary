@@ -5,7 +5,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record ScopeNameList
     {
-        public ScopeType ScopeType { get; set; } = ScopeType.Null;
+        public ScopeType ScopeType { get; init; } = ScopeType.Null;
         public String ScopeName { get; init; } = String.Empty;
 
         public static ScopeNameList Empty { get; } = new ScopeNameList();

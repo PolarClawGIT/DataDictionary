@@ -279,7 +279,7 @@
             nodeTab.Controls.Add(nodeLayout);
             nodeTab.Location = new Point(4, 24);
             nodeTab.Name = "nodeTab";
-            nodeTab.Size = new Size(599, 319);
+            nodeTab.Size = new Size(192, 72);
             nodeTab.TabIndex = 4;
             nodeTab.Text = "Nodes (XSD)";
             // 
@@ -297,7 +297,7 @@
             nodeLayout.RowCount = 2;
             nodeLayout.RowStyles.Add(new RowStyle());
             nodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeLayout.Size = new Size(599, 319);
+            nodeLayout.Size = new Size(192, 72);
             nodeLayout.TabIndex = 0;
             // 
             // nodeToolStrip
@@ -306,7 +306,7 @@
             nodeToolStrip.Items.AddRange(new ToolStripItem[] { addNodeCommand, deleteNodeCommand });
             nodeToolStrip.Location = new Point(0, 0);
             nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(599, 25);
+            nodeToolStrip.Size = new Size(192, 25);
             nodeToolStrip.TabIndex = 0;
             nodeToolStrip.Text = "Node";
             // 
@@ -335,7 +335,7 @@
             nodeTreeView.Dock = DockStyle.Fill;
             nodeTreeView.Location = new Point(3, 28);
             nodeTreeView.Name = "nodeTreeView";
-            nodeTreeView.Size = new Size(173, 288);
+            nodeTreeView.Size = new Size(51, 41);
             nodeTreeView.TabIndex = 1;
             nodeTreeView.NodeMouseClick += NodeTreeView_NodeMouseClick;
             // 
@@ -346,12 +346,12 @@
             nodeDetailLayout.Controls.Add(nodeNameData, 0, 0);
             nodeDetailLayout.Controls.Add(nodeTabControl, 0, 1);
             nodeDetailLayout.Dock = DockStyle.Fill;
-            nodeDetailLayout.Location = new Point(182, 28);
+            nodeDetailLayout.Location = new Point(60, 28);
             nodeDetailLayout.Name = "nodeDetailLayout";
             nodeDetailLayout.RowCount = 2;
             nodeDetailLayout.RowStyles.Add(new RowStyle());
             nodeDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeDetailLayout.Size = new Size(414, 288);
+            nodeDetailLayout.Size = new Size(129, 41);
             nodeDetailLayout.TabIndex = 1;
             // 
             // nodeNameData
@@ -363,7 +363,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = false;
-            nodeNameData.Size = new Size(408, 44);
+            nodeNameData.Size = new Size(123, 44);
             nodeNameData.TabIndex = 2;
             nodeNameData.WordWrap = true;
             // 
@@ -376,7 +376,7 @@
             nodeTabControl.Location = new Point(3, 53);
             nodeTabControl.Name = "nodeTabControl";
             nodeTabControl.SelectedIndex = 0;
-            nodeTabControl.Size = new Size(408, 232);
+            nodeTabControl.Size = new Size(123, 1);
             nodeTabControl.TabIndex = 0;
             // 
             // nodeTabDefinition
@@ -386,7 +386,7 @@
             nodeTabDefinition.Location = new Point(4, 24);
             nodeTabDefinition.Name = "nodeTabDefinition";
             nodeTabDefinition.Padding = new Padding(3);
-            nodeTabDefinition.Size = new Size(400, 204);
+            nodeTabDefinition.Size = new Size(115, 0);
             nodeTabDefinition.TabIndex = 0;
             nodeTabDefinition.Text = "Definition";
             // 
@@ -404,7 +404,7 @@
             nodeDefinitionLayout.RowStyles.Add(new RowStyle());
             nodeDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             nodeDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            nodeDefinitionLayout.Size = new Size(394, 198);
+            nodeDefinitionLayout.Size = new Size(109, 0);
             nodeDefinitionLayout.TabIndex = 0;
             // 
             // nodeRenderAsData
@@ -417,7 +417,7 @@
             nodeRenderAsData.Location = new Point(3, 3);
             nodeRenderAsData.Name = "nodeRenderAsData";
             nodeRenderAsData.ReadOnly = false;
-            nodeRenderAsData.Size = new Size(262, 46);
+            nodeRenderAsData.Size = new Size(1, 46);
             nodeRenderAsData.TabIndex = 4;
             // 
             // nodeRenderOrderData
@@ -425,7 +425,7 @@
             nodeRenderOrderData.AutoSize = true;
             nodeRenderOrderData.Dock = DockStyle.Fill;
             nodeRenderOrderData.HeaderText = "Render Order";
-            nodeRenderOrderData.Location = new Point(271, 3);
+            nodeRenderOrderData.Location = new Point(-14, 3);
             nodeRenderOrderData.Multiline = false;
             nodeRenderOrderData.Name = "nodeRenderOrderData";
             nodeRenderOrderData.ReadOnly = false;
@@ -896,7 +896,7 @@
             documentPostTransformTab.Controls.Add(scriptLayout);
             documentPostTransformTab.Location = new Point(4, 24);
             documentPostTransformTab.Name = "documentPostTransformTab";
-            documentPostTransformTab.Size = new Size(178, 0);
+            documentPostTransformTab.Size = new Size(585, 152);
             documentPostTransformTab.TabIndex = 3;
             documentPostTransformTab.Text = "Post-Transform (script)";
             // 
@@ -921,7 +921,7 @@
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle());
             scriptLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            scriptLayout.Size = new Size(178, 0);
+            scriptLayout.Size = new Size(585, 152);
             scriptLayout.TabIndex = 8;
             // 
             // scriptingDirectoryData
@@ -935,7 +935,7 @@
             scriptingDirectoryData.Name = "scriptingDirectoryData";
             scriptingDirectoryData.ReadOnly = false;
             scriptingDirectoryData.SelectIcon = (Image)resources.GetObject("scriptingDirectoryData.SelectIcon");
-            scriptingDirectoryData.Size = new Size(172, 44);
+            scriptingDirectoryData.Size = new Size(579, 44);
             scriptingDirectoryData.TabIndex = 7;
             scriptingDirectoryData.Validated += ScriptingDirectoryData_Validated;
             scriptingDirectoryData.SelectCommand += ScriptingDirectoryData_SelectCommand;
@@ -948,7 +948,7 @@
             scriptingPrefixData.Multiline = false;
             scriptingPrefixData.Name = "scriptingPrefixData";
             scriptingPrefixData.ReadOnly = false;
-            scriptingPrefixData.Size = new Size(120, 1);
+            scriptingPrefixData.Size = new Size(120, 44);
             scriptingPrefixData.TabIndex = 2;
             scriptingPrefixData.WordWrap = true;
             // 
@@ -958,7 +958,7 @@
             scriptPlaceHolder.Dock = DockStyle.Fill;
             scriptPlaceHolder.Location = new Point(129, 100);
             scriptPlaceHolder.Name = "scriptPlaceHolder";
-            scriptPlaceHolder.Size = new Size(1, 1);
+            scriptPlaceHolder.Size = new Size(201, 52);
             scriptPlaceHolder.TabIndex = 6;
             scriptPlaceHolder.Text = "<element name/>";
             scriptPlaceHolder.TextAlign = ContentAlignment.MiddleCenter;
@@ -967,11 +967,11 @@
             // 
             scriptingSuffixData.AutoSize = true;
             scriptingSuffixData.HeaderText = "Suffix";
-            scriptingSuffixData.Location = new Point(-71, 103);
+            scriptingSuffixData.Location = new Point(336, 103);
             scriptingSuffixData.Multiline = false;
             scriptingSuffixData.Name = "scriptingSuffixData";
             scriptingSuffixData.ReadOnly = false;
-            scriptingSuffixData.Size = new Size(120, 1);
+            scriptingSuffixData.Size = new Size(120, 44);
             scriptingSuffixData.TabIndex = 3;
             scriptingSuffixData.WordWrap = true;
             // 
@@ -985,7 +985,7 @@
             scriptingPhysicalDirectory.Multiline = false;
             scriptingPhysicalDirectory.Name = "scriptingPhysicalDirectory";
             scriptingPhysicalDirectory.ReadOnly = true;
-            scriptingPhysicalDirectory.Size = new Size(172, 44);
+            scriptingPhysicalDirectory.Size = new Size(579, 44);
             scriptingPhysicalDirectory.TabIndex = 8;
             scriptingPhysicalDirectory.WordWrap = true;
             // 
@@ -993,11 +993,11 @@
             // 
             scriptingExtensionData.AutoSize = true;
             scriptingExtensionData.HeaderText = "Extension";
-            scriptingExtensionData.Location = new Point(55, 103);
+            scriptingExtensionData.Location = new Point(462, 103);
             scriptingExtensionData.Multiline = false;
             scriptingExtensionData.Name = "scriptingExtensionData";
             scriptingExtensionData.ReadOnly = false;
-            scriptingExtensionData.Size = new Size(120, 1);
+            scriptingExtensionData.Size = new Size(120, 44);
             scriptingExtensionData.TabIndex = 4;
             scriptingExtensionData.WordWrap = true;
             // 

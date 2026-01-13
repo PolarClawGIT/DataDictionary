@@ -4,7 +4,7 @@
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 	[TemplateId]            UniqueIdentifier NULL,
 	[TransformScript]		NVarChar(Max) Null,
-	[SpecialFolder]         NVarChar(100) Null,
+	[RootFolder]			NVarChar(100) Null,
 	[InputDirectory]		NVarChar(250) Null,
 	[InputFile]             NVarChar(100) Null, 
 	[OutputDirectory]		NVarChar(250) Null,

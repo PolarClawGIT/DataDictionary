@@ -4,7 +4,9 @@ using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -37,6 +39,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Executes the XML Transform, filling Results and Exception.
         /// </summary>
         void DoTransform();
+
+        /// <summary>
+        /// Loads the values from the files as defined by Input and Result paths.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> LoadFiles();
+
+        /// <summary>
+        /// Saves the values to files as defined by Input and Result paths.
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> SaveFiles();
+
     }
 
     /// <inheritdoc/>
@@ -61,12 +76,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                String? value = GetValue(nameof(SpecialFolder));
+                String? value = GetValue(nameof(RootFolder));
                 if (value.TryParse(out DirectoryType result))
                 { return result; }
                 else { return DirectoryType.Null; }
             }
-            set { SetValue(nameof(SpecialFolder), value.GetEnumeration().Name); }
+            set { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -92,10 +107,81 @@ namespace DataDictionary.BusinessLayer.AppScripting
             };
         }
 
+
         /// <inheritdoc/>
         public void DoTransform()
         {
+            try
+            {
 
+                OnPropertyChanged(nameof(ResultData));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> LoadFiles()
+        {
+            if (String.IsNullOrEmpty(DocumentTitle))
+            { throw new ArgumentNullException(nameof(DocumentTitle)); }
+
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = String.Format("Load Document {0}", DocumentTitle), DoWork = LoadData });
+            return work;
+
+            void LoadData()
+            {
+                try
+                {
+                    OnPropertyChanged(nameof(InputData));
+                    OnPropertyChanged(nameof(ResultData));
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                
+
+                throw new NotImplementedException();
+            }
+        }
+
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> SaveFiles()
+        {
+            if (String.IsNullOrEmpty(DocumentTitle))
+            { throw new ArgumentNullException(nameof(DocumentTitle)); }
+
+
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = String.Format("Save Document {0}", DocumentTitle), DoWork = SaveData });
+            return work;
+
+            void SaveData()
+            {
+                try
+                {
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                throw new NotImplementedException();
+            }
+        }
+
+
     }
 }

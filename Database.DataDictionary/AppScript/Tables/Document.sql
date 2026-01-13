@@ -9,9 +9,7 @@
 	[ModelId]		        UniqueIdentifier NOT NULL,
 	[TemplateId]            UniqueIdentifier NULL, -- Template used to generate this document
 	[TransformScript]		XML Null , -- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	[SpecialFolder]         NVarChar(100) Null, -- Name of the Special Folder used as the Root (null = use RootDirectory)
-	--[RootDirectory]         NVarChar(250) Null, -- Name of the Directory within the Special Directory used as the Root. If SpecialFolder is null, this is the full path used as root.
-
+	[RootFolder]			NVarChar(100) Null, -- Name of the Special Folder used as the Root
 	[InputDirectory]		NVarChar(250) Null, -- From Root, the directory for the XML file.
 	[InputFile]             NVarChar(100) Null, 
 	[OutputDirectory]		NVarChar(250) Null, -- From Root, the directory for the result file.

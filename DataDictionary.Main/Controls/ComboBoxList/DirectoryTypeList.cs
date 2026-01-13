@@ -8,8 +8,9 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 {
     record DirectoryTypeList
     {
-        public DirectoryType DirectoryType { get; set; } = DirectoryType.Null;
+        public DirectoryType DirectoryType { get; init; } = DirectoryType.Null;
         public String DirectoryName { get; init; } = String.Empty;
+        public static DirectoryType NullValue { get; } = DirectoryType.Null;
 
         DirectoryTypeList() : base() { }
 
@@ -17,6 +18,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         {
             DirectoryTypeList directoryTypeItem = new DirectoryTypeList();
             BindingList<DirectoryTypeList> list = new BindingList<DirectoryTypeList>();
+
             foreach (DirectoryType item in directoryTypes)
             {
                 String name = item.GetEnumeration().DisplayName;

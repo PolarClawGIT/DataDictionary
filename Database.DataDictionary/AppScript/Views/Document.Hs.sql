@@ -16,7 +16,7 @@ Select	D.[DocumentId], -- PK
 		D.[ModelId], -- AK, FK
 		D.[TemplateId], -- FK
 		D.[TransformScript],
-		D.[SpecialFolder],
+		D.[RootFolder],
 		D.[InputDirectory],
 		D.[InputFile],
 		D.[OutputDirectory],

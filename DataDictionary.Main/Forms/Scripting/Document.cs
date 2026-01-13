@@ -85,12 +85,15 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 documentTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentTitle)));
                 
-                DirectoryTypeList.Load(specialFolderData);
-                rootDirectoryData.DataBindings.Add(new Binding(
+                DirectoryTypeList.Load(rootFolderData);
+                rootFolderData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
-                    bindingDocument, nameof(IDocumentValue.SpecialDirectory),
-                    false, DataSourceUpdateMode.OnPropertyChanged)
+                    bindingDocument, nameof(IDocumentValue.RootFolder),
+                    true, DataSourceUpdateMode.OnValidation)
                 { DataSourceNullValue = DirectoryType.Null });
+
+
+
             }
         }
     }
