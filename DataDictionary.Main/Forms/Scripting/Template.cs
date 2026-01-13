@@ -90,22 +90,20 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-                
-                DirectoryTypeList.Load(rootDirectoryData);
-                rootDirectoryData.DataBindings.Add(new Binding(
+
+                DirectoryTypeList.Load(rootFolderData);
+                rootFolderData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
                     bindingTemplate,
                     nameof(ITemplateValue.RootFolder),
-                    true, DataSourceUpdateMode.OnValidation,
-                    DirectoryTypeList.NullValue));
+                    true, DataSourceUpdateMode.OnValidation));
 
                 ScopeNameList.Load(breakOnScopeData, formBinding.XBuilder.Keys);
                 breakOnScopeData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
                     bindingTemplate,
                     nameof(ITemplateValue.TemplateBreakOn),
-                    true, DataSourceUpdateMode.OnValidation,
-                    ScopeNameList.NullValue));
+                    true, DataSourceUpdateMode.OnValidation));
 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
@@ -237,24 +235,15 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryData_Validated(object sender, EventArgs e)
         { scriptingPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, scriptingDirectoryData.Text); }
 
-        private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (rootDirectoryData.SelectedValue is DirectoryType value
-                && value.GetEnumeration().Directory is DirectoryInfo directory)
-            { rootPhysicalDirectory.Text = directory.FullName; }
-            else { rootPhysicalDirectory.Text = String.Empty; }
-        }
 
-        private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
+        private void RootFolderData_Validated(object sender, EventArgs e)
         {
             if (formBinding.TryGetValue(out TemplateValue? current))
             {
-                // TODO: For reasons unknown, the RootFolder is not being updated.
-                // Same code works fine on the Document form.
-                // This code is forcing the update.
-                current.RootFolder = rootDirectoryData.SelectedValue is DirectoryType value
-                    ? value
-                    : DirectoryType.Null;
+                if (current.RootFolder.GetEnumeration().Directory is DirectoryInfo directory)
+                { rootPhysicalDirectory.Text = directory.FullName; }
+                else { rootPhysicalDirectory.Text = String.Empty; }
+
                 current.DocumentDirectory = String.Empty;
                 current.ScriptDirectory = String.Empty;
             }
@@ -314,5 +303,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.NewNodeOwner(key);
             }
         }
+
+
     }
 }

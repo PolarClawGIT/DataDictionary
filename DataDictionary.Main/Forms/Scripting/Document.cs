@@ -84,13 +84,13 @@ namespace DataDictionary.Main.Forms.Scripting
             void DoBinding()
             {
                 documentTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentTitle)));
-                
+
                 DirectoryTypeList.Load(rootFolderData);
                 rootFolderData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
-                    bindingDocument, nameof(IDocumentValue.RootFolder),
-                    true, DataSourceUpdateMode.OnValidation)
-                { DataSourceNullValue = DirectoryType.Null });
+                    bindingDocument,
+                    nameof(ITemplateValue.RootFolder),
+                    true, DataSourceUpdateMode.OnValidation));
 
 
 

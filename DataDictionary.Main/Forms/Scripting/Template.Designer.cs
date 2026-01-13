@@ -84,7 +84,7 @@
             documentToolStrip = new ToolStrip();
             documentCommand = new ToolStripButton();
             rootPhysicalDirectory = new DataDictionary.Main.Controls.TextBoxData();
-            rootDirectoryData = new DataDictionary.Main.Controls.ComboBoxData();
+            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
             breakOnScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             documentDirectoryData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentPrefixData = new DataDictionary.Main.Controls.TextBoxData();
@@ -712,7 +712,7 @@
             optionsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
             optionsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             optionsLayout.Controls.Add(rootPhysicalDirectory, 0, 1);
-            optionsLayout.Controls.Add(rootDirectoryData, 0, 0);
+            optionsLayout.Controls.Add(rootFolderData, 0, 0);
             optionsLayout.Controls.Add(breakOnScopeData, 1, 0);
             optionsLayout.Dock = DockStyle.Fill;
             optionsLayout.Location = new Point(3, 28);
@@ -741,18 +741,17 @@
             // 
             // rootDirectoryData
             // 
-            rootDirectoryData.AutoSize = true;
-            rootDirectoryData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            rootDirectoryData.Dock = DockStyle.Fill;
-            rootDirectoryData.DropDownStyle = ComboBoxStyle.DropDownList;
-            rootDirectoryData.HeaderText = "Relative Root Directory";
-            rootDirectoryData.Location = new Point(3, 3);
-            rootDirectoryData.Name = "rootDirectoryData";
-            rootDirectoryData.ReadOnly = false;
-            rootDirectoryData.Size = new Size(409, 46);
-            rootDirectoryData.TabIndex = 1;
-            rootDirectoryData.SelectedIndexChanged += RootDirectoryData_SelectedIndexChanged;
-            rootDirectoryData.SelectionChangeCommitted += RootDirectoryData_SelectionChangeCommitted;
+            rootFolderData.AutoSize = true;
+            rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            rootFolderData.Dock = DockStyle.Fill;
+            rootFolderData.DropDownStyle = ComboBoxStyle.DropDownList;
+            rootFolderData.HeaderText = "Relative Root Directory";
+            rootFolderData.Location = new Point(3, 3);
+            rootFolderData.Name = "rootDirectoryData";
+            rootFolderData.ReadOnly = false;
+            rootFolderData.Size = new Size(409, 46);
+            rootFolderData.TabIndex = 1;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // breakOnScopeData
             // 
@@ -1102,7 +1101,7 @@
         private Controls.TextBoxData scriptingSuffixData;
         private Controls.TextBoxData scriptingExtensionData;
         private Controls.TextBoxData rootPhysicalDirectory;
-        private Controls.ComboBoxData rootDirectoryData;
+        private Controls.ComboBoxData rootFolderData;
         private Controls.ComboBoxData breakOnScopeData;
         private Controls.SelectTextBoxData documentDirectoryData;
         private Controls.SelectTextBoxData scriptingDirectoryData;
