@@ -1,9 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -79,6 +82,56 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out DocumentValue? result)
+            {
+                if (DocumentBinding.Position >= 0
+                    && DocumentBinding.Current is DocumentValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean GetAuthorization(Enumerations.CommandType command)
+            {
+                Boolean isGrant = false;
+
+                SecurableIndex? documentKey = null;
+                SecurableIndex? templateKey = null;
+                if (TryGetValue(out DocumentValue? documentValue))
+                {
+                    documentKey = new DocumentIndex(documentValue);
+                    templateKey = new TemplateIndex(documentValue);
+                }
+
+                isGrant = BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner
+                    || BusinessData.Authorization.IsGrant(documentKey)
+                    || BusinessData.Authorization.IsGrant(templateKey);
+
+                switch (command)
+                {
+                    case Enumerations.CommandType.Default: return true;
+                    case Enumerations.CommandType.Add: return isGrant;
+                    case Enumerations.CommandType.Delete: return isGrant;
+                    case Enumerations.CommandType.OpenDatabase: return isGrant;
+                    case Enumerations.CommandType.SaveDatabase: return isGrant;
+                    case Enumerations.CommandType.DeleteDatabase: return isGrant;
+                    case Enumerations.CommandType.HistoryDatabase: return isGrant;
+                    default: return false;
+                }
+            }
+
+            public Boolean GetLocked()
+            {
+                if (TryGetValue(out DocumentValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
+            }
+
+
 
         }
     }

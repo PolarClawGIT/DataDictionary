@@ -36,5 +36,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="source"></param>
         public static implicit operator DataIndex(DocumentIndex source)
         { return new DataIndex() { SystemId = source.DocumentId ?? Guid.Empty }; }
+
+        /// <summary>
+        /// Convert TemplateIndex to a SecurableIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator SecurableIndex(DocumentIndex source)
+        { return new SecurableIndex() { SecurableId = source.DocumentId ?? Guid.Empty }; }
     }
 }

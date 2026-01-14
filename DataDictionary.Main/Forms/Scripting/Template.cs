@@ -138,6 +138,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateNodeList.Load(nodeParentSelect, templateIndex, "(n/a)");
 
                 formBinding.BuildTree(nodeTreeView);
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 

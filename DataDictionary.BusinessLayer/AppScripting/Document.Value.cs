@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,25 +16,45 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IScopeType, ITemporal
     {
         /// <summary>
-        /// Speical Directory Name used to determine the Root Directory.
-        /// </summary>
-        DirectoryType SpecialDirectory { get; }
-
-        /// <summary>
         /// Input XML data
         /// </summary>
         /// 
-        String? InputData { get; }
+        String? InputText { get; }
 
         /// <summary>
         /// Results of the XML Transform
         /// </summary>
-        String? ResultData { get; }
+        String? ResultText { get; }
 
         /// <summary>
         /// Exception to the XML Transform or other processing errors.
         /// </summary>
-        String? ExceptionData { get; }
+        String? DocumentException { get; }
+
+        /// <summary>
+        /// Root Path determined by the RootFolder value.
+        /// </summary>
+        String RootPath { get; }
+
+        /// <summary>
+        /// Full Path to the Input File (not including file name)
+        /// </summary>
+        String InputPath { get; }
+
+        /// <summary>
+        /// Full Path to the OutputPath File (not including file name)
+        /// </summary>
+        String OutputPath { get; }
+
+        /// <summary>
+        /// Directory that the Transform was Saved to (Not saved to database)
+        /// </summary>
+        String? TransformPath { get; }
+
+        /// <summary>
+        /// File Name of the Transformed that was Saved to (Not saved to database)
+        /// </summary>
+        String? TransformFile { get; }
 
         /// <summary>
         /// Executes the XML Transform, filling Results and Exception.
@@ -72,30 +93,113 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
-        public DirectoryType SpecialDirectory
+        public String RootPath
         {
             get
             {
-                String? value = GetValue(nameof(RootFolder));
-                if (value.TryParse(out DirectoryType result))
-                { return result; }
-                else { return DirectoryType.Null; }
+
+                if (RootFolder.GetEnumeration().Directory is DirectoryInfo directory)
+                { return directory.FullName; }
+                else { return String.Empty; }
             }
-            set { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
-        public String? InputData { get; set; }
+        public String InputPath
+        {
+            get
+            {
+                if (RootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(InputDirectory))
+                { return SpecialDirectories.MyDocuments; }
+                else if (RootFolder is DirectoryType.Null) { return InputDirectory ?? String.Empty; }
+                else if (String.IsNullOrWhiteSpace(InputDirectory)) { return RootPath; }
+                else { return Path.Combine(RootPath, InputDirectory ?? String.Empty); }
+            }
+            set
+            {
+                if (value.StartsWith(RootPath))
+                {
+                    String path = Path.GetRelativePath(RootPath, value);
+                    if (path is "." || String.IsNullOrWhiteSpace(path))
+                    { InputDirectory = null; }
+                    else { InputDirectory = path; }
+                }
+
+                else { InputDirectory = value; }
+
+                OnPropertyChanged(nameof(InputPath));
+            }
+        }
 
         /// <inheritdoc/>
-        public String? ResultData { get; }
+        public String OutputPath
+        {
+            get
+            {
+                if (RootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(OutputDirectory))
+                { return SpecialDirectories.MyDocuments; }
+                else if (RootFolder is DirectoryType.Null) { return OutputDirectory ?? String.Empty; }
+                else if (String.IsNullOrWhiteSpace(OutputDirectory)) { return RootPath; }
+                else { return Path.Combine(RootPath, InputDirectory ?? String.Empty); }
+            }
+            set
+            {
+                if (value.StartsWith(RootPath))
+                {
+                    String path = Path.GetRelativePath(RootPath, value);
+                    if (path is "." || String.IsNullOrWhiteSpace(path))
+                    { OutputDirectory = null; }
+                    else { OutputDirectory = path; }
+                }
+                else { OutputDirectory = value; }
+
+                OnPropertyChanged(nameof(OutputPath));
+            }
+
+        }
 
         /// <inheritdoc/>
-        public String? ExceptionData { get; }
+        public String? TransformPath
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(transformDirectory))
+                { return RootPath; }
+                else { return transformDirectory; }
+            }
+            set { transformDirectory = value; OnPropertyChanged(nameof(TransformPath)); }
+        }
+        String? transformDirectory { get; set; } = String.Empty;
+
+        /// <inheritdoc/>
+        public String? TransformFile
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(transformFile))
+                { return Path.ChangeExtension(InputFile, "XSL"); }
+                else { return transformFile; }
+            }
+
+            set { transformFile = value; OnPropertyChanged(nameof(TransformFile)); }
+        }
+        String? transformFile = String.Empty;
+
+
+        /// <inheritdoc/>
+        public String? InputText { get; set; }
+
+        /// <inheritdoc/>
+        public String? ResultText { get; }
+
+        /// <inheritdoc/>
+        public String? DocumentException { get; }
 
         /// <inheritdoc/>
         public DocumentValue() : base()
         {
+            PropertyChanged += DocumentValue_PropertyChanged;
+
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
@@ -105,6 +209,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(DocumentTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(DocumentTitle)
             };
+
+            void DocumentValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName is nameof(RootFolder))
+                {
+                    OnPropertyChanged(nameof(RootPath));
+                    OnPropertyChanged(nameof(InputPath));
+                    OnPropertyChanged(nameof(OutputPath));
+                }
+            }
         }
 
 
@@ -114,7 +228,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             try
             {
 
-                OnPropertyChanged(nameof(ResultData));
+                OnPropertyChanged(nameof(ResultText));
             }
             catch (Exception)
             {
@@ -140,8 +254,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 try
                 {
-                    OnPropertyChanged(nameof(InputData));
-                    OnPropertyChanged(nameof(ResultData));
+                    OnPropertyChanged(nameof(InputText));
+                    OnPropertyChanged(nameof(ResultText));
                 }
                 catch (Exception)
                 {
@@ -149,7 +263,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     throw;
                 }
 
-                
+
 
                 throw new NotImplementedException();
             }
