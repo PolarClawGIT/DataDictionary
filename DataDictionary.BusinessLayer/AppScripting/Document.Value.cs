@@ -5,6 +5,7 @@ using DataDictionary.Resource.Enumerations;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using Toolbox.Threading;
@@ -71,7 +72,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Saves the values to files as defined by Input and Result paths.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> SaveFiles();
+        IReadOnlyList<WorkItem> OpenFiles();
 
     }
 
@@ -193,7 +194,34 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String? ResultText { get; }
 
         /// <inheritdoc/>
-        public String? DocumentException { get; }
+        public String? DocumentException
+        {
+            get
+            {
+                if (exceptions.Count == 0)
+                { return null; }
+
+                StringBuilder result = new StringBuilder();
+
+                foreach (Exception exceptionItem in exceptions)
+                {
+                    result.AppendLine(exceptionItem.Message);
+
+                    foreach (var exceptionKey in exceptionItem.Data.Keys)
+                    {
+                        if (exceptionKey.ToString() is String stringKey
+                            && exceptionItem.Data[exceptionKey] is Object value
+                            && value.ToString() is String stringValue)
+                        { result.AppendLine(String.Format("\t{0}: {1}", stringKey, stringValue)); }
+
+                    }
+                }
+
+                return result.ToString();
+            }
+        }
+
+        Collection<Exception> exceptions = new Collection<Exception>();
 
         /// <inheritdoc/>
         public DocumentValue() : base()
@@ -271,7 +299,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> SaveFiles()
+        public IReadOnlyList<WorkItem> OpenFiles()
         {
             if (String.IsNullOrEmpty(DocumentTitle))
             { throw new ArgumentNullException(nameof(DocumentTitle)); }
@@ -296,6 +324,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-
+        public IReadOnlyList<WorkItem> LoadImput() { }
+        public IReadOnlyList<WorkItem> OpenImput() { }
     }
 }

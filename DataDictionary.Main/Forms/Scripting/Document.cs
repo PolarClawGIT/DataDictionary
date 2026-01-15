@@ -45,6 +45,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ScopeType.ScriptingDocument,
                 CommandType.Delete,
+                CommandType.Save,
+                CommandType.Open,
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase,
@@ -192,6 +194,41 @@ namespace DataDictionary.Main.Forms.Scripting
         private void RefreshResultCommand_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+        }
+
+        protected override void SaveCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveCommand_Click(sender, e);
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void HistoryCommand_Click(Object sender, EventArgs e)
+        {
+            base.HistoryCommand_Click(sender, e);
         }
     }
 }

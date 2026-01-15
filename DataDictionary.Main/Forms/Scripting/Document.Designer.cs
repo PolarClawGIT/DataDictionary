@@ -65,6 +65,8 @@
             bindingDocument = new BindingSource(components);
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
+            transformDirectoryData = new DataDictionary.Main.Controls.TextBoxData();
+            transformFileData = new DataDictionary.Main.Controls.TextBoxData();
             mainLayout = new TableLayoutPanel();
             generalLayout = new TableLayoutPanel();
             dataTab = new TabPage();
@@ -200,7 +202,7 @@
             dataTab.Location = new Point(4, 24);
             dataTab.Name = "dataTab";
             dataTab.Padding = new Padding(3);
-            dataTab.Size = new Size(192, 72);
+            dataTab.Size = new Size(612, 439);
             dataTab.TabIndex = 0;
             dataTab.Text = "Data";
             // 
@@ -220,7 +222,7 @@
             documentInputLayout.RowStyles.Add(new RowStyle());
             documentInputLayout.RowStyles.Add(new RowStyle());
             documentInputLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentInputLayout.Size = new Size(186, 66);
+            documentInputLayout.Size = new Size(606, 433);
             documentInputLayout.TabIndex = 0;
             // 
             // inputToolstrip
@@ -228,7 +230,7 @@
             inputToolstrip.Items.AddRange(new ToolStripItem[] { inputOpenCommand, inputSaveCommand });
             inputToolstrip.Location = new Point(0, 0);
             inputToolstrip.Name = "inputToolstrip";
-            inputToolstrip.Size = new Size(186, 25);
+            inputToolstrip.Size = new Size(606, 25);
             inputToolstrip.TabIndex = 0;
             inputToolstrip.Text = "toolStrip1";
             // 
@@ -261,7 +263,7 @@
             inputData.Multiline = true;
             inputData.Name = "inputData";
             inputData.ReadOnly = false;
-            inputData.Size = new Size(180, 1);
+            inputData.Size = new Size(600, 302);
             inputData.TabIndex = 2;
             inputData.WordWrap = true;
             // 
@@ -274,7 +276,7 @@
             inputDirectoryData.Multiline = false;
             inputDirectoryData.Name = "inputDirectoryData";
             inputDirectoryData.ReadOnly = true;
-            inputDirectoryData.Size = new Size(180, 44);
+            inputDirectoryData.Size = new Size(600, 44);
             inputDirectoryData.TabIndex = 3;
             inputDirectoryData.WordWrap = true;
             // 
@@ -287,7 +289,7 @@
             inputFileData.Multiline = false;
             inputFileData.Name = "inputFileData";
             inputFileData.ReadOnly = true;
-            inputFileData.Size = new Size(180, 44);
+            inputFileData.Size = new Size(600, 44);
             inputFileData.TabIndex = 4;
             inputFileData.WordWrap = true;
             // 
@@ -308,11 +310,15 @@
             transformLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             transformLayout.Controls.Add(transformToolStrip, 0, 0);
             transformLayout.Controls.Add(templateData, 0, 1);
-            transformLayout.Controls.Add(transformData, 0, 2);
+            transformLayout.Controls.Add(transformData, 0, 4);
+            transformLayout.Controls.Add(transformDirectoryData, 0, 2);
+            transformLayout.Controls.Add(transformFileData, 0, 3);
             transformLayout.Dock = DockStyle.Fill;
             transformLayout.Location = new Point(3, 3);
             transformLayout.Name = "transformLayout";
-            transformLayout.RowCount = 3;
+            transformLayout.RowCount = 5;
+            transformLayout.RowStyles.Add(new RowStyle());
+            transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -376,11 +382,11 @@
             transformData.AutoSize = true;
             transformData.Dock = DockStyle.Fill;
             transformData.HeaderText = "Transform (XSL)";
-            transformData.Location = new Point(3, 80);
+            transformData.Location = new Point(3, 180);
             transformData.Multiline = true;
             transformData.Name = "transformData";
             transformData.ReadOnly = false;
-            transformData.Size = new Size(600, 350);
+            transformData.Size = new Size(600, 250);
             transformData.TabIndex = 2;
             transformData.WordWrap = true;
             // 
@@ -391,7 +397,7 @@
             resultTab.Location = new Point(4, 24);
             resultTab.Name = "resultTab";
             resultTab.Padding = new Padding(3);
-            resultTab.Size = new Size(612, 439);
+            resultTab.Size = new Size(192, 72);
             resultTab.TabIndex = 2;
             resultTab.Text = "Result";
             // 
@@ -411,7 +417,7 @@
             resultLayout.RowStyles.Add(new RowStyle());
             resultLayout.RowStyles.Add(new RowStyle());
             resultLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            resultLayout.Size = new Size(606, 433);
+            resultLayout.Size = new Size(186, 66);
             resultLayout.TabIndex = 0;
             // 
             // resultsToolStrip
@@ -419,7 +425,7 @@
             resultsToolStrip.Items.AddRange(new ToolStripItem[] { saveResultCommand, refreshResultCommand });
             resultsToolStrip.Location = new Point(0, 0);
             resultsToolStrip.Name = "resultsToolStrip";
-            resultsToolStrip.Size = new Size(606, 25);
+            resultsToolStrip.Size = new Size(186, 25);
             resultsToolStrip.TabIndex = 0;
             resultsToolStrip.Text = "toolStrip1";
             // 
@@ -452,7 +458,7 @@
             outputDirectoryData.Multiline = false;
             outputDirectoryData.Name = "outputDirectoryData";
             outputDirectoryData.ReadOnly = true;
-            outputDirectoryData.Size = new Size(600, 44);
+            outputDirectoryData.Size = new Size(180, 44);
             outputDirectoryData.TabIndex = 1;
             outputDirectoryData.WordWrap = true;
             // 
@@ -465,7 +471,7 @@
             outputFileData.Multiline = false;
             outputFileData.Name = "outputFileData";
             outputFileData.ReadOnly = true;
-            outputFileData.Size = new Size(600, 44);
+            outputFileData.Size = new Size(180, 44);
             outputFileData.TabIndex = 2;
             outputFileData.WordWrap = true;
             // 
@@ -478,13 +484,39 @@
             outputData.Multiline = true;
             outputData.Name = "outputData";
             outputData.ReadOnly = true;
-            outputData.Size = new Size(600, 302);
+            outputData.Size = new Size(180, 1);
             outputData.TabIndex = 3;
             outputData.WordWrap = true;
             // 
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
+            // 
+            // transformDirectoryData
+            // 
+            transformDirectoryData.AutoSize = true;
+            transformDirectoryData.Dock = DockStyle.Fill;
+            transformDirectoryData.HeaderText = "Directory";
+            transformDirectoryData.Location = new Point(3, 80);
+            transformDirectoryData.Multiline = false;
+            transformDirectoryData.Name = "transformDirectoryData";
+            transformDirectoryData.ReadOnly = true;
+            transformDirectoryData.Size = new Size(600, 44);
+            transformDirectoryData.TabIndex = 3;
+            transformDirectoryData.WordWrap = true;
+            // 
+            // transformFileData
+            // 
+            transformFileData.AutoSize = true;
+            transformFileData.Dock = DockStyle.Fill;
+            transformFileData.HeaderText = "File";
+            transformFileData.Location = new Point(3, 130);
+            transformFileData.Multiline = false;
+            transformFileData.Name = "transformFileData";
+            transformFileData.ReadOnly = true;
+            transformFileData.Size = new Size(600, 44);
+            transformFileData.TabIndex = 4;
+            transformFileData.WordWrap = true;
             // 
             // Document
             // 
@@ -556,5 +588,7 @@
         private BindingSource bindingDocument;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;
+        private Controls.TextBoxData transformDirectoryData;
+        private Controls.TextBoxData transformFileData;
     }
 }
