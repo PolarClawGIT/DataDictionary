@@ -3,8 +3,6 @@ using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
@@ -17,45 +15,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IScopeType, ITemporal
     {
         /// <summary>
-        /// Input XML data
-        /// </summary>
-        /// 
-        String? InputText { get; }
-
-        /// <summary>
-        /// Results of the XML Transform
-        /// </summary>
-        String? ResultText { get; }
-
-        /// <summary>
-        /// Exception to the XML Transform or other processing errors.
-        /// </summary>
-        String? DocumentException { get; }
-
-        /// <summary>
         /// Root Path determined by the RootFolder value.
         /// </summary>
         String RootPath { get; }
 
         /// <summary>
-        /// Full Path to the Input File (not including file name)
+        /// Input Data, XML is expected.
         /// </summary>
-        String InputPath { get; }
+        DocumentFile InputData { get; }
 
         /// <summary>
-        /// Full Path to the OutputPath File (not including file name)
+        /// XML Transform Data, XSL expected.
         /// </summary>
-        String OutputPath { get; }
+        DocumentFile TransformData { get; }
 
         /// <summary>
-        /// Directory that the Transform was Saved to (Not saved to database)
+        /// Output Data, Plain Text or XML is expected.
         /// </summary>
-        String? TransformPath { get; }
-
-        /// <summary>
-        /// File Name of the Transformed that was Saved to (Not saved to database)
-        /// </summary>
-        String? TransformFile { get; }
+        DocumentFile OutputData { get; }
 
         /// <summary>
         /// Executes the XML Transform, filling Results and Exception.
@@ -106,92 +83,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public String InputPath
-        {
-            get
-            {
-                if (RootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(InputDirectory))
-                { return SpecialDirectories.MyDocuments; }
-                else if (RootFolder is DirectoryType.Null) { return InputDirectory ?? String.Empty; }
-                else if (String.IsNullOrWhiteSpace(InputDirectory)) { return RootPath; }
-                else { return Path.Combine(RootPath, InputDirectory ?? String.Empty); }
-            }
-            set
-            {
-                if (value.StartsWith(RootPath))
-                {
-                    String path = Path.GetRelativePath(RootPath, value);
-                    if (path is "." || String.IsNullOrWhiteSpace(path))
-                    { InputDirectory = null; }
-                    else { InputDirectory = path; }
-                }
-
-                else { InputDirectory = value; }
-
-                OnPropertyChanged(nameof(InputPath));
-            }
-        }
+        public DocumentFile InputData { get; }
 
         /// <inheritdoc/>
-        public String OutputPath
-        {
-            get
-            {
-                if (RootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(OutputDirectory))
-                { return SpecialDirectories.MyDocuments; }
-                else if (RootFolder is DirectoryType.Null) { return OutputDirectory ?? String.Empty; }
-                else if (String.IsNullOrWhiteSpace(OutputDirectory)) { return RootPath; }
-                else { return Path.Combine(RootPath, InputDirectory ?? String.Empty); }
-            }
-            set
-            {
-                if (value.StartsWith(RootPath))
-                {
-                    String path = Path.GetRelativePath(RootPath, value);
-                    if (path is "." || String.IsNullOrWhiteSpace(path))
-                    { OutputDirectory = null; }
-                    else { OutputDirectory = path; }
-                }
-                else { OutputDirectory = value; }
-
-                OnPropertyChanged(nameof(OutputPath));
-            }
-
-        }
+        public DocumentFile TransformData { get; }
 
         /// <inheritdoc/>
-        public String? TransformPath
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(transformDirectory))
-                { return RootPath; }
-                else { return transformDirectory; }
-            }
-            set { transformDirectory = value; OnPropertyChanged(nameof(TransformPath)); }
-        }
-        String? transformDirectory { get; set; } = String.Empty;
-
-        /// <inheritdoc/>
-        public String? TransformFile
-        {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(transformFile))
-                { return Path.ChangeExtension(InputFile, "XSL"); }
-                else { return transformFile; }
-            }
-
-            set { transformFile = value; OnPropertyChanged(nameof(TransformFile)); }
-        }
-        String? transformFile = String.Empty;
-
-
-        /// <inheritdoc/>
-        public String? InputText { get; set; }
-
-        /// <inheritdoc/>
-        public String? ResultText { get; }
+        public DocumentFile OutputData { get; }
 
         /// <inheritdoc/>
         public String? DocumentException
@@ -226,6 +124,31 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public DocumentValue() : base()
         {
+            InputData = new DocumentFile()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => InputDirectory ?? String.Empty,
+                GetFileName = () => InputFile ?? String.Empty,
+                SetDirectory = (v) => InputDirectory = v,
+                SetFileName = (v) => InputFile = v
+            };
+
+            TransformData = new DocumentFile()
+            {
+                GetRootFolder = () => RootFolder,
+                GetContent = () => TransformScript?? String.Empty,
+                SetContent = (v) => TransformScript = v
+            };
+
+            OutputData = new DocumentFile()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => OutputDirectory ?? String.Empty,
+                GetFileName = () => OutputFile ?? String.Empty,
+                SetDirectory = (v) => OutputDirectory = v,
+                SetFileName = (v) => OutputFile = v
+            };
+
             PropertyChanged += DocumentValue_PropertyChanged;
 
             pathValue = new PathValue(this)
@@ -243,8 +166,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 if (e.PropertyName is nameof(RootFolder))
                 {
                     OnPropertyChanged(nameof(RootPath));
-                    OnPropertyChanged(nameof(InputPath));
-                    OnPropertyChanged(nameof(OutputPath));
                 }
             }
         }
@@ -256,7 +177,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             try
             {
 
-                OnPropertyChanged(nameof(ResultText));
+
             }
             catch (Exception)
             {
@@ -282,8 +203,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 try
                 {
-                    OnPropertyChanged(nameof(InputText));
-                    OnPropertyChanged(nameof(ResultText));
+
                 }
                 catch (Exception)
                 {
@@ -324,7 +244,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
         }
 
-        public IReadOnlyList<WorkItem> LoadImput() { }
-        public IReadOnlyList<WorkItem> OpenImput() { }
     }
 }

@@ -131,8 +131,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 else return true;
             }
 
-
-
         }
     }
 }

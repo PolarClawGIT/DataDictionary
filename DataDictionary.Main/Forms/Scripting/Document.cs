@@ -51,7 +51,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase,
                 CommandType.HistoryDatabase);
-
         }
 
         public Document(IDocumentIndex? document) : this()
@@ -94,27 +93,33 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.RootFolder),
                     true, DataSourceUpdateMode.OnValidation));
 
-                rootPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.RootPath)));
-                exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
 
-                inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.InputText)));
-                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.InputPath)));
-                inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.InputFile)));
+
+                rootPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.RootPath)));
+                //exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
+
+                inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.Content))));
+                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.Directory))));
+                inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.FileName))));
 
                 TemplateNameList.Load(templateData, "(n/a)");
                 templateData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
                     bindingDocument,
                     nameof(ITemplateValue.TemplateId)));
-                transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.TransformScript)));
 
-                outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.ResultText)));
-                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.OutputPath)));
-                outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.OutputFile)));
+                transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.Content))));
+                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.Directory))));
+                transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.FileName))));
+
+                outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.Content))));
+                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.Directory))));
+                outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.FileName))));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
+
             }
         }
 
@@ -122,20 +127,32 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             openFileDialog.Filter = "XML data|*.XML";
 
-            if(formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(out DocumentValue? document))
             {
-                openFileDialog.InitialDirectory = document.InputPath ;
-                openFileDialog.FileName = document.InputFile;
+                openFileDialog.InitialDirectory = document.InputData.FilePath;
+                openFileDialog.FileName = document.InputData.FileName;
 
                 DialogResult dialogResult = openFileDialog.ShowDialog();
 
                 if (dialogResult is DialogResult.OK)
                 {
-                    document.InputPath = Path.GetDirectoryName(openFileDialog.FileName)??String.Empty;
-                    document.InputFile = Path.GetFileName(openFileDialog.FileName);
+                    document.InputData.FilePath = Path.GetDirectoryName(openFileDialog.FileName) ?? String.Empty;
+                    document.InputData.FileName = Path.GetFileName(openFileDialog.FileName);
+
+                    DoWork(document.InputData.Open(), onCompleted);
                 }
             }
+
+            void onCompleted(RunWorkerCompletedEventArgs args)
+            {
+                bindingDocument.ResetCurrentItem();
+
+                if (args.Error is Exception ex)
+                { inputData.ErrorControl.Text = ex.Message; }
+                else { inputData.ErrorControl.Text = String.Empty; }
+            }
         }
+
 
         private void InputSaveCommand_Click(object sender, EventArgs e)
         {
@@ -145,13 +162,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
-                saveFileDialog.InitialDirectory = document.InputPath;
+                saveFileDialog.InitialDirectory = document.InputData.FilePath;
                 saveFileDialog.FileName = document.InputFile;
 
                 if (dialogResult is DialogResult.OK)
                 {
-                    document.InputPath = Path.GetDirectoryName(saveFileDialog.FileName) ?? String.Empty;
-                    document.InputFile = Path.GetFileName(saveFileDialog.FileName);
+                    document.InputData.FilePath = Path.GetDirectoryName(openFileDialog.FileName) ?? String.Empty;
+                    document.InputData.FileName = Path.GetFileName(openFileDialog.FileName);
                 }
             }
         }
@@ -162,8 +179,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
-                openFileDialog.InitialDirectory = document.TransformPath;
-                openFileDialog.FileName = document.TransformFile;
+
 
                 DialogResult dialogResult = openFileDialog.ShowDialog();
 
