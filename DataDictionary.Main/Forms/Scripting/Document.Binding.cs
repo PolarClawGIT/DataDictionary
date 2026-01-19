@@ -2,12 +2,11 @@
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
+using DataDictionary.Main.Controls;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -91,6 +90,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
+
+
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {
                 Boolean isGrant = false;
@@ -132,5 +133,44 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
         }
+
+
+        public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
+        {
+            dialog.InitialDirectory = file.FilePath;
+            dialog.FileName = file.FileName;
+
+            if (dialog.ShowDialog() is DialogResult.OK)
+            {
+                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.FileName = Path.GetFileName(dialog.FileName);
+
+                DoWork(file.Open(), onCompleted);
+            }
+
+            void onCompleted(RunWorkerCompletedEventArgs args)
+            { onComplete(args); }
+        }
+
+        public void Save(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
+        {
+            dialog.InitialDirectory = file.FilePath;
+            dialog.FileName = file.FileName;
+
+            if (dialog.ShowDialog() is DialogResult.OK)
+            {
+                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.FileName = Path.GetFileName(dialog.FileName);
+
+                DoWork(file.Save(), onCompleted);
+            }
+
+            void onCompleted(RunWorkerCompletedEventArgs args)
+            { onComplete(args); }
+        }
+
+
+
+
     }
 }

@@ -22,17 +22,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Input Data, XML is expected.
         /// </summary>
-        DocumentFile InputData { get; }
+        DocumentFile InputValue { get; }
 
         /// <summary>
         /// XML Transform Data, XSL expected.
         /// </summary>
-        DocumentFile TransformData { get; }
+        DocumentFile TransformValue { get; }
 
         /// <summary>
         /// Output Data, Plain Text or XML is expected.
         /// </summary>
-        DocumentFile OutputData { get; }
+        DocumentFile OutputValue { get; }
 
         /// <summary>
         /// Executes the XML Transform, filling Results and Exception.
@@ -83,13 +83,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public DocumentFile InputData { get; }
+        public DocumentFile InputValue { get; }
 
         /// <inheritdoc/>
-        public DocumentFile TransformData { get; }
+        public DocumentFile TransformValue { get; }
 
         /// <inheritdoc/>
-        public DocumentFile OutputData { get; }
+        public DocumentFile OutputValue { get; }
 
         /// <inheritdoc/>
         public String? DocumentException
@@ -124,7 +124,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public DocumentValue() : base()
         {
-            InputData = new DocumentFile()
+            InputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => InputDirectory ?? String.Empty,
@@ -133,14 +133,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 SetFileName = (v) => InputFile = v
             };
 
-            TransformData = new DocumentFile()
+            TransformValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
                 GetContent = () => TransformScript?? String.Empty,
                 SetContent = (v) => TransformScript = v
             };
 
-            OutputData = new DocumentFile()
+            OutputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
                 GetDirectory = () => OutputDirectory ?? String.Empty,

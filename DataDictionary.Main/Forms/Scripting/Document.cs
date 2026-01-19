@@ -99,9 +99,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 rootPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.RootPath)));
                 //exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
 
-                inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.Content))));
-                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.FilePath))));
-                inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.FileName))));
+                inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.Content))));
+                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.FilePath))));
+                inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.FileName))));
 
                 TemplateNameList.Load(templateData, "(n/a)");
                 templateData.DataBindings.Add(new Binding(
@@ -109,13 +109,13 @@ namespace DataDictionary.Main.Forms.Scripting
                     bindingDocument,
                     nameof(ITemplateValue.TemplateId)));
 
-                transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.Content))));
-                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.FilePath))));
-                transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.FileName))));
+                transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.Content))));
+                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.FilePath))));
+                transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.FileName))));
 
-                outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.Content))));
-                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.FilePath))));
-                outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.FileName))));
+                outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.Content))));
+                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FilePath))));
+                outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FileName))));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -130,32 +130,17 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
-                openFileDialog.InitialDirectory = document.InputData.FilePath;
-                openFileDialog.FileName = document.InputData.FileName;
+                Open(openFileDialog, document.InputValue, onCompleted);
 
-                DialogResult dialogResult = openFileDialog.ShowDialog();
-
-                if (dialogResult is DialogResult.OK)
+                void onCompleted(RunWorkerCompletedEventArgs args)
                 {
-                    document.InputData.FilePath = Path.GetDirectoryName(openFileDialog.FileName) ?? String.Empty;
-                    document.InputData.FileName = Path.GetFileName(openFileDialog.FileName);
+                    bindingDocument.ResetCurrentItem();
 
-                    DoWork(document.InputData.Open(), onCompleted);
-                }
-            }
-
-            void onCompleted(RunWorkerCompletedEventArgs args)
-            {
-                bindingDocument.ResetCurrentItem();
-
-                if (args.Error is Exception ex)
-                { inputData.ErrorControl.Text = ex.Message; }
-                else
-                {
-                    if (document.InputData.TryParse(out XDocument? _, out Exception? xException))
+                    if (args.Error is Exception exception)
+                    { inputData.ErrorControl.Text = exception.Message; }
+                    else if (document.InputValue.TryParse(out XDocument? _, out Exception? xException))
                     { inputData.ErrorControl.Text = String.Empty; }
-                    else
-                    { inputData.ErrorControl.Text = xException.Message; }
+                    else { inputData.ErrorControl.Text = xException.Message; }
                 }
             }
         }
@@ -164,25 +149,14 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             saveFileDialog.Filter = "XML data|*.XML";
 
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
-                saveFileDialog.InitialDirectory = document.InputData.FilePath;
-                saveFileDialog.FileName = document.InputFile;
-
-                if (dialogResult is DialogResult.OK)
-                {
-                    document.InputData.FilePath = Path.GetDirectoryName(openFileDialog.FileName) ?? String.Empty;
-                    document.InputData.FileName = Path.GetFileName(openFileDialog.FileName);
-
-                    DoWork(document.InputData.Save(), onCompleted);
-                }
+                Save(saveFileDialog, document.InputValue, onCompleted);
 
                 void onCompleted(RunWorkerCompletedEventArgs args)
                 {
-                    if (args.Error is Exception ex)
-                    { inputData.ErrorControl.Text = ex.Message; }
+                    if (args.Error is Exception exception)
+                    { inputData.ErrorControl.Text = exception.Message; }
                     else { inputData.ErrorControl.Text = String.Empty; }
                 }
             }
@@ -194,22 +168,36 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
+                Open(openFileDialog, document.TransformValue, onCompleted);
 
-
-                DialogResult dialogResult = openFileDialog.ShowDialog();
-
-                if (dialogResult is DialogResult.OK)
+                void onCompleted(RunWorkerCompletedEventArgs args)
                 {
+                    bindingDocument.ResetCurrentItem();
 
+                    if (args.Error is Exception exception)
+                    { transformData.ErrorControl.Text = exception.Message; }
+                    else if (document.TransformValue.TryParse(out XDocument? _, out Exception? xException))
+                    { transformData.ErrorControl.Text = String.Empty; }
+                    else { transformData.ErrorControl.Text = xException.Message; }
                 }
             }
-
-
         }
 
         private void SaveTransformCommand_Click(object sender, EventArgs e)
         {
+            saveFileDialog.Filter = "XSL Transform|*.XSL";
 
+            if (formBinding.TryGetValue(out DocumentValue? document))
+            {
+                Save(saveFileDialog, document.TransformValue, onCompleted);
+
+                void onCompleted(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is Exception exception)
+                    { transformData.ErrorControl.Text = exception.Message; }
+                    else { transformData.ErrorControl.Text = String.Empty; }
+                }
+            }
         }
 
         private void GetTransformCommand_Click(object sender, EventArgs e)
@@ -219,7 +207,19 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SaveResultCommand_Click(object sender, EventArgs e)
         {
+            saveFileDialog.Filter = "Plain Text|*.TXT|XML data|*.XML|SQL Script|*.SQL|C# Fragment|*.CS|VB.Net Fragment|*.VB|Other|*.*";
 
+            if (formBinding.TryGetValue(out DocumentValue? document))
+            {
+                Save(saveFileDialog, document.InputValue, onCompleted);
+
+                void onCompleted(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is Exception exception)
+                    { outputData.ErrorControl.Text = exception.Message; }
+                    else { outputData.ErrorControl.Text = String.Empty; }
+                }
+            }
         }
 
         private void RefreshResultCommand_Click(object sender, EventArgs e)
