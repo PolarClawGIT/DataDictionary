@@ -1,7 +1,11 @@
 ﻿using DataDictionary.Resource.Enumerations;
 using Microsoft.VisualBasic.FileIO;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -242,6 +246,31 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     ex.Data.Add(nameof(FileName), FileName);
                     throw;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Try/Parse the Content into an XDocument.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="exception"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public Boolean TryParse([NotNullWhen(true)] out XDocument? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
+        {
+            try
+            {
+                document = XDocument.Parse(Content, option);
+                exception = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                document = null;
+                ex.Data.Add(nameof(FilePath), FilePath);
+                ex.Data.Add(nameof(FileName), FileName);
+                exception = ex;
+                return false;
             }
         }
     }

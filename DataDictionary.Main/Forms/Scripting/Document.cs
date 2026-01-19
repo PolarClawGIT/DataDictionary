@@ -5,6 +5,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -99,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 //exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
 
                 inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.Content))));
-                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.Directory))));
+                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.FilePath))));
                 inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputData), nameof(IDocumentFile.FileName))));
 
                 TemplateNameList.Load(templateData, "(n/a)");
@@ -109,11 +110,11 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.TemplateId)));
 
                 transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.Content))));
-                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.Directory))));
+                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.FilePath))));
                 transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformData), nameof(IDocumentFile.FileName))));
 
                 outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.Content))));
-                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.Directory))));
+                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.FilePath))));
                 outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputData), nameof(IDocumentFile.FileName))));
 
                 // Security
@@ -149,10 +150,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (args.Error is Exception ex)
                 { inputData.ErrorControl.Text = ex.Message; }
-                else { inputData.ErrorControl.Text = String.Empty; }
+                else
+                {
+                    if (document.InputData.TryParse(out XDocument? _, out Exception? xException))
+                    { inputData.ErrorControl.Text = String.Empty; }
+                    else
+                    { inputData.ErrorControl.Text = xException.Message; }
+                }
             }
         }
-
 
         private void InputSaveCommand_Click(object sender, EventArgs e)
         {
@@ -169,6 +175,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     document.InputData.FilePath = Path.GetDirectoryName(openFileDialog.FileName) ?? String.Empty;
                     document.InputData.FileName = Path.GetFileName(openFileDialog.FileName);
+
+                    DoWork(document.InputData.Save(), onCompleted);
+                }
+
+                void onCompleted(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is Exception ex)
+                    { inputData.ErrorControl.Text = ex.Message; }
+                    else { inputData.ErrorControl.Text = String.Empty; }
                 }
             }
         }
