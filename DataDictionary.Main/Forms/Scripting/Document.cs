@@ -94,13 +94,11 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.RootFolder),
                     true, DataSourceUpdateMode.OnValidation));
 
-
-
                 rootPathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.RootPath)));
                 //exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
 
                 inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.Content))));
-                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.FilePath))));
+                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.Directory))));
                 inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.FileName))));
 
                 TemplateNameList.Load(templateData, "(n/a)");
@@ -110,11 +108,11 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.TemplateId)));
 
                 transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.Content))));
-                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.FilePath))));
+                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.Directory))));
                 transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.FileName))));
 
                 outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.Content))));
-                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FilePath))));
+                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.Directory))));
                 outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FileName))));
 
                 // Security

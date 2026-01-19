@@ -127,7 +127,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             InputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetDirectory = () => InputDirectory ?? String.Empty,
+                GetDirectory = () => InputDirectory ?? RootPath,
                 GetFileName = () => InputFile ?? String.Empty,
                 SetDirectory = (v) => InputDirectory = v,
                 SetFileName = (v) => InputFile = v
@@ -143,7 +143,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             OutputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetDirectory = () => OutputDirectory ?? String.Empty,
+                GetDirectory = () => OutputDirectory ?? RootPath,
                 GetFileName = () => OutputFile ?? String.Empty,
                 SetDirectory = (v) => OutputDirectory = v,
                 SetFileName = (v) => OutputFile = v
