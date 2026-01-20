@@ -5,7 +5,12 @@ using DataDictionary.Resource.Enumerations;
 using Microsoft.VisualBasic.FileIO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Xsl;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -37,7 +42,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Executes the XML Transform, filling Results and Exception.
         /// </summary>
-        void DoTransform();
+        Boolean TryTransform([NotNullWhen(false)] out Exception? exception);
 
         /// <summary>
         /// Loads the values from the files as defined by Input and Result paths.
@@ -136,8 +141,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             TransformValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetContent = () => TransformScript?? String.Empty,
-                SetContent = (v) => TransformScript = v
+                GetContent = () => TransformScript ?? String.Empty,
+                SetContent = (v) => TransformScript = v // TODO: Throwing Binding error because this occurred in a background thread.
             };
 
             OutputValue = new DocumentFile()
@@ -172,20 +177,65 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
 
         /// <inheritdoc/>
-        public void DoTransform()
+        public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
         {
-            try
+            if ((InputValue.TryParse(out XDocument? source, out Exception? inputException)
+                & TransformValue.TryParse(out XDocument? transform, out Exception? transformException))
+                && source is XDocument && transform is XDocument)
             {
+
+                try
+                {
+                    using (XmlReader sourceReader = source.CreateReader())
+                    using (XmlReader transformReader = transform.CreateReader())
+                    {
+                        XslCompiledTransform transformer = new XslCompiledTransform();
+                        transformer.Load(transformReader);
+
+                        // Try results as Text
+                        using (StringWriter resultText = new StringWriter())
+                        { transformer.Transform(sourceReader, null, resultText); }
+
+
+
+
+
+
+                        //if (templateValue.ScriptAs is TemplateScriptAsType.Text)
+                        //{
+                        //    using (StringWriter resultText = new StringWriter())
+                        //    {
+
+                        //        ResultsAsText = resultText.ToString();
+                        //    }
+                        //}
+                        //else if (templateValue.ScriptAs is TemplateScriptAsType.XML)
+                        //{
+                        //    ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
+                        //    using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())
+                        //    { transformer.Transform(sourceReader, resultAsXml); }
+                        //}
+
+                    }
+
+                    exception = null; return true;
+
+                }
+                catch (Exception ex)
+                { exception = ex; return false; }
 
 
             }
-            catch (Exception)
+            else
             {
+                if (inputException is Exception)
+                { exception = inputException; return false; }
 
-                throw;
+                if (transformException is Exception)
+                { exception = transformException; return false; }
+
+                throw new UnreachableException();// This should be un-reachable. But the compiler says otherwise.
             }
-
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>

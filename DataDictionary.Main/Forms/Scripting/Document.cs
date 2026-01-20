@@ -118,7 +118,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.GetAuthorization);
-
             }
         }
 
@@ -135,10 +134,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     bindingDocument.ResetCurrentItem();
 
                     if (args.Error is Exception exception)
-                    { inputData.ErrorControl.Text = exception.Message; }
-                    else if (document.InputValue.TryParse(out XDocument? _, out Exception? xException))
-                    { inputData.ErrorControl.Text = String.Empty; }
-                    else { inputData.ErrorControl.Text = xException.Message; }
+                    { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
+                    else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
+
+                    if (document.InputValue.TryParse(out XDocument? _, out Exception? xException))
+                    { errorProvider.SetError(inputData.ErrorControl, String.Empty); }
+                    else { errorProvider.SetError(inputData.ErrorControl, xException.Message); }
                 }
             }
         }
@@ -154,15 +155,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 void onCompleted(RunWorkerCompletedEventArgs args)
                 {
                     if (args.Error is Exception exception)
-                    { inputData.ErrorControl.Text = exception.Message; }
-                    else { inputData.ErrorControl.Text = String.Empty; }
+                    { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
+                    else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
                 }
             }
         }
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "XSL Transform|*.XSL";
+            openFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
@@ -173,17 +174,19 @@ namespace DataDictionary.Main.Forms.Scripting
                     bindingDocument.ResetCurrentItem();
 
                     if (args.Error is Exception exception)
-                    { transformData.ErrorControl.Text = exception.Message; }
-                    else if (document.TransformValue.TryParse(out XDocument? _, out Exception? xException))
-                    { transformData.ErrorControl.Text = String.Empty; }
-                    else { transformData.ErrorControl.Text = xException.Message; }
+                    { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
+                    else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
+
+                    if (document.TransformValue.TryParse(out XDocument? _, out Exception? xException))
+                    { errorProvider.SetError(transformData.ErrorControl, String.Empty); }
+                    else { errorProvider.SetError(transformData.ErrorControl, xException.Message); }
                 }
             }
         }
 
         private void SaveTransformCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "XSL Transform|*.XSL";
+            saveFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
 
             if (formBinding.TryGetValue(out DocumentValue? document))
             {
@@ -192,8 +195,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 void onCompleted(RunWorkerCompletedEventArgs args)
                 {
                     if (args.Error is Exception exception)
-                    { transformData.ErrorControl.Text = exception.Message; }
-                    else { transformData.ErrorControl.Text = String.Empty; }
+                    { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
+                    else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
                 }
             }
         }
@@ -214,15 +217,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 void onCompleted(RunWorkerCompletedEventArgs args)
                 {
                     if (args.Error is Exception exception)
-                    { outputData.ErrorControl.Text = exception.Message; }
-                    else { outputData.ErrorControl.Text = String.Empty; }
+                    { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
+                    else { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
                 }
             }
         }
 
         private void RefreshResultCommand_Click(object sender, EventArgs e)
         {
-
+            if (formBinding.TryTransform(out Exception? exception))
+            { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
+            else { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)

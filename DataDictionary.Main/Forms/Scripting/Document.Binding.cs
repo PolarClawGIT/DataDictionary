@@ -90,7 +90,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
-
+            public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
+            {
+                if(TryGetValue(out DocumentValue? value))
+                {
+                    if(value.TryTransform(out Exception? transformException))
+                    {   exception = null; return true; }
+                    else { exception = transformException; return false; }
+                }
+                else { exception = new Exception("Document not found"); return false; }
+            }
 
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {
