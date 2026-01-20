@@ -211,7 +211,7 @@ namespace DataDictionary.Main.Forms.Model
                 set
                 {
                     inModel = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InModel));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InModel));
                 }
             }
             private Boolean inModel;
@@ -222,7 +222,7 @@ namespace DataDictionary.Main.Forms.Model
                 set
                 {
                     inDatabase = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InDatabase));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InDatabase));
                 }
             }
             private Boolean inDatabase;
@@ -239,19 +239,15 @@ namespace DataDictionary.Main.Forms.Model
 
             private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
+                if (dataSource is IModelValue sourceValue)
                 {
-                    if (dataSource is IModelValue sourceValue)
-                    {
-                        if (e.PropertyName is nameof(IModelValue.ModelTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(ModelTitle))); }
+                    if (e.PropertyName is nameof(IModelValue.ModelTitle))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(ModelTitle)); }
 
-                        if (e.PropertyName is nameof(IModelValue.ModelDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(ModelDescription))); }
-
-                    }
-                    else { }
+                    if (e.PropertyName is nameof(IModelValue.ModelDescription))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(ModelDescription)); }
                 }
+                else { }
             }
 
             public Boolean TryGetIndex([NotNullWhen(true)] out ModelIndex? result)

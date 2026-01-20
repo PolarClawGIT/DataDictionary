@@ -263,7 +263,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 set
                 {
                     inModel = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InModel));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InModel));
                 }
             }
             private Boolean inModel;
@@ -274,7 +274,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 set
                 {
                     inDatabase = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InDatabase));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InDatabase));
                 }
             }
             private Boolean inDatabase;
@@ -291,27 +291,24 @@ namespace DataDictionary.Main.Forms.Catalog
 
             private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
+                if (dataSource is ICatalogValue sourceValue)
                 {
-                    if (dataSource is ICatalogValue sourceValue)
-                    {
-                        if (e.PropertyName is nameof(ICatalogValue.CatalogTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(CatalogTitle))); }
+                    if (e.PropertyName is nameof(ICatalogValue.CatalogTitle))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(CatalogTitle)); }
 
-                        if (e.PropertyName is nameof(ICatalogValue.CatalogDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(CatalogDescription))); }
+                    if (e.PropertyName is nameof(ICatalogValue.CatalogDescription))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(CatalogDescription)); }
 
-                        if (e.PropertyName is nameof(ICatalogValue.ServerName))
-                        { handler(this, new PropertyChangedEventArgs(nameof(ServerName))); }
+                    if (e.PropertyName is nameof(ICatalogValue.ServerName))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(ServerName)); }
 
-                        if (e.PropertyName is nameof(ICatalogValue.DatabaseName))
-                        { handler(this, new PropertyChangedEventArgs(nameof(DatabaseName))); }
+                    if (e.PropertyName is nameof(ICatalogValue.DatabaseName))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(DatabaseName)); }
 
-                        if (e.PropertyName is nameof(ICatalogValue.SourceDate))
-                        { handler(this, new PropertyChangedEventArgs(nameof(SourceDate))); }
-                    }
-                    else { }
+                    if (e.PropertyName is nameof(ICatalogValue.SourceDate))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(SourceDate)); }
                 }
+                else { }
             }
 
             public Boolean TryGetIndex([NotNullWhen(true)] out CatalogIndex? result)

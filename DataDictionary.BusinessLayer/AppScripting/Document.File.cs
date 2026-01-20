@@ -74,8 +74,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 SetDirectory(value);
 
-                OnPropertyChanged(nameof(Directory));
-                OnPropertyChanged(nameof(FilePath));
+                this.OnPropertyChanged(PropertyChanged, nameof(Directory));
+                this.OnPropertyChanged(PropertyChanged, nameof(FilePath));
             }
         }
         internal Func<String> GetDirectory { private get; init; }
@@ -116,8 +116,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                 else { SetDirectory(value); }
 
-                OnPropertyChanged(nameof(Directory));
-                OnPropertyChanged(nameof(FilePath));
+                this.OnPropertyChanged(PropertyChanged, nameof(Directory));
+                this.OnPropertyChanged(PropertyChanged, nameof(FilePath));
             }
         }
 
@@ -125,7 +125,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String FileName
         {
             get { return GetFileName(); }
-            set { SetFileName(value); OnPropertyChanged(nameof(FileName)); }
+            set
+            {
+                SetFileName(value);
+                this.OnPropertyChanged(PropertyChanged, nameof(FileName));
+            }
         }
         internal Func<String> GetFileName { private get; init; }
         internal Action<String> SetFileName { private get; init; }
@@ -135,7 +139,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public String Content
         {
             get { return GetContent(); }
-            set { SetContent(value); OnPropertyChanged(nameof(Content)); }
+            set
+            {
+                SetContent(value);
+                this.OnPropertyChanged(PropertyChanged, nameof(Content));
+            }
         }
         internal Func<String> GetContent { private get; init; }
         internal Action<String> SetContent { private get; init; }
@@ -163,14 +171,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="IBindingPropertyChanged.OnPropertyChanged"/>
-        /// <remarks>
-        /// Do not call this on a background thread.
-        /// It will cause threading issues with "FindGoodRow" method.
-        /// </remarks>
-        protected virtual void OnPropertyChanged(String propertyName)
-        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
-
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Open()
         {
@@ -195,7 +195,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     try
                     {
                         SetContent(File.ReadAllText(file.FullName));
-                        //OnPropertyChanged(nameof(Content)); // This statement causes threading issues as it occurs on the background thread.
+                        this.OnPropertyChanged(PropertyChanged, (nameof(Content)));
                     }
                     catch (Exception ex)
                     {

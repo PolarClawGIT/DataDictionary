@@ -72,8 +72,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
-        void OnPropertyChanged(String propertyName)
-        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
 
         /// <summary>
         /// Creates WorkItems that invoke a method to add items to NamedScopes, generic version.

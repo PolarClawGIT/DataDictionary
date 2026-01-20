@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                 onItemChanged: (s, t) =>
                 {
                     t.RoleName = s.RoleName ?? String.Empty;
-                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.RoleName));
+                    t.OnPropertyChanged(t.PropertyChanged, nameof(t.RoleName));
                 },
                 orderBy: (o) => o.RoleName,
                 areEquel: (a, b) => new RoleIndex(a).Equals(b),

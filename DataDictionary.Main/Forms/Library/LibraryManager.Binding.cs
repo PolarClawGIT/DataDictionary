@@ -263,7 +263,7 @@ namespace DataDictionary.Main.Forms.Library
                 set
                 {
                     inModel = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InModel));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InModel));
                 }
             }
             private Boolean inModel;
@@ -274,7 +274,7 @@ namespace DataDictionary.Main.Forms.Library
                 set
                 {
                     inDatabase = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InDatabase));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InDatabase));
                 }
             }
             private Boolean inDatabase;
@@ -291,27 +291,24 @@ namespace DataDictionary.Main.Forms.Library
 
             private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
+                if (dataSource is ILibrarySourceValue sourceValue)
                 {
-                    if (dataSource is ILibrarySourceValue sourceValue)
-                    {
-                        if (e.PropertyName is nameof(ILibrarySourceValue.LibraryTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(LibraryTitle))); }
+                    if (e.PropertyName is nameof(ILibrarySourceValue.LibraryTitle))
+                    { this.OnPropertyChanged(PropertyChanged,nameof(LibraryTitle)); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.LibraryDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(LibraryDescription))); }
+                    if (e.PropertyName is nameof(ILibrarySourceValue.LibraryDescription))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(LibraryDescription)); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.SourceFile))
-                        { handler(this, new PropertyChangedEventArgs(nameof(SourceFile))); }
+                    if (e.PropertyName is nameof(ILibrarySourceValue.SourceFile))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(SourceFile)); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.AssemblyName))
-                        { handler(this, new PropertyChangedEventArgs(nameof(AssemblyName))); }
+                    if (e.PropertyName is nameof(ILibrarySourceValue.AssemblyName))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(AssemblyName)); }
 
-                        if (e.PropertyName is nameof(ILibrarySourceValue.SourceDate))
-                        { handler(this, new PropertyChangedEventArgs(nameof(SourceDate))); }
-                    }
-                    else { }
+                    if (e.PropertyName is nameof(ILibrarySourceValue.SourceDate))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(SourceDate)); }
                 }
+                else { }
             }
 
             public Boolean TryGetIndex([NotNullWhen(true)] out LibrarySourceIndex? result)

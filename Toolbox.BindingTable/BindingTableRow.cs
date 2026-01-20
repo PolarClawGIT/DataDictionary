@@ -300,7 +300,7 @@ namespace Toolbox.BindingTable
             if (ReferenceEquals(data, e.Row)
                 && e.Row.RowState != DataRowState.Detached
                 && e.Column is not null)
-            { OnPropertyChanged(e.Column.ColumnName); }
+            { this.OnPropertyChanged(PropertyChanged, e.Column.ColumnName); }
 
             IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
@@ -478,10 +478,6 @@ namespace Toolbox.BindingTable
         #region INotifyPropertyChanged
         /// <inheritdoc/>
         public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
-
-
-        public virtual void OnPropertyChanged(String propertyName)
-        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
         #endregion
 
         #region ISerializable

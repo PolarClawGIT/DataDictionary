@@ -1,12 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Dialogs
@@ -24,7 +19,7 @@ namespace DataDictionary.Main.Dialogs
             set
             {
                 scopeValue = value;
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(SelectedScope));
+                this.OnPropertyChanged(PropertyChanged, nameof(SelectedScope));
             }
         }
         public ScopeType ScopeNull { get { return scopeNull; } }
@@ -41,7 +36,7 @@ namespace DataDictionary.Main.Dialogs
             set
             {
                 pathValue = value;
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(SelectedPath));
+                this.OnPropertyChanged(PropertyChanged, nameof(SelectedPath));
             }
         }
         public PathIndex PathNull { get { return pathNull; } }
@@ -58,8 +53,8 @@ namespace DataDictionary.Main.Dialogs
             set
             {
                 isGroupByScope = value;
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(GroupByScope));
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(GroupByPath));
+                this.OnPropertyChanged(PropertyChanged, nameof(GroupByScope));
+                this.OnPropertyChanged(PropertyChanged, nameof(GroupByPath));
             }
         }
 
@@ -72,8 +67,8 @@ namespace DataDictionary.Main.Dialogs
             set
             {
                 isGroupByScope = !value;
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(GroupByScope));
-                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(GroupByPath));
+                this.OnPropertyChanged(PropertyChanged, nameof(GroupByScope));
+                this.OnPropertyChanged(PropertyChanged, nameof(GroupByPath));
             }
         }
         private Boolean isGroupByScope = true;

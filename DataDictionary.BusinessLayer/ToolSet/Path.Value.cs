@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
             base.OnPropertyChanged(sender, e);
 
             if (IsPathChanged(e))
-            { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Path)); }
+            { this.OnPropertyChanged(PropertyChanged, nameof(Path)); }
         }
 
 
