@@ -477,7 +477,13 @@ namespace Toolbox.BindingTable
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
+        /// <remarks>Child classes MUST override this event to reference it. CS0070</remarks>
         public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
+        /// <remarks>To override this method the PropertyChanged must also be overridden.</remarks>
+        public virtual void OnPropertyChanged(String propertyName)
+        { this.OnPropertyChanged(PropertyChanged, propertyName); }
         #endregion
 
         #region ISerializable

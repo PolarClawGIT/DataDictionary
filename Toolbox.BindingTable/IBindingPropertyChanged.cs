@@ -4,14 +4,46 @@ namespace Toolbox.BindingTable
 {
     /// <inheritdoc cref="System.ComponentModel.INotifyPropertyChanged"/>
     /// <remarks>
-    /// Helper interface for INotifyPropertyChanged
+    /// Helper interface for INotifyPropertyChanged.<br/>
+    /// Child classes MUST override the PropertyChanged event to reference it. CS0070
     /// </remarks>
+    /// <example>
+    /// public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+    /// </example>
     public interface IBindingPropertyChanged : INotifyPropertyChanged
     { }
 
     /// <summary>
     /// Helper Class for INotifyPropertyChanged
     /// </summary>
+    /// <example>
+    /// class SomeClass : IBindingPropertyChanged
+    /// {
+    ///     public String SomeProperty
+    ///     {
+    ///         get;
+    ///         set { field = value; this.OnPropertyChanged(PropertyChanged, nameof(SomeProperty)); }
+    ///     }
+    /// 
+    ///     public virtual event PropertyChangedEventHandler? PropertyChanged;
+    /// }
+    /// 
+    /// --- or ---
+    /// 
+    /// class SomeClass : IBindingPropertyChanged
+    /// {
+    ///     public String SomeProperty
+    ///     {
+    ///         get;
+    ///         set { field = value; OnPropertyChanged(nameof(SomeProperty)); }
+    ///     }
+    ///     
+    ///     public virtual event PropertyChangedEventHandler? PropertyChanged;
+    ///     
+    ///     protected virtual void OnPropertyChanged(String propertyName)
+    ///     { this.OnPropertyChanged(PropertyChanged, nameof(propertyName)); }
+    /// }
+    /// </example>
     public static class BindingPropertyChanged
     {
         static SynchronizationContext? syncContext;
@@ -19,9 +51,11 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Raises the PropertyChanged event for the specified property on the given sender object.
         /// </summary>
-        /// <remarks>This method is intended to simplify raising the PropertyChanged event in
+        /// <remarks>
+        /// This method is intended to simplify raising the PropertyChanged event in
         /// implementations of INotifyPropertyChanged. It ensures that the event is raised on the appropriate
-        /// synchronization context if one is present.</remarks>
+        /// synchronization context if one is present.
+        /// </remarks>
         /// <param name="sender">The object that is the source of the property change notification. Typically, this is the object whose
         /// property value has changed.</param>
         /// <param name="eventHandler">The event handler to invoke for the PropertyChanged event. If null, the event is not raised.</param>

@@ -169,7 +169,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Open()
