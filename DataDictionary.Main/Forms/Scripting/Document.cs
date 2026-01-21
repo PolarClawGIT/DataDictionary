@@ -116,8 +116,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FileName))));
 
                 // Security
-                IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetCommandEnabled();
+                IsLocked(formBinding.GetLocked(documentIndex));
+                SetAuthorization((f) => formBinding.GetAuthorization(documentIndex, f));
             }
         }
 
@@ -125,7 +126,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             openFileDialog.Filter = "XML data|*.XML";
 
-            if (formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
                 Open(openFileDialog, document.InputValue, onCompleted);
 
@@ -148,7 +149,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             saveFileDialog.Filter = "XML data|*.XML";
 
-            if (formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
                 Save(saveFileDialog, document.InputValue, onCompleted);
 
@@ -165,7 +166,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             openFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
 
-            if (formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
                 Open(openFileDialog, document.TransformValue, onCompleted);
 
@@ -188,7 +189,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             saveFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
 
-            if (formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
                 Save(saveFileDialog, document.TransformValue, onCompleted);
 
@@ -210,7 +211,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             saveFileDialog.Filter = "Plain Text|*.TXT|XML data|*.XML|SQL Script|*.SQL|C# Fragment|*.CS|VB.Net Fragment|*.VB|Other|*.*";
 
-            if (formBinding.TryGetValue(out DocumentValue? document))
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
                 Save(saveFileDialog, document.InputValue, onCompleted);
 
@@ -225,7 +226,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RefreshResultCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TryTransform(out Exception? exception))
+            if (formBinding.TryTransform(documentIndex, out Exception? exception))
             { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
             else { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
         }
@@ -263,6 +264,28 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+        }
+
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        {
+            SetCommandEnabled();
+            bindingDocument.ResetCurrentItem();
+        }
+
+        private void SetCommandEnabled()
+        {
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
+            {
+                inputOpenCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+                inputSaveCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+
+                openTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+                saveTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+                getTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+
+                saveResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+                refreshResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+            }
         }
     }
 }

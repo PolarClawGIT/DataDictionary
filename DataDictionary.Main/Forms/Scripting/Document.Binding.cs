@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -82,32 +83,58 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out DocumentValue? result)
+            public void Save(DocumentIndex document, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
-                if (DocumentBinding.Position >= 0
-                    && DocumentBinding.Current is DocumentValue value)
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(data.Save(factory, document));
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting.Documents; } });
+                work.AddRange(data.Delete(document));
+                work.AddRange(data.Load(factory, document));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(document);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public Boolean TryGetValue(DocumentIndex document, [NotNullWhen(true)] out DocumentValue? result)
+            {
+                if(data.FirstOrDefault(w => document.Equals(w)) is DocumentValue value) 
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
-            public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
+            public Boolean TryTransform(DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {
-                if(TryGetValue(out DocumentValue? value))
+                if(TryGetValue(document, out DocumentValue? value))
                 {
-                    if(value.TryTransform(out Exception? transformException))
-                    {   exception = null; return true; }
+                    if (value.TryTransform(out Exception? transformException))
+                    { exception = null; return true; }
                     else { exception = transformException; return false; }
                 }
-                else { exception = new Exception("Document not found"); return false; }
+                else
+                {
+                    Exception ex = new IndexOutOfRangeException("Document not Found");
+                    ex.Data.Add(nameof(document), document);
+                    exception = ex; return false;
+                }
             }
 
-            public Boolean GetAuthorization(Enumerations.CommandType command)
+
+            public Boolean GetAuthorization(DocumentIndex document, Enumerations.CommandType command)
             {
                 Boolean isGrant = false;
 
                 SecurableIndex? documentKey = null;
                 SecurableIndex? templateKey = null;
-                if (TryGetValue(out DocumentValue? documentValue))
+
+                if (TryGetValue(document, out DocumentValue ? documentValue))
                 {
                     documentKey = new DocumentIndex(documentValue);
                     templateKey = new TemplateIndex(documentValue);
@@ -131,9 +158,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public Boolean GetLocked()
+            public Boolean GetLocked(DocumentIndex document)
             {
-                if (TryGetValue(out DocumentValue? value))
+                if (TryGetValue(document, out DocumentValue ? value))
                 {
                     return value.RowState() is DataRowState.Detached
                         or DataRowState.Deleted;
@@ -142,7 +169,6 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
         }
-
 
         public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {

@@ -169,9 +169,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             void DocumentValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
                 if (e.PropertyName is nameof(RootFolder))
-                {
-                    OnPropertyChanged(nameof(RootPath));
-                }
+                { OnPropertyChanged(nameof(RootPath)); }
             }
         }
 

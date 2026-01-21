@@ -94,7 +94,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 { rootPath = rootDirectory.FullName; }
 
                 if (rootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(relativeDirectory))
-                { return SpecialDirectories.MyDocuments; }
+                { return String.Empty; }
                 else if (rootFolder is DirectoryType.Null) { return relativeDirectory ?? String.Empty; }
                 else if (String.IsNullOrWhiteSpace(relativeDirectory)) { return rootPath; }
                 else { return Path.Combine(rootPath, relativeDirectory ?? String.Empty); }
@@ -158,7 +158,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </remarks>
         public DocumentFile() : base()
         {
-            GetDirectory = () => directoryValue;
+            GetDirectory = () =>
+            {
+                if (String.IsNullOrWhiteSpace(directoryValue)
+                && GetRootFolder().GetEnumeration().Directory is DirectoryInfo directory)
+                { return directory.FullName; }
+                else { return directoryValue; }
+            };
             SetDirectory = (v) => directoryValue = v;
 
             GetFileName = () => fileNameValue;

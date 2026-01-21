@@ -170,6 +170,7 @@
             rootFolderData.ReadOnly = false;
             rootFolderData.Size = new Size(606, 46);
             rootFolderData.TabIndex = 2;
+            rootFolderData.Validated += RootFolderData_Validated;
             // 
             // rootPathData
             // 

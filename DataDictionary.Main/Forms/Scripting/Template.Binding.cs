@@ -136,8 +136,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
                 work.AddRange(data.Save(factory, template));
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
+                work.AddRange(data.Delete(template));
+                work.AddRange(data.Load(factory, template));
 
                 DoWork(work, completing);
 
