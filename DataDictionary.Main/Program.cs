@@ -25,8 +25,6 @@ namespace DataDictionary.Main
 
             Worker.WorkException += WorkerQueue_WorkException;
             
-            BindingPropertyChanged.Init();
-
             Application.Run(new Main());
         }
 

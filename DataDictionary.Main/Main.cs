@@ -9,6 +9,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -28,6 +29,8 @@ namespace DataDictionary.Main
 
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
+
+            BindingPropertyChanged.ValidateInit();
 
             // Set the button images based on Scope.
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);

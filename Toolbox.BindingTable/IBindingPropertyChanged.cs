@@ -65,16 +65,47 @@ namespace Toolbox.BindingTable
             if (eventHandler is PropertyChangedEventHandler handler)
             {
                 if (syncContext is null)
-                { handler(sender, new PropertyChangedEventArgs(propertyName)); }
+                {
+                    try
+                    { handler(sender, new PropertyChangedEventArgs(propertyName)); }
+                    catch (Exception ex)
+                    {
+                        ex.Data.Add("Class", nameof(BindingPropertyChanged));
+                        ex.Data.Add("Method", nameof(OnPropertyChanged));
+                        ex.Data.Add(nameof(propertyName), propertyName);
+                        throw;
+                    }
+                }
                 else
-                { syncContext.Post(state => { handler(sender, new PropertyChangedEventArgs(propertyName)); }, null); }
+                {
+                    syncContext.Post(state =>
+                    {
+                        try
+                        { handler(sender, new PropertyChangedEventArgs(propertyName)); }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add("Class", nameof(BindingPropertyChanged));
+                            ex.Data.Add("Method", nameof(OnPropertyChanged));
+                            ex.Data.Add(nameof(propertyName), propertyName);
+                            throw;
+                        }
+                    }, null);
+                }
             }
         }
 
         /// <summary>
-        /// Initialize the static class on the correct thread, if not already Initialize.
+        /// Validates the Initialize the static class on the correct thread.
         /// </summary>
-        public static void Init() { } // All this is really for is to control when the constructor is run.
+        /// <remarks>Verifies that the Constructor was called and initialized as expected.</remarks>
+        public static void ValidateInit()
+        {
+            // The constructor will fire first.
+
+            // Catch if this object was not initialized as expected;
+            if(syncContext is null)
+            { throw new ArgumentNullException(nameof(syncContext)); }
+        }
 
         /// <summary>
         /// Sets up the SynchronizationContext. Assumed to be executed on main thread.
