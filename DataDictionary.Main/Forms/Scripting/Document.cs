@@ -5,6 +5,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -213,7 +214,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
             {
-                Save(saveFileDialog, document.InputValue, onCompleted);
+                Save(saveFileDialog, document.OutputValue, onCompleted);
 
                 void onCompleted(RunWorkerCompletedEventArgs args)
                 {
@@ -285,6 +286,34 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 saveResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
                 refreshResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+            }
+        }
+
+        private void InputData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
+            {
+                if (value.InputValue.TryParse(out String? document, out Exception? exception))
+                {
+                    value.InputValue.Content = document;
+                    errorProvider.SetError(inputData.ErrorControl, String.Empty);
+                }
+                else
+                { errorProvider.SetError(inputData.ErrorControl, exception.Message); }
+            }
+        }
+
+        private void TransformData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
+            {
+                if (value.TransformValue.TryParse(out String? document, out Exception? exception))
+                {
+                    value.InputValue.Content = document;
+                    errorProvider.SetError(transformData.ErrorControl, String.Empty);
+                }
+                else
+                { errorProvider.SetError(transformData.ErrorControl, exception.Message); }
             }
         }
     }

@@ -177,11 +177,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
         {
-            if ((InputValue.TryParse(out XDocument? source, out Exception? inputException)
-                & TransformValue.TryParse(out XDocument? transform, out Exception? transformException))
-                && source is XDocument && transform is XDocument)
-            {
+            Boolean isSourceXml = InputValue.TryParse(out XDocument? source, out Exception? inputException);
+            Boolean isTransformXml = TransformValue.TryParse(out XDocument? transform, out Exception? transformException);
 
+            if (source is XDocument && transform is XDocument)
+            {
                 try
                 {
                     using (XmlReader sourceReader = source.CreateReader())
@@ -190,49 +190,39 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         XslCompiledTransform transformer = new XslCompiledTransform();
                         transformer.Load(transformReader);
 
-                        // Try results as Text
                         using (StringWriter resultText = new StringWriter())
-                        { transformer.Transform(sourceReader, null, resultText); }
+                        {   // Transform to Text
+                            transformer.Transform(sourceReader, null, resultText);
+                            OutputValue.Content = resultText.ToString();
+                        }
+                    }
 
-
-
-
-
-
-                        //if (templateValue.ScriptAs is TemplateScriptAsType.Text)
-                        //{
-                        //    using (StringWriter resultText = new StringWriter())
-                        //    {
-
-                        //        ResultsAsText = resultText.ToString();
-                        //    }
-                        //}
-                        //else if (templateValue.ScriptAs is TemplateScriptAsType.XML)
-                        //{
-                        //    ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
-                        //    using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())
-                        //    { transformer.Transform(sourceReader, resultAsXml); }
-                        //}
-
+                    if(String.IsNullOrWhiteSpace(OutputValue.Content))
+                    {
+                        OutputValue.Content = String.Empty;
+                        exception = new InvalidDataException("No results returned");
+                        exception.Data.Add(nameof(InputValue), InputValue.Content);
+                        exception.Data.Add(nameof(TransformValue), TransformValue.Content);
+                        return false;
                     }
 
                     exception = null; return true;
-
                 }
                 catch (Exception ex)
                 { exception = ex; return false; }
-
-
             }
+            else if(inputException is Exception)
+            { exception = inputException; return false; }
+            else if (transformException is Exception)
+            { exception = transformException; return false; }
             else
-            {
-                if (inputException is Exception)
-                { exception = inputException; return false; }
-
-                if (transformException is Exception)
-                { exception = transformException; return false; }
-
-                throw new UnreachableException();// This should be un-reachable. But the compiler says otherwise.
+            {   // This should be un-reachable.
+                exception = new InvalidOperationException("Data is Not XML");
+                exception.Data.Add(nameof(InputValue), InputValue.Content);
+                exception.Data.Add(nameof(isSourceXml), isSourceXml);
+                exception.Data.Add(nameof(TransformValue), TransformValue.Content);
+                exception.Data.Add(nameof(isTransformXml), isTransformXml);
+                return false;
             }
         }
 

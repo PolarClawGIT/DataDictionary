@@ -244,7 +244,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 FileInfo file = new FileInfo(Path.Combine(FilePath, FileName));
 
                 try
-                { File.WriteAllText(Path.Combine(FilePath, FileName), GetContent()); }
+                {
+                    // Detect if the data is XML and use XML save instead of normal text.
+                    // TODO: This is still adding the Byte Order Mark (BOM) to the file.
+                    // This is not necessary an in some cases, may cause issues with other tools.
+                    if (TryParse(out XDocument? document, out Exception? _))
+                    { document.Save(Path.Combine(FilePath, FileName)); }
+                    else // Save the file as Text. This is expected to have a BOM.
+                    { File.WriteAllText(Path.Combine(FilePath, FileName), GetContent()); }
+                }
                 catch (Exception ex)
                 {
                     cancel = true;
@@ -278,6 +286,40 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 exception = ex;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Try/Parse the Context into a Formatted XML String.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="exception"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public Boolean TryParse([NotNullWhen(true)] out String? document, [NotNullWhen(false)] out Exception? exception, LoadOptions option = LoadOptions.PreserveWhitespace)
+        {
+            //Note: Online Sources use StringWriter to convert an XDocument to String.
+            //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
+            //Other solutions run the XDcument thru several more steps that also alter the Declaration or require
+            //that the correct Declaration to be known and that is be compatible with a String Encoding.
+            //This approach is to add the Declaration using the StringBuilder as a simple string.
+
+            if (TryParse(out XDocument? value, out Exception? xmlException, option))
+            {
+                StringBuilder result = new StringBuilder();
+
+                // XDocument.ToString() does not contain the Header, put that back in.
+                if (value.Declaration is XDeclaration declaration)
+                { result.Append(declaration.ToString()); }
+                //else { result.AppendLine(new XDeclaration(null, null, null).ToString()); }
+
+                result.AppendLine(value.ToString());
+
+                exception = null;
+                document = result.ToString();
+                return true;
+            }
+            else
+            { document = null; exception = xmlException; return false; }
         }
     }
 }
