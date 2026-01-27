@@ -48,14 +48,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Loads the values from the files as defined by Input and Result paths.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> LoadFiles();
+        IReadOnlyList<WorkItem> OpenFiles();
 
         /// <summary>
         /// Saves the values to files as defined by Input and Result paths.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> OpenFiles();
-
+        IReadOnlyList<WorkItem> SaveFiles();
     }
 
     /// <inheritdoc/>
@@ -197,7 +196,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                         }
                     }
 
-                    if(String.IsNullOrWhiteSpace(OutputValue.Content))
+                    if (String.IsNullOrWhiteSpace(OutputValue.Content))
                     {
                         OutputValue.Content = String.Empty;
                         exception = new InvalidDataException("No results returned");
@@ -211,7 +210,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 catch (Exception ex)
                 { exception = ex; return false; }
             }
-            else if(inputException is Exception)
+            else if (inputException is Exception)
             { exception = inputException; return false; }
             else if (transformException is Exception)
             { exception = transformException; return false; }
@@ -227,59 +226,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> LoadFiles()
+        public IReadOnlyList<WorkItem> OpenFiles()
         {
-            if (String.IsNullOrEmpty(DocumentTitle))
-            { throw new ArgumentNullException(nameof(DocumentTitle)); }
-
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { WorkName = String.Format("Load Document {0}", DocumentTitle), DoWork = LoadData });
+            work.AddRange(InputValue.Open());
+            work.AddRange(TransformValue.Open());
+            work.AddRange(OutputValue.Open());
+
             return work;
-
-            void LoadData()
-            {
-                try
-                {
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-
-
-                throw new NotImplementedException();
-            }
         }
 
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> OpenFiles()
+        public IReadOnlyList<WorkItem> SaveFiles()
         {
-            if (String.IsNullOrEmpty(DocumentTitle))
-            { throw new ArgumentNullException(nameof(DocumentTitle)); }
-
-
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = String.Format("Save Document {0}", DocumentTitle), DoWork = SaveData });
+
+            work.AddRange(InputValue.Save());
+            work.AddRange(TransformValue.Save());
+            work.AddRange(OutputValue.Save());
+
             return work;
-
-            void SaveData()
-            {
-                try
-                {
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                throw new NotImplementedException();
-            }
         }
 
     }
