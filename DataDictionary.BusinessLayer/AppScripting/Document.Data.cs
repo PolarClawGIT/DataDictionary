@@ -14,7 +14,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface IDocumentData :
         IBindingData<DocumentValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<IDocumentIndex>
-    { }
+    {
+        /// <summary>
+        /// Opens/Loads the files for a specific document.
+        /// </summary>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> OpenFiles(IDocumentIndex dataKey);
+
+        /// <summary>
+        /// Saves the files for a specific document.
+        /// </summary>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> SaveFiles(IDocumentIndex dataKey);
+    }
 
     class DocumentData : DocumentCollection<DocumentValue>, IDocumentData,
         ILoadData<IDocumentIndex>, ISaveData<IDocumentIndex>,
@@ -53,6 +67,29 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> OpenFiles(IDocumentIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            DocumentIndex key = new DocumentIndex(dataKey);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is DocumentValue value)
+            {
+                work.AddRange(value.InputValue.Open());
+                work.AddRange(value.TransformValue.Open());
+                work.AddRange(value.OutputValue.Open());
+            }
+            else
+            {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(dataKey), dataKey);
+                throw ex;
+            }
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDocumentIndex dataKey)
         { return factory.CreateSave(this, (IDocumentKey)dataKey).ToList(); }
 
@@ -65,6 +102,29 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingDocument</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingDocument</remarks>
+        public IReadOnlyList<WorkItem> SaveFiles(IDocumentIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            DocumentIndex key = new DocumentIndex(dataKey);
+
+            if (this.FirstOrDefault(w => key.Equals(w)) is DocumentValue value)
+            {
+                work.AddRange(value.InputValue.Save());
+                work.AddRange(value.TransformValue.Save());
+                work.AddRange(value.OutputValue.Save());
+            }
+            else
+            {
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(dataKey), dataKey);
+                throw ex;
+            }
+
+            return work;
+        }
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDocument</remarks>

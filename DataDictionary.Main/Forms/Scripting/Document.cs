@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.Scripting
         TemporalIndex? temporalIndex = null;
 
         public Boolean IsOpenItem(object? item)
-        { return documentIndex.Equals(item); }
+        { return formBinding.Equals(item); }
 
         public Document()
         {
@@ -126,80 +126,66 @@ namespace DataDictionary.Main.Forms.Scripting
         private void InputOpenCommand_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XML data|*.XML";
+            Open(openFileDialog, formBinding.InputValue, onCompleted);
 
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
+            void onCompleted(RunWorkerCompletedEventArgs args)
             {
-                Open(openFileDialog, document.InputValue, onCompleted);
+                bindingDocument.ResetCurrentItem();
 
-                void onCompleted(RunWorkerCompletedEventArgs args)
-                {
-                    bindingDocument.ResetCurrentItem();
+                if (args.Error is Exception exception)
+                { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
 
-                    if (args.Error is Exception exception)
-                    { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
-                    else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
-
-                    if (document.InputValue.TryParse(out XDocument? _, out Exception? xException))
-                    { errorProvider.SetError(inputData.ErrorControl, String.Empty); }
-                    else { errorProvider.SetError(inputData.ErrorControl, xException.Message); }
-                }
+                if (formBinding.InputValue.TryParse(out XDocument? _, out Exception? xException))
+                { errorProvider.SetError(inputData.ErrorControl, String.Empty); }
+                else { errorProvider.SetError(inputData.ErrorControl, xException.Message); }
             }
+
         }
 
         private void InputSaveCommand_Click(object sender, EventArgs e)
         {
             saveFileDialog.Filter = "XML data|*.XML";
+            Save(saveFileDialog, formBinding.InputValue, onCompleted);
 
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
+            void onCompleted(RunWorkerCompletedEventArgs args)
             {
-                Save(saveFileDialog, document.InputValue, onCompleted);
-
-                void onCompleted(RunWorkerCompletedEventArgs args)
-                {
-                    if (args.Error is Exception exception)
-                    { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
-                    else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
-                }
+                if (args.Error is Exception exception)
+                { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
             }
         }
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
+            Open(openFileDialog, formBinding.TransformValue, onCompleted);
 
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
+            void onCompleted(RunWorkerCompletedEventArgs args)
             {
-                Open(openFileDialog, document.TransformValue, onCompleted);
+                bindingDocument.ResetCurrentItem();
 
-                void onCompleted(RunWorkerCompletedEventArgs args)
-                {
-                    bindingDocument.ResetCurrentItem();
+                if (args.Error is Exception exception)
+                { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
 
-                    if (args.Error is Exception exception)
-                    { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
-                    else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
-
-                    if (document.TransformValue.TryParse(out XDocument? _, out Exception? xException))
-                    { errorProvider.SetError(transformData.ErrorControl, String.Empty); }
-                    else { errorProvider.SetError(transformData.ErrorControl, xException.Message); }
-                }
+                if (formBinding.TransformValue.TryParse(out XDocument? _, out Exception? xException))
+                { errorProvider.SetError(transformData.ErrorControl, String.Empty); }
+                else { errorProvider.SetError(transformData.ErrorControl, xException.Message); }
             }
+
         }
 
         private void SaveTransformCommand_Click(object sender, EventArgs e)
         {
             saveFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
+            Save(saveFileDialog, formBinding.TransformValue, onCompleted);
 
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
+            void onCompleted(RunWorkerCompletedEventArgs args)
             {
-                Save(saveFileDialog, document.TransformValue, onCompleted);
-
-                void onCompleted(RunWorkerCompletedEventArgs args)
-                {
-                    if (args.Error is Exception exception)
-                    { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
-                    else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
-                }
+                if (args.Error is Exception exception)
+                { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
             }
         }
 
@@ -211,17 +197,13 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SaveResultCommand_Click(object sender, EventArgs e)
         {
             saveFileDialog.Filter = "Plain Text|*.TXT|XML data|*.XML|SQL Script|*.SQL|C# Fragment|*.CS|VB.Net Fragment|*.VB|Other|*.*";
+            Save(saveFileDialog, formBinding.OutputValue, onCompleted);
 
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? document))
+            void onCompleted(RunWorkerCompletedEventArgs args)
             {
-                Save(saveFileDialog, document.OutputValue, onCompleted);
-
-                void onCompleted(RunWorkerCompletedEventArgs args)
-                {
-                    if (args.Error is Exception exception)
-                    { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
-                    else { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
-                }
+                if (args.Error is Exception exception)
+                { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
             }
         }
 
@@ -275,46 +257,37 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SetCommandEnabled()
         {
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
-            {
-                inputOpenCommand.Enabled = value.RootFolder is not DirectoryType.Null;
-                inputSaveCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+            inputOpenCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
+            inputSaveCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
 
-                openTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
-                saveTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
-                getTransformCommand.Enabled = value.RootFolder is not DirectoryType.Null;
+            openTransformCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
+            saveTransformCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
+            getTransformCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
 
-                saveResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
-                refreshResultCommand.Enabled = value.RootFolder is not DirectoryType.Null;
-            }
+            saveResultCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
+            refreshResultCommand.Enabled = formBinding.RootFolder is not DirectoryType.Null;
         }
 
         private void InputData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
+            if (formBinding.InputValue.TryParse(out String? document, out Exception? exception))
             {
-                if (value.InputValue.TryParse(out String? document, out Exception? exception))
-                {
-                    value.InputValue.Content = document;
-                    errorProvider.SetError(inputData.ErrorControl, String.Empty);
-                }
-                else
-                { errorProvider.SetError(inputData.ErrorControl, exception.Message); }
+                formBinding.InputValue.Content = document;
+                errorProvider.SetError(inputData.ErrorControl, String.Empty);
             }
+            else
+            { errorProvider.SetError(inputData.ErrorControl, exception.Message); }
         }
 
         private void TransformData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(documentIndex, out DocumentValue? value))
+            if (formBinding.TransformValue.TryParse(out String? document, out Exception? exception))
             {
-                if (value.TransformValue.TryParse(out String? document, out Exception? exception))
-                {
-                    value.InputValue.Content = document;
-                    errorProvider.SetError(transformData.ErrorControl, String.Empty);
-                }
-                else
-                { errorProvider.SetError(transformData.ErrorControl, exception.Message); }
+                formBinding.InputValue.Content = document;
+                errorProvider.SetError(transformData.ErrorControl, String.Empty);
             }
+            else
+            { errorProvider.SetError(transformData.ErrorControl, exception.Message); }
         }
     }
 }

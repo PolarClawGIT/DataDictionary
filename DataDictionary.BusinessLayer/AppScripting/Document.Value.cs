@@ -43,18 +43,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Executes the XML Transform, filling Results and Exception.
         /// </summary>
         Boolean TryTransform([NotNullWhen(false)] out Exception? exception);
-
-        /// <summary>
-        /// Loads the values from the files as defined by Input and Result paths.
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> OpenFiles();
-
-        /// <summary>
-        /// Saves the values to files as defined by Input and Result paths.
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> SaveFiles();
     }
 
     /// <inheritdoc/>
@@ -223,31 +211,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 exception.Data.Add(nameof(isTransformXml), isTransformXml);
                 return false;
             }
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> OpenFiles()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(InputValue.Open());
-            work.AddRange(TransformValue.Open());
-            work.AddRange(OutputValue.Open());
-
-            return work;
-        }
-
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> SaveFiles()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(InputValue.Save());
-            work.AddRange(TransformValue.Save());
-            work.AddRange(OutputValue.Save());
-
-            return work;
         }
 
     }
