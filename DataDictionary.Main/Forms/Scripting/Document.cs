@@ -99,8 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 //exceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, nameof(IDocumentValue.DocumentException)));
 
                 inputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.Content))));
-                inputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.Directory))));
-                inputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.FileName))));
+                inputFile.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.InputValue), nameof(IDocumentFile.RelativeFileName))));
 
                 TemplateNameList.Load(templateData, "(n/a)");
                 templateData.DataBindings.Add(new Binding(
@@ -109,12 +108,10 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.TemplateId)));
 
                 transformData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.Content))));
-                transformDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.Directory))));
-                transformFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.FileName))));
+                transformFile.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.TransformValue), nameof(IDocumentFile.RelativeFileName))));
 
                 outputData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.Content))));
-                outputDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.Directory))));
-                outputFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.FileName))));
+                outputFile.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingDocument, NavigationPath(nameof(IDocumentValue.OutputValue), nameof(IDocumentFile.RelativeFileName))));
 
                 // Security
                 SetCommandEnabled();
@@ -133,10 +130,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingDocument.ResetCurrentItem();
 
                 if (args.Error is Exception exception)
-                { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
-                else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
-
-                if (formBinding.InputValue.TryParse(out XDocument? _, out Exception? xException))
+                { errorProvider.SetError(inputData.ErrorControl, exception.Message); }
+                else if (formBinding.InputValue.TryParse(out XDocument? _, out Exception? xException))
                 { errorProvider.SetError(inputData.ErrorControl, String.Empty); }
                 else { errorProvider.SetError(inputData.ErrorControl, xException.Message); }
             }
@@ -151,8 +146,8 @@ namespace DataDictionary.Main.Forms.Scripting
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is Exception exception)
-                { errorProvider.SetError(inputFileData.ErrorControl, exception.Message); }
-                else { errorProvider.SetError(inputFileData.ErrorControl, String.Empty); }
+                { errorProvider.SetError(inputData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(inputData.ErrorControl, String.Empty); }
             }
         }
 
@@ -166,10 +161,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingDocument.ResetCurrentItem();
 
                 if (args.Error is Exception exception)
-                { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
-                else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
-
-                if (formBinding.TransformValue.TryParse(out XDocument? _, out Exception? xException))
+                { errorProvider.SetError(transformData.ErrorControl, exception.Message); }
+                else if (formBinding.TransformValue.TryParse(out XDocument? _, out Exception? xException))
                 { errorProvider.SetError(transformData.ErrorControl, String.Empty); }
                 else { errorProvider.SetError(transformData.ErrorControl, xException.Message); }
             }
@@ -184,8 +177,8 @@ namespace DataDictionary.Main.Forms.Scripting
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is Exception exception)
-                { errorProvider.SetError(transformFileData.ErrorControl, exception.Message); }
-                else { errorProvider.SetError(transformFileData.ErrorControl, String.Empty); }
+                { errorProvider.SetError(transformData.ErrorControl, exception.Message); }
+                else { errorProvider.SetError(transformData.ErrorControl, String.Empty); }
             }
         }
 
@@ -213,8 +206,6 @@ namespace DataDictionary.Main.Forms.Scripting
             { errorProvider.SetError(outputData.ErrorControl, String.Empty); }
             else { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
         }
-
-
 
         protected override void OpenCommand_Click(Object? sender, EventArgs e)
         {

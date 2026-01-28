@@ -17,19 +17,21 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface IDocumentFile : IBindingPropertyChanged
     {
         /// <summary>
-        /// Gets/Sets the Directory Full Path of the File.
+        /// Full File Path of the File (includes root).
         /// </summary>
+        /// <remarks>Use this to set the directory.</remarks>
         String FilePath { get; set; }
 
         /// <summary>
-        /// Directory Name for the file, relative to the Root;
-        /// </summary>
-        String Directory { get; set; }
-
-        /// <summary>
-        /// File Name for the File within the Directory
+        /// File Name for the File within the File Path.
         /// </summary>
         String FileName { get; set; }
+
+        /// <summary>
+        /// Relative File Path from the Root Folder and File Name.
+        /// </summary>
+        /// <remarks>Computed from FilePath, Root Folder and FileName</remarks>
+        String RelativeFileName { get; }
 
         /// <summary>
         /// Text Content of the File
@@ -66,18 +68,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         internal Func<DirectoryType> GetRootFolder { private get; init; } = () => DirectoryType.Null;
 
-        /// <inheritdoc/>
-        public String Directory
-        {
-            get { return GetDirectory(); }
-            set
-            {
-                SetDirectory(value);
-
-                this.OnPropertyChanged(PropertyChanged, nameof(Directory));
-                this.OnPropertyChanged(PropertyChanged, nameof(FilePath));
-            }
-        }
         internal Func<String> GetDirectory { private get; init; }
         internal Action<String> SetDirectory { private get; init; }
         String directoryValue = String.Empty;
@@ -116,10 +106,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                 else { SetDirectory(value); }
 
-                this.OnPropertyChanged(PropertyChanged, nameof(Directory));
                 this.OnPropertyChanged(PropertyChanged, nameof(FilePath));
+                this.OnPropertyChanged(PropertyChanged, nameof(RelativeFileName));
             }
         }
+
+        /// <inheritdoc/>
+        public String RelativeFileName
+        { get { return Path.Combine(GetDirectory(), FileName); } }
 
         /// <inheritdoc/>
         public String FileName
@@ -129,6 +123,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             {
                 SetFileName(value);
                 this.OnPropertyChanged(PropertyChanged, nameof(FileName));
+                this.OnPropertyChanged(PropertyChanged, nameof(RelativeFileName));
             }
         }
         internal Func<String> GetFileName { private get; init; }
