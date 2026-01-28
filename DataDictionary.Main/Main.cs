@@ -159,7 +159,7 @@ namespace DataDictionary.Main
             void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
                 if (dataLoaded)
-                { this.Invoke(() => { splashScreen.Close(); }); }
+                { this.Invoke(() => { if (!splashScreen.IsDisposed) { splashScreen.Close(); } }); }
 
                 splashTimer.Elapsed -= MinTime_Elapsed;
                 splashDone = true;
