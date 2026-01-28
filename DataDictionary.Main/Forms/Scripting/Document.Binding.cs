@@ -148,6 +148,29 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public void OpenFiles(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                work.AddRange(data.OpenFiles(value));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
+            }
+
+            public void SaveFiles(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                work.AddRange(data.SaveFiles(value));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
+                
+            }
+
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -168,6 +191,16 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
+
+            public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
+            { return value.TryTransform(out exception); }
+
+
+            public void Remove()
+            { data.Remove(value); }
+
+            public ITemporalData GetTemporal()
+            { return data.GetTemporal(value); }
 
             public Boolean TryTransform(DocumentIndex document, [NotNullWhen(false)] out Exception? exception)
             {
@@ -205,14 +238,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public Boolean GetLocked(DocumentIndex document)
+            public Boolean GetLocked()
             {
                 return value.RowState() is DataRowState.Detached
                                         or DataRowState.Deleted;
             }
 
-            public Boolean TryTransform([NotNullWhen(false)] out Exception? exception)
-            { return value.TryTransform(out exception); }
+
         }
 
         public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
@@ -248,7 +280,6 @@ namespace DataDictionary.Main.Forms.Scripting
             void onCompleted(RunWorkerCompletedEventArgs args)
             { onComplete(args); }
         }
-
 
 
 

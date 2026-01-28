@@ -118,7 +118,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Security
                 SetCommandEnabled();
-                IsLocked(formBinding.GetLocked(documentIndex));
+                IsLocked(formBinding.GetLocked());
                 SetAuthorization((f) => formBinding.GetAuthorization(documentIndex, f));
             }
         }
@@ -214,39 +214,76 @@ namespace DataDictionary.Main.Forms.Scripting
             else { errorProvider.SetError(outputData.ErrorControl, exception.Message); }
         }
 
+
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+
+            formBinding.OpenFiles(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
+
+
+        protected override void SaveCommand_Click(Object? sender, EventArgs e)
+        {
+            base.SaveCommand_Click(sender, e);
+
+            formBinding.SaveFiles(onComplete);
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { }
+        }
+
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+
+            formBinding.Remove();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
-        }
 
-        protected override void OpenCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenCommand_Click(sender, e);
-        }
+            formBinding.Remove();
+            formBinding.Save(onCompleting);
 
-        protected override void SaveCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveCommand_Click(sender, e);
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+
+            formBinding.Load(documentIndex, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+
+            formBinding.Save(onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            {
+                OpenForm = (temporal) =>
+                { return new Document(documentIndex, new TemporalIndex(temporal)); }
+            });
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)

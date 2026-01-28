@@ -30,16 +30,16 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
-            TableLayoutPanel generalLayout;
+            GroupBox rootGroupBox;
+            TableLayoutPanel rootGroupLayout;
             TabPage dataTab;
             TableLayoutPanel documentInputLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Document));
             TableLayoutPanel transformLayout;
             documentTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            documentDetailTab = new TabControl();
-            generalTab = new TabPage();
-            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
             rootPathData = new DataDictionary.Main.Controls.TextBoxData();
+            rootFolderData = new DataDictionary.Main.Controls.ComboBoxData();
+            documentDetailTab = new TabControl();
             inputToolstrip = new ToolStrip();
             inputOpenCommand = new ToolStripButton();
             inputSaveCommand = new ToolStripButton();
@@ -68,14 +68,15 @@
             saveFileDialog = new SaveFileDialog();
             errorProvider = new ErrorProvider(components);
             mainLayout = new TableLayoutPanel();
-            generalLayout = new TableLayoutPanel();
+            rootGroupBox = new GroupBox();
+            rootGroupLayout = new TableLayoutPanel();
             dataTab = new TabPage();
             documentInputLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
+            rootGroupBox.SuspendLayout();
+            rootGroupLayout.SuspendLayout();
             documentDetailTab.SuspendLayout();
-            generalTab.SuspendLayout();
-            generalLayout.SuspendLayout();
             dataTab.SuspendLayout();
             documentInputLayout.SuspendLayout();
             inputToolstrip.SuspendLayout();
@@ -94,13 +95,15 @@
             mainLayout.ColumnCount = 1;
             mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             mainLayout.Controls.Add(documentTitleData, 0, 0);
-            mainLayout.Controls.Add(documentDetailTab, 0, 1);
+            mainLayout.Controls.Add(rootGroupBox, 0, 1);
+            mainLayout.Controls.Add(documentDetailTab, 0, 2);
             mainLayout.Dock = DockStyle.Fill;
             mainLayout.Location = new Point(0, 25);
             mainLayout.Name = "mainLayout";
-            mainLayout.RowCount = 2;
+            mainLayout.RowCount = 3;
             mainLayout.RowStyles.Add(new RowStyle());
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 62.5F));
+            mainLayout.RowStyles.Add(new RowStyle());
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             mainLayout.Size = new Size(626, 523);
             mainLayout.TabIndex = 4;
             // 
@@ -117,44 +120,46 @@
             documentTitleData.TabIndex = 0;
             documentTitleData.WordWrap = true;
             // 
-            // documentDetailTab
+            // rootGroupBox
             // 
-            documentDetailTab.Controls.Add(generalTab);
-            documentDetailTab.Controls.Add(dataTab);
-            documentDetailTab.Controls.Add(transformTab);
-            documentDetailTab.Controls.Add(resultTab);
-            documentDetailTab.Dock = DockStyle.Fill;
-            documentDetailTab.Location = new Point(3, 53);
-            documentDetailTab.Name = "documentDetailTab";
-            documentDetailTab.SelectedIndex = 0;
-            documentDetailTab.Size = new Size(620, 467);
-            documentDetailTab.TabIndex = 5;
+            rootGroupBox.AutoSize = true;
+            rootGroupBox.Controls.Add(rootGroupLayout);
+            rootGroupBox.Dock = DockStyle.Fill;
+            rootGroupBox.Location = new Point(3, 53);
+            rootGroupBox.Name = "rootGroupBox";
+            rootGroupBox.Size = new Size(620, 124);
+            rootGroupBox.TabIndex = 6;
+            rootGroupBox.TabStop = false;
+            rootGroupBox.Text = "Root Location";
             // 
-            // generalTab
+            // rootGroupLayout
             // 
-            generalTab.BackColor = SystemColors.Control;
-            generalTab.Controls.Add(generalLayout);
-            generalTab.Location = new Point(4, 24);
-            generalTab.Name = "generalTab";
-            generalTab.Size = new Size(612, 439);
-            generalTab.TabIndex = 3;
-            generalTab.Text = "General";
+            rootGroupLayout.AutoSize = true;
+            rootGroupLayout.ColumnCount = 1;
+            rootGroupLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            rootGroupLayout.Controls.Add(rootPathData, 0, 1);
+            rootGroupLayout.Controls.Add(rootFolderData, 0, 0);
+            rootGroupLayout.Dock = DockStyle.Fill;
+            rootGroupLayout.Location = new Point(3, 19);
+            rootGroupLayout.Name = "rootGroupLayout";
+            rootGroupLayout.RowCount = 2;
+            rootGroupLayout.RowStyles.Add(new RowStyle());
+            rootGroupLayout.RowStyles.Add(new RowStyle());
+            rootGroupLayout.Size = new Size(614, 102);
+            rootGroupLayout.TabIndex = 0;
             // 
-            // generalLayout
+            // rootPathData
             // 
-            generalLayout.ColumnCount = 1;
-            generalLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            generalLayout.Controls.Add(rootFolderData, 0, 0);
-            generalLayout.Controls.Add(rootPathData, 0, 1);
-            generalLayout.Dock = DockStyle.Fill;
-            generalLayout.Location = new Point(0, 0);
-            generalLayout.Name = "generalLayout";
-            generalLayout.RowCount = 3;
-            generalLayout.RowStyles.Add(new RowStyle());
-            generalLayout.RowStyles.Add(new RowStyle());
-            generalLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            generalLayout.Size = new Size(612, 439);
-            generalLayout.TabIndex = 0;
+            rootPathData.AutoSize = true;
+            rootPathData.Dock = DockStyle.Fill;
+            rootPathData.HeaderText = "Path";
+            rootPathData.Location = new Point(3, 55);
+            rootPathData.Multiline = false;
+            rootPathData.Name = "rootPathData";
+            rootPathData.ReadOnly = true;
+            rootPathData.Size = new Size(608, 44);
+            rootPathData.TabIndex = 4;
+            rootPathData.WordWrap = true;
             // 
             // rootFolderData
             // 
@@ -162,26 +167,25 @@
             rootFolderData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             rootFolderData.Dock = DockStyle.Fill;
             rootFolderData.DropDownStyle = ComboBoxStyle.DropDown;
-            rootFolderData.HeaderText = "Root Folder";
+            rootFolderData.HeaderText = "Folder";
             rootFolderData.Location = new Point(3, 3);
             rootFolderData.Name = "rootFolderData";
             rootFolderData.ReadOnly = false;
-            rootFolderData.Size = new Size(606, 46);
+            rootFolderData.Size = new Size(608, 46);
             rootFolderData.TabIndex = 2;
             rootFolderData.Validated += RootFolderData_Validated;
             // 
-            // rootPathData
+            // documentDetailTab
             // 
-            rootPathData.AutoSize = true;
-            rootPathData.Dock = DockStyle.Fill;
-            rootPathData.HeaderText = "Root Path";
-            rootPathData.Location = new Point(3, 55);
-            rootPathData.Multiline = false;
-            rootPathData.Name = "rootPathData";
-            rootPathData.ReadOnly = true;
-            rootPathData.Size = new Size(606, 44);
-            rootPathData.TabIndex = 4;
-            rootPathData.WordWrap = true;
+            documentDetailTab.Controls.Add(dataTab);
+            documentDetailTab.Controls.Add(transformTab);
+            documentDetailTab.Controls.Add(resultTab);
+            documentDetailTab.Dock = DockStyle.Fill;
+            documentDetailTab.Location = new Point(3, 183);
+            documentDetailTab.Name = "documentDetailTab";
+            documentDetailTab.SelectedIndex = 0;
+            documentDetailTab.Size = new Size(620, 337);
+            documentDetailTab.TabIndex = 5;
             // 
             // dataTab
             // 
@@ -190,7 +194,7 @@
             dataTab.Location = new Point(4, 24);
             dataTab.Name = "dataTab";
             dataTab.Padding = new Padding(3);
-            dataTab.Size = new Size(612, 439);
+            dataTab.Size = new Size(612, 309);
             dataTab.TabIndex = 0;
             dataTab.Text = "Data";
             // 
@@ -210,7 +214,7 @@
             documentInputLayout.RowStyles.Add(new RowStyle());
             documentInputLayout.RowStyles.Add(new RowStyle());
             documentInputLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            documentInputLayout.Size = new Size(606, 433);
+            documentInputLayout.Size = new Size(606, 303);
             documentInputLayout.TabIndex = 0;
             // 
             // inputToolstrip
@@ -251,7 +255,7 @@
             inputData.Multiline = true;
             inputData.Name = "inputData";
             inputData.ReadOnly = false;
-            inputData.Size = new Size(600, 302);
+            inputData.Size = new Size(600, 172);
             inputData.TabIndex = 2;
             inputData.WordWrap = true;
             inputData.Validated += InputData_Validated;
@@ -289,7 +293,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(612, 439);
+            transformTab.Size = new Size(192, 72);
             transformTab.TabIndex = 1;
             transformTab.Text = "Transform";
             // 
@@ -311,7 +315,7 @@
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            transformLayout.Size = new Size(606, 433);
+            transformLayout.Size = new Size(186, 66);
             transformLayout.TabIndex = 0;
             // 
             // transformToolStrip
@@ -319,7 +323,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { openTransformCommand, saveTransformCommand, getTransformCommand });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(606, 25);
+            transformToolStrip.Size = new Size(186, 25);
             transformToolStrip.TabIndex = 0;
             transformToolStrip.Text = "toolStrip1";
             // 
@@ -363,7 +367,7 @@
             templateData.Location = new Point(3, 28);
             templateData.Name = "templateData";
             templateData.ReadOnly = true;
-            templateData.Size = new Size(600, 46);
+            templateData.Size = new Size(180, 46);
             templateData.TabIndex = 1;
             // 
             // transformData
@@ -375,7 +379,7 @@
             transformData.Multiline = true;
             transformData.Name = "transformData";
             transformData.ReadOnly = false;
-            transformData.Size = new Size(600, 250);
+            transformData.Size = new Size(180, 1);
             transformData.TabIndex = 2;
             transformData.WordWrap = true;
             transformData.Validated += TransformData_Validated;
@@ -389,7 +393,7 @@
             transformDirectoryData.Multiline = false;
             transformDirectoryData.Name = "transformDirectoryData";
             transformDirectoryData.ReadOnly = true;
-            transformDirectoryData.Size = new Size(600, 44);
+            transformDirectoryData.Size = new Size(180, 44);
             transformDirectoryData.TabIndex = 3;
             transformDirectoryData.WordWrap = true;
             // 
@@ -402,7 +406,7 @@
             transformFileData.Multiline = false;
             transformFileData.Name = "transformFileData";
             transformFileData.ReadOnly = true;
-            transformFileData.Size = new Size(600, 44);
+            transformFileData.Size = new Size(180, 44);
             transformFileData.TabIndex = 4;
             transformFileData.WordWrap = true;
             // 
@@ -524,10 +528,11 @@
             Controls.SetChildIndex(mainLayout, 0);
             mainLayout.ResumeLayout(false);
             mainLayout.PerformLayout();
+            rootGroupBox.ResumeLayout(false);
+            rootGroupBox.PerformLayout();
+            rootGroupLayout.ResumeLayout(false);
+            rootGroupLayout.PerformLayout();
             documentDetailTab.ResumeLayout(false);
-            generalTab.ResumeLayout(false);
-            generalLayout.ResumeLayout(false);
-            generalLayout.PerformLayout();
             dataTab.ResumeLayout(false);
             documentInputLayout.ResumeLayout(false);
             documentInputLayout.PerformLayout();
@@ -559,10 +564,8 @@
         private TabPage resultTab;
         private ToolStrip inputToolstrip;
         private Controls.TextBoxData inputData;
-        private TabPage generalTab;
         private ToolStripButton inputOpenCommand;
         private ToolStripButton inputSaveCommand;
-        private TableLayoutPanel generalLayout;
         private TableLayoutPanel transformLayout;
         private ToolStrip transformToolStrip;
         private ToolStripButton openTransformCommand;
