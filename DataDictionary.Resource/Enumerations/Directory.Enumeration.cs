@@ -7,6 +7,16 @@ namespace DataDictionary.Resource.Enumerations;
 public interface IDirectoryEnumeration : IEnumeration<DirectoryType>
 {
     /// <summary>
+    /// The SpecialFolder to use as the base for the directory.
+    /// </summary>
+    Environment.SpecialFolder SpecialFolder { get; }
+
+    /// <summary>
+    /// The Relative folder within the SpecialFolder for the directory.
+    /// </summary>
+    String? RelativeFolder { get; set; }
+
+    /// <summary>
     /// Directory Information for the Directory Enum
     /// </summary>
     DirectoryInfo? Directory { get; }
@@ -19,7 +29,25 @@ class DirectoryEnumeration : Enumeration<DirectoryType, DirectoryEnumeration>,
     IDirectoryEnumeration
 {
     /// <inheritdoc/>
-    public DirectoryInfo? Directory { get; init; } = null;
+    public Environment.SpecialFolder SpecialFolder { get; init; }
+
+    /// <inheritdoc/>
+    public String? RelativeFolder { get; set; }
+
+    /// <inheritdoc/>
+    public DirectoryInfo? Directory
+    {
+        get
+        {
+            if (this.Value is DirectoryType.Null) { return null; }
+
+            String path = Environment.GetFolderPath(SpecialFolder);
+            if (RelativeFolder is not null)
+            { path = Path.Combine(path, RelativeFolder); }
+
+            return new DirectoryInfo(path);
+        }
+    }
 
     /// <summary>
     /// Internal Constructor for Directory Enumeration
@@ -27,25 +55,17 @@ class DirectoryEnumeration : Enumeration<DirectoryType, DirectoryEnumeration>,
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
     DirectoryEnumeration(DirectoryType value, String name) : base(value, name) { }
 
-    /// <summary>
-    /// Internal Constructor for Directory Enumeration
-    /// </summary>
-    /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    DirectoryEnumeration(DirectoryType value, String name, DirectoryInfo directory) : this(value, name)
-    { Directory = directory; }
-
     static DirectoryEnumeration()
     {
         List<DirectoryEnumeration> data = new List<DirectoryEnumeration>()
         {
-            new DirectoryEnumeration(DirectoryType.Null,        String.Empty) { DisplayName = "not defined" },
-            new DirectoryEnumeration(DirectoryType.MySources,   "My Sources",
-                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos"))),
-            new DirectoryEnumeration(DirectoryType.MyDocuments, "My Documents",
-                new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))),
-            new DirectoryEnumeration(DirectoryType.MyDownloads, "My Downloads",
-                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"))),
+            new DirectoryEnumeration(DirectoryType.Null,        String.Empty)   { DisplayName = "not defined" },
+            new DirectoryEnumeration(DirectoryType.MyDocuments, "My Documents") {SpecialFolder = Environment.SpecialFolder.MyDocuments},
+            new DirectoryEnumeration(DirectoryType.MyDownloads, "My Downloads") {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = "Downloads" },
+            new DirectoryEnumeration(DirectoryType.Projects,    "VS Projects")  {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = Path.Combine("source","repos") },
+            new DirectoryEnumeration(DirectoryType.Data,        "App. Data")    {SpecialFolder = Environment.SpecialFolder.MyDocuments, RelativeFolder = "DataDictionary" },
         };
+
         BuildDictionary(data);
     }
 }

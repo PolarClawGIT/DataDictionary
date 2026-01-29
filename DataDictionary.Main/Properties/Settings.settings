@@ -32,5 +32,11 @@
     <Setting Name="DefaultSubject" Type="System.String" Scope="Application">
       <Value Profile="(Default)">About</Value>
     </Setting>
+    <Setting Name="UserProjects" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UserData" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

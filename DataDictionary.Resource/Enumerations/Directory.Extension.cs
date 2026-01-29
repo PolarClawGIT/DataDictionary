@@ -1,12 +1,12 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Extensions on TemplateDirectory Enum. 
+    /// Extensions on Directory Enum. 
     /// </summary>
     public static class DirectoryExtension
     {
         /// <summary>
-        /// Gets the Details for the TemplateDirectoryType enum.
+        /// Gets the Details for the DirectoryType enum.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -14,7 +14,7 @@
         { return DirectoryEnumeration.GetValue(value); }
 
         /// <summary>
-        /// Try to parse the String into a TemplateDirectoryType enum.
+        /// Try to parse the String into a DirectoryType enum.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="result"></param>

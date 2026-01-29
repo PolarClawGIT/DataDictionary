@@ -22,11 +22,14 @@ namespace DataDictionary.Main.ApplicationWide
         {
             defaultModeOnLine.Checked = Settings.Default.IsOnLineMode;
             defaultModeOffLine.Checked = !Settings.Default.IsOnLineMode;
-            defaultModeOnLine.DataBindings.Add(new Binding(nameof(defaultModeOnLine.Checked), Settings.Default, nameof(Settings.Default.IsOnLineMode)));
-            serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.Text), Settings.Default, nameof(Settings.Default.AppServer)));
-            databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.Text), Settings.Default, nameof(Settings.Default.AppDatabase)));
-            applicationRoleData.DataBindings.Add(new Binding(nameof(applicationRoleData.Text), Settings.Default, nameof(Settings.Default.AppDbRole)));
-            applicationFileData.DataBindings.Add(new Binding(nameof(applicationFileData.Text), Settings.Default, nameof(Settings.Default.AppDataFile)));
+            defaultModeOnLine.DataBindings.Add(new Binding(nameof(RadioButton.Checked), Settings.Default, nameof(Settings.Default.IsOnLineMode)));
+            serverNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.AppServer)));
+            databaseNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.AppDatabase)));
+            applicationRoleData.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.AppDbRole)));
+            applicationFileData.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.AppDataFile)));
+
+            projectFolderData.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.UserProjects)));
+            applicationDataFolder.DataBindings.Add(new Binding(nameof(TextBox.Text), Settings.Default, nameof(Settings.Default.UserData)));
         }
 
         private void commandSaveToDatabase_Click(object sender, EventArgs e)
@@ -123,6 +126,60 @@ namespace DataDictionary.Main.ApplicationWide
 
                 SendMessage(new OnlineStatusChanged());
             }
+        }
+
+        private void ProjectFolderData_SelectCommand(object sender, EventArgs e)
+        {
+            IDirectoryEnumeration value = DirectoryType.Projects.GetEnumeration();
+
+            folderBrowserDialog.Reset();
+            folderBrowserDialog.RootFolder = value.SpecialFolder;
+
+            if (value.Directory is DirectoryInfo directory && directory.Exists)
+            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            else
+            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+
+            if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+            {
+                String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
+                value.RelativeFolder = newPath;
+                //projectFolderData.Text = newPath;
+                Settings.Default.UserProjects = newPath;
+                Settings.Default.Save();
+            }
+        }
+
+        private void ApplicationDataFolder_SelectCommand(object sender, EventArgs e)
+        {
+            IDirectoryEnumeration value = DirectoryType.Data.GetEnumeration();
+
+            folderBrowserDialog.Reset();
+            folderBrowserDialog.RootFolder = value.SpecialFolder;
+
+            if (value.Directory is DirectoryInfo directory && directory.Exists)
+            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            else
+            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+
+            if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+            {
+                String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
+                value.RelativeFolder = newPath;
+                //applicationDataFolder.Text = newPath;
+                Settings.Default.UserData = newPath;
+                Settings.Default.Save();
+            }
+        }
+
+        private void ProjectFolderData_Validated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ApplicationDataFolder_Validated(object sender, EventArgs e)
+        {
+
         }
     }
 }

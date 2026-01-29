@@ -1,26 +1,39 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
-    /// Supported Scripting Folders
+    /// Supported Folders
     /// </summary>
     public enum DirectoryType
     {
+        // This is primary used for Scripting.
+
         /// <summary>
         /// Unspecified Directory
         /// </summary>
         Null,
 
         /// <summary>
-        /// Default Location Visual Studio places Source files.
+        /// Base Directory for My Documents.
+        /// Fixed: Environment.SpecialFolder.MyDocuments
         /// </summary>
-        MySources,
-
-        /// <inheritdoc cref="Environment.SpecialFolder.MyDocuments"/>
         MyDocuments,
 
         /// <summary>
-        /// Default Location of the User Downloads.
+        /// Offset Directory used for the Downloads folder.
+        /// Default: Environment.SpecialFolder.UserProfile & Downloads
         /// </summary>
-        MyDownloads
+        MyDownloads,
+
+        /// <summary>
+        /// Location Visual Studio places Source files.
+        /// Default: Environment.SpecialFolder.UserProfile & source\repos
+        /// </summary>
+        Projects,
+
+        /// <summary>
+        /// Location Application looks for Data.
+        /// Default: Environment.SpecialFolder.MyDocuments & DataDictionary
+        /// </summary>
+        Data,
     }
 }
