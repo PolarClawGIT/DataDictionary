@@ -1,11 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
@@ -51,7 +45,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                 onItemChanged: (s, t) =>
                 {
                     t.PrincipalLogin = s.PrincipalLogin ?? String.Empty;
-                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.PrincipalLogin));
+                    t.OnPropertyChanged(t.PropertyChanged, nameof(t.PrincipalLogin));
                 },
                 orderBy: (o) => o.PrincipalLogin,
                 areEquel: (a, b) => new PrincipalIndex(a).Equals(b),

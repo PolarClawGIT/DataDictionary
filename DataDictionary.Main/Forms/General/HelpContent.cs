@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.General
             InitializeComponent();
             helpToolStripButton.Enabled = false;
             formData = new FormBinding() { BindingHelpSubject = helpBinding, DoWork = base.DoWork };
-            formData.Init();
+            
 
             formTree = new ContentTree(helpContentNavigation);
 
@@ -71,6 +71,7 @@ namespace DataDictionary.Main.Forms.General
 
         private void HelpContent_Load(object sender, EventArgs e)
         {
+            formData.Load();
             formData.SubjectsChanged += FormData_SubjectsChanged;
             formTree.BuildTree(formData.HelpSubjects);
 

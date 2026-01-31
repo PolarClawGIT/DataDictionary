@@ -300,7 +300,7 @@ namespace Toolbox.BindingTable
             if (ReferenceEquals(data, e.Row)
                 && e.Row.RowState != DataRowState.Detached
                 && e.Column is not null)
-            { OnPropertyChanged(e.Column.ColumnName); }
+            { this.OnPropertyChanged(PropertyChanged, e.Column.ColumnName); }
 
             IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
@@ -477,11 +477,13 @@ namespace Toolbox.BindingTable
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
+        /// <remarks>Child classes MUST override this event to reference it. CS0070</remarks>
         public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
-
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
+        /// <remarks>To override this method the PropertyChanged must also be overridden.</remarks>
         public virtual void OnPropertyChanged(String propertyName)
-        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
+        { this.OnPropertyChanged(PropertyChanged, propertyName); }
         #endregion
 
         #region ISerializable

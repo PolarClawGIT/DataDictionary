@@ -32,7 +32,7 @@ Begin Try
 			[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
 			[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL, 
 			[TransformScript]		XML Null , 
-			[RootDirectory]         NVarChar(100) Null,
+			[RootFolder]			NVarChar(100) Null,
 			[DocumentDirectory]		NVarChar(250) Null,
 			[DocumentPrefix]		NVarChar(50) Null,
 			[DocumentSuffix]		NVarChar(50) Null,
@@ -57,7 +57,7 @@ Begin Try
 				When D.[TransformScript] Like '%encoding="utf-8"%' Then Try_Convert(XML,Convert(VarChar(Max),D.[TransformScript]),1) -- Handle UTF-8
 				Else Try_Convert(XML,D.[TransformScript],1)
 				End As [TransformScript],
-			NullIf(Trim(D.[RootDirectory]),'') As [RootDirectory],
+			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
 			NullIf(Trim(D.[DocumentDirectory]),'') As [DocumentDirectory],
 			NullIf(Trim(D.[DocumentPrefix]),'') As [DocumentPrefix],
 			NullIf(Trim(D.[DocumentSuffix]),'') As [DocumentSuffix],
@@ -119,6 +119,17 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	Update	[AppScript].[Document]
+	Set		[TemplateId] = Null
+	From	[AppScript].[Document] T
+			Left Join @Values S
+			On	T.[TemplateId] = S.[TemplateId]
+	Where	S.[TemplateId] is Null And
+			T.[TemplateId] In (
+				Select	[TemplateId]
+				From	@Delete)
+	Print FormatMessage ('Update [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppScript].[ScriptingModel]
 	From	[AppScript].[ScriptingModel] T
 			Left Join @Values S
@@ -146,7 +157,7 @@ Begin Try
 				[TemplateDescription],
 				[BreakOnScope],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
-				[RootDirectory],
+				[RootFolder],
 				[DocumentDirectory],
 				[DocumentPrefix],
 				[DocumentSuffix],
@@ -163,7 +174,7 @@ Begin Try
 				[TemplateDescription],
 				[BreakOnScope],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
-				[RootDirectory],
+				[RootFolder],
 				[DocumentDirectory],
 				[DocumentPrefix],
 				[DocumentSuffix],
@@ -179,7 +190,7 @@ Begin Try
 				[TemplateDescription] = S.[TemplateDescription],
 				[BreakOnScope] = S.[BreakOnScope],
 				[TransformScript] = S.[TransformScript],
-				[RootDirectory] = S.[RootDirectory],
+				[RootFolder] = S.[RootFolder],
 				[DocumentDirectory] = S.[DocumentDirectory],
 				[DocumentPrefix] = S.[DocumentPrefix],
 				[DocumentSuffix] = S.[DocumentSuffix],
@@ -200,7 +211,7 @@ Begin Try
 			[TemplateDescription],
 			[BreakOnScope],
 			[TransformScript],
-			[RootDirectory],
+			[RootFolder],
 			[DocumentDirectory],
 			[DocumentPrefix],
 			[DocumentSuffix],
@@ -215,7 +226,7 @@ Begin Try
 			S.[TemplateDescription],
 			S.[BreakOnScope],
 			S.[TransformScript],
-			S.[RootDirectory],
+			S.[RootFolder],
 			S.[DocumentDirectory],
 			S.[DocumentPrefix],
 			S.[DocumentSuffix],

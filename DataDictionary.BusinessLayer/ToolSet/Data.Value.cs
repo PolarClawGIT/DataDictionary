@@ -104,11 +104,13 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <inheritdoc cref="BindingPropertyChanged.OnPropertyChanged"/>
         protected virtual void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (IsTitleChanged(e))
-            { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Title)); }
+            { this.OnPropertyChanged(PropertyChanged, nameof(Title)); }
         }
+
         public override String ToString()
         { return  Title; }
 

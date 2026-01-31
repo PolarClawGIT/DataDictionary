@@ -5,7 +5,7 @@
 	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
 	[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL,
 	[TransformScript]		NVarChar(Max) Null,
-	[RootDirectory]         NVarChar(100) Null,
+	[RootFolder]			NVarChar(100) Null,
 	[DocumentDirectory]		NVarChar(250) Null,
 	[DocumentPrefix]		NVarChar(50) Null,
 	[DocumentSuffix]		NVarChar(50) Null,

@@ -9,6 +9,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -28,6 +29,8 @@ namespace DataDictionary.Main
 
             InitializeComponent();
             Icon = ScopeType.Application.GetIcon();
+
+            BindingPropertyChanged.ValidateInit();
 
             // Set the button images based on Scope.
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
@@ -94,7 +97,7 @@ namespace DataDictionary.Main
             menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
             menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
             menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Default);
-            menuScriptingDocument.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
@@ -133,6 +136,13 @@ namespace DataDictionary.Main
                     Settings.Default.Save();
                 }
 
+                // Override default Directories
+                if(!String.IsNullOrWhiteSpace(Settings.Default.UserProjects))
+                { DirectoryType.Projects.GetEnumeration().RelativeFolder = Settings.Default.UserProjects; }
+
+                if(!String.IsNullOrWhiteSpace(Settings.Default.UserData))
+                { DirectoryType.Data.GetEnumeration().RelativeFolder = Settings.Default.UserData; }
+
                 if (args.Error is not null)
                 { Program.ShowException(args.Error); }
 
@@ -156,7 +166,7 @@ namespace DataDictionary.Main
             void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
                 if (dataLoaded)
-                { this.Invoke(() => { splashScreen.Close(); }); }
+                { this.Invoke(() => { if (!splashScreen.IsDisposed) { splashScreen.Close(); } }); }
 
                 splashTimer.Elapsed -= MinTime_Elapsed;
                 splashDone = true;

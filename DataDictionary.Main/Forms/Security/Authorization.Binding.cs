@@ -16,32 +16,44 @@ namespace DataDictionary.Main.Forms.Security
 
             ISecurity data = ISecurity.Create();
 
-            public required BindingSource PrincipalBinding { private get; init; }
+            public required BindingSource PrincipalBinding
+            { private get; init { field = value; field.DataSource = Principals; } }
+
             BindingView<PrincipalValue> Principals =
                 new BindingView<PrincipalValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource RoleBinding { private get; init; }
+            public required BindingSource RoleBinding
+            { private get; init { field = value; field.DataSource = Roles; } }
+
             BindingView<RoleValue> Roles =
                 new BindingView<RoleValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource SecurableBinding { private get; init; }
+            public required BindingSource SecurableBinding
+            { private get; init { field = value; field.DataSource = Securables; } }
+
             BindingView<SecurableValue> Securables =
                 new BindingView<SecurableValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource MemberBinding { private get; init; }
+            public required BindingSource MemberBinding
+            { private get; init { field = value; field.DataSource = Memberships; } }
+
             BindingView<RoleMembershipValue> Memberships =
                 new BindingView<RoleMembershipValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource OwnerBinding { private get; init; }
+            public required BindingSource OwnerBinding
+            { private get; init { field = value; field.DataSource = SecurableOwners; } }
+
             BindingView<SecurableOwnerValue> SecurableOwners =
                 new BindingView<SecurableOwnerValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource PermissionBinding { private get; init; }
+            public required BindingSource PermissionBinding
+            { private get; init { field = value; field.DataSource = SecurablePermissions; } }
+
             BindingView<SecurablePermissionValue> SecurablePermissions =
                 new BindingView<SecurablePermissionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };

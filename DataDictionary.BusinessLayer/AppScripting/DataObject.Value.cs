@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         String IDataValue.Title { get { return pathValue.Title; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
+        public ScopeType Scope { get { return ScopeType.ScriptingDataObject; } }
 
         /// <inheritdoc/>
         public new PathIndex ObjectPath

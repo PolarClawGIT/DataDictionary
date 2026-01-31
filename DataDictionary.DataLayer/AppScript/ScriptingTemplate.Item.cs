@@ -211,7 +211,7 @@ namespace DataDictionary.DataLayer.AppScript
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
             if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
-            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.MySources; }
+            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.Projects; }
 
             Temporal = new TemporalItem()
             {

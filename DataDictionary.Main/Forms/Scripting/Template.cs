@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class Template : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return item is ITemplateIndex template && templateIndex.Equals(template); }
+        { return templateIndex.Equals(item); }
 
         FormBinding formBinding;
         TemplateIndex templateIndex = new TemplateIndex();
@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
 
-            documentCommand.Image = ScopeType.ScriptingTemplateDocument.GetImage(CommandType.Default);
+            documentCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
             transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
             addNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Add);
             deleteNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Delete);
@@ -91,17 +91,19 @@ namespace DataDictionary.Main.Forms.Scripting
                 transformScriptData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformScript)));
                 transformExceptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-                rootDirectoryData.ValueMember = nameof(IDirectoryEnumeration.Value);
-                rootDirectoryData.DisplayMember = nameof(IDirectoryEnumeration.DisplayName);
-                rootDirectoryData.DataSource = Enum.GetValues<DirectoryType>().ToList();
-                rootDirectoryData.DataBindings.Add(new Binding(
+                DirectoryTypeList.Load(rootFolderData);
+                rootFolderData.DataBindings.Add(new Binding(
                     nameof(ComboBox.SelectedValue),
-                    bindingTemplate, nameof(ITemplateValue.TemplateDirectory),
-                    false, DataSourceUpdateMode.OnPropertyChanged)
-                { DataSourceNullValue = DirectoryType.Null });
+                    bindingTemplate,
+                    nameof(ITemplateValue.RootFolder),
+                    true, DataSourceUpdateMode.OnValidation));
 
                 ScopeNameList.Load(breakOnScopeData, formBinding.XBuilder.Keys);
-                breakOnScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingTemplate, nameof(ITemplateValue.TemplateBreakOn), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
+                breakOnScopeData.DataBindings.Add(new Binding(
+                    nameof(ComboBox.SelectedValue),
+                    bindingTemplate,
+                    nameof(ITemplateValue.TemplateBreakOn),
+                    true, DataSourceUpdateMode.OnValidation));
 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
@@ -136,6 +138,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateNodeList.Load(nodeParentSelect, templateIndex, "(n/a)");
 
                 formBinding.BuildTree(nodeTreeView);
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 
@@ -233,24 +239,17 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryData_Validated(object sender, EventArgs e)
         { scriptingPhysicalDirectory.Text = Path.Combine(rootPhysicalDirectory.Text, scriptingDirectoryData.Text); }
 
-        private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (rootDirectoryData.SelectedValue is DirectoryType value
-                && value.GetEnumeration().Directory is DirectoryInfo directory)
-            { rootPhysicalDirectory.Text = directory.FullName; }
-            else { rootPhysicalDirectory.Text = String.Empty; }
-        }
 
-        private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
+        private void RootFolderData_Validated(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedValue is DirectoryType value
-                && formBinding.TryGetValue(out TemplateValue? current))
+            if (formBinding.TryGetValue(out TemplateValue? current))
             {
-                //Note: For reason unknown, current.TemplateDirectory has not been updated
-                //at this point. Setting the current.RootDirectory directly solves this.
-                current.RootDirectory = value.GetEnumeration().Name;
-                current.DocumentDirectory = null;
-                current.ScriptDirectory = null;
+                if (current.RootFolder.GetEnumeration().Directory is DirectoryInfo directory)
+                { rootPhysicalDirectory.Text = directory.FullName; }
+                else { rootPhysicalDirectory.Text = String.Empty; }
+
+                current.DocumentDirectory = String.Empty;
+                current.ScriptDirectory = String.Empty;
             }
         }
 
@@ -308,5 +307,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.NewNodeOwner(key);
             }
         }
+
+
     }
 }

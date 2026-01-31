@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
-    Microsoft ResX Schema 
+    Microsoft ResX Schema
 
     Version 2.0
 
@@ -48,7 +48,7 @@
     value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
     value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>116, 17</value>
+  </metadata>
   <metadata name="optionsLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <metadata name="optionsDefaultModeGroup.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
+  <metadata name="defaultModeLayut.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
   <metadata name="onlineOptionsGroup.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -129,6 +138,9 @@
   <metadata name="onlineButtonLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
+  <metadata name="applicationDataLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </metadata>
   <metadata name="optionsOfflineGroup.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
@@ -138,10 +150,36 @@
   <metadata name="offLineButtonLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
-  <metadata name="optionsDefaultModeGroup.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="userFolderGroup.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
-  <metadata name="defaultModeLayut.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="userFolderLayout.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="projectFolderData.SelectIcon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABDUlE
+        QVQ4T2NgIBXE7CphiN7tgC5MPIjdbcMQu+slQ8xOJ3Qp3CB0FRtQUycQPwPi/xC88yq6MtwgdmcHEG9h
+        iNsjDXZ+zK5XKN6YkcfwYGY+w38k/HF6PgNCQezOpwzR22TAbGxhANZUwCAJw9PyGIKn5zF8BYmDFYCc
+        DFKXx3AfRSMMoBuAE8MMRAdUMWBWCYMBkP6AFha4cR7DThQDgAHZBqRXggIPF56Wz1AAooGuWQg0YAqK
+        AUCBR7PyGRLQNaEbMKWIwRmo9uWsAgZtVAPyGc6ha0DHYBfkMlTPymM4AdcMM2BGAUMbugZ0DDIA6NWj
+        QBfEoxgwI5/hHkYg4cBAtY97Cxk4UQwYUAAANSDaALZMfGIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="applicationDataFolder.SelectIcon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7DAAAOwwHHb6hkAAABDUlE
+        QVQ4T2NgIBXE7CphiN7tgC5MPIjdbcMQu+slQ8xOJ3Qp3CB0FRtQUycQPwPi/xC88yq6MtwgdmcHEG9h
+        iNsjDXZ+zK5XKN6YkcfwYGY+w38k/HF6PgNCQezOpwzR22TAbGxhANZUwCAJw9PyGIKn5zF8BYmDFYCc
+        DFKXx3AfRSMMoBuAE8MMRAdUMWBWCYMBkP6AFha4cR7DThQDgAHZBqRXggIPF56Wz1AAooGuWQg0YAqK
+        AUCBR7PyGRLQNaEbMKWIwRmo9uWsAgZtVAPyGc6ha0DHYBfkMlTPymM4AdcMM2BGAUMbugZ0DDIA6NWj
+        QBfEoxgwI5/hHkYg4cBAtY97Cxk4UQwYUAAANSDaALZMfGIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <metadata name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>374, 17</value>
   </metadata>
 </root>

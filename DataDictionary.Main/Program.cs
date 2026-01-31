@@ -1,10 +1,7 @@
-using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Toolbox.DbContext;
-using Toolbox.Mediator;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -27,7 +24,7 @@ namespace DataDictionary.Main
             Application.ApplicationExit += Application_ApplicationExit;
 
             Worker.WorkException += WorkerQueue_WorkException;
-
+            
             Application.Run(new Main());
         }
 
@@ -55,16 +52,16 @@ namespace DataDictionary.Main
         {
             if (Settings.Default.IsOnLineMode)
             { Worker.Enqueue(BusinessData.GetDbFactory().OpenConnection(), TestConnection); }
-            else { LoadbyFile(); }
+            else { LoadByFile(); }
 
             void TestConnection(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is Exception ex)
-                { LoadbyFile(); }
+                { LoadByFile(); }
                 else { LoadByDatabase(); }
             }
 
-            void LoadbyFile()
+            void LoadByFile()
             {
                 FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
                 FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);

@@ -32,11 +32,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IEnumerable<Exception> TemplateException { get; }
 
         /// <summary>
-        /// Speical Directory Name used to determine the Root Directory.
-        /// </summary>
-        DirectoryType TemplateDirectory { get; }
-
-        /// <summary>
         /// The Scripting Break On Scope.
         /// </summary>
         ScopeType TemplateBreakOn { get; }
@@ -68,18 +63,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IEnumerable<Exception> TemplateException { get { return templateException; } }
 
-        /// <inheritdoc/>
-        public DirectoryType TemplateDirectory
-        {
-            get
-            {
-                String? value = GetValue(nameof(RootDirectory));
-                if (value.TryParse(out DirectoryType result))
-                { return result; }
-                else { return DirectoryType.Null; }
-            }
-            set { SetValue(nameof(RootDirectory), value.GetEnumeration().Name); }
-        }
 
         /// <inheritdoc/>
         public ScopeType TemplateBreakOn
@@ -134,9 +117,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     OnPropertyChanged(nameof(TransformException));
                 }
             }
-
-            if (e.PropertyName is nameof(RootDirectory))
-            { OnPropertyChanged(nameof(TemplateDirectory)); }
 
             if (e.PropertyName is nameof(BreakOnScope))
             { OnPropertyChanged(nameof(TemplateBreakOn)); }

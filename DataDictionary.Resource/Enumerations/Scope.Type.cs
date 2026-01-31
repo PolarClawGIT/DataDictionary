@@ -345,6 +345,11 @@
         ScriptingDataObject,
 
         /// <summary>
+        /// Scripting Document
+        /// </summary>
+        ScriptingDocument,
+
+        /// <summary>
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,
@@ -363,11 +368,6 @@
         /// Scripting Template Data
         /// </summary>
         ScriptingTemplateData,
-
-        /// <summary>
-        /// Scripting Template Document
-        /// </summary>
-        ScriptingTemplateDocument,
 
     }
 

@@ -20,6 +20,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             ITemplate data = BusinessData.Scripting;
 
+            //TODO: C# 13 Init fields fixed to mimic other classes.
+            //Currently, the ListChange Event is firing before the object is assigned to a property.
+
             public required BindingSource TemplateBinding { private get; init; }
             BindingView<TemplateValue> templates =
                 new BindingView<TemplateValue>([])
@@ -90,7 +93,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-
             public void Load(TemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -134,8 +136,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
                 work.AddRange(data.Save(factory, template));
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Scripting; } });
+                work.AddRange(data.Delete(template));
+                work.AddRange(data.Load(factory, template));
 
                 DoWork(work, completing);
 

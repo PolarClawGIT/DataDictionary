@@ -2,8 +2,6 @@
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -19,74 +17,58 @@ namespace DataDictionary.Main.Forms.Model
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource BindingProcess { private get; init; }
+
             public BindingView<ProcessValue> Process { get; private set; } =
                 new BindingView<ProcessValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAlias { private get; init; }
+
             public BindingView<ProcessAliasValue> Aliases { get; private set; } =
                 new BindingView<ProcessAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingSubjectArea { private get; init; }
+
             public BindingView<ProcessSubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<ProcessSubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingProperty { private get; init; }
+
             public BindingView<ProcessPropertyValue> Properties { get; private set; } =
                 new BindingView<ProcessPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingDefinition { private get; init; }
+
             public BindingView<ProcessDefinitionValue> Definitions { get; private set; } =
                 new BindingView<ProcessDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource BindingArgument { private get; init; }
+            public required BindingSource BindingArgument
+            { private get; init { field = value; field.DataSource = Arguments; } }
+
             public BindingView<ProcessArgumentValue> Arguments { get; private set; } =
                 new BindingView<ProcessArgumentValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            ProcessIndex processIndex = new ProcessIndex();
-            TemporalIndex? temporalIndex = null;
-            IProcess processData = BusinessData.Model.Process;
+            IProcess data = BusinessData.Model.Process;
 
             public FormBinding()
             { }
 
-            public void Init()
-            {
-                // Note: C# 13 (Nov 2025?) adds "field". Allows code to be applied to "Init".
-
-                Process = new BindingView<ProcessValue>(processData.Processes, w => processIndex.Equals(w));
-                Properties = new BindingView<ProcessPropertyValue>(processData.Properties, w => processIndex.Equals(w));
-                Aliases = new BindingView<ProcessAliasValue>(processData.Aliases, w => processIndex.Equals(w));
-                SubjectAreas = new BindingView<ProcessSubjectAreaValue>(processData.SubjectArea, w => processIndex.Equals(w));
-                Definitions = new BindingView<ProcessDefinitionValue>(processData.Definitions, w => processIndex.Equals(w));
-                Arguments = new BindingView<ProcessArgumentValue>(processData.Arguments, w => processIndex.Equals(w));
-
-                BindingProcess.DataSource = Process;
-                BindingProperty.DataSource = Properties;
-                BindingAlias.DataSource = Aliases;
-                BindingSubjectArea.DataSource = SubjectAreas;
-                BindingDefinition.DataSource = Definitions;
-                BindingArgument.DataSource = Arguments;
-            }
-
-            public IProcessIndex? Create()
+            public ProcessValue NewValue()
             {
                 ProcessValue newValue = new ProcessValue();
-                processData.Processes.Add(newValue);
-                SetPosition(newValue);
+                data.Processes.Add(newValue);
 
                 return newValue;
             }
 
-            public void SetPosition(IProcessIndex process)
-            {
-                processIndex = new ProcessIndex(process);
 
+            public void Load(ProcessIndex process)
+            {
                 BindingProcess.RaiseListChangedEvents = false;
                 BindingProperty.RaiseListChangedEvents = false;
                 BindingAlias.RaiseListChangedEvents = false;
@@ -100,12 +82,12 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Process = new BindingView<ProcessValue>(processData.Processes, w => processIndex.Equals(w));
-                Properties = new BindingView<ProcessPropertyValue>(processData.Properties, w => processIndex.Equals(w));
-                Aliases = new BindingView<ProcessAliasValue>(processData.Aliases, w => processIndex.Equals(w));
-                SubjectAreas = new BindingView<ProcessSubjectAreaValue>(processData.SubjectArea, w => processIndex.Equals(w));
-                Definitions = new BindingView<ProcessDefinitionValue>(processData.Definitions, w => processIndex.Equals(w));
-                Arguments = new BindingView<ProcessArgumentValue>(processData.Arguments, w => processIndex.Equals(w));
+                Process = new BindingView<ProcessValue>(data.Processes, w => process.Equals(w));
+                Properties = new BindingView<ProcessPropertyValue>(data.Properties, w => process.Equals(w));
+                Aliases = new BindingView<ProcessAliasValue>(data.Aliases, w => process.Equals(w));
+                SubjectAreas = new BindingView<ProcessSubjectAreaValue>(data.SubjectArea, w => process.Equals(w));
+                Definitions = new BindingView<ProcessDefinitionValue>(data.Definitions, w => process.Equals(w));
+                Arguments = new BindingView<ProcessArgumentValue>(data.Arguments, w => process.Equals(w));
 
                 if (Process.Count > 0)
                 {
@@ -139,6 +121,45 @@ namespace DataDictionary.Main.Forms.Model
                 Arguments.ResetBindings();
 
                 BindingProcess.MoveFirst(); // For some reason this must be done last or it does not work.
+            }
+
+
+            public void Load(ProcessIndex process, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Model.Process; } });
+                work.AddRange(data.Delete(process));
+                work.AddRange(data.Load(factory, process));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(process);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+            public void Load(ProcessIndex process, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = IProcess.Create(); } });
+                work.AddRange(data.Load(factory, process, temporal));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(process);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
 
             public Boolean TryGetValue([NotNullWhen(true)] out ProcessValue? result)
@@ -178,7 +199,6 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current ProcessValue not defined"); }
             }
 
-
             public void AddArgument(PathIndex path)
             {
                 if (TryGetValue(out ProcessValue? value))
@@ -193,7 +213,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 var positions = Arguments.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.ArgumentKnownAs).ToList();
                 foreach (ProcessArgumentValue item in Arguments)
-                { item.OrdinalPosition = positions.IndexOf(item) +1; }
+                { item.OrdinalPosition = positions.IndexOf(item) + 1; }
 
             }
 
@@ -245,12 +265,6 @@ namespace DataDictionary.Main.Forms.Model
                 return TryGetValue(out ProcessValue? current) && key.Equals(current);
             }
 
-            public void SetPosition(IProcessIndex process, ITemporalIndex temporal)
-            {
-                SetPosition(process);
-                temporalIndex = new TemporalIndex(temporal);
-            }
-
             public IAliasSubType NewAlias()
             {
                 if (TryGetValue(out ProcessValue? value))
@@ -258,58 +272,23 @@ namespace DataDictionary.Main.Forms.Model
                 else { throw new InvalidOperationException("Current AttributeValue not defined"); }
             }
 
-            public void Save(Action<RunWorkerCompletedEventArgs> onCompleting)
+            public void Save(ProcessIndex process, Action<RunWorkerCompletedEventArgs> onCompleting)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.AddRange(processData.Save(factory, processIndex));
+                work.AddRange(data.Save(factory, process));
 
                 DoWork(work, onCompleting);
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs> onComplete)
+            public void Remove(ProcessIndex process)
+            { data.Remove(process); }
+
+            public ITemporalData GetTemporal(ProcessIndex process)
             {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-
-                if (temporalIndex is null)
-                {
-                    processData = BusinessData.Model.Process;
-                    work.AddRange(processData.Delete(processIndex));
-                    work.AddRange(processData.Load(factory, processIndex));
-                }
-                else
-                {
-                    processData = IProcess.Create();
-                    work.AddRange(processData.Load(factory, processIndex, temporalIndex));
-                }
-
-                DoWork(work, StartBinding);
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(processIndex);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public void Remove()
-            {
-                if (TryGetValue(out ProcessValue? value))
-                {
-                    processData.RaiseListChangedEvents = false;
-                    processData.Remove(value);
-                    SetPosition(value);
-                }
-            }
-
-            public ITemporalData GetTemporal()
-            {
-                { return processData.GetTemporal(processIndex); }
+                { return data.GetTemporal(process); }
             }
         }
     }

@@ -20,71 +20,54 @@ namespace DataDictionary.Main.Forms.Model
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource BindingEntity { private get; init; }
+
             public BindingView<EntityValue> Entity { get; private set; } =
                 new BindingView<EntityValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAlias { private get; init; }
+
             public BindingView<EntityAliasValue> Aliases { get; private set; } =
                 new BindingView<EntityAliasValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingSubjectArea { private get; init; }
+
             public BindingView<EntitySubjectAreaValue> SubjectAreas { get; private set; } =
                 new BindingView<EntitySubjectAreaValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingProperty { private get; init; }
+
             public BindingView<EntityPropertyValue> Properties { get; private set; } =
                 new BindingView<EntityPropertyValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingDefinition { private get; init; }
+
             public BindingView<EntityDefinitionValue> Definitions { get; private set; } =
                 new BindingView<EntityDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAttribute { private get; init; }
+
             public BindingView<EntityAttributeValue> Attributes { get; private set; } =
                 new BindingView<EntityAttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource BindingAttributeDetail { private get; init; }
+
             public BindingView<AttributeValue> AttributeDetails { get; private set; } =
                 new BindingView<AttributeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            EntityIndex entityIndex = new EntityIndex();
-            TemporalIndex? temporalIndex = null;
-            IEntity entityData = BusinessData.Model.Entity;
+            IEntity data = BusinessData.Model.Entity;
 
             public FormBinding()
             { }
 
-            public void Init()
+            public void Load(EntityIndex entity)
             {
-                // Note: C# 13 adds "field".
-                // This code could then be moved to the BindingHelpSubject init.
-
-                Entity = new BindingView<EntityValue>(entityData.Entities, w => entityIndex.Equals(w));
-                Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
-                Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
-                SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
-                Definitions = new BindingView<EntityDefinitionValue>(entityData.Definitions, w => entityIndex.Equals(w));
-                Attributes = new BindingView<EntityAttributeValue>(entityData.Attributes, w => entityIndex.Equals(w));
-
-                BindingEntity.DataSource = Entity;
-                BindingProperty.DataSource = Properties;
-                BindingAlias.DataSource = Aliases;
-                BindingSubjectArea.DataSource = SubjectAreas;
-                BindingDefinition.DataSource = Definitions;
-                BindingAttribute.DataSource = Attributes;
-            }
-
-            public void SetPosition(IEntityIndex entity)
-            {
-                entityIndex = new EntityIndex(entity);
-
                 Entity.ListChanged -= OnListChanged;
                 BindingEntity.RaiseListChangedEvents = false;
                 BindingProperty.RaiseListChangedEvents = false;
@@ -99,12 +82,12 @@ namespace DataDictionary.Main.Forms.Model
                 SubjectAreas.RaiseListChangedEvents = false;
                 Definitions.RaiseListChangedEvents = false;
 
-                Entity = new BindingView<EntityValue>(entityData.Entities, w => entityIndex.Equals(w));
-                Properties = new BindingView<EntityPropertyValue>(entityData.Properties, w => entityIndex.Equals(w));
-                Aliases = new BindingView<EntityAliasValue>(entityData.Aliases, w => entityIndex.Equals(w));
-                SubjectAreas = new BindingView<EntitySubjectAreaValue>(entityData.SubjectArea, w => entityIndex.Equals(w));
-                Definitions = new BindingView<EntityDefinitionValue>(entityData.Definitions, w => entityIndex.Equals(w));
-                Attributes = new BindingView<EntityAttributeValue>(entityData.Attributes, w => entityIndex.Equals(w));
+                Entity = new BindingView<EntityValue>(data.Entities, w => entity.Equals(w));
+                Properties = new BindingView<EntityPropertyValue>(data.Properties, w => entity.Equals(w));
+                Aliases = new BindingView<EntityAliasValue>(data.Aliases, w => entity.Equals(w));
+                SubjectAreas = new BindingView<EntitySubjectAreaValue>(data.SubjectArea, w => entity.Equals(w));
+                Definitions = new BindingView<EntityDefinitionValue>(data.Definitions, w => entity.Equals(w));
+                Attributes = new BindingView<EntityAttributeValue>(data.Attributes, w => entity.Equals(w));
 
                 if (Entity.Count > 0)
                 {
@@ -140,11 +123,45 @@ namespace DataDictionary.Main.Forms.Model
                 BindingEntity.MoveFirst(); // For some reason this must be done last or it does not work.
             }
 
-            public void SetPosition(IEntityIndex entity, ITemporalIndex temporal)
+            public void Load(EntityIndex entity, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
-                SetPosition(entity);
-                temporalIndex = new TemporalIndex(temporal);
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+
+                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Model.Entity; } });
+                work.AddRange(data.Delete(entity));
+                work.AddRange(data.Load(factory, entity));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(entity);
+                    if (onComplete is not null) { onComplete(args); }
+                }
             }
+
+            public void Load(EntityIndex entity, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { DoWork = () => { data = IEntity.Create(); } });
+                work.AddRange(data.Load(factory, entity, temporal));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                {
+                    Load(entity);
+                    if (onComplete is not null) { onComplete(args); }
+                }
+            }
+
+
 
             private void OnListChanged(Object? sender, ListChangedEventArgs e)
             {
@@ -164,53 +181,26 @@ namespace DataDictionary.Main.Forms.Model
             public EntityValue NewValue()
             {
                 EntityValue newValue = new EntityValue();
-                entityData.Entities.Add(newValue);
-                SetPosition(newValue);
+                data.Entities.Add(newValue);
 
                 return newValue;
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+
+
+            public void Save(EntityIndex entity, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-
-                if (temporalIndex is null)
-                {
-                    entityData = BusinessData.Model.Entity;
-                    work.AddRange(entityData.Delete(entityIndex));
-                    work.AddRange(entityData.Load(factory, entityIndex));
-                }
-                else
-                {
-                    entityData = IEntity.Create();
-                    work.AddRange(entityData.Load(factory, entityIndex, temporalIndex));
-                }
-
-                DoWork(work, StartBinding);
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    SetPosition(entityIndex);
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(entityData.Save(factory, entityIndex));
+                work.AddRange(data.Save(factory, entity));
 
                 DoWork(work, onComplete);
             }
 
-            public ITemporalData GetTemporal()
-            { return entityData.GetTemporal(entityIndex); }
+            public ITemporalData GetTemporal(EntityIndex entity)
+            { return data.GetTemporal(entity); }
 
             public Boolean TryGetValue([NotNullWhen(true)] out EntityValue? result)
             {
@@ -236,15 +226,8 @@ namespace DataDictionary.Main.Forms.Model
                 else { result = null; return false; }
             }
 
-            public void RemoveValue()
-            {
-                if (TryGetValue(out EntityValue? value))
-                {
-                    entityData.RaiseListChangedEvents = false;
-                    entityData.Remove(value);
-                    SetPosition(value);
-                }
-            }
+            public void RemoveValue(EntityIndex entity)
+            { data.Remove(entity); }
 
             public Boolean GetAuthorization(Enumerations.CommandType command)
             {

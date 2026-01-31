@@ -144,5 +144,12 @@ namespace DataDictionary.Main
                 () => new Forms.Scripting.DataSource(dataSource),
                 (form) => form.IsOpenItem(dataSource));
         }
+
+        void OpenForm(IDocumentValue document)
+        {
+            Activate(
+                () => new Forms.Scripting.Document(document),
+                (form) => form.IsOpenItem(document));
+        }
     }
 }

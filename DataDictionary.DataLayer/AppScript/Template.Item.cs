@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Resource.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -59,10 +60,16 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? RootDirectory
-        {
-            get { return GetValue(nameof(RootDirectory)); }
-            set { SetValue(nameof(RootDirectory), value); }
+        public DirectoryType RootFolder {
+            get
+            {
+                String? value = GetValue(nameof(RootFolder));
+                if (value.TryParse(out DirectoryType result))
+                { return result; }
+                else { return DirectoryType.Null; }
+            }
+            set
+            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -154,7 +161,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateDescription), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(BreakOnScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RootDirectory), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DocumentDirectory), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DocumentPrefix), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(DocumentSuffix), typeof(String)){ AllowDBNull = true},

@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Controls.ComboBoxList
                 onItemChanged: (s, t) =>
                 {
                     t.TemplateTitle = s.TemplateTitle ?? String.Empty;
-                    IBindingPropertyChanged.OnPropertyChanged(comboList, t.PropertyChanged, nameof(t.TemplateTitle));
+                    t.OnPropertyChanged(t.PropertyChanged, nameof(t.TemplateTitle));
                 },
                 orderBy: (o) => o.TemplateTitle,
                 areEquel: (a, b) => new TemplateIndex(a).Equals(b),

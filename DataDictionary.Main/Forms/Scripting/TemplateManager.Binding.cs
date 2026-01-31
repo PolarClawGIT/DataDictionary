@@ -13,7 +13,9 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
-            public required BindingSource ManagerBinding { private get; init; }
+            public required BindingSource ManagerBinding
+            { private get; init { field = value; field.DataSource = managerData; } }
+
             BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
@@ -237,7 +239,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 set
                 {
                     inModel = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InModel));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InModel));
                 }
             }
 
@@ -247,7 +249,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 set
                 {
                     inDatabase = value;
-                    IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(InDatabase));
+                    this.OnPropertyChanged(PropertyChanged, nameof(InDatabase));
                 }
             }
 
@@ -292,27 +294,23 @@ namespace DataDictionary.Main.Forms.Scripting
 
             private void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
+                if (dataSource is IDataSourceValue sourceValue)
                 {
-                    if (dataSource is IDataSourceValue sourceValue)
-                    {
-                        if (e.PropertyName is nameof(IDataSourceValue.DataSourceTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(Title))); }
+                    if (e.PropertyName is nameof(IDataSourceValue.DataSourceTitle))
+                    { this.OnPropertyChanged(PropertyChanged,nameof(Title)); }
 
-                        if (e.PropertyName is nameof(IDataSourceValue.DataSourceDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(Description))); }
-
-                    }
-                    else if (template is ITemplateValue templateValue)
-                    {
-                        if (e.PropertyName is nameof(ITemplateValue.TemplateTitle))
-                        { handler(this, new PropertyChangedEventArgs(nameof(Title))); }
-
-                        if (e.PropertyName is nameof(ITemplateValue.TemplateDescription))
-                        { handler(this, new PropertyChangedEventArgs(nameof(Description))); }
-                    }
-                    else { }
+                    if (e.PropertyName is nameof(IDataSourceValue.DataSourceDescription))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(Description)); }
                 }
+                else if (template is ITemplateValue templateValue)
+                {
+                    if (e.PropertyName is nameof(ITemplateValue.TemplateTitle))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(Title)); }
+
+                    if (e.PropertyName is nameof(ITemplateValue.TemplateDescription))
+                    { this.OnPropertyChanged(PropertyChanged, nameof(Description)); }
+                }
+                else { }
             }
 
             public Boolean TryGetIndex([NotNullWhen(true)] out DataSourceIndex? result)

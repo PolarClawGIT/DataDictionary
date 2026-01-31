@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Copyright>© 2025 William Howard, All Rights Reserved</Copyright>
+    <Copyright>© 2026 William Howard, All Rights Reserved</Copyright>
     <ApplicationIcon>Properties\Icon\SoftwareDefinitionModel.ico</ApplicationIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Description>A Data Dictionary application that works with meta-data provided by MS SQL and Visual Studio.

@@ -21,7 +21,7 @@
 	--          Extension: The extension to be used. The Default is either .XML or .TXT depending on TransformOnText.
 	--          A simple viewer would exist within the application to preview the data with "Save As" feature.
 	--          The application can search for files based on the Template settings and display them in the navigation tree.
-	[RootDirectory]         NVarChar(100) Null, -- Name of the Special Directory used as the Root
+	[RootFolder]			NVarChar(100) Null, -- Name of the Special Directory used as the Root
 	[DocumentDirectory]		NVarChar(250) Null, -- From Root, the directory for the XML files.
 	[DocumentPrefix]		NVarChar(50) Null,
 	[DocumentSuffix]		NVarChar(50) Null,

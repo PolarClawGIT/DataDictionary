@@ -395,6 +395,35 @@ namespace DataDictionary.Main.Forms
             { item.Value.IsEnabled = getAuthorization(item.Key); }
         }
 
+        /// <summary>
+        /// Used to build a property Navigation Path.
+        /// A period delimited names of properties used for Binding.
+        /// </summary>
+        /// <param name="nameOfs"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// The nameof function cannot be used directly with String.Format.
+        /// This is because String.Format expects a list of Objects, not strings.
+        /// This works around that limitation.
+        /// This is a String Concatenation function.
+        /// </remarks>
+        /// <example>
+        /// textBoxControl.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSource, NavigationPath(nameof(parentClass.parentProperty),nameof(childClass.childProperty))));
+        /// </example>
+        public virtual String NavigationPath(params List<String> nameOfs)
+        {
+            String result = String.Empty;
+
+            foreach (String item in nameOfs)
+            {
+                if (String.IsNullOrWhiteSpace(result))
+                { result = String.Format("{0}", item); }
+                else { result = String.Format("{0}.{1}", result, item); }
+            }
+
+            return result;
+        }
+
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
         {
             // Visibility can be set in code.
