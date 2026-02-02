@@ -41,19 +41,22 @@ namespace DataDictionary.Main.Forms.Scripting
             public DocumentFile OutputValue => value.OutputValue;
 
             /// <inheritdoc/>
-            public String? TransformScript => value.TransformScript;
-
-            /// <inheritdoc/>
             public DirectoryType RootFolder => value.RootFolder;
 
             /// <inheritdoc/>
-            public String? InputDirectory => value.InputDirectory;
+            public String? InputPath => value.InputPath;
 
             /// <inheritdoc/>
             public String? InputFile => value.InputFile;
 
             /// <inheritdoc/>
-            public String? OutputDirectory => value.OutputDirectory;
+            public String? ProcessPath => value.ProcessPath;
+
+            /// <inheritdoc/>
+            public String? ProcessFile => value.ProcessFile;
+
+            /// <inheritdoc/>
+            public String? OutputPath => value.OutputPath;
 
             /// <inheritdoc/>
             public String? OutputFile => value.OutputFile;

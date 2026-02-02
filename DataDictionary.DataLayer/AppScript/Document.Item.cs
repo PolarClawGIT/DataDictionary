@@ -15,15 +15,6 @@ namespace DataDictionary.DataLayer.AppScript
         ITemporalItem
     {
         /// <summary>
-        /// XSLT Transform Script.
-        /// </summary>
-        /// <remarks>
-        /// Root Node should be- xsl:stylesheet
-        /// XML NameSpace- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        /// </remarks>
-        String? TransformScript { get; }
-
-        /// <summary>
         /// Name of the Special Folder used as the Root Directory.
         /// </summary>
         /// <remarks>
@@ -34,7 +25,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Input Directory off of the Root Directory where the XML Input file is located.
         /// </summary>
-        String? InputDirectory { get; }
+        String? InputPath { get; }
 
         /// <summary>
         /// Input File name for the XML Input file.
@@ -42,9 +33,19 @@ namespace DataDictionary.DataLayer.AppScript
         String? InputFile { get; }
 
         /// <summary>
+        /// Process Directory off of the Root Directory where the XSL Process/Transform file is located.
+        /// </summary>
+        String? ProcessPath { get; }
+
+        /// <summary>
+        /// Process File name for the XSL Process/Transform file.
+        /// </summary>
+        String? ProcessFile { get; }
+
+        /// <summary>
         /// Output Directory off of the Root Directory where the Output file is to be written.
         /// </summary>
-        String? OutputDirectory { get; }
+        String? OutputPath { get; }
 
         /// <summary>
         /// Output File name for the result file.
@@ -81,13 +82,6 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? TransformScript
-        {
-            get { return GetValue(nameof(TransformScript)); }
-            set { SetValue(nameof(TransformScript), value); }
-        }
-
-        /// <inheritdoc/>
         public DirectoryType RootFolder
         {
             get
@@ -101,12 +95,11 @@ namespace DataDictionary.DataLayer.AppScript
             { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
         }
 
-
         /// <inheritdoc/>
-        public String? InputDirectory
+        public String? InputPath
         {
-            get { return GetValue(nameof(InputDirectory)); }
-            set { SetValue(nameof(InputDirectory), value); }
+            get { return GetValue(nameof(InputPath)); }
+            set { SetValue(nameof(InputPath), value); }
         }
 
         /// <inheritdoc/>
@@ -117,10 +110,24 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public String? OutputDirectory
+        public String? ProcessPath
         {
-            get { return GetValue(nameof(OutputDirectory)); }
-            set { SetValue(nameof(OutputDirectory), value); }
+            get { return GetValue(nameof(ProcessPath)); }
+            set { SetValue(nameof(ProcessPath), value); }
+        }
+
+        /// <inheritdoc/>
+        public String? ProcessFile
+        {
+            get { return GetValue(nameof(ProcessFile)); }
+            set { SetValue(nameof(ProcessFile), value); }
+        }
+
+        /// <inheritdoc/>
+        public String? OutputPath
+        {
+            get { return GetValue(nameof(OutputPath)); }
+            set { SetValue(nameof(OutputPath), value); }
         }
 
         /// <inheritdoc/>
@@ -154,11 +161,12 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(DocumentId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(DocumentTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(InputDirectory), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(InputPath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(InputFile), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(OutputDirectory), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ProcessPath), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ProcessFile), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(OutputPath), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(OutputFile), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
