@@ -557,6 +557,10 @@
     <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
     <Build Include="AppScript\Triggers\trigDocument.sql" />
+    <Build Include="AppScript\Tables\DocumentFile.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFilePath.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileName.sql" />
+    <Build Include="AppScript\Triggers\trigDocumentFile.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

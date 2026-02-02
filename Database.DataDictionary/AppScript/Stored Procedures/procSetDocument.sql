@@ -29,28 +29,34 @@ Begin Try
 		[DocumentId]			UniqueIdentifier NOT Null,
 		[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 		[TemplateId]            UniqueIdentifier NULL,
-		[TransformScript]		XML Null,
-		[RootFolder]         NVarChar(100) Null,
-		[InputDirectory]		NVarChar(250) Null,
-		[InputFile]             NVarChar(100) Null, 
-		[OutputDirectory]		NVarChar(250) Null,
-		[OutputFile]            NVarChar(100) Null,
+		[RootFolder]			NVarChar(30) Null,
+		[InputPath]				[AppGeneral].[uddtFilePath] Null,
+		[InputFile]             [AppGeneral].[uddtFileName] Null, 
+		[ProcessPath]			[AppGeneral].[uddtFilePath] Null,
+		[ProcessFile]           [AppGeneral].[uddtFileName] Null, 
+		[OutputPath]			[AppGeneral].[uddtFilePath] Null,
+		[OutputFile]            [AppGeneral].[uddtFileName] Null,
 		Primary Key ([DocumentId]))
-			
+
+	Declare @Files Table (
+		[DocumentId]			UniqueIdentifier NOT Null,
+		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
+		[FileName]				[AppGeneral].[uddtFileName] Not Null,
+		[IsInput]				Bit Not Null,
+		[IsProcess]				Bit Not Null,
+		[IsOutput]				Bit Not Null,
+		Primary Key ([DocumentId], [IsInput], [IsProcess], [IsOutput]))
+
 	Insert Into @Values
 	Select	X.[DocumentId],
 			NullIf(Trim(D.[DocumentTitle]),'') As [DocumentTitle],
 			D.[TemplateId],
-			Case
-				When NullIf(D.[TransformScript],'') is Null Then Null
-				When SubString(Trim(D.[TransformScript]),1,1) Not In ('<') Then Null -- First Character not a tag start
-				When D.[TransformScript] Like '%encoding="utf-8"%' Then Try_Convert(XML,Convert(VarChar(Max),D.[TransformScript]),1) -- Handle UTF-8
-				Else Try_Convert(XML,D.[TransformScript],1)
-				End As [TransformScript],
 			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
-			NullIf(Trim(D.[InputDirectory]),'') As [InputDirectory],
+			NullIf(Trim(D.[InputPath]),'') As [InputPath],
 			NullIf(Trim(D.[InputFile]),'') As [InputFile],
-			NullIf(Trim(D.[OutputDirectory]),'') As [OutputDirectory],
+			NullIf(Trim(D.[ProcessPath]),'') As [ProcessPath],
+			NullIf(Trim(D.[ProcessFile]),'') As [ProcessFile],
+			NullIf(Trim(D.[OutputPath]),'') As [OutputPath],
 			NullIf(Trim(D.[OutputFile]),'') As [OutputFile]
 	From	@Data D
 			Left Join [AppScript].[Document] O
@@ -61,10 +67,53 @@ Begin Try
 				Select	Coalesce(O.[DocumentId], NewId()) As [DocumentId]) X
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	Insert Into @Files
+	Select	[DocumentId],
+			[InputPath] As [RelativePath],
+			[InputFile] As [FileName],
+			1 As [IsInput],
+			0 As [IsProcess],
+			0 As [IsOutput]
+	From	@Values
+	Where	[InputFile] is Not Null
+	Union
+	Select	[DocumentId],
+			[ProcessPath] As [RelativePath],
+			[ProcessFile] As [FileName],
+			0 As [IsInput],
+			1 As [IsProcess],
+			0 As [IsOutput]
+	From	@Values
+	Where	[ProcessFile] is Not Null
+	Union
+	Select	[DocumentId],
+			[OutputPath] As [RelativePath],
+			[OutputFile] As [FileName],
+			0 As [IsInput],
+			0 As [IsProcess],
+			1 As [IsOutput]
+	From	@Values
+	Where	[OutputFile] is Not Null
+	Print FormatMessage ('@Files: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	-- Set Transaction Log
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 		
 	-- Apply Changes
+	Delete From [AppScript].[DocumentFile]
+	From	[AppScript].[DocumentFile] T
+			Left Join @Files S
+			On	T.[DocumentId] = S.[DocumentId] And
+				T.[IsInput] = S.[IsInput] And
+				T.[IsProcess] = S.[IsProcess] And
+				T.[IsOutput] = S.[IsOutput]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DocumentId], 1)
+	Where	S.[DocumentId] is Null And
+			(@DocumentId is Not Null Or @ModelId is Not Null) And
+			(@DocumentId is Null Or @DocumentId = T.[DocumentId])  And
+			(@ModelId is Null Or @ModelId = T.[DocumentId])
+	Print FormatMessage ('Delete [AppScript].[DocumentFile]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [AppScript].[Document]
 	From	[AppScript].[Document] T
 			Left Join @Values S
@@ -80,65 +129,90 @@ Begin Try
 		Select	[DocumentId],
 				[DocumentTitle],
 				[TemplateId],
-				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
-				[RootFolder],
-				[InputDirectory],
-				[InputFile],
-				[OutputDirectory],
-				[OutputFile]
+				[RootFolder]
 		From	@Values
 		Except
 		Select	[DocumentId],
 				[DocumentTitle],
 				[TemplateId],
-				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
-				[RootFolder],
-				[InputDirectory],
-				[InputFile],
-				[OutputDirectory],
-				[OutputFile]
+				[RootFolder]
 		From	[AppScript].[Document])
 	Update [AppScript].[Document]
 		Set		[DocumentTitle] = S.[DocumentTitle],
 				[TemplateId] = S.[TemplateId],
-				[TransformScript] = S.[TransformScript],
-				[RootFolder] = S.[RootFolder],
-				[InputDirectory] = S.[InputDirectory],
-				[InputFile] = S.[InputFile],
-				[OutputDirectory] = S.[OutputDirectory],
-				[OutputFile] = S.[OutputFile]
+				[RootFolder] = S.[RootFolder]
 		From	[AppScript].[Document] T
 				Inner Join [Delta] S
 				On	T.[DocumentId] = S.[DocumentId]
 	Print FormatMessage ('Update [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[DocumentId],
+				[RelativePath],
+				[FileName],
+				[IsInput],
+				[IsProcess],
+				[IsOutput]
+		From	@Files
+		Except
+		Select	[DocumentId],
+				[RelativePath],
+				[FileName],
+				[IsInput],
+				[IsProcess],
+				[IsOutput]
+		From	[AppScript].[DocumentFile])
+	Update [AppScript].[DocumentFile]
+		Set		[RelativePath] = S.[RelativePath],
+				[FileName] = S.[FileName]
+		From	[AppScript].[DocumentFile] T
+				Inner Join [Delta] S
+				On	T.[DocumentId] = S.[DocumentId] And
+					T.[IsInput] = S.[IsInput] And
+					T.[IsProcess] = S.[IsProcess] And
+					T.[IsOutput] = S.[IsOutput]
+	Print FormatMessage ('Update [AppScript].[DocumentFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[Document] (
 			[DocumentId],
 			[DocumentTitle],
 			[ModelId],
 			[TemplateId],
-			[TransformScript],
-			[RootFolder],
-			[InputDirectory],
-			[InputFile],
-			[OutputDirectory],
-			[OutputFile])
+			[RootFolder])
 	Select	S.[DocumentId],
 			S.[DocumentTitle],
 			@ModelId,
 			S.[TemplateId],
-			S.[TransformScript],
-			S.[RootFolder],
-			S.[InputDirectory],
-			S.[InputFile],
-			S.[OutputDirectory],
-			S.[OutputFile]
+			S.[RootFolder]
 	From	@Values S
 			Left Join [AppScript].[Document] T
 			On	S.[DocumentId] = T.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[DocumentId], 1)
 	Where	T.[DocumentId] is Null
 	Print FormatMessage ('Insert [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [AppScript].[DocumentFile] (
+			[DocumentId],
+			[RelativePath],
+			[FileName],
+			[IsInput],
+			[IsProcess],
+			[IsOutput])
+	Select	S.[DocumentId],
+			S.[RelativePath],
+			S.[FileName],
+			S.[IsInput],
+			S.[IsProcess],
+			S.[IsOutput]
+	From	@Files S
+			Left Join [AppScript].[DocumentFile] T
+			On	S.[DocumentId] = T.[DocumentId] And
+				S.[IsInput] = T.[IsInput] And
+				S.[IsProcess] = T.[IsProcess] And
+				S.[IsOutput] = T.[IsOutput]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[DocumentId], 1)
+	Where	T.[DocumentId] is Null
+	Print FormatMessage ('Insert [AppScript].[DocumentFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

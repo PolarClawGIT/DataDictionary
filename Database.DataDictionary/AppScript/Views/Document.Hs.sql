@@ -5,6 +5,11 @@ With [Dates] As (
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[Document]
+	Union
+	Select	[DocumentId],
+			[SysStart],
+			[SysEnd]
+	From	[AppScript].[DocumentFile]
 	/*Union -- TODO: Temporal not yet implemented
 	Select	[DocumentId],
 			[SysStart],
@@ -15,12 +20,13 @@ Select	D.[DocumentId], -- PK
 		D.[DocumentTitle], -- AK
 		D.[ModelId], -- AK, FK
 		D.[TemplateId], -- FK
-		D.[TransformScript],
 		D.[RootFolder],
-		D.[InputDirectory],
-		D.[InputFile],
-		D.[OutputDirectory],
-		D.[OutputFile],
+		I.[RelativePath] As [InputPath],
+		I.[FileName] As [InputFile],
+		T.[RelativePath] As [ProcessPath],
+		T.[FileName] As [ProcessFile],
+		O.[RelativePath] As [OutputPath],
+		O.[FileName] As [OutputFile],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -33,6 +39,16 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[Document] D
+		Left Join [AppScript].[DocumentFile] I
+		On	D.[DocumentId] = I.[DocumentId] And
+			I.[IsInput] = 1
+		Left Join [AppScript].[DocumentFile] T
+		On	D.[DocumentId] = T.[DocumentId] And
+			T.[IsProcess] = 1
+		Left Join [AppScript].[DocumentFile] O
+		On	D.[DocumentId] = O.[DocumentId] And
+			O.[IsOutput] = 1
+
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

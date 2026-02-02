@@ -1,5 +1,5 @@
-﻿CREATE TRIGGER [AppScript].[trigDocument]
-	ON [AppScript].[Document]
+﻿CREATE TRIGGER [AppScript].[trigDocumentFile]
+	ON [AppScript].[DocumentFile]
 	FOR DELETE, INSERT, UPDATE
 	AS
 	BEGIN
