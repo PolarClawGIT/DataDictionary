@@ -31,9 +31,9 @@
         Projects,
 
         /// <summary>
-        /// Location Application looks for Data.
+        /// Location Application looks for Data Dictionary
         /// Default: Environment.SpecialFolder.MyDocuments & DataDictionary
         /// </summary>
-        Data,
+        Dictionary,
     }
 }

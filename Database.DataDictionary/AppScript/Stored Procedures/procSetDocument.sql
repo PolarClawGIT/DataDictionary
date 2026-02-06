@@ -29,7 +29,7 @@ Begin Try
 		[DocumentId]			UniqueIdentifier NOT Null,
 		[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 		[TemplateId]            UniqueIdentifier NULL,
-		[RootFolder]			NVarChar(30) Null,
+		[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
 		[InputPath]				[AppGeneral].[uddtFilePath] Null,
 		[InputFile]             [AppGeneral].[uddtFileName] Null, 
 		[ProcessPath]			[AppGeneral].[uddtFilePath] Null,
@@ -46,6 +46,8 @@ Begin Try
 		[IsProcess]				Bit Not Null,
 		[IsOutput]				Bit Not Null,
 		Primary Key ([DocumentId], [IsInput], [IsProcess], [IsOutput]))
+
+	Declare @Delete Table ([DocumentId] UniqueIdentifier NOT NULL)
 
 	Insert Into @Values
 	Select	X.[DocumentId],
@@ -96,6 +98,21 @@ Begin Try
 	Where	[OutputFile] is Not Null
 	Print FormatMessage ('@Files: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	Insert Into @Delete
+	Select	T.[DocumentId]
+	From	[AppScript].[Document] T
+			Left Join @Values S
+			On	T.[DocumentId] = S.[DocumentId]
+	Where	S.[DocumentId] is Null And
+			T.[DocumentId] In (
+				Select	[DocumentId]
+				From	[AppScript].[Document]
+				Where	[ModelId] = @ModelId
+				Union
+				Select	@DocumentId
+				Where	@DocumentId is Not Null)
+	Print FormatMessage ('Insert @Delete: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	-- Set Transaction Log
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 		
@@ -109,9 +126,9 @@ Begin Try
 				T.[IsOutput] = S.[IsOutput]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DocumentId], 1)
 	Where	S.[DocumentId] is Null And
-			(@DocumentId is Not Null Or @ModelId is Not Null) And
-			(@DocumentId is Null Or @DocumentId = T.[DocumentId])  And
-			(@ModelId is Null Or @ModelId = T.[DocumentId])
+			T.[DocumentId] In (
+				Select	[DocumentId]
+				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[DocumentFile]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [AppScript].[Document]
@@ -120,9 +137,9 @@ Begin Try
 			On	T.[DocumentId] = S.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DocumentId], 1)
 	Where	S.[DocumentId] is Null And
-			(@DocumentId is Not Null Or @ModelId is Not Null) And
-			(@DocumentId is Null Or @DocumentId = T.[DocumentId])  And
-			(@ModelId is Null Or @ModelId = T.[DocumentId])
+			T.[DocumentId] In (
+				Select	[DocumentId]
+				From	@Delete)
 	Print FormatMessage ('Delete [AppScript].[Document]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (

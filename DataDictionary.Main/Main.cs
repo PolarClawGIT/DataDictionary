@@ -141,7 +141,7 @@ namespace DataDictionary.Main
                 { DirectoryType.Projects.GetEnumeration().RelativeFolder = Settings.Default.UserProjects; }
 
                 if(!String.IsNullOrWhiteSpace(Settings.Default.UserData))
-                { DirectoryType.Data.GetEnumeration().RelativeFolder = Settings.Default.UserData; }
+                { DirectoryType.Dictionary.GetEnumeration().RelativeFolder = Settings.Default.UserData; }
 
                 if (args.Error is not null)
                 { Program.ShowException(args.Error); }

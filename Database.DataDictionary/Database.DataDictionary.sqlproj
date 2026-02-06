@@ -561,6 +561,11 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtFilePath.sql" />
     <Build Include="AppGeneral\User Defined Data Types\uddtFileName.sql" />
     <Build Include="AppScript\Triggers\trigDocumentFile.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileRoot.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileExtension.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileAffix.sql" />
+    <Build Include="AppScript\Tables\TemplateFile.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateFile.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

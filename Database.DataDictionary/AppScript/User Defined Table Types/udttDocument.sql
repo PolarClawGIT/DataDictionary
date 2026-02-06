@@ -3,7 +3,7 @@
 	[DocumentId]			UniqueIdentifier Null,
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
 	[TemplateId]            UniqueIdentifier NULL,
-	[RootFolder]			NVarChar(30) Null,
+	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
 	[InputPath]				[AppGeneral].[uddtFilePath] Null,
 	[InputFile]             [AppGeneral].[uddtFileName] Null, 
 	[ProcessPath]			[AppGeneral].[uddtFilePath] Null,

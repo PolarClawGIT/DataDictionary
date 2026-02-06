@@ -8,7 +8,7 @@
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Not Null,
 	[ModelId]		        UniqueIdentifier NOT NULL,
 	[TemplateId]            UniqueIdentifier NULL, -- Template used to generate this document
-	[RootFolder]			NVarChar(30) Null, -- Name of the Special Folder used as the Root defined in the Application.
+	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
 	-- TODO: Add System Version later once the schema is locked down
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Document_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Document_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),

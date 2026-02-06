@@ -152,7 +152,7 @@ namespace DataDictionary.Main.ApplicationWide
 
         private void ApplicationDataFolder_SelectCommand(object sender, EventArgs e)
         {
-            IDirectoryEnumeration value = DirectoryType.Data.GetEnumeration();
+            IDirectoryEnumeration value = DirectoryType.Dictionary.GetEnumeration();
 
             folderBrowserDialog.Reset();
             folderBrowserDialog.RootFolder = value.SpecialFolder;
