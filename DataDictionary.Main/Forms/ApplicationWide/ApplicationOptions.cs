@@ -136,9 +136,9 @@ namespace DataDictionary.Main.ApplicationWide
             folderBrowserDialog.RootFolder = value.SpecialFolder;
 
             if (value.Directory is DirectoryInfo directory && directory.Exists)
-            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            { folderBrowserDialog.InitialDirectory = directory.FullName; }
             else
-            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+            { folderBrowserDialog.InitialDirectory = Environment.GetFolderPath(value.SpecialFolder); }
 
             if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
             {
@@ -158,9 +158,9 @@ namespace DataDictionary.Main.ApplicationWide
             folderBrowserDialog.RootFolder = value.SpecialFolder;
 
             if (value.Directory is DirectoryInfo directory && directory.Exists)
-            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            { folderBrowserDialog.InitialDirectory = directory.FullName; }
             else
-            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+            { folderBrowserDialog.InitialDirectory = Environment.GetFolderPath(value.SpecialFolder); }
 
             if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
             {
