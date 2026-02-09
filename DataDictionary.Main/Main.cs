@@ -33,6 +33,8 @@ namespace DataDictionary.Main
             BindingPropertyChanged.ValidateInit();
 
             // Set the button images based on Scope.
+            optionsToolStripMenuItem.Image = ScopeType.ApplicationOption.GetImage(CommandType.Default);
+
             newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
             newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);

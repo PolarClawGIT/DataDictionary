@@ -144,7 +144,6 @@ namespace DataDictionary.Main.ApplicationWide
             {
                 String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
                 value.RelativeFolder = newPath;
-                //projectFolderData.Text = newPath;
                 Settings.Default.UserProjects = newPath;
                 Settings.Default.Save();
             }
@@ -166,20 +165,9 @@ namespace DataDictionary.Main.ApplicationWide
             {
                 String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
                 value.RelativeFolder = newPath;
-                //applicationDataFolder.Text = newPath;
                 Settings.Default.UserData = newPath;
                 Settings.Default.Save();
             }
-        }
-
-        private void ProjectFolderData_Validated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ApplicationDataFolder_Validated(object sender, EventArgs e)
-        {
-
         }
     }
 }
