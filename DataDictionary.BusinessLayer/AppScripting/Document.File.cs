@@ -1,10 +1,6 @@
-﻿using DataDictionary.Resource.Enumerations;
-using Microsoft.VisualBasic.FileIO;
-using System.ComponentModel;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices.Marshalling;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -14,25 +10,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for Single File of a Document.
     /// </summary>
-    public interface IDocumentFile : IBindingPropertyChanged
+    public interface IDocumentFile : IFileValue, IBindingPropertyChanged
     {
-        /// <summary>
-        /// Full File Path of the File (includes root).
-        /// </summary>
-        /// <remarks>Use this to set the directory.</remarks>
-        String FilePath { get; set; }
-
-        /// <summary>
-        /// File Name for the File within the File Path.
-        /// </summary>
-        String FileName { get; set; }
-
-        /// <summary>
-        /// Relative File Path from the Root Folder and File Name.
-        /// </summary>
-        /// <remarks>Computed from FilePath, Root Folder and FileName</remarks>
-        String RelativeFileName { get; }
-
         /// <summary>
         /// Text Content of the File
         /// </summary>
@@ -61,75 +40,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Used to hold Input, Transform, and Output file information.
     /// This is a Wrapper around the fields in the main Document so that they can be treated as a single unit.
     /// </summary>
-    public class DocumentFile : IDocumentFile
+    public class DocumentFile : FileValue, IDocumentFile
     {
-        /// <summary>
-        /// Function that returns the Current root Directory Type.
-        /// </summary>
-        internal Func<DirectoryType> GetRootFolder { private get; init; } = () => DirectoryType.Null;
-
-        internal Func<String> GetDirectory { private get; init; }
-        internal Action<String> SetDirectory { private get; init; }
-        String directoryValue = String.Empty;
-
-        /// <inheritdoc/>
-        public String FilePath
-        {
-            get
-            {
-                String relativeDirectory = GetDirectory();
-                DirectoryType rootFolder = GetRootFolder();
-                String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
-                { rootPath = rootDirectory.FullName; }
-
-                if (rootFolder is DirectoryType.Null && String.IsNullOrWhiteSpace(relativeDirectory))
-                { return String.Empty; }
-                else if (rootFolder is DirectoryType.Null) { return relativeDirectory ?? String.Empty; }
-                else if (String.IsNullOrWhiteSpace(relativeDirectory)) { return rootPath; }
-                else { return Path.Combine(rootPath, relativeDirectory ?? String.Empty); }
-            }
-            set
-            {
-                DirectoryType rootFolder = GetRootFolder();
-                String rootPath = String.Empty;
-                if (rootFolder.GetEnumeration().Directory is DirectoryInfo rootDirectory)
-                { rootPath = rootDirectory.FullName; }
-
-                if (value.StartsWith(rootPath))
-                {
-                    String path = Path.GetRelativePath(rootPath, value);
-                    if (path is "." || String.IsNullOrWhiteSpace(path))
-                    { SetDirectory(String.Empty); }
-                    else { SetDirectory(path); }
-                }
-
-                else { SetDirectory(value); }
-
-                this.OnPropertyChanged(PropertyChanged, nameof(FilePath));
-                this.OnPropertyChanged(PropertyChanged, nameof(RelativeFileName));
-            }
-        }
-
-        /// <inheritdoc/>
-        public String RelativeFileName
-        { get { return Path.Combine(GetDirectory(), FileName); } }
-
-        /// <inheritdoc/>
-        public String FileName
-        {
-            get { return GetFileName(); }
-            set
-            {
-                SetFileName(value);
-                this.OnPropertyChanged(PropertyChanged, nameof(FileName));
-                this.OnPropertyChanged(PropertyChanged, nameof(RelativeFileName));
-            }
-        }
-        internal Func<String> GetFileName { private get; init; }
-        internal Action<String> SetFileName { private get; init; }
-        String fileNameValue = String.Empty;
-
         /// <inheritdoc/>
         public String Content
         {
@@ -137,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             set
             {
                 SetContent(value);
-                this.OnPropertyChanged(PropertyChanged, nameof(Content));
+                OnPropertyChanged(nameof(Content));
             }
         }
         internal Func<String> GetContent { private get; init; }
@@ -153,24 +65,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </remarks>
         public DocumentFile() : base()
         {
-            GetDirectory = () =>
-            {
-                if (String.IsNullOrWhiteSpace(directoryValue)
-                && GetRootFolder().GetEnumeration().Directory is DirectoryInfo directory)
-                { return directory.FullName; }
-                else { return directoryValue; }
-            };
-            SetDirectory = (v) => directoryValue = v;
-
-            GetFileName = () => fileNameValue;
-            SetFileName = (v) => fileNameValue = v;
-
             GetContent = () => contentValue;
             SetContent = (v) => contentValue = v;
         }
-
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        public virtual event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Open()
@@ -189,19 +86,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(FilePath, FileName));
+                FileInfo file = new FileInfo(Path.Combine(DirectoryPath, FileName));
 
                 if (file.Exists)
                 {
                     try
                     {
                         SetContent(File.ReadAllText(file.FullName));
-                        this.OnPropertyChanged(PropertyChanged, (nameof(Content)));
+                        OnPropertyChanged(nameof(Content));
                     }
                     catch (Exception ex)
                     {
                         cancel = true;
-                        ex.Data.Add(nameof(FilePath), FilePath);
+                        ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
                         ex.Data.Add(nameof(FileName), FileName);
                         throw;
                     }
@@ -211,13 +108,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     cancel = true;
                     Exception ex = new FileNotFoundException();
 
-                    ex.Data.Add(nameof(FilePath), FilePath);
+                    ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
                     ex.Data.Add(nameof(FileName), FileName);
                     throw ex;
                 }
             }
         }
-
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save()
@@ -236,7 +132,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(FilePath, FileName));
+                FileInfo file = new FileInfo(Path.Combine(DirectoryPath, FileName));
 
                 try
                 {
@@ -244,14 +140,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
                     if (TryParse(out XDocument? document, out Exception? _))
-                    { document.Save(Path.Combine(FilePath, FileName)); }
+                    { document.Save(Path.Combine(DirectoryPath, FileName)); }
                     else // Save the file as Text. This is expected to have a BOM.
-                    { File.WriteAllText(Path.Combine(FilePath, FileName), GetContent()); }
+                    { File.WriteAllText(Path.Combine(DirectoryPath, FileName), GetContent()); }
                 }
                 catch (Exception ex)
                 {
                     cancel = true;
-                    ex.Data.Add(nameof(FilePath), FilePath);
+                    ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
                     ex.Data.Add(nameof(FileName), FileName);
                     throw;
                 }
@@ -276,7 +172,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             catch (Exception ex)
             {
                 document = null;
-                ex.Data.Add(nameof(FilePath), FilePath);
+                ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
                 ex.Data.Add(nameof(FileName), FileName);
                 exception = ex;
                 return false;
@@ -294,7 +190,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             //Note: Online Sources use StringWriter to convert an XDocument to String.
             //This alters the Declaration of the XDocument and forces it to UTF-16, which is the format of Windows Strings.
-            //Other solutions run the XDcument thru several more steps that also alter the Declaration or require
+            //Other solutions run the XDocument thru several more steps that also alter the Declaration or require
             //that the correct Declaration to be known and that is be compatible with a String Encoding.
             //This approach is to add the Declaration using the StringBuilder as a simple string.
 

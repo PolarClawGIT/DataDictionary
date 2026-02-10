@@ -252,12 +252,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.InitialDirectory = file.FilePath;
+            dialog.InitialDirectory = file.DirectoryPath;
             dialog.FileName = file.FileName;
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Open(), onCompleted);
@@ -269,12 +269,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         public void Save(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.InitialDirectory = file.FilePath;
+            dialog.InitialDirectory = file.DirectoryPath;
             dialog.FileName = file.FileName;
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Save(), onCompleted);
