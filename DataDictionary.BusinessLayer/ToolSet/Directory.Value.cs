@@ -10,9 +10,23 @@ namespace DataDictionary.BusinessLayer.ToolSet
     public interface IDirectoryValue : IBindingPropertyChanged
     {
         /// <summary>
+        /// Returns the RootFolder used as a base.
+        /// </summary>
+        /// <remarks>
+        /// Use to set FolderBrowserDialog RootFolder.
+        /// </remarks>
+        /// <example>
+        /// dialog.RootFolder = IDirectoryValue.RootFolder;
+        /// </example>
+        Environment.SpecialFolder RootFolder { get; }
+
+        /// <summary>
         /// Full Directory Path (includes root).
         /// </summary>
-        /// <remarks>Use this to set the directory.</remarks>
+        /// <remarks>Use to set the FileDialog (Open File or Save File) initial directory or to update the Relative Path</remarks>
+        /// <example>
+        /// dialog.InitialDirectory = IDirectoryValue.DirectoryPath;
+        /// </example>
         String DirectoryPath { get; set; }
     }
 
@@ -21,12 +35,15 @@ namespace DataDictionary.BusinessLayer.ToolSet
     /// Used to hold directory information.
     /// This is a Wrapper around the fields in the base table so that they can be treated as a single unit.
     /// </summary>
-    public abstract class DirectoryValue: IDirectoryValue
+    public abstract class DirectoryValue : IDirectoryValue
     {
+        /// <inheritdoc/>
+        public virtual Environment.SpecialFolder RootFolder { get { return GetRootFolder().GetEnumeration().SpecialFolder; } }
+
         /// <summary>
         /// Function that returns the Current root Directory Type.
         /// </summary>
-        protected internal Func<DirectoryType> GetRootFolder { protected get;  init; } = () => DirectoryType.Null;
+        protected internal Func<DirectoryType> GetRootFolder { protected get; init; } = () => DirectoryType.Null;
 
         /// <summary>
         /// Function representing the Get function for the Relative Directory.
@@ -40,7 +57,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String directoryValue = String.Empty;
 
         /// <inheritdoc/>
-        public virtual String DirectoryPath {
+        public virtual String DirectoryPath
+        {
             get
             {
                 String relativeDirectory = GetDirectory();

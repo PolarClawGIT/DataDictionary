@@ -122,8 +122,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void InputOpenCommand_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "XML data|*.XML";
-            Open(openFileDialog, formBinding.InputValue, onCompleted);
+            Open(openFileDialog, formBinding.InputValue, onCompleted,
+                new List<(String text, String extension)>
+                { ("XML data", "*.XML") });
 
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
@@ -140,8 +141,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void InputSaveCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "XML data|*.XML";
-            Save(saveFileDialog, formBinding.InputValue, onCompleted);
+            Save(saveFileDialog, formBinding.InputValue, onCompleted,
+                new List<(String text, String extension)>
+                { ("XML data", "*.XML") });
 
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
@@ -153,8 +155,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
-            Open(openFileDialog, formBinding.TransformValue, onCompleted);
+            Open(openFileDialog, formBinding.TransformValue, onCompleted,
+                new List<(String text, String extension)>
+                { ("XSL Transform","*.XSLT;*.XSL;") });
 
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
@@ -171,8 +174,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SaveTransformCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
-            Save(saveFileDialog, formBinding.TransformValue, onCompleted);
+            Save(saveFileDialog, formBinding.TransformValue, onCompleted,
+                new List<(String text, String extension)>
+                { ("XSL Transform","*.XSLT;*.XSL;") });
 
             void onCompleted(RunWorkerCompletedEventArgs args)
             {
@@ -189,8 +193,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SaveResultCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "Plain Text|*.TXT|XML data|*.XML|SQL Script|*.SQL|C# Fragment|*.CS|VB.Net Fragment|*.VB|Other|*.*";
-            Save(saveFileDialog, formBinding.OutputValue, onCompleted);
+            Save(saveFileDialog, formBinding.OutputValue, onCompleted,
+                new List<(String text, String extension)>
+                {   ("Plain Text","*.TXT;"),
+                    ("XML data","*.XML;"),
+                    ("SQL Script","*.SQL;"),
+                    ("C# Fragment","*.CS;"),
+                    ("VB.Net Fragment","*.VB;"),
+                    ("Other","*.*;")});
 
             void onCompleted(RunWorkerCompletedEventArgs args)
             {

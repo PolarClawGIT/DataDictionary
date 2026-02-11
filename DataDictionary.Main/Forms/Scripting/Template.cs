@@ -105,6 +105,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     nameof(ITemplateValue.TemplateBreakOn),
                     true, DataSourceUpdateMode.OnValidation));
 
+
+ 
                 documentDirectoryData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentDirectory), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 documentPrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentPrefix), false, DataSourceUpdateMode.OnValidation, String.Empty));
                 documentSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.DocumentSuffix), true, DataSourceUpdateMode.OnValidation, String.Empty));
@@ -203,15 +205,14 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.TryGetValue(out TemplateValue? current))
             {
-                DirectoryInfo rootDirectory = new DirectoryInfo(rootPhysicalDirectory.Text);
-                folderBrowserDialog.InitialDirectory = Path.Combine(rootDirectory.FullName, current.DocumentDirectory ?? String.Empty);
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.DocumentValue.RootFolder;
+                folderBrowserDialog.InitialDirectory = current.DocumentValue.DirectoryPath;
 
-                if (folderBrowserDialog.ShowDialog() is DialogResult.OK
-                    && folderBrowserDialog.SelectedPath.Length > rootDirectory.FullName.Length
-                    && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, rootDirectory.FullName.Length), rootDirectory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
                 {
-                    current.DocumentDirectory = folderBrowserDialog.SelectedPath.Substring(rootDirectory.FullName.Length + 1);
-                    documentPhysicalDirectory.Text = Path.Combine(rootDirectory.FullName, current.DocumentDirectory);
+                    current.DocumentValue.DirectoryPath = folderBrowserDialog.SelectedPath;
+                    documentPhysicalDirectory.Text = current.DocumentValue.DirectoryPath;
                 }
             }
         }
@@ -223,15 +224,14 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.TryGetValue(out TemplateValue? current))
             {
-                DirectoryInfo rootDirectory = new DirectoryInfo(rootPhysicalDirectory.Text);
-                folderBrowserDialog.InitialDirectory = Path.Combine(rootDirectory.FullName, current.ScriptDirectory ?? String.Empty);
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.ScriptValue.RootFolder;
+                folderBrowserDialog.InitialDirectory = current.ScriptValue.DirectoryPath;
 
-                if (folderBrowserDialog.ShowDialog() is DialogResult.OK
-                    && folderBrowserDialog.SelectedPath.Length > rootDirectory.FullName.Length
-                    && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, rootDirectory.FullName.Length), rootDirectory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
                 {
-                    current.ScriptDirectory = folderBrowserDialog.SelectedPath.Substring(rootDirectory.FullName.Length + 1);
-                    scriptingPhysicalDirectory.Text = Path.Combine(rootDirectory.FullName, current.ScriptDirectory);
+                    current.ScriptValue.DirectoryPath = folderBrowserDialog.SelectedPath;
+                    scriptingPhysicalDirectory.Text = current.ScriptValue.DirectoryPath;
                 }
             }
         }

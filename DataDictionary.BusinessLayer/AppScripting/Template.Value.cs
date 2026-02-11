@@ -2,12 +2,7 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -16,6 +11,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ITemplateValue : ITemplateItem, ITemplateIndex,
         IScopeType, ITemporal
     {
+        /// <summary>
+        /// Document File Pattern data
+        /// </summary>
+        TemplateFile DocumentValue { get; }
+
+        /// <summary>
+        /// Script File Pattern data
+        /// </summary>
+        TemplateFile ScriptValue { get; }
+
         /// <summary>
         /// Transform Script as XDocument
         /// </summary>
@@ -63,6 +68,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IEnumerable<Exception> TemplateException { get { return templateException; } }
 
+        /// <inheritdoc/>
+        public TemplateFile DocumentValue { get; }
+
+        /// <inheritdoc/>
+        public TemplateFile ScriptValue { get; }
 
         /// <inheritdoc/>
         public ScopeType TemplateBreakOn
@@ -90,6 +100,33 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetTitle = () => TemplateTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
+            };
+
+
+            DocumentValue = new TemplateFile()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => DocumentDirectory ?? String.Empty,
+                SetDirectory = (v) => DocumentDirectory = v, 
+                GetExtension = () => DocumentExtension ?? String.Empty,
+                SetExtension = (v) => DocumentExtension = v,
+                GetPrefix = () => DocumentPrefix ?? String.Empty,
+                SetPrefix = (v) => DocumentPrefix = v,
+                GetSuffix = () => DocumentSuffix ?? String.Empty,
+                SetSuffix = (v) => DocumentSuffix = v,
+            };
+
+            ScriptValue = new TemplateFile()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => ScriptDirectory ?? String.Empty,
+                SetDirectory = (v) => ScriptDirectory = v,
+                GetExtension = () => ScriptExtension ?? String.Empty,
+                SetExtension = (v) => ScriptExtension = v,
+                GetPrefix = () => ScriptPrefix ?? String.Empty,
+                SetPrefix = (v) => ScriptPrefix = v,
+                GetSuffix = () => ScriptSuffix ?? String.Empty,
+                SetSuffix = (v) => ScriptSuffix = v,
             };
         }
 
