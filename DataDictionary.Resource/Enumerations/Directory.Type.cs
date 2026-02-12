@@ -8,7 +8,7 @@
         // This is primary used for Scripting.
 
         /// <summary>
-        /// Unspecified Directory
+        /// Unspecified Directory or unidentified.
         /// </summary>
         Null,
 

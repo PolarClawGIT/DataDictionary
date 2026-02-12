@@ -1,11 +1,12 @@
-﻿using Toolbox.BindingTable;
+﻿using DataDictionary.Resource.Enumerations;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.ToolSet
 {
     /// <summary>
     /// Interface for Single File.
     /// </summary>
-    public interface IFileValue : IBindingPropertyChanged
+    public interface IFileValue : IDirectoryValue, IBindingPropertyChanged
     {
         /// <summary>
         /// File Name for the File within the File Path.
@@ -17,6 +18,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <remarks>Computed from Root Folder, Relative Directory and FileName</remarks>
         String RelativeFileName { get; }
+
+        /// <summary>
+        /// List of FileFormats supported. Normally only one.
+        /// </summary>
+        IEnumerable<FileFormatType> FileFormats { get; }
     }
 
     /// <summary>
@@ -53,6 +59,10 @@ namespace DataDictionary.BusinessLayer.ToolSet
             }
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<FileFormatType> FileFormats 
+        { get { return GetFileFormats(); } }
+
         /// <summary>
         /// Function representing Get function for the FileName.
         /// </summary>
@@ -65,6 +75,12 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String fileNameValue = String.Empty;
 
         /// <summary>
+        /// Function representing Get function for the FileFormatTypes.
+        /// </summary>
+        protected internal Func<IEnumerable<FileFormatType>> GetFileFormats { protected get; init; }
+        List<FileFormatType> fileFormatValues = new List<FileFormatType>() { FileFormatType.PlainText };
+
+        /// <summary>
         /// Create an Instance of a FileValue.
         /// </summary>
         /// <remarks>
@@ -75,6 +91,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
         {
             GetFileName = () => fileNameValue;
             SetFileName = (v) => fileNameValue = v;
+
+            GetFileFormats = () => fileFormatValues;
         }
 
     }

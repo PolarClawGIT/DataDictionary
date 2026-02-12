@@ -248,14 +248,9 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete,
-            params IEnumerable<(String text, String extension)> filters)
+        public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.Reset();
-            dialog.InitialDirectory = file.DirectoryPath;
-            dialog.Filter = String.Join('|', filters.Select(s => String.Format("{0}|{1}", s.text, s.extension)));
-            dialog.FileName = file.FileName;
-            dialog.ShowPinnedPlaces = false;
+            dialog.SetDialog(file);
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
@@ -269,14 +264,9 @@ namespace DataDictionary.Main.Forms.Scripting
             { onComplete(args); }
         }
 
-        public void Save(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete,
-            params IEnumerable<(String text, String extension)> filters)
+        public void Save(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.Reset();
-            dialog.InitialDirectory = file.DirectoryPath;
-            dialog.Filter = String.Join('|', filters.Select(s => String.Format("{0}|{1}", s.text, s.extension)));
-            dialog.FileName = file.FileName;
-            dialog.ShowPinnedPlaces = false;
+            dialog.SetDialog(file);
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {

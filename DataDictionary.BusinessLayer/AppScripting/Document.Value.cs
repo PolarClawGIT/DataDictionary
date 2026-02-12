@@ -119,7 +119,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetDirectory = () => InputPath ?? RootPath,
                 GetFileName = () => InputFile ?? String.Empty,
                 SetDirectory = (v) => InputPath = v,
-                SetFileName = (v) => InputFile = v
+                SetFileName = (v) => InputFile = v,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
             };
 
             TransformValue = new DocumentFile()
@@ -128,7 +129,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetDirectory = () => InputPath ?? RootPath,
                 GetFileName = () => InputFile ?? String.Empty,
                 SetDirectory = (v) => InputPath = v,
-                SetFileName = (v) => InputFile = v
+                SetFileName = (v) => InputFile = v,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
             };
 
             OutputValue = new DocumentFile()
@@ -137,7 +139,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetDirectory = () => OutputPath ?? RootPath,
                 GetFileName = () => OutputFile ?? String.Empty,
                 SetDirectory = (v) => OutputPath = v,
-                SetFileName = (v) => OutputFile = v
+                SetFileName = (v) => OutputFile = v,
+                GetFileFormats = () => new List<FileFormatType>()
+                { FileFormatType.PlainText,
+                  FileFormatType.XMLData,
+                  FileFormatType.SQLScript,
+                  FileFormatType.CSharp,
+                  FileFormatType.VisualBasic,
+                  FileFormatType.Mermaid,
+                  FileFormatType.Markdown,
+                  FileFormatType.Other
+                }
             };
 
             PropertyChanged += DocumentValue_PropertyChanged;
