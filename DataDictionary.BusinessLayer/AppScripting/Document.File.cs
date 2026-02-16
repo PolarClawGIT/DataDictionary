@@ -75,12 +75,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<WorkItem> work = new List<WorkItem>();
             Boolean cancel = false;
 
-            work.Add(new WorkItem()
+            if (!String.IsNullOrWhiteSpace(FileName)) 
             {
-                WorkName = String.Format("Opening {0}", FileName),
-                DoWork = OnWork,
-                IsCanceling = () => cancel
-            });
+                work.Add(new WorkItem()
+                {
+                    WorkName = String.Format("Opening {0}", FileName),
+                    DoWork = OnWork,
+                    IsCanceling = () => cancel
+                });
+            }
 
             return work;
 

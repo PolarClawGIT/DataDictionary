@@ -122,14 +122,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 SetFileName = (v) => InputFile = v,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
             };
-
+            
             TransformValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetDirectory = () => InputPath ?? RootPath,
-                GetFileName = () => InputFile ?? String.Empty,
-                SetDirectory = (v) => InputPath = v,
-                SetFileName = (v) => InputFile = v,
+                GetDirectory = () => ProcessPath ?? RootPath,
+                GetFileName = () => ProcessFile ?? String.Empty,
+                SetDirectory = (v) => ProcessPath = v,
+                SetFileName = (v) => ProcessFile = v,
                 GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
             };
 

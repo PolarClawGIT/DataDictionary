@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Scripting
             if (temporalIndex is null)
             {
                 formBinding.Load(documentIndex);
-                DoBinding();
+                formBinding.OpenFiles(onCompleting);
             }
             else
             { formBinding.Load(documentIndex, temporalIndex, onCompleting); }
