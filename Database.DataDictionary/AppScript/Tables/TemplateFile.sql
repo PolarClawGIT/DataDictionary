@@ -33,7 +33,7 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TemplateFile_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_TemplateFile] PRIMARY KEY CLUSTERED ([TemplateId] ASC, [IsInput] ASC, [IsProcess] ASC, [IsOutput] ASC),
-	CONSTRAINT [FK_Template] FOREIGN KEY ([TemplateId]) REFERENCES [AppModel].[Model] ([ModelId]),
+	CONSTRAINT [FK_Template] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [CK_TemplateFileType] CHECK (([IsInput] = 1 And [IsProcess] = 0 And [IsOutput] = 0) Or ([IsInput] = 0 And [IsProcess] = 1 And [IsOutput] = 0) Or ([IsInput] = 0 And [IsProcess] = 0 And [IsOutput] = 1)),
 )
 

@@ -15,6 +15,6 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DocumentFile_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_DocumentFile] PRIMARY KEY CLUSTERED ([DocumentId] ASC, [IsInput] ASC, [IsProcess] ASC, [IsOutput] ASC),
-	CONSTRAINT [FK_Document] FOREIGN KEY ([DocumentId]) REFERENCES [AppModel].[Model] ([ModelId]),
+	CONSTRAINT [FK_Document] FOREIGN KEY ([DocumentId]) REFERENCES [AppScript].[Document] ([DocumentId]),
 	CONSTRAINT [CK_DocumentFileType] CHECK (([IsInput] = 1 And [IsProcess] = 0 And [IsOutput] = 0) Or ([IsInput] = 0 And [IsProcess] = 1 And [IsOutput] = 0) Or ([IsInput] = 0 And [IsProcess] = 0 And [IsOutput] = 1)),
 )
