@@ -82,11 +82,21 @@ namespace Toolbox.Threading
             Exception? firstException = null;
             WorkItem? firstExceptionItem = null;
 
-            foreach (WorkItem item in work)
-            {
-                if (onCompleting is not null) { item.Completing += Item_Completing; }
-                WorkQueue.Enqueue(item);
+            if (lastWork is null)
+            {   // Handle scenario where the list of work items is empty.
+                lastWork = new WorkItem() { WorkName = "No Work Items" };
+                if (onCompleting is not null) { lastWork.Completing += Item_Completing; }
+                WorkQueue.Enqueue(lastWork);
                 WorkAdded++;
+            }
+            else
+            {
+                foreach (WorkItem item in work)
+                {
+                    if (onCompleting is not null) { item.Completing += Item_Completing; }
+                    WorkQueue.Enqueue(item);
+                    WorkAdded++;
+                }
             }
 
             if (!backgroundWorker.IsBusy) { backgroundWorker.RunWorkerAsync(); }
