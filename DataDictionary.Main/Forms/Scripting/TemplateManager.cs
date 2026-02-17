@@ -17,7 +17,6 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.Scripting);
             SetCommand(
                 ScopeType.Scripting,
-                CommandType.Delete,
                 CommandType.OpenDatabase,
                 CommandType.SaveDatabase,
                 CommandType.DeleteDatabase

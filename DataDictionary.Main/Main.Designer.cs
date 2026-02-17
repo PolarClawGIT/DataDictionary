@@ -98,6 +98,7 @@
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
+            databaseMessagesCommand = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
             browseHelpCommand = new ToolStripMenuItem();
@@ -133,6 +134,8 @@
             toolStripSeparator6 = new ToolStripSeparator();
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
+            menuScriptingAddTemplate = new ToolStripMenuItem();
+            menuScriptingAddDocument = new ToolStripMenuItem();
             menuScriptingTemplate = new ToolStripMenuItem();
             menuScriptingNode = new ToolStripMenuItem();
             menuScriptingNodeOwner = new ToolStripMenuItem();
@@ -140,7 +143,7 @@
             menuScriptingDataObject = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
             bindingModel = new BindingSource(components);
-            databaseMessagesCommand = new ToolStripMenuItem();
+            menuScriptingAddData = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -666,13 +669,20 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(176, 22);
             customizeToolStripMenuItem.Text = "&Customize";
+            // 
+            // databaseMessagesCommand
+            // 
+            databaseMessagesCommand.Name = "databaseMessagesCommand";
+            databaseMessagesCommand.Size = new Size(176, 22);
+            databaseMessagesCommand.Text = "Database Messages";
+            databaseMessagesCommand.Click += DatabaseMessagesCommand_Click;
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(176, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -680,7 +690,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Size = new Size(176, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browseHelpCommand
@@ -694,7 +704,7 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(180, 22);
+            unitTestingToolStripMenuItem.Size = new Size(176, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -903,10 +913,23 @@
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingAddTemplate, menuScriptingAddDocument, menuScriptingAddData, menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(235, 136);
+            scriptingContextMenu.Size = new Size(235, 224);
+            // 
+            // menuScriptingAddTemplate
+            // 
+            menuScriptingAddTemplate.Name = "menuScriptingAddTemplate";
+            menuScriptingAddTemplate.Size = new Size(234, 22);
+            menuScriptingAddTemplate.Text = "add Template";
+            menuScriptingAddTemplate.Click += MenuScriptingAddTemplate_Click;
+            // 
+            // menuScriptingAddDocument
+            // 
+            menuScriptingAddDocument.Name = "menuScriptingAddDocument";
+            menuScriptingAddDocument.Size = new Size(234, 22);
+            menuScriptingAddDocument.Text = "add Document";
+            menuScriptingAddDocument.Click += MenuScriptingAddDocument_Click;
             // 
             // menuScriptingTemplate
             // 
@@ -953,12 +976,12 @@
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
             // 
-            // databaseMessagesCommand
+            // menuScriptingAddData
             // 
-            databaseMessagesCommand.Name = "databaseMessagesCommand";
-            databaseMessagesCommand.Size = new Size(180, 22);
-            databaseMessagesCommand.Text = "Database Messages";
-            databaseMessagesCommand.Click += DatabaseMessagesCommand_Click;
+            menuScriptingAddData.Name = "menuScriptingAddData";
+            menuScriptingAddData.Size = new Size(234, 22);
+            menuScriptingAddData.Text = "add Data Source";
+            menuScriptingAddData.Click += MenuScriptingAddData_Click;
             // 
             // Main
             // 
@@ -1111,5 +1134,8 @@
         private Controls.NamedScopeTreeView namedScopeData;
         private ToolStripMenuItem securitySetAuthorization;
         private ToolStripMenuItem databaseMessagesCommand;
+        private ToolStripMenuItem menuScriptingAddTemplate;
+        private ToolStripMenuItem menuScriptingAddDocument;
+        private ToolStripMenuItem menuScriptingAddData;
     }
 }

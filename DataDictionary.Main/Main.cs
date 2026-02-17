@@ -97,10 +97,13 @@ namespace DataDictionary.Main
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
 
             menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            menuScriptingAddTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
             menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
             menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Default);
             menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
+            menuScriptingAddDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Add);
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
+            menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
@@ -139,10 +142,10 @@ namespace DataDictionary.Main
                 }
 
                 // Override default Directories
-                if(!String.IsNullOrWhiteSpace(Settings.Default.UserProjects))
+                if (!String.IsNullOrWhiteSpace(Settings.Default.UserProjects))
                 { DirectoryType.Projects.GetEnumeration().RelativeFolder = Settings.Default.UserProjects; }
 
-                if(!String.IsNullOrWhiteSpace(Settings.Default.UserData))
+                if (!String.IsNullOrWhiteSpace(Settings.Default.UserData))
                 { DirectoryType.Dictionary.GetEnumeration().RelativeFolder = Settings.Default.UserData; }
 
                 if (args.Error is not null)
