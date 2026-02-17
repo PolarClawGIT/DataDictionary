@@ -61,12 +61,9 @@ Begin Try
 			NullIf(Trim(D.[OutputPath]),'') As [OutputPath],
 			NullIf(Trim(D.[OutputFile]),'') As [OutputFile]
 	From	@Data D
-			Left Join [AppScript].[Document] O
-			On	IsNull(D.[DocumentId], @DocumentId) = O.[DocumentId] And
-				@ModelId = O.[ModelId] And
-				D.[DocumentTitle] = O.[DocumentTitle]
-			Cross Apply (
-				Select	Coalesce(O.[DocumentId], NewId()) As [DocumentId]) X
+			Cross apply (Select	Coalesce(D.[DocumentId], @DocumentId, NewId()) As [DocumentId]) X
+	Where	(@DocumentId is Null And X.[DocumentId] is Not Null) Or
+			(@DocumentId is Not Null And IsNull(X.[DocumentId], @DocumentId) = @DocumentId)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into @Files
