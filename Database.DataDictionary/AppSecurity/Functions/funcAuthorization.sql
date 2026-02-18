@@ -5,7 +5,7 @@ As Return
 -- All other Security Functions use this function.
 With [Login] As (
 	-- Database Level security
-	Select	Original_Login() As [PrincipalLogin],
+	Select	SUser_Name() As [PrincipalLogin],
 			Is_RoleMember('DataDictionaryApp') As [IsApplication],
 			IIF(
 				Is_RoleMember('DataDictionaryApp') = 0 And -- Cannot be executing using the application
