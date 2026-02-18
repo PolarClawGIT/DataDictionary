@@ -1,11 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Toolbox.DbContext
 {
@@ -24,7 +17,7 @@ namespace Toolbox.DbContext
     public class Context : IContext
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
-        { ApplicationName = GetApplicationName(), };
+        { ApplicationName = GetApplicationName(), TrustServerCertificate = true, IntegratedSecurity = true };
 
         /// <summary>
         /// Used to set the Application Name of the Connection String.
@@ -60,6 +53,7 @@ namespace Toolbox.DbContext
         }
 
         public Boolean IntegratedSecurity { get { return ConnectionBuilder.IntegratedSecurity; } set { ConnectionBuilder.IntegratedSecurity = value; } }
+        public Boolean TrustServerCertificate { get { return ConnectionBuilder.TrustServerCertificate; } set { ConnectionBuilder.TrustServerCertificate = value; } }
 
         public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
         public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }
