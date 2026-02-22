@@ -118,6 +118,8 @@
     <Folder Include="AppGeneral\User Defined Data Types" />
     <Folder Include="AppLibrary\Functions" />
     <Folder Include="AppScript\Functions" />
+    <Folder Include="AppPOC" />
+    <Folder Include="AppPOC\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -566,6 +568,15 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtFileAffix.sql" />
     <Build Include="AppScript\Tables\TemplateFile.sql" />
     <Build Include="AppScript\Triggers\trigTemplateFile.sql" />
+    <Build Include="AppPOC\Tables\Document.sql" />
+    <Build Include="Security\Schema\AppPOC.sql" />
+    <Build Include="AppPOC\Tables\Template.sql" />
+    <Build Include="AppPOC\Tables\TemplateData.sql" />
+    <Build Include="AppPOC\Tables\TemplateObject.sql" />
+    <Build Include="AppPOC\Tables\TemplateTransform.sql" />
+    <Build Include="AppPOC\Tables\TemplateNode.sql" />
+    <Build Include="AppPOC\Tables\TemplateNodeOwner.sql" />
+    <Build Include="AppPOC\Tables\TemplateDocument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -4843,4 +4843,101 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[RootFolder]" />
   </Operation>
+  <Operation Name="Move Schema" Key="1f9fea7d-48cf-4ad8-9606-4a9ef0bedb56" ChangeDateTime="02/19/2026 14:50:55">
+    <Property Name="ElementName" Value="[dbo].[DataDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="de531f22-3acb-4305-967d-9fae10339ea7" ChangeDateTime="02/19/2026 14:51:16">
+    <Property Name="ElementName" Value="[dbo].[DataNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b3ecf5ff-39d7-4683-ae9a-810d91a159e4" ChangeDateTime="02/19/2026 14:51:33">
+    <Property Name="ElementName" Value="[dbo].[DataNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="34aac05b-1d1e-49a4-83a8-0d7d77a8a93d" ChangeDateTime="02/19/2026 14:51:46">
+    <Property Name="ElementName" Value="[dbo].[DataObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="338c74a0-91a8-4a9c-b4db-19d7d0be4e1e" ChangeDateTime="02/19/2026 14:51:59">
+    <Property Name="ElementName" Value="[dbo].[Document]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="dc7da3c3-2288-4412-804b-c4c5d45a226d" ChangeDateTime="02/19/2026 14:52:15">
+    <Property Name="ElementName" Value="[dbo].[ScriptModel]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8c01a36d-30a4-4ced-a643-ba2fa39eb77d" ChangeDateTime="02/19/2026 14:52:27">
+    <Property Name="ElementName" Value="[dbo].[Transform]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="329f8686-2704-45d2-a932-046b4f689359" ChangeDateTime="02/19/2026 14:52:41">
+    <Property Name="ElementName" Value="[dbo].[TransformDocument]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="594a41ac-fa39-4c9a-a0fd-6078b6ef9dbb" ChangeDateTime="02/19/2026 15:33:31">
+    <Property Name="ElementName" Value="[AppPOC].[TransformDocument]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppPOC]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TransformSubject]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="6720c1cf-bd26-4af9-b750-7dc2e941a7d6" ChangeDateTime="02/20/2026 17:06:17">
+    <Property Name="ElementName" Value="[dbo].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="41860e19-c954-4ee9-a6ac-cb6869354428" ChangeDateTime="02/20/2026 17:08:51">
+    <Property Name="ElementName" Value="[dbo].[TemplateData]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="4601792c-5f1e-4c1b-80ce-3417fc51250e" ChangeDateTime="02/20/2026 17:14:57">
+    <Property Name="ElementName" Value="[dbo].[TemplateTransform]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="6af37178-6416-4547-a1a9-a6c830174551" ChangeDateTime="02/20/2026 17:40:56">
+    <Property Name="ElementName" Value="[dbo].[TemplateDataNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8fef4a53-8538-44c6-999a-95e797822064" ChangeDateTime="02/20/2026 18:00:29">
+    <Property Name="ElementName" Value="[dbo].[TemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="19145aa2-c9ba-494b-a4e8-57f71bf098b3" ChangeDateTime="02/20/2026 18:04:13">
+    <Property Name="ElementName" Value="[dbo].[TemplateObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="222a4dcd-a33a-41de-bb7f-2ac881114aeb" ChangeDateTime="02/20/2026 18:39:26">
+    <Property Name="ElementName" Value="[dbo].[TemplateDocument]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppPOC" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>
