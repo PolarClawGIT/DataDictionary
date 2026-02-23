@@ -2,8 +2,6 @@
 (	-- List of objects in the Template.
 	[ObjectId]			UniqueIdentifier Not Null CONSTRAINT [DF_TemplateObjectId] DEFAULT (newid()),
 	[TemplateId]		UniqueIdentifier Not Null,
-	--[ModelId]			UniqueIdentifier Not Null, -- Objects is Model specific Each Model can have muliple Data for the same template.
-	-- TODO: How to turn this into a filter mechanism?
 	[ObjectScope]		[AppGeneral].[uddtScopeName] Null, -- Application Scope to match to. Required on the Leaf Node only. Null = Use Child Nodes Scope.
 	[ObjectMember]		[AppGeneral].[uddtMember] Not Null, -- Member Name of the alias. Combined to create a NameSpace.
 	[ParentObjectId]	UniqueIdentifier NULL,
@@ -13,9 +11,8 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_TemplateObject] PRIMARY KEY CLUSTERED ([ObjectId] ASC),
+	CONSTRAINT [AK_TemplateObjectID] UNIQUE ([TemplateId] ASC, [ObjectId] ASC), -- For FK Refrences
+	CONSTRAINT [AK_TemplateOjbectName] UNIQUE ([TemplateId] ASC, [ParentObjectId] ASC, [ObjectMember] ASC),
 	CONSTRAINT [FK_TemplateObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppPOC].[Template] ([TemplateId]),
-	--CONSTRAINT [FK_TemplateObjectModel] FOREIGN KEY ([ModelId]) REFERENCES [AppModel].[Model] ([ModelId]),
-
 	CONSTRAINT [FK_TemplateObjectParent] FOREIGN KEY ([ObjectId]) REFERENCES [AppPOC].[TemplateObject] ([ObjectId]),
-
 )

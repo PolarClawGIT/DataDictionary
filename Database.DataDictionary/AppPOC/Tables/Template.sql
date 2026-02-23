@@ -9,4 +9,5 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_Template] PRIMARY KEY CLUSTERED ([TemplateId] ASC),
+	CONSTRAINT [AK_TemplateTitle] UNIQUE ([TemplateTitle] ASC),
 )
