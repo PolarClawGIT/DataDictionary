@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [AppPOC].[DocumentData]
-(	-- Input Document
+(	-- Input Document, Sub-Type
 	[DocumentId]            UniqueIdentifier Not Null,
 	[TemplateId]            UniqueIdentifier Not Null,
 	[DataId]				UniqueIdentifier Null,

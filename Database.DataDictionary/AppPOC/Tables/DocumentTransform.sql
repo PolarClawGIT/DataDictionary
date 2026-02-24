@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [AppPOC].[DocumentTransform]
-(	-- Output Document
+(	-- Output Document, Sub-Type
 	[DocumentId]            UniqueIdentifier Not Null,
 	[TemplateId]            UniqueIdentifier Not Null,
 	[TransformId]			UniqueIdentifier Not Null,
