@@ -571,15 +571,14 @@
     <Build Include="AppPOC\Tables\Document.sql" />
     <Build Include="Security\Schema\AppPOC.sql" />
     <Build Include="AppPOC\Tables\Template.sql" />
-    <Build Include="AppPOC\Tables\DataDefinition.sql" />
+    <Build Include="AppPOC\Tables\SchemaDefinition.sql" />
     <Build Include="AppPOC\Tables\TemplateObject.sql" />
     <Build Include="AppPOC\Tables\TemplateTransform.sql" />
-    <Build Include="AppPOC\Tables\DataNode.sql" />
-    <Build Include="AppPOC\Tables\DataNodeOwner.sql" />
-    <Build Include="AppPOC\Tables\DocumentTransform.sql" />
-    <Build Include="AppPOC\Tables\DocumentData.sql" />
-    <Build Include="AppPOC\Tables\Transform.sql" />
+    <Build Include="AppPOC\Tables\SchemaNode.sql" />
+    <Build Include="AppPOC\Tables\SchemaNodeOwner.sql" />
+    <Build Include="AppPOC\Tables\TransformDefinition.sql" />
     <Build Include="AppPOC\Tables\ScriptModel.sql" />
+    <Build Include="AppPOC\Tables\TemplateDocument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
