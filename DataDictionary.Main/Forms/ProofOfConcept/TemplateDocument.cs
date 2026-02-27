@@ -1,5 +1,4 @@
-﻿using DataDictionary.Main.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,14 +8,14 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.ProofOfConcept
 {
-    partial class Template : ApplicationData, IApplicationDataForm
+    partial class TemplateDocument : ApplicationData, IApplicationDataForm
     {
-        public Template()
+        public TemplateDocument()
         {
             InitializeComponent();
         }
 
-        private void TemplateTabs_SelectedIndexChanged(object sender, EventArgs e)
+        private void DocumentTitleData_Load(object sender, EventArgs e)
         {
 
         }
