@@ -167,27 +167,7 @@ Begin Try
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppScript].[TemplateAttribute]
-	From	[AppScript].[TemplateAttribute] T
-			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
-	Where	S.[TemplateId] is Null And
-			T.[TemplateId] In (
-				Select	[TemplateId]
-				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppScript].[TemplateElement]
-	From	[AppScript].[TemplateElement] T
-			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
-	Where	S.[TemplateId] is Null And
-			T.[TemplateId] In (
-				Select	[TemplateId]
-				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNodeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Update	[AppScript].[Document]
 	Set		[TemplateId] = Null
