@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[Document]
+﻿CREATE TABLE [ProofOfConcept].[Document]
 (	-- Documents to appear in the UI.
 	[DocumentId]            UniqueIdentifier Not Null CONSTRAINT [DF_DocumentId] DEFAULT (newid()),
 	[DocumentTitle]			[AppGeneral].[uddtTitle] Not Null, -- Default to Object Name

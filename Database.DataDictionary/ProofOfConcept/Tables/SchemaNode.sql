@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[SchemaNode]
+﻿CREATE TABLE [ProofOfConcept].[SchemaNode]
 (	-- Describes a Node within the Schema Definition
 	[NodeId]				UniqueIdentifier Not Null CONSTRAINT [DF_SchemaNode] DEFAULT (newid()),
 	[DefinitionId]			UniqueIdentifier Not Null,
@@ -19,7 +19,7 @@
 	-- Keys
 	CONSTRAINT [PK_SchemaNode] PRIMARY KEY CLUSTERED ([NodeId] ASC),
 	CONSTRAINT [AK_SchemaNodeID] UNIQUE ([DefinitionId] ASC, [NodeId] ASC), -- Used for FK refrence to insure everything belong TemplateData
-	CONSTRAINT [FK_SchemaNodeDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [AppPOC].[SchemaDefinition] ([DefinitionId]),
+	CONSTRAINT [FK_SchemaNodeDefinition] FOREIGN KEY ([DefinitionId]) REFERENCES [ProofOfConcept].[SchemaDefinition] ([DefinitionId]),
 	CONSTRAINT [FK_SchemaNodeProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
     CONSTRAINT [CK_SchemaNodeName] CHECK ([NodeName] like '[A-Z]%' AND NOT [NodeName] like '%[^-,^_^:^.,^A-Z,^0-9]%'),
     CONSTRAINT [CK_SchemaNodeValueAs] CHECK ([RenderValueAs]='Element' OR [RenderValueAs]='Element.Text' OR [RenderValueAs]='Element.XML' OR [RenderValueAs]='Element.CData' OR [RenderValueAs]='Attribute' OR [RenderValueAs]='Attribute.Text'),

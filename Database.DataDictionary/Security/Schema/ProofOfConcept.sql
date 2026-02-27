@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [Obsolete]
+    AUTHORIZATION [dbo];
+GO

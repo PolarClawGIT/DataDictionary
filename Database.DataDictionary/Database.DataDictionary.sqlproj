@@ -119,7 +119,8 @@
     <Folder Include="AppLibrary\Functions" />
     <Folder Include="AppScript\Functions" />
     <Folder Include="AppPOC" />
-    <Folder Include="AppPOC\Tables" />
+    <Folder Include="ProofOfConcept" />
+    <Folder Include="ProofOfConcept\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -549,17 +550,18 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtFileAffix.sql" />
     <Build Include="AppScript\Tables\TemplateFile.sql" />
     <Build Include="AppScript\Triggers\trigTemplateFile.sql" />
-    <Build Include="AppPOC\Tables\Document.sql" />
-    <Build Include="Security\Schema\AppPOC.sql" />
-    <Build Include="AppPOC\Tables\Template.sql" />
-    <Build Include="AppPOC\Tables\SchemaDefinition.sql" />
-    <Build Include="AppPOC\Tables\TemplateObject.sql" />
-    <Build Include="AppPOC\Tables\TemplateTransform.sql" />
-    <Build Include="AppPOC\Tables\SchemaNode.sql" />
-    <Build Include="AppPOC\Tables\SchemaNodeOwner.sql" />
-    <Build Include="AppPOC\Tables\TransformDefinition.sql" />
-    <Build Include="AppPOC\Tables\ScriptModel.sql" />
-    <Build Include="AppPOC\Tables\TemplateDocument.sql" />
+    <Build Include="Security\Schema\Obsolete.sql" />
+    <Build Include="Security\Schema\ProofOfConcept.sql" />
+    <Build Include="ProofOfConcept\Tables\Document.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaDefinition.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNode.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNodeOwner.sql" />
+    <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
+    <Build Include="ProofOfConcept\Tables\Template.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateDocument.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateObject.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateTransform.sql" />
+    <Build Include="ProofOfConcept\Tables\TransformDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

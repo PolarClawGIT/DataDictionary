@@ -1,5 +1,0 @@
-﻿CREATE SCHEMA [AppPOC]
-    AUTHORIZATION [dbo];
-GO
-GRANT EXECUTE ON SCHEMA::[AppPOC] TO [DataDictionaryApp]
-GO

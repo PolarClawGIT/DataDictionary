@@ -5082,4 +5082,64 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[TransformDefinition]" />
   </Operation>
+  <Operation Name="Move Schema" Key="2bed6efc-cdbe-49c8-a857-6d26a7bd8414" ChangeDateTime="02/27/2026 15:06:14">
+    <Property Name="ElementName" Value="[AppPOC].[Document]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="87cb48cc-a227-45e0-88f4-173138d5c729" ChangeDateTime="02/27/2026 15:06:37">
+    <Property Name="ElementName" Value="[AppPOC].[TransformDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="0e6cd98a-ed37-411d-bbc2-dd0839577a45" ChangeDateTime="02/27/2026 15:06:52">
+    <Property Name="ElementName" Value="[AppPOC].[TemplateTransform]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="ec39f0e2-70c9-4f87-9286-572ef06b4959" ChangeDateTime="02/27/2026 15:07:03">
+    <Property Name="ElementName" Value="[AppPOC].[TemplateObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="4746ac33-6499-46f7-a9b7-02525f9158fd" ChangeDateTime="02/27/2026 15:07:19">
+    <Property Name="ElementName" Value="[AppPOC].[TemplateDocument]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8b967939-1c1c-452c-b34a-18d7d000df2e" ChangeDateTime="02/27/2026 15:07:34">
+    <Property Name="ElementName" Value="[AppPOC].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="4357289e-7b53-437b-9a06-a88bb826ec23" ChangeDateTime="02/27/2026 15:07:46">
+    <Property Name="ElementName" Value="[AppPOC].[ScriptModel]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="c7695d0a-856a-4883-aef4-3f38284a9454" ChangeDateTime="02/27/2026 15:07:57">
+    <Property Name="ElementName" Value="[AppPOC].[SchemaNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="a1cf9be6-cf9c-4c5e-a37b-430d44e6519a" ChangeDateTime="02/27/2026 15:08:09">
+    <Property Name="ElementName" Value="[AppPOC].[SchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="53a313de-8ecc-44b2-9196-c1b9aa345cd9" ChangeDateTime="02/27/2026 15:08:22">
+    <Property Name="ElementName" Value="[AppPOC].[SchemaDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[SchemaDefinition]
+﻿CREATE TABLE [ProofOfConcept].[SchemaDefinition]
 (	-- Describes the Data Scheme aka its Schema (XSD)
 	[DefinitionId]				UniqueIdentifier Not Null CONSTRAINT [DF_SchemaDefinitionId] DEFAULT (newid()),
 	[DefinitionTitle]			[AppGeneral].[uddtTitle] Not Null,

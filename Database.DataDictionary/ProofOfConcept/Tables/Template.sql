@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[Template]
+﻿CREATE TABLE [ProofOfConcept].[Template]
 (	-- Describes the Template
 	[TemplateId]            UniqueIdentifier Not Null CONSTRAINT [DF_TemplateId] DEFAULT (newid()),
 	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,

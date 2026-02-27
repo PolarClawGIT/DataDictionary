@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[TemplateObject]
+﻿CREATE TABLE [ProofOfConcept].[TemplateObject]
 (	-- List of objects in the Template.
 	[ObjectId]			UniqueIdentifier Not Null CONSTRAINT [DF_TemplateObjectId] DEFAULT (newid()),
 	[TemplateId]		UniqueIdentifier Not Null,
@@ -13,6 +13,6 @@
 	CONSTRAINT [PK_TemplateObject] PRIMARY KEY CLUSTERED ([ObjectId] ASC),
 	CONSTRAINT [AK_TemplateObjectID] UNIQUE ([TemplateId] ASC, [ObjectId] ASC), -- For FK Refrences
 	CONSTRAINT [AK_TemplateOjbectName] UNIQUE ([TemplateId] ASC, [ParentObjectId] ASC, [ObjectMember] ASC),
-	CONSTRAINT [FK_TemplateObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppPOC].[Template] ([TemplateId]),
-	CONSTRAINT [FK_TemplateObjectParent] FOREIGN KEY ([ObjectId]) REFERENCES [AppPOC].[TemplateObject] ([ObjectId]),
+	CONSTRAINT [FK_TemplateObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
+	CONSTRAINT [FK_TemplateObjectParent] FOREIGN KEY ([ObjectId]) REFERENCES [ProofOfConcept].[TemplateObject] ([ObjectId]),
 )

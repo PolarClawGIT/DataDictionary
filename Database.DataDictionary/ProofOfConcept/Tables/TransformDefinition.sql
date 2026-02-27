@@ -1,4 +1,4 @@
-﻿CREATE TABLE [AppPOC].[TransformDefinition]
+﻿CREATE TABLE [ProofOfConcept].[TransformDefinition]
 (	-- Describes the XSLT
 	[TransformId]			UniqueIdentifier Not Null CONSTRAINT [DF_TransformId] DEFAULT (newid()),
 	[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
