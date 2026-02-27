@@ -98,4 +98,9 @@
     <EmbeddedResource Include="AppCatalog\TableColumn.TSql.InformationSchema.sql" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProofOfConcept\" />
+    <Folder Include="Obsolete\" />
+  </ItemGroup>
+
 </Project>

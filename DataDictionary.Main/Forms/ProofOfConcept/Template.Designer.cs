@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.ProofOfConcept
+﻿namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class Template
     {

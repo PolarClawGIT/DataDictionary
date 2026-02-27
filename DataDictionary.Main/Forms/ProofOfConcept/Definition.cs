@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.ProofOfConcept
+namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class Definition : ApplicationData, IApplicationDataForm
     {

@@ -7,13 +7,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.ProofOfConcept
+namespace DataDictionary.Main.Forms.ProofOfConcept
 {
-    partial class Document : ApplicationData, IApplicationDataForm
+    partial class Template : ApplicationData, IApplicationDataForm
     {
-        public Document()
+        public Template()
         {
             InitializeComponent();
         }
+
     }
 }

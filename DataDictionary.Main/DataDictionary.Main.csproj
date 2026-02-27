@@ -96,4 +96,8 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     </Using>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Forms\Obsolete\" />
+  </ItemGroup>
+
 </Project>
