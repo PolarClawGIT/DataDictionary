@@ -99,7 +99,7 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = CommandType.OpenDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
 
             new CommandState(saveToDatabaseCommand)
@@ -107,7 +107,7 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = CommandType.SaveDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
 
             new CommandState(deleteFromDatabaseCommand)
@@ -115,7 +115,7 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = CommandType.DeleteDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
 
             new CommandState(securityCommand)
@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Security,
                 Command = CommandType.SecurityDatabase,
                 IsVisible = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
 
             new CommandState(historyCommand)
@@ -131,7 +131,7 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.ApplicationTimeLine,
                 Command = CommandType.HistoryDatabase,
                 IsVisible = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
         }
 
@@ -248,9 +248,10 @@ namespace DataDictionary.Main.Forms
             }
 
             void Item_CurrentChanged(Object? sender, EventArgs e)
-            {   // Item Changed occures each time Current Change occurs. Don't need to do anything.
-                //rowStateCommand.Image = GetToolImage();
-                //rowStateCommand.ToolTipText = GetToolTip();
+            { // Update the RowState of the form to reflect the RowState of the first binding.
+                if (sender is BindingSource binding
+                    && ReferenceEquals(bindings.FirstOrDefault(), binding))
+                { RowState = binding.GetRowState().AsDataRowState(); }
             }
 
             void Item_DataSourceChanged(Object? sender, EventArgs e)

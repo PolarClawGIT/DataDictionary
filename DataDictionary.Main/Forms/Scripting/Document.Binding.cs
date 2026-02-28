@@ -41,19 +41,22 @@ namespace DataDictionary.Main.Forms.Scripting
             public DocumentFile OutputValue => value.OutputValue;
 
             /// <inheritdoc/>
-            public String? TransformScript => value.TransformScript;
-
-            /// <inheritdoc/>
             public DirectoryType RootFolder => value.RootFolder;
 
             /// <inheritdoc/>
-            public String? InputDirectory => value.InputDirectory;
+            public String? InputPath => value.InputPath;
 
             /// <inheritdoc/>
             public String? InputFile => value.InputFile;
 
             /// <inheritdoc/>
-            public String? OutputDirectory => value.OutputDirectory;
+            public String? ProcessPath => value.ProcessPath;
+
+            /// <inheritdoc/>
+            public String? ProcessFile => value.ProcessFile;
+
+            /// <inheritdoc/>
+            public String? OutputPath => value.OutputPath;
 
             /// <inheritdoc/>
             public String? OutputFile => value.OutputFile;
@@ -168,7 +171,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void completing(RunWorkerCompletedEventArgs args)
                 { if (onComplete is not null) { onComplete(args); } }
-                
+
             }
 
             public void Save(Action<RunWorkerCompletedEventArgs>? onComplete = null)
@@ -243,18 +246,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 return value.RowState() is DataRowState.Detached
                                         or DataRowState.Deleted;
             }
-
-
         }
 
         public void Open(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.InitialDirectory = file.FilePath;
-            dialog.FileName = file.FileName;
+            dialog.SetDialog(file);
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Open(), onCompleted);
@@ -266,12 +266,11 @@ namespace DataDictionary.Main.Forms.Scripting
 
         public void Save(FileDialog dialog, DocumentFile file, Action<RunWorkerCompletedEventArgs> onComplete)
         {
-            dialog.InitialDirectory = file.FilePath;
-            dialog.FileName = file.FileName;
+            dialog.SetDialog(file);
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.FilePath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Save(), onCompleted);

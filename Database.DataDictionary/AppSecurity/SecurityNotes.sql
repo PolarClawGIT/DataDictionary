@@ -66,3 +66,12 @@ Select	IS_SRVROLEMEMBER('sysadmin') As [IsSysAdmin],
 --   The row cannot first inserted into TableC because it does not exist in TableB.
 --
 -- This is not easy to to test.
+--
+-- 2/2026 Addtional testing
+--   After converting to SQL 2025 express addtion, a new twist comes up.
+--   ORIGINAL_LOGIN was returning the Windows Live account instead of the local user account.
+--   ORIGINAL_LOGIN is still valid for auditing ([AppGeneral].[TransactionLog]) but not for security purposes.
+--   Switching to SUSER_NAME has a side effect that the application security functions ([AppSecurity].[funcAuthorization])
+--   support the use of Execute As and impersonation scenrios.
+--   When used with an Application Role, SUSER_NAME (SUSER_SNAME and SYSTEM_USER) retains the current principal.
+--   CURRENT_USER and SESSION_USER take on the Application Role Name

@@ -5,27 +5,32 @@ With [Dates] As (
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[Template]
+	Union
+	Select	[TemplateId],
+			[SysStart],
+			[SysEnd]
+	From	[AppScript].[TemplateFile]
 	/*Union -- TODO: Temporal not yet implemented
 	Select	[TemplateId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[ScriptingTemplate]
+	From	[HsScript].[Document]
 	Where	[SysStart] != [SysEnd]*/)
-Select	D.[TemplateId],
-		D.[TemplateTitle],
+Select	D.[TemplateId], -- PK
+		D.[TemplateTitle], -- AK
 		D.[TemplateDescription],
 		D.[BreakOnScope],
 		D.[TransformScript],
 		D.[RootFolder],
-		D.[DocumentDirectory],
-		D.[DocumentPrefix],
-		D.[DocumentSuffix],
-		D.[DocumentExtension],
-		D.[ScriptAs],
-		D.[ScriptDirectory],
-		D.[ScriptPrefix],
-		D.[ScriptSuffix],
-		D.[ScriptExtension],
+		I.[RelativePath] As [DocumentDirectory],
+		I.[FilePrefix] As [DocumentPrefix],
+		I.[FileSuffix] As [DocumentSuffix],
+		I.[FileExtension] As [DocumentExtension],
+		D.[ScriptAs], -- obsolete, The Transform results determines type
+		O.[RelativePath] As [ScriptDirectory],
+		O.[FilePrefix] As [ScriptPrefix],
+		O.[FileSuffix] As [ScriptSuffix],
+		O.[FileExtension] As [ScriptExtension],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -38,6 +43,16 @@ Select	D.[TemplateId],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[Template] D
+		Left Join [AppScript].[TemplateFile] I
+		On	D.[TemplateId] = I.[TemplateId] And
+			I.[IsInput] = 1
+		Left Join [AppScript].[TemplateFile] T
+		On	D.[TemplateId] = T.[TemplateId] And
+			T.[IsProcess] = 1
+		Left Join [AppScript].[TemplateFile] O
+		On	D.[TemplateId] = O.[TemplateId] And
+			O.[IsOutput] = 1
+
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

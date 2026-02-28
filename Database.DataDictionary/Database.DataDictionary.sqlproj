@@ -118,6 +118,9 @@
     <Folder Include="AppGeneral\User Defined Data Types" />
     <Folder Include="AppLibrary\Functions" />
     <Folder Include="AppScript\Functions" />
+    <Folder Include="AppPOC" />
+    <Folder Include="ProofOfConcept" />
+    <Folder Include="ProofOfConcept\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -521,28 +524,9 @@
     <Build Include="AppScript\User Defined Table Types\udttDataObjectName.sql" />
     <Build Include="AppScript\Tables\TemplateNode.sql" />
     <Build Include="AppScript\Tables\TemplateNodeOwner.sql" />
-    <Build Include="Obsolete\TemplateAttribute.sql" />
-    <Build Include="Obsolete\TemplateElement.sql" />
-    <Build Include="Obsolete\TemplateNodeOwner.sql" />
-    <Build Include="Obsolete\TemplateNode.sql" />
-    <Build Include="Obsolete\TemplateNodeOwner.Hs.sql" />
-    <Build Include="Obsolete\trigTemplateNodeOwner.sql" />
-    <Build Include="Obsolete\trigTemplateAttribute.sql" />
-    <Build Include="Obsolete\trigTemplateElement.sql" />
     <Build Include="AppScript\Triggers\trigTemplateParentNode.sql" />
     <Build Include="AppScript\Triggers\trigTemplateNode.sql" />
-    <Build Include="Obsolete\procGetTemplateNodeOwner.sql" />
-    <Build Include="Obsolete\procGetTemplateElement.sql" />
-    <Build Include="Obsolete\procGetTemplateAttribute.sql" />
-    <Build Include="Obsolete\procSetTemplateNodeOwner.sql" />
-    <Build Include="Obsolete\procSetTemplateElement.sql" />
-    <Build Include="Obsolete\procSetTemplateAttribute.sql" />
-    <Build Include="Obsolete\udttTemplateAttribute.sql" />
-    <Build Include="Obsolete\udttTemplateNodeOwner.sql" />
-    <Build Include="Obsolete\udttTemplateElement.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTemplateNode.sql" />
-    <Build Include="Obsolete\TemplateElement.Hs.sql" />
-    <Build Include="Obsolete\TemplateAttribute.Hs.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTemplateNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNodeOwner.sql" />
@@ -557,6 +541,27 @@
     <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
     <Build Include="AppScript\Triggers\trigDocument.sql" />
+    <Build Include="AppScript\Tables\DocumentFile.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFilePath.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileName.sql" />
+    <Build Include="AppScript\Triggers\trigDocumentFile.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileRoot.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileExtension.sql" />
+    <Build Include="AppGeneral\User Defined Data Types\uddtFileAffix.sql" />
+    <Build Include="AppScript\Tables\TemplateFile.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateFile.sql" />
+    <Build Include="Security\Schema\Obsolete.sql" />
+    <Build Include="Security\Schema\ProofOfConcept.sql" />
+    <Build Include="ProofOfConcept\Tables\Document.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaDefinition.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNode.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNodeOwner.sql" />
+    <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
+    <Build Include="ProofOfConcept\Tables\Template.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateDocument.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateObject.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateTransform.sql" />
+    <Build Include="ProofOfConcept\Tables\TransformDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

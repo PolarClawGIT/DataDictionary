@@ -1,0 +1,24 @@
+﻿using DataDictionary.Main.Forms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace DataDictionary.Main.Forms.ProofOfConcept
+{
+    partial class Template : ApplicationData, IApplicationDataForm
+    {
+        public Template()
+        {
+            InitializeComponent();
+        }
+
+        private void TemplateTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-namespace DataDictionary.Resource.Enumerations;
+﻿namespace DataDictionary.Resource.Enumerations;
 
 /// <summary>
 /// Interface for a Directory Type Enumeration.
@@ -63,7 +62,7 @@ class DirectoryEnumeration : Enumeration<DirectoryType, DirectoryEnumeration>,
             new DirectoryEnumeration(DirectoryType.MyDocuments, "My Documents") {SpecialFolder = Environment.SpecialFolder.MyDocuments},
             new DirectoryEnumeration(DirectoryType.MyDownloads, "My Downloads") {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = "Downloads" },
             new DirectoryEnumeration(DirectoryType.Projects,    "VS Projects")  {SpecialFolder = Environment.SpecialFolder.UserProfile, RelativeFolder = Path.Combine("source","repos") },
-            new DirectoryEnumeration(DirectoryType.Data,        "App. Data")    {SpecialFolder = Environment.SpecialFolder.MyDocuments, RelativeFolder = "DataDictionary" },
+            new DirectoryEnumeration(DirectoryType.Dictionary,  "Dictionary")    {SpecialFolder = Environment.SpecialFolder.MyDocuments, RelativeFolder = "DataDictionary" },
         };
 
         BuildDictionary(data);

@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("(LocalDb)\\MSSQLLocalDb")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\SQLEXPRESS")]
         public string AppServer {
             get {
                 return ((string)(this["AppServer"]));

@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITemplateNodeOwnerData NodeOwners { get; }
 
         /// <summary>
-        /// List of Scripting Data Sources asscoated with a Templates.
+        /// List of Scripting Data Sources associated with a Templates.
         /// </summary>
         ITemplateInputData TemplateSources { get; }
 

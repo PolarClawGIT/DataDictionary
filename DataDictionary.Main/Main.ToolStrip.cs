@@ -258,6 +258,15 @@ namespace DataDictionary.Main
                 (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
         }
 
+        private void MenuScriptingAddTemplate_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.Template(null)); }
+
+        private void MenuScriptingAddDocument_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.Document(null)); }
+
+        private void MenuScriptingAddData_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.DataSource(null)); }
+
         private void MenuProcess_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView

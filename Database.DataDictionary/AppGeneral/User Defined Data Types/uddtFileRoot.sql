@@ -1,0 +1,11 @@
+﻿-- Represents a Special Folder used as the Root folder for the files
+-- This maps to a set of folders defined within the application.
+-- The base location maps to a folder defined by
+--    Environment.SpecialFolder Enum
+-- Entries include:
+--   MyDocuments: Environment.SpecialFolder.MyDocuments
+--   UserProfile: Environment.SpecialFolder.UserProfile
+--   MyDownloads: Environment.SpecialFolder.UserProfile & Downloads
+--   Projects: Environment.SpecialFolder.UserProfile & source\repos
+--   Dictionary: Environment.SpecialFolder.MyDocuments & DataDictionary
+CREATE TYPE [AppGeneral].[uddtFileRoot] FROM NVarchar(30)

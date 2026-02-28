@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="AppServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">(LocalDb)\MSSQLLocalDb</Value>
+      <Value Profile="(Default)">.\SQLEXPRESS</Value>
     </Setting>
     <Setting Name="AppDatabase" Type="System.String" Scope="Application">
       <Value Profile="(Default)">DataDictionary</Value>

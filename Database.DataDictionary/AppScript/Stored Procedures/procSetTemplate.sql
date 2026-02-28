@@ -32,17 +32,29 @@ Begin Try
 			[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
 			[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL, 
 			[TransformScript]		XML Null , 
-			[RootFolder]			NVarChar(100) Null,
-			[DocumentDirectory]		NVarChar(250) Null,
-			[DocumentPrefix]		NVarChar(50) Null,
-			[DocumentSuffix]		NVarChar(50) Null,
-			[DocumentExtension]		NVarChar(10) Null,
+			[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
+			[DocumentDirectory]		[AppGeneral].[uddtFilePath] Null,
+			[DocumentPrefix]		[AppGeneral].[uddtFileAffix] Null,
+			[DocumentSuffix]		[AppGeneral].[uddtFileAffix] Null,
+			[DocumentExtension]		[AppGeneral].[uddtFileExtension] Null,
 			[ScriptAs]              NVarChar(10) Not Null,
-			[ScriptDirectory]		NVarChar(250) Null,
-			[ScriptPrefix]			NVarChar(50) Null,
-			[ScriptSuffix]			NVarChar(50) Null,
-			[ScriptExtension]		NVarChar(10) Null,
+			[ScriptDirectory]		[AppGeneral].[uddtFilePath] Null,
+			[ScriptPrefix]			[AppGeneral].[uddtFileAffix] Null,
+			[ScriptSuffix]			[AppGeneral].[uddtFileAffix] Null,
+			[ScriptExtension]		[AppGeneral].[uddtFileExtension] Null,
 		Primary Key ([TemplateId]))
+
+	Declare @Files Table (
+		[TemplateId]			UniqueIdentifier NOT Null,
+		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
+		[FileObject]			[AppGeneral].[uddtFileName] Null,
+		[FilePrefix]			[AppGeneral].[uddtFileAffix] Null,
+		[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
+		[FileExtension]			[AppGeneral].[uddtFileExtension] Null,
+		[IsInput]				Bit Not Null,
+		[IsProcess]				Bit Not Null,
+		[IsOutput]				Bit Not Null,
+		Primary Key ([TemplateId], [IsInput], [IsProcess], [IsOutput]))
 
 	Declare @Delete Table ([TemplateId] UniqueIdentifier NOT NULL)
 
@@ -73,6 +85,50 @@ Begin Try
 			(@TemplateId is Not Null And IsNull(X.[TemplateId], @TemplateId) = @TemplateId)
 	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	Insert Into @Files
+	Select	[TemplateId],
+			[DocumentDirectory] As [RelativePath],
+			Convert(NVarChar, Null) As [FileObject],
+			[DocumentPrefix] As [FilePrefix],
+			[DocumentSuffix] As [FileSuffix],
+			[DocumentExtension] As [FileExtension],
+			1 As [IsInput],
+			0 As [IsProcess],
+			0 As [IsOutput]
+	From	@Values
+	Where	[DocumentDirectory] is not null Or
+			[DocumentPrefix] is not null Or
+			[DocumentSuffix] is not null Or
+			[DocumentExtension] is not null
+	Union
+	-- Process is currently hard-coded as there is no UI element for it.
+	Select	[TemplateId],
+			Convert(NVarChar, Null) As [RelativePath],
+			[TemplateTitle] As [FileObject],
+			Convert(NVarChar, Null) As [FilePrefix],
+			Convert(NVarChar, Null) As [FileSuffix],
+			Convert(NVarChar, 'xslt') As [FileExtension],
+			0 As [IsInput],
+			1 As [IsProcess],
+			0 As [IsOutput]
+	From	@Values
+	Union
+	Select	[TemplateId],
+			[ScriptDirectory] As [RelativePath],
+			Convert(NVarChar, Null) As [FileObject],
+			[ScriptPrefix] As [FilePrefix],
+			[ScriptSuffix] As [FileSuffix],
+			[ScriptExtension] As [FileExtension],
+			0 As [IsInput],
+			0 As [IsProcess],
+			1 As [IsOutput]
+	From	@Values
+	Where	[ScriptDirectory] is not null Or
+			[ScriptPrefix] is not null Or
+			[ScriptSuffix] is not null Or
+			[ScriptExtension] is not null
+	Print FormatMessage ('@Files: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Insert Into @Delete
 	Select	T.[TemplateId]
 	From	[AppScript].[Template] T
@@ -89,35 +145,29 @@ Begin Try
 	Print FormatMessage ('Insert @Delete: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
-	Delete From [AppScript].[TemplateNodeOwner_Old]
-	From	[AppScript].[TemplateNodeOwner_Old] T
-			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
+	Delete From [AppScript].[TemplateFile]
+	From	[AppScript].[TemplateFile] T
+			Left Join @Files S
+			On	T.[TemplateId] = S.[TemplateId] And
+				T.[IsInput] = S.[IsInput] And
+				T.[IsProcess] = S.[IsProcess] And
+				T.[IsOutput] = S.[IsOutput]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
 	Where	S.[TemplateId] is Null And
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateNodeeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateFile]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[TemplateAttribute]
-	From	[AppScript].[TemplateAttribute] T
+	Delete From [AppScript].[TemplateNodeOwner]
+	From	[AppScript].[TemplateNodeOwner] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [AppScript].[TemplateElement]
-	From	[AppScript].[TemplateElement] T
-			Left Join @Values S
-			On	T.[TemplateId] = S.[TemplateId]
-	Where	S.[TemplateId] is Null And
-			T.[TemplateId] In (
-				Select	[TemplateId]
-				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[TemplateElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[TemplateNodeOwner]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Update	[AppScript].[Document]
 	Set		[TemplateId] = Null
@@ -158,15 +208,7 @@ Begin Try
 				[BreakOnScope],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
 				[RootFolder],
-				[DocumentDirectory],
-				[DocumentPrefix],
-				[DocumentSuffix],
-				[DocumentExtension],
-				[ScriptAs],
-				[ScriptDirectory],
-				[ScriptPrefix],
-				[ScriptSuffix],
-				[ScriptExtension]
+				[ScriptAs]
 		From	@Values
 		Except
 		Select	[TemplateId],
@@ -175,15 +217,7 @@ Begin Try
 				[BreakOnScope],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
 				[RootFolder],
-				[DocumentDirectory],
-				[DocumentPrefix],
-				[DocumentSuffix],
-				[DocumentExtension],
-				[ScriptAs],
-				[ScriptDirectory],
-				[ScriptPrefix],
-				[ScriptSuffix],
-				[ScriptExtension]
+				[ScriptAs]
 		From	[AppScript].[Template])
 	Update [AppScript].[Template]
 		Set		[TemplateTitle] = S.[TemplateTitle],
@@ -191,19 +225,47 @@ Begin Try
 				[BreakOnScope] = S.[BreakOnScope],
 				[TransformScript] = S.[TransformScript],
 				[RootFolder] = S.[RootFolder],
-				[DocumentDirectory] = S.[DocumentDirectory],
-				[DocumentPrefix] = S.[DocumentPrefix],
-				[DocumentSuffix] = S.[DocumentSuffix],
-				[DocumentExtension] = S.[DocumentExtension],
-				[ScriptAs] = S.[ScriptAs],
-				[ScriptDirectory] = S.[ScriptDirectory],
-				[ScriptPrefix] = S.[ScriptPrefix],
-				[ScriptSuffix] = S.[ScriptSuffix],
-				[ScriptExtension] = S.[ScriptExtension]
+				[ScriptAs] = S.[ScriptAs]
 		From	[AppScript].[Template] T
 				Inner Join [Delta] S
 				On	T.[TemplateId] = S.[TemplateId]
 	Print FormatMessage ('Update [AppScript].[Template]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[TemplateId],
+				[RelativePath],
+				[FileObject],
+				[FilePrefix],
+				[FileSuffix],
+				[FileExtension],
+				[IsInput],
+				[IsProcess],
+				[IsOutput]
+		From	@Files
+		Except
+		Select	[TemplateId],
+				[RelativePath],
+				[FileObject],
+				[FilePrefix],
+				[FileSuffix],
+				[FileExtension],
+				[IsInput],
+				[IsProcess],
+				[IsOutput]
+		From	[AppScript].[TemplateFile])
+	Update [AppScript].[TemplateFile]
+		Set		[RelativePath] = S.[RelativePath],
+				[FileObject] = S.[FileObject],
+				[FilePrefix] = S.[FilePrefix],
+				[FileSuffix] = S.[FileSuffix],
+				[FileExtension] = S.[FileExtension]
+		From	[AppScript].[TemplateFile] T
+				Inner Join [Delta] S
+				On	T.[TemplateId] = S.[TemplateId] And
+					T.[IsInput] = S.[IsInput] And
+					T.[IsProcess] = S.[IsProcess] And
+					T.[IsOutput] = S.[IsOutput]
+	Print FormatMessage ('Update [AppScript].[TemplateFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[Template] (
 			[TemplateId],
@@ -212,35 +274,49 @@ Begin Try
 			[BreakOnScope],
 			[TransformScript],
 			[RootFolder],
-			[DocumentDirectory],
-			[DocumentPrefix],
-			[DocumentSuffix],
-			[DocumentExtension],
-			[ScriptAs],
-			[ScriptDirectory],
-			[ScriptPrefix],
-			[ScriptSuffix],
-			[ScriptExtension])
+			[ScriptAs])
 	Select	S.[TemplateId],
 			S.[TemplateTitle],
 			S.[TemplateDescription],
 			S.[BreakOnScope],
 			S.[TransformScript],
 			S.[RootFolder],
-			S.[DocumentDirectory],
-			S.[DocumentPrefix],
-			S.[DocumentSuffix],
-			S.[DocumentExtension],
-			S.[ScriptAs],
-			S.[ScriptDirectory],
-			S.[ScriptPrefix],
-			S.[ScriptSuffix],
-			S.[ScriptExtension]
+			S.[ScriptAs]
 	From	@Values S
 			Left Join [AppScript].[Template] T
 			On	S.[TemplateId] = T.[TemplateId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[TemplateId] is Null
 	Print FormatMessage ('Insert [AppScript].[Template]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [AppScript].[TemplateFile] (
+			[TemplateId],
+			[RelativePath],
+			[FileObject],
+			[FilePrefix],
+			[FileSuffix],
+			[FileExtension],
+			[IsInput],
+			[IsProcess],
+			[IsOutput])
+	Select	S.[TemplateId],
+			S.[RelativePath],
+			S.[FileObject],
+			S.[FilePrefix],
+			S.[FileSuffix],
+			S.[FileExtension],
+			S.[IsInput],
+			S.[IsProcess],
+			S.[IsOutput]
+	From	@Files S
+			Left Join [AppScript].[TemplateFile] T
+			On	S.[TemplateId] = T.[TemplateId] And
+				S.[IsInput] = T.[IsInput] And
+				S.[IsProcess] = T.[IsProcess] And
+				S.[IsOutput] = T.[IsOutput]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
+	Where	T.[TemplateId] is Null
+	Print FormatMessage ('Insert [AppScript].[TemplateFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[ScriptingModel] (
 			[ModelId],

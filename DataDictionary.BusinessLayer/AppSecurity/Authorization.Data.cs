@@ -76,7 +76,7 @@ namespace DataDictionary.BusinessLayer.AppSecurity
         {
             get
             {
-                if (Authorization is not null) { return Authorization.PrincipalLogin; }
+                if (Authorization is not null) { return Authorization.PrincipalName; }
                 else { return null; }
             }
         }

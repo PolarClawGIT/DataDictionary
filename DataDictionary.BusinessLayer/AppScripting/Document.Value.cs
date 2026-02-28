@@ -2,16 +2,13 @@
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using Microsoft.VisualBasic.FileIO;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -119,26 +116,40 @@ namespace DataDictionary.BusinessLayer.AppScripting
             InputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetDirectory = () => InputDirectory ?? RootPath,
+                GetDirectory = () => InputPath ?? RootPath,
                 GetFileName = () => InputFile ?? String.Empty,
-                SetDirectory = (v) => InputDirectory = v,
-                SetFileName = (v) => InputFile = v
+                SetDirectory = (v) => InputPath = v,
+                SetFileName = (v) => InputFile = v,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XMLData }
             };
-
+            
             TransformValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetContent = () => TransformScript ?? String.Empty,
-                SetContent = (v) => TransformScript = v // TODO: Throwing Binding error because this occurred in a background thread.
+                GetDirectory = () => ProcessPath ?? RootPath,
+                GetFileName = () => ProcessFile ?? String.Empty,
+                SetDirectory = (v) => ProcessPath = v,
+                SetFileName = (v) => ProcessFile = v,
+                GetFileFormats = () => new List<FileFormatType>() { FileFormatType.XSLTransform }
             };
 
             OutputValue = new DocumentFile()
             {
                 GetRootFolder = () => RootFolder,
-                GetDirectory = () => OutputDirectory ?? RootPath,
+                GetDirectory = () => OutputPath ?? RootPath,
                 GetFileName = () => OutputFile ?? String.Empty,
-                SetDirectory = (v) => OutputDirectory = v,
-                SetFileName = (v) => OutputFile = v
+                SetDirectory = (v) => OutputPath = v,
+                SetFileName = (v) => OutputFile = v,
+                GetFileFormats = () => new List<FileFormatType>()
+                { FileFormatType.PlainText,
+                  FileFormatType.XMLData,
+                  FileFormatType.SQLScript,
+                  FileFormatType.CSharp,
+                  FileFormatType.VisualBasic,
+                  FileFormatType.Mermaid,
+                  FileFormatType.Markdown,
+                  FileFormatType.Other
+                }
             };
 
             PropertyChanged += DocumentValue_PropertyChanged;

@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Scripting
             if (temporalIndex is null)
             {
                 formBinding.Load(documentIndex);
-                DoBinding();
+                formBinding.OpenFiles(onCompleting);
             }
             else
             { formBinding.Load(documentIndex, temporalIndex, onCompleting); }
@@ -122,7 +122,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void InputOpenCommand_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "XML data|*.XML";
             Open(openFileDialog, formBinding.InputValue, onCompleted);
 
             void onCompleted(RunWorkerCompletedEventArgs args)
@@ -140,7 +139,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void InputSaveCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "XML data|*.XML";
             Save(saveFileDialog, formBinding.InputValue, onCompleted);
 
             void onCompleted(RunWorkerCompletedEventArgs args)
@@ -153,7 +151,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            openFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
             Open(openFileDialog, formBinding.TransformValue, onCompleted);
 
             void onCompleted(RunWorkerCompletedEventArgs args)
@@ -171,7 +168,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SaveTransformCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "XSL Transform|*.XSLT;*.XSL;";
             Save(saveFileDialog, formBinding.TransformValue, onCompleted);
 
             void onCompleted(RunWorkerCompletedEventArgs args)
@@ -189,7 +185,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SaveResultCommand_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "Plain Text|*.TXT|XML data|*.XML|SQL Script|*.SQL|C# Fragment|*.CS|VB.Net Fragment|*.VB|Other|*.*";
             Save(saveFileDialog, formBinding.OutputValue, onCompleted);
 
             void onCompleted(RunWorkerCompletedEventArgs args)

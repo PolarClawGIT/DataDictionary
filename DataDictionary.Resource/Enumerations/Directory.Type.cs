@@ -8,7 +8,7 @@
         // This is primary used for Scripting.
 
         /// <summary>
-        /// Unspecified Directory
+        /// Unspecified Directory or unidentified.
         /// </summary>
         Null,
 
@@ -31,9 +31,9 @@
         Projects,
 
         /// <summary>
-        /// Location Application looks for Data.
+        /// Location Application looks for Data Dictionary
         /// Default: Environment.SpecialFolder.MyDocuments & DataDictionary
         /// </summary>
-        Data,
+        Dictionary,
     }
 }

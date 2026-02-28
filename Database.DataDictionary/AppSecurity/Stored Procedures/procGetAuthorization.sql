@@ -16,7 +16,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 	Where	[name] Not In ('dbo','sys','INFORMATION_SCHEMA','guest') And
 			[authentication_type] <> 0
 	Union
-	Select	Original_Login() As [PrincipalLogin])
+	Select	SUser_Name() As [PrincipalLogin])
 Select	L.[PrincipalLogin], -- Will not be Null, PK
 		-- Principal Data, may be null if not an Application User
 		P.[PrincipalId],

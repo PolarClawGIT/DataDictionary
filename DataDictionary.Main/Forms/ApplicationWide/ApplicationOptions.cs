@@ -136,15 +136,14 @@ namespace DataDictionary.Main.ApplicationWide
             folderBrowserDialog.RootFolder = value.SpecialFolder;
 
             if (value.Directory is DirectoryInfo directory && directory.Exists)
-            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            { folderBrowserDialog.InitialDirectory = directory.FullName; }
             else
-            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+            { folderBrowserDialog.InitialDirectory = Environment.GetFolderPath(value.SpecialFolder); }
 
             if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
             {
                 String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
                 value.RelativeFolder = newPath;
-                //projectFolderData.Text = newPath;
                 Settings.Default.UserProjects = newPath;
                 Settings.Default.Save();
             }
@@ -152,34 +151,23 @@ namespace DataDictionary.Main.ApplicationWide
 
         private void ApplicationDataFolder_SelectCommand(object sender, EventArgs e)
         {
-            IDirectoryEnumeration value = DirectoryType.Data.GetEnumeration();
+            IDirectoryEnumeration value = DirectoryType.Dictionary.GetEnumeration();
 
             folderBrowserDialog.Reset();
             folderBrowserDialog.RootFolder = value.SpecialFolder;
 
             if (value.Directory is DirectoryInfo directory && directory.Exists)
-            { folderBrowserDialog.SelectedPath = directory.FullName; }
+            { folderBrowserDialog.InitialDirectory = directory.FullName; }
             else
-            { folderBrowserDialog.SelectedPath = Environment.GetFolderPath(value.SpecialFolder); }
+            { folderBrowserDialog.InitialDirectory = Environment.GetFolderPath(value.SpecialFolder); }
 
             if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
             {
                 String newPath = Path.GetRelativePath(Environment.GetFolderPath(value.SpecialFolder), folderBrowserDialog.SelectedPath);
                 value.RelativeFolder = newPath;
-                //applicationDataFolder.Text = newPath;
                 Settings.Default.UserData = newPath;
                 Settings.Default.Save();
             }
-        }
-
-        private void ProjectFolderData_Validated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ApplicationDataFolder_Validated(object sender, EventArgs e)
-        {
-
         }
     }
 }
