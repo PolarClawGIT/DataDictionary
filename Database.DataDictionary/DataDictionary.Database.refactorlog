@@ -5142,4 +5142,64 @@
     <Property Name="NewSchema" Value="ProofOfConcept" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="6e8f3afa-6992-453f-9ae4-fbd9dbba89ff" ChangeDateTime="03/02/2026 15:05:04">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="2e06ea3c-6944-4ce4-8970-8a3dbe549925" ChangeDateTime="03/02/2026 15:07:33">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="3697b48b-6e7e-4085-b4b1-95c8dfaa06bb" ChangeDateTime="03/02/2026 15:18:01">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchema]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="9adb3e69-84f7-4c66-a205-de9b74d68d43" ChangeDateTime="03/02/2026 15:22:56">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="d3042876-f17e-4648-a27e-9efcbce86960" ChangeDateTime="03/02/2026 15:23:10">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="e5df1460-eab2-4757-8721-5ce903124de9" ChangeDateTime="03/02/2026 15:23:26">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="5bb37059-1e22-43f0-84c2-319444522d93" ChangeDateTime="03/02/2026 15:24:25">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TransformDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="9d36466c-93e0-42d2-ae7f-905a171748a3" ChangeDateTime="03/02/2026 15:32:16">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b75d0ea5-aa08-4be5-af6a-5d040a84bcae" ChangeDateTime="03/02/2026 15:32:30">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="7dc8bc71-63de-4a39-99f9-aba104cd1c99" ChangeDateTime="03/02/2026 16:04:15">
+    <Property Name="ElementName" Value="[dbo].[TemplateModel]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>

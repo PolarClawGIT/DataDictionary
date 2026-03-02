@@ -14,5 +14,5 @@
 	CONSTRAINT [AK_TemplateObjectID] UNIQUE ([TemplateId] ASC, [ObjectId] ASC), -- For FK Refrences
 	CONSTRAINT [AK_TemplateOjbectName] UNIQUE ([TemplateId] ASC, [ParentObjectId] ASC, [ObjectMember] ASC),
 	CONSTRAINT [FK_TemplateObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
-	CONSTRAINT [FK_TemplateObjectParent] FOREIGN KEY ([ObjectId]) REFERENCES [ProofOfConcept].[TemplateObject] ([ObjectId]),
+	CONSTRAINT [FK_TemplateObjectParent] FOREIGN KEY ([ParentObjectId]) REFERENCES [ProofOfConcept].[TemplateObject] ([ObjectId]),
 )

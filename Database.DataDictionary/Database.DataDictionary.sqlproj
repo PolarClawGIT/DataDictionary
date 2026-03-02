@@ -118,7 +118,6 @@
     <Folder Include="AppGeneral\User Defined Data Types" />
     <Folder Include="AppLibrary\Functions" />
     <Folder Include="AppScript\Functions" />
-    <Folder Include="AppPOC" />
     <Folder Include="ProofOfConcept" />
     <Folder Include="ProofOfConcept\Tables" />
   </ItemGroup>
@@ -552,16 +551,14 @@
     <Build Include="AppScript\Triggers\trigTemplateFile.sql" />
     <Build Include="Security\Schema\Obsolete.sql" />
     <Build Include="Security\Schema\ProofOfConcept.sql" />
-    <Build Include="ProofOfConcept\Tables\Document.sql" />
-    <Build Include="ProofOfConcept\Tables\SchemaDefinition.sql" />
-    <Build Include="ProofOfConcept\Tables\SchemaNode.sql" />
-    <Build Include="ProofOfConcept\Tables\SchemaNodeOwner.sql" />
-    <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
     <Build Include="ProofOfConcept\Tables\Template.sql" />
     <Build Include="ProofOfConcept\Tables\TemplateDocument.sql" />
     <Build Include="ProofOfConcept\Tables\TemplateObject.sql" />
     <Build Include="ProofOfConcept\Tables\TemplateTransform.sql" />
-    <Build Include="ProofOfConcept\Tables\TransformDefinition.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateSchema.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateNode.sql" />
+    <Build Include="ProofOfConcept\Tables\TemplateNodeOwner.sql" />
+    <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
