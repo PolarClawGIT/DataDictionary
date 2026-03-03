@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 

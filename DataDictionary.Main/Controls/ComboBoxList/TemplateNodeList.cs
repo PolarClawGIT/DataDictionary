@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
+﻿using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.Resource;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;

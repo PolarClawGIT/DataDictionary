@@ -52,7 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Obsolete\" />
     <Folder Include="ProofOfConcept\" />
   </ItemGroup>
 

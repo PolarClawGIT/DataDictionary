@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
+﻿using DataDictionary.BusinessLayer.Obsolete;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 

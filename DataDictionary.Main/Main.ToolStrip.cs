@@ -2,7 +2,7 @@
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Resource.Enumerations;
 
