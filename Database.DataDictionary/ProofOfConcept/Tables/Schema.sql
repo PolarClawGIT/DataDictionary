@@ -1,4 +1,4 @@
-﻿CREATE TABLE [ProofOfConcept].[TemplateSchema]
+﻿CREATE TABLE [ProofOfConcept].[Schema]
 (	-- Defines an XSD
 	[SchemaId]				UniqueIdentifier Not Null CONSTRAINT [DF_SchemaId] DEFAULT (newid()),
 	[TemplateId]            UniqueIdentifier Not Null,
@@ -13,12 +13,12 @@
 	[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
 	[FileExtension]			[AppGeneral].[uddtFileExtension] Null, -- XML is expected
 	-- Temporal History Support
-	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TemplateSchema_SysStart] DEFAULT (sysdatetime()),
-	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TemplateSchema_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Schema_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Schema_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_TemplateSchema] PRIMARY KEY CLUSTERED ([SchemaId] ASC),
-	CONSTRAINT [AK_TemplateSchema] UNIQUE ([TemplateId] ASC, [SchemaId] ASC), -- Used by FK's
-	CONSTRAINT [AK_TemplateSchemaTitle] UNIQUE ([SchemaTitle] ASC),
-	CONSTRAINT [FK_TemplateSchemaTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
+	CONSTRAINT [PK_Schema] PRIMARY KEY CLUSTERED ([SchemaId] ASC),
+	CONSTRAINT [AK_Schema] UNIQUE ([TemplateId] ASC, [SchemaId] ASC), -- Used by FK's
+	CONSTRAINT [AK_SchemaTitle] UNIQUE ([SchemaTitle] ASC),
+	CONSTRAINT [FK_SchemaTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
 )

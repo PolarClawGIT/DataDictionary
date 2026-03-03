@@ -1,4 +1,4 @@
-﻿CREATE TABLE [ProofOfConcept].[TemplateTransform]
+﻿CREATE TABLE [ProofOfConcept].[Transform]
 (	-- Defines an XSLT
 	[TransformId]			UniqueIdentifier Not Null CONSTRAINT [DF_TransformId] DEFAULT (newid()),
 	[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
@@ -14,12 +14,12 @@
 	[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
 	[FileExtension]			[AppGeneral].[uddtFileExtension] Null, -- XML, TXT, SQL, CS, VB, MD ...
 	-- Temporal History Support
-	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_TemplateTransform_SysStart] DEFAULT (sysdatetime()),
-	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_TemplateTransform_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_Transform_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_Transform_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_TemplateTransform] PRIMARY KEY CLUSTERED ([TransformId] ASC),
-	CONSTRAINT [AK_TemplateTransform] UNIQUE ([TemplateId] ASC, [TransformId] ASC), -- Used by FK's
-	CONSTRAINT [FK_TemplateTransformTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
-	CONSTRAINT [FK_TemplateTransformSchema] FOREIGN KEY ([TemplateId], [SchemaId]) REFERENCES [ProofOfConcept].[TemplateSchema] ([TemplateId], [SchemaId]),
+	CONSTRAINT [PK_Transform] PRIMARY KEY CLUSTERED ([TransformId] ASC),
+	CONSTRAINT [AK_Transform] UNIQUE ([TemplateId] ASC, [TransformId] ASC), -- Used by FK's
+	CONSTRAINT [FK_TransformTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
+	CONSTRAINT [FK_TransformSchema] FOREIGN KEY ([TemplateId], [SchemaId]) REFERENCES [ProofOfConcept].[Schema] ([TemplateId], [SchemaId]),
 )

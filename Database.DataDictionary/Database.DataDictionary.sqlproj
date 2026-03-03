@@ -552,12 +552,12 @@
     <Build Include="Security\Schema\Obsolete.sql" />
     <Build Include="Security\Schema\ProofOfConcept.sql" />
     <Build Include="ProofOfConcept\Tables\Template.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateDocument.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateObject.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateTransform.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateSchema.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateNode.sql" />
-    <Build Include="ProofOfConcept\Tables\TemplateNodeOwner.sql" />
+    <Build Include="ProofOfConcept\Tables\Document.sql" />
+    <Build Include="ProofOfConcept\Tables\DataObject.sql" />
+    <Build Include="ProofOfConcept\Tables\Transform.sql" />
+    <Build Include="ProofOfConcept\Tables\Schema.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNode.sql" />
+    <Build Include="ProofOfConcept\Tables\SchemaNodeOwner.sql" />
     <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
   </ItemGroup>
   <ItemGroup>

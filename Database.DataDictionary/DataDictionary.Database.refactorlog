@@ -5202,4 +5202,39 @@
     <Property Name="NewSchema" Value="ProofOfConcept" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="c29cb9c9-3e6f-4e2d-ba37-f277721af90c" ChangeDateTime="03/03/2026 16:54:08">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateSchema]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Schema]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="631cf753-d7d9-407b-b28f-450379a56349" ChangeDateTime="03/03/2026 16:56:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[SchemaNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="af460e2b-b148-40af-a723-4e63b43549d9" ChangeDateTime="03/03/2026 16:57:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[SchemaNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="368d02ab-9543-4e91-b050-7092346789f9" ChangeDateTime="03/03/2026 16:58:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateTransform]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Transform]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d23a64a1-bb7e-4a74-a142-ca3eed006164" ChangeDateTime="03/03/2026 17:01:31">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DataObject]" />
+  </Operation>
 </Operations>
