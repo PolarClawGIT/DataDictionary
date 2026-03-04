@@ -120,6 +120,7 @@
     <Folder Include="AppScript\Functions" />
     <Folder Include="ProofOfConcept" />
     <Folder Include="ProofOfConcept\Tables" />
+    <Folder Include="ProofOfConcept\User Defined Table Types" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -559,6 +560,13 @@
     <Build Include="ProofOfConcept\Tables\SchemaNode.sql" />
     <Build Include="ProofOfConcept\Tables\SchemaNodeOwner.sql" />
     <Build Include="ProofOfConcept\Tables\ScriptModel.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttTemplate.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttSchema.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttSchemaNode.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttSchemaNodeOwner.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttDocument.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttTransform.sql" />
+    <Build Include="ProofOfConcept\User Defined Table Types\udttDataObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

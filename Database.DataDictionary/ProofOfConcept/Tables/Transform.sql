@@ -3,7 +3,7 @@
 	[TransformId]			UniqueIdentifier Not Null CONSTRAINT [DF_TransformId] DEFAULT (newid()),
 	[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
 	[TemplateId]            UniqueIdentifier Not Null,
-	[SchemaId]				UniqueIdentifier Not Null, -- Input
+	[SchemaId]				UniqueIdentifier Null, -- Input, Null = No Schema, everything must be hand mapped.
 	-- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	[TransformScript]		XML Null, -- Can be imported/exported to file. Null = Look for the File
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null, -- Null = Looks for Script

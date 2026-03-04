@@ -1,6 +1,9 @@
 ﻿CREATE TABLE [ProofOfConcept].[Document]
 (	
 	[DocumentId]            UniqueIdentifier Not Null CONSTRAINT [DF_DocumentId] DEFAULT (newid()),
+	-- Note: There are multiple ways to determine the [DocumentId]
+	-- perfered: [TemplateId] & ([SchemaId] or [TransformId]) & [ObjectPath] (Updates allowed)
+	-- If [SchemaId] or [TransformId] are both Null: [TemplateId] & [RootFolder] & [RelativePath] & [FileName] (Updates not possible)
 	[TemplateId]            UniqueIdentifier Not Null,
 	-- Supertype
 	-- all Null: (Input, XML, fixed)
@@ -20,6 +23,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED ([DocumentId] ASC),
+	CONSTRAINT [AK_DocumentName] UNIQUE ([TemplateId] ASC, [RootFolder] ASC, [RelativePath] ASC, [FileName] ASC),
 	CONSTRAINT [FK_DocumentTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
 	CONSTRAINT [FK_DocumentObject] FOREIGN KEY ([TemplateId], [ObjectId]) REFERENCES [ProofOfConcept].[DataObject] ([TemplateId], [ObjectId]),
 	CONSTRAINT [FK_DocumentTransform] FOREIGN KEY ([TemplateId], [TransformId]) REFERENCES [ProofOfConcept].[Transform] ([TemplateId], [TransformId]),

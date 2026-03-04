@@ -5,7 +5,7 @@
 	[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,
 	-- Root Node Behavior
 	[RootNodeName]			[AppGeneral].[uddtMember] Null, -- Name of the Root Node. Name of the Object is used if Null.
-	[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL,  -- The Scope to have a document break on. Null = no break (single file).
+	[BreakOnScope]			[AppGeneral].[uddtScopeName] Null,  -- The Scope to have a document break on. Null = no break (single file).
 	-- Folder Patern for the files (Output for XSD, Input for XSLT)
 	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
 	[RelativePath]			[AppGeneral].[uddtFilePath] Null,
@@ -19,6 +19,6 @@
 	-- Keys
 	CONSTRAINT [PK_Schema] PRIMARY KEY CLUSTERED ([SchemaId] ASC),
 	CONSTRAINT [AK_Schema] UNIQUE ([TemplateId] ASC, [SchemaId] ASC), -- Used by FK's
-	CONSTRAINT [AK_SchemaTitle] UNIQUE ([SchemaTitle] ASC),
+	CONSTRAINT [AK_SchemaTitle] UNIQUE ([TemplateId], [SchemaTitle] ASC),
 	CONSTRAINT [FK_SchemaTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [ProofOfConcept].[Template] ([TemplateId]),
 )
