@@ -121,6 +121,8 @@
     <Folder Include="ProofOfConcept" />
     <Folder Include="ProofOfConcept\Tables" />
     <Folder Include="ProofOfConcept\User Defined Table Types" />
+    <Folder Include="ProofOfConcept\Functions" />
+    <Folder Include="ProofOfConcept\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -492,7 +494,6 @@
     <Build Include="AppGeneral\User Defined Data Types\uddtPath.sql" />
     <Build Include="AppLibrary\Views\LibraryMember.Hs.sql" />
     <Build Include="AppLibrary\Views\LibrarySourceHs.sql" />
-    <Build Include="AppScript\Views\Template.Hs.sql" />
     <Build Include="AppScript\Triggers\trigScriptingNameSpace.sql" />
     <Build Include="AppSecurity\Functions\funcScriptingAuthorization.sql" />
     <Build Include="AppSecurity\Policy\policyScripting.sql" />
@@ -508,9 +509,6 @@
     <Build Include="AppScript\User Defined Table Types\udttDataObject.sql" />
     <Build Include="AppScript\Functions\funcObjectNameId.sql" />
     <Build Include="AppScript\Functions\funcObjectPath.sql" />
-    <Build Include="AppScript\Views\DataSource.Hs.sql" />
-    <Build Include="AppScript\Views\DataObject.Hs.sql" />
-    <Build Include="AppScript\Views\TemplateInput.Hs.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTemplateData.sql" />
     <Build Include="AppScript\Stored Procedures\procGetDataSource.sql" />
     <Build Include="AppScript\Stored Procedures\procGetDataObject.sql" />
@@ -530,14 +528,11 @@
     <Build Include="AppScript\User Defined Table Types\udttTemplateNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateNodeOwner.sql" />
-    <Build Include="AppScript\Views\TemplateNodeOwner.Hs.sql" />
-    <Build Include="AppScript\Views\TemplateNode.Hs.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateNode.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateNodeOwner.sql" />
     <Build Include="AppGeneral\Functions\funcCreatePath.sql" />
     <Build Include="AppScript\Tables\Document.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDocument.sql" />
-    <Build Include="AppScript\Views\Document.Hs.sql" />
     <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
     <Build Include="AppScript\Triggers\trigDocument.sql" />
@@ -567,6 +562,22 @@
     <Build Include="ProofOfConcept\User Defined Table Types\udttDocument.sql" />
     <Build Include="ProofOfConcept\User Defined Table Types\udttTransform.sql" />
     <Build Include="ProofOfConcept\User Defined Table Types\udttDataObject.sql" />
+    <Build Include="ProofOfConcept\Functions\funcObjectNameId.sql" />
+    <Build Include="ProofOfConcept\Functions\funcObjectPath.sql" />
+    <Build Include="ProofOfConcept\Views\viewDataObject.sql" />
+    <Build Include="ProofOfConcept\Views\viewDocument.sql" />
+    <Build Include="ProofOfConcept\Views\viewSchema.sql" />
+    <Build Include="ProofOfConcept\Views\viewSchemaNode.sql" />
+    <Build Include="ProofOfConcept\Views\viewTemplate.sql" />
+    <Build Include="ProofOfConcept\Views\viewTransform.sql" />
+    <Build Include="ProofOfConcept\Views\viewSchemaNodeOwner.sql" />
+    <Build Include="AppScript\Views\DataObject.Hs.sql" />
+    <Build Include="AppScript\Views\DataSource.Hs.sql" />
+    <Build Include="AppScript\Views\Document.Hs.sql" />
+    <Build Include="AppScript\Views\Template.Hs.sql" />
+    <Build Include="AppScript\Views\TemplateInput.Hs.sql" />
+    <Build Include="AppScript\Views\TemplateNode.Hs.sql" />
+    <Build Include="AppScript\Views\TemplateNodeOwner.HS.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
