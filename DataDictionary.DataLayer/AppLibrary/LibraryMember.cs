@@ -5,19 +5,22 @@
     /// </summary>  
     static class LibraryMember
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(LibraryMember));
+
         /// <summary>  
         /// The stored procedure for retrieving library member information.  
         /// </summary>  
-        public const string GetProcedure = "[AppLibrary].[procGetLibraryMember]";
+        public readonly static String GetProcedure = schema.FullName("[procGetLibraryMember]");
 
         /// <summary>  
         /// The stored procedure for setting library member information.  
         /// </summary>  
-        public const string SetProcedure = "[AppLibrary].[procSetLibraryMember]";
+        public readonly static String SetProcedure = schema.FullName("[procSetLibraryMember]");
 
         /// <summary>  
         /// The user-defined table type for library members.  
         /// </summary>  
-        public const string TableType = "[AppLibrary].[udttLibraryMember]";
+        public readonly static String TableType = schema.FullName("[udttLibraryMember]");
     }
 }

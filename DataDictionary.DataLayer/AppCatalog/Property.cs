@@ -33,24 +33,27 @@
     /// </summary>  
     static class Property
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Property));
+
         /// <summary>  
         /// The stored procedure for retrieving a property.  
         /// </summary>  
-        public const string GetProcedure = "[AppCatalog].[procGetProperty]";
+        public readonly static String GetProcedure = schema.FullName("[procGetProperty]");
 
         /// <summary>  
         /// The parameter name for the property ID in stored procedures.  
         /// </summary>  
-        public const string PropertyId = "@PropertyId";
+        public readonly static String PropertyId = "@PropertyId";
 
         /// <summary>  
         /// The stored procedure for setting a property.  
         /// </summary>  
-        public const string SetProcedure = "[AppCatalog].[procSetProperty]";
+        public readonly static String SetProcedure = schema.FullName("[procSetProperty]");
 
         /// <summary>  
         /// The table type used for properties.  
         /// </summary>  
-        public const string TableType = "[AppCatalog].[udttProperty]";
+        public readonly static String TableType = schema.FullName("[udttProperty]");
     }
 }

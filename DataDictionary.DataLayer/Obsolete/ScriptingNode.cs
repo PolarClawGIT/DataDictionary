@@ -6,19 +6,22 @@
     [Obsolete("replace", true)]
     static class ScriptingNode
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(ScriptingNode));
+
         /// <summary>  
         /// The stored procedure used to retrieve scripting node data.  
         /// </summary>  
-        public const String GetProcedure = "[AppScript].[procGetScriptingNode]";
+        public readonly static String GetProcedure = schema.FullName("[procGetScriptingNode]");
 
         /// <summary>  
         /// The stored procedure used to set scripting node data.  
         /// </summary>  
-        public const String SetProcedure = "[AppScript].[procSetScriptingNode]";
+        public readonly static String SetProcedure = schema.FullName("[procSetScriptingNode]");
 
         /// <summary>  
         /// The user-defined table type for scripting node data.  
         /// </summary>  
-        public const String TableType = "[AppScript].[udttScriptingNode]";
+        public readonly static String TableType = schema.FullName("[udttScriptingNode]");
     }
 }

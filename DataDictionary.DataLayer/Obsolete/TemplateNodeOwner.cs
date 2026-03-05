@@ -16,19 +16,22 @@ namespace DataDictionary.DataLayer.Obsolete
     [Obsolete]
     static class TemplateNodeOwner
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(TemplateNodeOwner));
+
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template NodeOwner.  
         /// </summary>  
-        public const String GetProcedure = "[AppScript].[procGetTemplateNodeOwner]";
+        public readonly static String GetProcedure = schema.FullName("[procGetTemplateNodeOwner]");
 
         /// <summary>  
         /// The stored procedure used to set scripting Template NodeOwner.  
         /// </summary>  
-        public const String SetProcedure = "[AppScript].[procSetTemplateNodeOwner]";
+        public readonly static String SetProcedure = schema.FullName("[procSetTemplateNodeOwner]");
 
         /// <summary>  
         /// The user-defined table type for scripting Template NodeOwner.  
         /// </summary>  
-        public const String TableType = "[AppScript].[udttTemplateNodeOwner]";
+        public readonly static String TableType = schema.FullName("[udttTemplateNodeOwner]");
     }
 }

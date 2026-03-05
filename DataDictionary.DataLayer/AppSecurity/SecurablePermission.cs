@@ -5,19 +5,22 @@
     /// </summary>  
     static class SecurablePermission
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(SecurablePermission));
+
         /// <summary>  
         /// The stored procedure used to retrieve securable permissions.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetSecurablePermission]";
+        public readonly static String GetProcedure = schema.FullName("[procGetSecurablePermission]");
 
         /// <summary>  
         /// The stored procedure used to set securable permissions.  
         /// </summary>  
-        public const String SetProcedure = "[AppSecurity].[procSetSecurablePermission]";
+        public readonly static String SetProcedure = schema.FullName("[procSetSecurablePermission]");
 
         /// <summary>  
         /// The table type used for securable permissions.  
         /// </summary>  
-        public const String TableType = "[AppSecurity].[udttSecurablePermission]";
+        public readonly static String TableType = schema.FullName("[udttSecurablePermission]");
     }
 }

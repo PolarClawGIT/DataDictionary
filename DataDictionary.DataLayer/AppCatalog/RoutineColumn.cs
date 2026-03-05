@@ -37,19 +37,22 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>  
     static class RoutineColumn
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(RoutineColumn));
+
         /// <summary>  
         /// Stored procedure to retrieve RoutineColumn data.  
         /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetRoutineColumn]";
+        public readonly static String GetProcedure = schema.FullName("[procGetRoutineColumn]");
 
         /// <summary>  
         /// Stored procedure to set RoutineColumn data.  
         /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetRoutineColumn]";
+        public readonly static String SetProcedure = schema.FullName("[procSetRoutineColumn]");
 
         /// <summary>  
         /// User-defined table type for RoutineColumn.  
         /// </summary>  
-        public const String TableType = "[AppCatalog].[udttRoutineColumn]";
+        public readonly static String TableType = schema.FullName("[udttRoutineColumn]");
     }
 }

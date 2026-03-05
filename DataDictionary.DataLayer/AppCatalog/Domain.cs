@@ -16,24 +16,27 @@
     /// </summary>  
     static class Domain
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Catalog));
+
         /// <summary>  
         /// Identifier for the Domain  
         /// </summary>  
-        public const String DomainId = "@DomainId";
+        public readonly static String DomainId = "@DomainId";
 
         /// <summary>  
         /// Stored procedure to retrieve Domain information  
         /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetDomain]";
+        public readonly static String GetProcedure = schema.FullName("[procGetDomain]");
 
         /// <summary>  
         /// Stored procedure to set Domain information  
         /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetDomain]";
+        public readonly static String SetProcedure = schema.FullName("[procSetDomain]");
 
         /// <summary>  
         /// Table type for Domain  
         /// </summary>  
-        public const String TableType = "[AppCatalog].[udttDomain]";
+        public readonly static String TableType = schema.FullName("[udttDomain]");
     }
 }

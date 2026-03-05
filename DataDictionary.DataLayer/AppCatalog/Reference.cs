@@ -61,24 +61,27 @@
     /// </summary>
     static class Reference
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Reference));
+
         /// <summary>
         /// The stored procedure for retrieving references.
         /// </summary>
-        public const String GetProcedure = "[AppCatalog].[procGetReference]";
+        public readonly static String GetProcedure = schema.FullName("[procGetReference]");
 
         /// <summary>
         /// The parameter name for the reference ID.
         /// </summary>
-        public const String ReferenceId = "@ReferenceId";
+        public readonly static String ReferenceId = "@ReferenceId";
 
         /// <summary>
         /// The stored procedure for setting references.
         /// </summary>
-        public const String SetProcedure = "[AppCatalog].[procSetReference]";
+        public readonly static String SetProcedure = schema.FullName("[procSetReference]");
 
         /// <summary>
         /// The user-defined table type for references.
         /// </summary>
-        public const String TableType = "[AppCatalog].[udttReference]";
+        public readonly static String TableType = schema.FullName("[udttReference]");
     }
 }

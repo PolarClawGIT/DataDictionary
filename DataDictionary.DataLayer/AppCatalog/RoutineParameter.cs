@@ -12,19 +12,22 @@
     /// </summary>  
     static class RoutineParameter
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(RoutineParameter));
+
         /// <summary>  
         /// The stored procedure to retrieve routine parameters.  
         /// </summary>  
-        public const string GetProcedure = "[AppCatalog].[procGetRoutineParameter]";
+        public readonly static String GetProcedure = schema.FullName("[procGetRoutineParameter]");
 
         /// <summary>  
         /// The stored procedure to set routine parameters.  
         /// </summary>  
-        public const string SetProcedure = "[AppCatalog].[procSetRoutineParameter]";
+        public readonly static String SetProcedure = schema.FullName("[procSetRoutineParameter]");
 
         /// <summary>  
         /// The table type used for routine parameters.  
         /// </summary>  
-        public const string TableType = "[AppCatalog].[udttRoutineParameter]";
+        public readonly static String TableType = schema.FullName("[udttRoutineParameter]");
     }
 }

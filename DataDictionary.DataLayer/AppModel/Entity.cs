@@ -16,24 +16,27 @@
     /// </summary>  
     static class Entity
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Entity));
+
         /// <summary>  
         /// Represents the parameter name for the Entity ID in database operations.  
         /// </summary>  
-        public const String EntityId = "@EntityId";
+        public readonly static String EntityId = "@EntityId";
 
         /// <summary>  
         /// Represents the stored procedure name for retrieving an Entity.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntity]";
+        public readonly static String GetProcedure = schema.FullName("[procGetEntity]");
 
         /// <summary>  
         /// Represents the stored procedure name for setting an Entity.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntity]";
+        public readonly static String SetProcedure = schema.FullName("[procSetEntity]");
 
         /// <summary>  
         /// Represents the table type name for Entity operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntity]";
+        public readonly static String TableType = schema.FullName("[udttEntity]");
     }
 }

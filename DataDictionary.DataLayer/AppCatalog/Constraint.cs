@@ -22,24 +22,27 @@
     /// </summary>  
     static class Constraint
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Constraint));
+
         /// <summary>  
         /// Identifier for the constraint.  
         /// </summary>  
-        public const String ConstraintId = "@ConstraintId";
+        public readonly static String ConstraintId = "@ConstraintId";
 
         /// <summary>  
         /// Stored procedure to retrieve constraint information.  
         /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetConstraint]";
+        public readonly static String GetProcedure = schema.FullName("[procGetConstraint]");
 
         /// <summary>  
         /// Stored procedure to set constraint information.  
         /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetConstraint]";
+        public readonly static String SetProcedure = schema.FullName("[procSetConstraint]");
 
         /// <summary>  
         /// Table type for constraints.  
         /// </summary>  
-        public const String TableType = "[AppCatalog].[udttConstraint]";
+        public readonly static String TableType = schema.FullName("[udttConstraint]");
     }
 }

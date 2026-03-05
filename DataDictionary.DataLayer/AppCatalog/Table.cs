@@ -24,29 +24,32 @@
     /// </summary>
     static class Table
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Table));
+
         /// <summary>
         /// The stored procedure used to retrieve table information.
         /// </summary>
-        public const String GetProcedure = "[AppCatalog].[procGetTable]";
+        public readonly static String GetProcedure = schema.FullName("[procGetTable]");
 
         /// <summary>
         /// A list of system tables that should be excluded from certain operations.
         /// </summary>
-        public const String IsSystem = "dbo.__RefactorLog, dbo.sysdiagrams, INFORMATION_SCHEMA.*, sys.*";
+        public readonly static String IsSystem = "dbo.__RefactorLog, dbo.sysdiagrams, INFORMATION_SCHEMA.*, sys.*";
 
         /// <summary>
         /// The stored procedure used to set table information.
         /// </summary>
-        public const String SetProcedure = "[AppCatalog].[procSetTable]";
+        public readonly static String SetProcedure = schema.FullName("[procSetTable]");
 
         /// <summary>
         /// The parameter name for the table ID.
         /// </summary>
-        public const String TableId = "@TableId";
+        public readonly static String TableId = "@TableId";
 
         /// <summary>
         /// The user-defined table type used in operations.
         /// </summary>
-        public const String TableType = "[AppCatalog].[udttTable]";
+        public readonly static String TableType = schema.FullName("[udttTable]");
     }
 }

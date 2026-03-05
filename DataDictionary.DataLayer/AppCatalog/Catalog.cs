@@ -33,39 +33,42 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>
     static class Catalog
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Catalog));
+
         /// <summary>
         /// Identifier for the Catalog.
         /// </summary>
-        public const String CatalogId = "@CatalogId";
+        public readonly static String CatalogId = "@CatalogId";
 
         /// <summary>
         /// Stored procedure to retrieve the Catalog.
         /// </summary>
-        public const String GetProcedure = "[AppCatalog].[procGetCatalog]";
+        public readonly static String GetProcedure = schema.FullName("[procGetCatalog]");
 
         /// <summary>
         /// Names of system databases.
         /// </summary>
-        public const String IsSystem = "tempdb, master, msdb, model";
+        public readonly static String IsSystem = "tempdb, master, msdb, model";
 
         /// <summary>
         /// Substring indicating a LocalDB instance.
         /// </summary>
-        public const String LocalDbContains = "\\LOCALDB";
+        public readonly static String LocalDbContains = "\\LOCALDB";
 
         /// <summary>
         /// Name of the default LocalDB instance.
         /// </summary>
-        public const String LocalDbName = "(LocalDb)\\MSSQLLocalDb";
+        public readonly static String LocalDbName = "(LocalDb)\\MSSQLLocalDb";
 
         /// <summary>
         /// Stored procedure to set the Catalog.
         /// </summary>
-        public const String SetProcedure = "[AppCatalog].[procSetCatalog]";
+        public readonly static String SetProcedure = schema.FullName("[procSetCatalog]");
 
         /// <summary>
         /// Table type for the Catalog.
         /// </summary>
-        public const String TableType = "[AppCatalog].[udttCatalog]";
+        public readonly static String TableType = schema.FullName("[udttCatalog]");
     }
 }

@@ -16,19 +16,22 @@
     /// </summary>  
     static class EntitySubjectArea
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(EntitySubjectArea));
+
         /// <summary>  
         /// The stored procedure used to retrieve the Entity Subject Area.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntitySubjectArea]";
+        public readonly static String GetProcedure = schema.FullName("[procGetEntitySubjectArea]");
 
         /// <summary>  
         /// The stored procedure used to set the Entity Subject Area.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntitySubjectArea]";
+        public readonly static String SetProcedure = schema.FullName("[procSetEntitySubjectArea]");
 
         /// <summary>  
         /// The table type used for Entity Subject Area operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntitySubjectArea]";
+        public readonly static String TableType = schema.FullName("[udttEntitySubjectArea]");
     }
 }

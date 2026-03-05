@@ -87,24 +87,27 @@ namespace DataDictionary.DataLayer.Obsolete
     /// </summary>  
     static class Template
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Template));
+
         /// <summary>  
         /// The parameter name for the Scripting Template ID.  
         /// </summary>  
-        public const String TemplateId = "@TemplateId";
+        public readonly static String TemplateId = "@TemplateId";
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template.  
         /// </summary>  
-        public const String GetProcedure = "[AppScript].[procGetTemplate]";
+        public readonly static String GetProcedure = schema.FullName("[procGetTemplate]");
 
         /// <summary>  
         /// The stored procedure used to set scripting Template.  
         /// </summary>  
-        public const String SetProcedure = "[AppScript].[procSetTemplate]";
+        public readonly static String SetProcedure = schema.FullName("[procSetTemplate]");
 
         /// <summary>  
         /// The user-defined table type for scripting Template.  
         /// </summary>  
-        public const String TableType = "[AppScript].[udttTemplate]";
+        public readonly static String TableType = schema.FullName("[udttTemplate]");
     }
 }

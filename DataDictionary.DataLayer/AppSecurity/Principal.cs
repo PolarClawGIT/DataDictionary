@@ -5,34 +5,37 @@
     /// </summary>  
     static class Principal
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(Principal));
+
         /// <summary>  
         /// The stored procedure used to retrieve Principal information.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetPrincipal]";
+        public readonly static String GetProcedure = schema.FullName("[procGetPrincipal]");
 
         /// <summary>  
         /// Parameter indicating whether the Principal is current.  
         /// </summary>  
-        public const String IsCurrent = "@IsCurrent";
+        public readonly static String IsCurrent = "@IsCurrent";
 
         /// <summary>  
         /// Parameter representing the Principal's unique identifier.  
         /// </summary>  
-        public const String PrincipalId = "@PrincipalId";
+        public readonly static String PrincipalId = "@PrincipalId";
 
         /// <summary>  
         /// Parameter representing the Principal's login name.  
         /// </summary>  
-        public const String PrincipalLogin = "@PrincipalLogin";
+        public readonly static String PrincipalLogin = "@PrincipalLogin";
 
         /// <summary>  
         /// The stored procedure used to set Principal information.  
         /// </summary>  
-        public const String SetProcedure = "[AppSecurity].[procSetPrincipal]";
+        public readonly static String SetProcedure = schema.FullName("[procSetPrincipal]");
 
         /// <summary>  
         /// The table type used for Principal operations.  
         /// </summary>  
-        public const String TableType = "[AppSecurity].[udttPrincipal]";
+        public readonly static String TableType = schema.FullName("[udttPrincipal]");
     }
 }

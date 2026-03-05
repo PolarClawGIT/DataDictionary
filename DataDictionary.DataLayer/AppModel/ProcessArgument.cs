@@ -5,19 +5,22 @@
     /// </summary>  
     static class ProcessArgument
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(ProcessArgument));
+
         /// <summary>  
         /// The stored procedure used to retrieve process arguments.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetProcessArgument]";
+        public readonly static String GetProcedure = schema.FullName("[procGetProcessArgument]");
 
         /// <summary>  
         /// The stored procedure used to set process arguments.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetProcessArgument]";
+        public readonly static String SetProcedure = schema.FullName("[procSetProcessArgument]");
 
         /// <summary>  
         /// The user-defined table type for process arguments.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttProcessArgument]";
+        public readonly static String TableType = schema.FullName("[udttProcessArgument]");
     }
 }

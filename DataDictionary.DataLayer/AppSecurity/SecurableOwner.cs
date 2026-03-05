@@ -5,19 +5,22 @@
     /// </summary>  
     static class SecurableOwner
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(SecurableOwner));
+
         /// <summary>  
         /// The stored procedure used to retrieve securable owner information.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetSecurableOwner]";
+        public readonly static String GetProcedure = schema.FullName("[procGetSecurableOwner]");
 
         /// <summary>  
         /// The stored procedure used to set securable owner information.  
         /// </summary>  
-        public const String SetProcedure = "[AppSecurity].[procSetSecurableOwner]";
+        public readonly static String SetProcedure = schema.FullName("[procSetSecurableOwner]");
 
         /// <summary>  
         /// The user-defined table type for securable owner operations.  
         /// </summary>  
-        public const String TableType = "[AppSecurity].[udttSecurableOwner]";
+        public readonly static String TableType = schema.FullName("[udttSecurableOwner]");
     }
 }

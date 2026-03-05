@@ -15,19 +15,22 @@
     /// </summary>  
     static class ConstraintColumn
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly SchemaName schema = new SchemaName(typeof(ConstraintColumn));
+
         /// <summary>  
         /// The stored procedure to retrieve constraint column data.  
         /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetConstraintColumn]";
+        public readonly static String GetProcedure = schema.FullName("[procGetConstraintColumn]");
 
         /// <summary>  
         /// The stored procedure to set constraint column data.  
         /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetConstraintColumn]";
+        public readonly static String SetProcedure = schema.FullName("[procSetConstraintColumn]");
 
         /// <summary>  
         /// The user-defined table type for constraint column data.  
         /// </summary>  
-        public const String TableType = "[AppCatalog].[udttConstraintColumn]";
+        public readonly static String TableType = schema.FullName("[udttConstraintColumn]");
     }
 }
