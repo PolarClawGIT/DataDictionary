@@ -20,7 +20,7 @@ With [Securable] As (
 	Union
 	Select	[TemplateId] As [SecurableId],
 			[TemplateTitle] As [SecurableTitle]
-	From	[AppScript].[Template]
+	From	[Obsolete].[Template]
 	/* Not Supported
 	Union
 	Select	[AttributeId] As [ObjectId],

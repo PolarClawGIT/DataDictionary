@@ -22,7 +22,7 @@ With [Authorization] As (
 				When [IsApplication] = 0 And [IsDbWriter] = 1 Then 1
 				When [IsApplication] = 1 And [IsScriptAdmin] = 1 Then 1
 				When [IsApplication] = 1 And [IsScriptOwner] = 1 And [HasOwner] = 0 Then 1
-				When @ScriptId Not In (Select [TemplateId] From [AppScript].[Template] Union Select [DataSourceId] From [AppScript].[DataSource]) Then 0
+				When @ScriptId Not In (Select [TemplateId] From [Obsolete].[Template] Union Select [DataSourceId] From [Obsolete].[DataSource]) Then 0
 				When [IsApplication] = 1 And [IsOwner] = 1 Then 1
 				When [IsApplication] = 1 And [IsGrant] = 1 And [IsDeny] = 0 Then 1
 				Else 0 End)

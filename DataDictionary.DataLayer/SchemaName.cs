@@ -26,7 +26,7 @@
             schemaName = (nameSpace.Namespace ?? String.Empty).Split('.').LastOrDefault();
 
             //TODO: Temporary Override for the Obsolete NameSpace.
-            if (schemaName is "Obsolete") { schemaName = "AppScript"; }
+            //if (schemaName is "Obsolete") { schemaName = "AppScript"; }
         }
 
         /// <summary>

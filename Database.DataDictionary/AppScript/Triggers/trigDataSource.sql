@@ -1,8 +1,0 @@
-﻿CREATE TRIGGER [AppScript].[trigDataSource]
-	ON [AppScript].[DataSource]
-	FOR DELETE, INSERT, UPDATE
-	AS
-	BEGIN
-	-- Set Transaction Log
-	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
-	END
