@@ -123,6 +123,12 @@
     <Folder Include="Obsolete\Triggers" />
     <Folder Include="Obsolete\User Defined Table Types" />
     <Folder Include="Obsolete\Views" />
+    <Folder Include="AppScript\Tables" />
+    <Folder Include="AppScript\Functions" />
+    <Folder Include="AppScript\Stored Procedures" />
+    <Folder Include="AppScript\Triggers" />
+    <Folder Include="AppScript\User Defined Table Types" />
+    <Folder Include="AppScript\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -130,6 +136,7 @@
     <None Include="AppSecurity\SecurityNotes.sql" />
     <None Include="AppSecurity\DefaultSecurityRoles.sql" />
     <None Include="AppGeneral\DefaultHelpText.sql" />
+    <None Include="AppScript\Template Unit Test.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\DataDictionaryApp.sql" />
@@ -578,6 +585,16 @@
     <Build Include="Obsolete\Views\TemplateInput.Hs.sql" />
     <Build Include="Obsolete\Views\TemplateNode.Hs.sql" />
     <Build Include="Obsolete\Views\TemplateNodeOwner.HS.sql" />
+    <Build Include="AppScript\Tables\Template.sql" />
+    <Build Include="AppScript\Tables\TemplateModel.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTemplate.sql" />
+    <Build Include="AppScript\Views\Template.HS.sql" />
+    <Build Include="AppScript\Triggers\trigTemplate.sql" />
+    <Build Include="AppScript\Triggers\trigTemplateModel.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTemplate.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTemplate.sql" />
+    <Build Include="HsScript\Tables\Template.sql" />
+    <Build Include="HsScript\Tables\TemplateModel.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

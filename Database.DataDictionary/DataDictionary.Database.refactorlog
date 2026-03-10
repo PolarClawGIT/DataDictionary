@@ -5489,4 +5489,16 @@
     <Property Name="NewSchema" Value="Obsolete" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="169dbd04-598f-4b57-8edf-3d7e65128b43" ChangeDateTime="03/09/2026 15:32:25">
+    <Property Name="ElementName" Value="[dbo].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppScript" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8f739f92-7ee4-4dfd-88f1-60a37695f40e" ChangeDateTime="03/09/2026 15:51:06">
+    <Property Name="ElementName" Value="[dbo].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="HsScript" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
 </Operations>
