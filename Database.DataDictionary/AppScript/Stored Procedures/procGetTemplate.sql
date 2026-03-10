@@ -18,11 +18,11 @@ Select	[TemplateId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[TemplateHs] D
+From	[AppScript].[TemplateHs] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (
 			Select	[ModelId]
-			From	[AppScript].[TemplateModel] -- TODO: For System_Time As of @AsOfUtcDate
+			From	[AppScript].[TemplateModel] For System_Time As of @AsOfUtcDate
 			Where	D.[TemplateId] = [TemplateId]))
 GO
