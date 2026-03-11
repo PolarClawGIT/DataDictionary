@@ -2,54 +2,78 @@
 	Begin Transaction;
 	Set NoCount On;
 
+	Declare @ModelId UniqueIdentifier = (Select [ModelId] From [AppModel].[Model] Where [ModelTitle] = 'Unit Test')
 
-	Declare @ModelId UniqueIdentifier = (Select [ModelId] From [AppModel].[Model] Where [ModelTitle] = 'Unit Test'),
-			@TemplateId UniqueIdentifier = Null,
-			@Data [AppScript].[udttTemplate],
+	-- Testing Template --
+	Declare	@TemplateId UniqueIdentifier = Null,
+			@Template [AppScript].[udttTemplate],
 			@Empty [AppScript].[udttTemplate]
 
-	Insert Into @Data ([TemplateId], [TemplateTitle], [TemplateDescription])
+	Print '-- Validate [udttTemplate] --'
+	Insert Into @Template
+	Exec [AppScript].[procGetTemplate]
+	Print FormatMessage ('udttTemplate: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into @Template ([TemplateId], [TemplateTitle], [TemplateDescription])
 	Values (@TemplateId, 'Unit Test', 'Testing'),
 			(NewId(),'Test 2', Null)
 
-
-
-	Print '--- Add Without Model or ID --'
-	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = @TemplateId, @Data = @Data
+	Print '--- Add Template Without Model or ID --'
+	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = @TemplateId, @Data = @Template
 
 	Print '-- Delete Template --'
-	Set @TemplateId = (Select [TemplateId] From [AppScript].[Template] Where [TemplateTitle] In (Select [TemplateTitle] From @Data Where [TemplateId] is Null))
+	Set @TemplateId = (Select [TemplateId] From [AppScript].[Template] Where [TemplateTitle] In (Select [TemplateTitle] From @Template Where [TemplateId] is Null))
 	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = @TemplateId, @Data = @Empty
 	
-	Print '-- Add to Model --'
+	Print '-- Add Template to Model --'
 	Set @TemplateId = newId()
-	Update @Data Set [TemplateId] = @TemplateId Where [TemplateId] is Null
+	Update @Template Set [TemplateId] = @TemplateId Where [TemplateId] is Null
 
-	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = Null, @Data = @Data
-	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = Null, @Data = @Data
+	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = Null, @Data = @Template
+	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = Null, @Data = @Template
 
-	Print '-- Remove From Model --'
+	Print '-- Remove Template From Model --'
 	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = Null, @Data = @Empty
 
 	Print '-- Update Template --'
-	Update @Data Set [TemplateDescription] = 'Update Testing'
-	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = Null, @Data = @Data
+	Update @Template Set [TemplateDescription] = 'Update Testing'
+	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = Null, @Data = @Template
 
 	Print '-- Remove Template --'
 	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = @TemplateId, @Data = @Empty
 
-	Select	*
-	From	[AppScript].[TemplateHS] For System_Time All
 
-	Select	*
+	Print '-- Setup Template (Expected state) --'
+	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Template
+
+	-- Testing SchemaDefinition --
+	Declare	@SchemaId  UniqueIdentifier = Null,
+			@Schema [AppScript].[udttSchemaDefinition]
+
+	Print '-- Validate udttSchemaDefinition --'
+	Insert Into @Schema
+	Exec [AppScript].[procGetSchemaDefinition]
+	Print FormatMessage ('udttSchemaDefinition: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into @Schema ([SchemaId], [TemplateId], [SchemaTitle])
+	Values	(@SchemaId, @TemplateId, 'Unit Test')
+
+	Print '-- Setup SchemaDefinition (Expected state) --'
+	Exec [AppScript].[procSetSchemaDefinition] @ModelId = @ModelId, @TemplateId = @TemplateId, @SchemaId = @SchemaId, @Data = @Schema
+
+
+	-- Check Results
+	Select	'[TemplateModel]', *
 	From	[AppScript].[TemplateModel]
-	/*
-	Delete From @Data
-	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Data
 
-	Select	*
+	Select	'[TemplateHS]', *
 	From	[AppScript].[TemplateHS] For System_Time All
-	*/
+
+	Select	'[SchemaDefinitionHS]', *
+	From	[AppScript].[SchemaDefinitionHS] For System_Time All
+
+
+
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
 	

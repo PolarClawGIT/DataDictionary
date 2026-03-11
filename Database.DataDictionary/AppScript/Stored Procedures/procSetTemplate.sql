@@ -34,7 +34,7 @@ Begin Try
 			NullIf(Trim(D.[TemplateDescription]),'') As [TemplateDescription]
 	From	@Data D
 			Cross Apply (
-				Select	Coalesce(D.[TemplateId], NewId()) As [TemplateId]) X
+				Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId]) X
 	Where	(@TemplateId is Null Or @TemplateId = X.[TemplateId])
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

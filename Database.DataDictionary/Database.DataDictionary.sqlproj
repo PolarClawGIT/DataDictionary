@@ -595,6 +595,13 @@
     <Build Include="AppScript\Stored Procedures\procSetTemplate.sql" />
     <Build Include="HsScript\Tables\Template.sql" />
     <Build Include="HsScript\Tables\TemplateModel.sql" />
+    <Build Include="AppScript\Tables\SchemaDefinition.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttSchemaDefinition.sql" />
+    <Build Include="AppScript\Views\SchemaDefinition.HS.sql" />
+    <Build Include="AppScript\Triggers\trigSchemaDefinition.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetSchemaDefinition.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetSchemaDefinition.sql" />
+    <Build Include="HsScript\Tables\SchemaDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
