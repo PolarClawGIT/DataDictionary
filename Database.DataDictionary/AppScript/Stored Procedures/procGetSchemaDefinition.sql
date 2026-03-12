@@ -10,8 +10,8 @@ Select	[SchemaId],
 		[TemplateId],
 		[SchemaTitle],
 		-- Root Node Behavior
+		[ForEachScope],
 		[RootNodeName],
-		[BreakOnScope],
 		-- Folder Patern for the files (Output for XSD, Input for XSLT)
 		[RootFolder],
 		[RelativePath],

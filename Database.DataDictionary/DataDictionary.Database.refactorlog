@@ -5501,4 +5501,18 @@
     <Property Name="NewSchema" Value="HsScript" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f759435a-b3f0-4aad-9097-130b548f0051" ChangeDateTime="03/12/2026 16:18:45">
+    <Property Name="ElementName" Value="[AppScript].[SchemaDefinition].[BreakOnScope]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaDefinition]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ForEachScope]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fcd537d4-b211-4adb-aa77-d416523a093f" ChangeDateTime="03/12/2026 16:21:56">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDefinition].[BreakOnScope]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDefinition]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ForEachScope]" />
+  </Operation>
 </Operations>

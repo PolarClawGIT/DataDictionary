@@ -4,14 +4,14 @@
 	[TemplateId]            UniqueIdentifier Not Null,
 	[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,
 	-- Root Node Behavior
-	[RootNodeName]			[AppGeneral].[uddtMember] Null, -- Name of the Root Node. Name of the Object is used if Null.
-	[BreakOnScope]			[AppGeneral].[uddtScopeName] Null,  -- The Scope to have a document break on. Null = no break (single file).
+	[ForEachScope]			[AppGeneral].[uddtScopeName] Not Null,
+	[RootNodeName]			[AppGeneral].[uddtMember] Null,
 	-- Folder Patern for the files (Output for XSD, Input for XSLT)
-	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
+	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
 	[RelativePath]			[AppGeneral].[uddtFilePath] Null,
 	[FilePrefix]			[AppGeneral].[uddtFileAffix] Null,
 	[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
-	[FileExtension]			[AppGeneral].[uddtFileExtension] Null, -- XML is expected
+	[FileExtension]			[AppGeneral].[uddtFileExtension] Null,
 	-- Temporal History Support
 	[SysStart]				DateTime2 (7) Not Null,
 	[SysEnd]				DateTime2 (7) Not Null,

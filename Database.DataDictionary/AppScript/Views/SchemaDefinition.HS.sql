@@ -16,7 +16,7 @@ Select	D.[SchemaId], -- PK
 		D.[SchemaTitle], -- AK
 		-- Root Node Behavior
 		D.[RootNodeName],
-		D.[BreakOnScope],
+		D.[ForEachScope],
 		-- Folder Patern for the files (Output for XSD, Input for XSLT)
 		D.[RootFolder],
 		D.[RelativePath],

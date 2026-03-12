@@ -4,8 +4,8 @@
 	[TemplateId]            UniqueIdentifier Not Null,
 	[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,
 	-- Root Node Behavior
+	[ForEachScope]			[AppGeneral].[uddtScopeName] Not Null,  -- Object Selection. ForEach Object of this type in the Model. Top Level, Model = everything in one file.
 	[RootNodeName]			[AppGeneral].[uddtMember] Null, -- Name of the Root Node. Name of the Object is used if Null.
-	[BreakOnScope]			[AppGeneral].[uddtScopeName] Null,  -- The Scope to have a document break on. Null = no break (single file).
 	-- Folder Patern for the files (Output for XSD, Input for XSLT)
 	[RootFolder]			[AppGeneral].[uddtFileRoot] Null, -- Name of the Special Folder used as the Root defined in the Application.
 	[RelativePath]			[AppGeneral].[uddtFilePath] Null,
