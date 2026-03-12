@@ -1,28 +1,26 @@
-﻿CREATE VIEW [AppScript].[SchemaDefinitionHS] AS
+﻿CREATE VIEW [AppScript].[SchemaNodeHS] AS
 -- Temporal View
 With [Dates] As (
-	Select	[SchemaId],
+	Select	[NodeId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[SchemaDefinition]
+	From	[AppScript].[SchemaNode]
 	Union
-	Select	[SchemaId],
+	Select	[NodeId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[SchemaDefinition]
+	From	[HsScript].[SchemaNode]
 	Where	[SysStart] != [SysEnd])
-Select	D.[SchemaId], -- PK
-		D.[TemplateId], -- AK
-		D.[SchemaTitle], -- AK
-		-- Root Node Behavior
-		D.[RootNodeName],
-		D.[BreakOnScope],
-		-- Folder Patern for the files (Output for XSD, Input for XSLT)
-		D.[RootFolder],
-		D.[RelativePath],
-		D.[FilePrefix],
-		D.[FileSuffix],
-		D.[FileExtension],
+Select	D.[NodeId], -- PK
+		D.[SchemaId],
+		F.[TemplateId],
+		D.[NodeName],
+		D.[NodeOrder],
+		D.[RenderValueAs],
+		D.[FixedValue],
+		D.[ObjectScope],
+		D.[ObjectProperty],
+		D.[ModelPropertyId],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -34,16 +32,18 @@ Select	D.[SchemaId], -- PK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[SchemaDefinition] D
+From	[AppScript].[SchemaNode] D
+		Inner Join [AppScript].[SchemaDefinition] F
+		On	D.[SchemaId] = F.[SchemaId]
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
-			Where	[SchemaId] = D.[SchemaId] And
+			Where	[NodeId] = D.[NodeId] And
 					[SysStart] < D.[SysStart]) P
 		Outer Apply (
 			Select	Min([SysStart]) As [NextDate]
 			From	[Dates]
-			Where	[SchemaId] = D.[SchemaId] And
+			Where	[NodeId] = D.[NodeId] And
 					[SysStart] >= D.[SysEnd]) N
 		Left Join [AppGeneral].[TransactionSummary] C
 		On	D.[SysStart] = C.[ModifiedOn]

@@ -4,7 +4,7 @@
 
 	Declare @ModelId UniqueIdentifier = (Select [ModelId] From [AppModel].[Model] Where [ModelTitle] = 'Unit Test')
 
-	-- Testing Template --
+	-- Testing [AppScript].[Template] --
 	Declare	@TemplateId UniqueIdentifier = Null,
 			@Template [AppScript].[udttTemplate],
 			@Empty [AppScript].[udttTemplate]
@@ -46,9 +46,9 @@
 	Print '-- Setup Template (Expected state) --'
 	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Template
 
-	-- Testing SchemaDefinition --
-	Declare	@SchemaId  UniqueIdentifier = Null,
-			@Schema [AppScript].[udttSchemaDefinition]
+	-- Testing [AppScript].[SchemaDefinition] --
+	Declare	@Schema [AppScript].[udttSchemaDefinition],
+			@SchemaId UniqueIdentifier = NewId()
 
 	Print '-- Validate udttSchemaDefinition --'
 	Insert Into @Schema
@@ -56,11 +56,45 @@
 	Print FormatMessage ('udttSchemaDefinition: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into @Schema ([SchemaId], [TemplateId], [SchemaTitle])
-	Values	(@SchemaId, @TemplateId, 'Unit Test')
+	Values	(@SchemaId, @TemplateId, 'Unit Test Schema')
 
 	Print '-- Setup SchemaDefinition (Expected state) --'
-	Exec [AppScript].[procSetSchemaDefinition] @ModelId = @ModelId, @TemplateId = @TemplateId, @SchemaId = @SchemaId, @Data = @Schema
+	Exec [AppScript].[procSetSchemaDefinition] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Schema
 
+	-- Testing [AppScript].[SchemaNode]
+	Declare @Node [AppScript].[udttSchemaNode],
+			@NodeId01 UniqueIdentifier = NewId(),
+			@NodeId02 UniqueIdentifier = NewId()
+
+	Print '-- Validate udttSchemaNode --'
+	Insert Into @Node
+	Exec [AppScript].[procGetSchemaNode]
+	Print FormatMessage ('udttSchemaNode: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into @Node ([NodeId], [SchemaId], [TemplateId], [NodeName])
+	Values	(@NodeId01, @SchemaId, @TemplateId, 'UnitTestNode'),
+			(@NodeId02, @SchemaId, @TemplateId, 'UnitTestNodeChild')
+
+	Print '-- Setup SchemaNode (Expected state) --'
+	Exec [AppScript].[procSetSchemaNode] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Node
+
+	-- Testing [AppScript].[SchemaNodeOwner]
+	Declare @Owner [AppScript].[udttSchemaNodeOwner]
+
+	Print '-- Validate udttSchemaNodeOwner --'
+	Insert Into @Owner
+	Exec [AppScript].[procGetSchemaNodeOwner]
+	Print FormatMessage ('udttSchemaNodeOwner: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into @Owner ([NodeId], [NodeOwnerId], [SchemaId], [TemplateId])
+	Values (@NodeId02, @NodeId01, @SchemaId, @TemplateId)
+
+	Print '-- Setup SchemaDefinition (Expected state) --'
+	Exec [AppScript].[procSetSchemaNodeOwner] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Owner
+
+
+
+	--[AppScript].[udttSchemaNodeOwner]
 
 	-- Check Results
 	Select	'[TemplateModel]', *
@@ -72,7 +106,11 @@
 	Select	'[SchemaDefinitionHS]', *
 	From	[AppScript].[SchemaDefinitionHS] For System_Time All
 
+	Select	'[SchemaNodeHS]', *
+	From	[AppScript].[SchemaNodeHS] For System_Time All
 
+	Select	'[SchemaNodeOwnerHS]', *
+	From	[AppScript].[SchemaNodeOwnerHS] For System_Time All
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
@@ -98,5 +136,5 @@ Begin Catch
 	-- Rollback Transaction
 	Print 'Rollback Issued';
 	Rollback Transaction;
-	--Throw;
+	If(ERROR_NUMBER()<> 50000) Throw;
 End Catch;

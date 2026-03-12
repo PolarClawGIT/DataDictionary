@@ -602,6 +602,20 @@
     <Build Include="AppScript\Stored Procedures\procGetSchemaDefinition.sql" />
     <Build Include="AppScript\Stored Procedures\procSetSchemaDefinition.sql" />
     <Build Include="HsScript\Tables\SchemaDefinition.sql" />
+    <Build Include="AppScript\Tables\SchemaNode.sql" />
+    <Build Include="HsScript\Tables\SchemaNode.sql" />
+    <Build Include="AppScript\Triggers\trigSchemaNode.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttSchemaNode.sql" />
+    <Build Include="AppScript\Tables\SchemaNodeOwner.sql" />
+    <Build Include="HsScript\Tables\SchemaNodeOwner.sql" />
+    <Build Include="AppScript\Triggers\trigSchemaNodeOwner.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttSchemaNodeOwner.sql" />
+    <Build Include="AppScript\Views\SchemaNode.HS.sql" />
+    <Build Include="AppScript\Views\SchemaNodeOwner.HS.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetSchemaNode.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetSchemaNodeOwner.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetSchemaNode.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetSchemaNodeOwner.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetSchemaDefinition]
+﻿CREATE PROCEDURE [AppScript].[procSetSchemaNode]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttSchemaDefinition] ReadOnly
+		@Data [AppScript].[udttSchemaNode] ReadOnly
 AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
@@ -23,35 +23,33 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
+		[NodeId]				UniqueIdentifier Not Null,
 		[SchemaId]				UniqueIdentifier Not Null,
-		[TemplateId]            UniqueIdentifier Not Null,
-		[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,
-		[RootNodeName]			[AppGeneral].[uddtMember] Null,
-		[BreakOnScope]			[AppGeneral].[uddtScopeName] Null,
-		[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
-		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
-		[FilePrefix]			[AppGeneral].[uddtFileAffix] Null,
-		[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
-		[FileExtension]			[AppGeneral].[uddtFileExtension] Null,
-		Primary Key([SchemaId]))
+		[NodeName]				[AppGeneral].[uddtMember] Null,
+		[NodeOrder]				Int Not Null,
+		[RenderValueAs]			NVarChar(20) Null,
+		[FixedValue]			NVarChar(250) Null,
+		[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
+		[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
+		[ModelPropertyId]		UniqueIdentifier NULL,
+		Primary Key([NodeId]))
 
 	Insert Into @Values
-	Select	X.[SchemaId],
-			D.[TemplateId],
-			NullIf(Trim(D.[SchemaTitle]),'') As [SchemaTitle],
-			NullIf(Trim(D.[RootNodeName]),'') As [RootNodeName],
-			NullIf(Trim(D.[BreakOnScope]),'') As [BreakOnScope],
-			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
-			NullIf(Trim(D.[RelativePath]),'') As [RelativePath],
-			NullIf(Trim(D.[FilePrefix]),'') As [FilePrefix],
-			NullIf(Trim(D.[FileSuffix]),'') As [FileSuffix],
-			NullIf(Trim(D.[FileExtension]),'') As [FileExtension]
+	Select	X.[NodeId],
+			D.[SchemaId],
+			NullIf(Trim(D.[NodeName]),'') As [NodeName],
+			IIF([NodeOrder]<0,0,IsNull([NodeOrder],0)) As [NodeOrder],
+			IsNull(NullIf(Trim(D.[RenderValueAs]),''),'Element') As [RenderValueAs],
+			NullIf(Trim(D.[FixedValue]),'') As [FixedValue],
+			NullIf(Trim(D.[ObjectScope]),'') As [ObjectScope],
+			NullIf(Trim(D.[ObjectProperty]),'') As [ObjectProperty],
+			D.[ModelPropertyId]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
 				@ModelId = M.[ModelId]
 			Cross Apply (
-				Select	Coalesce(D.[SchemaId], NewId()) As [SchemaId]) X
+				Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
 	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -60,89 +58,91 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[SchemaDefinition]
-	From	[AppScript].[SchemaDefinition] T
+	Delete From [AppScript].[SchemaNode]
+	From	[AppScript].[SchemaNode] T
+			Inner Join [AppScript].[SchemaDefinition] F
+			On	T.[SchemaId] = F.[SchemaId]
 			Left Join @Values S
 			On	T.[SchemaId] = S.[SchemaId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](F.[TemplateId], 1)
 	Where	S.[SchemaId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
-			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
-			(@ModelId is Null Or T.[TemplateId] In (
+			(@TemplateId is Null Or @TemplateId = F.[TemplateId])  And
+			(@ModelId is Null Or F.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[SchemaDefinition]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[SchemaNode]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	-- TODO: Add child table delete
 
 
 	;With [Delta] As (
-		Select	[SchemaId],
-				[TemplateId],
-				[SchemaTitle],
-				[RootNodeName],
-				[BreakOnScope],
-				[RootFolder],
-				[RelativePath],
-				[FilePrefix],
-				[FileSuffix],
-				[FileExtension]
+		Select	[NodeId],
+				[SchemaId],
+				[NodeName],
+				[NodeOrder],
+				[RenderValueAs],
+				[FixedValue],
+				[ObjectScope],
+				[ObjectProperty],
+				[ModelPropertyId]
 		From	@Values
 		Except
-		Select	[SchemaId],
-				[TemplateId],
-				[SchemaTitle],
-				[RootNodeName],
-				[BreakOnScope],
-				[RootFolder],
-				[RelativePath],
-				[FilePrefix],
-				[FileSuffix],
-				[FileExtension]
-		From	[AppScript].[SchemaDefinition])
-	Update [AppScript].[SchemaDefinition]
-	Set		[SchemaTitle] = S.[SchemaTitle],
-			[RootNodeName] = S.[RootNodeName],
-			[BreakOnScope] = S.[BreakOnScope],
-			[RootFolder] = S.[RootFolder],
-			[RelativePath] = S.[RelativePath],
-			[FilePrefix] = S.[FilePrefix],
-			[FileSuffix] = S.[FileSuffix],
-			[FileExtension] = S.[FileExtension]
-	From	[AppScript].[SchemaDefinition] T
+		Select	[NodeId],
+				[SchemaId],
+				[NodeName],
+				[NodeOrder],
+				[RenderValueAs],
+				[FixedValue],
+				[ObjectScope],
+				[ObjectProperty],
+				[ModelPropertyId]
+		From	[AppScript].[SchemaNode])
+	Update [AppScript].[SchemaNode]
+	Set		[SchemaId] = S.[SchemaId],
+			[NodeName] = S.[NodeName],
+			[NodeOrder] = S.[NodeOrder],
+			[RenderValueAs] = S.[RenderValueAs],
+			[FixedValue] = S.[FixedValue],
+			[ObjectScope] = S.[ObjectScope],
+			[ObjectProperty] = S.[ObjectProperty],
+			[ModelPropertyId] = S.[ModelPropertyId]
+	From	[AppScript].[SchemaNode] T
 			Inner Join [Delta] S
 			On	T.[SchemaId] = S.[SchemaId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[SchemaId], 1)
-	Print FormatMessage ('Update [AppScript].[SchemaDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			Inner Join [AppScript].[SchemaDefinition] F
+			On	T.[SchemaId] = F.[SchemaId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](F.[TemplateId], 1)
+	Print FormatMessage ('Update [AppScript].[SchemaNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[SchemaDefinition] (
+	Insert Into [AppScript].[SchemaNode] (
+			[NodeId],
 			[SchemaId],
-			[TemplateId],
-			[SchemaTitle],
-			[RootNodeName],
-			[BreakOnScope],
-			[RootFolder],
-			[RelativePath],
-			[FilePrefix],
-			[FileSuffix],
-			[FileExtension])
-	Select	S.[SchemaId],
-			S.[TemplateId],
-			S.[SchemaTitle],
-			S.[RootNodeName],
-			S.[BreakOnScope],
-			S.[RootFolder],
-			S.[RelativePath],
-			S.[FilePrefix],
-			S.[FileSuffix],
-			S.[FileExtension]
+			[NodeName],
+			[NodeOrder],
+			[RenderValueAs],
+			[FixedValue],
+			[ObjectScope],
+			[ObjectProperty],
+			[ModelPropertyId])
+	Select	S.[NodeId],
+			S.[SchemaId],
+			S.[NodeName],
+			S.[NodeOrder],
+			S.[RenderValueAs],
+			S.[FixedValue],
+			S.[ObjectScope],
+			S.[ObjectProperty],
+			S.[ModelPropertyId]
 	From	@Values S
-			Left Join [AppScript].[SchemaDefinition] T
+			Inner Join [AppScript].[SchemaDefinition] F
+			On	S.[SchemaId] = F.[SchemaId]
+			Left Join [AppScript].[SchemaNode] T
 			On	S.[SchemaId] = T.[SchemaId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[SchemaId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](F.[TemplateId], 1)
 	Where	T.[SchemaId] is Null
-	Print FormatMessage ('Insert [AppScript].[SchemaDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[SchemaNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
