@@ -616,6 +616,23 @@
     <Build Include="AppScript\Stored Procedures\procGetSchemaNodeOwner.sql" />
     <Build Include="AppScript\Stored Procedures\procSetSchemaNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetSchemaNodeOwner.sql" />
+    <Build Include="AppScript\Tables\Transform.sql" />
+    <Build Include="AppScript\Tables\Document.sql" />
+    <Build Include="AppScript\Tables\DocumentObject.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttDocument.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTransform.sql" />
+    <Build Include="AppScript\Triggers\trigDocument.sql" />
+    <Build Include="AppScript\Triggers\trigDocumentObject.sql" />
+    <Build Include="AppScript\Triggers\trigTransform.sql" />
+    <Build Include="HsScript\Tables\Document.sql" />
+    <Build Include="HsScript\Tables\DocumentObject.sql" />
+    <Build Include="HsScript\Tables\Transform.sql" />
+    <Build Include="AppScript\Views\Transform.HS.sql" />
+    <Build Include="AppScript\Views\Document.HS.sql" />
+    <Build Include="AppScript\Views\DocumentObject.Leaf.sql" />
+    <Build Include="AppScript\Views\DocumentObject.Tree.sql" />
+    <Build Include="AppScript\Functions\funcDocumentObjectId.sql" />
+    <Build Include="AppScript\Functions\funcDocumentObjectPath.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

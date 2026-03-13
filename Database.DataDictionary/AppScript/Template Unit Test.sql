@@ -94,6 +94,11 @@
 
 
 
+	Print '-- Remove Template -- '
+	-- TODO Not Working
+	Exec [AppScript].[procSetTemplate] @ModelId = Null, @TemplateId = @TemplateId, @Data = @Empty
+
+
 	--[AppScript].[udttSchemaNodeOwner]
 
 	-- Check Results
