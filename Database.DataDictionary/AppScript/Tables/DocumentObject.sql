@@ -21,4 +21,5 @@
 	CONSTRAINT [FK_DocumentObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_DocumentObjectModel] FOREIGN KEY ([ModelId], [TemplateId]) REFERENCES [AppScript].[TemplateModel] ([ModelId], [TemplateId]),
 	CONSTRAINT [FK_DocumentObjectParent] FOREIGN KEY ([ParentObjectId]) REFERENCES [AppScript].[DocumentObject] ([ObjectId]),
+	CONSTRAINT [AK_DocumentObjectName] UNIQUE ([ParentObjectId] ASC, [ObjectMember] ASC),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[DocumentObject]))

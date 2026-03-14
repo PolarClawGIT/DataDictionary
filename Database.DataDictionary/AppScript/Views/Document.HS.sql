@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppScript].[DocumentObjectHS] AS
+﻿CREATE VIEW [AppScript].[DocumentHS] AS
 -- Temporal View
 With [Dates] As (
 	Select	[DocumentId],
@@ -51,6 +51,7 @@ Select	D.[DocumentId], -- PK
 		D.[SchemaId],
 		D.[TransformId],
 		O.[ModelId],
+		O.[ObjectId],
 		O.[ObjectScope],
 		O.[ObjectPath],
 		O.[ObjectMember],

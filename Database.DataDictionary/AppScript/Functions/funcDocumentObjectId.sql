@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [AppScript].[funcDocumentObjectId] (@ObjectPath [AppGeneral].[uddtPath])
+﻿CREATE FUNCTION [AppScript].[funcDocumentObjectId] (@TemplateId UniqueIdentifier, @ModelId UniqueIdentifier, @ObjectPath [AppGeneral].[uddtPath])
 -- Takes an ObjectPath and gets the Document ObjectId
 -- Temporal Data NOT Supported
 RETURNS UniqueIdentifier
@@ -23,6 +23,8 @@ Declare	@Result UniqueIdentifier = null
 			On	D.[ObjectMember] = N.[ObjectMember] And
 				N.[ParentObjectId] is Null And
 				D.[Level] = 1
+	Where	N.[TemplateId] = @TemplateId And
+			N.[ModelId] = @ModelId
 	Union All
 	Select	N.[ObjectId],
 			N.[ParentObjectId],

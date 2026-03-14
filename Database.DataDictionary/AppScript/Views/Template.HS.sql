@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppScript].[TransformHS] AS
+﻿CREATE VIEW [AppScript].[TemplateHS] AS
 -- Temporal View
 With [Dates] As (
 	Select	[TemplateId],

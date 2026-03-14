@@ -1,4 +1,4 @@
-﻿CREATE VIEW [AppScript].[DocumentObjectLeaf] AS
+﻿CREATE VIEW [AppScript].[DocumentObjectHS] AS
 -- Returns only the Leaf Nodes of the Document Objects with the full Object Path.
 -- This uses a Leaf first approch build a tree and is primarly here for validation/testing.
 With [Dates] As (

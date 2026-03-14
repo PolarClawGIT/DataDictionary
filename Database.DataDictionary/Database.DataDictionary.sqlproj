@@ -629,10 +629,11 @@
     <Build Include="HsScript\Tables\Transform.sql" />
     <Build Include="AppScript\Views\Transform.HS.sql" />
     <Build Include="AppScript\Views\Document.HS.sql" />
-    <Build Include="AppScript\Views\DocumentObject.Leaf.sql" />
+    <Build Include="AppScript\Views\DocumentObject.HS.sql" />
     <Build Include="AppScript\Views\DocumentObject.Tree.sql" />
     <Build Include="AppScript\Functions\funcDocumentObjectId.sql" />
     <Build Include="AppScript\Functions\funcDocumentObjectPath.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttDocumentObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
