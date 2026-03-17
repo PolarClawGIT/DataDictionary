@@ -634,6 +634,12 @@
     <Build Include="AppScript\Functions\funcDocumentObjectId.sql" />
     <Build Include="AppScript\Functions\funcDocumentObjectPath.sql" />
     <Build Include="AppScript\User Defined Table Types\udttDocumentObject.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTransform.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTransform.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetDocumentObject.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetDocumentObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

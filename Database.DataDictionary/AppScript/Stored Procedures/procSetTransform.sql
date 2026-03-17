@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetSchemaDefinition]
+﻿CREATE PROCEDURE [AppScript].[procSetTransform]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttSchemaDefinition] ReadOnly
+		@Data [AppScript].[udttTransform] ReadOnly
 AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
@@ -23,24 +23,31 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[SchemaId]				UniqueIdentifier Not Null,
+		[TransformId]			UniqueIdentifier Not NULL,
+		[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
 		[TemplateId]            UniqueIdentifier Not Null,
-		[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,
-		[ForEachScope]			[AppGeneral].[uddtScopeName] Not Null,
-		[RootNodeName]			[AppGeneral].[uddtMember] Null,
+		[SchemaId]				UniqueIdentifier Null,
+		[TransformScript]		XML Null,
+		[TransformFileName]		[AppGeneral].[uddtFileName] Null,
 		[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
 		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
 		[FilePrefix]			[AppGeneral].[uddtFileAffix] Null,
 		[FileSuffix]			[AppGeneral].[uddtFileAffix] Null,
 		[FileExtension]			[AppGeneral].[uddtFileExtension] Null,
-		Primary Key([SchemaId]))
+		Primary Key([TransformId]))
 
 	Insert Into @Values
-	Select	X.[SchemaId],
+	Select	X.[TransformId],
+			NullIf(Trim(D.[TransformTitle]),'') As [TransformTitle],
 			D.[TemplateId],
-			NullIf(Trim(D.[SchemaTitle]),'') As [SchemaTitle],
-			IsNull(NullIf(Trim(D.[ForEachScope]),''),'Model') As [ForEachScope],
-			NullIf(Trim(D.[RootNodeName]),'') As [RootNodeName],
+			D.[SchemaId],
+			Case
+				When NullIf(D.[TransformScript],'') is Null Then Null
+				When SubString(Trim(D.[TransformScript]),1,1) Not In ('<') Then Null -- First Character not a tag start
+				When D.[TransformScript] Like '%encoding="utf-8"%' Then Try_Convert(XML,Convert(VarChar(Max),D.[TransformScript]),1) -- Handle UTF-8
+				Else Try_Convert(XML,D.[TransformScript],1)
+				End As [TransformScript],
+			NullIf(Trim(D.[TransformFileName]),'') As [TransformFileName],
 			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
 			NullIf(Trim(D.[RelativePath]),'') As [RelativePath],
 			NullIf(Trim(D.[FilePrefix]),'') As [FilePrefix],
@@ -51,7 +58,7 @@ Begin Try
 			On	D.[TemplateId] = M.[TemplateId] And
 				@ModelId = M.[ModelId]
 			Cross Apply (
-				Select	Coalesce(D.[SchemaId], NewId()) As [SchemaId]) X
+				Select	Coalesce(D.[TransformId], NewId()) As [TransformId]) X
 	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
@@ -60,29 +67,30 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[SchemaDefinition]
-	From	[AppScript].[SchemaDefinition] T
+	Delete From [AppScript].[Transform]
+	From	[AppScript].[Transform] T
 			Left Join @Values S
-			On	T.[SchemaId] = S.[SchemaId]
+			On	T.[TransformId] = S.[TransformId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
-	Where	S.[SchemaId] is Null And
+	Where	S.[TransformId] is Null And
 			(@TemplateId is Not Null Or @ModelId is Not Null) And
 			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
 			(@ModelId is Null Or T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[SchemaDefinition]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[Transform]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	-- TODO: Add child table delete
 
 
 	;With [Delta] As (
-		Select	[SchemaId],
-				[TemplateId],
-				[SchemaTitle],
-				[ForEachScope],
-				[RootNodeName],
+		Select	[TransformId],
+				[TransformTitle],
+				--[TemplateId],
+				[SchemaId],
+				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
+				[TransformFileName],
 				[RootFolder],
 				[RelativePath],
 				[FilePrefix],
@@ -90,59 +98,63 @@ Begin Try
 				[FileExtension]
 		From	@Values
 		Except
-		Select	[SchemaId],
-				[TemplateId],
-				[SchemaTitle],
-				[ForEachScope],
-				[RootNodeName],
+		Select	[TransformId],
+				[TransformTitle],
+				--[TemplateId],
+				[SchemaId],
+				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
+				[TransformFileName],
 				[RootFolder],
 				[RelativePath],
 				[FilePrefix],
 				[FileSuffix],
 				[FileExtension]
-		From	[AppScript].[SchemaDefinition])
-	Update [AppScript].[SchemaDefinition]
-	Set		[SchemaTitle] = S.[SchemaTitle],
-			[ForEachScope] = S.[ForEachScope],
-			[RootNodeName] = S.[RootNodeName],
+		From	[AppScript].[Transform])
+	Update [AppScript].[Transform]
+	Set		[TransformTitle] = S.[TransformTitle],
+			--[TemplateId] = S.[TemplateId],
+			[TransformScript] = S.[TransformScript],
+			[TransformFileName] = S.[TransformFileName],
 			[RootFolder] = S.[RootFolder],
 			[RelativePath] = S.[RelativePath],
 			[FilePrefix] = S.[FilePrefix],
 			[FileSuffix] = S.[FileSuffix],
 			[FileExtension] = S.[FileExtension]
-	From	[AppScript].[SchemaDefinition] T
+	From	[AppScript].[Transform] T
 			Inner Join [Delta] S
-			On	T.[SchemaId] = S.[SchemaId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
-	Print FormatMessage ('Update [AppScript].[SchemaDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[TransformId] = S.[TransformId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
+	Print FormatMessage ('Update [AppScript].[Transform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[SchemaDefinition] (
-			[SchemaId],
+	Insert Into [AppScript].[Transform] (
+			[TransformId],
+			[TransformTitle],
 			[TemplateId],
-			[SchemaTitle],
-			[ForEachScope],
-			[RootNodeName],
+			[SchemaId],
+			[TransformScript],
+			[TransformFileName],
 			[RootFolder],
 			[RelativePath],
 			[FilePrefix],
 			[FileSuffix],
 			[FileExtension])
-	Select	S.[SchemaId],
+	Select	S.[TransformId],
+			S.[TransformTitle],
 			S.[TemplateId],
-			S.[SchemaTitle],
-			S.[ForEachScope],
-			S.[RootNodeName],
+			S.[SchemaId],
+			S.[TransformScript],
+			S.[TransformFileName],
 			S.[RootFolder],
 			S.[RelativePath],
 			S.[FilePrefix],
 			S.[FileSuffix],
 			S.[FileExtension]
 	From	@Values S
-			Left Join [AppScript].[SchemaDefinition] T
-			On	S.[SchemaId] = T.[SchemaId]
+			Left Join [AppScript].[Transform] T
+			On	S.[TransformId] = T.[TransformId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
-	Where	T.[SchemaId] is Null
-	Print FormatMessage ('Insert [AppScript].[SchemaDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Where	T.[TransformId] is Null
+	Print FormatMessage ('Insert [AppScript].[Transform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
