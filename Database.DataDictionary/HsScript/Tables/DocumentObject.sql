@@ -1,7 +1,6 @@
 ﻿CREATE TABLE [HsScript].[DocumentObject]
 (	[ObjectId]			UniqueIdentifier Not Null,
 	[TemplateId]		UniqueIdentifier Not Null,
-	[ModelId]			UniqueIdentifier Not Null,
 	[ParentObjectId]	UniqueIdentifier NULL,
 	[ObjectScope]		[AppGeneral].[uddtScopeName] Null,
 	[ObjectMember]		[AppGeneral].[uddtMember] Not Null,

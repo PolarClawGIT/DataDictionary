@@ -10,54 +10,13 @@ With [Dates] As (
 			[SysStart],
 			[SysEnd]
 	From	[HsScript].[Document]
-	Where	[SysStart] != [SysEnd]),
-[Object] As (
-	-- Leaf Nodes
-	-- Uses a Leaf first approch to building a tree where the Document defines the Leaf.
-	Select	L.[ObjectId],
-			L.[TemplateId],
-			L.[ModelId],
-			L.[ParentObjectId],
-			L.[ObjectMember],
-			L.[ObjectScope],
-			Convert(NVarChar(Max), Concat('[',L.[ObjectMember],']')) As [ObjectPath],
-			L.[IsExcluded],
-			L.[KeepOrphaned],
-			Convert(TinyInt,1) As [Depth],
-			L.[SysStart],
-			L.[SysEnd]
-	From	[AppScript].[DocumentObject] L
-			Inner Join [AppScript].[Document] D
-			On	L.[ObjectId] = D.[ObjectId]
-	-- Parent Nodes
-	Union All
-	Select	L.[ObjectId],
-			L.[TemplateId],
-			L.[ModelId],
-			P.[ParentObjectId],
-			L.[ObjectMember],
-			L.[ObjectScope],
-			Convert(NVarChar(Max), Concat('[',P.[ObjectMember],'].',L.[ObjectPath])) As [ObjectPath],
-			L.[IsExcluded],
-			L.[KeepOrphaned],
-			Convert(TinyInt,L.[Depth] + 1) As [Depth],
-			L.[SysStart],
-			L.[SysEnd]
-	From	[AppScript].[DocumentObject] P
-			Inner Join [Object] L
-			On	P.[ObjectId] = L.[ParentObjectId])
+	Where	[SysStart] != [SysEnd])
 Select	D.[DocumentId], -- PK
 		D.[TemplateId],
 		D.[SchemaId],
 		D.[TransformId],
-		O.[ModelId],
-		O.[ObjectId],
-		O.[ObjectScope],
-		O.[ObjectPath],
-		O.[ObjectMember],
+		D.[ObjectId],
 		D.[FileName],
-		O.[IsExcluded],
-		O.[KeepOrphaned],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -70,9 +29,6 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
 From	[AppScript].[Document] D
-		Left Join [Object] O
-		On	D.[ObjectId] = O.[ObjectId] And
-			O.[ParentObjectId] is Null
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

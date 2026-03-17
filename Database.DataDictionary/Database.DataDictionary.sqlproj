@@ -640,6 +640,7 @@
     <Build Include="AppScript\Stored Procedures\procSetTransform.sql" />
     <Build Include="AppScript\Stored Procedures\procGetDocumentObject.sql" />
     <Build Include="AppScript\Stored Procedures\procSetDocumentObject.sql" />
+    <Build Include="AppGeneral\Functions\funcConcatPath.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

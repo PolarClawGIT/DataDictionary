@@ -16,7 +16,6 @@ With [Dates] As (
 	-- Parent Nodes
 	Select	L.[ObjectId],
 			L.[TemplateId],
-			L.[ModelId],
 			L.[ParentObjectId],
 			L.[ObjectMember],
 			L.[ObjectScope],
@@ -24,6 +23,10 @@ With [Dates] As (
 			L.[IsExcluded],
 			L.[KeepOrphaned],
 			Convert(TinyInt,1) As [Depth],
+			Convert(NVarChar(Max),
+				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
+					Dense_Rank() Over (Order By [ObjectMember])))
+				As [HierarchyId],
 			[SysStart],
 			[SysEnd]
 	From	[AppScript].[DocumentObject] L
@@ -32,7 +35,6 @@ With [Dates] As (
 	Union All
 	Select	C.[ObjectId],
 			IsNull(C.[TemplateId], P.[TemplateId]) As [TemplateId],
-			IsNull(C.[ModelId], P.[ModelId]) As [ModelId],
 			C.[ParentObjectId],
 			C.[ObjectMember],
 			IsNull(C.[ObjectScope], P.[ObjectScope]) As [ObjectScope],
@@ -40,19 +42,25 @@ With [Dates] As (
 			C.[IsExcluded],
 			C.[KeepOrphaned],
 			Convert(TinyInt,P.[Depth] + 1) As [Depth],
-			C.[SysStart],
-			C.[SysEnd]
+			Convert(NVarChar(Max), FormatMessage('%s%I64d/', P.[HierarchyId],
+				Row_Number() Over (Partition By C.[ObjectId] Order By C.[ObjectMember])))
+				As [HierarchyId],
+			Greatest(P.[SysStart], C.[SysStart]) As [SysStart],
+			Least(P.[SysEnd], C.[SysEnd]) As [SysEnd]
 	From	[Data] P
 			Inner Join [AppScript].[DocumentObject] C
-			On	P.[ObjectId] = C.[ParentObjectId])
+			On	P.[ObjectId] = C.[ParentObjectId] And
+				-- Temporal, multiple rows could be returned. Do not have confidence in this.
+				((P.[SysStart] >= C.[SysStart] And P.[SysStart] < C.[SysEnd]) Or
+				(C.[SysStart] >= P.[SysStart] And C.[SysStart] < P.[SysEnd])))
 Select	D.[ObjectId],
 		D.[TemplateId],
-		D.[ModelId],
-		D.[ObjectMember],
 		D.[ObjectScope],
 		D.[ObjectPath],
+		D.[ObjectMember],
 		D.[IsExcluded],
 		D.[KeepOrphaned],
+		Convert(HierarchyId, D.[HierarchyId]) As [HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -98,30 +106,27 @@ Begin Try;
 	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Template
 
 	-- Root Node
-	Insert Into [AppScript].[DocumentObject] ([TemplateId], [ModelId], [ObjectMember])
-	Values (@TemplateId, @ModelId, 'Root Node')
+	Insert Into [AppScript].[DocumentObject] ([TemplateId], [ObjectMember])
+	Values (@TemplateId, 'Root Node')
 
 	-- Children
-	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ModelId], [ObjectMember])
+	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ObjectMember])
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Child 1' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Root Node'
 	Union
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Child 2' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Root Node'
 
 	-- Grand Children
-	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ModelId], [ObjectMember])
+	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ObjectMember])
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Grand Child 1' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Child 1'

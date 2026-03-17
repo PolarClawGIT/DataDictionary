@@ -1,6 +1,5 @@
 ﻿CREATE VIEW [AppScript].[DocumentObjectHS] AS
 -- Returns only the Leaf Nodes of the Document Objects with the full Object Path.
--- This uses a Leaf first approch build a tree and is primarly here for validation/testing.
 With [Dates] As (
 	Select	[ObjectId],
 			[SysStart],
@@ -16,12 +15,11 @@ With [Dates] As (
 	-- Leaf Nodes
 	Select	L.[ObjectId],
 			L.[TemplateId],
-			L.[ModelId],
 			L.[ParentObjectId],
 			Convert(UniqueIdentifier, Null) As [ChildObjectId],
-			L.[ObjectMember],
 			L.[ObjectScope],
-			Convert(NVarChar(Max), Concat('[',L.[ObjectMember],']')) As [ObjectPath],
+			[AppGeneral].[funcConcatPath](Null, Null) As [ObjectPath],
+			L.[ObjectMember],
 			L.[IsExcluded],
 			L.[KeepOrphaned],
 			Convert(TinyInt,1) As [Depth],
@@ -37,12 +35,11 @@ With [Dates] As (
 	Union All
 	Select	L.[ObjectId],
 			IsNull(L.[TemplateId], P.[TemplateId]) As [TemplateId],
-			IsNull(L.[ModelId], P.[ModelId]) As [ModelId],
 			P.[ParentObjectId],
 			P.[ObjectId] As [ChildObjectId],
-			L.[ObjectMember],
 			IsNull(L.[ObjectScope], P.[ObjectScope]) As [ObjectScope],
-			Convert(NVarChar(Max), Concat('[',P.[ObjectMember],'].',L.[ObjectPath])) As [ObjectPath],
+			[AppGeneral].[funcConcatPath](P.[ObjectMember],L.[ObjectPath]) As [ObjectPath],
+			L.[ObjectMember],
 			L.[IsExcluded],
 			L.[KeepOrphaned],
 			Convert(TinyInt,L.[Depth] + 1) As [Depth],
@@ -51,12 +48,12 @@ With [Dates] As (
 	From	[AppScript].[DocumentObject] P
 			Inner Join [Data] L
 			On	P.[ObjectId] = L.[ParentObjectId])
-Select	D.[ObjectId],
-		D.[TemplateId],
-		D.[ModelId],
-		D.[ObjectMember],
+Select	D.[ObjectId], -- PK
+		D.[TemplateId], -- AK
 		D.[ObjectScope],
-		D.[ObjectPath],
+		--D.[ObjectName],
+		D.[ObjectPath], -- AK
+		D.[ObjectMember], -- AK
 		D.[IsExcluded],
 		D.[KeepOrphaned],
 		-- Temporal Status
@@ -87,7 +84,8 @@ From	[Data] D
 		On	D.[SysEnd] = R.[ModifiedOn]
 Where	D.[ParentObjectId] is Null -- Only the leaf nodes are returned. Other nodes do not contain good data.
 GO
-/* Testing
+/*
+ --Testing
 Begin Try;
 	Begin Transaction;
 	Set NoCount On;
@@ -103,30 +101,27 @@ Begin Try;
 	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Template
 
 	-- Root Node
-	Insert Into [AppScript].[DocumentObject] ([TemplateId], [ModelId], [ObjectMember])
-	Values (@TemplateId, @ModelId, 'Root Node')
+	Insert Into [AppScript].[DocumentObject] ([TemplateId],  [ObjectMember])
+	Values (@TemplateId,  'Root Node')
 
 	-- Children
-	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ModelId], [ObjectMember])
+	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId],  [ObjectMember])
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Child 1' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Root Node'
 	Union
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Child 2' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Root Node'
 
 	-- Grand Children
-	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ModelId], [ObjectMember])
+	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ObjectMember])
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
-			@ModelId As [ModelId],
 			'Grand Child 1' As [ObjectMember]
 	From	[AppScript].[DocumentObject]
 	Where	[ObjectMember] = 'Child 1'
@@ -161,6 +156,3 @@ Begin Catch
 	If(ERROR_NUMBER()<> 50000) Throw;
 End Catch;
 */
-
-
-

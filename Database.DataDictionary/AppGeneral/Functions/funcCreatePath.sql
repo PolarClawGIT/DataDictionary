@@ -10,6 +10,8 @@ Begin
 	** @Path is required. If not supplied, the function returns Null.
 	** @Member is optional. If not supplied the @Path is returned with [].
 	** Otherwise the @Member is concatinated to @Path with [] and period between them.
+	**
+	** TODO: Replace With [AppGeneral].[funcConcatPath]. 
 	*/
 	Return 
 		Case

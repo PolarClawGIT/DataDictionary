@@ -1,7 +1,7 @@
 ﻿CREATE FUNCTION [AppScript].[funcDocumentObjectPath](@ObjectId UniqueIdentifier)
 -- This takes the Object and rebuilds them into a Object Path.
 -- Path is qualified by square brackets and delimited by periods.
--- Temporal Data NOT Supported
+-- Temporal Data NOT Supported, is it needed?
 RETURNS [AppGeneral].[uddtPath] as 
 BEGIN
 	Declare @Result [AppGeneral].[uddtPath] = null

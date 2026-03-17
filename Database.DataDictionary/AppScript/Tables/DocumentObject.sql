@@ -4,7 +4,6 @@
 	[ObjectId]			UniqueIdentifier Not Null CONSTRAINT [DF_ObjectId] DEFAULT (newid()),
 	[TemplateId]		UniqueIdentifier Not Null,
 	-- Object Filter/Matching
-	[ModelId]			UniqueIdentifier Not Null, -- Object is Model Specfic
 	[ParentObjectId]	UniqueIdentifier NULL,
 	[ObjectScope]		[AppGeneral].[uddtScopeName] Null, -- ScopeType for the Object
 	--[ObjectPath]		[AppGeneral].[uddtPath] Null, -- Varies by Model, Null = Model Root
@@ -19,7 +18,6 @@
 	-- Keys
 	CONSTRAINT [PK_DocumentObject] PRIMARY KEY CLUSTERED ([ObjectId] ASC),
 	CONSTRAINT [FK_DocumentObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
-	CONSTRAINT [FK_DocumentObjectModel] FOREIGN KEY ([ModelId], [TemplateId]) REFERENCES [AppScript].[TemplateModel] ([ModelId], [TemplateId]),
 	CONSTRAINT [FK_DocumentObjectParent] FOREIGN KEY ([ParentObjectId]) REFERENCES [AppScript].[DocumentObject] ([ObjectId]),
-	CONSTRAINT [AK_DocumentObjectName] UNIQUE ([ParentObjectId] ASC, [ObjectMember] ASC),
+	CONSTRAINT [AK_DocumentObjectName] UNIQUE ([TemplateId] ASC, [ParentObjectId] ASC, [ObjectMember] ASC),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[DocumentObject]))

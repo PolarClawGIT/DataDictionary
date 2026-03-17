@@ -1,10 +1,9 @@
 ﻿CREATE TYPE [AppScript].[udttDocumentObject] AS TABLE
 (
 	[ObjectId]				UniqueIdentifier NULL,
-	[ModelId]				UniqueIdentifier NULL,
+	[TemplateId]            UniqueIdentifier NULL,
 	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
-	[ObjectPath]			[AppGeneral].[uddtPath] Null,
-	[ObjectMember]			[AppGeneral].[uddtMember] Null,
+	[ObjectName]			[AppGeneral].[uddtPath] Null, -- Full Name including Member Name
 	[IsExcluded]			Bit Null,
 	[KeepOrphaned]			Bit Null,
 	-- Temporal Data
