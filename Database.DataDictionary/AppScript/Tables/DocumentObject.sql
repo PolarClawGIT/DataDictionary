@@ -8,7 +8,7 @@
 	[ObjectScope]		[AppGeneral].[uddtScopeName] Null, -- ScopeType for the Object
 	--[ObjectPath]		[AppGeneral].[uddtPath] Null, -- Varies by Model, Null = Model Root
 	[ObjectMember]		[AppGeneral].[uddtMember] Not Null, -- Member Name of the Object
-	-- Behavior
+	-- Behavior 		TODO: This might be solved diffrently by assocating an Object to a Model. Right now, this is just for application processing but even that may not be needed.
 	[IsExcluded]		Bit Not Null CONSTRAINT [DF_Document_IsExcluded] DEFAULT (0),  -- Do not generate a File for this object.
 	[KeepOrphaned]		Bit Not NULL CONSTRAINT [DF_Document_KeepOrphaned] DEFAULT (0), -- Keep this object even if oprhaned, otherwise delete if oprhaned.
 	-- Temporal History Support
