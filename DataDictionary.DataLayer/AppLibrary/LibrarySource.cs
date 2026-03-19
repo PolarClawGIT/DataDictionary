@@ -5,27 +5,26 @@
     /// </summary>  
     static class LibrarySource
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(LibrarySource));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(LibrarySource)) { Identifier = "@LibraryId" };
 
         /// <summary>  
         /// The name of the stored procedure used to retrieve library source data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetLibrarySource]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the library ID used in stored procedures.  
         /// </summary>  
-        public readonly static String LibraryId = "@LibraryId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The name of the stored procedure used to set library source data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetLibrarySource]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The name of the user-defined table type for library source data.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttLibrarySource]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

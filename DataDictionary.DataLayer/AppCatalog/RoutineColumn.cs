@@ -38,21 +38,21 @@ namespace DataDictionary.DataLayer.AppCatalog
     static class RoutineColumn
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(RoutineColumn));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(RoutineColumn));
 
         /// <summary>  
         /// Stored procedure to retrieve RoutineColumn data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetRoutineColumn]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Stored procedure to set RoutineColumn data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetRoutineColumn]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// User-defined table type for RoutineColumn.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttRoutineColumn]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

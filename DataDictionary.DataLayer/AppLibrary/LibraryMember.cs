@@ -5,22 +5,21 @@
     /// </summary>  
     static class LibraryMember
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(LibraryMember));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(LibraryMember));
 
         /// <summary>  
         /// The stored procedure for retrieving library member information.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetLibraryMember]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure for setting library member information.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetLibraryMember]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for library members.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttLibraryMember]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

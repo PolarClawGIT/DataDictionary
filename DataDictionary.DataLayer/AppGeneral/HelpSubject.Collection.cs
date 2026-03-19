@@ -41,7 +41,7 @@ namespace DataDictionary.DataLayer.AppGeneral
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = HelpSubject.GetProcedure;
-            command.AddParameter(HelpSubject.HelpId, helpId);
+            command.AddParameter(HelpSubject.Identifier, helpId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
 
@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.AppGeneral
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = HelpSubject.SetProcedure;
-            command.AddParameter(HelpSubject.HelpId, helpId);
+            command.AddParameter(HelpSubject.Identifier, helpId);
 
             IEnumerable<TItem> data = this.Where(w => helpId is null || w.HelpId == helpId);
             command.AddParameter(WriteData.Data, HelpSubject.TableType, data);

@@ -5,22 +5,21 @@
     /// </summary>  
     static class RoleMembership
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(RoleMembership));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(RoleMembership));
 
         /// <summary>  
         /// The stored procedure used to retrieve role membership information.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetRoleMembership]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set role membership information.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetRoleMembership]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for role membership operations.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttRoleMembership]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

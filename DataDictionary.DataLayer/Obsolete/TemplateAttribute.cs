@@ -6,22 +6,21 @@
     [Obsolete]
     static class TemplateAttribute
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(TemplateAttribute));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TemplateAttribute));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template Attribute.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetTemplateAttribute]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Template Attribute.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetTemplateAttribute]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Template Attribute.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttTemplateAttribute]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

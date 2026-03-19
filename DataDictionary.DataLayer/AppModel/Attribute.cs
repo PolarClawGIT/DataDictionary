@@ -87,27 +87,26 @@
     /// </summary>
     static class Attribute
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Attribute));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Attribute));
 
         /// <summary>
         /// Identifier for the Attribute.
         /// </summary>
-        public readonly static String AttributeId = "@AttributeId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Stored procedure to retrieve an Attribute.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetAttribute]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure to set an Attribute.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetAttribute]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// User-defined table type for Attribute operations.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttAttribute]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

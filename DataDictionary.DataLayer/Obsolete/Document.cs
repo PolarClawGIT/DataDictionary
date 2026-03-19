@@ -7,27 +7,26 @@ namespace DataDictionary.DataLayer.Obsolete
     [Obsolete]
     static class Document
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Document));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Document));
 
         /// <summary>  
         /// The parameter name for the Scripting DocumentId ID.  
         /// </summary>  
-        public readonly static String DocumentId = "@DocumentId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Document.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetDocument]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Document.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetDocument]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Document.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttDocument]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

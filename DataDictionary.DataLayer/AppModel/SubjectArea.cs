@@ -21,27 +21,26 @@
     /// </summary>
     static class SubjectArea
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(SubjectArea));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(SubjectArea));
 
         /// <summary>
         /// Stored procedure for retrieving Subject Area data.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetSubjectArea]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure for setting Subject Area data.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetSubjectArea]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// Parameter name for Subject Area ID.
         /// </summary>
-        public readonly static String SubjectAreaId = "@SubjectAreaId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Table type for Subject Area data.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttSubjectArea]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

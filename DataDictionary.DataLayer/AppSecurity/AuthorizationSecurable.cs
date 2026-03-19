@@ -5,12 +5,11 @@
     /// </summary>  
     static class AuthorizationSecurable
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(AuthorizationSecurable));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AuthorizationSecurable));
 
         /// <summary>  
         /// The stored procedure name for retrieving authorization securable data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetAuthorizationSecurable]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
     }
 }

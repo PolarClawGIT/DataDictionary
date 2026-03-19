@@ -5,22 +5,21 @@
     /// </summary>  
     static class ProcessArgument
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ProcessArgument));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessArgument));
 
         /// <summary>  
         /// The stored procedure used to retrieve process arguments.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProcessArgument]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set process arguments.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProcessArgument]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for process arguments.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProcessArgument]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

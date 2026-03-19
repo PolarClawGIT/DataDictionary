@@ -5,23 +5,22 @@
     /// </summary>  
     static class ProcessDefinition
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ProcessDefinition));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessDefinition));
 
         /// <summary>  
         /// The stored procedure for retrieving process definitions.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProcessDefinition]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure for setting process definitions.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProcessDefinition]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for process definitions.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProcessDefinition]");
+        public readonly static String TableType = dataObject.TableType;
     }
 
 }

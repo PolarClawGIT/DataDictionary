@@ -62,9 +62,9 @@ namespace DataDictionary.DataLayer.Obsolete
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = DataSource.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(DataSource.DataSourceId, dataSourceId);
-            command.AddParameter(Template.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(DataSource.Identifier, dataSourceId);
+            command.AddParameter(Template.Identifier, templateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -83,8 +83,8 @@ namespace DataDictionary.DataLayer.Obsolete
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = DataSource.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(DataSource.DataSourceId, dataSourceId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(DataSource.Identifier, dataSourceId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (dataSourceId is null || w.DataSourceId == dataSourceId));

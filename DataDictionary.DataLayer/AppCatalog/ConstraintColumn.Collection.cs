@@ -55,9 +55,9 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = ConstraintColumn.GetProcedure;
-            command.AddParameter(AppModel.Model.ModelId, modelId);
-            command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Constraint.ConstraintId, constraintId);
+            command.AddParameter(AppModel.Model.Identifier, modelId);
+            command.AddParameter(Catalog.Identifier, catalogId);
+            command.AddParameter(Constraint.Identifier, constraintId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -81,8 +81,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = ConstraintColumn.SetProcedure;
-            command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Constraint.ConstraintId, constraintId);
+            command.AddParameter(Catalog.Identifier, catalogId);
+            command.AddParameter(Constraint.Identifier, constraintId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (catalogId is null || w.CatalogId == catalogId));

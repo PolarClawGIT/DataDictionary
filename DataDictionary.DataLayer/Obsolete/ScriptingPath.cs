@@ -6,22 +6,21 @@
     [Obsolete("replace", true)]
     static class ScriptingPath
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ScriptingPath));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ScriptingPath));
 
         /// <summary>  
         /// The stored procedure used to retrieve the scripting path.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetScriptingPath]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set the scripting path.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetScriptingPath]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting path operations.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttScriptingPath]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

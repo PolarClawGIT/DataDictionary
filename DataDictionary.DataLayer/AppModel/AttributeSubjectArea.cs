@@ -16,22 +16,21 @@
     /// </summary>  
     static class AttributeSubjectArea
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(AttributeSubjectArea));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeSubjectArea));
 
         /// <summary>  
         /// The stored procedure used to retrieve Attribute Subject Area data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetAttributeSubjectArea]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set Attribute Subject Area data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetAttributeSubjectArea]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for Attribute Subject Area data operations.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttAttributeSubjectArea]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

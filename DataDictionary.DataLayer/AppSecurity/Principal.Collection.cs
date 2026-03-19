@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Principal.GetProcedure;
-            command.AddParameter(Principal.PrincipalId, parameters.principalId);
+            command.AddParameter(Principal.Identifier, parameters.principalId);
             command.AddParameter(Principal.PrincipalLogin, parameters.principalLogin);
             command.AddParameter(Principal.IsCurrent, parameters.isCurrent);
             return command;
@@ -59,7 +59,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Principal.SetProcedure;
-            command.AddParameter(Principal.PrincipalId, parameters.principalId);
+            command.AddParameter(Principal.Identifier, parameters.principalId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.principalId is null || w.PrincipalId == parameters.principalId);
             command.AddParameter(WriteData.Data, Principal.TableType, data);

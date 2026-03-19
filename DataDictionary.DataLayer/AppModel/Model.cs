@@ -21,27 +21,26 @@
     /// </summary>  
     static class Model
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Model));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Model));
 
         /// <summary>  
         /// The stored procedure name for retrieving a model.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetModel]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the model ID.  
         /// </summary>  
-        public readonly static String ModelId = "@ModelId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure name for setting a model.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetModel]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type name for the model.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttModel]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

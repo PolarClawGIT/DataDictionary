@@ -25,12 +25,12 @@
     static class Routine
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Routine));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Routine));
 
         /// <summary>
         /// The stored procedure to retrieve routine information.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetRoutine]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// A list of system routines that are predefined in the database.
@@ -40,16 +40,16 @@
         /// <summary>
         /// The parameter name for the routine identifier.
         /// </summary>
-        public readonly static String RoutineId = "@RoutineId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// The stored procedure to set routine information.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetRoutine]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The table type used for routines in the database.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttRoutine]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

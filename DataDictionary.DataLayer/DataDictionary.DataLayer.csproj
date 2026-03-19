@@ -99,7 +99,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppScript\" />
     <Folder Include="ProofOfConcept\" />
   </ItemGroup>
 

@@ -5,22 +5,21 @@
     /// </summary>  
     static class DataObject
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(DataObject));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(DataObject));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Data Object.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetDataObject]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Data Object.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetDataObject]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Data Object.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttDataObject]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

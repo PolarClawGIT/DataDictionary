@@ -5,22 +5,21 @@
     /// </summary>  
     static class ProcessAlias
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ProcessAlias));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessAlias));
 
         /// <summary>  
         /// The stored procedure used to retrieve process aliases.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProcessAlias]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set process aliases.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProcessAlias]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for process aliases.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProcessAlias]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

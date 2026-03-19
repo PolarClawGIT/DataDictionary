@@ -6,22 +6,21 @@
     [Obsolete("replace",true)]
     static class ScriptingAttribute
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ScriptingAttribute));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ScriptingAttribute));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting attributes.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetScriptingAttribute]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting attributes.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetScriptingAttribute]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting attributes.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttScriptingAttribute]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -12,12 +12,12 @@
     static class Schema
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Schema));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Schema));
 
         /// <summary>
         /// The stored procedure to retrieve schema information.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetSchema]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// A comma-separated list of system schemas.
@@ -27,16 +27,16 @@
         /// <summary>
         /// The parameter name for schema ID.
         /// </summary>
-        public readonly static String SchemaId = "@SchemaId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// The stored procedure to set schema information.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetSchema]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The user-defined table type for schema.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttSchema]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

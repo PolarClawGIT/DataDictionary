@@ -46,8 +46,8 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = AttributeSubjectArea.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Attribute.AttributeId, attributeId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Attribute.Identifier, attributeId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -66,8 +66,8 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = AttributeSubjectArea.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Attribute.AttributeId, attributeId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Attribute.Identifier, attributeId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (attributeId is null || w.AttributeId == attributeId));

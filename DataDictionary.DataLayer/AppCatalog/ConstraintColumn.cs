@@ -16,21 +16,21 @@
     static class ConstraintColumn
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ConstraintColumn));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ConstraintColumn));
 
         /// <summary>  
         /// The stored procedure to retrieve constraint column data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetConstraintColumn]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure to set constraint column data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetConstraintColumn]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for constraint column data.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttConstraintColumn]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

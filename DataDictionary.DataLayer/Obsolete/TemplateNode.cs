@@ -13,22 +13,21 @@ namespace DataDictionary.DataLayer.Obsolete
     [Obsolete]
     static class TemplateNode
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(TemplateNode));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TemplateNode));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template Node.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetTemplateNode]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Template Node.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetTemplateNode]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Template Node.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttTemplateNode]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

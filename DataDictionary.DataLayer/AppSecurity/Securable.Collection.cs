@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Securable.GetProcedure;
-            command.AddParameter(Securable.SecurableId, securableId);
+            command.AddParameter(Securable.Identifier, securableId);
             return command;
         }
     }

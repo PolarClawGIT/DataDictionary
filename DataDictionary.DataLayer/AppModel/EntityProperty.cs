@@ -5,22 +5,21 @@
     /// </summary>  
     static class EntityProperty
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(EntityProperty));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(EntityProperty));
 
         /// <summary>  
         /// The stored procedure used to retrieve entity property data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetEntityProperty]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set entity property data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetEntityProperty]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for entity property data.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttEntityProperty]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

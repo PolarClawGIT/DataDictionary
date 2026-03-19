@@ -47,8 +47,8 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = SecurableOwner.GetProcedure;
-            command.AddParameter(Principal.PrincipalId, principalId);
-            command.AddParameter(Securable.SecurableId, securableId);
+            command.AddParameter(Principal.Identifier, principalId);
+            command.AddParameter(Securable.Identifier, securableId);
             return command;
         }
 
@@ -70,8 +70,8 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = SecurableOwner.SetProcedure;
-            command.AddParameter(Principal.PrincipalId, parameters.PrincipalId);
-            command.AddParameter(Securable.SecurableId, parameters.SecurableId);
+            command.AddParameter(Principal.Identifier, parameters.PrincipalId);
+            command.AddParameter(Securable.Identifier, parameters.SecurableId);
 
             IEnumerable<TItem> data = this.Where(w => (parameters.PrincipalId is null || w.PrincipalId == parameters.PrincipalId) && (parameters.SecurableId is null || w.SecurableId == parameters.SecurableId));
             command.AddParameter(WriteData.Data, SecurableOwner.TableType, data);

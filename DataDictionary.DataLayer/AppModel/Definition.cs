@@ -21,27 +21,26 @@
     /// </summary>  
     static class Definition
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Definition));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Definition));
 
         /// <summary>  
         /// Identifier for the Definition entity.  
         /// </summary>  
-        public readonly static String DefinitionId = "@DefinitionId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// Stored procedure to retrieve a Definition.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetDefinition]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Stored procedure to set a Definition.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetDefinition]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// User-defined table type for Definition.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttDefinition]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

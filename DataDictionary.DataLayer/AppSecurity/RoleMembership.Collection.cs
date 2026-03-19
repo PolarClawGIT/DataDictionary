@@ -40,8 +40,8 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = RoleMembership.GetProcedure;
-            command.AddParameter(Principal.PrincipalId, principalId);
-            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Principal.Identifier, principalId);
+            command.AddParameter(Role.Identifier, roleId);
             return command;
         }
 
@@ -62,8 +62,8 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = RoleMembership.SetProcedure;
-            command.AddParameter(Principal.PrincipalId, principalId);
-            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Principal.Identifier, principalId);
+            command.AddParameter(Role.Identifier, roleId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (principalId is null || w.PrincipalId == principalId)

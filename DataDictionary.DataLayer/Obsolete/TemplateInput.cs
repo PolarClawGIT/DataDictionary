@@ -6,22 +6,21 @@
     [Obsolete]
     static class TemplateInput
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(TemplateInput));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TemplateInput));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Template Input Data Source .  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetTemplateInput]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Template Input Data Source .  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetTemplateInput]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Template Input Data Source .  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttTemplateInput]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -5,22 +5,21 @@
     /// </summary>  
     static class AttributeAlias
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(AttributeAlias));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeAlias));
 
         /// <summary>  
         /// The stored procedure used to retrieve attribute aliases.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetAttributeAlias]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set attribute aliases.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetAttributeAlias]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for attribute alias operations.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttAttributeAlias]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -13,21 +13,21 @@
     static class RoutineParameter
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(RoutineParameter));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(RoutineParameter));
 
         /// <summary>  
         /// The stored procedure to retrieve routine parameters.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetRoutineParameter]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure to set routine parameters.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetRoutineParameter]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for routine parameters.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttRoutineParameter]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -5,22 +5,21 @@
     /// </summary>
     static class AttributeDefinition
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(AttributeDefinition));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeDefinition));
 
         /// <summary>
         /// The stored procedure used to retrieve attribute definitions.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetAttributeDefinition]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// The stored procedure used to set attribute definitions.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetAttributeDefinition]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The user-defined table type for attribute definitions.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttAttributeDefinition]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

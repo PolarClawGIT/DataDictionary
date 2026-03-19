@@ -25,12 +25,12 @@
     static class Table
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Table));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Table));
 
         /// <summary>
         /// The stored procedure used to retrieve table information.
         /// </summary>
-        public readonly static String GetProcedure = schema.FullName("[procGetTable]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// A list of system tables that should be excluded from certain operations.
@@ -40,16 +40,16 @@
         /// <summary>
         /// The stored procedure used to set table information.
         /// </summary>
-        public readonly static String SetProcedure = schema.FullName("[procSetTable]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The parameter name for the table ID.
         /// </summary>
-        public readonly static String TableId = "@TableId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// The user-defined table type used in operations.
         /// </summary>
-        public readonly static String TableType = schema.FullName("[udttTable]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -16,27 +16,26 @@
     /// </summary>  
     static class Process
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Process));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Process));
 
         /// <summary>  
         /// The stored procedure used to retrieve process information.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProcess]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the Process ID.  
         /// </summary>  
-        public readonly static String ProcessId = "@ProcessId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure used to set process information.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProcess]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for process operations.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProcess]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

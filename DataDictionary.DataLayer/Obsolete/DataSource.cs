@@ -18,27 +18,26 @@
     [Obsolete]
     static class DataSource
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(DataSource));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(DataSource));
 
         /// <summary>  
         /// The parameter name for the Scripting Data Source ID.  
         /// </summary>  
-        public readonly static String DataSourceId = "@DataSourceId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting Data Source.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetDataSource]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting Data Source.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetDataSource]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for scripting Data Source.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttDataSource]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

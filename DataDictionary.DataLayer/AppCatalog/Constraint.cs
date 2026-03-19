@@ -22,27 +22,26 @@
     /// </summary>  
     static class Constraint
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Constraint));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Constraint));
 
-        /// <summary>  
-        /// Identifier for the constraint.  
-        /// </summary>  
-        public readonly static String ConstraintId = "@ConstraintId";
+        /// <summary>
+        /// Identifier for the Constraint.
+        /// </summary>
+        public readonly static String Identifier = dataObject.Identifier;
 
-        /// <summary>  
-        /// Stored procedure to retrieve constraint information.  
-        /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetConstraint]");
+        /// <summary>
+        /// Stored procedure to retrieve the Constraint.
+        /// </summary>
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
-        /// <summary>  
-        /// Stored procedure to set constraint information.  
-        /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetConstraint]");
+        /// <summary>
+        /// Stored procedure to set the Constraint.
+        /// </summary>
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
-        /// <summary>  
-        /// Table type for constraints.  
-        /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttConstraint]");
+        /// <summary>
+        /// Table type for the Constraint.
+        /// </summary>
+        public readonly static String TableType = dataObject.TableType;
     }
 }

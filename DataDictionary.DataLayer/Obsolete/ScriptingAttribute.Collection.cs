@@ -40,8 +40,8 @@ namespace DataDictionary.DataLayer.Obsolete
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = ScriptingAttribute.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(ScriptingTemplate.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, templateId);
             return command;
         }
 
@@ -58,8 +58,8 @@ namespace DataDictionary.DataLayer.Obsolete
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = ScriptingAttribute.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(ScriptingTemplate.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, templateId);
 
             IEnumerable<TItem> data = this.Where(w => templateId is null || w.TemplateId == templateId);
             command.AddParameter(WriteData.Data, ScriptingAttribute.TableType, data);

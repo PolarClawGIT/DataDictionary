@@ -5,22 +5,21 @@
     /// </summary>  
     static class EntityDefinition
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(EntityDefinition));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(EntityDefinition));
 
         /// <summary>  
         /// The stored procedure used to retrieve entity definitions.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetEntityDefinition]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set entity definitions.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetEntityDefinition]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for entity definitions.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttEntityDefinition]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

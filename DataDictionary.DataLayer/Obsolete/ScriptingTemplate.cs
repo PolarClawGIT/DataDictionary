@@ -6,27 +6,21 @@
     [Obsolete("replace", true)]
     static class ScriptingTemplate
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ScriptingTemplate));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ScriptingTemplate));
 
         /// <summary>  
         /// The stored procedure used to retrieve scripting templates.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetScriptingTemplate]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set scripting templates.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetScriptingTemplate]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for scripting templates.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttScriptingTemplate]");
-
-        /// <summary>  
-        /// The parameter name for the template ID.  
-        /// </summary>  
-        public readonly static String TemplateId = "@TemplateId";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

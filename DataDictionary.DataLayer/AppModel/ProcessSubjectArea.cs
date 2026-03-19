@@ -16,22 +16,21 @@
     /// </summary>  
     static class ProcessSubjectArea
     {
-        /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(ProcessSubjectArea));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessSubjectArea));
 
         /// <summary>  
         /// The name of the stored procedure used to retrieve Process Subject Area data.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProcessSubjectArea]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The name of the stored procedure used to set Process Subject Area data.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProcessSubjectArea]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The name of the user-defined table type for Process Subject Area.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProcessSubjectArea]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -34,26 +34,26 @@
     static class Property
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(Property));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Property));
 
         /// <summary>  
         /// The stored procedure for retrieving a property.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetProperty]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the property ID in stored procedures.  
         /// </summary>  
-        public readonly static String PropertyId = "@PropertyId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure for setting a property.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetProperty]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for properties.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttProperty]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -48,21 +48,21 @@ namespace DataDictionary.DataLayer.AppCatalog
     static class TableColumn
     {
         /// <inheritdoc cref="Object.GetType"/>
-        static readonly SchemaName schema = new SchemaName(typeof(TableColumn));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TableColumn));
 
         /// <summary>  
         /// Stored procedure to get table column information.  
         /// </summary>  
-        public readonly static String GetProcedure = schema.FullName("[procGetTableColumn]");
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Stored procedure to set table column information.  
         /// </summary>  
-        public readonly static String SetProcedure = schema.FullName("[procSetTableColumn]");
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// User-defined table type for table column information.  
         /// </summary>  
-        public readonly static String TableType = schema.FullName("[udttTableColumn]");
+        public readonly static String TableType = dataObject.TableType;
     }
 }
