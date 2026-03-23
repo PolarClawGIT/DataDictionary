@@ -6,22 +6,22 @@
     /// </summary>
     static class SchemaDefinition
     {
-        static readonly DatabaseNaming schema = new DatabaseNaming(typeof(SchemaDefinition));
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(SchemaDefinition));
 
         /// <summary>
         /// Stored procedure to retrieve an SchemaDefinition.
         /// </summary>
-        public readonly static String GetProcedure = schema.GetProcedure;
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure to set an SchemaDefinition.
         /// </summary>
-        public readonly static String SetProcedure = schema.SetProcedure;
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// User-defined table type for SchemaDefinition operations.
         /// </summary>
-        public readonly static String TableType = schema.TableType;
+        public readonly static String TableType = dataObject.TableType;
     }
 
 }
