@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Transform ID for the Scripting Transform.
         /// </summary>
-        Guid? SchemaId { get; }
+        Guid? TransformId { get; }
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.AppScript
         IKeyEquality<ITransformKey>
     {
         /// <inheritdoc/>
-        public Guid? SchemaId { get; init; } = Guid.Empty;
+        public Guid? TransformId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Blank/Empty Transform Key
@@ -36,14 +36,14 @@ namespace DataDictionary.DataLayer.AppScript
         /// <param name="source"></param>
         public TransformKey(ITransformKey source) : base()
         {
-            if (source.SchemaId is Guid) { SchemaId = source.SchemaId; }
-            else { SchemaId = Guid.Empty; }
+            if (source.TransformId is Guid) { TransformId = source.TransformId; }
+            else { TransformId = Guid.Empty; }
         }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TransformKey? other)
-        { return other is TransformKey key && key.SchemaId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(SchemaId, key.SchemaId); }
+        { return other is TransformKey key && key.TransformId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TransformId, key.TransformId); }
 
         /// <inheritdoc/>
         public Boolean Equals(ITransformKey? other)
@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(SchemaId); }
+        { return HashCode.Combine(TransformId); }
 
 
         #endregion
