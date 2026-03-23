@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     public interface ISchemaNodeKey : IKey
     {
         /// <summary>
-        /// SchemaNode ID for the Scripting SchemaNode.
+        /// Node ID for the Scripting SchemaNode.
         /// </summary>
         Guid? NodeId { get; }
     }
