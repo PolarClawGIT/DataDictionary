@@ -20,7 +20,7 @@
 	CONSTRAINT [FK_DocumentTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_DocumentSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([SchemaId]),
 	CONSTRAINT [FK_DocumentTransform] FOREIGN KEY ([TransformId]) REFERENCES [AppScript].[Transform] ([TransformId]),
-	CONSTRAINT [FK_DocumentObject] FOREIGN KEY ([ObjectId]) REFERENCES [AppScript].[DocumentObject] ([ObjectId]),
+	CONSTRAINT [FK_DocumentObject] FOREIGN KEY ([ObjectId]) REFERENCES [AppScript].[TemplateObject] ([ObjectId]),
 	CONSTRAINT [CK_TemplateSchema] CHECK (
 		([SchemaId] is Not Null And [TransformId] Is Null) Or
 		([SchemaId] is Null And [TransformId] is Not Null)),

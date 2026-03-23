@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppScript].[procGetDocumentObject]
+﻿CREATE PROCEDURE [AppScript].[procGetTemplateObject]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -21,7 +21,7 @@ Select	[ObjectId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[DocumentObjectHS] For System_Time All D
+From	[AppScript].[TemplateObjectHS] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (

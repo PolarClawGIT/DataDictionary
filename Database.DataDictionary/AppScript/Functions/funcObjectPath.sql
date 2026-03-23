@@ -1,7 +1,8 @@
-﻿CREATE FUNCTION [AppScript].[funcDocumentObjectPath](@ObjectId UniqueIdentifier)
+﻿CREATE FUNCTION [AppScript].[funcObjectPath](@ObjectId UniqueIdentifier)
 -- This takes the Object and rebuilds them into a Object Path.
 -- Path is qualified by square brackets and delimited by periods.
--- Temporal Data NOT Supported, is it needed?
+-- Temporal Data NOT Supported
+-- TODO: is it needed?
 RETURNS [AppGeneral].[uddtPath] as 
 BEGIN
 	Declare @Result [AppGeneral].[uddtPath] = null
@@ -10,14 +11,14 @@ BEGIN
 	Select	[ObjectId],
 			NullIf([ParentObjectId], [ObjectId]) As [ParentObjectId],
 			[AppGeneral].[funcCreatePath]([ObjectMember], Null) As [ObjectPath]
-	From	[AppScript].[DocumentObject]
+	From	[AppScript].[TemplateObject]
 	Where	[ObjectId] = @ObjectId
 	Union All
 	Select	D.[ObjectId],
 			NullIf(P.[ParentObjectId], D.[ObjectId]) As [ParentObjectId],
 			[AppGeneral].[funcCreatePath](P.[ObjectMember], D.[ObjectPath]) As [ObjectPath]
 	From	[Data] D
-			Inner Join [AppScript].[DocumentObject] P
+			Inner Join [AppScript].[TemplateObject] P
 			On	D.[ParentObjectId] = P.[ObjectId])
 Select	@Result = [ObjectPath]
 From	[Data]

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [HsScript].[DocumentObject]
+﻿CREATE TABLE [HsScript].[TemplateObject]
 (	[ObjectId]			UniqueIdentifier Not Null,
 	[TemplateId]		UniqueIdentifier Not Null,
 	[ParentObjectId]	UniqueIdentifier NULL,
@@ -11,9 +11,9 @@
 	[SysEnd]			DateTime2 (7) Not Null,
 )
 GO
-CREATE CLUSTERED INDEX [IX_DocumentObject]
-    ON [HsScript].[DocumentObject]([SysEnd] ASC, [SysStart] ASC)
+CREATE CLUSTERED INDEX [IX_TemplateObject]
+    ON [HsScript].[TemplateObject]([SysEnd] ASC, [SysStart] ASC)
 GO
-CREATE INDEX [FK_DocumentObject]
-    ON [HsScript].[DocumentObject]([ObjectId] ASC)
+CREATE INDEX [FK_TemplateObject]
+    ON [HsScript].[TemplateObject]([ObjectId] ASC)
 GO

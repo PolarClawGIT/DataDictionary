@@ -6,6 +6,6 @@
 	ADD BLOCK PREDICATE [AppSecurity].[funcScriptingAuthorization] (Null, Null) ON [AppScript].[SchemaNode],
 	ADD BLOCK PREDICATE [AppSecurity].[funcScriptingAuthorization] (Null, Null) ON [AppScript].[SchemaNodeOwner],
 	ADD BLOCK PREDICATE [AppSecurity].[funcScriptingAuthorization] (Null, Null) ON [AppScript].[Document],
-	ADD BLOCK PREDICATE [AppSecurity].[funcScriptingAuthorization] (Null, Null) ON [AppScript].[DocumentObject]
+	ADD BLOCK PREDICATE [AppSecurity].[funcScriptingAuthorization] (Null, Null) ON [AppScript].[TemplateObject]
 	WITH (STATE = ON, SCHEMABINDING = ON)
 GO

@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetDocumentObject]
+﻿CREATE PROCEDURE [AppScript].[procSetTemplateObject]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttDocumentObject] ReadOnly
+		@Data [AppScript].[udttTemplateObject] ReadOnly
 AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
@@ -63,7 +63,7 @@ Begin Try
 						X.[ObjectId]
 					) As [RankIndex]
 		From	[Data] D
-				Left Join [AppScript].[DocumentObjectHS] H
+				Left Join [AppScript].[TemplateObjectHS] H
 				On	IsNull(D.[TemplateId], @TemplateId) = H.[TemplateId] And
 					IsNull(D.[ObjectPath],'') = IsNull(H.[ObjectPath],'') And
 					D.[ObjectMember] = H.[ObjectMember]
@@ -84,8 +84,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[DocumentObject]
-	From	[AppScript].[DocumentObject] T
+	Delete From [AppScript].[TemplateObject]
+	From	[AppScript].[TemplateObject] T
 			Left Join @Values S
 			On	T.[ObjectId] = S.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
@@ -132,21 +132,21 @@ Begin Try
 				[ObjectMember],
 				[IsExcluded],
 				[KeepOrphaned]
-		From	[AppScript].[DocumentObject])
-	Update [AppScript].[DocumentObject]
+		From	[AppScript].[TemplateObject])
+	Update [AppScript].[TemplateObject]
 	Set		--[TemplateId] = S.[TemplateId],
 			[ParentObjectId] = S.[ParentObjectId],
 			[ObjectScope] = S.[ObjectScope],
 			[ObjectMember] = S.[ObjectMember],
 			[IsExcluded] = S.[IsExcluded],
 			[KeepOrphaned] = S.[KeepOrphaned]
-	From	[AppScript].[DocumentObject] T
+	From	[AppScript].[TemplateObject] T
 			Inner Join [Delta] S
 			On	T.[ObjectId] = S.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
 	Print FormatMessage ('Update [AppScript].[DocumentObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[DocumentObject] (
+	Insert Into [AppScript].[TemplateObject] (
 			[ObjectId],
 			[TemplateId],
 			[ParentObjectId],
@@ -165,7 +165,7 @@ Begin Try
 				Left Join @Values P
 				On	S.[TemplateId] = P.[TemplateId] And
 					S.[ObjectPath] = P.[ObjectName]
-			Left Join [AppScript].[DocumentObject] T
+			Left Join [AppScript].[TemplateObject] T
 			On	S.[ObjectId] = T.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[ObjectId] is Null

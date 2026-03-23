@@ -1,61 +1,66 @@
-﻿CREATE VIEW [AppScript].[DocumentObjectHS] AS
--- Returns only the Leaf Nodes of the Document Objects with the full Object Path.
+﻿CREATE VIEW [AppScript].[TemplateObjectTree] AS
+-- Returns the Tree structure of the  Objects.
+-- This uses a Parent first approch to build a tree and is primarly here for validation/testing.
 With [Dates] As (
 	Select	[ObjectId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[DocumentObject]
+	From	[AppScript].[TemplateObject]
 	Union
 	Select	[ObjectId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[DocumentObject]
+	From	[HsScript].[TemplateObject]
 	Where	[SysStart] != [SysEnd]),
 [Data] As (
-	-- Leaf Nodes
+	-- Parent Nodes
 	Select	L.[ObjectId],
 			L.[TemplateId],
 			L.[ParentObjectId],
-			Convert(UniqueIdentifier, Null) As [ChildObjectId],
-			L.[ObjectScope],
-			[AppGeneral].[funcConcatPath](Null, Null) As [ObjectPath],
 			L.[ObjectMember],
+			L.[ObjectScope],
+			Convert(NVarChar(Max), Concat('[',L.[ObjectMember],']')) As [ObjectPath],
 			L.[IsExcluded],
 			L.[KeepOrphaned],
 			Convert(TinyInt,1) As [Depth],
+			Convert(NVarChar(Max),
+				FormatMessage('/%I64d/', -- Under documented BigInt. See C++ PrintF
+					Dense_Rank() Over (Order By [ObjectMember])))
+				As [HierarchyId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[DocumentObject] L
-	Where	Not Exists (
-				-- Has No Children
-				Select	1
-				From	[AppScript].[DocumentObject] P
-				Where	P.[ParentObjectId] = L.[ObjectId])
+	From	[AppScript].[TemplateObject] L
+	Where	L.[ParentObjectId] is Null
 	-- Parent Nodes
 	Union All
-	Select	L.[ObjectId],
-			IsNull(L.[TemplateId], P.[TemplateId]) As [TemplateId],
-			P.[ParentObjectId],
-			P.[ObjectId] As [ChildObjectId],
-			IsNull(L.[ObjectScope], P.[ObjectScope]) As [ObjectScope],
-			[AppGeneral].[funcConcatPath](P.[ObjectMember],L.[ObjectPath]) As [ObjectPath],
-			L.[ObjectMember],
-			L.[IsExcluded],
-			L.[KeepOrphaned],
-			Convert(TinyInt,L.[Depth] + 1) As [Depth],
-			L.[SysStart],
-			L.[SysEnd]
-	From	[AppScript].[DocumentObject] P
-			Inner Join [Data] L
-			On	P.[ObjectId] = L.[ParentObjectId])
-Select	D.[ObjectId], -- PK
-		D.[TemplateId], -- AK
+	Select	C.[ObjectId],
+			IsNull(C.[TemplateId], P.[TemplateId]) As [TemplateId],
+			C.[ParentObjectId],
+			C.[ObjectMember],
+			IsNull(C.[ObjectScope], P.[ObjectScope]) As [ObjectScope],
+			Convert(NVarChar(Max), Concat(P.[ObjectPath],'.[',C.[ObjectMember],']')) As [ObjectPath],
+			C.[IsExcluded],
+			C.[KeepOrphaned],
+			Convert(TinyInt,P.[Depth] + 1) As [Depth],
+			Convert(NVarChar(Max), FormatMessage('%s%I64d/', P.[HierarchyId],
+				Row_Number() Over (Partition By C.[ObjectId] Order By C.[ObjectMember])))
+				As [HierarchyId],
+			Greatest(P.[SysStart], C.[SysStart]) As [SysStart],
+			Least(P.[SysEnd], C.[SysEnd]) As [SysEnd]
+	From	[Data] P
+			Inner Join [AppScript].[TemplateObject] C
+			On	P.[ObjectId] = C.[ParentObjectId] And
+				-- Temporal, multiple rows could be returned. Do not have confidence in this.
+				((P.[SysStart] >= C.[SysStart] And P.[SysStart] < C.[SysEnd]) Or
+				(C.[SysStart] >= P.[SysStart] And C.[SysStart] < P.[SysEnd])))
+Select	D.[ObjectId],
+		D.[TemplateId],
 		D.[ObjectScope],
-		--D.[ObjectName],
-		D.[ObjectPath], -- AK
-		D.[ObjectMember], -- AK
+		D.[ObjectPath],
+		D.[ObjectMember],
 		D.[IsExcluded],
 		D.[KeepOrphaned],
+		Convert(HierarchyId, D.[HierarchyId]) As [HierarchyId], -- Values is not guaranteed between executions.
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -82,10 +87,10 @@ From	[Data] D
 		On	D.[SysStart] = C.[ModifiedOn]
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
-Where	D.[ParentObjectId] is Null -- Only the leaf nodes are returned. Other nodes do not contain good data.
 GO
+
+-- Testing
 /*
- --Testing
 Begin Try;
 	Begin Transaction;
 	Set NoCount On;
@@ -101,11 +106,11 @@ Begin Try;
 	Exec [AppScript].[procSetTemplate] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Template
 
 	-- Root Node
-	Insert Into [AppScript].[DocumentObject] ([TemplateId],  [ObjectMember])
-	Values (@TemplateId,  'Root Node')
+	Insert Into [AppScript].[DocumentObject] ([TemplateId], [ObjectMember])
+	Values (@TemplateId, 'Root Node')
 
 	-- Children
-	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId],  [ObjectMember])
+	Insert Into [AppScript].[DocumentObject] ([ParentObjectId], [TemplateId], [ObjectMember])
 	Select	[ObjectId] As [ParentObjectId],
 			@TemplateId As [TemplateId],
 			'Child 1' As [ObjectMember]
@@ -127,7 +132,7 @@ Begin Try;
 	Where	[ObjectMember] = 'Child 1'
 
 	Select	*
-	From	[AppScript].[DocumentObjectHS]
+	From	[AppScript].[DocumentObjectTree]
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
