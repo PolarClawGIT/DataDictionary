@@ -43,6 +43,19 @@ namespace DataDictionary.DataLayer.AppScript
             else { NodeId = Guid.Empty; }
         }
 
+        /// <summary>
+        /// Constructor for the SchemaNode Key
+        /// </summary>
+        /// <param name="source"></param>
+        public SchemaNodeOwnerKey(ISchemaNodeOwnerKey source) : base()
+        {
+            if (source.NodeId is Guid) { NodeId = source.NodeId; }
+            else { NodeId = Guid.Empty; }
+
+            if (source.NodeOwnerId is Guid) { NodeId = source.NodeOwnerId; }
+            else { NodeOwnerId = Guid.Empty; }
+        }
+
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(SchemaNodeOwnerKey? other)
