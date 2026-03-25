@@ -131,7 +131,7 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 <SchemaValue, Forms.Catalog.DbSchema>
-                (ScopeType.DatabaseSchema, BusinessData.CatalogModel.DbSchemta)
+                (ScopeType.DatabaseSchema, BusinessData.CatalogModel.DbSchemata)
             { SelectedForm = (data) => new Forms.Catalog.DbSchema(data) });
         }
 
