@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
+﻿//using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls;

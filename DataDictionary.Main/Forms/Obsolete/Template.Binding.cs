@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
+﻿//using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Obsolete;
@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateInputValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public IXElementBuilderList XBuilder { get; } = BusinessData.Scripting.XBuilders;
+            public BusinessLayer.AppScripting.IXElementBuilderList XBuilder { get; } = BusinessData.Scripting.XBuilders;
 
             public FormBinding() : base()
             { }
