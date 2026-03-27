@@ -318,5 +318,48 @@ namespace DataDictionary.Main
             Activate(static () => new DetailDataView
                 (ScopeType.ApplicationLog, BusinessData.Messages));
         }
+
+
+        private void MenuTemplate_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplate, BusinessData.Templates));
+        }
+
+        private void MenuTemplateTransform_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTransform, BusinessData.Templates.Transforms));
+        }
+
+        private void MenuTemplateSchemata_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingSchema, BusinessData.Templates.Schemata));
+        }
+
+        private void MenuTemplateNode_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingSchema, BusinessData.Templates.SchemataNodes));
+        }
+
+        private void MenuTemplateNodeOwner_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingNodeOwner, BusinessData.Templates.SchemataNodeOwners));
+        }
+
+        private void MenuTemplateObject_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingObject, BusinessData.Templates.Objects));
+        }
+
+        private void MenuTemplateDocument_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingDocument, BusinessData.Templates.Documents));
+        }
     }
 }
