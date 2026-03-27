@@ -134,21 +134,21 @@ namespace DataDictionary.Main
         void OpenForm(ITemplateValue template)
         {
             Activate(
-                () => new Forms.Scripting.Template(template),
+                () => new Forms.Obsolete.Template(template),
                 (form) => form.IsOpenItem(template));
         }
 
         void OpenForm(IDataSourceValue dataSource)
         {
             Activate(
-                () => new Forms.Scripting.DataSource(dataSource),
+                () => new Forms.Obsolete.DataSource(dataSource),
                 (form) => form.IsOpenItem(dataSource));
         }
 
         void OpenForm(IDocumentValue document)
         {
             Activate(
-                () => new Forms.Scripting.Document(document),
+                () => new Forms.Obsolete.Document(document),
                 (form) => form.IsOpenItem(document));
         }
     }

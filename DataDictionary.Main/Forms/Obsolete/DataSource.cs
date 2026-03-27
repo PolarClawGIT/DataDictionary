@@ -8,8 +8,9 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.Obsolete
 {
+    [Obsolete]
     partial class DataSource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)

@@ -8,8 +8,9 @@ using System.ComponentModel;
 using System.Text;
 using System.Xml.Linq;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.Obsolete
 {
+    [Obsolete]
     partial class Document : ApplicationData, IApplicationDataForm
     {
         FormBinding formBinding;

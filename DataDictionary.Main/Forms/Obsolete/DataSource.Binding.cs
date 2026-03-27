@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.Obsolete
 {
     partial class DataSource
     {

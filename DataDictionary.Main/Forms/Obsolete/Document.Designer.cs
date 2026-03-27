@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Scripting
+﻿namespace DataDictionary.Main.Forms.Obsolete
 {
     partial class Document
     {
