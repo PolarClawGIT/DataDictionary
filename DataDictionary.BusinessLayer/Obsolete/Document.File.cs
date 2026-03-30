@@ -91,7 +91,7 @@ namespace DataDictionary.BusinessLayer.Obsolete
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(DirectoryPath, FileName));
+                FileInfo file = new FileInfo(Path.Combine(InitialDirectory, FileName));
 
                 if (file.Exists)
                 {
@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer.Obsolete
                     catch (Exception ex)
                     {
                         cancel = true;
-                        ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
+                        ex.Data.Add(nameof(InitialDirectory), InitialDirectory);
                         ex.Data.Add(nameof(FileName), FileName);
                         throw;
                     }
@@ -113,7 +113,7 @@ namespace DataDictionary.BusinessLayer.Obsolete
                     cancel = true;
                     Exception ex = new FileNotFoundException();
 
-                    ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
+                    ex.Data.Add(nameof(InitialDirectory), InitialDirectory);
                     ex.Data.Add(nameof(FileName), FileName);
                     throw ex;
                 }
@@ -137,7 +137,7 @@ namespace DataDictionary.BusinessLayer.Obsolete
 
             void OnWork()
             {
-                FileInfo file = new FileInfo(Path.Combine(DirectoryPath, FileName));
+                FileInfo file = new FileInfo(Path.Combine(InitialDirectory, FileName));
 
                 try
                 {
@@ -145,14 +145,14 @@ namespace DataDictionary.BusinessLayer.Obsolete
                     // TODO: This is still adding the Byte Order Mark (BOM) to the file.
                     // This is not necessary an in some cases, may cause issues with other tools.
                     if (TryParse(out XDocument? document, out Exception? _))
-                    { document.Save(Path.Combine(DirectoryPath, FileName)); }
+                    { document.Save(Path.Combine(InitialDirectory, FileName)); }
                     else // Save the file as Text. This is expected to have a BOM.
-                    { File.WriteAllText(Path.Combine(DirectoryPath, FileName), GetContent()); }
+                    { File.WriteAllText(Path.Combine(InitialDirectory, FileName), GetContent()); }
                 }
                 catch (Exception ex)
                 {
                     cancel = true;
-                    ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
+                    ex.Data.Add(nameof(InitialDirectory), InitialDirectory);
                     ex.Data.Add(nameof(FileName), FileName);
                     throw;
                 }
@@ -177,7 +177,7 @@ namespace DataDictionary.BusinessLayer.Obsolete
             catch (Exception ex)
             {
                 document = null;
-                ex.Data.Add(nameof(DirectoryPath), DirectoryPath);
+                ex.Data.Add(nameof(InitialDirectory), InitialDirectory);
                 ex.Data.Add(nameof(FileName), FileName);
                 exception = ex;
                 return false;

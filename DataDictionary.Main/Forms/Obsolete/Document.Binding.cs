@@ -255,7 +255,7 @@ namespace DataDictionary.Main.Forms.Obsolete
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.InitialDirectory = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Open(), onCompleted);
@@ -271,7 +271,7 @@ namespace DataDictionary.Main.Forms.Obsolete
 
             if (dialog.ShowDialog() is DialogResult.OK)
             {
-                file.DirectoryPath = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
+                file.InitialDirectory = Path.GetDirectoryName(dialog.FileName) ?? String.Empty;
                 file.FileName = Path.GetFileName(dialog.FileName);
 
                 DoWork(file.Save(), onCompleted);

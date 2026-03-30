@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for the Templates
     /// </summary>
+    [Obsolete("Do not think this is needed")]
     public interface ITemplate :
         ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
@@ -22,6 +23,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         //TODO: Add rest of Template objects
     }
 
+    [Obsolete("Do not think this is needed")]
     class Template : ITemplate, IDataTableFile
     {
         /// <inheritdoc/>

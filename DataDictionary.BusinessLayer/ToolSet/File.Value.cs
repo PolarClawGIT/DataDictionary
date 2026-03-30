@@ -10,13 +10,16 @@ namespace DataDictionary.BusinessLayer.ToolSet
     {
         /// <summary>
         /// File Name for the File within the File Path.
+        /// dialog.FileName = IFileValue.FileName
         /// </summary>
         String FileName { get; set; }
 
         /// <summary>
         /// Relative File Path from the Root Folder and File Name.
+        /// dialog.InitialDirectory = IFileValue.InitialDirectory
         /// </summary>
         /// <remarks>Computed from Root Folder, Relative Directory and FileName</remarks>
+        [Obsolete ("redundant with InitialDirectory")]
         String RelativeFileName { get; }
 
         /// <summary>
@@ -27,18 +30,18 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
     /// <summary>
     /// Represents a Single File.
-    /// Used to hold file information.
+    /// Used to hold file information for use with the File Open/Save Dialog.
     /// This is a Wrapper around the fields in the base table so that they can be treated as a single unit.
     /// </summary>
-    public abstract class FileValue : DirectoryValue, IFileValue
+    public class FileValue : DirectoryValue, IFileValue
     {
         /// <inheritdoc/>
-        public override String DirectoryPath
+        public override String InitialDirectory
         {
-            get { return base.DirectoryPath; }
+            get { return base.InitialDirectory; }
             set
             {
-                base.DirectoryPath = value;
+                base.InitialDirectory = value;
                 OnPropertyChanged(nameof(RelativeFileName));
             }
         }

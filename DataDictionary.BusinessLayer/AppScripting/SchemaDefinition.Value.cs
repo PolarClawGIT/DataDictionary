@@ -8,7 +8,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ISchemaDefinitionValue : ISchemaDefinitionItem, ISchemaDefinitionIndex, ITemplateIndex,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// Directory information to be used with the Directory Dialog.
+        /// </summary>
+        IDirectoryValue SchemaDirectory { get; }
+    }
 
     /// <inheritdoc/>
     public class SchemaDefinitionValue : SchemaDefinitionItem, ISchemaDefinitionValue, IPathValue, INamedScopeSourceValue
@@ -28,6 +33,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingSchema; } }
 
         /// <inheritdoc/>
+        public IDirectoryValue SchemaDirectory { get; }
+
+        /// <inheritdoc/>
         public SchemaDefinitionValue() : base()
         {
             pathValue = new PathValue(this)
@@ -38,6 +46,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),
                 IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
+            };
+
+            SchemaDirectory = new DirectoryValue()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => RelativePath ?? String.Empty,
+                SetDirectory = (value) => RelativePath = value
             };
         }
     }

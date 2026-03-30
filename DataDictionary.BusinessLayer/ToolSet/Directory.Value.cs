@@ -25,17 +25,17 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// </summary>
         /// <remarks>Use to set the FileDialog (Open File or Save File) initial directory or to update the Relative Path</remarks>
         /// <example>
-        /// dialog.InitialDirectory = IDirectoryValue.DirectoryPath;
+        /// dialog.InitialDirectory = IDirectoryValue.InitialDirectory;
         /// </example>
-        String DirectoryPath { get; set; }
+        String InitialDirectory { get; set; }
     }
 
     /// <summary>
     /// Represents a Single Directory.
-    /// Used to hold directory information.
+    /// Used to hold directory information for use with the Folder Browser Dialog.
     /// This is a Wrapper around the fields in the base table so that they can be treated as a single unit.
     /// </summary>
-    public abstract class DirectoryValue : IDirectoryValue
+    public class DirectoryValue : IDirectoryValue
     {
         /// <inheritdoc/>
         public virtual Environment.SpecialFolder RootFolder { get { return GetRootFolder().GetEnumeration().SpecialFolder; } }
@@ -57,7 +57,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
         String directoryValue = String.Empty;
 
         /// <inheritdoc/>
-        public virtual String DirectoryPath
+        public virtual String InitialDirectory
         {
             get
             {
@@ -90,7 +90,7 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
                 else { SetDirectory(value); }
 
-                OnPropertyChanged(nameof(DirectoryPath));
+                OnPropertyChanged(nameof(InitialDirectory));
             }
         }
 

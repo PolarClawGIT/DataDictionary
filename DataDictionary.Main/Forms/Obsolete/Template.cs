@@ -209,12 +209,12 @@ namespace DataDictionary.Main.Forms.Obsolete
             {
                 folderBrowserDialog.Reset();
                 folderBrowserDialog.RootFolder = current.DocumentValue.RootFolder;
-                folderBrowserDialog.InitialDirectory = current.DocumentValue.DirectoryPath;
+                folderBrowserDialog.InitialDirectory = current.DocumentValue.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
                 {
-                    current.DocumentValue.DirectoryPath = folderBrowserDialog.SelectedPath;
-                    documentPhysicalDirectory.Text = current.DocumentValue.DirectoryPath;
+                    current.DocumentValue.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    documentPhysicalDirectory.Text = current.DocumentValue.InitialDirectory;
                 }
             }
         }
@@ -228,12 +228,12 @@ namespace DataDictionary.Main.Forms.Obsolete
             {
                 folderBrowserDialog.Reset();
                 folderBrowserDialog.RootFolder = current.ScriptValue.RootFolder;
-                folderBrowserDialog.InitialDirectory = current.ScriptValue.DirectoryPath;
+                folderBrowserDialog.InitialDirectory = current.ScriptValue.InitialDirectory;
 
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
                 {
-                    current.ScriptValue.DirectoryPath = folderBrowserDialog.SelectedPath;
-                    scriptingPhysicalDirectory.Text = current.ScriptValue.DirectoryPath;
+                    current.ScriptValue.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    scriptingPhysicalDirectory.Text = current.ScriptValue.InitialDirectory;
                 }
             }
         }
