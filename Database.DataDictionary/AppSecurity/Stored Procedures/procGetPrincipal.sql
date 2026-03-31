@@ -13,4 +13,5 @@ Select	P.[PrincipalId],
 From	[AppSecurity].[Principal] P
 Where	(@PrincipalId is Null or P.[PrincipalId] = @PrincipalId) And
 		(@PrincipalLogin is Null or P.[PrincipalLogin] = @PrincipalLogin)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

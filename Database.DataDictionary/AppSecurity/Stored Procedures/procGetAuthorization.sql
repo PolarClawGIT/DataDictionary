@@ -39,4 +39,5 @@ From	[Logins] L
 		On	L.[PrincipalLogin] = P.[PrincipalLogin]
 		-- Only Returns values for the original_login. Everything else gets Null.
 		Cross Apply  [AppSecurity].[funcAuthorization](null) S
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

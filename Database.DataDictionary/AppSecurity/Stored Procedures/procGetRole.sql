@@ -22,4 +22,5 @@ Select	R.[RoleId],
 From	[AppSecurity].[Role] R
 		Cross Apply [AppSecurity].[funcAuthorization](null) S
 Where	(@RoleId is Null or R.[RoleId] = @RoleId)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

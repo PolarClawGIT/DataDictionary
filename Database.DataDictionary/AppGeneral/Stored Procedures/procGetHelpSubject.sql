@@ -27,4 +27,5 @@ Select	[HelpId],
 From	[AppGeneral].[HelpSubjectHs] For System_Time All 
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@HelpId is Null Or @HelpId = [HelpId])
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO
