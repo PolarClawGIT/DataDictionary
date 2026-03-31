@@ -1,14 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices.JavaScript;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Toolbox.DbContext
 {
@@ -233,7 +224,6 @@ namespace Toolbox.DbContext
             try
             {
                 if (DbContext.ValidateCommand) { Validate(command); }
-                Validate(command);
                 return command.BaseCommand.ExecuteReader();
             }
             catch (Exception ex)
