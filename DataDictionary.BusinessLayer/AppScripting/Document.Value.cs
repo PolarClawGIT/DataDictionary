@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface IDocumentValue : IDocumentItem, IDocumentIndex, ITemplateIndex,
+    public interface IDocumentValue : IDocumentItem, IDocumentIndex, ITemplateIndex, ITransformIndex, ISchemaDefinitionIndex, ITemplateObjectIndex,
         IScopeType, ITemporal
     { }
 

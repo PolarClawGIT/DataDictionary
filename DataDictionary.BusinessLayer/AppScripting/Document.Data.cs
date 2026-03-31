@@ -131,5 +131,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
+
     }
 }
