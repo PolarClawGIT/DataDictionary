@@ -1,15 +1,11 @@
 ﻿CREATE TYPE [AppScript].[udttDocument] AS TABLE
 (
-	[DocumentId]			UniqueIdentifier Null,
-	[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
-	[TemplateId]            UniqueIdentifier NULL,
-	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
-	[InputPath]				[AppGeneral].[uddtFilePath] Null,
-	[InputFile]             [AppGeneral].[uddtFileName] Null, 
-	[ProcessPath]			[AppGeneral].[uddtFilePath] Null,
-	[ProcessFile]           [AppGeneral].[uddtFileName] Null, 
-	[OutputPath]			[AppGeneral].[uddtFilePath] Null,
-	[OutputFile]            [AppGeneral].[uddtFileName] Null,
+	[DocumentId]			UniqueIdentifier NULL,
+	[TemplateId]			UniqueIdentifier NULL,
+	[SchemaId]				UniqueIdentifier NULL,
+	[TransformId]			UniqueIdentifier NULL,
+	[ObjectId]				UniqueIdentifier NULL,
+	[FileName]				[AppGeneral].[uddtFileName] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,
@@ -19,4 +15,3 @@
 	[IsUpdated]             Bit Null,
 	[IsDeleted]             Bit Null,
 	[IsCurrent]             Bit Null);
-

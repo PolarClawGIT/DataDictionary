@@ -11,4 +11,5 @@ Select	M.[RoleId],
 From	[AppSecurity].[RoleMembership] M
 Where	(@RoleId is Null or [RoleId] = @RoleId) And
 		(@PrincipalId is Null or M.[PrincipalId] = @PrincipalId)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

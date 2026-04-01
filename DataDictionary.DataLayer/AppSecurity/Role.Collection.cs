@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Role.GetProcedure;
-            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Role.Identifier, roleId);
             return command;
         }
 
@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.AppSecurity
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Role.SetProcedure;
-            command.AddParameter(Role.RoleId, roleId);
+            command.AddParameter(Role.Identifier, roleId);
 
             IEnumerable<TItem> data = this.Where(w => roleId is null || w.RoleId == roleId);
             command.AddParameter(WriteData.Data, Role.TableType, data);

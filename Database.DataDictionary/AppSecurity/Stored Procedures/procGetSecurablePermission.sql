@@ -16,4 +16,5 @@ From	[AppSecurity].[SecurablePermission] O
 		On	O.[SecurableId] = T.[SecurableId]
 Where	(@SecurableId is Null Or O.[SecurableId] = @SecurableId) And
 		(@RoleId is Null Or O.[RoleId] = @RoleId)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

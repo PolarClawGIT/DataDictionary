@@ -14,4 +14,5 @@ Select	[PrincipalId],
 		[IsDeny]
 From	[AppSecurity].[Securable] O
 		Cross Apply [AppSecurity].[funcAuthorization](O.[SecurableId]) S
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 Go

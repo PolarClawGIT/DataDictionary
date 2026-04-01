@@ -30,4 +30,5 @@ Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUt
 			Select	[ModelId]
 			From	[AppModel].[ModelAttribute] For System_Time As of @AsOfUtcDate
 			Where	D.[AttributeId] = [AttributeId]))
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

@@ -29,9 +29,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Forms\Scripting\ScriptingTemplate.Binding.cs" />
-    <None Include="Forms\Scripting\ScriptingTemplate.cs" />
-    <None Include="Forms\Scripting\ScriptingTemplate.Designer.cs" />
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -94,10 +91,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     <Using Include="DataDictionary.Main.Global">
       <Static>True</Static>
     </Using>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Forms\Obsolete\" />
   </ItemGroup>
 
 </Project>

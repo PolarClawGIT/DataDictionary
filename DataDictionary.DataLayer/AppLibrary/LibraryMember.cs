@@ -5,19 +5,21 @@
     /// </summary>  
     static class LibraryMember
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(LibraryMember));
+
         /// <summary>  
         /// The stored procedure for retrieving library member information.  
         /// </summary>  
-        public const string GetProcedure = "[AppLibrary].[procGetLibraryMember]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure for setting library member information.  
         /// </summary>  
-        public const string SetProcedure = "[AppLibrary].[procSetLibraryMember]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for library members.  
         /// </summary>  
-        public const string TableType = "[AppLibrary].[udttLibraryMember]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

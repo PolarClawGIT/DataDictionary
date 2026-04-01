@@ -1,11 +1,12 @@
-﻿using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
-
     /// <inheritdoc/>
     public interface IDocumentIndex : IDocumentKey
     { }
@@ -14,13 +15,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class DocumentIndex : DocumentKey, IDocumentIndex,
         IKeyEquality<IDocumentIndex>, IKeyEquality<DocumentIndex>
     {
-        /// <inheritdoc cref="DocumentKey()"/>
-        public DocumentIndex() : base()
-        { }
-
         /// <inheritdoc cref="DocumentKey(IDocumentKey)"/>
-        public DocumentIndex(IDocumentIndex source) : base(source)
-        { }
+        public DocumentIndex(IDocumentIndex source) : base(source) { }
 
         /// <inheritdoc/>
         public Boolean Equals(IDocumentIndex? other)
@@ -36,12 +32,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="source"></param>
         public static implicit operator DataIndex(DocumentIndex source)
         { return new DataIndex() { SystemId = source.DocumentId ?? Guid.Empty }; }
-
-        /// <summary>
-        /// Convert TemplateIndex to a SecurableIndex
-        /// </summary>
-        /// <param name="source"></param>
-        public static implicit operator SecurableIndex(DocumentIndex source)
-        { return new SecurableIndex() { SecurableId = source.DocumentId ?? Guid.Empty }; }
     }
 }

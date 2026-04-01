@@ -87,24 +87,26 @@
     /// </summary>
     static class Attribute
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Attribute));
+
         /// <summary>
         /// Identifier for the Attribute.
         /// </summary>
-        public const String AttributeId = "@AttributeId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Stored procedure to retrieve an Attribute.
         /// </summary>
-        public const String GetProcedure = "[AppModel].[procGetAttribute]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure to set an Attribute.
         /// </summary>
-        public const String SetProcedure = "[AppModel].[procSetAttribute]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// User-defined table type for Attribute operations.
         /// </summary>
-        public const String TableType = "[AppModel].[udttAttribute]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

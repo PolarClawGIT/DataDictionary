@@ -16,24 +16,26 @@
     /// </summary>  
     static class Entity
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Entity));
+
         /// <summary>  
         /// Represents the parameter name for the Entity ID in database operations.  
         /// </summary>  
-        public const String EntityId = "@EntityId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// Represents the stored procedure name for retrieving an Entity.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntity]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Represents the stored procedure name for setting an Entity.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntity]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// Represents the table type name for Entity operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntity]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

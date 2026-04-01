@@ -5,23 +5,25 @@
 /// </summary>
 public static class HelpSubject
 {
+    static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(HelpSubject)) { Identifier = "@HelpId" };
+
     /// <summary>
     /// The stored procedure for retrieving help subjects.
     /// </summary>
-    public const string GetProcedure = "[AppGeneral].[procGetHelpSubject]";
+    public readonly static String GetProcedure = dataObject.GetProcedure;
 
     /// <summary>
     /// The parameter name for HelpId in database operations.
     /// </summary>
-    public const string HelpId = "@HelpId";
+    public readonly static String Identifier = dataObject.Identifier;
 
     /// <summary>
     /// The stored procedure for setting help subjects.
     /// </summary>
-    public const string SetProcedure = "[AppGeneral].[procSetHelpSubject]";
+    public readonly static String SetProcedure = dataObject.SetProcedure;
 
     /// <summary>
     /// The user-defined table type for help subjects.
     /// </summary>
-    public const string TableType = "[AppGeneral].[udttHelpSubject]";
+    public readonly static String TableType = dataObject.TableType;
 }

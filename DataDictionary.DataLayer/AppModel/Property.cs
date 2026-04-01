@@ -16,24 +16,26 @@
     /// </summary>
     static class Property
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Property));
+
         /// <summary>
         /// Identifier for the property. Used as a parameter in database operations.
         /// </summary>
-        public const String PropertyId = "@PropertyId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Name of the stored procedure to retrieve property data.
         /// </summary>
-        public const String GetProcedure = "[AppModel].[procGetProperty]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Name of the stored procedure to set property data.
         /// </summary>
-        public const String SetProcedure = "[AppModel].[procSetProperty]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// Name of the user-defined table type for property data.
         /// </summary>
-        public const String TableType = "[AppModel].[udttProperty]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

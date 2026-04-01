@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Model.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Model.Identifier, modelId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Model.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
+            command.AddParameter(Model.Identifier, modelId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (modelId is null || w.ModelId == modelId));

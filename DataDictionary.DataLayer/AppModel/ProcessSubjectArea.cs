@@ -16,19 +16,21 @@
     /// </summary>  
     static class ProcessSubjectArea
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessSubjectArea));
+
         /// <summary>  
         /// The name of the stored procedure used to retrieve Process Subject Area data.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetProcessSubjectArea]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The name of the stored procedure used to set Process Subject Area data.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetProcessSubjectArea]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The name of the user-defined table type for Process Subject Area.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttProcessSubjectArea]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

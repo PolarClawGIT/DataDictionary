@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Catalog
             SchemaIndexName key = new SchemaIndexName(schemaItem);
             PropertyIndexObject propertyKey = new PropertyIndexObject(key);
 
-            IBindingList data = new BindingView<SchemaValue>(BusinessData.CatalogModel.DbSchemta, w => key.Equals(w));
+            IBindingList data = new BindingView<SchemaValue>(BusinessData.CatalogModel.DbSchemata, w => key.Equals(w));
             data.ListChanged += ListChanged;
 
             bindingSchema.DataSource = data;

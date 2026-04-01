@@ -1,11 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -22,11 +17,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateIndexName? other)
-        { return other is ITemplateKeyName value && Equals(new TemplateKeyName(value)); }
+        { return other is ITemplateKeyName key && Equals(new TemplateKeyName(key)); }
 
         /// <inheritdoc/>
         public Boolean Equals(TemplateIndexName? other)
-        { return other is ITemplateKeyName value && Equals(new TemplateKeyName(value)); }
+        { return other is ITemplateKeyName key && Equals(new TemplateKeyName(key)); }
 
         /// <summary>
         /// Convert TemplateIndexName to a DataIndexName
@@ -35,4 +30,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public static implicit operator DataIndexName(TemplateIndexName source)
         { return new DataIndexName() { Title = source.TemplateTitle ?? String.Empty }; }
     }
+
 }

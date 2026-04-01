@@ -47,19 +47,22 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>  
     static class TableColumn
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(TableColumn));
+
         /// <summary>  
         /// Stored procedure to get table column information.  
         /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetTableColumn]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Stored procedure to set table column information.  
         /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetTableColumn]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// User-defined table type for table column information.  
         /// </summary>  
-        public const String TableType = "[AppCatalog].[udttTableColumn]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

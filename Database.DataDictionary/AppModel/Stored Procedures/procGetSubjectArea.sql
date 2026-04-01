@@ -28,4 +28,5 @@ From	[AppModel].[SubjectAreaHs] For System_Time All M
 Where	(@IncludeHistory = 1 Or (M.[SysStart] <= @AsOfUtcDate And M.[SysEnd] > @AsOfUtcDate)) And
 		(@ModelId is Null Or @ModelId = M.[ModelId]) And
 		(@SubjectAreaId is Null Or @SubjectAreaId = M.[SubjectAreaId])
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

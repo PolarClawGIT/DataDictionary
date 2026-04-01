@@ -11,29 +11,32 @@
     /// </summary>
     static class Schema
     {
+        /// <inheritdoc cref="Object.GetType"/>
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Schema));
+
         /// <summary>
         /// The stored procedure to retrieve schema information.
         /// </summary>
-        public const string GetProcedure = "[AppCatalog].[procGetSchema]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// A comma-separated list of system schemas.
         /// </summary>
-        public const string IsSystem = "dbo, sys, db_owner, db_accessadmin, db_securityadmin, db_ddladmin, db_backupoperator, db_datareader, db_datawriter, db_denydatareader, db_denydatawriter, INFORMATION_SCHEMA, guest";
+        public readonly static String IsSystem = "dbo, sys, db_owner, db_accessadmin, db_securityadmin, db_ddladmin, db_backupoperator, db_datareader, db_datawriter, db_denydatareader, db_denydatawriter, INFORMATION_SCHEMA, guest";
 
         /// <summary>
         /// The parameter name for schema ID.
         /// </summary>
-        public const string SchemaId = "@SchemaId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// The stored procedure to set schema information.
         /// </summary>
-        public const string SetProcedure = "[AppCatalog].[procSetSchema]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The user-defined table type for schema.
         /// </summary>
-        public const string TableType = "[AppCatalog].[udttSchema]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

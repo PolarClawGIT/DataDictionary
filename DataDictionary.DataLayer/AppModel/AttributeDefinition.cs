@@ -5,19 +5,21 @@
     /// </summary>
     static class AttributeDefinition
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeDefinition));
+
         /// <summary>
         /// The stored procedure used to retrieve attribute definitions.
         /// </summary>
-        public const String GetProcedure = "[AppModel].[procGetAttributeDefinition]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// The stored procedure used to set attribute definitions.
         /// </summary>
-        public const String SetProcedure = "[AppModel].[procSetAttributeDefinition]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The user-defined table type for attribute definitions.
         /// </summary>
-        public const String TableType = "[AppModel].[udttAttributeDefinition]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

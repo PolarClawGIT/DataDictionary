@@ -1,27 +1,29 @@
-﻿CREATE FUNCTION [AppScript].[funcObjectPath](@ObjectNameId UniqueIdentifier)
--- This takes the DataNameId and rebuilds them into a Data Object NameSpace.
--- NameSpace is qualified by square brackets and delimited by periods.
+﻿CREATE FUNCTION [AppScript].[funcObjectPath](@ObjectId UniqueIdentifier)
+-- This takes the Object and rebuilds them into a Object Path.
+-- Path is qualified by square brackets and delimited by periods.
 -- Temporal Data NOT Supported
+-- TODO: is it needed?
 RETURNS [AppGeneral].[uddtPath] as 
 BEGIN
 	Declare @Result [AppGeneral].[uddtPath] = null
 
 	;With [Data] As (
-	Select	[ObjectNameId],
-			[ParentNameId],
+	Select	[ObjectId],
+			NullIf([ParentObjectId], [ObjectId]) As [ParentObjectId],
 			[AppGeneral].[funcCreatePath]([ObjectMember], Null) As [ObjectPath]
-	From	[AppScript].[DataObjectName]
-	Where	[ObjectNameId] = @ObjectNameId
+	From	[AppScript].[TemplateObject]
+	Where	[ObjectId] = @ObjectId
 	Union All
-	Select	D.[ObjectNameId],
-			NullIf(P.[ParentNameId], D.[ObjectNameId]) As [ParentNameId],
-			[AppGeneral].[funcCreatePath](P.[ObjectMember],D.[ObjectPath]) As [ObjectPath]
+	Select	D.[ObjectId],
+			NullIf(P.[ParentObjectId], D.[ObjectId]) As [ParentObjectId],
+			[AppGeneral].[funcCreatePath](P.[ObjectMember], D.[ObjectPath]) As [ObjectPath]
 	From	[Data] D
-			Inner Join [AppScript].[DataObjectName] P
-			On	D.[ParentNameId] = P.[ObjectNameId])
+			Inner Join [AppScript].[TemplateObject] P
+			On	D.[ParentObjectId] = P.[ObjectId])
 Select	@Result = [ObjectPath]
 From	[Data]
-Where	[ParentNameId] is Null
+Where	[ParentObjectId] is Null
 
 Return	@Result
 END
+GO

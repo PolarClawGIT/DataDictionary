@@ -5,19 +5,21 @@
     /// </summary>  
     static class ProcessProperty
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(ProcessProperty));
+
         /// <summary>  
         /// The name of the stored procedure used to retrieve process properties.  
         /// </summary>  
-        public const string GetProcedure = "[AppModel].[procGetProcessProperty]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The name of the stored procedure used to set process properties.  
         /// </summary>  
-        public const string SetProcedure = "[AppModel].[procSetProcessProperty]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The name of the user-defined table type for process properties.  
         /// </summary>  
-        public const string TableType = "[AppModel].[udttProcessProperty]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

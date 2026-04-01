@@ -2,7 +2,7 @@
 using DataDictionary.BusinessLayer.AppGeneral;
 using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Resource.Enumerations;
 
@@ -131,7 +131,7 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 <SchemaValue, Forms.Catalog.DbSchema>
-                (ScopeType.DatabaseSchema, BusinessData.CatalogModel.DbSchemta)
+                (ScopeType.DatabaseSchema, BusinessData.CatalogModel.DbSchemata)
             { SelectedForm = (data) => new Forms.Catalog.DbSchema(data) });
         }
 
@@ -220,30 +220,30 @@ namespace DataDictionary.Main
         }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(static () => new Forms.Scripting.TemplateManager()); }
+        { Activate(static () => new Forms.Obsolete.TemplateManager()); }
 
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <TemplateValue, Forms.Scripting.Template>
+                <TemplateValue, Forms.Obsolete.Template>
                 (ScopeType.ScriptingTemplate, BusinessData.Scripting.Templates)
-            { SelectedForm = (data) => new Forms.Scripting.Template(data) });
+            { SelectedForm = (data) => new Forms.Obsolete.Template(data) });
         }
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <DataSourceValue, Forms.Scripting.DataSource>
+                <DataSourceValue, Forms.Obsolete.DataSource>
                 (ScopeType.ScriptingData, BusinessData.Scripting.DataSources)
-            { SelectedForm = (data) => new Forms.Scripting.DataSource(data) });
+            { SelectedForm = (data) => new Forms.Obsolete.DataSource(data) });
         }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                <DocumentValue, Forms.Scripting.Document>
+                <DocumentValue, Forms.Obsolete.Document>
                 (ScopeType.ScriptingDocument, BusinessData.Scripting.Documents)
-            { SelectedForm = (data) => new Forms.Scripting.Document(data) });
+            { SelectedForm = (data) => new Forms.Obsolete.Document(data) });
         }
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
@@ -259,13 +259,13 @@ namespace DataDictionary.Main
         }
 
         private void MenuScriptingAddTemplate_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.Template(null)); }
+        { Activate(() => new Forms.Obsolete.Template(null)); }
 
         private void MenuScriptingAddDocument_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.Document(null)); }
+        { Activate(() => new Forms.Obsolete.Document(null)); }
 
         private void MenuScriptingAddData_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.DataSource(null)); }
+        { Activate(() => new Forms.Obsolete.DataSource(null)); }
 
         private void MenuProcess_Click(object sender, EventArgs e)
         {
@@ -317,6 +317,49 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 (ScopeType.ApplicationLog, BusinessData.Messages));
+        }
+
+
+        private void MenuTemplate_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTemplate, BusinessData.Templates));
+        }
+
+        private void MenuTemplateTransform_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingTransform, BusinessData.Templates.Transforms));
+        }
+
+        private void MenuTemplateSchemata_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingSchema, BusinessData.Templates.Schemata));
+        }
+
+        private void MenuTemplateNode_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingSchema, BusinessData.Templates.SchemataNodes));
+        }
+
+        private void MenuTemplateNodeOwner_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingNodeOwner, BusinessData.Templates.SchemataNodeOwners));
+        }
+
+        private void MenuTemplateObject_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingObject, BusinessData.Templates.Objects));
+        }
+
+        private void MenuTemplateDocument_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ScriptingDocument, BusinessData.Templates.Documents));
         }
     }
 }

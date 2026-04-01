@@ -32,6 +32,7 @@ Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUt
 			Select	[DefinitionId]
 			From	[AppModel].[ModelDefinitionHs]
 			Where	@ModelId = [ModelId]))
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO
 
 

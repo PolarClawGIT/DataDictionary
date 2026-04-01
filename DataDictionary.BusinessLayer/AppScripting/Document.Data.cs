@@ -3,161 +3,116 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.AppScript;
-using System.Data;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
-    /// Interface component for the Scripting Data Source
+    /// Interface component for the Scripting Document
     /// </summary>
     public interface IDocumentData :
         IBindingData<DocumentValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<IDocumentIndex>
-    {
-        /// <summary>
-        /// Opens/Loads the files for a specific document.
-        /// </summary>
-        /// <param name="dataKey"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> OpenFiles(IDocumentIndex dataKey);
-
-        /// <summary>
-        /// Saves the files for a specific document.
-        /// </summary>
-        /// <param name="dataKey"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> SaveFiles(IDocumentIndex dataKey);
-    }
-
-    class DocumentData : DocumentCollection<DocumentValue>, IDocumentData,
-        ILoadData<IDocumentIndex>, ISaveData<IDocumentIndex>,
+        IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
+        ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>
+        IDeleteData
+    { }
+
+    class DocumentData : DocumentCollection<DocumentValue>, IDocumentData
     {
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
-        { return factory.CreateLoad(this, (IModelKey)dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IModelKey)dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
-        { return factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDocumentIndex dataKey)
-        { return factory.CreateLoad(this, (IDocumentKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDocumentIndex dataKey, ITemporalIndex asOfUtcDate)
-        { return factory.CreateLoad(this, (IDocumentKey)dataKey, asOfUtcDate).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
-        { return factory.CreateLoad(this, (ITemplateKey)dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, (ITemplateKey)dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
-        { return factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> OpenFiles(IDocumentIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DocumentIndex key = new DocumentIndex(dataKey);
-
-            if (this.FirstOrDefault(w => key.Equals(w)) is DocumentValue value)
-            {
-                work.AddRange(value.InputValue.Open());
-                work.AddRange(value.TransformValue.Open());
-                work.AddRange(value.OutputValue.Open());
-            }
-            else
-            {
-                Exception ex = new IndexOutOfRangeException();
-                ex.Data.Add(nameof(dataKey), dataKey);
-                throw ex;
-            }
-
+            work.Add(factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate));
             return work;
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDocumentIndex dataKey)
-        { return factory.CreateSave(this, (IDocumentKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
-        { return factory.CreateSave(this, (ITemplateKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
-        { return factory.CreateSave(this, (IModelKey)dataKey).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> SaveFiles(IDocumentIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DocumentIndex key = new DocumentIndex(dataKey);
-
-            if (this.FirstOrDefault(w => key.Equals(w)) is DocumentValue value)
-            {
-                work.AddRange(value.InputValue.Save());
-                work.AddRange(value.TransformValue.Save());
-                work.AddRange(value.OutputValue.Save());
-            }
-            else
-            {
-                Exception ex = new IndexOutOfRangeException();
-                ex.Data.Add(nameof(dataKey), dataKey);
-                throw ex;
-            }
-
+            work.Add(factory.CreateSave(this, (ITemplateKey)dataKey));
             return work;
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public IReadOnlyList<WorkItem> Delete(IDocumentIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } }.ToList(); }
+        /// <remarks>ScriptingTemplate</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateSave(this, (IModelKey)dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
-        { return new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } }.ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } });
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Clear(); } }.ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Clear(); } });
+            return work;
+        }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
-        public void Remove(IDocumentIndex dataKey)
-        { base.Remove(dataKey); }
-
-        /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public void Remove(ITemplateIndex dataKey)
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDocument</remarks>
+        /// <remarks>ScriptingTemplate</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
 
@@ -165,16 +120,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <remarks>ScriptingDataSource</remarks>
         public ITemporalData GetTemporal(IModelIndex model)
         {
-            return new TemporalData<DocumentData, DocumentValue>()
+            return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (IModelKey)model) };
         }
 
         /// <inheritdoc/>
         /// <remarks>ScriptingDataSource</remarks>
-        public ITemporalData GetTemporal(IDocumentIndex Document)
+        public ITemporalData GetTemporal(ITemplateIndex template)
         {
-            return new TemporalData<DocumentData, DocumentValue>()
-            { CreateLoad = (factory, data) => factory.CreateHistory(data, (IDocumentKey)Document) };
+            return new TemporalData<TemplateData, TemplateValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
+
     }
 }

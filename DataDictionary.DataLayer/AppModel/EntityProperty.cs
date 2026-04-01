@@ -5,19 +5,21 @@
     /// </summary>  
     static class EntityProperty
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(EntityProperty));
+
         /// <summary>  
         /// The stored procedure used to retrieve entity property data.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntityProperty]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set entity property data.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntityProperty]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for entity property data.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntityProperty]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

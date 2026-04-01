@@ -3,21 +3,22 @@
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Primary Key for the Scripting Document.
+    /// Interface for the Scripting Document Key
     /// </summary>
     public interface IDocumentKey : IKey
     {
         /// <summary>
-        /// Document Id of the Scripting Document.
+        /// Document ID for the Scripting Document.
         /// </summary>
         Guid? DocumentId { get; }
     }
 
     /// <summary>
-    /// Implementation for the Primary Key for the Scripting Document.
+    /// Implementation for the Scripting Document Key
     /// </summary>
     public class DocumentKey : IDocumentKey,
-        IKeyEquality<IDocumentKey>, IKeyEquality<DocumentKey>
+        IKeyEquality<DocumentKey>,
+        IKeyEquality<IDocumentKey>
     {
         /// <inheritdoc/>
         public Guid? DocumentId { get; init; } = Guid.Empty;
@@ -26,11 +27,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// Constructor for the Blank/Empty Document Key
         /// </summary>
         /// <remarks>Empty Key is never equal to anything.</remarks>
-        public DocumentKey() : base()
+        public DocumentKey()
         { }
 
         /// <summary>
-        /// Constructor for the Primary Key of the Scripting Document.
+        /// Constructor for the Document Key
         /// </summary>
         /// <param name="source"></param>
         public DocumentKey(IDocumentKey source) : base()
@@ -42,15 +43,15 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(DocumentKey? other)
-        { return other is DocumentKey key && key.DocumentId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(DocumentId, other.DocumentId); }
+        { return other is DocumentKey key && key.DocumentId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(DocumentId, key.DocumentId); }
 
         /// <inheritdoc/>
         public Boolean Equals(IDocumentKey? other)
-        { return other is IDocumentKey value && Equals(new DocumentKey(value)); }
+        { return other is IDocumentKey key && Equals(new DocumentKey(key)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IDocumentKey value && Equals(new DocumentKey(value)); }
+        { return obj is IDocumentKey key && Equals(new DocumentKey(key)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(DocumentKey left, DocumentKey right)
@@ -62,10 +63,9 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        {
-            if (DocumentId is Guid) { return DocumentId.GetHashCode(); }
-            else { return Guid.Empty.GetHashCode(); }
-        }
+        { return HashCode.Combine(DocumentId); }
+
+
         #endregion
     }
 }

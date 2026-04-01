@@ -16,19 +16,21 @@
     /// </summary>  
     static class AttributeSubjectArea
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeSubjectArea));
+
         /// <summary>  
         /// The stored procedure used to retrieve Attribute Subject Area data.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetAttributeSubjectArea]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set Attribute Subject Area data.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetAttributeSubjectArea]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for Attribute Subject Area data operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttAttributeSubjectArea]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

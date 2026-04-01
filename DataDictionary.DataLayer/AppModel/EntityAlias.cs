@@ -5,19 +5,21 @@
     /// </summary>  
     static class EntityAlias
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(EntityAlias));
+
         /// <summary>  
         /// The stored procedure used to retrieve entity alias information.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntityAlias]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set entity alias information.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntityAlias]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for entity alias operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntityAlias]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

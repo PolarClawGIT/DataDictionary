@@ -58,9 +58,9 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Schema.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Schema.SchemaId, schemaId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Catalog.Identifier, catalogId);
+            command.AddParameter(Schema.Identifier, schemaId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
 
@@ -84,8 +84,8 @@ namespace DataDictionary.DataLayer.AppCatalog
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Schema.SetProcedure;
-            command.AddParameter(Catalog.CatalogId, catalogId);
-            command.AddParameter(Schema.SchemaId, schemaId);
+            command.AddParameter(Catalog.Identifier, catalogId);
+            command.AddParameter(Schema.Identifier, schemaId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (catalogId is null || w.CatalogId == catalogId) &&

@@ -14,4 +14,5 @@ From	[AppSecurity].[SecurableOwner] O
 		On	O.[SecurableId] = T.[SecurableId]
 Where	(@SecurableId is Null Or O.[SecurableId] = @SecurableId) And
 		(@PrincipalId is Null Or O.[PrincipalId] = @PrincipalId)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

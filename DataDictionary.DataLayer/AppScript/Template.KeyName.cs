@@ -1,9 +1,4 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.AppScript
 {
@@ -13,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     public interface ITemplateKeyName : IKey
     {
         /// <summary>
-        /// Title of the Scripting Template
+        /// Title of the Scripting Template (aka Name of the Template)
         /// </summary>
         String? TemplateTitle { get; }
     }

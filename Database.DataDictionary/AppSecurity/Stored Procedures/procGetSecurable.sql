@@ -11,4 +11,5 @@ Select	T.[SecurableId],
 From	[AppSecurity].[Securable] T
 		Cross Apply [AppSecurity].[funcAuthorization](T.[SecurableId]) S
 Where	(@SecurableId is Null Or T.[SecurableId] = @SecurableId)
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

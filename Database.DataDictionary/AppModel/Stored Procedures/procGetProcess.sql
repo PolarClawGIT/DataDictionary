@@ -72,4 +72,5 @@ Where	(@IncludeHistory = 1 Or (T.[SysStart] <= @AsOfUtcDate And Least(T.[SysEnd]
 			Select	[ModelId]
 			From	[AppModel].[ModelProcess] For System_Time As of @AsOfUtcDate
 			Where	D.[ProcessId] = [ProcessId]))
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

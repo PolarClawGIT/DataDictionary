@@ -54,8 +54,8 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Process.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Process.ProcessId, ProcessId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Process.Identifier, ProcessId);
             return command;
         }
 
@@ -72,8 +72,8 @@ namespace DataDictionary.DataLayer.AppModel
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Process.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Process.ProcessId, ProcessId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Process.Identifier, ProcessId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (ProcessId is null || w.ProcessId == ProcessId));

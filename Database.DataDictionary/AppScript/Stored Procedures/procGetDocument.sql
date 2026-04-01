@@ -1,24 +1,17 @@
 ﻿CREATE PROCEDURE [AppScript].[procGetDocument]
 		@ModelId UniqueIdentifier = Null,
-		@DocumentId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
-		@IncludeHistory Bit = 0 -- History is included
-As
-/* Description: Performs Get on Document.
-*/
+		@IncludeHistory Bit = 0 -- History
+AS
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
 Select	[DocumentId],
-		[DocumentTitle],
 		[TemplateId],
-		[RootFolder],
-		[InputPath],
-		[InputFile],
-		[ProcessPath],
-		[ProcessFile],
-		[OutputPath],
-		[OutputFile],
+		[SchemaId],
+		[TransformId],
+		[ObjectId],
+		[FileName],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -28,8 +21,12 @@ Select	[DocumentId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[DocumentHs] D
+From	[AppScript].[DocumentHS] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
-		(@DocumentId is Null Or @DocumentId = [DocumentId]) And
-		(@ModelId is Null Or @ModelId = [ModelId])
-Go
+		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
+		(@ModelId is Null Or @ModelId In (
+			Select	[ModelId]
+			From	[AppScript].[TemplateModel] For System_Time As of @AsOfUtcDate
+			Where	D.[TemplateId] = [TemplateId]))
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+GO

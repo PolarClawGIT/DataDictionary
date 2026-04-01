@@ -1,20 +1,8 @@
 ﻿CREATE TYPE [AppScript].[udttTemplate] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
-	[TemplateTitle]			[AppGeneral].[uddtTitle] Not Null,
+	[TemplateTitle]			[AppGeneral].[uddtTitle] Null,
 	[TemplateDescription]	[AppGeneral].[uddtDescription] Null,
-	[BreakOnScope]			[AppGeneral].[uddtScopeName] NULL,
-	[TransformScript]		NVarChar(Max) Null,
-	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
-	[DocumentDirectory]		[AppGeneral].[uddtFilePath] Null,
-	[DocumentPrefix]		[AppGeneral].[uddtFileAffix] Null,
-	[DocumentSuffix]		[AppGeneral].[uddtFileAffix] Null,
-	[DocumentExtension]		[AppGeneral].[uddtFileExtension] Null,
-	[ScriptAs]              NVarChar(10) Null,
-	[ScriptDirectory]		[AppGeneral].[uddtFilePath] Null,
-	[ScriptPrefix]			[AppGeneral].[uddtFileAffix] Null,
-	[ScriptSuffix]			[AppGeneral].[uddtFileAffix] Null,
-	[ScriptExtension]		[AppGeneral].[uddtFileExtension] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
 	[CreatedBy]             NVarChar(4000) Null,

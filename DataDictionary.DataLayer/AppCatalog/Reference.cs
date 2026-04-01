@@ -61,24 +61,26 @@
     /// </summary>
     static class Reference
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Reference));
+
         /// <summary>
         /// The stored procedure for retrieving references.
         /// </summary>
-        public const String GetProcedure = "[AppCatalog].[procGetReference]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// The parameter name for the reference ID.
         /// </summary>
-        public const String ReferenceId = "@ReferenceId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// The stored procedure for setting references.
         /// </summary>
-        public const String SetProcedure = "[AppCatalog].[procSetReference]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// The user-defined table type for references.
         /// </summary>
-        public const String TableType = "[AppCatalog].[udttReference]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

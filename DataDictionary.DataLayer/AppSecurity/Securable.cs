@@ -7,14 +7,16 @@ namespace DataDictionary.DataLayer.AppSecurity
     /// </summary>  
     static class Securable
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Securable));
+
         /// <summary>  
         /// The stored procedure name for retrieving securable information.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetSecurable]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the securable ID.  
         /// </summary>  
-        public const String SecurableId = "@SecurableId";
+        public readonly static String Identifier = dataObject.Identifier;
     }
 }

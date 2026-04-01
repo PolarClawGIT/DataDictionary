@@ -3,21 +3,22 @@
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Primary Key for the Scripting Template.
+    /// Interface for the Scripting Template Key
     /// </summary>
     public interface ITemplateKey : IKey
     {
         /// <summary>
-        /// Template Id of the Scripting Template.
+        /// Template ID for the Scripting Template.
         /// </summary>
         Guid? TemplateId { get; }
     }
 
     /// <summary>
-    /// Implementation for the Primary Key for the Scripting Template.
+    /// Implementation for the Scripting Template Key
     /// </summary>
     public class TemplateKey : ITemplateKey,
-        IKeyEquality<ITemplateKey>, IKeyEquality<TemplateKey>
+        IKeyEquality<TemplateKey>,
+        IKeyEquality<ITemplateKey>
     {
         /// <inheritdoc/>
         public Guid? TemplateId { get; init; } = Guid.Empty;
@@ -26,11 +27,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// Constructor for the Blank/Empty Template Key
         /// </summary>
         /// <remarks>Empty Key is never equal to anything.</remarks>
-        public TemplateKey() : base()
+        public TemplateKey()
         { }
 
         /// <summary>
-        /// Constructor for the Primary Key of the Scripting Template.
+        /// Constructor for the Template Key
         /// </summary>
         /// <param name="source"></param>
         public TemplateKey(ITemplateKey source) : base()
@@ -42,15 +43,15 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TemplateKey? other)
-        { return other is TemplateKey key && key.TemplateId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TemplateId, other.TemplateId); }
+        { return other is TemplateKey key && key.TemplateId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TemplateId, key.TemplateId); }
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateKey? other)
-        { return other is ITemplateKey value && Equals(new TemplateKey(value)); }
+        { return other is ITemplateKey key && Equals(new TemplateKey(key)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is ITemplateKey value && Equals(new TemplateKey(value)); }
+        { return obj is ITemplateKey key && Equals(new TemplateKey(key)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(TemplateKey left, TemplateKey right)
@@ -62,10 +63,9 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        {
-            if (TemplateId is Guid) { return TemplateId.GetHashCode(); }
-            else { return Guid.Empty.GetHashCode(); }
-        }
+        { return HashCode.Combine(TemplateId); }
+
+
         #endregion
     }
 }

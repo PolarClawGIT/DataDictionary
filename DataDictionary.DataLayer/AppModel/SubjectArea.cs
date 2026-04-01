@@ -21,24 +21,26 @@
     /// </summary>
     static class SubjectArea
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(SubjectArea));
+
         /// <summary>
         /// Stored procedure for retrieving Subject Area data.
         /// </summary>
-        public const String GetProcedure = "[AppModel].[procGetSubjectArea]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure for setting Subject Area data.
         /// </summary>
-        public const String SetProcedure = "[AppModel].[procSetSubjectArea]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// Parameter name for Subject Area ID.
         /// </summary>
-        public const String SubjectAreaId = "@SubjectAreaId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Table type for Subject Area data.
         /// </summary>
-        public const String TableType = "[AppModel].[udttSubjectArea]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

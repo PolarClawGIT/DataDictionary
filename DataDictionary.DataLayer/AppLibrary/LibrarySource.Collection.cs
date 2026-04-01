@@ -41,8 +41,8 @@ namespace DataDictionary.DataLayer.AppLibrary
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = LibrarySource.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(LibrarySource.LibraryId, libraryId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(LibrarySource.Identifier, libraryId);
             return command;
         }
 
@@ -59,8 +59,8 @@ namespace DataDictionary.DataLayer.AppLibrary
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = LibrarySource.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(LibrarySource.LibraryId, libraryId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(LibrarySource.Identifier, libraryId);
 
             IEnumerable<TItem> data = this.Where(w => libraryId is null || w.LibraryId == libraryId);
             command.AddParameter(WriteData.Data, LibrarySource.TableType, data);

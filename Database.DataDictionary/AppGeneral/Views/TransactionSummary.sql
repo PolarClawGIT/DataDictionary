@@ -37,7 +37,9 @@
 ** discarded as they are usually an issue with how the application is updating values.
 */
 Select	[TransactionDate] As [ModifiedOn], -- PK, Join to SysStart and SysEnd
-		String_Agg([OriginalLogin], ', ') As [ModifiedBy]
-From	[AppGeneral].[TransactionLog]
+		String_Agg(IsNull(P.[PrincipalName], L.[ExecuteLogin]), ', ') As [ModifiedBy]
+From	[AppGeneral].[TransactionLog] L
+		Left Join [AppSecurity].[Principal] P
+		On	L.[ExecuteLogin] = P.[PrincipalLogin]
 Group By [TransactionDate]
 GO

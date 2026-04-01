@@ -33,39 +33,41 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// </summary>
     static class Catalog
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Catalog));
+
         /// <summary>
         /// Identifier for the Catalog.
         /// </summary>
-        public const String CatalogId = "@CatalogId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>
         /// Stored procedure to retrieve the Catalog.
         /// </summary>
-        public const String GetProcedure = "[AppCatalog].[procGetCatalog]";
-
-        /// <summary>
-        /// Names of system databases.
-        /// </summary>
-        public const String IsSystem = "tempdb, master, msdb, model";
-
-        /// <summary>
-        /// Substring indicating a LocalDB instance.
-        /// </summary>
-        public const String LocalDbContains = "\\LOCALDB";
-
-        /// <summary>
-        /// Name of the default LocalDB instance.
-        /// </summary>
-        public const String LocalDbName = "(LocalDb)\\MSSQLLocalDb";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>
         /// Stored procedure to set the Catalog.
         /// </summary>
-        public const String SetProcedure = "[AppCatalog].[procSetCatalog]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>
         /// Table type for the Catalog.
         /// </summary>
-        public const String TableType = "[AppCatalog].[udttCatalog]";
+        public readonly static String TableType = dataObject.TableType;
+
+        /// <summary>
+        /// Names of system databases.
+        /// </summary>
+        public readonly static String IsSystem = "tempdb, master, msdb, model";
+
+        /// <summary>
+        /// Substring indicating a LocalDB instance.
+        /// </summary>
+        public readonly static String LocalDbContains = "\\LOCALDB";
+
+        /// <summary>
+        /// Name of the default LocalDB instance.
+        /// </summary>
+        public readonly static String LocalDbName = "(LocalDb)\\MSSQLLocalDb";
     }
 }

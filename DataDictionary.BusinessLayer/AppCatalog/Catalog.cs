@@ -24,9 +24,9 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         ICatalogData DbCatalogs { get; }
 
         /// <summary>
-        /// List of Model Schemta within the Model.
+        /// List of Model Schemata within the Model.
         /// </summary>
-        ISchemaData DbSchemta { get; }
+        ISchemaData DbSchemata { get; }
 
         /// <summary>
         /// List of Model Domains (types) within the Model.
@@ -107,8 +107,8 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         private readonly CatalogData catalogs;
 
         /// <inheritdoc/>
-        public ISchemaData DbSchemta { get { return schemta; } }
-        private readonly SchemaData schemta;
+        public ISchemaData DbSchemata { get { return schemata; } }
+        private readonly SchemaData schemata;
 
         /// <inheritdoc/>
         public IDomainData DbDomains { get { return domains; } }
@@ -154,7 +154,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public Catalog() : base()
         {
             catalogs = new CatalogData();
-            schemta = new SchemaData() { Catalog = this };
+            schemata = new SchemaData() { Catalog = this };
             domains = new DomainData() { Catalog = this };
 
             tables = new TableData() { Catalog = this };
@@ -171,7 +171,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             properties = new PropertyData() { Catalog = this };
 
             catalogs.ListChanged += OnListChanged;
-            schemta.ListChanged += OnListChanged;
+            schemata.ListChanged += OnListChanged;
             domains.ListChanged += OnListChanged;
             properties.ListChanged += OnListChanged;
             tables.ListChanged += OnListChanged;
@@ -196,7 +196,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey));
-            work.AddRange(schemta.Load(factory, dataKey));
+            work.AddRange(schemata.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
             work.AddRange(properties.Load(factory, dataKey));
 
@@ -220,7 +220,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(schemta.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(schemata.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(domains.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(properties.Load(factory, dataKey, asOfUtcDate));
 
@@ -245,7 +245,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey));
-            work.AddRange(schemta.Load(factory, dataKey));
+            work.AddRange(schemata.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
             work.AddRange(properties.Load(factory, dataKey));
 
@@ -269,7 +269,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Load(factory, dataKey, asOfUtcDate));
-            work.AddRange(schemta.Load(factory, dataKey, asOfUtcDate));
+            work.AddRange(schemata.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(domains.Load(factory, dataKey, asOfUtcDate));
             work.AddRange(properties.Load(factory, dataKey, asOfUtcDate));
 
@@ -293,7 +293,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
-            work.AddRange(schemta.Save(factory, dataKey));
+            work.AddRange(schemata.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
             work.AddRange(properties.Save(factory, dataKey));
 
@@ -317,7 +317,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Save(factory, dataKey));
-            work.AddRange(schemta.Save(factory, dataKey));
+            work.AddRange(schemata.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
             work.AddRange(properties.Save(factory, dataKey));
 
@@ -343,7 +343,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             if (catalogs.Count > 0)
             {
                 result.Add(catalogs.ToDataTable());
-                result.Add(schemta.ToDataTable());
+                result.Add(schemata.ToDataTable());
                 result.Add(domains.ToDataTable());
 
                 result.Add(tables.ToDataTable());
@@ -369,7 +369,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             if (catalogs.Load(source, default, true))
             {
-                schemta.Load(source);
+                schemata.Load(source);
                 domains.Load(source);
 
                 tables.Load(source);
@@ -410,7 +410,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             work.Add(factory.CreateImport(
                 workName: "Import InformationSchema- Schema",
                 getData: SchemaMetaData.GetSchema,
-                import: (data) => schemta.Import(key, data)));
+                import: (data) => schemata.Import(key, data)));
 
             work.Add(factory.CreateImport(
                workName: "Import InformationSchema- Domain",
@@ -471,7 +471,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Delete(key));
-            work.AddRange(schemta.Delete(key));
+            work.AddRange(schemata.Delete(key));
             work.AddRange(domains.Delete(key));
 
             work.AddRange(tables.Delete(key));
@@ -495,7 +495,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(catalogs.Delete());
-            work.AddRange(schemta.Delete());
+            work.AddRange(schemata.Delete());
             work.AddRange(domains.Delete());
 
             work.AddRange(tables.Delete());
@@ -533,21 +533,21 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             List<WorkItem> work = new List<WorkItem>();
 
             work.AddRange(NameSpaceSource.Load<CatalogData, CatalogValue>(catalogs, addNamedScope));
-            work.AddRange(NameSpaceSource.Load<SchemaData, SchemaValue>(schemta, addNamedScope,
+            work.AddRange(NameSpaceSource.Load<SchemaData, SchemaValue>(schemata, addNamedScope,
                 (parent) => catalogs.FirstOrDefault(w => new CatalogKeyName(parent).Equals(w))));
 
             work.AddRange(NameSpaceSource.Load<DomainData, DomainValue>(domains, addNamedScope,
-                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
+                (parent) => schemata.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
 
             work.AddRange(NameSpaceSource.Load<TableData, TableValue>(tables, addNamedScope,
-                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
+                (parent) => schemata.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
             work.AddRange(NameSpaceSource.Load<TableColumnData, TableColumnValue>(tableColumns, addNamedScope,
                 (parent) => tables.FirstOrDefault(w => new TableKeyName(parent).Equals(w))));
             work.AddRange(NameSpaceSource.Load<ConstraintData, ConstraintValue>(constraints, addNamedScope,
                 (parent) => tables.FirstOrDefault(w => new TableKeyName(parent).Equals(w))));
 
             work.AddRange(NameSpaceSource.Load<RoutineData, RoutineValue>(routines, addNamedScope,
-                (parent) => schemta.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
+                (parent) => schemata.FirstOrDefault(w => new SchemaKeyName(parent).Equals(w))));
             work.AddRange(NameSpaceSource.Load<RoutineParameterData, RoutineParameterValue>(routineParameters, addNamedScope,
                 (parent) => routines.FirstOrDefault(w => new RoutineKeyName(parent).Equals(w))));
             work.AddRange(NameSpaceSource.Load<RoutineColumnData, RoutineColumnValue>(routineColumns, addNamedScope,
@@ -560,7 +560,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public void Remove(ICatalogIndex dataKey)
         {
             catalogs.Remove(dataKey);
-            schemta.Remove(dataKey);
+            schemata.Remove(dataKey);
             domains.Remove(dataKey);
 
             tables.Remove(dataKey);
@@ -581,7 +581,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public void Remove(AppModel.IModelIndex dataKey)
         {
             catalogs.Remove(dataKey);
-            schemta.Remove(dataKey);
+            schemata.Remove(dataKey);
             domains.Remove(dataKey);
             tables.Remove(dataKey);
             tableColumns.Remove(dataKey);
@@ -598,7 +598,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public void Clear()
         {
             catalogs.Clear();
-            schemta.Clear();
+            schemata.Clear();
             domains.Clear();
             tables.Clear();
             tableColumns.Clear();
@@ -619,7 +619,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         public void ResetBindings()
         {
             catalogs.ResetBindings();
-            schemta.ResetBindings();
+            schemata.ResetBindings();
             domains.ResetBindings();
             properties.ResetBindings();
             tables.ResetBindings();
@@ -639,7 +639,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             get
             {
                 return catalogs.RaiseListChangedEvents
-                    && schemta.RaiseListChangedEvents
+                    && schemata.RaiseListChangedEvents
                     && domains.RaiseListChangedEvents
                     && properties.RaiseListChangedEvents
                     && tables.RaiseListChangedEvents
@@ -654,7 +654,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
             set
             {
                 catalogs.RaiseListChangedEvents = value;
-                schemta.RaiseListChangedEvents = value;
+                schemata.RaiseListChangedEvents = value;
                 domains.RaiseListChangedEvents = value;
                 properties.RaiseListChangedEvents = value;
                 tables.RaiseListChangedEvents = value;

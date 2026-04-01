@@ -5142,4 +5142,454 @@
     <Property Name="NewSchema" Value="ProofOfConcept" />
     <Property Name="IsNewSchemaExternal" Value="False" />
   </Operation>
+  <Operation Name="Move Schema" Key="6e8f3afa-6992-453f-9ae4-fbd9dbba89ff" ChangeDateTime="03/02/2026 15:05:04">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="2e06ea3c-6944-4ce4-8970-8a3dbe549925" ChangeDateTime="03/02/2026 15:07:33">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="3697b48b-6e7e-4085-b4b1-95c8dfaa06bb" ChangeDateTime="03/02/2026 15:18:01">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchema]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="9adb3e69-84f7-4c66-a205-de9b74d68d43" ChangeDateTime="03/02/2026 15:22:56">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="d3042876-f17e-4648-a27e-9efcbce86960" ChangeDateTime="03/02/2026 15:23:10">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="e5df1460-eab2-4757-8721-5ce903124de9" ChangeDateTime="03/02/2026 15:23:26">
+    <Property Name="ElementName" Value="[ProofOfConcept].[SchemaNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="5bb37059-1e22-43f0-84c2-319444522d93" ChangeDateTime="03/02/2026 15:24:25">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TransformDefinition]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="9d36466c-93e0-42d2-ae7f-905a171748a3" ChangeDateTime="03/02/2026 15:32:16">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b75d0ea5-aa08-4be5-af6a-5d040a84bcae" ChangeDateTime="03/02/2026 15:32:30">
+    <Property Name="ElementName" Value="[dbo].[TemplateSchemaNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="7dc8bc71-63de-4a39-99f9-aba104cd1c99" ChangeDateTime="03/02/2026 16:04:15">
+    <Property Name="ElementName" Value="[dbo].[TemplateModel]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="ProofOfConcept" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c29cb9c9-3e6f-4e2d-ba37-f277721af90c" ChangeDateTime="03/03/2026 16:54:08">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateSchema]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Schema]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="631cf753-d7d9-407b-b28f-450379a56349" ChangeDateTime="03/03/2026 16:56:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[SchemaNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="af460e2b-b148-40af-a723-4e63b43549d9" ChangeDateTime="03/03/2026 16:57:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[SchemaNodeOwner]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="368d02ab-9543-4e91-b050-7092346789f9" ChangeDateTime="03/03/2026 16:58:04">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateTransform]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[Transform]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d23a64a1-bb7e-4a74-a142-ca3eed006164" ChangeDateTime="03/03/2026 17:01:31">
+    <Property Name="ElementName" Value="[ProofOfConcept].[TemplateObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[ProofOfConcept]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DataObject]" />
+  </Operation>
+  <Operation Name="Move Schema" Key="fc8ea309-58b6-4245-ab20-dda666188f40" ChangeDateTime="03/05/2026 16:21:44">
+    <Property Name="ElementName" Value="[AppScript].[funcObjectNameId]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="2b6702bb-dc1b-48b9-b849-5fa59f7e8a22" ChangeDateTime="03/05/2026 16:21:58">
+    <Property Name="ElementName" Value="[AppScript].[funcObjectPath]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="18ae116b-89d9-4ab1-aaf5-9715350b804c" ChangeDateTime="03/05/2026 16:22:15">
+    <Property Name="ElementName" Value="[AppScript].[procGetDataObject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="eee26f59-25e0-4d11-bbfd-ef6bbbfc8e7b" ChangeDateTime="03/05/2026 16:23:18">
+    <Property Name="ElementName" Value="[AppScript].[procGetDataSource]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="2ddf01d6-e949-480f-9d79-ea85dd396b97" ChangeDateTime="03/05/2026 16:23:32">
+    <Property Name="ElementName" Value="[AppScript].[procGetDocument]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="434062b2-72f4-4c98-9061-37be1c9895bb" ChangeDateTime="03/05/2026 16:23:43">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplate]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="f7c310bd-bd37-4d99-8cdb-feac665f9261" ChangeDateTime="03/05/2026 16:23:58">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplateInput]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="e1b3bc5d-c9ea-4077-8057-f7a39dfdd9a0" ChangeDateTime="03/05/2026 16:24:11">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplateNode]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8cd8abcf-3578-4321-90c2-f521bef4d057" ChangeDateTime="03/05/2026 16:24:23">
+    <Property Name="ElementName" Value="[AppScript].[procGetTemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="ed422168-c1b8-477e-85c0-e8c5a59a11c6" ChangeDateTime="03/05/2026 16:24:39">
+    <Property Name="ElementName" Value="[AppScript].[procSetDataObject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="3671d93d-42dd-4e60-9966-ce3f415bf3e4" ChangeDateTime="03/05/2026 16:24:52">
+    <Property Name="ElementName" Value="[AppScript].[procSetDataObjectName]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="7d2aa020-bebb-42d1-ad8f-c97eeb5eeb1f" ChangeDateTime="03/05/2026 16:25:06">
+    <Property Name="ElementName" Value="[AppScript].[procSetDataSource]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b50f9e37-17a9-45c2-ab3b-86dc02bcf73f" ChangeDateTime="03/05/2026 16:25:22">
+    <Property Name="ElementName" Value="[AppScript].[procSetDocument]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="1cd48627-2077-497f-a6be-53a309faeb67" ChangeDateTime="03/05/2026 16:25:35">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplate]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b96ec99b-e454-407c-95f4-7485a28757a4" ChangeDateTime="03/05/2026 16:25:48">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplateInput]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="7f8d084e-195e-4066-9160-bc6545e45682" ChangeDateTime="03/05/2026 16:26:00">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplateNode]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="6055f95e-04a2-46d2-98f1-3d0f6801977f" ChangeDateTime="03/05/2026 16:26:11">
+    <Property Name="ElementName" Value="[AppScript].[procSetTemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b8db0fdb-283e-4835-a024-8fa1536d4654" ChangeDateTime="03/05/2026 16:26:32">
+    <Property Name="ElementName" Value="[AppScript].[DataObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="20bea737-04a8-4ee6-a7c0-ee279ac3f16a" ChangeDateTime="03/05/2026 16:26:46">
+    <Property Name="ElementName" Value="[AppScript].[DataObjectName]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="f1265a4a-7f99-4233-9bd9-8ac41e9bd21f" ChangeDateTime="03/05/2026 16:26:57">
+    <Property Name="ElementName" Value="[AppScript].[DataSource]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="f0f9631c-ccee-4465-a752-57d0cfe9efc7" ChangeDateTime="03/05/2026 16:27:08">
+    <Property Name="ElementName" Value="[AppScript].[Document]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="932c2bb0-665d-4d6e-89c6-cf29c959cfff" ChangeDateTime="03/05/2026 16:27:23">
+    <Property Name="ElementName" Value="[AppScript].[DocumentFile]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="6712dfc6-2299-4f73-a68d-25eada3dd78d" ChangeDateTime="03/05/2026 16:27:36">
+    <Property Name="ElementName" Value="[AppScript].[ScriptingModel]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="2eded005-3b10-44a0-a153-98fd34227af6" ChangeDateTime="03/05/2026 16:27:50">
+    <Property Name="ElementName" Value="[AppScript].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="bff54f9b-ca64-49f4-90c5-4c572bc1dac7" ChangeDateTime="03/05/2026 16:28:04">
+    <Property Name="ElementName" Value="[AppScript].[TemplateFile]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="21946468-decb-4df9-b89d-d06c45c53054" ChangeDateTime="03/05/2026 16:28:16">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNode]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="1212f572-b3aa-4d85-981e-46bb7690ccb5" ChangeDateTime="03/05/2026 16:28:31">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="cfa2ff39-4d7f-46d9-86f1-fe0abb791a8f" ChangeDateTime="03/05/2026 16:29:19">
+    <Property Name="ElementName" Value="[AppScript].[udttDataObject]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="f69d456e-b883-4757-8724-82b76f94a68b" ChangeDateTime="03/05/2026 16:29:29">
+    <Property Name="ElementName" Value="[AppScript].[udttDataObjectName]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="0b957496-9be8-4964-94dc-59f2d6cea7da" ChangeDateTime="03/05/2026 16:29:40">
+    <Property Name="ElementName" Value="[AppScript].[udttDataSource]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="faa18a60-fe1b-4a8e-b1bd-c9a961b96647" ChangeDateTime="03/05/2026 16:29:50">
+    <Property Name="ElementName" Value="[AppScript].[udttDocument]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="d3ca6f85-2e21-4b81-bf71-062dc8d675a0" ChangeDateTime="03/05/2026 16:29:59">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplate]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="411f749c-710c-49c3-9192-2042a858d7a6" ChangeDateTime="03/05/2026 16:30:10">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplateInput]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="03317102-dff3-44f5-b0a1-e516b8aa99c5" ChangeDateTime="03/05/2026 16:30:20">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplateNode]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="294916b7-d251-458d-b1fe-eb5a922f7f00" ChangeDateTime="03/05/2026 16:30:30">
+    <Property Name="ElementName" Value="[AppScript].[udttTemplateNodeOwner]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="a8dee83d-c3dc-4bb7-b285-05a4c936b8f9" ChangeDateTime="03/05/2026 16:30:47">
+    <Property Name="ElementName" Value="[AppScript].[DataObjectHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="036842a5-ac9b-40d8-b9c6-5254e42abdbe" ChangeDateTime="03/05/2026 16:31:06">
+    <Property Name="ElementName" Value="[AppScript].[DataSourceHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="e700437d-0fef-4bbd-a6b3-6af8bc35e0b0" ChangeDateTime="03/05/2026 16:31:24">
+    <Property Name="ElementName" Value="[AppScript].[DocumentHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="427883f9-6758-4bd4-881f-9dd5028da8ae" ChangeDateTime="03/05/2026 16:31:37">
+    <Property Name="ElementName" Value="[AppScript].[TemplateHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="d6fb5d9b-b0db-4a68-b63d-04ecd7da7fe6" ChangeDateTime="03/05/2026 16:31:46">
+    <Property Name="ElementName" Value="[AppScript].[TemplateInputHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="cc9fdecc-a907-417c-809b-0019a7f95509" ChangeDateTime="03/05/2026 16:32:00">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNodeHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="b1dc9c78-fd63-4083-9824-d7f7013941f3" ChangeDateTime="03/05/2026 16:32:14">
+    <Property Name="ElementName" Value="[AppScript].[TemplateNodeOwnerHs]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="NewSchema" Value="Obsolete" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="169dbd04-598f-4b57-8edf-3d7e65128b43" ChangeDateTime="03/09/2026 15:32:25">
+    <Property Name="ElementName" Value="[dbo].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="AppScript" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Move Schema" Key="8f739f92-7ee4-4dfd-88f1-60a37695f40e" ChangeDateTime="03/09/2026 15:51:06">
+    <Property Name="ElementName" Value="[dbo].[Template]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="NewSchema" Value="HsScript" />
+    <Property Name="IsNewSchemaExternal" Value="False" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f759435a-b3f0-4aad-9097-130b548f0051" ChangeDateTime="03/12/2026 16:18:45">
+    <Property Name="ElementName" Value="[AppScript].[SchemaDefinition].[BreakOnScope]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[AppScript].[SchemaDefinition]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ForEachScope]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fcd537d4-b211-4adb-aa77-d416523a093f" ChangeDateTime="03/12/2026 16:21:56">
+    <Property Name="ElementName" Value="[HsScript].[SchemaDefinition].[BreakOnScope]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[HsScript].[SchemaDefinition]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ForEachScope]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0a8f3ef9-83e6-43f6-b265-2eac5549476b" ChangeDateTime="03/14/2026 14:06:29">
+    <Property Name="ElementName" Value="[AppScript].[DocumentObjectLeaf]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DocumentObjectHS]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7f7a3894-5e53-4d8f-a46b-aa82c871ccad" ChangeDateTime="03/23/2026 15:41:37">
+    <Property Name="ElementName" Value="[AppScript].[DocumentObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dc8fff52-6bc1-43dd-9789-c1263547f340" ChangeDateTime="03/23/2026 15:43:23">
+    <Property Name="ElementName" Value="[AppScript].[trigDocumentObject]" />
+    <Property Name="ElementType" Value="SqlDmlTrigger" />
+    <Property Name="ParentElementName" Value="[AppScript].[TemplateObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[trigTemplateObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2dae2767-451b-460b-b87a-05a663a04de0" ChangeDateTime="03/23/2026 15:44:12">
+    <Property Name="ElementName" Value="[AppScript].[udttDocumentObject]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[udttTemplateObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5ef0d270-ce42-4722-b66a-fd3a49af3f2f" ChangeDateTime="03/23/2026 15:44:46">
+    <Property Name="ElementName" Value="[AppScript].[DocumentObjectHS]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateObjectHS]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="130afc57-5ed0-4949-9577-2ade74de7eab" ChangeDateTime="03/23/2026 15:45:22">
+    <Property Name="ElementName" Value="[AppScript].[DocumentObjectTree]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateObjectTree]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="be4df598-7838-4b64-be54-a68a9b707e8e" ChangeDateTime="03/23/2026 15:46:43">
+    <Property Name="ElementName" Value="[HsScript].[DocumentObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[HsScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[TemplateObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0e0c1233-ce48-4e55-b1db-06f7e0592a93" ChangeDateTime="03/23/2026 15:48:27">
+    <Property Name="ElementName" Value="[AppScript].[funcDocumentObjectId]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcObjectId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bb19eb7d-1f86-4490-b105-ec57210772bd" ChangeDateTime="03/23/2026 15:48:59">
+    <Property Name="ElementName" Value="[AppScript].[funcDocumentObjectPath]" />
+    <Property Name="ElementType" Value="SqlScalarFunction" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcObjectPath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4c7d93ef-ed3c-4338-b219-e95a4a1cb91b" ChangeDateTime="03/23/2026 15:50:04">
+    <Property Name="ElementName" Value="[AppScript].[procGetDocumentObject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetTemplateObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="32b13e0a-48b1-42ee-97a2-09aef42bfc33" ChangeDateTime="03/23/2026 15:50:27">
+    <Property Name="ElementName" Value="[AppScript].[procSetDocumentObject]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[AppScript]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetTemplateObject]" />
+  </Operation>
 </Operations>

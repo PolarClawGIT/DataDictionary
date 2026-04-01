@@ -24,4 +24,5 @@ Select	[ModelId],
 From	[AppModel].[ModelHs] For System_Time All
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@ModelId is Null Or @ModelId = [ModelId])
+Print FormatMessage ('Select: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 GO

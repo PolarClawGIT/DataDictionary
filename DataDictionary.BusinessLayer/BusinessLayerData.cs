@@ -77,6 +77,7 @@ namespace DataDictionary.BusinessLayer
             libraryValues = new AppLibrary.LibraryModel();
 
             scriptingValue = InitScripting(modelValues);
+            templateValues = new AppScripting.TemplateData();
         }
 
         /// <summary>
@@ -106,6 +107,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(CatalogModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
             work.AddRange(Scripting.Load(factory, key));
+            work.AddRange(templateValues.Load(factory, key));
 
             return work;
         }
@@ -120,6 +122,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(CatalogModel.Load(factory, key, asOfUtcDate));
             work.AddRange(LibraryModel.Load(factory, key, asOfUtcDate));
             work.AddRange(Scripting.Load(factory, key));
+            work.AddRange(templateValues.Load(factory, key));
 
             return work;
         }
@@ -133,6 +136,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(CatalogModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
             work.AddRange(Scripting.Save(factory, key));
+            work.AddRange(templateValues.Save(factory, key));
 
             return work;
         }
@@ -146,6 +150,7 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(CatalogModel.Delete());
             work.AddRange(LibraryModel.Delete());
             work.AddRange(Scripting.Delete());
+            work.AddRange(templateValues.Delete());
 
             work.Add(new WorkItem() { DoWork = namedScopeValues.Clear });
 
@@ -190,6 +195,7 @@ namespace DataDictionary.BusinessLayer
                     catalogValue.Import(workSet);
                     libraryValues.Import(workSet);
                     scriptingValue.Import(workSet);
+                    templateValues.Import(workSet);
                 }
 
                 ModelFile = file;
@@ -213,6 +219,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.AddRange(catalogValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValues.Export().ToArray());
                     workSet.Tables.AddRange(scriptingValue.Export().ToArray());
+                    workSet.Tables.AddRange(templateValues.Export().ToArray());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
@@ -228,6 +235,7 @@ namespace DataDictionary.BusinessLayer
             CatalogModel.Remove(dataKey);
             LibraryModel.Remove(dataKey);
             Scripting.Remove(dataKey);
+            templateValues.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -237,6 +245,7 @@ namespace DataDictionary.BusinessLayer
             CatalogModel.Clear();
             LibraryModel.Clear();
             Scripting.Clear();
+            templateValues.Clear();
         }
     }
 }

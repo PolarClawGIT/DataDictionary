@@ -100,7 +100,6 @@
 
   <ItemGroup>
     <Folder Include="ProofOfConcept\" />
-    <Folder Include="Obsolete\" />
   </ItemGroup>
 
 </Project>

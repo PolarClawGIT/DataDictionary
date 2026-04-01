@@ -1,13 +1,8 @@
 ﻿CREATE PROCEDURE [AppScript].[procSetDocument]
 		@ModelId UniqueIdentifier = Null,
-		@DocumentId UniqueIdentifier = Null,
+		@TemplateId UniqueIdentifier = Null,
 		@Data [AppScript].[udttDocument] ReadOnly
-As
-Set NoCount On -- Do not show record counts
-Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on Document.
-*/
-
+AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
@@ -19,214 +14,108 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
 	If Exists (
 		Select	1
 		From	@Data D
-				Cross Apply [AppSecurity].[funcScriptingAuthorization]([DocumentId], 0))
-	Throw 601020, 'DataSource Not Authorized', 2;
+				Cross Apply [AppSecurity].[funcScriptingAuthorization]([TemplateId], 0))
+	Throw 601020, 'Template Not Authorized', 2;
 
+	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[DocumentId]			UniqueIdentifier NOT Null,
-		[DocumentTitle]			[AppGeneral].[uddtTitle] Null,
-		[TemplateId]            UniqueIdentifier NULL,
-		[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
-		[InputPath]				[AppGeneral].[uddtFilePath] Null,
-		[InputFile]             [AppGeneral].[uddtFileName] Null, 
-		[ProcessPath]			[AppGeneral].[uddtFilePath] Null,
-		[ProcessFile]           [AppGeneral].[uddtFileName] Null, 
-		[OutputPath]			[AppGeneral].[uddtFilePath] Null,
-		[OutputFile]            [AppGeneral].[uddtFileName] Null,
-		Primary Key ([DocumentId]))
-
-	Declare @Files Table (
-		[DocumentId]			UniqueIdentifier NOT Null,
-		[RelativePath]			[AppGeneral].[uddtFilePath] Null,
-		[FileName]				[AppGeneral].[uddtFileName] Not Null,
-		[IsInput]				Bit Not Null,
-		[IsProcess]				Bit Not Null,
-		[IsOutput]				Bit Not Null,
-		Primary Key ([DocumentId], [IsInput], [IsProcess], [IsOutput]))
-
-	Declare @Delete Table ([DocumentId] UniqueIdentifier NOT NULL)
+		[DocumentId]		UniqueIdentifier Not NULL,
+		[TemplateId]		UniqueIdentifier Not NULL,
+		[SchemaId]			UniqueIdentifier NULL,
+		[TransformId]		UniqueIdentifier NULL,
+		[ObjectId]			UniqueIdentifier NULL,
+		[FileName]			[AppGeneral].[uddtFileName] Null,
+		Primary Key([DocumentId]))
 
 	Insert Into @Values
 	Select	X.[DocumentId],
-			NullIf(Trim(D.[DocumentTitle]),'') As [DocumentTitle],
 			D.[TemplateId],
-			NullIf(Trim(D.[RootFolder]),'') As [RootFolder],
-			NullIf(Trim(D.[InputPath]),'') As [InputPath],
-			NullIf(Trim(D.[InputFile]),'') As [InputFile],
-			NullIf(Trim(D.[ProcessPath]),'') As [ProcessPath],
-			NullIf(Trim(D.[ProcessFile]),'') As [ProcessFile],
-			NullIf(Trim(D.[OutputPath]),'') As [OutputPath],
-			NullIf(Trim(D.[OutputFile]),'') As [OutputFile]
+			D.[SchemaId],
+			D.[TransformId],
+			D.[ObjectId],
+			NullIf(Trim(D.[FileName]),'') As [FileName]
 	From	@Data D
-			Cross apply (Select	Coalesce(D.[DocumentId], @DocumentId, NewId()) As [DocumentId]) X
-	Where	(@DocumentId is Null And X.[DocumentId] is Not Null) Or
-			(@DocumentId is Not Null And IsNull(X.[DocumentId], @DocumentId) = @DocumentId)
+			Left Join [AppScript].[TemplateModel] M
+			On	D.[TemplateId] = M.[TemplateId] And
+				@ModelId = M.[ModelId]
+			Cross Apply (
+				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
+	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
+			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into @Files
-	Select	[DocumentId],
-			[InputPath] As [RelativePath],
-			[InputFile] As [FileName],
-			1 As [IsInput],
-			0 As [IsProcess],
-			0 As [IsOutput]
-	From	@Values
-	Where	[InputFile] is Not Null
-	Union
-	Select	[DocumentId],
-			[ProcessPath] As [RelativePath],
-			[ProcessFile] As [FileName],
-			0 As [IsInput],
-			1 As [IsProcess],
-			0 As [IsOutput]
-	From	@Values
-	Where	[ProcessFile] is Not Null
-	Union
-	Select	[DocumentId],
-			[OutputPath] As [RelativePath],
-			[OutputFile] As [FileName],
-			0 As [IsInput],
-			0 As [IsProcess],
-			1 As [IsOutput]
-	From	@Values
-	Where	[OutputFile] is Not Null
-	Print FormatMessage ('@Files: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into @Delete
-	Select	T.[DocumentId]
-	From	[AppScript].[Document] T
-			Left Join @Values S
-			On	T.[DocumentId] = S.[DocumentId]
-	Where	S.[DocumentId] is Null And
-			T.[DocumentId] In (
-				Select	[DocumentId]
-				From	[AppScript].[Document]
-				Where	[ModelId] = @ModelId
-				Union
-				Select	@DocumentId
-				Where	@DocumentId is Not Null)
-	Print FormatMessage ('Insert @Delete: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Set Transaction Log
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
-		
-	-- Apply Changes
-	Delete From [AppScript].[DocumentFile]
-	From	[AppScript].[DocumentFile] T
-			Left Join @Files S
-			On	T.[DocumentId] = S.[DocumentId] And
-				T.[IsInput] = S.[IsInput] And
-				T.[IsProcess] = S.[IsProcess] And
-				T.[IsOutput] = S.[IsOutput]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DocumentId], 1)
-	Where	S.[DocumentId] is Null And
-			T.[DocumentId] In (
-				Select	[DocumentId]
-				From	@Delete)
-	Print FormatMessage ('Delete [AppScript].[DocumentFile]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
+	-- Apply Changes
 	Delete From [AppScript].[Document]
 	From	[AppScript].[Document] T
 			Left Join @Values S
 			On	T.[DocumentId] = S.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[DocumentId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
 	Where	S.[DocumentId] is Null And
-			T.[DocumentId] In (
-				Select	[DocumentId]
-				From	@Delete)
+			(@TemplateId is Not Null Or @ModelId is Not Null) And
+			(@TemplateId is Null Or @TemplateId = T.[TemplateId])  And
+			(@ModelId is Null Or T.[TemplateId] In (
+				Select	[TemplateId]
+				From	[AppScript].[TemplateModel]
+				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[Document]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+
+	-- TODO: Add child table delete
+
 
 	;With [Delta] As (
 		Select	[DocumentId],
-				[DocumentTitle],
-				[TemplateId],
-				[RootFolder]
+				--[TemplateId],
+				[SchemaId],
+				[TransformId],
+				[ObjectId],
+				[FileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
-				[DocumentTitle],
-				[TemplateId],
-				[RootFolder]
+				--[TemplateId],
+				[SchemaId],
+				[TransformId],
+				[ObjectId],
+				[FileName]
 		From	[AppScript].[Document])
 	Update [AppScript].[Document]
-		Set		[DocumentTitle] = S.[DocumentTitle],
-				[TemplateId] = S.[TemplateId],
-				[RootFolder] = S.[RootFolder]
-		From	[AppScript].[Document] T
-				Inner Join [Delta] S
-				On	T.[DocumentId] = S.[DocumentId]
+	Set		--[TemplateId] = S.[TemplateId],
+			[SchemaId] = S.[SchemaId],
+			[TransformId] = S.[TransformId],
+			[ObjectId] = S.[ObjectId],
+			[FileName] = S.[FileName]
+	From	[AppScript].[Document] T
+			Inner Join [Delta] S
+			On	T.[DocumentId] = S.[DocumentId]
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
 	Print FormatMessage ('Update [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	;With [Delta] As (
-		Select	[DocumentId],
-				[RelativePath],
-				[FileName],
-				[IsInput],
-				[IsProcess],
-				[IsOutput]
-		From	@Files
-		Except
-		Select	[DocumentId],
-				[RelativePath],
-				[FileName],
-				[IsInput],
-				[IsProcess],
-				[IsOutput]
-		From	[AppScript].[DocumentFile])
-	Update [AppScript].[DocumentFile]
-		Set		[RelativePath] = S.[RelativePath],
-				[FileName] = S.[FileName]
-		From	[AppScript].[DocumentFile] T
-				Inner Join [Delta] S
-				On	T.[DocumentId] = S.[DocumentId] And
-					T.[IsInput] = S.[IsInput] And
-					T.[IsProcess] = S.[IsProcess] And
-					T.[IsOutput] = S.[IsOutput]
-	Print FormatMessage ('Update [AppScript].[DocumentFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[Document] (
 			[DocumentId],
-			[DocumentTitle],
-			[ModelId],
 			[TemplateId],
-			[RootFolder])
+			[SchemaId],
+			[TransformId],
+			[ObjectId],
+			[FileName])
 	Select	S.[DocumentId],
-			S.[DocumentTitle],
-			@ModelId,
 			S.[TemplateId],
-			S.[RootFolder]
+			S.[SchemaId],
+			S.[TransformId],
+			S.[ObjectId],
+			S.[FileName]
 	From	@Values S
 			Left Join [AppScript].[Document] T
 			On	S.[DocumentId] = T.[DocumentId]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[DocumentId], 1)
+			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[DocumentId] is Null
 	Print FormatMessage ('Insert [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [AppScript].[DocumentFile] (
-			[DocumentId],
-			[RelativePath],
-			[FileName],
-			[IsInput],
-			[IsProcess],
-			[IsOutput])
-	Select	S.[DocumentId],
-			S.[RelativePath],
-			S.[FileName],
-			S.[IsInput],
-			S.[IsProcess],
-			S.[IsOutput]
-	From	@Files S
-			Left Join [AppScript].[DocumentFile] T
-			On	S.[DocumentId] = T.[DocumentId] And
-				S.[IsInput] = T.[IsInput] And
-				S.[IsProcess] = T.[IsProcess] And
-				S.[IsOutput] = T.[IsOutput]
-			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[DocumentId], 1)
-	Where	T.[DocumentId] is Null
-	Print FormatMessage ('Insert [AppScript].[DocumentFile]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

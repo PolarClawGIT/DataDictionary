@@ -5,9 +5,11 @@
     /// </summary>  
     static class Authorization
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Authorization));
+
         /// <summary>  
         /// The stored procedure name for retrieving authorization data.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetAuthorization]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
     }
 }

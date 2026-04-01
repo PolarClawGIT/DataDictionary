@@ -16,19 +16,21 @@
     /// </summary>  
     static class EntitySubjectArea
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(EntitySubjectArea));
+
         /// <summary>  
         /// The stored procedure used to retrieve the Entity Subject Area.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetEntitySubjectArea]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set the Entity Subject Area.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetEntitySubjectArea]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for Entity Subject Area operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttEntitySubjectArea]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

@@ -337,12 +337,16 @@
         /// <summary>
         /// Scripting Data Source
         /// </summary>
+        [Obsolete("No Replacement")]
         ScriptingData,
 
         /// <summary>
         /// Scripting Data Source Object
         /// </summary>
+        [Obsolete("Use ScriptingObject")]
         ScriptingDataObject,
+        ScriptingObject,
+
 
         /// <summary>
         /// Scripting Document
@@ -357,17 +361,33 @@
         /// <summary>
         /// Scripting Template Node (Attribute or Element)
         /// </summary>
+        [Obsolete("Use ScriptingNode")]
         ScriptingTemplateNode,
+        ScriptingNode,
+
 
         /// <summary>
         /// Scripting Template Node Owner
         /// </summary>
+        [Obsolete("Use ScriptingNodeOwner")]
         ScriptingTemplateNodeOwner,
+        ScriptingNodeOwner,
 
         /// <summary>
         /// Scripting Template Data
         /// </summary>
+        [Obsolete("No Replacement")]
         ScriptingTemplateData,
+
+        /// <summary>
+        /// Scripting Transform (XSLT)
+        /// </summary>
+        ScriptingTransform,
+
+        /// <summary>
+        /// Scripting Schema Definition (XSD)
+        /// </summary>
+        ScriptingSchema,
 
     }
 

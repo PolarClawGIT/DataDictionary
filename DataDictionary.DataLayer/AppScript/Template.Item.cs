@@ -1,28 +1,25 @@
-﻿using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Interface for the Scripting Template data.
+    /// Interface for the Scripting Template
     /// </summary>
-    public interface ITemplateItem : ITemplateKey, ITemplate,
-        ITemporalItem
-    { }
+    public interface ITemplateItem : ITemplateKeyName, ITemplateKey
+    {
+        /// <summary>
+        /// Description of the Scripting Template
+        /// </summary>
+        String? TemplateDescription { get; }
+    }
 
     /// <summary>
-    /// Implementation for the Scripting Template data.
+    /// Implementation for the Scripting Template.
     /// </summary>
     [Serializable]
-    public class TemplateItem : BindingTableRow, ITemplateItem, ISerializable
+    public class TemplateItem: BindingTableRow, ITemplateItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? TemplateId
@@ -43,96 +40,6 @@ namespace DataDictionary.DataLayer.AppScript
         {
             get { return GetValue(nameof(TemplateDescription)); }
             set { SetValue(nameof(TemplateDescription), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? BreakOnScope
-        {
-            get { return GetValue(nameof(BreakOnScope)); }
-            set { SetValue(nameof(BreakOnScope), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? TransformScript
-        {
-            get { return GetValue(nameof(TransformScript)); }
-            set { SetValue(nameof(TransformScript), value); }
-        }
-
-        /// <inheritdoc/>
-        public DirectoryType RootFolder {
-            get
-            {
-                String? value = GetValue(nameof(RootFolder));
-                if (value.TryParse(out DirectoryType result))
-                { return result; }
-                else { return DirectoryType.Null; }
-            }
-            set
-            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
-        }
-
-        /// <inheritdoc/>
-        public String? DocumentDirectory
-        {
-            get { return GetValue(nameof(DocumentDirectory)); }
-            set { SetValue(nameof(DocumentDirectory), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? DocumentPrefix
-        {
-            get { return GetValue(nameof(DocumentPrefix)); }
-            set { SetValue(nameof(DocumentPrefix), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? DocumentSuffix
-        {
-            get { return GetValue(nameof(DocumentSuffix)); }
-            set { SetValue(nameof(DocumentSuffix), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? DocumentExtension
-        {
-            get { return GetValue(nameof(DocumentExtension)); }
-            set { SetValue(nameof(DocumentExtension), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ScriptAs
-        {
-            get { return GetValue(nameof(ScriptAs)); }
-            set { SetValue(nameof(ScriptAs), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ScriptDirectory
-        {
-            get { return GetValue(nameof(ScriptDirectory)); }
-            set { SetValue(nameof(ScriptDirectory), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ScriptPrefix
-        {
-            get { return GetValue(nameof(ScriptPrefix)); }
-            set { SetValue(nameof(ScriptPrefix), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ScriptSuffix
-        {
-            get { return GetValue(nameof(ScriptSuffix)); }
-            set { SetValue(nameof(ScriptSuffix), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? ScriptExtension
-        {
-            get { return GetValue(nameof(ScriptExtension)); }
-            set { SetValue(nameof(ScriptExtension), value); }
         }
 
         /// <inheritdoc/>
@@ -159,18 +66,6 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateDescription), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(BreakOnScope), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(DocumentDirectory), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(DocumentPrefix), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(DocumentSuffix), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(DocumentExtension), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScriptAs), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScriptDirectory), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScriptPrefix), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScriptSuffix), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScriptExtension), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];
 

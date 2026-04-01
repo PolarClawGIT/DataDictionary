@@ -5,24 +5,26 @@
     /// </summary>  
     static class LibrarySource
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(LibrarySource)) { Identifier = "@LibraryId" };
+
         /// <summary>  
         /// The name of the stored procedure used to retrieve library source data.  
         /// </summary>  
-        public const string GetProcedure = "[AppLibrary].[procGetLibrarySource]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the library ID used in stored procedures.  
         /// </summary>  
-        public const string LibraryId = "@LibraryId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The name of the stored procedure used to set library source data.  
         /// </summary>  
-        public const string SetProcedure = "[AppLibrary].[procSetLibrarySource]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The name of the user-defined table type for library source data.  
         /// </summary>  
-        public const string TableType = "[AppLibrary].[udttLibrarySource]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

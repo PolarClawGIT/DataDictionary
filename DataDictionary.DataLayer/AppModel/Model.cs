@@ -21,24 +21,26 @@
     /// </summary>  
     static class Model
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Model));
+
         /// <summary>  
         /// The stored procedure name for retrieving a model.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetModel]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the model ID.  
         /// </summary>  
-        public const String ModelId = "@ModelId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure name for setting a model.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetModel]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type name for the model.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttModel]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

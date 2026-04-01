@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: Utc
-
-using DataDictionary.DataLayer.AppModel;
+﻿using DataDictionary.DataLayer.AppModel;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -53,8 +51,8 @@ namespace DataDictionary.DataLayer.AppScript
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Template.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Template.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, templateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -73,8 +71,8 @@ namespace DataDictionary.DataLayer.AppScript
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Template.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Template.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, templateId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (templateId is null || w.TemplateId == templateId));

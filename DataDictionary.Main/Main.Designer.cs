@@ -136,14 +136,23 @@
             scriptingContextMenu = new ContextMenuStrip(components);
             menuScriptingAddTemplate = new ToolStripMenuItem();
             menuScriptingAddDocument = new ToolStripMenuItem();
+            menuScriptingAddData = new ToolStripMenuItem();
             menuScriptingTemplate = new ToolStripMenuItem();
             menuScriptingNode = new ToolStripMenuItem();
             menuScriptingNodeOwner = new ToolStripMenuItem();
             menuScriptingDataSource = new ToolStripMenuItem();
             menuScriptingDataObject = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
+            manageTemplateCommand = new ToolStripSplitButton();
             bindingModel = new BindingSource(components);
-            menuScriptingAddData = new ToolStripMenuItem();
+            templateContextMenu = new ContextMenuStrip(components);
+            menuTemplate = new ToolStripMenuItem();
+            menuTemplateTransform = new ToolStripMenuItem();
+            menuTemplateSchemata = new ToolStripMenuItem();
+            menuTemplateNode = new ToolStripMenuItem();
+            menuTemplateNodeOwner = new ToolStripMenuItem();
+            menuTemplateObject = new ToolStripMenuItem();
+            menuTemplateDocument = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -161,6 +170,7 @@
             processContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
+            templateContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // navigationPanel
@@ -449,7 +459,7 @@
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusUser, toolStripStatusBreak, toolStripOnlineStatus, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
             statusStrip.Location = new Point(0, 640);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(917, 22);
+            statusStrip.Size = new Size(965, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
             // 
@@ -469,7 +479,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(577, 17);
+            toolStripWhiteSpace.Size = new Size(625, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -490,7 +500,7 @@
             menuStrip.MdiWindowListItem = windowToolStripMenuItem;
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(0, 2, 0, 2);
-            menuStrip.Size = new Size(917, 24);
+            menuStrip.Size = new Size(965, 24);
             menuStrip.TabIndex = 0;
             menuStrip.Text = "menuStrip";
             // 
@@ -809,10 +819,10 @@
             // 
             // mainToolStrip
             // 
-            mainToolStrip.Items.AddRange(new ToolStripItem[] { manageModelCommand, newAttributeCommand, newEntityCommand, newProcessCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, manageScriptingCommand });
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { manageModelCommand, newAttributeCommand, newEntityCommand, newProcessCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, manageScriptingCommand, manageTemplateCommand });
             mainToolStrip.Location = new Point(303, 24);
             mainToolStrip.Name = "mainToolStrip";
-            mainToolStrip.Size = new Size(614, 25);
+            mainToolStrip.Size = new Size(662, 25);
             mainToolStrip.TabIndex = 10;
             mainToolStrip.Text = "mainToolStrip";
             // 
@@ -909,13 +919,15 @@
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(70, 22);
             manageScriptingCommand.Text = "Scripting";
+            manageScriptingCommand.Visible = false;
             manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingAddTemplate, menuScriptingAddDocument, menuScriptingAddData, menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.Size = new Size(235, 224);
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
+            scriptingContextMenu.Size = new Size(235, 202);
             // 
             // menuScriptingAddTemplate
             // 
@@ -930,6 +942,13 @@
             menuScriptingAddDocument.Size = new Size(234, 22);
             menuScriptingAddDocument.Text = "add Document";
             menuScriptingAddDocument.Click += MenuScriptingAddDocument_Click;
+            // 
+            // menuScriptingAddData
+            // 
+            menuScriptingAddData.Name = "menuScriptingAddData";
+            menuScriptingAddData.Size = new Size(234, 22);
+            menuScriptingAddData.Text = "add Data Source";
+            menuScriptingAddData.Click += MenuScriptingAddData_Click;
             // 
             // menuScriptingTemplate
             // 
@@ -972,22 +991,79 @@
             menuScriptingDocument.Text = "browse Documents";
             menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
+            // manageTemplateCommand
+            // 
+            manageTemplateCommand.DropDown = templateContextMenu;
+            manageTemplateCommand.ImageTransparentColor = Color.Magenta;
+            manageTemplateCommand.Name = "manageTemplateCommand";
+            manageTemplateCommand.Size = new Size(72, 22);
+            manageTemplateCommand.Text = "Template";
+            // 
             // bindingModel
             // 
             bindingModel.ListChanged += BindingModel_ListChanged;
             // 
-            // menuScriptingAddData
+            // templateContextMenu
             // 
-            menuScriptingAddData.Name = "menuScriptingAddData";
-            menuScriptingAddData.Size = new Size(234, 22);
-            menuScriptingAddData.Text = "add Data Source";
-            menuScriptingAddData.Click += MenuScriptingAddData_Click;
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuTemplate, menuTemplateTransform, menuTemplateSchemata, menuTemplateNode, menuTemplateNodeOwner, menuTemplateObject, menuTemplateDocument });
+            templateContextMenu.Name = "templateContextMenu";
+            templateContextMenu.OwnerItem = manageTemplateCommand;
+            templateContextMenu.Size = new Size(188, 158);
+            // 
+            // menuTemplate
+            // 
+            menuTemplate.Name = "menuTemplate";
+            menuTemplate.Size = new Size(187, 22);
+            menuTemplate.Text = "browse Templates";
+            menuTemplate.Click += MenuTemplate_Click;
+            // 
+            // menuTemplateTransform
+            // 
+            menuTemplateTransform.Name = "menuTemplateTransform";
+            menuTemplateTransform.Size = new Size(187, 22);
+            menuTemplateTransform.Text = "browse Transforms";
+            menuTemplateTransform.Click += MenuTemplateTransform_Click;
+            // 
+            // menuTemplateSchemata
+            // 
+            menuTemplateSchemata.Name = "menuTemplateSchemata";
+            menuTemplateSchemata.Size = new Size(187, 22);
+            menuTemplateSchemata.Text = "browse Schemata";
+            menuTemplateSchemata.Click += MenuTemplateSchemata_Click;
+            // 
+            // menuTemplateNode
+            // 
+            menuTemplateNode.Name = "menuTemplateNode";
+            menuTemplateNode.Size = new Size(187, 22);
+            menuTemplateNode.Text = "browse Nodes";
+            menuTemplateNode.Click += MenuTemplateNode_Click;
+            // 
+            // menuTemplateNodeOwner
+            // 
+            menuTemplateNodeOwner.Name = "menuTemplateNodeOwner";
+            menuTemplateNodeOwner.Size = new Size(187, 22);
+            menuTemplateNodeOwner.Text = "browse Node Owners";
+            menuTemplateNodeOwner.Click += MenuTemplateNodeOwner_Click;
+            // 
+            // menuTemplateObject
+            // 
+            menuTemplateObject.Name = "menuTemplateObject";
+            menuTemplateObject.Size = new Size(187, 22);
+            menuTemplateObject.Text = "browse Objects";
+            menuTemplateObject.Click += MenuTemplateObject_Click;
+            // 
+            // menuTemplateDocument
+            // 
+            menuTemplateDocument.Name = "menuTemplateDocument";
+            menuTemplateDocument.Size = new Size(187, 22);
+            menuTemplateDocument.Text = "browse Documents";
+            menuTemplateDocument.Click += MenuTemplateDocument_Click;
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(917, 662);
+            ClientSize = new Size(965, 662);
             Controls.Add(mainToolStrip);
             Controls.Add(navigationSpliter);
             Controls.Add(navigationPanel);
@@ -1020,6 +1096,7 @@
             processContextMenu.ResumeLayout(false);
             scriptingContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
+            templateContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1137,5 +1214,14 @@
         private ToolStripMenuItem menuScriptingAddTemplate;
         private ToolStripMenuItem menuScriptingAddDocument;
         private ToolStripMenuItem menuScriptingAddData;
+        private ContextMenuStrip templateContextMenu;
+        private ToolStripMenuItem menuTemplate;
+        private ToolStripMenuItem menuTemplateTransform;
+        private ToolStripMenuItem menuTemplateSchemata;
+        private ToolStripMenuItem menuTemplateNode;
+        private ToolStripMenuItem menuTemplateNodeOwner;
+        private ToolStripMenuItem menuTemplateObject;
+        private ToolStripMenuItem menuTemplateDocument;
+        private ToolStripSplitButton manageTemplateCommand;
     }
 }

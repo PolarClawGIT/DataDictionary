@@ -5,19 +5,21 @@
     /// </summary>  
     static class AttributeAlias
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(AttributeAlias));
+
         /// <summary>  
         /// The stored procedure used to retrieve attribute aliases.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetAttributeAlias]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set attribute aliases.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetAttributeAlias]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for attribute alias operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttAttributeAlias]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

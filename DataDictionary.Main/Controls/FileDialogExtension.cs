@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Controls
         public static void SetDialog(this FileDialog dialog, IFileValue file)
         {
             dialog.Reset();
-            dialog.InitialDirectory = file.DirectoryPath;
+            dialog.InitialDirectory = file.InitialDirectory;
             dialog.Filter = String.Join('|', file.FileFormats.Select(s => s.DialogFilter()));
             dialog.FileName = file.FileName;
         }

@@ -22,24 +22,26 @@
     /// </summary>  
     static class Constraint
     {
-        /// <summary>  
-        /// Identifier for the constraint.  
-        /// </summary>  
-        public const String ConstraintId = "@ConstraintId";
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Constraint));
 
-        /// <summary>  
-        /// Stored procedure to retrieve constraint information.  
-        /// </summary>  
-        public const String GetProcedure = "[AppCatalog].[procGetConstraint]";
+        /// <summary>
+        /// Identifier for the Constraint.
+        /// </summary>
+        public readonly static String Identifier = dataObject.Identifier;
 
-        /// <summary>  
-        /// Stored procedure to set constraint information.  
-        /// </summary>  
-        public const String SetProcedure = "[AppCatalog].[procSetConstraint]";
+        /// <summary>
+        /// Stored procedure to retrieve the Constraint.
+        /// </summary>
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
-        /// <summary>  
-        /// Table type for constraints.  
-        /// </summary>  
-        public const String TableType = "[AppCatalog].[udttConstraint]";
+        /// <summary>
+        /// Stored procedure to set the Constraint.
+        /// </summary>
+        public readonly static String SetProcedure = dataObject.SetProcedure;
+
+        /// <summary>
+        /// Table type for the Constraint.
+        /// </summary>
+        public readonly static String TableType = dataObject.TableType;
     }
 }

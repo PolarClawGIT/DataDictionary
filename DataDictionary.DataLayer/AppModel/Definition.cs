@@ -21,24 +21,26 @@
     /// </summary>  
     static class Definition
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Definition));
+
         /// <summary>  
         /// Identifier for the Definition entity.  
         /// </summary>  
-        public const String DefinitionId = "@DefinitionId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// Stored procedure to retrieve a Definition.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetDefinition]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// Stored procedure to set a Definition.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetDefinition]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// User-defined table type for Definition.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttDefinition]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

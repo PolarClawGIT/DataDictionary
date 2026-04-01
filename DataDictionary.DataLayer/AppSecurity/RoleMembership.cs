@@ -5,19 +5,21 @@
     /// </summary>  
     static class RoleMembership
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(RoleMembership));
+
         /// <summary>  
         /// The stored procedure used to retrieve role membership information.  
         /// </summary>  
-        public const String GetProcedure = "[AppSecurity].[procGetRoleMembership]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The stored procedure used to set role membership information.  
         /// </summary>  
-        public const String SetProcedure = "[AppSecurity].[procSetRoleMembership]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The table type used for role membership operations.  
         /// </summary>  
-        public const String TableType = "[AppSecurity].[udttRoleMembership]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

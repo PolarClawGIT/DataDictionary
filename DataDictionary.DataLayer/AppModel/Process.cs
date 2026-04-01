@@ -16,24 +16,26 @@
     /// </summary>  
     static class Process
     {
+        static readonly DatabaseNaming dataObject = new DatabaseNaming(typeof(Process));
+
         /// <summary>  
         /// The stored procedure used to retrieve process information.  
         /// </summary>  
-        public const String GetProcedure = "[AppModel].[procGetProcess]";
+        public readonly static String GetProcedure = dataObject.GetProcedure;
 
         /// <summary>  
         /// The parameter name for the Process ID.  
         /// </summary>  
-        public const String ProcessId = "@ProcessId";
+        public readonly static String Identifier = dataObject.Identifier;
 
         /// <summary>  
         /// The stored procedure used to set process information.  
         /// </summary>  
-        public const String SetProcedure = "[AppModel].[procSetProcess]";
+        public readonly static String SetProcedure = dataObject.SetProcedure;
 
         /// <summary>  
         /// The user-defined table type for process operations.  
         /// </summary>  
-        public const String TableType = "[AppModel].[udttProcess]";
+        public readonly static String TableType = dataObject.TableType;
     }
 }

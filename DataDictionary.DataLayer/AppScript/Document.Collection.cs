@@ -10,15 +10,15 @@ namespace DataDictionary.DataLayer.AppScript
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     public class DocumentCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IModelKey>, IReadData<IDocumentKey>, IReadData<ITemplateKey>,
-        IWriteData<IModelKey>, IWriteData<IDocumentKey>, IWriteData<ITemplateKey>,
-        IRemoveItem<IDocumentKey>, IRemoveItem<ITemplateKey>,
-        IReadTemporal<IModelKey>, IReadTemporal<IDocumentKey>
+        IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
+        IWriteData<IModelKey>, IWriteData<ITemplateKey>,
+        IRemoveItem<ITemplateKey>,
+        IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
         where TItem : BindingTableRow, IDocumentItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, modelId: null, documentId: null); }
+        { return LoadCommand(connection, modelId: null, TemplateId: null); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -29,39 +29,30 @@ namespace DataDictionary.DataLayer.AppScript
         { return LoadCommand(connection, modelId: modelKey.ModelId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDocumentKey documentKey)
-        { return LoadCommand(connection, documentId: documentKey.DocumentId); }
+        public Command LoadCommand(IConnection connection, ITemplateKey TemplateKey)
+        { return LoadCommand(connection, TemplateId: TemplateKey.TemplateId); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDocumentKey documentKey, ITemporalKey asOfUtcDate)
-        { return LoadCommand(connection, documentId: documentKey.DocumentId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
-
-        /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ITemplateKey templateKey)
-        { return LoadCommand(connection, templateId: templateKey.TemplateId); }
-
-        /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ITemplateKey templateKey, ITemporalKey asOfUtcDate)
-        { return LoadCommand(connection, templateId: templateKey.TemplateId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
+        public Command LoadCommand(IConnection connection, ITemplateKey TemplateKey, ITemporalKey asOfUtcDate)
+        { return LoadCommand(connection, TemplateId: TemplateKey.TemplateId, asOfUtcDate: asOfUtcDate.AsOfUtcDate); }
 
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, IModelKey modelKey)
         { return LoadCommand(connection, modelId: modelKey.ModelId, includeHistory: true); }
 
         /// <inheritdoc/>
-        public Command HistoryCommand(IConnection connection, IDocumentKey key)
-        { return LoadCommand(connection, documentId: key.DocumentId, includeHistory: true); }
+        public Command HistoryCommand(IConnection connection, ITemplateKey key)
+        { return LoadCommand(connection, TemplateId: key.TemplateId, includeHistory: true); }
 
         private Command LoadCommand(IConnection connection,
-            Guid? modelId = null, Guid? documentId = null, Guid? templateId = null,
+            Guid? modelId = null, Guid? TemplateId = null,
             DateTime? asOfUtcDate = null, Boolean includeHistory = false)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Document.GetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Document.DocumentId, documentId);
-            command.AddParameter(Template.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, TemplateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
             command.AddParameter(Temporal.IncludeHistory, includeHistory);
             return command;
@@ -72,43 +63,27 @@ namespace DataDictionary.DataLayer.AppScript
         { return SaveCommand(connection, modelId: modelKey.ModelId); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IDocumentKey documentKey)
-        { return SaveCommand(connection, documentId: documentKey.DocumentId); }
+        public Command SaveCommand(IConnection connection, ITemplateKey TemplateKey)
+        { return SaveCommand(connection, TemplateId: TemplateKey.TemplateId); }
 
-        /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, ITemplateKey templateKey)
-        { return SaveCommand(connection, documentId: templateKey.TemplateId); }
-
-        private Command SaveCommand(IConnection connection,
-            Guid? modelId = null, Guid? documentId = null, Guid? templateId = null)
+        private Command SaveCommand(IConnection connection, Guid? modelId = null, Guid? TemplateId = null)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = Document.SetProcedure;
-            command.AddParameter(Model.ModelId, modelId);
-            command.AddParameter(Document.DocumentId, documentId);
-            command.AddParameter(Template.TemplateId, templateId);
+            command.AddParameter(Model.Identifier, modelId);
+            command.AddParameter(Template.Identifier, TemplateId);
 
             IEnumerable<TItem> data = this.Where(w =>
-                (documentId is null || w.DocumentId == documentId) &&
-                (templateId is null || w.TemplateId == templateId));
+                (TemplateId is null || w.TemplateId == TemplateId));
             command.AddParameter(WriteData.Data, Document.TableType, data);
             return command;
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDocumentKey documentKey)
+        public virtual void Remove(ITemplateKey TemplateKey)
         {
-            DocumentKey key = new DocumentKey(documentKey);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
-            { base.Remove(item); }
-        }
-
-        /// <inheritdoc/>
-        public virtual void Remove(ITemplateKey templateKey)
-        {
-            TemplateKey key = new TemplateKey(templateKey);
+            TemplateKey key = new TemplateKey(TemplateKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

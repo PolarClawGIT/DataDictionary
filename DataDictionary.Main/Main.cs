@@ -105,6 +105,16 @@ namespace DataDictionary.Main
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
             menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
 
+            manageTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            manageTemplateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            menuTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            menuTemplateDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
+            menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(CommandType.Default);
+            menuTemplateNodeOwner.Image = ScopeType.ScriptingNodeOwner.GetImage(CommandType.Default);
+            menuTemplateObject.Image = ScopeType.ScriptingObject.GetImage(CommandType.Default);
+            menuTemplateSchemata.Image = ScopeType.ScriptingSchema.GetImage(CommandType.Default);
+            menuTemplateTransform.Image = ScopeType.ScriptingTransform.GetImage(CommandType.Default);
+
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
             IsLocked(true);
@@ -361,7 +371,6 @@ namespace DataDictionary.Main
 
             securityAuthorization.Enabled = true;
         }
-
 
     }
 }
