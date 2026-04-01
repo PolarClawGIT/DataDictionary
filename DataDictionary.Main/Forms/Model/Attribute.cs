@@ -9,9 +9,9 @@ using DataDictionary.Main.Controls.ComboBoxList;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Attribute : ApplicationData, IApplicationDataForm
+    partial class Attribute : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IAttributeIndex attribute && attributeIndex.Equals(attribute); }
 
         FormBinding formBinding;

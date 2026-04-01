@@ -11,8 +11,20 @@ using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms
 {
+
     partial class ApplicationData : ApplicationBase
     {
+        /// <summary>
+        /// Is the object passed the item the form is using for data.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// By default the function always returns true.
+        /// Override this if the from is specific to data item.
+        /// </remarks>
+        public virtual Boolean IsOpenItem(Object? item) { return true; }
+
         /// <summary>
         /// The set of Command Buttons
         /// </summary>

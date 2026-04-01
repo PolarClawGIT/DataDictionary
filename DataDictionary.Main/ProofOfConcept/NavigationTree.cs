@@ -13,7 +13,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.ProofOfConcept
 {
-    partial class NavigationTree : ApplicationData, IApplicationDataForm
+    partial class NavigationTree : ApplicationData
     {
 
         public NavigationTree()

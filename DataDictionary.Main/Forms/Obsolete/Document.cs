@@ -11,13 +11,13 @@ using System.Xml.Linq;
 namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete]
-    partial class Document : ApplicationData, IApplicationDataForm
+    partial class Document : ApplicationData
     {
         FormBinding formBinding;
         DocumentIndex documentIndex = new DocumentIndex();
         TemporalIndex? temporalIndex = null;
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return formBinding.Equals(item); }
 
         public Document()

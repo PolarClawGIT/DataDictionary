@@ -10,16 +10,18 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
 {
-    partial class HelpSubject : ApplicationData, IApplicationDataForm
+    partial class HelpSubject : ApplicationData
     {
         FormBinding formBinding;
         Boolean needsData = false;
 
-        public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
+        public override Boolean IsOpenItem(object? item)
         {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
-            return formBinding.TryGetValue(out HelpSubjectValue? subject) && key.Equals(subject);
+            return item is IHelpSubjectIndex key
+                && formBinding.TryGetValue(out HelpSubjectValue? subject)
+                && key.Equals(subject);
         }
+
 
         public HelpSubject() : base()
         {

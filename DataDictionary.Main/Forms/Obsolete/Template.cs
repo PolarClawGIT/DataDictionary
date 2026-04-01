@@ -11,9 +11,9 @@ using System.ComponentModel;
 namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete]
-    partial class Template : ApplicationData, IApplicationDataForm
+    partial class Template : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return templateIndex.Equals(item); }
 
         FormBinding formBinding;

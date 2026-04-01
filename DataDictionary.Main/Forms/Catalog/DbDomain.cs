@@ -6,10 +6,10 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbDomain : ApplicationData, IApplicationDataForm
+    partial class DbDomain : ApplicationData
     {
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingDomain.Current is IDomainValue current && ReferenceEquals(current, item); }
 
         protected DbDomain() : base()

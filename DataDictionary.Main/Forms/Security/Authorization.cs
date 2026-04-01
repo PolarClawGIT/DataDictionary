@@ -6,9 +6,9 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Security
 {
-    partial class Authorization : ApplicationData, IApplicationDataForm
+    partial class Authorization : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return true; } // Only single copy allowed
 
         FormBinding formBinding;

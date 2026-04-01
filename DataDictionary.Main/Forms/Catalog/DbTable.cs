@@ -10,9 +10,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbTable : ApplicationData, IApplicationDataForm
+    partial class DbTable : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingTable.Current is ITableValue current && ReferenceEquals(current, item); }
 
         protected DbTable() : base()

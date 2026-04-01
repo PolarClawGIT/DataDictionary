@@ -7,9 +7,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbSchema : ApplicationData, IApplicationDataForm
+    partial class DbSchema : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingSchema.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
         protected DbSchema() : base()

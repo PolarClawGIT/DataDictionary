@@ -11,9 +11,9 @@ using CommandType = DataDictionary.Main.Enumerations.CommandType;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Entity : ApplicationData, IApplicationDataForm
+    partial class Entity : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IEntityIndex entity && entityIndex.Equals(entity); }
 
         FormBinding formBinding;

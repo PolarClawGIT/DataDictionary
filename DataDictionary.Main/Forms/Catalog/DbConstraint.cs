@@ -7,9 +7,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbConstraint : ApplicationData, IApplicationDataForm
+    partial class DbConstraint : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingConstraint.Current is IConstraintValue current && ReferenceEquals(current, item); }
 
         protected DbConstraint() : base()

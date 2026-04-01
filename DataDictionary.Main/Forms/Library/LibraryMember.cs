@@ -4,9 +4,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryMember : ApplicationData, IApplicationDataForm
+    partial class LibraryMember : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingMember.Current is ILibraryMemberValue current && ReferenceEquals(current, item); }
 
         protected LibraryMember() : base()

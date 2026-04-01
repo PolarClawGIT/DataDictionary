@@ -10,9 +10,9 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Process : ApplicationData, IApplicationDataForm
+    partial class Process : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IProcessIndex attribute && processIndex.Equals(attribute); }
 
         FormBinding formBinding;

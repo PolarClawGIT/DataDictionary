@@ -7,10 +7,10 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbCatalog : ApplicationData, IApplicationDataForm
+    partial class DbCatalog : ApplicationData
     {
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ICatalogValue current && ReferenceEquals(current, item); }
 
         protected DbCatalog() : base()
