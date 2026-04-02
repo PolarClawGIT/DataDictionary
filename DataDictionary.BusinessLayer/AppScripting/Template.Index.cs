@@ -12,6 +12,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class TemplateIndex : TemplateKey, ITemplateIndex,
         IKeyEquality<ITemplateIndex>, IKeyEquality<TemplateIndex>
     {
+        /// <inheritdoc cref="TemplateKey()"/>
+        public TemplateIndex() : base() { }
+
         /// <inheritdoc cref="TemplateKey(ITemplateKey)"/>
         public TemplateIndex(ITemplateIndex source) : base(source) { }
 

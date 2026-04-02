@@ -12,6 +12,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class SchemaDefinitionIndex : SchemaDefinitionKey, ISchemaDefinitionIndex,
         IKeyEquality<ISchemaDefinitionIndex>, IKeyEquality<SchemaDefinitionIndex>
     {
+        /// <inheritdoc cref="SchemaDefinitionKey()"/>
+        public SchemaDefinitionIndex() : base() { }
+
         /// <inheritdoc cref="SchemaDefinitionKey(ISchemaDefinitionKey)"/>
         public SchemaDefinitionIndex(ISchemaDefinitionIndex source) : base(source) { }
 

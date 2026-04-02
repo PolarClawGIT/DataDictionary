@@ -144,8 +144,8 @@
             menuScriptingDataObject = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
             manageTemplateCommand = new ToolStripSplitButton();
-            bindingModel = new BindingSource(components);
             templateContextMenu = new ContextMenuStrip(components);
+            menuNewTemplate = new ToolStripMenuItem();
             menuTemplate = new ToolStripMenuItem();
             menuTemplateTransform = new ToolStripMenuItem();
             menuTemplateSchemata = new ToolStripMenuItem();
@@ -153,6 +153,7 @@
             menuTemplateNodeOwner = new ToolStripMenuItem();
             menuTemplateObject = new ToolStripMenuItem();
             menuTemplateDocument = new ToolStripMenuItem();
+            bindingModel = new BindingSource(components);
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -169,8 +170,8 @@
             modelContextMenu.SuspendLayout();
             processContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
             templateContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
             SuspendLayout();
             // 
             // navigationPanel
@@ -998,17 +999,21 @@
             manageTemplateCommand.Name = "manageTemplateCommand";
             manageTemplateCommand.Size = new Size(72, 22);
             manageTemplateCommand.Text = "Template";
-            // 
-            // bindingModel
-            // 
-            bindingModel.ListChanged += BindingModel_ListChanged;
+            manageTemplateCommand.ButtonClick += ManageTemplateCommand_ButtonClick;
             // 
             // templateContextMenu
             // 
-            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuTemplate, menuTemplateTransform, menuTemplateSchemata, menuTemplateNode, menuTemplateNodeOwner, menuTemplateObject, menuTemplateDocument });
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateTransform, menuTemplateSchemata, menuTemplateNode, menuTemplateNodeOwner, menuTemplateObject, menuTemplateDocument });
             templateContextMenu.Name = "templateContextMenu";
             templateContextMenu.OwnerItem = manageTemplateCommand;
-            templateContextMenu.Size = new Size(188, 158);
+            templateContextMenu.Size = new Size(188, 202);
+            // 
+            // menuNewTemplate
+            // 
+            menuNewTemplate.Name = "menuNewTemplate";
+            menuNewTemplate.Size = new Size(187, 22);
+            menuNewTemplate.Text = "New Template";
+            menuNewTemplate.Click += MenuNewTemplate_Click;
             // 
             // menuTemplate
             // 
@@ -1059,6 +1064,10 @@
             menuTemplateDocument.Text = "browse Documents";
             menuTemplateDocument.Click += MenuTemplateDocument_Click;
             // 
+            // bindingModel
+            // 
+            bindingModel.ListChanged += BindingModel_ListChanged;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1095,8 +1104,8 @@
             modelContextMenu.ResumeLayout(false);
             processContextMenu.ResumeLayout(false);
             scriptingContextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
             templateContextMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1223,5 +1232,6 @@
         private ToolStripMenuItem menuTemplateObject;
         private ToolStripMenuItem menuTemplateDocument;
         private ToolStripSplitButton manageTemplateCommand;
+        private ToolStripMenuItem menuNewTemplate;
     }
 }

@@ -15,6 +15,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class TransformIndex : TransformKey, ITransformIndex,
         IKeyEquality<ITransformIndex>, IKeyEquality<TransformIndex>
     {
+        /// <inheritdoc cref="TransformKey()"/>
+        public TransformIndex() : base() { }
+
         /// <inheritdoc cref="TransformKey(ITransformKey)"/>
         public TransformIndex(ITransformIndex source) : base(source) { }
 
