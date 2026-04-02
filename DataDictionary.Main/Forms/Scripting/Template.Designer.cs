@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            bindingTemplate = new BindingSource(components);
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             SuspendLayout();
             // 
             // Template
@@ -38,10 +41,13 @@
             Name = "Template";
             Text = "Template";
             Load += Template_Load;
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
+
+        private BindingSource bindingTemplate;
     }
 }

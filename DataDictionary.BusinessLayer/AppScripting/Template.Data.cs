@@ -48,6 +48,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Documents for the Templates
         /// </summary>
         IDocumentData Documents { get; }
+
+        /// <summary>
+        /// Creates an empty ITemplateData.
+        /// </summary>
+        /// <returns></returns>
+        static ITemplateData Create()
+        { return new TemplateData(); }
     }
 
     class TemplateData : TemplateCollection<TemplateValue>, ITemplateData,
@@ -89,15 +96,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        /// <remarks>Only loads the base Templates, not the child objects.</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateLoad(this));
-            work.AddRange(factory.CreateLoad(schemaNodeValues));
-            work.AddRange(factory.CreateLoad(schemaNodeValues));
-            work.AddRange(factory.CreateLoad(schemaNodeOwnerValues));
-            work.AddRange(factory.CreateLoad(templateObjectValues));
-            work.AddRange(factory.CreateLoad(documentValues));
+            //work.AddRange(factory.CreateLoad(schemaNodeValues)); 
+            //work.AddRange(factory.CreateLoad(schemaNodeValues));
+            //work.AddRange(factory.CreateLoad(schemaNodeOwnerValues));
+            //work.AddRange(factory.CreateLoad(templateObjectValues));
+            //work.AddRange(factory.CreateLoad(documentValues));
             return work;
         }
 
