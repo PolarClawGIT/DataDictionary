@@ -31,8 +31,8 @@ namespace DataDictionary.Main.Forms.Security
             SetIcon(ScopeType.Security);
 
             SetCommand(ScopeType.Security,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase);
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase);
 
             authorizationTab.ImageList = new ImageList();
             authorizationTab.ImageList.AddImages(

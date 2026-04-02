@@ -7,7 +7,7 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
-using CommandType = DataDictionary.Main.Enumerations.CommandType;
+using ButtonType = DataDictionary.Main.Enumerations.ButtonType;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -48,14 +48,14 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAttribute);
             
             SetCommand(ScopeType.ModelEntity,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
-            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Select);
-            attributeNewCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Select);
+            attributeNewCommand.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
         }
 
         public Entity(IEntityIndex? entity) : this()

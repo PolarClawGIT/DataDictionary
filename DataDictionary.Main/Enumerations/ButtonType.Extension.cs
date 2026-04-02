@@ -11,7 +11,7 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="scope"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        public static Image GetImage(this ScopeType scope, CommandType command)
+        public static Image GetImage(this ScopeType scope, ButtonType command)
         {
             if (scope.TryGetImage(command, out Image? result))
             { return result; }
@@ -31,14 +31,14 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="command"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Boolean TryGetImage(this ScopeType scope, CommandType command, [NotNullWhen(true)] out Image? value)
+        public static Boolean TryGetImage(this ScopeType scope, ButtonType command, [NotNullWhen(true)] out Image? value)
         {
             if (scope.TryGetImage(out Image? scopeImage))
             {
                 value = scopeImage;
 
                 if (commmandOverride.ContainsKey(scope) 
-                    && command is not CommandType.Default)
+                    && command is not ButtonType.Default)
                 { value = commmandOverride[scope].GetSmallImage(); }
 
                 if (commandOverlay.ContainsKey(command))

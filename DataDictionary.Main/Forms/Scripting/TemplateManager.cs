@@ -22,11 +22,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.CommandType.Add,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase);
+                Enumerations.ButtonType.Add,
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase);
 
             formBinding = new FormBinding()
             {
@@ -88,11 +88,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                CommandButtons[CommandType.Delete].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
 
-                CommandButtons[CommandType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
-                CommandButtons[CommandType.SaveDatabase].IsEnabled = binding.InModel;
-                CommandButtons[CommandType.DeleteDatabase].IsEnabled = binding.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
         }
     }

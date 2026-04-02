@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
-            xElementRenderCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
+            xElementRenderCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
 
             formBinding = new FormBinding()
             {
@@ -44,11 +44,11 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea);
             
             SetCommand(ScopeType.ModelAttribute,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase,
+                Enumerations.ButtonType.HistoryDatabase);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()

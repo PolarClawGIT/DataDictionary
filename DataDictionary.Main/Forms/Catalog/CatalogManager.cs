@@ -20,11 +20,11 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetIcon(ScopeType.Database);
             SetCommand(ScopeType.Database,
-                CommandType.Add,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase);
+                ButtonType.Add,
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase);
 
             formBinding = new FormBinding()
             {
@@ -171,11 +171,11 @@ namespace DataDictionary.Main.Forms.Catalog
         {
             if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                CommandButtons[CommandType.Delete].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
 
-                CommandButtons[CommandType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
-                CommandButtons[CommandType.SaveDatabase].IsEnabled = binding.InModel;
-                CommandButtons[CommandType.DeleteDatabase].IsEnabled = binding.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
         }
     }

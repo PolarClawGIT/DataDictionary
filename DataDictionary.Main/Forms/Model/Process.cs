@@ -46,14 +46,14 @@ namespace DataDictionary.Main.Forms.Model
                 bindingArgument);
 
             SetCommand(ScopeType.ModelProcess,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
-            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Select);
-            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Add);
+            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetImage(ButtonType.Select);
+            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetImage(ButtonType.Add);
         }
 
         public Process(IProcessIndex? process) : this()

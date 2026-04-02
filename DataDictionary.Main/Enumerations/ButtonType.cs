@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace DataDictionary.Main.Enumerations
 {
     /// <summary>
-    /// List of different Images used by commands within the UI
+    /// List of different Images used by Buttons within the UI
     /// </summary>
-    enum CommandType
+    enum ButtonType
     {
         /// <summary>
         /// Default image

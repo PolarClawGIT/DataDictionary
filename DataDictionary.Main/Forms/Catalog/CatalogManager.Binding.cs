@@ -176,17 +176,17 @@ namespace DataDictionary.Main.Forms.Catalog
                 }
             }
 
-            public Boolean GetAuthorization(Enumerations.CommandType command)
+            public Boolean GetAuthorization(Enumerations.ButtonType command)
             {
                 switch (command)
                 {
-                    case Enumerations.CommandType.Default: return true;
-                    case Enumerations.CommandType.Add: return BusinessData.Authorization.IsCatalogAdmin;
-                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsCatalogAdmin;
-                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsCatalogAdmin;
-                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsCatalogAdmin;
-                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsCatalogAdmin;
-                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Add: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.Delete: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.OpenDatabase: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.SaveDatabase: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.DeleteDatabase: return BusinessData.Authorization.IsCatalogAdmin;
+                    case Enumerations.ButtonType.HistoryDatabase: return BusinessData.Authorization.IsCatalogAdmin;
                     default: return false;
                 }
             }

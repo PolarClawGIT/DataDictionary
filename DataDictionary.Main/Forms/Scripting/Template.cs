@@ -26,11 +26,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase,
+                Enumerations.ButtonType.HistoryDatabase);
 
         }
 

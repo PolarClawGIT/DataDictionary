@@ -241,7 +241,7 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
-            public Boolean GetAuthorization(Enumerations.CommandType command)
+            public Boolean GetAuthorization(Enumerations.ButtonType command)
             {
                 Boolean isGrant = false;
                 SecurableIndex securable = BusinessData.Model.ModelIndex;
@@ -249,12 +249,12 @@ namespace DataDictionary.Main.Forms.Model
 
                 switch (command)
                 {
-                    case Enumerations.CommandType.Default: return true;
-                    case Enumerations.CommandType.Delete: return BusinessData.Authorization.IsModelAdmin || isGrant;
-                    case Enumerations.CommandType.OpenDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
-                    case Enumerations.CommandType.SaveDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
-                    case Enumerations.CommandType.DeleteDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
-                    case Enumerations.CommandType.HistoryDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Delete: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case Enumerations.ButtonType.OpenDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case Enumerations.ButtonType.SaveDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case Enumerations.ButtonType.DeleteDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
+                    case Enumerations.ButtonType.HistoryDatabase: return BusinessData.Authorization.IsModelAdmin || isGrant;
                     default: return false;
                 }
             }

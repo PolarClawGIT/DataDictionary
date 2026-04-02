@@ -278,21 +278,21 @@ namespace DataDictionary.Main.Forms.General
             public ITemporalData GetTemporal()
             { return subjectData.GetTemporal(); }
 
-            public Boolean GetAuthorization(CommandType command)
+            public Boolean GetAuthorization(ButtonType command)
             {
                 switch (command)
                 {
-                    case CommandType.Default: return true;
-                    case CommandType.Browse: return true;
-                    case CommandType.Select: return true;
-                    case CommandType.Add:
+                    case ButtonType.Default: return true;
+                    case ButtonType.Browse: return true;
+                    case ButtonType.Select: return true;
+                    case ButtonType.Add:
                         return BusinessData.Authorization.IsHelpAdmin
                             || BusinessData.Authorization.IsHelpOwner;
-                    case CommandType.Open: return true;
-                    case CommandType.OpenDatabase: return true;
-                    case CommandType.SaveDatabase:
+                    case ButtonType.Open: return true;
+                    case ButtonType.OpenDatabase: return true;
+                    case ButtonType.SaveDatabase:
                         return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandType.SecurityDatabase:
+                    case ButtonType.SecurityDatabase:
                         return BusinessData.Authorization.IsSecurityAdmin;
                     default:
                         return false;
