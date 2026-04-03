@@ -13,11 +13,11 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDefinition : ApplicationData
     {
-        SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
+        TemplateIndex templateIndex = new TemplateIndex();
         TemporalIndex? temporalIndex = null;
 
         public override Boolean IsOpenItem(object? item)
-        { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
+        { return item is ITemplateIndex key && templateIndex.Equals(key); }
 
         public SchemaDefinition() : base()
         {
@@ -34,10 +34,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema) : this()
-        { schemaIndex = new SchemaDefinitionIndex(schema); }
+        public SchemaDefinition(ITemplateIndex template) : this()
+        { templateIndex = new TemplateIndex(template); }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
+        public SchemaDefinition(ITemplateIndex template, ITemporalIndex temporal) : this(template)
         { temporalIndex = new TemporalIndex(); }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)

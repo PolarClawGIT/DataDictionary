@@ -13,11 +13,11 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Document : ApplicationData
     {
-        DocumentIndex documentIndex = new DocumentIndex();
+        TemplateIndex templateIndex = new TemplateIndex();
         TemporalIndex? temporalIndex = null;
 
         public override Boolean IsOpenItem(object? item)
-        { return item is IDocumentIndex key && documentIndex.Equals(key); }
+        { return item is ITemplateIndex key && templateIndex.Equals(key); }
 
         public Document() : base()
         {
@@ -34,10 +34,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
-        public Document(IDocumentIndex document) : this()
-        { documentIndex = new DocumentIndex(document); }
+        public Document(ITemplateIndex template) : this()
+        { templateIndex = new TemplateIndex(template); }
 
-        public Document(IDocumentIndex document, ITemporalIndex temporal) : this(document)
+        public Document(ITemplateIndex template, ITemporalIndex temporal) : this(template)
         { temporalIndex = new TemporalIndex(); }
 
         private void Document_Load(object sender, EventArgs e)

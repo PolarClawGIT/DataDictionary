@@ -15,6 +15,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class TemplateObjectIndex : TemplateObjectKey, ITemplateObjectIndex,
         IKeyEquality<ITemplateObjectIndex>, IKeyEquality<TemplateObjectIndex>
     {
+        /// <inheritdoc cref="TemplateObjectKey()"/>
+        public TemplateObjectIndex() : base() { }
+
         /// <inheritdoc cref="TemplateObjectKey(ITemplateObjectKey)"/>
         public TemplateObjectIndex(ITemplateObjectIndex source) : base(source) { }
 

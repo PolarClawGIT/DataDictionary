@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class Transform : ApplicationData
+    partial class TemplateObject : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
         TemporalIndex? temporalIndex = null;
@@ -19,28 +19,27 @@ namespace DataDictionary.Main.Forms.Scripting
         public override Boolean IsOpenItem(object? item)
         { return item is ITemplateIndex key && templateIndex.Equals(key); }
 
-        public Transform() : base()
+        public TemplateObject()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingTransform);
+            SetIcon(ScopeType.ScriptingObject);
 
-            SetCommand(ScopeType.ScriptingTransform,
+            SetCommand(ScopeType.ScriptingObject,
                 Enumerations.ButtonType.Delete,
                 Enumerations.ButtonType.OpenDatabase,
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
-
         }
 
-        public Transform(ITemplateIndex template) : this()
+        public TemplateObject(ITemplateIndex template) : this()
         { templateIndex = new TemplateIndex(template); }
 
-        public Transform(ITemplateIndex template, ITemporalIndex temporal) : this(template)
+        public TemplateObject(ITemplateIndex template, ITemporalIndex temporal) : this(template)
         { temporalIndex = new TemporalIndex(); }
 
-        private void Transform_Load(object sender, EventArgs e)
+        private void TemplateObject_Load(object sender, EventArgs e)
         {
 
         }
@@ -74,5 +73,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
         }
+
+
     }
 }
