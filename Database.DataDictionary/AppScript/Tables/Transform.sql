@@ -3,7 +3,6 @@
 	[TransformId]			UniqueIdentifier Not Null CONSTRAINT [DF_TransformId] DEFAULT (newid()),
 	[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
 	[TemplateId]            UniqueIdentifier Not Null,
-	[SchemaId]				UniqueIdentifier Null, -- Input, Null = No Schema, everything must be hand mapped.
 	-- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	[TransformScript]		XML Null, -- Can be imported/exported to file. Null = Look for the File
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null, -- Null = Looks for Script
@@ -21,5 +20,4 @@
 	CONSTRAINT [PK_Transform] PRIMARY KEY CLUSTERED ([TransformId] ASC),
 	CONSTRAINT [AK_Transform] UNIQUE ([TemplateId] ASC, [TransformId] ASC), -- Used by FK's
 	CONSTRAINT [FK_TransformTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
-	CONSTRAINT [FK_TransformSchema] FOREIGN KEY ([TemplateId], [SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([TemplateId], [SchemaId]),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[Transform]))

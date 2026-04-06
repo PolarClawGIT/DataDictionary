@@ -9,7 +9,6 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[TransformId],
 		[TransformTitle],
 		[TemplateId],
-		[SchemaId],
 		[TransformScript],
 		[TransformFileName],
 		[RootFolder],

@@ -1,17 +1,6 @@
-﻿CREATE VIEW [AppScript].[DocumentHS] AS
+﻿CREATE VIEW [AppScript].[TransformDocumentHS] AS
 -- Temporal View
 With [Dates] As (
-	Select	[DocumentId],
-			[SysStart],
-			[SysEnd]
-	From	[AppScript].[SchemaDocument]
-	Union
-	Select	[DocumentId],
-			[SysStart],
-			[SysEnd]
-	From	[HsScript].[SchemaDocument]
-	Where	[SysStart] != [SysEnd]
-	Union
 	Select	[DocumentId],
 			[SysStart],
 			[SysEnd]
@@ -21,32 +10,20 @@ With [Dates] As (
 			[SysStart],
 			[SysEnd]
 	From	[HsScript].[TransformDocument]
-	Where	[SysStart] != [SysEnd]),
-[Document] As (
-	-- Rolls the Sub-Type of Document back into the Super-Type
-	Select	D.[DocumentId],
-			S.[RootFolder],
-			S.[RelativePath],
-			D.[FileName],
-			D.[SysStart],
-			D.[SysEnd]
-	From	[AppScript].[SchemaDocument] D
-			Inner Join [AppScript].[SchemaDefinition] S
-			On	D.[SchemaId] = S.[SchemaId]
-	Union
-	Select	D.[DocumentId],
-			S.[RootFolder],
-			S.[RelativePath],
-			D.[FileName],
-			D.[SysStart],
-			D.[SysEnd]
-	From	[AppScript].[TransformDocument] D
-			Inner Join [AppScript].[Transform] S
-			On	D.[TransformId] = S.[TransformId])
+	Where	[SysStart] != [SysEnd])
 Select	D.[DocumentId], -- PK
-		D.[RootFolder],
-		D.[RelativePath],
-		D.[FileName],
+		D.[TemplateId], -- AK
+		D.[TransformId],
+		D.[SchemaDocumentId],
+		-- Useful Data
+		A.[RootFolder], -- AK
+		A.[RelativePath], -- Ak
+		D.[FileName], -- AK
+		O.[ObjectScope],
+		O.[ObjectMember],
+		F.[RootFolder] As [SchemaRootFolder],
+		F.[RelativePath] As [SchemaRelativePath],
+		S.[FileName] As [SchemaFileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],
@@ -58,7 +35,15 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[Document] D
+From	[AppScript].[TransformDocument] D
+		Inner Join [AppScript].[Transform] A
+		On	D.[TransformId] = A.[TransformId]
+		Inner Join [AppScript].[SchemaDocument] S
+		On	D.[SchemaDocumentId] = S.[DocumentId]
+		Inner Join [AppScript].[SchemaDefinition] F
+		On	S.[SchemaId] = F.[SchemaId]
+		Left Join [AppScript].[TemplateObject] O
+		On	S.[ObjectId] = O.[ObjectId]
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]
@@ -74,3 +59,4 @@ From	[Document] D
 		Left Join [AppGeneral].[TransactionSummary] R
 		On	D.[SysEnd] = R.[ModifiedOn]
 GO
+

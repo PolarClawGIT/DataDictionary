@@ -1,7 +1,7 @@
-﻿CREATE PROCEDURE [AppScript].[procSetDocument]
+﻿CREATE PROCEDURE [AppScript].[procSetTransformDocument]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [AppScript].[udttDocument] ReadOnly
+		@Data [AppScript].[udttTransformDocument] ReadOnly
 AS
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
@@ -23,20 +23,18 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[DocumentId]		UniqueIdentifier Not NULL,
-		[TemplateId]		UniqueIdentifier Not NULL,
-		[SchemaId]			UniqueIdentifier NULL,
-		[TransformId]		UniqueIdentifier NULL,
-		[ObjectId]			UniqueIdentifier NULL,
+		[DocumentId]		UniqueIdentifier Not Null,
+		[TemplateId]		UniqueIdentifier Not Null,
+		[TransformId]		UniqueIdentifier Not Null,
+		[SchemaDocumentId]	UniqueIdentifier Not Null,
 		[FileName]			[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
 	Insert Into @Values
 	Select	X.[DocumentId],
 			D.[TemplateId],
-			D.[SchemaId],
 			D.[TransformId],
-			D.[ObjectId],
+			D.[SchemaDocumentId],
 			NullIf(Trim(D.[FileName]),'') As [FileName]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
@@ -52,8 +50,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
-	Delete From [AppScript].[Document]
-	From	[AppScript].[Document] T
+	Delete From [AppScript].[TransformDocument]
+	From	[AppScript].[TransformDocument] T
 			Left Join @Values S
 			On	T.[DocumentId] = S.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
@@ -64,54 +62,45 @@ Begin Try
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[Document]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
-
-	-- TODO: Add child table delete
-
+	Print FormatMessage ('Delete [AppScript].[TransformDocument]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[DocumentId],
-				--[TemplateId],
-				[SchemaId],
+				[TemplateId],
 				[TransformId],
-				[ObjectId],
+				[SchemaDocumentId],
 				[FileName]
 		From	@Values
 		Except
 		Select	[DocumentId],
-				--[TemplateId],
-				[SchemaId],
+				[TemplateId],
 				[TransformId],
-				[ObjectId],
+				[SchemaDocumentId],
 				[FileName]
-		From	[AppScript].[Document])
-	Update [AppScript].[Document]
+		From	[AppScript].[TransformDocument])
+	Update [AppScript].[TransformDocument]
 	Set		--[TemplateId] = S.[TemplateId],
-			[SchemaId] = S.[SchemaId],
 			[TransformId] = S.[TransformId],
-			[ObjectId] = S.[ObjectId],
-			[FileName] = S.[FileName]
-	From	[AppScript].[Document] T
+			[SchemaDocumentId] = S.[SchemaDocumentId]
+	From	[AppScript].[TransformDocument] T
 			Inner Join [Delta] S
 			On	T.[DocumentId] = S.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
-	Print FormatMessage ('Update [AppScript].[Document]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[TransformDocument]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [AppScript].[Document] (
+	Insert Into [AppScript].[TransformDocument] (
 			[DocumentId],
 			[TemplateId],
-			[SchemaId],
 			[TransformId],
-			[ObjectId],
+			[SchemaDocumentId],
 			[FileName])
 	Select	S.[DocumentId],
 			S.[TemplateId],
-			S.[SchemaId],
 			S.[TransformId],
-			S.[ObjectId],
+			S.[SchemaDocumentId],
 			S.[FileName]
 	From	@Values S
-			Left Join [AppScript].[Document] T
+			Left Join [AppScript].[TransformDocument] T
 			On	S.[DocumentId] = T.[DocumentId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[DocumentId] is Null

@@ -1,23 +1,16 @@
-﻿CREATE PROCEDURE [AppScript].[procGetSchemaDefinition]
+﻿CREATE PROCEDURE [AppScript].[procGetSchemaDocument]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
-		@IncludeHistory Bit = 0 -- History is included
+		@IncludeHistory Bit = 0 -- History
 AS
 Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
-Select	[SchemaId],
+Select	[DocumentId],
 		[TemplateId],
-		[SchemaTitle],
-		-- Root Node Behavior
-		[ForEachScope],
-		[RootNodeName],
-		-- Folder Patern for the files (Output for XSD, Input for XSLT)
-		[RootFolder],
-		[RelativePath],
-		[FilePrefix],
-		[FileSuffix],
-		[FileExtension],
+		[SchemaId],
+		[ObjectId],
+		[FileName],
 		-- Temporal Data
 		[CreatedOn],
 		[CreatedBy],
@@ -27,7 +20,7 @@ Select	[SchemaId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[SchemaDefinitionHS] For System_Time All D
+From	[AppScript].[SchemaDocumentHS] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (

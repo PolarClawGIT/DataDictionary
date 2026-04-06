@@ -1,10 +1,9 @@
-﻿CREATE TYPE [AppScript].[udttDocument] AS TABLE
+﻿CREATE TYPE [AppScript].[udttTransformDocument] AS TABLE
 (
-	[DocumentId]			UniqueIdentifier NULL,
-	[TemplateId]			UniqueIdentifier NULL,
-	[SchemaId]				UniqueIdentifier NULL,
-	[TransformId]			UniqueIdentifier NULL,
-	[ObjectId]				UniqueIdentifier NULL,
+	[DocumentId]			UniqueIdentifier Null,
+	[TemplateId]			UniqueIdentifier Null,
+	[TransformId]			UniqueIdentifier Null,
+	[SchemaDocumentId]		UniqueIdentifier Null,
 	[FileName]				[AppGeneral].[uddtFileName] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,

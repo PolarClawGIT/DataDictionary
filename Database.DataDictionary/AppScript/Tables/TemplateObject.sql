@@ -17,6 +17,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_Object] PRIMARY KEY CLUSTERED ([ObjectId] ASC),
+	CONSTRAINT [AK_Object] UNIQUE ([TemplateId] ASC, [ObjectId] ASC), -- Used by FK's
 	CONSTRAINT [FK_ObjectTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [AppScript].[Template] ([TemplateId]),
 	CONSTRAINT [FK_ObjectParent] FOREIGN KEY ([ParentObjectId]) REFERENCES [AppScript].[TemplateObject] ([ObjectId]),
 	CONSTRAINT [AK_DocumentObjectName] UNIQUE ([TemplateId] ASC, [ParentObjectId] ASC, [ObjectMember] ASC),

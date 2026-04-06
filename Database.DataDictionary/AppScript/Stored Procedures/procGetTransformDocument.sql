@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [AppScript].[procGetDocument]
+﻿CREATE PROCEDURE [AppScript].[procGetTransformDocument]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
 		@AsOfUtcDate DateTime2 (7) = Null, -- As of this UTC Date (account for timezone offset). Default is now.
@@ -8,9 +8,8 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 
 Select	[DocumentId],
 		[TemplateId],
-		[SchemaId],
 		[TransformId],
-		[ObjectId],
+		[SchemaDocumentId],
 		[FileName],
 		-- Temporal Data
 		[CreatedOn],
@@ -21,7 +20,7 @@ Select	[DocumentId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[DocumentHS] For System_Time All D
+From	[AppScript].[TransformDocumentHS] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (

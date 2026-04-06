@@ -98,8 +98,8 @@ Begin Try
 				Where	[ModelId] = @ModelId))
 	Print FormatMessage ('Delete [AppScript].[DocumentObject]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [AppScript].[Document]
-	From	[AppScript].[Document] T
+	Delete From [AppScript].[SchemaDocument]
+	From	[AppScript].[SchemaDocument] T
 			Left Join @Values S
 			On	T.[ObjectId] = S.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
@@ -110,7 +110,7 @@ Begin Try
 				Select	[TemplateId]
 				From	[AppScript].[TemplateModel]
 				Where	[ModelId] = @ModelId))
-	Print FormatMessage ('Delete [AppScript].[Document]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [AppScript].[SchemaDocument]: %i, %s', @@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	C.[ObjectId],
@@ -144,7 +144,7 @@ Begin Try
 			Inner Join [Delta] S
 			On	T.[ObjectId] = S.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](T.[TemplateId], 1)
-	Print FormatMessage ('Update [AppScript].[DocumentObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [AppScript].[TemplateObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [AppScript].[TemplateObject] (
 			[ObjectId],
@@ -169,7 +169,7 @@ Begin Try
 			On	S.[ObjectId] = T.[ObjectId]
 			Cross Apply [AppSecurity].[funcScriptingAuthorization](S.[TemplateId], 1)
 	Where	T.[ObjectId] is Null
-	Print FormatMessage ('Insert [AppScript].[DocumentObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [AppScript].[TemplateObject]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
