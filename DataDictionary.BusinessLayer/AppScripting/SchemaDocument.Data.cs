@@ -8,17 +8,17 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
-    /// Interface component for the Scripting Document
+    /// Interface component for the Scripting SchemaDocument
     /// </summary>
-    public interface IDocumentData :
-        IBindingData<DocumentValue>,
+    public interface ISchemaDocumentData :
+        IBindingData<SchemaDocumentValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IDeleteData
     { }
 
-    class DocumentData : DocumentCollection<DocumentValue>, IDocumentData
+    class SchemaDocumentData : SchemaDocumentCollection<SchemaDocumentValue>, ISchemaDocumentData
     {
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
@@ -88,7 +88,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Remove(dataKey); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting SchemaDocument", DoWork = () => { Remove(dataKey); } });
             return work;
         }
 
@@ -97,7 +97,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Document", DoWork = () => { Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting SchemaDocument", DoWork = () => { Clear(); } });
             return work;
         }
 

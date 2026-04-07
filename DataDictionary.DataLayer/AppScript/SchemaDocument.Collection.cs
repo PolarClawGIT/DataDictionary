@@ -6,15 +6,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.AppScript
 {
     /// <summary>
-    /// Generic Base class for Scripting Document
+    /// Generic Base class for Scripting Schema Document
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    public class DocumentCollection<TItem> : BindingTable<TItem>,
+    public class SchemaDocumentCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>,
         IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
-        where TItem : BindingTableRow, IDocumentItem, new()
+        where TItem : BindingTableRow, ISchemaDocumentItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Document.GetProcedure;
+            command.CommandText = SchemaDocument.GetProcedure;
             command.AddParameter(Model.Identifier, modelId);
             command.AddParameter(Template.Identifier, TemplateId);
             command.AddParameter(Temporal.AsOfUtcDate, asOfUtcDate);
@@ -70,13 +70,13 @@ namespace DataDictionary.DataLayer.AppScript
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = Document.SetProcedure;
+            command.CommandText = SchemaDocument.SetProcedure;
             command.AddParameter(Model.Identifier, modelId);
             command.AddParameter(Template.Identifier, TemplateId);
 
             IEnumerable<TItem> data = this.Where(w =>
                 (TemplateId is null || w.TemplateId == TemplateId));
-            command.AddParameter(WriteData.Data, Document.TableType, data);
+            command.AddParameter(WriteData.Data, SchemaDocument.TableType, data);
             return command;
         }
 

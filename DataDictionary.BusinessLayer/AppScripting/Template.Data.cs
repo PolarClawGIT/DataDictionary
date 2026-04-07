@@ -45,9 +45,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ITransformData Transforms { get; }
 
         /// <summary>
-        /// Documents for the Templates
+        /// Schema Documents for the Templates
         /// </summary>
-        IDocumentData Documents { get; }
+        ISchemaDocumentData SchemaDocuments { get; }
+
+        /// <summary>
+        /// Transform Documents for the Templates
+        /// </summary>
+        ITransformDocumentData TransformDocuments { get; }
 
         /// <summary>
         /// Creates an empty ITemplateData.
@@ -81,8 +86,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TransformData transformValues;
 
         /// <inheritdoc/>
-        public IDocumentData Documents { get { return documentValues; } }
-        DocumentData documentValues;
+        public ISchemaDocumentData SchemaDocuments { get; }
+        SchemaDocumentData schemaDocumentValues;
+
+        /// <inheritdoc/>
+        public ITransformDocumentData TransformDocuments { get; }
+        TransformDocumentData transformDocumentValues;
 
 
         public TemplateData() : base()
@@ -92,7 +101,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaNodeOwnerValues = new SchemaNodeOwnerData();
             templateObjectValues = new TemplateObjectData();
             transformValues = new TransformData();
-            documentValues = new DocumentData();
+            schemaDocumentValues = new SchemaDocumentData();
+            transformDocumentValues = new TransformDocumentData();
         }
 
         /// <inheritdoc/>
@@ -118,7 +128,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(templateObjectValues, (IModelKey)dataKey));
-            work.AddRange(factory.CreateLoad(documentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey));
             return work;
         }
 
@@ -131,7 +142,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(templateObjectValues, (IModelKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(documentValues, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(schemaDocumentValues, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(transformDocumentValues, (IModelKey)dataKey, asOfUtcDate));
             return work;
         }
 
@@ -144,7 +156,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(templateObjectValues, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateLoad(documentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey));
             return work;
         }
 
@@ -157,7 +170,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(templateObjectValues, (ITemplateKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(documentValues, (ITemplateKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(schemaDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(transformDocumentValues, (ITemplateKey)dataKey, asOfUtcDate));
             return work;
         }
 
@@ -170,7 +184,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(schemaNodeValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(templateObjectValues, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateSave(documentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateSave(schemaDocumentValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateSave(transformDocumentValues, (ITemplateKey)dataKey));
             return work;
         }
 
@@ -183,7 +198,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(factory.CreateSave(schemaNodeValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(templateObjectValues, (IModelKey)dataKey));
-            work.AddRange(factory.CreateSave(documentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateSave(schemaDocumentValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateSave(transformDocumentValues, (IModelKey)dataKey));
             return work;
         }
 
@@ -197,8 +213,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(schemaNodeValues.Delete(dataKey));
             work.AddRange(schemaNodeOwnerValues.Delete(dataKey));
             work.AddRange(templateObjectValues.Delete(dataKey));
-            work.AddRange(documentValues.Delete(dataKey));
-
+            work.AddRange(schemaDocumentValues.Delete(dataKey));
+            work.AddRange(transformDocumentValues.Delete(dataKey));
             return work;
         }
 
@@ -212,8 +228,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             work.AddRange(schemaNodeValues.Delete());
             work.AddRange(schemaNodeOwnerValues.Delete());
             work.AddRange(templateObjectValues.Delete());
-            work.AddRange(documentValues.Delete());
-
+            work.AddRange(schemaDocumentValues.Delete());
+            work.AddRange(transformDocumentValues.Delete());
             return work;
         }
 
@@ -230,7 +246,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaNodeValues.Remove(dataKey);
             schemaNodeOwnerValues.Remove(dataKey);
             templateObjectValues.Remove(dataKey);
-            documentValues.Remove(dataKey);
+            schemaDocumentValues.Remove(dataKey);
+            transformDocumentValues.Remove(dataKey);
         }
 
         /// <inheritdoc/>
@@ -242,7 +259,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaNodeValues.Clear();
             schemaNodeOwnerValues.Clear();
             templateObjectValues.Clear();
-            documentValues.Clear();
+            schemaDocumentValues.Clear();
+            transformDocumentValues.Clear();
         }
 
         /// <inheritdoc/>
@@ -269,7 +287,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             result.Add(schemaNodeValues.ToDataTable());
             result.Add(schemaNodeOwnerValues.ToDataTable());
             result.Add(templateObjectValues.ToDataTable());
-            result.Add(documentValues.ToDataTable());
+            result.Add(schemaDocumentValues.ToDataTable());
+            result.Add(transformDocumentValues.ToDataTable());
 
             return result;
         }
@@ -282,7 +301,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             schemaNodeValues.Load(source);
             schemaNodeOwnerValues.Load(source);
             templateObjectValues.Load(source);
-            documentValues.Load(source);
+            schemaDocumentValues.Load(source);
+            transformDocumentValues.Load(source);
         }        
     }
 }

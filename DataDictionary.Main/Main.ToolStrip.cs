@@ -379,10 +379,16 @@ namespace DataDictionary.Main
                 (ScopeType.ScriptingObject, BusinessData.Templates.Objects));
         }
 
-        private void MenuTemplateDocument_Click(object sender, EventArgs e)
+        private void MenuTemplateSchemaDocument_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
-                (ScopeType.ScriptingDocument, BusinessData.Templates.Documents));
+                (ScopeType.ScriptingDocument, BusinessData.Templates.SchemaDocuments));
+        }
+
+        private void MenuTemplateTransformDocument_Click(object sender, EventArgs e)
+        {
+            Activate(static () => new DetailDataView
+                (ScopeType.ApplicationDocument, BusinessData.Templates.TransformDocuments));
         }
     }
 }

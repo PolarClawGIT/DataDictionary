@@ -6,12 +6,12 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface IDocumentValue : IDocumentItem, IDocumentIndex, ITemplateIndex, ITransformIndex, ISchemaDefinitionIndex, ITemplateObjectIndex,
+    public interface ITransformDocumentValue : ITransformDocumentItem, IDocumentIndex, ITemplateIndex,
         IScopeType, ITemporal
     { }
 
     /// <inheritdoc/>
-    public class DocumentValue : DocumentItem, IDocumentValue, IPathValue, INamedScopeSourceValue
+    public class TransformDocumentValue : TransformDocumentItem, ITransformDocumentValue, IPathValue, INamedScopeSourceValue
     {
         IPathValue pathValue; // Backing field for IPathValue
 
@@ -28,14 +28,28 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public ScopeType Scope { get { return ScopeType.ScriptingDocument; } }
 
         /// <inheritdoc/>
-        public DocumentValue() : base()
+        public TransformDocumentValue() : base()
         {
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
                 GetPath = () => new PathIndex(Scope),
                 GetScope = () => Scope,
-                GetTitle = () => FileName ?? Scope.GetEnumeration().Name,
+                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(FileName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
+            };
+        }
+
+        /// <inheritdoc/>
+        public TransformDocumentValue(ITemplateIndex template) : base(template)
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new DocumentIndex(this),
+                GetPath = () => new PathIndex(Scope),
+                GetScope = () => Scope,
+                GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
             };
