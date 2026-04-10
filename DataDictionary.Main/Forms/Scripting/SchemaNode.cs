@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class SchemaDefinition : ApplicationData
+    partial class SchemaNode : ApplicationData
     {
         SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
         TemporalIndex? temporalIndex = null;
@@ -19,28 +19,27 @@ namespace DataDictionary.Main.Forms.Scripting
         public override Boolean IsOpenItem(object? item)
         { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
 
-        public SchemaDefinition() : base()
+        public SchemaNode()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingSchema);
+            SetIcon(ScopeType.ScriptingNode);
 
-            SetCommand(ScopeType.ScriptingSchema,
+            SetCommand(ScopeType.ScriptingNode,
                 Enumerations.ButtonType.Delete,
                 Enumerations.ButtonType.OpenDatabase,
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
-
         }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema) : this()
+        public SchemaNode(ISchemaDefinitionIndex schema) : this()
         { schemaIndex = new SchemaDefinitionIndex(schema); }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
+        public SchemaNode(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
         { temporalIndex = new TemporalIndex(); }
 
-        private void SchemaDefinition_Load(object sender, EventArgs e)
+        private void SchemaNode_Load(object sender, EventArgs e)
         {
 
         }
