@@ -3,7 +3,6 @@
 	[TransformId]			UniqueIdentifier NULL,
 	[TransformTitle]		[AppGeneral].[uddtTitle] Null,
 	[TemplateId]            UniqueIdentifier Null,
-	[SchemaId]				UniqueIdentifier Null,
 	[TransformScript]		NVarChar(Max) Null,
 	[TransformFileName]		[AppGeneral].[uddtFileName] Null,
 	[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
