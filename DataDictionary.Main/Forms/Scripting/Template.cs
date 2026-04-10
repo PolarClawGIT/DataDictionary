@@ -33,10 +33,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
 
-            manageSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Default);
-            manageTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Default);
-            manageObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Default);
-            manageDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
+
+            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
+            openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
+            openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
+            addObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Add);
+            addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
+            addTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
+
+            templateOpenDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
             executeSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
             executeTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
             AddCommands(contextTemplate, ToolStripItemDisplayStyle.Image);
@@ -84,28 +89,48 @@ namespace DataDictionary.Main.Forms.Scripting
             base.HistoryCommand_Click(sender, e);
         }
 
-        private void ManageSchemaCommand_Click(object sender, EventArgs e)
+
+
+
+
+        private void ContextTemplate_Opening(object sender, CancelEventArgs e)
+        {
+            // TODO: Not Needed
+        }
+
+        private void OpenObjectCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Added data
+            Activate(static () => new Forms.Scripting.TemplateObject());
+        }
+
+        private void AddObjectCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenSchemaCommand_Click(object sender, EventArgs e)
         {
             // TODO: Added data
             Activate(static () => new Forms.Scripting.SchemaDefinition());
         }
-
-        private void ManageTransformCommand_Click(object sender, EventArgs e)
+        private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void AddSchemaCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenTransformCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Added data
             Activate(static () => new Forms.Scripting.Transform());
         }
 
-        private void ManageObjectCommand_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new Forms.Scripting.TemplateObject());
-        }
-
-        private void ManageDocumentCommand_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new Forms.Scripting.Document());
-        }
-
-        private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
+        private void AddTransformCommand_Click(object sender, EventArgs e)
         {
 
         }
@@ -114,5 +139,13 @@ namespace DataDictionary.Main.Forms.Scripting
         {
 
         }
+
+
+        private void OpenDocumentCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Added data
+            Activate(static () => new Forms.Scripting.Document());
+        }
+
     }
 }

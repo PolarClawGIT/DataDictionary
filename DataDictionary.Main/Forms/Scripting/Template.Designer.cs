@@ -33,7 +33,7 @@
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
-            scemaTab = new TabPage();
+            schemaTab = new TabPage();
             schemaData = new DataGridView();
             schemaTitleColumn = new DataGridViewTextBoxColumn();
             transformTab = new TabPage();
@@ -52,16 +52,19 @@
             bindingObject = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             contextTemplate = new ContextMenuStrip(components);
-            manageSchemaCommand = new ToolStripMenuItem();
-            manageTransformCommand = new ToolStripMenuItem();
-            manageObjectCommand = new ToolStripMenuItem();
-            manageDocumentCommand = new ToolStripMenuItem();
+            addObjectCommand = new ToolStripMenuItem();
+            openObjectCommand = new ToolStripMenuItem();
+            addSchemaCommand = new ToolStripMenuItem();
+            openSchemaCommand = new ToolStripMenuItem();
             executeSchemaCommand = new ToolStripMenuItem();
+            addTransformCommand = new ToolStripMenuItem();
+            openTransformCommand = new ToolStripMenuItem();
             executeTransformCommand = new ToolStripMenuItem();
+            templateOpenDocumentCommand = new ToolStripMenuItem();
             templateLayout = new TableLayoutPanel();
             templateLayout.SuspendLayout();
             templateTabs.SuspendLayout();
-            scemaTab.SuspendLayout();
+            schemaTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)schemaData).BeginInit();
             transformTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)transformsData).BeginInit();
@@ -122,7 +125,7 @@
             // 
             // templateTabs
             // 
-            templateTabs.Controls.Add(scemaTab);
+            templateTabs.Controls.Add(schemaTab);
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(objectTab);
             templateTabs.Controls.Add(documentTab);
@@ -133,16 +136,16 @@
             templateTabs.Size = new Size(464, 219);
             templateTabs.TabIndex = 2;
             // 
-            // scemaTab
+            // schemaTab
             // 
-            scemaTab.BackColor = SystemColors.Control;
-            scemaTab.Controls.Add(schemaData);
-            scemaTab.Location = new Point(4, 24);
-            scemaTab.Name = "scemaTab";
-            scemaTab.Padding = new Padding(3);
-            scemaTab.Size = new Size(456, 191);
-            scemaTab.TabIndex = 1;
-            scemaTab.Text = "Schema";
+            schemaTab.BackColor = SystemColors.Control;
+            schemaTab.Controls.Add(schemaData);
+            schemaTab.Location = new Point(4, 24);
+            schemaTab.Name = "schemaTab";
+            schemaTab.Padding = new Padding(3);
+            schemaTab.Size = new Size(456, 191);
+            schemaTab.TabIndex = 1;
+            schemaTab.Text = "Schema";
             // 
             // schemaData
             // 
@@ -272,37 +275,38 @@
             // 
             // contextTemplate
             // 
-            contextTemplate.Items.AddRange(new ToolStripItem[] { manageSchemaCommand, manageTransformCommand, manageObjectCommand, manageDocumentCommand, executeSchemaCommand, executeTransformCommand });
+            contextTemplate.Items.AddRange(new ToolStripItem[] { addObjectCommand, openObjectCommand, addSchemaCommand, openSchemaCommand, executeSchemaCommand, addTransformCommand, openTransformCommand, executeTransformCommand, templateOpenDocumentCommand });
             contextTemplate.Name = "contextTemplate";
-            contextTemplate.Size = new Size(223, 158);
+            contextTemplate.Size = new Size(223, 202);
+            contextTemplate.Opening += ContextTemplate_Opening;
             // 
-            // manageSchemaCommand
+            // addObjectCommand
             // 
-            manageSchemaCommand.Name = "manageSchemaCommand";
-            manageSchemaCommand.Size = new Size(222, 22);
-            manageSchemaCommand.Text = "Schema";
-            manageSchemaCommand.Click += ManageSchemaCommand_Click;
+            addObjectCommand.Name = "addObjectCommand";
+            addObjectCommand.Size = new Size(222, 22);
+            addObjectCommand.Text = "Add Object";
+            addObjectCommand.Click += AddObjectCommand_Click;
             // 
-            // manageTransformCommand
+            // openObjectCommand
             // 
-            manageTransformCommand.Name = "manageTransformCommand";
-            manageTransformCommand.Size = new Size(222, 22);
-            manageTransformCommand.Text = "Transform";
-            manageTransformCommand.Click += ManageTransformCommand_Click;
+            openObjectCommand.Name = "openObjectCommand";
+            openObjectCommand.Size = new Size(222, 22);
+            openObjectCommand.Text = "Open Object";
+            openObjectCommand.Click += OpenObjectCommand_Click;
             // 
-            // manageObjectCommand
+            // addSchemaCommand
             // 
-            manageObjectCommand.Name = "manageObjectCommand";
-            manageObjectCommand.Size = new Size(222, 22);
-            manageObjectCommand.Text = "Object";
-            manageObjectCommand.Click += ManageObjectCommand_Click;
+            addSchemaCommand.Name = "addSchemaCommand";
+            addSchemaCommand.Size = new Size(222, 22);
+            addSchemaCommand.Text = "Add Schema";
+            addSchemaCommand.Click += AddSchemaCommand_Click;
             // 
-            // manageDocumentCommand
+            // openSchemaCommand
             // 
-            manageDocumentCommand.Name = "manageDocumentCommand";
-            manageDocumentCommand.Size = new Size(222, 22);
-            manageDocumentCommand.Text = "Document";
-            manageDocumentCommand.Click += ManageDocumentCommand_Click;
+            openSchemaCommand.Name = "openSchemaCommand";
+            openSchemaCommand.Size = new Size(222, 22);
+            openSchemaCommand.Text = "Open Schema";
+            openSchemaCommand.Click += OpenSchemaCommand_Click;
             // 
             // executeSchemaCommand
             // 
@@ -311,12 +315,33 @@
             executeSchemaCommand.Text = "build Schema Documents";
             executeSchemaCommand.Click += ExecuteSchemaCommand_Click;
             // 
+            // addTransformCommand
+            // 
+            addTransformCommand.Name = "addTransformCommand";
+            addTransformCommand.Size = new Size(222, 22);
+            addTransformCommand.Text = "Add Transform";
+            addTransformCommand.Click += AddTransformCommand_Click;
+            // 
+            // openTransformCommand
+            // 
+            openTransformCommand.Name = "openTransformCommand";
+            openTransformCommand.Size = new Size(222, 22);
+            openTransformCommand.Text = "Open Transform";
+            openTransformCommand.Click += OpenTransformCommand_Click;
+            // 
             // executeTransformCommand
             // 
             executeTransformCommand.Name = "executeTransformCommand";
             executeTransformCommand.Size = new Size(222, 22);
             executeTransformCommand.Text = "build Transform Documents";
             executeTransformCommand.Click += ExecuteTransformCommand_Click;
+            // 
+            // templateOpenDocumentCommand
+            // 
+            templateOpenDocumentCommand.Name = "templateOpenDocumentCommand";
+            templateOpenDocumentCommand.Size = new Size(222, 22);
+            templateOpenDocumentCommand.Text = "Open Document";
+            templateOpenDocumentCommand.Click += OpenDocumentCommand_Click;
             // 
             // Template
             // 
@@ -331,7 +356,7 @@
             templateLayout.ResumeLayout(false);
             templateLayout.PerformLayout();
             templateTabs.ResumeLayout(false);
-            scemaTab.ResumeLayout(false);
+            schemaTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)schemaData).EndInit();
             transformTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)transformsData).EndInit();
@@ -364,7 +389,7 @@
         private DataGridViewTextBoxColumn objectScopeColumn;
         private DataGridViewTextBoxColumn objectNameColumn;
         private TabControl templateTabs;
-        private TabPage scemaTab;
+        private TabPage schemaTab;
         private TabPage transformTab;
         private TabPage objectTab;
         private TabPage documentTab;
@@ -373,11 +398,14 @@
         private BindingSource bindingObject;
         private BindingSource bindingDocument;
         private ContextMenuStrip contextTemplate;
-        private ToolStripMenuItem manageSchemaCommand;
-        private ToolStripMenuItem manageTransformCommand;
-        private ToolStripMenuItem manageObjectCommand;
-        private ToolStripMenuItem manageDocumentCommand;
         private ToolStripMenuItem executeSchemaCommand;
         private ToolStripMenuItem executeTransformCommand;
+        private ToolStripMenuItem templateOpenDocumentCommand;
+        private ToolStripMenuItem openObjectCommand;
+        private ToolStripMenuItem addObjectCommand;
+        private ToolStripMenuItem addSchemaCommand;
+        private ToolStripMenuItem openSchemaCommand;
+        private ToolStripMenuItem addTransformCommand;
+        private ToolStripMenuItem openTransformCommand;
     }
 }

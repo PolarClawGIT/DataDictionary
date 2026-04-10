@@ -843,6 +843,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_XMLTransformation {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLTransformation", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_XPath {
             get {
                 object obj = ResourceManager.GetObject("Icon_XPath", resourceCulture);

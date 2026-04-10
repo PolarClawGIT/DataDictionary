@@ -393,6 +393,7 @@ namespace DataDictionary.Main.Forms
                 item.DisplayStyle = displayStyle;
                 item.MergeIndex = mergeIndex++;
                 item.MergeAction = MergeAction.Insert;
+                item.ToolTipText = item.Text;
             }
 
             ToolStripManager.Merge(commands, toolStrip);

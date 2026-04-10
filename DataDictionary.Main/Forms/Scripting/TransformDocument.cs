@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -12,40 +11,29 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class Transform : ApplicationData
+    partial class TransformDocument : ApplicationData
     {
-        TemplateIndex templateIndex = new TemplateIndex();
+        DocumentIndex documentIndex = new DocumentIndex();
         TemporalIndex? temporalIndex = null;
 
         public override Boolean IsOpenItem(object? item)
-        { return item is ITemplateIndex key && templateIndex.Equals(key); }
+        { return item is IDocumentIndex key && documentIndex.Equals(key); }
 
-        public Transform() : base()
+        public TransformDocument()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingTransform);
+            SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ScopeType.ScriptingTransform,
+            SetCommand(ScopeType.ScriptingDocument,
                 Enumerations.ButtonType.Delete,
                 Enumerations.ButtonType.OpenDatabase,
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
-
-            scriptOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            scriptSaveCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Save);
-            documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
-            documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
-        public Transform(ITemplateIndex template) : this()
-        { templateIndex = new TemplateIndex(template); }
-
-        public Transform(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
-
-        private void Transform_Load(object sender, EventArgs e)
+        private void TransformDocument_Load(object sender, EventArgs e)
         {
 
         }
@@ -79,29 +67,5 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
         }
-
-        private void DocumentNewCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
-        }
-
-        private void DocumentOpenCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.TransformDocument());
-        }
-
-        private void ScriptOpenCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ScriptSaveCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
     }
 }
