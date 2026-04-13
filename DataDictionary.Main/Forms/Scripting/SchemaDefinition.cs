@@ -33,6 +33,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
 
+            openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
 
@@ -89,6 +90,12 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             // TODO: Add Data
             Activate(static () => new Forms.Scripting.SchemaDocument());
+        }
+
+        private void OpenNodeCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Add Data
+            Activate(static () => new Forms.Scripting.SchemaNode());
         }
     }
 }
