@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
+
+            documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
+            documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
 
         }
 
@@ -73,6 +77,18 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+        }
+
+        private void DocumentNewCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Add Data
+            Activate(static () => new Forms.Scripting.SchemaDocument());
+        }
+
+        private void DocumentOpenCommand_Click(object sender, EventArgs e)
+        {
+            // TODO: Add Data
+            Activate(static () => new Forms.Scripting.SchemaDocument());
         }
     }
 }

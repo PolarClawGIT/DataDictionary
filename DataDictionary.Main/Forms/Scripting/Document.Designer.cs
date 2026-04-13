@@ -124,7 +124,7 @@
             documentFileContentData.AutoSize = true;
             documentLayout.SetColumnSpan(documentFileContentData, 2);
             documentFileContentData.Dock = DockStyle.Fill;
-            documentFileContentData.HeaderText = "File Conten";
+            documentFileContentData.HeaderText = "File Content";
             documentFileContentData.Location = new Point(3, 208);
             documentFileContentData.Multiline = true;
             documentFileContentData.Name = "documentFileContentData";

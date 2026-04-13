@@ -32,10 +32,10 @@
             TableLayoutPanel detailLayout;
             GroupBox filePatternGroup;
             TableLayoutPanel filePatternLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             Label fileBaseName;
             GroupBox schemaRootNodeGroup;
             TableLayoutPanel rootNodeLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
             schemaTab = new TabPage();
@@ -49,11 +49,13 @@
             forEachScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
+            documentToolStrip = new ToolStrip();
+            documentNewCommand = new ToolStripButton();
+            documentOpenCommand = new ToolStripButton();
             objectData = new DataDictionary.Main.Controls.ComboBoxData();
             fileNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
             documentData = new DataGridView();
             FileNameColumn = new DataGridViewTextBoxColumn();
-            documentToolStrip = new ToolStrip();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
@@ -72,6 +74,7 @@
             rootNodeLayout.SuspendLayout();
             documentTab.SuspendLayout();
             fileLayout.SuspendLayout();
+            documentToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             SuspendLayout();
             // 
@@ -340,11 +343,10 @@
             // 
             fileLayout.ColumnCount = 1;
             fileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            fileLayout.Controls.Add(documentToolStrip, 0, 0);
             fileLayout.Controls.Add(objectData, 0, 3);
             fileLayout.Controls.Add(fileNameData, 0, 2);
             fileLayout.Controls.Add(documentData, 0, 1);
-            fileLayout.Controls.Add(documentToolStrip, 0, 0);
-            fileLayout.Dock = DockStyle.Fill;
             fileLayout.Location = new Point(3, 3);
             fileLayout.Name = "fileLayout";
             fileLayout.RowCount = 4;
@@ -354,6 +356,35 @@
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.Size = new Size(525, 326);
             fileLayout.TabIndex = 5;
+            // 
+            // documentToolStrip
+            // 
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
+            documentToolStrip.Location = new Point(0, 0);
+            documentToolStrip.Name = "documentToolStrip";
+            documentToolStrip.Size = new Size(525, 25);
+            documentToolStrip.TabIndex = 15;
+            documentToolStrip.Text = "Document Tools";
+            // 
+            // documentNewCommand
+            // 
+            documentNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentNewCommand.Image = (Image)resources.GetObject("documentNewCommand.Image");
+            documentNewCommand.ImageTransparentColor = Color.Magenta;
+            documentNewCommand.Name = "documentNewCommand";
+            documentNewCommand.Size = new Size(23, 22);
+            documentNewCommand.Text = "New";
+            documentNewCommand.Click += DocumentNewCommand_Click;
+            // 
+            // documentOpenCommand
+            // 
+            documentOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentOpenCommand.Image = (Image)resources.GetObject("documentOpenCommand.Image");
+            documentOpenCommand.ImageTransparentColor = Color.Magenta;
+            documentOpenCommand.Name = "documentOpenCommand";
+            documentOpenCommand.Size = new Size(23, 22);
+            documentOpenCommand.Text = "Open";
+            documentOpenCommand.Click += DocumentOpenCommand_Click;
             // 
             // objectData
             // 
@@ -402,14 +433,6 @@
             FileNameColumn.Name = "FileNameColumn";
             FileNameColumn.ReadOnly = true;
             // 
-            // documentToolStrip
-            // 
-            documentToolStrip.Location = new Point(0, 0);
-            documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(525, 25);
-            documentToolStrip.TabIndex = 14;
-            documentToolStrip.Text = "Document Tools";
-            // 
             // schemaTitleData
             // 
             schemaTitleData.AutoSize = true;
@@ -450,6 +473,8 @@
             documentTab.ResumeLayout(false);
             fileLayout.ResumeLayout(false);
             fileLayout.PerformLayout();
+            documentToolStrip.ResumeLayout(false);
+            documentToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -478,5 +503,7 @@
         private TabPage documentTab;
         private Controls.SelectTextBoxData fileNameData;
         private ToolStrip documentToolStrip;
+        private ToolStripButton documentNewCommand;
+        private ToolStripButton documentOpenCommand;
     }
 }
