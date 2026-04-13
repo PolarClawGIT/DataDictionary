@@ -41,10 +41,10 @@ namespace DataDictionary.Main.Forms.Scripting
             addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
             addTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
 
-            templateOpenDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
             executeSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Export);
             executeTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
-            AddCommands(contextTemplate, ToolStripItemDisplayStyle.Image);
+
+            openDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
 
         }
 
@@ -98,13 +98,20 @@ namespace DataDictionary.Main.Forms.Scripting
             // TODO: Not Needed
         }
 
+
+
+        private void AddObjectCommand_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void OpenObjectCommand_Click(object sender, EventArgs e)
         {
             // TODO: Added data
             Activate(static () => new Forms.Scripting.TemplateObject());
         }
 
-        private void AddObjectCommand_Click(object sender, EventArgs e)
+        private void AddSchemaCommand_Click(object sender, EventArgs e)
         {
 
         }
@@ -114,12 +121,13 @@ namespace DataDictionary.Main.Forms.Scripting
             // TODO: Added data
             Activate(static () => new Forms.Scripting.SchemaDefinition());
         }
+
         private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void AddSchemaCommand_Click(object sender, EventArgs e)
+        private void AddTransformCommand_Click(object sender, EventArgs e)
         {
 
         }
@@ -130,22 +138,15 @@ namespace DataDictionary.Main.Forms.Scripting
             Activate(static () => new Forms.Scripting.Transform());
         }
 
-        private void AddTransformCommand_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ExecuteTransformCommand_Click(object sender, EventArgs e)
         {
 
         }
-
 
         private void OpenDocumentCommand_Click(object sender, EventArgs e)
         {
             // TODO: Added data
             Activate(static () => new Forms.Scripting.Document());
         }
-
     }
 }

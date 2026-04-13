@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.HistoryDatabase);
 
             documentOpenSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
-            documentOpenTransformCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
+            documentOpenTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             AddCommands(documentCcontextMenu, ToolStripItemDisplayStyle.Image);
         }
 
