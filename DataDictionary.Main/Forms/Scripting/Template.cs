@@ -45,7 +45,6 @@ namespace DataDictionary.Main.Forms.Scripting
             executeTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Export);
 
             openDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
-
         }
 
         public Template(ITemplateIndex template) : this()
@@ -56,7 +55,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void Template_Load(object sender, EventArgs e)
         {
-
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
