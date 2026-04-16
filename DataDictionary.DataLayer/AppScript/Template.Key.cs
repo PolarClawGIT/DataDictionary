@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Guid? TemplateId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return TemplateId.HasValue && TemplateId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Template Key
         /// </summary>
@@ -43,7 +46,12 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TemplateKey? other)
-        { return other is TemplateKey key && key.TemplateId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TemplateId, key.TemplateId); }
+        {
+            return other is TemplateKey key
+                && TemplateId.HasValue && TemplateId != Guid.Empty
+                && key.TemplateId.HasValue && key.TemplateId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(TemplateId, other.TemplateId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateKey? other)

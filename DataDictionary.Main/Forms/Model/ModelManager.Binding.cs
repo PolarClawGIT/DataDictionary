@@ -185,6 +185,9 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
 
+            /// <inheritdoc/>
+            public virtual Boolean HasValue { get { return ModelId.HasValue && ModelId != Guid.Empty; } }
+
             public String? ModelTitle
             {
                 get

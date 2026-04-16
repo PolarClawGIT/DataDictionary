@@ -24,6 +24,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public Guid? NodeOwnerId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return NodeOwnerId.HasValue && NodeOwnerId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Node Owner Key of the Scripting Template Node.
         /// </summary>

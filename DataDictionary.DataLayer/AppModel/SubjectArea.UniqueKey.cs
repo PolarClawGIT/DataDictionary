@@ -23,6 +23,10 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String SubjectAreaTitle { get; init; } = string.Empty;
 
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(SubjectAreaTitle); } }
+
         /// <summary>
         /// Constrictor for Model Subject Area Unique Key
         /// </summary>

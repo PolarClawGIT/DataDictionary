@@ -26,6 +26,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         /// <inheritdoc/>
         public String Title { get; internal init; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(Title); } }
+
         internal DataIndexName() : base() { }
 
         /// <summary>

@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <inheritdoc/>
         public String NameSpace { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(NameSpace); } }
+
         /// <summary>
         /// Create a Help Key by NameSpace that implement the Unique Key
         /// </summary>
@@ -48,7 +51,7 @@ namespace DataDictionary.DataLayer.AppGeneral
         public Boolean Equals(HelpSubjectKeyNameSpace? other)
         {
             return
-                other is IHelpSubjectKeyNameSpace &&
+                other is HelpSubjectKeyNameSpace &&
                 !string.IsNullOrEmpty(NameSpace) &&
                 !string.IsNullOrEmpty(other.NameSpace) &&
                 NameSpace.Equals(other.NameSpace, KeyExtension.CompareString);

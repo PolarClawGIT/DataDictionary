@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public String PrincipalLogin { get; init; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(PrincipalLogin); } }
+
         /// <summary>
         /// Constructor for the Security Principal Name Key.
         /// </summary>

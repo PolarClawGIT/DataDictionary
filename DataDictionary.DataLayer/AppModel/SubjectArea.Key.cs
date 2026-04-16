@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Guid? SubjectAreaId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return SubjectAreaId.HasValue && SubjectAreaId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Model Subject Area Key
         /// </summary>
@@ -35,7 +38,12 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public Boolean Equals(SubjectAreaKey? other)
-        { return other is SubjectAreaKey key && EqualityComparer<Guid?>.Default.Equals(SubjectAreaId, key.SubjectAreaId); }
+        {
+            return other is SubjectAreaKey key
+                && SubjectAreaId.HasValue && SubjectAreaId != Guid.Empty
+                && key.SubjectAreaId.HasValue && key.SubjectAreaId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(SubjectAreaId, other.SubjectAreaId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ISubjectAreaKey? other)

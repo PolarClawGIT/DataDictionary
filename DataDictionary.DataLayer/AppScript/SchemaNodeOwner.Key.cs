@@ -16,15 +16,14 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting SchemaNodeOwner Key
     /// </summary>
-    public class SchemaNodeOwnerKey : ISchemaNodeOwnerKey,
-        IKeyEquality<SchemaNodeOwnerKey>,
-        IKeyEquality<ISchemaNodeOwnerKey>
+    public class SchemaNodeOwnerKey : SchemaNodeKey,
+        ISchemaNodeOwnerKey, IKeyEquality<SchemaNodeOwnerKey>, IKeyEquality<ISchemaNodeOwnerKey>
     {
         /// <inheritdoc/>
-        public Guid? NodeId { get; init; } = Guid.Empty;
+        public Guid? NodeOwnerId { get; init; } = Guid.Empty;
 
         /// <inheritdoc/>
-        public Guid? NodeOwnerId { get; set; } = Guid.Empty;
+        public override Boolean HasValue { get { return base.HasValue && NodeOwnerId.HasValue && NodeOwnerId != Guid.Empty; } }
 
         /// <summary>
         /// Constructor for the Blank/Empty SchemaNode Key
@@ -37,21 +36,15 @@ namespace DataDictionary.DataLayer.AppScript
         /// Constructor for the SchemaNode Key
         /// </summary>
         /// <param name="source"></param>
-        public SchemaNodeOwnerKey(ISchemaNodeKey source) : base()
-        {
-            if (source.NodeId is Guid) { NodeId = source.NodeId; }
-            else { NodeId = Guid.Empty; }
-        }
+        public SchemaNodeOwnerKey(ISchemaNodeKey source) : base(source)
+        { }
 
         /// <summary>
         /// Constructor for the SchemaNode Key
         /// </summary>
         /// <param name="source"></param>
-        public SchemaNodeOwnerKey(ISchemaNodeOwnerKey source) : base()
+        public SchemaNodeOwnerKey(ISchemaNodeOwnerKey source) : base(source)
         {
-            if (source.NodeId is Guid) { NodeId = source.NodeId; }
-            else { NodeId = Guid.Empty; }
-
             if (source.NodeOwnerId is Guid) { NodeId = source.NodeOwnerId; }
             else { NodeOwnerId = Guid.Empty; }
         }
@@ -60,9 +53,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Boolean Equals(SchemaNodeOwnerKey? other)
         {
-            return other is SchemaNodeOwnerKey key &&
-                key.NodeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(NodeId, key.NodeId) &&
-                key.NodeOwnerId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(NodeOwnerId, key.NodeOwnerId);
+            return other is SchemaNodeOwnerKey key
+                && base.Equals(key)
+                && NodeOwnerId.HasValue && NodeOwnerId != Guid.Empty
+                && key.NodeOwnerId.HasValue && key.NodeOwnerId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(NodeOwnerId, other.NodeOwnerId);
         }
 
         /// <inheritdoc/>

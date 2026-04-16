@@ -24,6 +24,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public Guid? AttributeId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return AttributeId.HasValue && AttributeId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Primary Key of the Scripting Template Attribute.
         /// </summary>

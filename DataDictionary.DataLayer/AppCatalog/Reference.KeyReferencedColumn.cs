@@ -22,6 +22,9 @@ public class ReferencedKeyColumn : ReferencedKeyObject, IReferencedKeyColumn,
     /// <inheritdoc/>
     public String ReferencedColumnName { get; init; } = string.Empty;
 
+    /// <inheritdoc/>
+    public override Boolean HasValue { get { return base.HasValue && !String.IsNullOrEmpty(ReferencedColumnName); } }
+
     /// <summary>
     /// Constructor for Referenced Object Name
     /// </summary>

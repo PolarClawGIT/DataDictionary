@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Guid? AttributeId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return AttributeId.HasValue && AttributeId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Attribute Key
         /// </summary>
@@ -43,7 +46,12 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AttributeKey? other)
-        { return other is AttributeKey key && key.AttributeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
+        {
+            return other is AttributeKey key
+                && AttributeId.HasValue && AttributeId != Guid.Empty
+                && key.AttributeId.HasValue && key.AttributeId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(AttributeId, other.AttributeId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(IAttributeKey? other)

@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String AliasPath { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(AliasPath); } }
+
         /// <summary>
         /// Constructor for the Domain Alias Name Key
         /// </summary>

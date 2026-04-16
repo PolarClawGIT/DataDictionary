@@ -208,6 +208,9 @@ namespace DataDictionary.Main.Forms.Obsolete
                 }
             }
 
+            /// <inheritdoc/>
+            public virtual Boolean HasValue { get { return Id.HasValue && Id != Guid.Empty; } }
+
             public String? Title
             {
                 get

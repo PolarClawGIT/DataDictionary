@@ -99,6 +99,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Guid? TemplateId { get { return dataSource.TemplateId; } }
 
+            /// <inheritdoc/>
+            public virtual Boolean HasValue { get { return TemplateId.HasValue && TemplateId != Guid.Empty; } }
+
             public String? TemplateTitle { get { return dataSource.TemplateTitle; } }
 
             public String? TemplateDescription { get { return dataSource.TemplateDescription; } }

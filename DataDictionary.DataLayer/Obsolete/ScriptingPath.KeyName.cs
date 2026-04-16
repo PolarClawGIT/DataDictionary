@@ -24,6 +24,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public String NameSpace { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(NameSpace); } }
+
         /// <summary>
         /// Constructor for the Scripting Template Path Key
         /// </summary>

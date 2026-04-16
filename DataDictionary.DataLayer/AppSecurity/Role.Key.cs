@@ -28,6 +28,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public Guid? RoleId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return RoleId.HasValue && RoleId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Security Role Key.
         /// </summary>
@@ -41,7 +44,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(RoleKey? other)
-        { return other is RoleKey && EqualityComparer<Guid?>.Default.Equals(RoleId, other.RoleId); }
+        {
+            return other is RoleKey key
+                && RoleId.HasValue && RoleId != Guid.Empty
+                && key.RoleId.HasValue && key.RoleId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(RoleId, other.RoleId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(IRoleKey? other)

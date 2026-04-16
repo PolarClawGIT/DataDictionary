@@ -27,6 +27,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public String RoleName { get; init; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(RoleName); } }
+
         /// <summary>
         /// Constructor for the Role Name Key.
         /// </summary>

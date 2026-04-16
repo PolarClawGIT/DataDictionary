@@ -22,6 +22,9 @@ public class CatalogKeyName : ICatalogKeyName,
     /// <inheritdoc/>
     public String DatabaseName { get; init; } = string.Empty;
 
+    /// <inheritdoc/>
+    public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(DatabaseName); } }
+
     /// <summary>
     /// Constructor for a blank Catalog Key
     /// </summary>

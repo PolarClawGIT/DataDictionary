@@ -6,6 +6,7 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Interface for the unique Name of a TemplateNode.
     /// </summary>
+    [Obsolete]
     public interface ITemplateNodeKeyName : IKey
     {
         /// <summary>
@@ -17,11 +18,15 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Implementation for the unique Name of a TemplateNode.
     /// </summary>
+    [Obsolete]
     public class TemplateNodeKeyName : ITemplateNodeKeyName,
         IKeyComparable<ITemplateNodeKeyName>, IKeyComparable<TemplateNodeKeyName>
     {
         /// <inheritdoc/>
         public String NodeName { get; init; } = string.Empty;
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(NodeName); } }
 
         /// <summary>
         /// Constructor for the TemplateNode Unique Key.

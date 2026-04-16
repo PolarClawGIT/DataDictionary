@@ -207,6 +207,9 @@ namespace DataDictionary.Main.Forms.Library
                 }
             }
 
+            /// <inheritdoc/>
+            public virtual Boolean HasValue { get { return LibraryId.HasValue && LibraryId != Guid.Empty; } }
+
             public String? LibraryTitle
             {
                 get

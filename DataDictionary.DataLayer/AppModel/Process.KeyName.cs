@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String ProcessTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(ProcessTitle); } }
+
         /// <summary>
         /// Constructor for the Process Unique Key.
         /// </summary>

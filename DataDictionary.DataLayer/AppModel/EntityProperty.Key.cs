@@ -11,32 +11,28 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Implantation for the Model Entity Property Key
     /// </summary>
-    public class EntityPropertyKey : IEntityPropertyKey,
-        IKeyEquality<IEntityPropertyKey>, IKeyEquality<EntityPropertyKey>
+    public class EntityPropertyKey : PropertyKey,
+        IEntityPropertyKey, IKeyEquality<IEntityPropertyKey>, IKeyEquality<EntityPropertyKey>
     {
         /// <inheritdoc/>
         public Guid? EntityId { get; init; } = Guid.Empty;
-
-        /// <inheritdoc/>
-        public Guid? PropertyId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Domain Entity Property Key
         /// </summary>
         /// <param name="source"></param>
-        public EntityPropertyKey(IEntityPropertyKey source)
-        {
-            EntityId = source.EntityId;
-            PropertyId = source.PropertyId;
-        }
+        public EntityPropertyKey(IEntityPropertyKey source):base(source)
+        {   EntityId = source.EntityId; }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(EntityPropertyKey? other)
         {
-            return other is EntityPropertyKey key &&
-                   EqualityComparer<Guid?>.Default.Equals(EntityId, key.EntityId) &&
-                   EqualityComparer<Guid?>.Default.Equals(PropertyId, key.PropertyId);
+            return other is EntityPropertyKey key
+                && EntityId.HasValue && EntityId != Guid.Empty
+                && key.EntityId.HasValue && key.EntityId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(EntityId, other.EntityId)
+                && base.Equals(key);
         }
 
         /// <inheritdoc/>

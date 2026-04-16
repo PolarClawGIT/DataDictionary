@@ -28,6 +28,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public String PropertyName { get; protected set; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return PropertyScope != ScopeType.Null && !String.IsNullOrWhiteSpace(PropertyName); } }
+
         /// <summary>
         /// Constructor for the Unique Key on Property for the Scripting Node.
         /// </summary>

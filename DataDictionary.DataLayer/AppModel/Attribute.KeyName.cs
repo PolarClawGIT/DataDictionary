@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String AttributeTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(AttributeTitle); } }
+
         /// <summary>
         /// Constructor for the Attribute Unique Key.
         /// </summary>

@@ -11,32 +11,28 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Implantation for the Model Process Property Key
     /// </summary>
-    public class ProcessPropertyKey : IProcessPropertyKey,
-        IKeyEquality<IProcessPropertyKey>, IKeyEquality<ProcessPropertyKey>
+    public class ProcessPropertyKey : PropertyKey,
+        IProcessPropertyKey, IKeyEquality<IProcessPropertyKey>, IKeyEquality<ProcessPropertyKey>
     {
         /// <inheritdoc/>
         public Guid? ProcessId { get; init; } = Guid.Empty;
-
-        /// <inheritdoc/>
-        public Guid? PropertyId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Domain Process Property Key
         /// </summary>
         /// <param name="source"></param>
-        public ProcessPropertyKey(IProcessPropertyKey source)
-        {
-            ProcessId = source.ProcessId;
-            PropertyId = source.PropertyId;
-        }
+        public ProcessPropertyKey(IProcessPropertyKey source) : base(source)
+        { ProcessId = source.ProcessId; }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(ProcessPropertyKey? other)
         {
-            return other is ProcessPropertyKey key &&
-                   EqualityComparer<Guid?>.Default.Equals(ProcessId, key.ProcessId) &&
-                   EqualityComparer<Guid?>.Default.Equals(PropertyId, key.PropertyId);
+            return other is ProcessPropertyKey key
+                && ProcessId.HasValue && ProcessId != Guid.Empty
+                && key.ProcessId.HasValue && key.ProcessId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(ProcessId, other.ProcessId)
+                && base.Equals(key);
         }
 
         /// <inheritdoc/>

@@ -48,6 +48,9 @@ namespace DataDictionary.BusinessLayer.ToolSet
         protected List<String> pathParts = new List<String>();
 
         /// <inheritdoc/>
+        public Boolean HasValue { get { return pathParts.Count > 0 && !String.IsNullOrEmpty(pathParts.First()); } }
+
+        /// <inheritdoc/>
         public String Member
         {
             get
@@ -88,6 +91,8 @@ namespace DataDictionary.BusinessLayer.ToolSet
                 else { return null; }
             }
         }
+
+
 
         /// <summary>
         /// Constructor for a Path

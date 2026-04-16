@@ -5,6 +5,7 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template Attribute.
     /// </summary>
+    [Obsolete]
     public interface ITemplateNodeKey : IKey
     {
         /// <summary>
@@ -16,11 +17,15 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Implementation for the Primary Key for the Scripting Template Attribute.
     /// </summary>
+    [Obsolete]
     public class TemplateNodeKey : ITemplateNodeKey,
         IKeyEquality<ITemplateNodeKey>, IKeyEquality<TemplateNodeKey>
     {
         /// <inheritdoc/>
         public Guid? NodeId { get; init; } = Guid.Empty;
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return NodeId.HasValue && NodeId != Guid.Empty; } }
 
         /// <summary>
         /// Constructor for the Primary Key of the Scripting Template Node.
@@ -51,7 +56,12 @@ namespace DataDictionary.DataLayer.Obsolete
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TemplateNodeKey? other)
-        { return other is TemplateNodeKey key && key.NodeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(NodeId, other.NodeId); }
+        {
+            return other is TemplateNodeKey key
+                && NodeId.HasValue && NodeId != Guid.Empty
+                && key.NodeId.HasValue && key.NodeId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(NodeId, other.NodeId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ITemplateNodeKey? other)

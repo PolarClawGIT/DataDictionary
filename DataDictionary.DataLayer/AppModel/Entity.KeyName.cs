@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String EntityTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(EntityTitle); } }
+
         /// <summary>
         /// Constructor for the Entity Unique Key.
         /// </summary>

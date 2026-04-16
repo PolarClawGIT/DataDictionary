@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public String DataSourceTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(DataSourceTitle); } }
+
         /// <summary>
         /// Constructor for the DataSource Unique Key.
         /// </summary>

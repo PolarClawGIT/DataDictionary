@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public Guid? ConstraintId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return ConstraintId.HasValue && ConstraintId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Constraint Key.
         /// </summary>
@@ -35,7 +38,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(ConstraintKey? other)
-        { return other is ConstraintKey && EqualityComparer<Guid?>.Default.Equals(ConstraintId, other.ConstraintId); }
+        {
+            return other is ConstraintKey key
+                && ConstraintId.HasValue && ConstraintId != Guid.Empty
+                && key.ConstraintId.HasValue && key.ConstraintId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(ConstraintId, other.ConstraintId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(IConstraintKey? other)

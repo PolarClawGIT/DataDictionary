@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public Guid? SecurableId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return SecurableId.HasValue && SecurableId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Security Object Key.
         /// </summary>
@@ -48,7 +51,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(SecurableKey? other)
-        { return other is SecurableKey && EqualityComparer<Guid?>.Default.Equals(SecurableId, other.SecurableId); }
+        {
+            return other is SecurableKey key
+                && SecurableId.HasValue && SecurableId != Guid.Empty
+                && key.SecurableId.HasValue && key.SecurableId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(SecurableId, other.SecurableId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(ISecurableKey? other)

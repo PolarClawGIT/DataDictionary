@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public String SecurableTitle { get; init; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(SecurableTitle); } }
+
         /// <summary>
         /// Constructor for the Security Object Name Key.
         /// </summary>

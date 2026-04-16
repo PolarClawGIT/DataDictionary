@@ -26,6 +26,9 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <inheritdoc/>
         public Guid? HelpParentId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return HelpParentId.HasValue && HelpParentId != Guid.Empty; } }
+
         /// <summary>
         /// Creates a Help Key from a item that implements the Primary key.
         /// </summary>
@@ -39,7 +42,12 @@ namespace DataDictionary.DataLayer.AppGeneral
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(HelpSubjectKeyParent? other)
-        { return other is HelpSubjectKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
+        {
+            return other is HelpSubjectKeyParent key
+                && HelpParentId.HasValue && HelpParentId != Guid.Empty
+                && key.HelpParentId.HasValue && key.HelpParentId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(IHelpSubjectKeyParent? other)

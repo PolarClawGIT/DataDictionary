@@ -207,6 +207,9 @@ namespace DataDictionary.Main.Forms.Catalog
                 }
             }
 
+            /// <inheritdoc/>
+            public virtual Boolean HasValue { get { return CatalogId.HasValue && CatalogId != Guid.Empty; } }
+
             public String? CatalogTitle
             {
                 get

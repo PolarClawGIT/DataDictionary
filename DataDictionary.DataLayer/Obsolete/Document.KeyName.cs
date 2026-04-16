@@ -27,6 +27,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public String DocumentTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(DocumentTitle); } }
+
         /// <summary>
         /// Constructor for the Document Unique Key.
         /// </summary>

@@ -24,6 +24,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public Guid? DocumentId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return DocumentId.HasValue && DocumentId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Document Key
         /// </summary>

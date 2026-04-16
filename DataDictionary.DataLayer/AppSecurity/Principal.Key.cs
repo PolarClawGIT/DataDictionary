@@ -27,6 +27,9 @@ namespace DataDictionary.DataLayer.AppSecurity
         /// <inheritdoc/>
         public Guid? PrincipalId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return PrincipalId.HasValue && PrincipalId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Security Principal Key.
         /// </summary>
@@ -40,7 +43,12 @@ namespace DataDictionary.DataLayer.AppSecurity
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(PrincipalKey? other)
-        { return other is PrincipalKey && EqualityComparer<Guid?>.Default.Equals(PrincipalId, other.PrincipalId); }
+        {
+            return other is PrincipalKey key
+                && PrincipalId.HasValue && PrincipalId != Guid.Empty
+                && key.PrincipalId.HasValue && key.PrincipalId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(PrincipalId, other.PrincipalId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(IPrincipalKey? other)

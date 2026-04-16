@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public Guid? DomainId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return DomainId.HasValue && DomainId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Domain Key.
         /// </summary>
@@ -35,7 +38,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         #region IEquatable
         /// <inheritdoc/>
         public virtual Boolean Equals(DomainKey? other)
-        { return other is DomainKey && EqualityComparer<Guid?>.Default.Equals(DomainId, other.DomainId); }
+        {
+            return other is DomainKey key
+                && DomainId.HasValue && DomainId != Guid.Empty
+                && key.DomainId.HasValue && key.DomainId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(DomainId, other.DomainId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(IDomainKey? other)
