@@ -10,7 +10,7 @@ namespace DataDictionary.Main.Forms.Catalog
     partial class DbRoutineParameter : ApplicationData
     {
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingParameter.Current is IRoutineParameterValue current && ReferenceEquals(current, item); }
 
         protected DbRoutineParameter() : base()

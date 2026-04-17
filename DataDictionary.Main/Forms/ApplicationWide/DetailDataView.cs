@@ -42,7 +42,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public DetailDataView(ScopeType scope, IBindingList data) : this(data)
         { SetIcon(scope); }
 
-        public Boolean IsOpenItem(Object? item)
+        public override Boolean IsOpenItem(Object? item)
         { return ReferenceEquals(bindingSource.DataSource, item); }
 
         private void BindingDataView_Load(object sender, EventArgs e)
