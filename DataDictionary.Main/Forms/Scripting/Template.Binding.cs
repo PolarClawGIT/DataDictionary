@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public void AddValue(out TemplateValue result)
             {
                 TemplateValue value = new TemplateValue();
-                templates.Add(value);
+                data.Add(value);
                 result = value;
             }
 
@@ -46,12 +46,21 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 TemplateIndex key = new TemplateIndex(template);
                 TemplateBinding.RaiseListChangedEvents = false;
+                templates.RaiseListChangedEvents = false;
 
                 templates = new BindingView<TemplateValue>(data, w => key.Equals(w));
 
-                TemplateBinding.RaiseListChangedEvents = true;
+                if(templates.Count > 0)
+                {
+                    TemplateBinding.DataSource = templates;
+
+                    TemplateBinding.RaiseListChangedEvents = true;
+
+                    templates.RaiseListChangedEvents = true;
+                }
 
                 TemplateBinding.ResetBindings(false);
+                TemplateBinding.MoveFirst();
             }
 
             public void Load(ITemplateIndex template, Action<RunWorkerCompletedEventArgs>? onComplete = null)

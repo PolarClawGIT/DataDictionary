@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         TemplateIndex templateIndex = new TemplateIndex();
         TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
+        Boolean isNew = false;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ITemplateIndex key && templateIndex.Equals(key); }
@@ -24,7 +27,16 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingTemplate);
+            formBinding = new FormBinding()
+            {
+                DoWork = base.DoWork,
+                TemplateBinding = bindingTemplate
+            };
+
+            SetTitle(bindingTemplate);
+            SetRowState(
+                bindingTemplate);
+            //SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
                 Enumerations.ButtonType.Delete,
@@ -32,7 +44,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase,
                 Enumerations.ButtonType.HistoryDatabase);
-
 
             openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
@@ -47,14 +58,46 @@ namespace DataDictionary.Main.Forms.Scripting
             openDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
 
-        public Template(ITemplateIndex template) : this()
-        { templateIndex = new TemplateIndex(template); }
+        public Template(ITemplateIndex? template) : this()
+        { 
+            if(template is ITemplateIndex key)
+            { templateIndex = new TemplateIndex(key); }
+            else
+            {   // Handle new Value
+                formBinding.AddValue(out TemplateValue value);
+                templateIndex = new TemplateIndex(value);
+            }
+        }
 
         public Template(ITemplateIndex template, ITemporalIndex temporal) : this(template)
         { temporalIndex = new TemporalIndex(); }
 
         private void Template_Load(object sender, EventArgs e)
         {
+            if (temporalIndex is null)
+            {
+                formBinding.Load(templateIndex);
+                if (bindingTemplate.Count > 0)
+                { DoBinding(); }
+            }
+            else
+            { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is null)
+                {
+                    if (bindingTemplate.Count > 0)
+                    { DoBinding(); }
+                }
+            }
+
+            void DoBinding()
+            {
+                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
+                templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
+
+            }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
@@ -86,17 +129,6 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.HistoryCommand_Click(sender, e);
         }
-
-
-
-
-
-        private void ContextTemplate_Opening(object sender, CancelEventArgs e)
-        {
-            // TODO: Not Needed
-        }
-
-
 
         private void AddObjectCommand_Click(object sender, EventArgs e)
         {

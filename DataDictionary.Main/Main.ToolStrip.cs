@@ -334,7 +334,7 @@ namespace DataDictionary.Main
 
 
         private void MenuNewTemplate_Click(object sender, EventArgs e)
-        { Activate(static () => new Forms.Scripting.Template()); }
+        { Activate(static () => new Forms.Scripting.Template(null)); }
 
 
         private void MenuTemplate_Click(object sender, EventArgs e)

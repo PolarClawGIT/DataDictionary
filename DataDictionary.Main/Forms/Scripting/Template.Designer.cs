@@ -483,7 +483,6 @@
             // 
             contextTemplate.Name = "contextTemplate";
             contextTemplate.Size = new Size(61, 4);
-            contextTemplate.Opening += ContextTemplate_Opening;
             // 
             // Template
             // 
