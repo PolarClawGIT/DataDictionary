@@ -58,14 +58,12 @@ namespace DataDictionary.Main.Forms.Model
             public FormBinding()
             { }
 
-            public ProcessValue NewValue()
+            public Boolean TryAddValue([NotNullWhen(true)] out ProcessValue? result)
             {
-                ProcessValue newValue = new ProcessValue();
-                data.Processes.Add(newValue);
-
-                return newValue;
+                ProcessValue value = new ProcessValue();
+                data.Processes.Add(value);
+                result = value; return true;
             }
-
 
             public void Load(ProcessIndex process)
             {

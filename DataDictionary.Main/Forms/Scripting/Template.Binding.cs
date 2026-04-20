@@ -27,11 +27,6 @@ namespace DataDictionary.Main.Forms.Scripting
             public FormBinding() : base()
             { }
 
-            /// <summary>
-            /// Try/Get current Value of the Templates
-            /// </summary>
-            /// <param name="result"></param>
-            /// <returns></returns>
             public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
             {
                 if (TemplateBinding.Position >= 0
@@ -40,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
 
-            public Boolean TryAddValue(out TemplateValue result)
+            public Boolean TryAddValue([NotNullWhen(true)] out TemplateValue? result)
             {
                 TemplateValue value = new TemplateValue();
                 data.Add(value);

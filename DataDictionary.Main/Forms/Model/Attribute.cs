@@ -55,7 +55,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (attribute is IAttributeIndex)
             { attributeIndex = new AttributeIndex(attribute); }
-            else { attributeIndex = new AttributeIndex(formBinding.NewValue()); }
         }
 
         public Attribute(IAttributeIndex attribute, ITemporalIndex temporal) : this(attribute)
@@ -65,8 +64,20 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (temporalIndex is null)
             {
-                formBinding.Load(attributeIndex);
-                DoBinding();
+                if (attributeIndex.HasValue)
+                { formBinding.Load(attributeIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out AttributeValue? value))
+                    {
+                        attributeIndex = new AttributeIndex(value);
+                        formBinding.Load(attributeIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out AttributeValue? _))
+                { DoBinding(); }
             }
             else
             { formBinding.Load(attributeIndex, temporalIndex, onCompleting); }

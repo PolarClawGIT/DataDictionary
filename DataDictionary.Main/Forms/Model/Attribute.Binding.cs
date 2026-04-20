@@ -157,12 +157,11 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
 
-            public AttributeValue NewValue()
+            public Boolean TryAddValue([NotNullWhen(true)] out AttributeValue? result)
             {
-                AttributeValue newValue = new AttributeValue();
-                data.Attributes.Add(newValue);
-
-                return newValue;
+                AttributeValue value = new AttributeValue();
+                data.Attributes.Add(value);
+                result = value; return true;
             }
 
             public AttributePropertyValue NewProperty()

@@ -60,7 +60,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (process is IProcessIndex)
             { processIndex = new ProcessIndex(process); }
-            else { processIndex = new ProcessIndex(formBinding.NewValue()); }
         }
 
         public Process(IProcessIndex process, ITemporalIndex temporal) : this(process)
@@ -68,10 +67,23 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Process_Load(object sender, EventArgs e)
         {
+
             if (temporalIndex is null)
             {
-                formBinding.Load(processIndex);
-                DoBinding();
+                if (processIndex.HasValue)
+                { formBinding.Load(processIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out ProcessValue? value))
+                    {
+                        processIndex = new ProcessIndex(value);
+                        formBinding.Load(processIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out ProcessValue? _))
+                { DoBinding(); }
             }
             else
             { formBinding.Load(processIndex, temporalIndex, onCompleting); }

@@ -178,15 +178,12 @@ namespace DataDictionary.Main.Forms.Model
                 }
             }
 
-            public EntityValue NewValue()
+            public Boolean TryAddValue([NotNullWhen(true)] out EntityValue? result)
             {
-                EntityValue newValue = new EntityValue();
-                data.Entities.Add(newValue);
-
-                return newValue;
+                EntityValue value = new EntityValue();
+                data.Entities.Add(value);
+                result = value; return true;
             }
-
-
 
             public void Save(EntityIndex entity, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {

@@ -69,25 +69,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void Template_Load(object sender, EventArgs e)
         {
-            //TODO: The Message RefreshNavigation is not occurring as expected across the application.
-            // This cannot be called in the New because the event has not been hooked up.
-            // Order of Events:
-            // - New is called
-            // - Add MDI child called, after New is completed.
-            // - Messages hooked up
-            // Idea- the Form Load event will need to handle the Message.
-            // To do that, it needs to detect when the New row needs to be added.
-            // So that formBinding.AddValue(out TemplateValue value) can be called.
-            // This will need to be repeated in ALL forms.
-            // The new Index attribute HasValue can do this.
-
             if (temporalIndex is null)
             {
                 if (templateIndex.HasValue)
                 { formBinding.Load(templateIndex); }
                 else
                 {
-                    if (formBinding.TryAddValue(out TemplateValue value))
+                    if (formBinding.TryAddValue(out TemplateValue? value))
                     {
                         templateIndex = new TemplateIndex(value);
                         formBinding.Load(templateIndex);
@@ -115,6 +103,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
 
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
             }
         }
 

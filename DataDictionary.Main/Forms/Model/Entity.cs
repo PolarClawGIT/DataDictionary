@@ -62,7 +62,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (entity is IEntityIndex)
             { entityIndex = new EntityIndex(entity); }
-            else { entityIndex = new EntityIndex(formBinding.NewValue()); }
         }
 
         public Entity(IEntityIndex entity, ITemporalIndex temporal) : this(entity)
@@ -72,8 +71,20 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (temporalIndex is null)
             {
-                formBinding.Load(entityIndex);
-                DoBinding();
+                if (entityIndex.HasValue)
+                { formBinding.Load(entityIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out EntityValue? value))
+                    {
+                        entityIndex = new EntityIndex(value);
+                        formBinding.Load(entityIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out EntityValue? _))
+                { DoBinding(); }
             }
             else
             { formBinding.Load(entityIndex, temporalIndex, onCompleting); }
