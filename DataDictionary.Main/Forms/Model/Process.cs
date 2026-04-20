@@ -84,6 +84,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (formBinding.TryGetValue(out ProcessValue? _))
                 { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(processIndex, temporalIndex, onCompleting); }

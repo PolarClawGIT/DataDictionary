@@ -60,9 +60,14 @@ namespace DataDictionary.Main.Forms.Model
 
             public Boolean TryAddValue([NotNullWhen(true)] out ProcessValue? result)
             {
-                ProcessValue value = new ProcessValue();
-                data.Processes.Add(value);
-                result = value; return true;
+                if (BusinessData.Authorization.IsModelAdmin
+                    || BusinessData.Authorization.IsModelOwner)
+                {
+                    ProcessValue value = new ProcessValue();
+                    data.Processes.Add(value);
+                    result = value; return true;
+                }
+                else { result = null; return false; }
             }
 
             public void Load(ProcessIndex process)

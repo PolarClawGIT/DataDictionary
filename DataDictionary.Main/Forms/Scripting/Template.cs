@@ -30,12 +30,20 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding = new FormBinding()
             {
                 DoWork = base.DoWork,
-                TemplateBinding = bindingTemplate
+                TemplateBinding = bindingTemplate,
+                ObjectBinding = bindingObject,
+                SchemaBinding = bindingSchema,
+                TransformBinding = bindingTransform,
+                DocumentBinding = bindingDocument
             };
 
             SetTitle(bindingTemplate);
             SetRowState(
-                bindingTemplate);
+                bindingTemplate,
+                bindingObject,
+                bindingSchema,
+                bindingTransform,
+                bindingDocument);
             //SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
@@ -85,6 +93,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (formBinding.TryGetValue(out TemplateValue? _))
                 { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
@@ -102,6 +111,18 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
+
+                objectData.AutoGenerateColumns = false;
+                objectData.DataSource = bindingObject;
+
+                schemaData.AutoGenerateColumns = false;
+                schemaData.DataSource = bindingSchema;
+
+                transformsData.AutoGenerateColumns = false;
+                transformsData.DataSource = bindingTransform;
+
+                documentData.AutoGenerateColumns = false;
+                documentData.DataSource = bindingTransform;
 
                 // Security
                 IsLocked(formBinding.GetLocked());

@@ -85,6 +85,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 if (formBinding.TryGetValue(out EntityValue? _))
                 { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(entityIndex, temporalIndex, onCompleting); }

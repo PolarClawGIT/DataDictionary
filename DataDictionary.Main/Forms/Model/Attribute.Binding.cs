@@ -159,9 +159,14 @@ namespace DataDictionary.Main.Forms.Model
 
             public Boolean TryAddValue([NotNullWhen(true)] out AttributeValue? result)
             {
-                AttributeValue value = new AttributeValue();
-                data.Attributes.Add(value);
-                result = value; return true;
+                if (BusinessData.Authorization.IsModelAdmin
+                    || BusinessData.Authorization.IsModelOwner)
+                {
+                    AttributeValue value = new AttributeValue();
+                    data.Attributes.Add(value);
+                    result = value; return true;
+                }
+                else { result = null; return false; }
             }
 
             public AttributePropertyValue NewProperty()

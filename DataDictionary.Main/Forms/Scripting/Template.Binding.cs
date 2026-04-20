@@ -1,9 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Toolbox.BindingTable;
@@ -24,6 +26,24 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public required BindingSource ObjectBinding { private get; init; }
+            BindingView<TemplateObjectValue> objectValues =
+                new BindingView<TemplateObjectValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource SchemaBinding { private get; init; }
+            BindingView<SchemaDefinitionValue> schemaValues =
+                new BindingView<SchemaDefinitionValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource TransformBinding { private get; init; }
+            BindingView<TransformValue> transformValues =
+                new BindingView<TransformValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+            public required BindingSource DocumentBinding { private get; init; }
+
+
             public FormBinding() : base()
             { }
 
@@ -37,29 +57,56 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean TryAddValue([NotNullWhen(true)] out TemplateValue? result)
             {
-                TemplateValue value = new TemplateValue();
-                data.Add(value);
-                result = value; return true;
+                if (BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner)
+                {
+                    TemplateValue value = new TemplateValue();
+                    data.Add(value);
+                    result = value; return true;
+                }
+                else { result = null;  return false; }
             }
 
             public void Load(ITemplateIndex template)
             {
                 TemplateIndex key = new TemplateIndex(template);
                 TemplateBinding.RaiseListChangedEvents = false;
+                ObjectBinding.RaiseListChangedEvents = false;
+                SchemaBinding.RaiseListChangedEvents = false;
+                TransformBinding.RaiseListChangedEvents = false;
+
                 templateValues.RaiseListChangedEvents = false;
+                objectValues.RaiseListChangedEvents = false;
+                schemaValues.RaiseListChangedEvents = false;
+                transformValues.RaiseListChangedEvents = false;
 
                 templateValues = new BindingView<TemplateValue>(data, w => key.Equals(w));
+                objectValues = new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w));
+                schemaValues = new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w));
+                transformValues = new BindingView<TransformValue>(data.Transforms, w => key.Equals(w));
 
-                if(templateValues.Count > 0)
+                if (templateValues.Count > 0)
                 {
                     TemplateBinding.DataSource = templateValues;
+                    ObjectBinding.DataSource = objectValues;
+                    SchemaBinding.DataSource = schemaValues;
+                    TransformBinding.DataSource = transformValues;
 
                     TemplateBinding.RaiseListChangedEvents = true;
+                    ObjectBinding.RaiseListChangedEvents = true;
+                    SchemaBinding.RaiseListChangedEvents = true;
+                    TransformBinding.RaiseListChangedEvents = true;
 
                     templateValues.RaiseListChangedEvents = true;
+                    objectValues.RaiseListChangedEvents = true;
+                    schemaValues.RaiseListChangedEvents = true;
+                    transformValues.RaiseListChangedEvents = true;
                 }
 
                 TemplateBinding.ResetBindings(false);
+                ObjectBinding.ResetBindings(false);
+                SchemaBinding.ResetBindings(false);
+                TransformBinding.ResetBindings(false);
                 TemplateBinding.MoveFirst();
             }
 
@@ -125,12 +172,38 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public Boolean GetAuthorization(Enumerations.ButtonType command)
             {
-                return false;
+                Boolean isGrant = false;
+                Boolean isNode = TryGetValue(out TemplateValue? _);
+
+                SecurableIndex? templateKey = null;
+                if (TryGetValue(out TemplateValue? templateValue))
+                { templateKey = new TemplateIndex(templateValue); }
+
+                isGrant = BusinessData.Authorization.IsScriptAdmin
+                    || BusinessData.Authorization.IsScriptOwner
+                    || BusinessData.Authorization.IsGrant(templateKey);
+
+                switch (command)
+                {
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Add: return isGrant;
+                    case Enumerations.ButtonType.Delete: return isGrant && isNode;
+                    case Enumerations.ButtonType.OpenDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.SaveDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.DeleteDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.HistoryDatabase: return isGrant && isNode;
+                    default: return false;
+                }
             }
 
             public Boolean GetLocked()
             {
-                return true;
+                if (TryGetValue(out TemplateValue? value))
+                {
+                    return value.RowState() is DataRowState.Detached
+                        or DataRowState.Deleted;
+                }
+                else return true;
             }
         }
     }
