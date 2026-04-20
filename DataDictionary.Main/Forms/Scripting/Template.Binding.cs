@@ -20,43 +20,48 @@ namespace DataDictionary.Main.Forms.Scripting
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource TemplateBinding { private get; init; }
-            BindingView<TemplateValue> templates =
+            BindingView<TemplateValue> templateValues =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public FormBinding() : base()
             { }
 
-            public Boolean TryGetValue(ITemplateIndex template, [NotNullWhen(true)] out TemplateValue? result)
+            /// <summary>
+            /// Try/Get current Value of the Templates
+            /// </summary>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
             {
-                TemplateIndex key = new TemplateIndex(template);
-                if (templates.FirstOrDefault(w => key.Equals(w)) is TemplateValue value)
+                if (TemplateBinding.Position >= 0
+                    && TemplateBinding.Current is TemplateValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
 
-            public void AddValue(out TemplateValue result)
+            public Boolean TryAddValue(out TemplateValue result)
             {
                 TemplateValue value = new TemplateValue();
                 data.Add(value);
-                result = value;
+                result = value; return true;
             }
 
             public void Load(ITemplateIndex template)
             {
                 TemplateIndex key = new TemplateIndex(template);
                 TemplateBinding.RaiseListChangedEvents = false;
-                templates.RaiseListChangedEvents = false;
+                templateValues.RaiseListChangedEvents = false;
 
-                templates = new BindingView<TemplateValue>(data, w => key.Equals(w));
+                templateValues = new BindingView<TemplateValue>(data, w => key.Equals(w));
 
-                if(templates.Count > 0)
+                if(templateValues.Count > 0)
                 {
-                    TemplateBinding.DataSource = templates;
+                    TemplateBinding.DataSource = templateValues;
 
                     TemplateBinding.RaiseListChangedEvents = true;
 
-                    templates.RaiseListChangedEvents = true;
+                    templateValues.RaiseListChangedEvents = true;
                 }
 
                 TemplateBinding.ResetBindings(false);
