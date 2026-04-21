@@ -42,6 +42,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource DocumentBinding { private get; init; }
+            BindingList<DocumentValue> documentValues = new BindingList<DocumentValue>();
 
 
             public FormBinding() : base()
@@ -74,16 +75,24 @@ namespace DataDictionary.Main.Forms.Scripting
                 ObjectBinding.RaiseListChangedEvents = false;
                 SchemaBinding.RaiseListChangedEvents = false;
                 TransformBinding.RaiseListChangedEvents = false;
+                DocumentBinding.RaiseListChangedEvents = false;
 
                 templateValues.RaiseListChangedEvents = false;
                 objectValues.RaiseListChangedEvents = false;
                 schemaValues.RaiseListChangedEvents = false;
                 transformValues.RaiseListChangedEvents = false;
+                documentValues.RaiseListChangedEvents = false;
 
                 templateValues = new BindingView<TemplateValue>(data, w => key.Equals(w));
                 objectValues = new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w));
                 schemaValues = new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w));
                 transformValues = new BindingView<TransformValue>(data.Transforms, w => key.Equals(w));
+
+                // TODO: This is simplified and does not handle add/remove from either source.
+                DocumentCompare bindingCompare = new DocumentCompare();
+                documentValues.AddRange(
+                    data.SchemaDocuments.Select(s => new DocumentValue(s)).
+                    Union(data.TransformDocuments.Select(s => new DocumentValue(s)), bindingCompare));
 
                 if (templateValues.Count > 0)
                 {
@@ -91,22 +100,26 @@ namespace DataDictionary.Main.Forms.Scripting
                     ObjectBinding.DataSource = objectValues;
                     SchemaBinding.DataSource = schemaValues;
                     TransformBinding.DataSource = transformValues;
+                    DocumentBinding.DataSource = documentValues;
 
                     TemplateBinding.RaiseListChangedEvents = true;
                     ObjectBinding.RaiseListChangedEvents = true;
                     SchemaBinding.RaiseListChangedEvents = true;
                     TransformBinding.RaiseListChangedEvents = true;
+                    DocumentBinding.RaiseListChangedEvents = true;
 
                     templateValues.RaiseListChangedEvents = true;
                     objectValues.RaiseListChangedEvents = true;
                     schemaValues.RaiseListChangedEvents = true;
                     transformValues.RaiseListChangedEvents = true;
+                    documentValues.RaiseListChangedEvents = true;
                 }
 
                 TemplateBinding.ResetBindings(false);
                 ObjectBinding.ResetBindings(false);
                 SchemaBinding.ResetBindings(false);
                 TransformBinding.ResetBindings(false);
+                DocumentBinding.ResetBindings(false);
                 TemplateBinding.MoveFirst();
             }
 

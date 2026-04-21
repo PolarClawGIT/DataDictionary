@@ -86,13 +86,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         TransformData transformValues;
 
         /// <inheritdoc/>
-        public ISchemaDocumentData SchemaDocuments { get; }
+        public ISchemaDocumentData SchemaDocuments { get { return schemaDocumentValues; } }
         SchemaDocumentData schemaDocumentValues;
 
         /// <inheritdoc/>
-        public ITransformDocumentData TransformDocuments { get; }
+        public ITransformDocumentData TransformDocuments { get { return transformDocumentValues; } }
         TransformDocumentData transformDocumentValues;
-
 
         public TemplateData() : base()
         {
