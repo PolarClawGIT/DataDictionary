@@ -17,32 +17,144 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
+            /// <summary>
+            /// Internal reference to the source of the data.
+            /// </summary>
             ITemplateData data = BusinessData.Templates;
 
+            /// <summary>
+            /// How to invoke the WorkerQueue.
+            /// </summary>
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
+            /// <summary>
+            /// Reference to the BindingSource holding the Template Values
+            /// </summary>
             public required BindingSource TemplateBinding { private get; init; }
+            
+            /// <summary>
+            /// Backing field for the Template Values.
+            /// </summary>
             BindingView<TemplateValue> templateValues =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
+            
+            /// <summary>
+            /// How to get the Template Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<TemplateValue> GetTemplates(TemplateIndex key)
+            { return new BindingView<TemplateValue>(data, w => key.Equals(w)); }
 
+            /// <summary>
+            /// Reference to the BindingSource holding the Template Object Values
+            /// </summary>
             public required BindingSource ObjectBinding { private get; init; }
+
+            /// <summary>
+            /// Backing field for the Template Object Values.
+            /// </summary>
             BindingView<TemplateObjectValue> objectValues =
                 new BindingView<TemplateObjectValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            /// <summary>
+            /// How to get the Template Objects Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<TemplateObjectValue> GetObjects(TemplateIndex key)
+            { return new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w)); }
+
+            /// <summary>
+            /// Reference to the BindingSource holding the Template Schemas Values
+            /// </summary>
             public required BindingSource SchemaBinding { private get; init; }
+
+            /// <summary>
+            /// Backing field for the Template Schema Values.
+            /// </summary>
             BindingView<SchemaDefinitionValue> schemaValues =
                 new BindingView<SchemaDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            /// <summary>
+            /// How to get the Template Schema Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<SchemaDefinitionValue> GetSchemas(TemplateIndex key)
+            { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); }
+
+            /// <summary>
+            /// Reference to the BindingSource holding the Template Transforms Values
+            /// </summary>
             public required BindingSource TransformBinding { private get; init; }
+
+            /// <summary>
+            /// Backing field for the Template Transform Values.
+            /// </summary>
             BindingView<TransformValue> transformValues =
                 new BindingView<TransformValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            /// <summary>
+            /// How to get the Template Transforms Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<TransformValue> GetTransforms(TemplateIndex key)
+            { return new BindingView<TransformValue>(data.Transforms, w => key.Equals(w)); }
+
+            /// <summary>
+            /// Reference to the BindingSource holding the Template Documents Values
+            /// </summary>
             public required BindingSource DocumentBinding { private get; init; }
+
+            /// <summary>
+            /// Backing field for the Template Documents Values.
+            /// </summary>
             BindingList<DocumentValue> documentValues = new BindingList<DocumentValue>();
+
+            /// <summary>
+            /// How to get the Template Schema Document Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<SchemaDocumentValue> GetSchemaDocuments(TemplateIndex key)
+            { return new BindingView<SchemaDocumentValue>(data.SchemaDocuments, w => key.Equals(w)); }
+
+            /// <summary>
+            /// How to get the Template Transform Document Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingView<TransformDocumentValue> GetTransformDocuments(TemplateIndex key)
+            { return new BindingView<TransformDocumentValue>(data.TransformDocuments, w => key.Equals(w)); }
+
+            /// <summary>
+            /// How to get the Template Documents Values from the source Data.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
+            public BindingList<DocumentValue> GetDocuments(TemplateIndex key)
+            {
+                DocumentCompare compare = new DocumentCompare();
+                BindingList<DocumentValue> values = new BindingList<DocumentValue>();
+                values.AddRange(
+                    data.SchemaDocuments.Select(s => new DocumentValue(s)).
+                    Union(data.TransformDocuments.Select(s => new DocumentValue(s)), compare));
+
+                return values;
+            }
 
 
             public FormBinding() : base()
@@ -65,7 +177,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     data.Add(value);
                     result = value; return true;
                 }
-                else { result = null;  return false; }
+                else { result = null; return false; }
             }
 
             public void Load(ITemplateIndex template)
@@ -83,16 +195,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 transformValues.RaiseListChangedEvents = false;
                 documentValues.RaiseListChangedEvents = false;
 
-                templateValues = new BindingView<TemplateValue>(data, w => key.Equals(w));
-                objectValues = new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w));
-                schemaValues = new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w));
-                transformValues = new BindingView<TransformValue>(data.Transforms, w => key.Equals(w));
-
-                // TODO: This is simplified and does not handle add/remove from either source.
-                DocumentCompare bindingCompare = new DocumentCompare();
-                documentValues.AddRange(
-                    data.SchemaDocuments.Select(s => new DocumentValue(s)).
-                    Union(data.TransformDocuments.Select(s => new DocumentValue(s)), bindingCompare));
+                templateValues = GetTemplates(key);
+                objectValues = GetObjects(key);
+                schemaValues = GetSchemas(key);
+                transformValues = GetTransforms(key);
+                documentValues = GetDocuments(key);
 
                 if (templateValues.Count > 0)
                 {

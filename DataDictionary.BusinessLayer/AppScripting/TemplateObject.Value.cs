@@ -41,5 +41,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(ObjectName)
             };
         }
+
+        /// <inheritdoc cref="TemplateObjectItem.TemplateObjectItem(ITemplateKey)"/>
+        public TemplateObjectValue(ITemplateIndex template): base(template)
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new TemplateObjectIndex(this),
+                GetPath = () => new PathIndex(Scope),
+                GetScope = () => Scope,
+                GetTitle = () => ObjectName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(ObjectName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(ObjectName)
+            };
+        }
     }
 }

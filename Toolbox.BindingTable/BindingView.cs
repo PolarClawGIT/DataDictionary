@@ -181,9 +181,9 @@ namespace Toolbox.BindingTable
 
             // Causes ListChange event to occur on base.
             if (!isAddNewCore)
-            { BaseInsert(BaseCount(), item); } 
+            { BaseInsert(BaseCount(), item); }
 
-            // Cuases ListChange event to occur on this.
+            // Causes ListChange event to occur on this.
             RaiseListChangedEvents = raisingEvents;
             if (raisingEvents)
             { OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, baseIndex)); }

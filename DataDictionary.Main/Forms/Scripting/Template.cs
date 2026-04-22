@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -18,7 +19,6 @@ namespace DataDictionary.Main.Forms.Scripting
         TemplateIndex templateIndex = new TemplateIndex();
         TemporalIndex? temporalIndex = null;
         FormBinding formBinding;
-        Boolean isNew = false;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ITemplateIndex key && templateIndex.Equals(key); }
@@ -112,6 +112,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
 
+                ScopeNameList.Load(objectScopeColumn);
                 objectData.AutoGenerateColumns = false;
                 objectData.DataSource = bindingObject;
 
@@ -166,10 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void OpenObjectCommand_Click(object sender, EventArgs e)
-        {
-            // TODO: Added data
-            Activate(static () => new Forms.Scripting.TemplateObject());
-        }
+        { Activate(() => new Forms.Scripting.TemplateObject(templateIndex, formBinding.GetTemplates, formBinding.GetObjects)); }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)
         {
