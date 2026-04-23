@@ -37,12 +37,12 @@
             objectData = new DataGridView();
             objectScopeColumn = new DataGridViewComboBoxColumn();
             objectNameColumn = new DataGridViewTextBoxColumn();
-            isInModelData = new CheckBox();
             objectNameData = new DataDictionary.Main.Controls.TextBoxData();
             objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             objectIsExcluded = new CheckBox();
             objectKeepOrphaned = new CheckBox();
+            isInModelData = new CheckBox();
             bindingTemplate = new BindingSource(components);
             bindingObject = new BindingSource(components);
             templateObjectLayout = new TableLayoutPanel();
@@ -70,7 +70,7 @@
             templateObjectLayout.Controls.Add(objectOptionGroup, 0, 4);
             templateObjectLayout.Controls.Add(isInModelData, 1, 3);
             templateObjectLayout.Dock = DockStyle.Fill;
-            templateObjectLayout.Location = new Point(0, 0);
+            templateObjectLayout.Location = new Point(0, 25);
             templateObjectLayout.Name = "templateObjectLayout";
             templateObjectLayout.RowCount = 5;
             templateObjectLayout.RowStyles.Add(new RowStyle());
@@ -78,7 +78,7 @@
             templateObjectLayout.RowStyles.Add(new RowStyle());
             templateObjectLayout.RowStyles.Add(new RowStyle());
             templateObjectLayout.RowStyles.Add(new RowStyle());
-            templateObjectLayout.Size = new Size(548, 507);
+            templateObjectLayout.Size = new Size(548, 482);
             templateObjectLayout.TabIndex = 4;
             // 
             // objectData
@@ -91,7 +91,7 @@
             objectData.Location = new Point(3, 53);
             objectData.Name = "objectData";
             objectData.ReadOnly = true;
-            objectData.Size = new Size(542, 256);
+            objectData.Size = new Size(542, 231);
             objectData.TabIndex = 9;
             // 
             // objectScopeColumn
@@ -112,29 +112,19 @@
             objectNameColumn.Name = "objectNameColumn";
             objectNameColumn.ReadOnly = true;
             // 
-            // isInModelData
-            // 
-            isInModelData.AutoSize = true;
-            isInModelData.Enabled = false;
-            isInModelData.Location = new Point(472, 367);
-            isInModelData.Name = "isInModelData";
-            isInModelData.Size = new Size(73, 19);
-            isInModelData.TabIndex = 0;
-            isInModelData.Text = "in Model";
-            isInModelData.UseVisualStyleBackColor = true;
-            // 
             // objectNameData
             // 
             objectNameData.AutoSize = true;
             objectNameData.Dock = DockStyle.Fill;
             objectNameData.HeaderText = "Object Name";
-            objectNameData.Location = new Point(3, 367);
+            objectNameData.Location = new Point(3, 342);
             objectNameData.Multiline = false;
             objectNameData.Name = "objectNameData";
             objectNameData.ReadOnly = false;
             objectNameData.Size = new Size(463, 44);
             objectNameData.TabIndex = 2;
             objectNameData.WordWrap = true;
+            objectNameData.Validating += ObjectNameData_Validating;
             // 
             // objectScopeData
             // 
@@ -143,7 +133,7 @@
             objectScopeData.Dock = DockStyle.Fill;
             objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
             objectScopeData.HeaderText = "Scope";
-            objectScopeData.Location = new Point(3, 315);
+            objectScopeData.Location = new Point(3, 290);
             objectScopeData.Name = "objectScopeData";
             objectScopeData.ReadOnly = false;
             objectScopeData.Size = new Size(463, 46);
@@ -169,7 +159,7 @@
             templateObjectLayout.SetColumnSpan(objectOptionGroup, 2);
             objectOptionGroup.Controls.Add(objectOptionsLayout);
             objectOptionGroup.Dock = DockStyle.Fill;
-            objectOptionGroup.Location = new Point(3, 417);
+            objectOptionGroup.Location = new Point(3, 392);
             objectOptionGroup.Name = "objectOptionGroup";
             objectOptionGroup.Size = new Size(542, 87);
             objectOptionGroup.TabIndex = 5;
@@ -233,6 +223,17 @@
             orphanedLabel.Size = new Size(262, 40);
             orphanedLabel.TabIndex = 3;
             orphanedLabel.Text = "Keep Orphaned Document for Object not in the Model";
+            // 
+            // isInModelData
+            // 
+            isInModelData.AutoSize = true;
+            isInModelData.Enabled = false;
+            isInModelData.Location = new Point(472, 342);
+            isInModelData.Name = "isInModelData";
+            isInModelData.Size = new Size(73, 19);
+            isInModelData.TabIndex = 0;
+            isInModelData.Text = "in Model";
+            isInModelData.UseVisualStyleBackColor = true;
             // 
             // bindingObject
             // 

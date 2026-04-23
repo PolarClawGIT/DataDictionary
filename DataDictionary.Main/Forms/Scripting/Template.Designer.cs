@@ -39,8 +39,10 @@
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
             objectTab = new TabPage();
+            objectData = new DataGridView();
+            objectScopeColumn = new DataGridViewComboBoxColumn();
+            objectNameColumn = new DataGridViewTextBoxColumn();
             objectToolStrip = new ToolStrip();
-            addObjectCommand = new ToolStripButton();
             openObjectCommand = new ToolStripButton();
             schemaTab = new TabPage();
             schemaData = new DataGridView();
@@ -67,9 +69,6 @@
             bindingObject = new BindingSource(components);
             bindingDocument = new BindingSource(components);
             contextTemplate = new ContextMenuStrip(components);
-            objectData = new DataGridView();
-            objectScopeColumn = new DataGridViewComboBoxColumn();
-            objectNameColumn = new DataGridViewTextBoxColumn();
             templateLayout = new TableLayoutPanel();
             templateObjectLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
@@ -79,6 +78,7 @@
             templateTabs.SuspendLayout();
             objectTab.SuspendLayout();
             templateObjectLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
             objectToolStrip.SuspendLayout();
             schemaTab.SuspendLayout();
             schemaLayout.SuspendLayout();
@@ -97,7 +97,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
             SuspendLayout();
             // 
             // templateLayout
@@ -182,25 +181,46 @@
             templateObjectLayout.Size = new Size(450, 295);
             templateObjectLayout.TabIndex = 9;
             // 
+            // objectData
+            // 
+            objectData.AllowUserToAddRows = false;
+            objectData.AllowUserToDeleteRows = false;
+            objectData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            objectData.Columns.AddRange(new DataGridViewColumn[] { objectScopeColumn, objectNameColumn });
+            templateObjectLayout.SetColumnSpan(objectData, 2);
+            objectData.Dock = DockStyle.Fill;
+            objectData.Location = new Point(3, 28);
+            objectData.Name = "objectData";
+            objectData.ReadOnly = true;
+            objectData.Size = new Size(444, 264);
+            objectData.TabIndex = 10;
+            // 
+            // objectScopeColumn
+            // 
+            objectScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            objectScopeColumn.DataPropertyName = "ObjectScope";
+            objectScopeColumn.FillWeight = 40F;
+            objectScopeColumn.HeaderText = "Object Scope";
+            objectScopeColumn.Name = "objectScopeColumn";
+            objectScopeColumn.ReadOnly = true;
+            // 
+            // objectNameColumn
+            // 
+            objectNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            objectNameColumn.DataPropertyName = "ObjectName";
+            objectNameColumn.FillWeight = 60F;
+            objectNameColumn.HeaderText = "Object Name";
+            objectNameColumn.Name = "objectNameColumn";
+            objectNameColumn.ReadOnly = true;
+            // 
             // objectToolStrip
             // 
-            objectToolStrip.Items.AddRange(new ToolStripItem[] { addObjectCommand, openObjectCommand });
+            objectToolStrip.Items.AddRange(new ToolStripItem[] { openObjectCommand });
             objectToolStrip.Location = new Point(0, 0);
             objectToolStrip.Name = "objectToolStrip";
             objectToolStrip.Size = new Size(450, 25);
             objectToolStrip.TabIndex = 0;
             objectToolStrip.Text = "toolStrip1";
-            // 
-            // addObjectCommand
-            // 
-            addObjectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            addObjectCommand.Image = (Image)resources.GetObject("addObjectCommand.Image");
-            addObjectCommand.ImageTransparentColor = Color.Magenta;
-            addObjectCommand.Name = "addObjectCommand";
-            addObjectCommand.Size = new Size(23, 22);
-            addObjectCommand.Text = "add Object";
-            addObjectCommand.Visible = false;
-            addObjectCommand.Click += AddObjectCommand_Click;
             // 
             // openObjectCommand
             // 
@@ -454,38 +474,6 @@
             contextTemplate.Name = "contextTemplate";
             contextTemplate.Size = new Size(61, 4);
             // 
-            // objectData
-            // 
-            objectData.AllowUserToAddRows = false;
-            objectData.AllowUserToDeleteRows = false;
-            objectData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            objectData.Columns.AddRange(new DataGridViewColumn[] { objectScopeColumn, objectNameColumn });
-            templateObjectLayout.SetColumnSpan(objectData, 2);
-            objectData.Dock = DockStyle.Fill;
-            objectData.Location = new Point(3, 28);
-            objectData.Name = "objectData";
-            objectData.ReadOnly = true;
-            objectData.Size = new Size(444, 264);
-            objectData.TabIndex = 10;
-            // 
-            // objectScopeColumn
-            // 
-            objectScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectScopeColumn.DataPropertyName = "ObjectScope";
-            objectScopeColumn.FillWeight = 40F;
-            objectScopeColumn.HeaderText = "Object Scope";
-            objectScopeColumn.Name = "objectScopeColumn";
-            objectScopeColumn.ReadOnly = true;
-            // 
-            // objectNameColumn
-            // 
-            objectNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectNameColumn.DataPropertyName = "ObjectName";
-            objectNameColumn.FillWeight = 60F;
-            objectNameColumn.HeaderText = "Object Name";
-            objectNameColumn.Name = "objectNameColumn";
-            objectNameColumn.ReadOnly = true;
-            // 
             // Template
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -502,6 +490,7 @@
             objectTab.ResumeLayout(false);
             templateObjectLayout.ResumeLayout(false);
             templateObjectLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
             objectToolStrip.ResumeLayout(false);
             objectToolStrip.PerformLayout();
             schemaTab.ResumeLayout(false);
@@ -527,7 +516,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
-            ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -555,7 +543,6 @@
         private ContextMenuStrip contextTemplate;
         private ToolStripMenuItem templateOpenDocumentCommand;
         private ToolStrip objectToolStrip;
-        private ToolStripButton addObjectCommand;
         private ToolStripButton openObjectCommand;
         private ToolStrip schemaToolStrip;
         private ToolStripButton addSchemaCommand;

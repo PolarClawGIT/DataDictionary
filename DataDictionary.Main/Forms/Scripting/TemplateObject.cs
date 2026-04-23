@@ -1,6 +1,9 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -83,8 +86,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 objectIsExcluded.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingObject, nameof(ITemplateObjectValue.IsExcluded)));
                 objectKeepOrphaned.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingObject, nameof(ITemplateObjectValue.KeepOrphaned)));
 
-                if (bindingObject.Position >= 0)
-                { BindingObject_CurrentChanged(bindingObject, new EventArgs()); }
+                BindingObject_CurrentChanged(bindingObject, new EventArgs());
             }
         }
 
@@ -97,37 +99,80 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void SelectCommand_Click(Object sender, EventArgs e)
         {
             base.SelectCommand_Click(sender, e);
+
+            using (SelectionDialog dialog = new SelectionDialog(this))
+            {
+                dialog.FilterScopes.Add(ScopeType.ModelAttribute);
+                dialog.FilterScopes.Add(ScopeType.ModelEntity);
+                dialog.FilterScopes.Add(ScopeType.ModelProcess);
+                IEnumerable<PathIndex> selected = formBinding.
+                    GetObjects(templateIndex).
+                    Select(s => s.ObjectPath);
+
+                dialog.BuildData(selected, GetDescription);
+
+                if (dialog.ShowDialog(this) is DialogResult.OK)
+                {
+                    foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
+                    { formBinding.TryAddValue(item, out TemplateObjectValue? _); }
+
+                    bindingObject.ResetCurrentItem();
+                }
+            }
+
+            String GetDescription(INamedScopeSourceValue value)
+            {   // Needed a physical method rather then a Lambda expression.
+                // Properties don't get passed as expected.
+                // I needed the property passed by Reference and that did not work.
+                if (value is AttributeValue attribute)
+                { return attribute.AttributeDescription ?? String.Empty; }
+
+                else if (value is EntityValue entity)
+                { return entity.EntityDescription ?? String.Empty; }
+
+                else if (value is ProcessValue process)
+                { return process.ProcessDescription ?? String.Empty; }
+
+                else { return String.Empty; }
+            }
         }
 
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         private void BindingObject_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingObject.Position >= 0)
+            if (formBinding.TryGetValue(out TemplateObjectValue? objectValue))
             {
                 objectScopeData.ReadOnly = false;
                 objectNameData.ReadOnly = false;
                 objectIsExcluded.Enabled = true;
                 objectKeepOrphaned.Enabled = true;
+
+                Boolean inModel = BusinessData.NamedScope.PathKeys(objectValue.ObjectPath).Count > 0;
+                isInModelData.Checked = inModel;
             }
             else
             {
@@ -135,7 +180,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 objectNameData.ReadOnly = true;
                 objectIsExcluded.Enabled = false;
                 objectKeepOrphaned.Enabled = false;
+                isInModelData.Checked = false;
             }
+        }
+
+        private void ObjectNameData_Validating(object sender, CancelEventArgs e)
+        {
+            PathIndex path = new PathIndex(PathIndex.Parse(objectNameData.Text).ToArray());
+            objectNameData.Text = path.MemberFullPath;
         }
     }
 }

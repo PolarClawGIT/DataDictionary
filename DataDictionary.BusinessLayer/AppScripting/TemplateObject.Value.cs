@@ -9,35 +9,50 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ITemplateObjectValue : ITemplateObjectItem, ITemplateObjectIndex, ITemplateIndex,
         IScopeType, ITemporal
-    { }
+    {
+        /// <summary>
+        /// Returns the Object Name converted to a Path.
+        /// </summary>
+        PathIndex ObjectPath { get; }
+    }
 
     /// <inheritdoc/>
-    public class TemplateObjectValue : TemplateObjectItem, ITemplateObjectValue, IPathValue, INamedScopeSourceValue
+    public class TemplateObjectValue : TemplateObjectItem, ITemplateObjectValue
     {
-        IPathValue pathValue; // Backing field for IPathValue
+        IDataValue dataValue; // Backing field for IDataValue
 
         /// <inheritdoc/>
-        PathIndex IPathIndex.Path { get { return pathValue.Path; } }
+        public DataIndex Index { get { return dataValue.Index; } }
 
         /// <inheritdoc/>
-        DataIndex IDataValue.Index { get { return pathValue.Index; } }
-
-        /// <inheritdoc/>
-        String IDataValue.Title { get { return pathValue.Title; } }
+        public String Title { get { return dataValue.Title; } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingObject; } }
 
         /// <inheritdoc/>
+        public PathIndex ObjectPath
+        {
+            get
+            {
+                return new PathIndex(
+                    new PathIndex(PathIndex.Parse(base.ObjectName).ToArray()));
+            }
+            set
+            {
+                base.ObjectName = value.MemberFullPath;
+                OnPropertyChanged(nameof(ObjectName));
+            }
+        }
+
+        /// <inheritdoc/>
         public TemplateObjectValue() : base()
         {
-            pathValue = new PathValue(this)
+            dataValue = new DataValue(this)
             {
                 GetIndex = () => new TemplateObjectIndex(this),
-                GetPath = () => new PathIndex(Scope),
-                GetScope = () => Scope,
                 GetTitle = () => ObjectName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(ObjectName),
+                GetScope = () => Scope,
                 IsTitleChanged = (e) => e.PropertyName is nameof(ObjectName)
             };
         }
@@ -45,13 +60,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc cref="TemplateObjectItem.TemplateObjectItem(ITemplateKey)"/>
         public TemplateObjectValue(ITemplateIndex template): base(template)
         {
-            pathValue = new PathValue(this)
+            dataValue = new DataValue(this)
             {
                 GetIndex = () => new TemplateObjectIndex(this),
-                GetPath = () => new PathIndex(Scope),
-                GetScope = () => Scope,
                 GetTitle = () => ObjectName ?? Scope.GetEnumeration().Name,
-                IsPathChanged = (e) => e.PropertyName is nameof(ObjectName),
+                GetScope = () => Scope,
                 IsTitleChanged = (e) => e.PropertyName is nameof(ObjectName)
             };
         }

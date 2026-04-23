@@ -56,7 +56,6 @@ namespace DataDictionary.Main.Forms.Scripting
             openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
-            addObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Add);
             addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
             addTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Add);
 
@@ -134,44 +133,46 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
-        private void AddObjectCommand_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void OpenObjectCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.TemplateObject(templateIndex, formBinding.GetTemplates, formBinding.GetObjects)); }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
@@ -182,12 +183,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ExecuteSchemaCommand_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         private void AddTransformCommand_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
@@ -198,7 +199,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ExecuteTransformCommand_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         private void OpenDocumentCommand_Click(object sender, EventArgs e)

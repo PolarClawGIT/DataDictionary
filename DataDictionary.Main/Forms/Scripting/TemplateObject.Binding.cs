@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.ToolSet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,6 +89,27 @@ namespace DataDictionary.Main.Forms.Scripting
                     TemplateObjectValue value = new TemplateObjectValue(template);
                     data.Objects.Add(value);
                     result = value; return true;
+                }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryAddValue(INamedScopeValue item, [NotNullWhen(true)] out TemplateObjectValue? result)
+            {
+                if (TryGetValue(out TemplateValue? template))
+                {
+                    TemplateIndex key = new TemplateIndex(template);
+
+                    if (data.Objects.Any(w => key.Equals(w)
+                        && item.Scope.Equals(w.ObjectScope)
+                        && item.Path.Equals(w.ObjectPath)))
+                    { result = null; return false; }
+                    else
+                    {
+                        TemplateObjectValue newValue = new TemplateObjectValue(key)
+                        { ObjectPath = item.Path, ObjectScope = item.Scope };
+                        data.Objects.Add(newValue);
+                        result = newValue; return true;
+                    }
                 }
                 else { result = null; return false; }
             }
