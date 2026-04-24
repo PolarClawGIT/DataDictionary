@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -9,13 +11,16 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDefinition : ApplicationData
     {
+        TemplateIndex templateIndex = new TemplateIndex();
         SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
-        TemporalIndex? temporalIndex = null;
+        //TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
@@ -24,7 +29,20 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingSchema);
+            formBinding = new FormBinding()
+            {
+                TemplateBinding = bindingTemplate,
+                SchemaBinding = bindingSchema,
+                ObjectBinding = bindingObject,
+                DoWork = base.DoWork,
+            };
+
+            SetRowState(
+                bindingSchema
+                //bindingTemplate,
+                //bindingObject
+                );
+            //SetIcon(ScopeType.ScriptingSchema);
 
             SetCommand(ScopeType.ScriptingSchema,
                 Enumerations.ButtonType.Delete,
@@ -36,48 +54,128 @@ namespace DataDictionary.Main.Forms.Scripting
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
-
+            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
         }
 
         public SchemaDefinition(ISchemaDefinitionIndex schema) : this()
-        { schemaIndex = new SchemaDefinitionIndex(schema); }
+        {
+            if (schema is ISchemaDefinitionIndex key)
+            { schemaIndex = new SchemaDefinitionIndex(key); }
+        }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
-        { temporalIndex = new TemporalIndex(); }
+        // Temporal is handled by the Template screen and gets past to this screen.
+        //public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
+        //{ temporalIndex = new TemporalIndex(); }
+
+        public SchemaDefinition(
+            ITemplateIndex template,
+            ISchemaDefinitionIndex? schema,
+            Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
+            Func<TemplateIndex, BindingView<TemplateObjectValue>> getObjects,
+            Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> getSchemata,
+            Func<SchemaDefinitionIndex, BindingView<SchemaDocumentValue>> getDocuments,
+            Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> getNodes,
+            Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners)
+            : this()
+        {
+            templateIndex = new TemplateIndex(template);
+            if (schema is ISchemaDefinitionIndex key)
+            { schemaIndex = new SchemaDefinitionIndex(key); }
+
+            formBinding.GetTemplates = getTemplates;
+            formBinding.GetSchemata = getSchemata;
+            formBinding.GetObjects = getObjects;
+            formBinding.GetDocuments = getDocuments;
+            formBinding.GetNodes = getNodes;
+            formBinding.GetOwners = getOwners;
+        }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
+            if (schemaIndex.HasValue)
+            { formBinding.Load(schemaIndex); }
+            else
+            {
+                if (templateIndex.HasValue
+                    && formBinding.TryAddValue(templateIndex, out SchemaDefinitionValue? value))
+                {
+                    schemaIndex = new SchemaDefinitionIndex(value);
+                    formBinding.Load(schemaIndex);
+                    SendMessage(new RefreshNavigation());
+                }
+                else
+                {   // This should never occur.
+                    Exception ex = new InvalidOperationException("Template not found");
+                    ex.Data.Add(nameof(templateIndex), templateIndex);
+                    throw ex;
+                }
+            }
 
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? _))
+            { DoBinding(); }
+            else { IsLocked(true); }
+
+            void DoBinding()
+            {
+                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
+                schemaTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.SchemaTitle)));
+
+                DirectoryTypeList.Load(rootFolderData);
+                rootFolderData.DataBindings.Add(new Binding(
+                    nameof(ComboBox.SelectedValue),
+                    bindingSchema,
+                    nameof(ISchemaDefinitionValue.RootFolder),
+                    true, DataSourceUpdateMode.OnValidation));
+
+                relativePathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.RelativePath)));
+                filePrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FilePrefix)));
+                fileSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FileSuffix)));
+                fileExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FileExtension)));
+
+                ScopeNameList.Load(objectScopeColumn);
+                objectData.AutoGenerateColumns = false;
+                objectData.DataSource = bindingObject;
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
+            }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)
@@ -96,6 +194,47 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             // TODO: Add Data
             Activate(static () => new Forms.Scripting.SchemaNode());
+        }
+
+        private void RootFolderData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            {
+                value.RelativePath = String.Empty;
+                localPathData.Text = value.SchemaDirectory.InitialDirectory;
+            }
+            else { localPathData.Text = String.Empty; }
+        }
+
+        private void RelativePathData_Validated(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            { localPathData.Text = value.SchemaDirectory.InitialDirectory; }
+            else { localPathData.Text = String.Empty; }
+        }
+
+        private void RelativePathData_SelectCommand(object sender, EventArgs e)
+        {
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? current))
+            {
+                folderBrowserDialog.Reset();
+                folderBrowserDialog.RootFolder = current.SchemaDirectory.RootFolder;
+                folderBrowserDialog.InitialDirectory = current.SchemaDirectory.InitialDirectory;
+
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                {
+                    current.SchemaDirectory.InitialDirectory = folderBrowserDialog.SelectedPath;
+                    localPathData.Text = current.SchemaDirectory.InitialDirectory;
+                }
+            }
+        }
+
+        private void OpenObjectCommand_Click(object sender, EventArgs e)
+        {
+            Activate(() => new Forms.Scripting.TemplateObject(
+                template: templateIndex,
+                getTemplates: formBinding.GetTemplates,
+                getObjects: formBinding.GetObjects));
         }
     }
 }

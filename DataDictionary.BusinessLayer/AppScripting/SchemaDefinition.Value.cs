@@ -55,5 +55,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 SetDirectory = (value) => RelativePath = value
             };
         }
+
+        /// <inheritdoc cref="SchemaDefinitionItem(ITemplateKey)"/>
+        public SchemaDefinitionValue(ITemplateIndex template) : base(template)
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new SchemaDefinitionIndex(this),
+                GetPath = () => new PathIndex(Scope),
+                GetScope = () => Scope,
+                GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
+            };
+
+            SchemaDirectory = new DirectoryValue()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => RelativePath ?? String.Empty,
+                SetDirectory = (value) => RelativePath = value
+            };
+        }
     }
 }

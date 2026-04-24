@@ -101,8 +101,9 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (args.Error is null)
                 {
-                    if (bindingTemplate.Count > 0)
+                    if (formBinding.TryGetValue(out TemplateValue? _))
                     { DoBinding(); }
+                    else { IsLocked(true); }
                 }
             }
 
@@ -168,17 +169,40 @@ namespace DataDictionary.Main.Forms.Scripting
 
 
         private void OpenObjectCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.TemplateObject(templateIndex, formBinding.GetTemplates, formBinding.GetObjects)); }
+        {
+            Activate(() => new Forms.Scripting.TemplateObject(
+                template: templateIndex,
+                getTemplates: formBinding.GetTemplates,
+                getObjects: formBinding.GetObjects));
+        }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Activate(() => new Forms.Scripting.SchemaDefinition(
+                template: templateIndex,
+                schema: null,
+                getTemplates: formBinding.GetTemplates,
+                getObjects: formBinding.GetObjects,
+                getSchemata: formBinding.GetSchemata,
+                getDocuments: formBinding.GetSchemaDocuments,
+                getNodes: formBinding.GetSchemaNodes,
+                getOwners: formBinding.GetSchemaNodeOwners));
         }
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Added data
-            Activate(static () => new Forms.Scripting.SchemaDefinition());
+            if(formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            {
+                Activate(() => new Forms.Scripting.SchemaDefinition(
+                    template: templateIndex,
+                    schema: value,
+                    getTemplates: formBinding.GetTemplates,
+                    getObjects: formBinding.GetObjects,
+                    getSchemata: formBinding.GetSchemata,
+                    getDocuments: formBinding.GetSchemaDocuments,
+                    getNodes: formBinding.GetSchemaNodes,
+                    getOwners: formBinding.GetSchemaNodeOwners));
+            }
         }
 
         private void ExecuteSchemaCommand_Click(object sender, EventArgs e)

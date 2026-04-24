@@ -87,8 +87,17 @@ namespace DataDictionary.Main.Forms.Scripting
             /// <param name="key"></param>
             /// <returns></returns>
             /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
-            public BindingView<SchemaDefinitionValue> GetSchemas(TemplateIndex key)
+            public BindingView<SchemaDefinitionValue> GetSchemata(TemplateIndex key)
             { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); }
+
+            public BindingView<SchemaDefinitionValue> GetSchemata(SchemaDefinitionIndex key)
+            { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); }
+
+            public BindingView<SchemaNodeValue> GetSchemaNodes(SchemaDefinitionIndex key)
+            { return new BindingView<SchemaNodeValue>(data.SchemataNodes, w => key.Equals(w)); }
+
+            public BindingView<SchemaNodeOwnerValue> GetSchemaNodeOwners(SchemaDefinitionIndex key)
+            { return new BindingView<SchemaNodeOwnerValue>(data.SchemataNodeOwners, w => key.Equals(w)); }
 
             /// <summary>
             /// Reference to the BindingSource holding the Template Transforms Values
@@ -111,6 +120,9 @@ namespace DataDictionary.Main.Forms.Scripting
             public BindingView<TransformValue> GetTransforms(TemplateIndex key)
             { return new BindingView<TransformValue>(data.Transforms, w => key.Equals(w)); }
 
+            public BindingView<TransformValue> GetTransforms(TransformIndex key)
+            { return new BindingView<TransformValue>(data.Transforms, w => key.Equals(w)); }
+
             /// <summary>
             /// Reference to the BindingSource holding the Template Documents Values
             /// </summary>
@@ -130,6 +142,9 @@ namespace DataDictionary.Main.Forms.Scripting
             public BindingView<SchemaDocumentValue> GetSchemaDocuments(TemplateIndex key)
             { return new BindingView<SchemaDocumentValue>(data.SchemaDocuments, w => key.Equals(w)); }
 
+            public BindingView<SchemaDocumentValue> GetSchemaDocuments(SchemaDefinitionIndex key)
+            {   return new BindingView<SchemaDocumentValue>(data.SchemaDocuments, w => key.Equals(w)); }
+
             /// <summary>
             /// How to get the Template Transform Document Values from the source Data.
             /// </summary>
@@ -137,6 +152,9 @@ namespace DataDictionary.Main.Forms.Scripting
             /// <returns></returns>
             /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
             public BindingView<TransformDocumentValue> GetTransformDocuments(TemplateIndex key)
+            { return new BindingView<TransformDocumentValue>(data.TransformDocuments, w => key.Equals(w)); }
+
+            public BindingView<TransformDocumentValue> GetTransformDocuments(TransformIndex key)
             { return new BindingView<TransformDocumentValue>(data.TransformDocuments, w => key.Equals(w)); }
 
             /// <summary>
@@ -164,6 +182,14 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 if (TemplateBinding.Position >= 0
                     && TemplateBinding.Current is TemplateValue value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            public Boolean TryGetValue([NotNullWhen(true)] out SchemaDefinitionValue? result)
+            {
+                if (TemplateBinding.Position >= 0
+                    && SchemaBinding.Current is SchemaDefinitionValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
             }
@@ -197,7 +223,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 templateValues = GetTemplates(key);
                 objectValues = GetObjects(key);
-                schemaValues = GetSchemas(key);
+                schemaValues = GetSchemata(key);
                 transformValues = GetTransforms(key);
                 documentValues = GetDocuments(key);
 

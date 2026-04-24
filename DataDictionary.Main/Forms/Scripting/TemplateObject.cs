@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class TemplateObject : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();
-        TemporalIndex? temporalIndex = null;
+        //TemporalIndex? temporalIndex = null;
         FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
@@ -53,8 +53,9 @@ namespace DataDictionary.Main.Forms.Scripting
         public TemplateObject(ITemplateIndex template) : this()
         { templateIndex = new TemplateIndex(template); }
 
-        public TemplateObject(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
+        // Temporal is handled by the Template screen and gets past to this screen.
+        //public TemplateObject(ITemplateIndex template, ITemporalIndex temporal) : this(template)
+        //{ temporalIndex = new TemporalIndex(); }
 
         public TemplateObject(ITemplateIndex template,
             Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,

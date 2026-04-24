@@ -33,8 +33,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public FormBinding()
             {
-                GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => new TemplateIndex(key).Equals(w)); };
-                GetObjects = (key) => { return new BindingView<TemplateObjectValue>(data.Objects, w => new TemplateIndex(key).Equals(w)); };
+                GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => key.Equals(w)); };
+                GetObjects = (key) => { return new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w)); };
             }
 
             public void Load(ITemplateIndex template)
@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (TryGetValue(out TemplateValue? template))
                 {
                     TemplateObjectValue value = new TemplateObjectValue(template);
-                    data.Objects.Add(value);
+                    objectValues.Add(value);
                     result = value; return true;
                 }
                 else { result = null; return false; }
@@ -99,7 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     TemplateIndex key = new TemplateIndex(template);
 
-                    if (data.Objects.Any(w => key.Equals(w)
+                    if (objectValues.Any(w => key.Equals(w)
                         && item.Scope.Equals(w.ObjectScope)
                         && item.Path.Equals(w.ObjectPath)))
                     { result = null; return false; }
@@ -107,7 +107,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     {
                         TemplateObjectValue newValue = new TemplateObjectValue(key)
                         { ObjectPath = item.Path, ObjectScope = item.Scope };
-                        data.Objects.Add(newValue);
+                        objectValues.Add(newValue);
                         result = newValue; return true;
                     }
                 }
