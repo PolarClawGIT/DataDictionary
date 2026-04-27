@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppLibrary;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -13,6 +14,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             InitializeComponent();
             SetRowState(bindingMember, bindingChild);
+            SetIcon(bindingMember, ScopeType.LibraryType);
             SetTitle(bindingMember);
         }
 

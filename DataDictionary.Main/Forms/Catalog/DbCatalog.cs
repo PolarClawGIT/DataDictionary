@@ -19,6 +19,7 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetRowState(bindingSource);
             SetTitle(bindingSource);
+            SetIcon(bindingSource);
             SetCommand(ScopeType.Database, Enumerations.ButtonType.Export);
         }
 

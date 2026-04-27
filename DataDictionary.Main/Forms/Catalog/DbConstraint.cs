@@ -17,6 +17,7 @@ namespace DataDictionary.Main.Forms.Catalog
             InitializeComponent();
 
             SetRowState(bindingConstraint, bindingColumn, bindingProperties);
+            SetIcon(bindingConstraint);
             SetTitle(bindingConstraint);
         }
 

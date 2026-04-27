@@ -22,6 +22,7 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetRowState(bindingColumn, bindingProperties);
             SetTitle(bindingColumn);
+            SetIcon(bindingColumn);
             SetCommand(ScopeType.DatabaseTableColumn, Enumerations.ButtonType.Export);
 
             CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";

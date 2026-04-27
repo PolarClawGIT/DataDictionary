@@ -38,6 +38,7 @@ namespace DataDictionary.Main.Forms.Model
             };
 
             SetTitle(bindingEntity);
+            SetIcon(ScopeType.ModelEntity);
 
             SetRowState(
                 bindingEntity,

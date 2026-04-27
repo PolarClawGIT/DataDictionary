@@ -1,6 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -21,6 +19,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 bindingParameters,
                 bindingProperties,
                 bindingDependencies);
+            SetIcon(bindingRoutine);
             SetTitle(bindingRoutine);
         }
 

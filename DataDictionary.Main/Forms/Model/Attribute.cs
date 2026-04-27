@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Model
             };
 
             SetTitle(bindingAttribute);
+            SetIcon(ScopeType.ModelAttribute);
 
             SetRowState(
                 bindingAttribute,

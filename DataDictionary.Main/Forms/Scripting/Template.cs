@@ -37,14 +37,14 @@ namespace DataDictionary.Main.Forms.Scripting
                 DocumentBinding = bindingDocument
             };
 
-            SetTitle(bindingTemplate);
             SetRowState(
                 bindingTemplate,
                 bindingObject,
                 bindingSchema,
                 bindingTransform,
                 bindingDocument);
-            //SetIcon(ScopeType.ScriptingTemplate);
+            SetTitle(bindingTemplate);
+            SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
                 Enumerations.ButtonType.Delete,

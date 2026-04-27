@@ -31,6 +31,7 @@ namespace DataDictionary.Main.Forms.General
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
+            SetIcon(ScopeType.ApplicationHelpPage);
             SetCommand(ScopeType.ApplicationHelpPage,
                 Enumerations.ButtonType.Add,
                 Enumerations.ButtonType.Delete,

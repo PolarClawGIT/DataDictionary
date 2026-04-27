@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Model
                 DoWork = base.DoWork
             };
 
+            SetIcon(ScopeType.ModelProcess);
             SetTitle(bindingProcess);
 
             SetRowState(

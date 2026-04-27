@@ -18,6 +18,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.ModelSubjectArea);
             SetTitle(bindingSubject);
             SetRowState(bindingSubject);
             SetCommand(ScopeType.ModelSubjectArea,

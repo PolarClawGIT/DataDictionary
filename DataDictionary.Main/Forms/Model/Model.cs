@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -15,6 +16,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.Model);
             SetTitle(bindingModel);
             SetRowState(bindingModel);
         }

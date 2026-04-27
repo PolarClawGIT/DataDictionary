@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -17,6 +16,7 @@ namespace DataDictionary.Main.Forms.Catalog
             InitializeComponent();
 
             SetRowState(bindingDomain, bindingProperties);
+            SetIcon(bindingDomain);
             SetTitle(bindingDomain);
         }
 

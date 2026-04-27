@@ -296,20 +296,22 @@ namespace DataDictionary.Main.Forms
 
 
         /// <summary>
-        /// Sets the Title text and Icon based on the BindingSource provided.
+        /// Sets the Title based on the BindingSource provided.
+        /// Allows for the Title to be changed if the Title of the object changes.
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="defaultTitle"></param>
         /// <remarks>
-        /// This sets up the CurrentChanged and Disposed events.
-        /// Title and Icon are updated based on what record is being viewed.
-        /// Override behavior of SetIcon.
+        /// The data in the BindingSource must be an IDataValue.
         /// </remarks>
-        protected void SetTitle(BindingSource data)
+        protected void SetTitle(BindingSource data, String? defaultTitle = null)
         {
-            Data_CurrentChanged(data, EventArgs.Empty);
+            //Data_CurrentChanged(data, EventArgs.Empty);
             data.CurrentChanged += Data_CurrentChanged;
             data.Disposed += Data_Disposed;
             data.DataSourceChanged += Data_DataSourceChanged;
+
+            SetTitle(defaultTitle ?? String.Empty);
 
             void Data_DataSourceChanged(Object? sender, EventArgs e)
             { Data_CurrentChanged(data, EventArgs.Empty); }
@@ -317,10 +319,48 @@ namespace DataDictionary.Main.Forms
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
                 if (data.Position >= 0 && data.Current is IDataValue dataValue)
-                {
-                    Text = dataValue.Title;
-                    SetIcon(dataValue.Scope);
-                }
+                { SetTitle(dataValue.Title); }
+                else { SetTitle(defaultTitle ?? String.Empty); }
+            }
+
+            void Data_Disposed(Object? sender, EventArgs e)
+            {
+                data.CurrentChanged -= Data_CurrentChanged;
+                data.Disposed -= Data_Disposed;
+            }
+        }
+
+        /// <summary>
+        /// /// Sets the Title text to the string provided.
+        /// </summary>
+        /// <param name="value"></param>
+        protected void SetTitle(String value)
+        { Text = value; }
+
+        /// <summary>
+        /// Sets the Icon based on the BindingSource provided.
+        /// Allows for the Icon to be changed if the Scope of the object changes.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="defaultScope"></param>
+        /// <remarks>
+        /// The data in the BindingSource must be an IScopeType.
+        /// </remarks>
+        protected void SetIcon(BindingSource data, ScopeType defaultScope = ScopeType.Null)
+        {
+            data.CurrentChanged += Data_CurrentChanged;
+            data.Disposed += Data_Disposed;
+            data.DataSourceChanged += Data_DataSourceChanged;
+            SetIcon(defaultScope);
+
+            void Data_DataSourceChanged(Object? sender, EventArgs e)
+            { Data_CurrentChanged(data, EventArgs.Empty); }
+
+            void Data_CurrentChanged(Object? sender, EventArgs e)
+            {
+                if (data.Position >= 0 && data.Current is IScopeType dataValue)
+                { SetIcon(dataValue.Scope); }
+                else { SetIcon(defaultScope); }
             }
 
             void Data_Disposed(Object? sender, EventArgs e)
@@ -334,7 +374,7 @@ namespace DataDictionary.Main.Forms
         /// Sets the Icon based on Scope Provided
         /// </summary>
         /// <param name="scope"></param>
-        /// <remarks>Icon is static unless SetTitle is used.</remarks>
+        /// <remarks>This applies icon that is expected to be static.</remarks>
         protected void SetIcon(ScopeType scope)
         { Icon = scope.GetIcon(); }
 
@@ -367,7 +407,7 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="commands"></param>
         /// <param name="displayStyle">default is Image and Text</param>
-        /// <param name="positionOf">Postion the toolstrip to the Left of the command specfied</param>
+        /// <param name="positionOf">Position the toolstrip to the Left of the command specified</param>
         protected void AddCommands(ToolStrip commands,
             ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText,
             ButtonType positionOf = ButtonType.Default)

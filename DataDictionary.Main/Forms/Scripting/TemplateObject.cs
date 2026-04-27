@@ -39,7 +39,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetRowState(
                 bindingTemplate,
                 bindingObject);
-            //SetIcon(ScopeType.ScriptingObject);
+            SetIcon(ScopeType.ScriptingObject);
 
             SetCommand(ScopeType.ScriptingObject,
                 Enumerations.ButtonType.Add,
