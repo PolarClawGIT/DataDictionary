@@ -1,10 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.Obsolete;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace DataDictionary.Main.Controls
+namespace DataDictionary.Main.Forms.Obsolete
 {
+    [Obsolete]
     static class TemplateNodeTree
     {
         static Dictionary<TreeView, Dictionary<TreeNode, TemplateNodeValue>> treeControls = new Dictionary<TreeView, Dictionary<TreeNode, TemplateNodeValue>>();

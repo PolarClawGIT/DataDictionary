@@ -1,7 +1,6 @@
 ﻿//using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
