@@ -186,7 +186,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 getSchemata: formBinding.GetSchemata,
                 getDocuments: formBinding.GetSchemaDocuments,
                 getNodes: formBinding.GetSchemaNodes,
-                getOwners: formBinding.GetSchemaNodeOwners));
+                getOwners: formBinding.GetSchemaNodeOwners,
+                tryAddSchema: formBinding.TryAddValue));
         }
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
@@ -201,7 +202,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     getSchemata: formBinding.GetSchemata,
                     getDocuments: formBinding.GetSchemaDocuments,
                     getNodes: formBinding.GetSchemaNodes,
-                    getOwners: formBinding.GetSchemaNodeOwners));
+                    getOwners: formBinding.GetSchemaNodeOwners,
+                    tryAddSchema: formBinding.TryAddValue));
             }
         }
 
