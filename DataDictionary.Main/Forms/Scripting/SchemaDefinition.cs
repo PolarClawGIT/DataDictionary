@@ -42,7 +42,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 //bindingTemplate,
                 //bindingObject
                 );
-            //SetIcon(ScopeType.ScriptingSchema);
+            SetTitle(bindingSchema);
+            SetIcon(ScopeType.ScriptingSchema);
 
             SetCommand(ScopeType.ScriptingSchema,
                 Enumerations.ButtonType.Delete,
@@ -72,10 +73,11 @@ namespace DataDictionary.Main.Forms.Scripting
             ISchemaDefinitionIndex? schema,
             Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
             Func<TemplateIndex, BindingView<TemplateObjectValue>> getObjects,
-            Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> getSchemata,
+            GetSchemaCallBack getSchemata,
             Func<SchemaDefinitionIndex, BindingView<SchemaDocumentValue>> getDocuments,
             Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> getNodes,
-            Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners)
+            Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners,
+            TryAddSchemaCallback tryAddSchema)
             : this()
         {
             templateIndex = new TemplateIndex(template);
@@ -88,6 +90,7 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding.GetDocuments = getDocuments;
             formBinding.GetNodes = getNodes;
             formBinding.GetOwners = getOwners;
+            formBinding.TryAddSchema = tryAddSchema;
         }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
@@ -97,7 +100,7 @@ namespace DataDictionary.Main.Forms.Scripting
             else
             {
                 if (templateIndex.HasValue
-                    && formBinding.TryAddValue(templateIndex, out SchemaDefinitionValue? value))
+                    && formBinding.TryAddSchema(templateIndex, out SchemaDefinitionValue? value))
                 {
                     schemaIndex = new SchemaDefinitionIndex(value);
                     formBinding.Load(schemaIndex);
@@ -135,6 +138,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 ScopeNameList.Load(objectScopeColumn);
                 objectData.AutoGenerateColumns = false;
                 objectData.DataSource = bindingObject;
+
+                ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
+                forEachScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingSchema, nameof(ISchemaDefinitionValue.ForEachScope)) { DataSourceNullValue = ScopeNameList.NullValue });
+                rootNodeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.RootNodeName)));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -192,8 +199,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenNodeCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Add Data
-            Activate(static () => new Forms.Scripting.SchemaNode());
+            Activate(() => new Forms.Scripting.SchemaNode(
+                template: templateIndex, schema: schemaIndex,
+                getTemplates: formBinding.GetTemplates,
+                getSchemata: formBinding.GetSchemata,
+                getNodes: formBinding.GetNodes,
+                getOwners: formBinding.GetOwners));
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)

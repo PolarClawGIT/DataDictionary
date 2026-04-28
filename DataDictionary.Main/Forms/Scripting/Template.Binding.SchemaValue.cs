@@ -1,8 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting

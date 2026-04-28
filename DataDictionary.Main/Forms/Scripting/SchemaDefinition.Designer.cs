@@ -36,8 +36,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDefinition));
             Label fileBaseName;
             GroupBox templateObjectGroup;
-            TableLayoutPanel rootNodeLayout;
             TableLayoutPanel templateObjectLayout;
+            TableLayoutPanel rootNodeLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTabs = new TabControl();
             schemaTab = new TabPage();
@@ -47,6 +47,11 @@
             fileSuffixData = new DataDictionary.Main.Controls.TextBoxData();
             fileExtensionData = new DataDictionary.Main.Controls.TextBoxData();
             localPathData = new DataDictionary.Main.Controls.TextBoxData();
+            objectData = new DataGridView();
+            objectScopeColumn = new DataGridViewComboBoxColumn();
+            objectNameColumn = new DataGridViewTextBoxColumn();
+            objectToolStrip = new ToolStrip();
+            openObjectCommand = new ToolStripButton();
             nodeTab = new TabPage();
             nodesTree = new TreeView();
             rootNodeData = new DataDictionary.Main.Controls.TextBoxData();
@@ -67,19 +72,14 @@
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
             bindingObject = new BindingSource(components);
-            objectData = new DataGridView();
-            objectScopeColumn = new DataGridViewComboBoxColumn();
-            objectNameColumn = new DataGridViewTextBoxColumn();
-            objectToolStrip = new ToolStrip();
-            openObjectCommand = new ToolStripButton();
             schemaLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
             filePatternLayout = new TableLayoutPanel();
             fileBaseName = new Label();
             templateObjectGroup = new GroupBox();
-            rootNodeLayout = new TableLayoutPanel();
             templateObjectLayout = new TableLayoutPanel();
+            rootNodeLayout = new TableLayoutPanel();
             schemaLayout.SuspendLayout();
             schemaTabs.SuspendLayout();
             schemaTab.SuspendLayout();
@@ -87,6 +87,9 @@
             filePatternGroup.SuspendLayout();
             filePatternLayout.SuspendLayout();
             templateObjectGroup.SuspendLayout();
+            templateObjectLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
+            objectToolStrip.SuspendLayout();
             nodeTab.SuspendLayout();
             rootNodeLayout.SuspendLayout();
             nodeToolStrip.SuspendLayout();
@@ -97,9 +100,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).BeginInit();
-            templateObjectLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
-            objectToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // schemaLayout
@@ -313,209 +313,6 @@
             templateObjectGroup.TabStop = false;
             templateObjectGroup.Text = "Template Objects";
             // 
-            // nodeTab
-            // 
-            nodeTab.BackColor = SystemColors.Control;
-            nodeTab.Controls.Add(rootNodeLayout);
-            nodeTab.Location = new Point(4, 24);
-            nodeTab.Name = "nodeTab";
-            nodeTab.Padding = new Padding(3);
-            nodeTab.Size = new Size(192, 72);
-            nodeTab.TabIndex = 2;
-            nodeTab.Text = "Nodes";
-            // 
-            // rootNodeLayout
-            // 
-            rootNodeLayout.AutoSize = true;
-            rootNodeLayout.ColumnCount = 1;
-            rootNodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            rootNodeLayout.Controls.Add(nodesTree, 0, 3);
-            rootNodeLayout.Controls.Add(rootNodeData, 0, 2);
-            rootNodeLayout.Controls.Add(forEachScopeData, 0, 1);
-            rootNodeLayout.Controls.Add(nodeToolStrip, 0, 0);
-            rootNodeLayout.Dock = DockStyle.Fill;
-            rootNodeLayout.Location = new Point(3, 3);
-            rootNodeLayout.Name = "rootNodeLayout";
-            rootNodeLayout.RowCount = 4;
-            rootNodeLayout.RowStyles.Add(new RowStyle());
-            rootNodeLayout.RowStyles.Add(new RowStyle());
-            rootNodeLayout.RowStyles.Add(new RowStyle());
-            rootNodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            rootNodeLayout.Size = new Size(186, 66);
-            rootNodeLayout.TabIndex = 0;
-            // 
-            // nodesTree
-            // 
-            nodesTree.Dock = DockStyle.Fill;
-            nodesTree.Location = new Point(3, 130);
-            nodesTree.Name = "nodesTree";
-            nodesTree.Size = new Size(180, 1);
-            nodesTree.TabIndex = 2;
-            // 
-            // rootNodeData
-            // 
-            rootNodeData.AutoSize = true;
-            rootNodeData.Dock = DockStyle.Fill;
-            rootNodeData.HeaderText = "Root Node Name (override)";
-            rootNodeData.Location = new Point(3, 80);
-            rootNodeData.Multiline = false;
-            rootNodeData.Name = "rootNodeData";
-            rootNodeData.ReadOnly = false;
-            rootNodeData.Size = new Size(180, 44);
-            rootNodeData.TabIndex = 0;
-            rootNodeData.WordWrap = true;
-            // 
-            // forEachScopeData
-            // 
-            forEachScopeData.AutoSize = true;
-            forEachScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            forEachScopeData.Dock = DockStyle.Fill;
-            forEachScopeData.DropDownStyle = ComboBoxStyle.DropDown;
-            forEachScopeData.HeaderText = "Root Node Scope (for each)";
-            forEachScopeData.Location = new Point(3, 28);
-            forEachScopeData.Name = "forEachScopeData";
-            forEachScopeData.ReadOnly = false;
-            forEachScopeData.Size = new Size(180, 46);
-            forEachScopeData.TabIndex = 1;
-            // 
-            // nodeToolStrip
-            // 
-            nodeToolStrip.Items.AddRange(new ToolStripItem[] { openNodeCommand });
-            nodeToolStrip.Location = new Point(0, 0);
-            nodeToolStrip.Name = "nodeToolStrip";
-            nodeToolStrip.Size = new Size(186, 25);
-            nodeToolStrip.TabIndex = 3;
-            nodeToolStrip.Text = "toolStrip1";
-            // 
-            // openNodeCommand
-            // 
-            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openNodeCommand.Image = (Image)resources.GetObject("openNodeCommand.Image");
-            openNodeCommand.ImageTransparentColor = Color.Magenta;
-            openNodeCommand.Name = "openNodeCommand";
-            openNodeCommand.Size = new Size(23, 22);
-            openNodeCommand.Text = "open Nodes";
-            openNodeCommand.Click += OpenNodeCommand_Click;
-            // 
-            // documentTab
-            // 
-            documentTab.BackColor = SystemColors.Control;
-            documentTab.Controls.Add(fileLayout);
-            documentTab.Location = new Point(4, 24);
-            documentTab.Name = "documentTab";
-            documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(192, 72);
-            documentTab.TabIndex = 1;
-            documentTab.Text = "Documents";
-            // 
-            // fileLayout
-            // 
-            fileLayout.ColumnCount = 1;
-            fileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            fileLayout.Controls.Add(documentToolStrip, 0, 0);
-            fileLayout.Controls.Add(documentObjectData, 0, 3);
-            fileLayout.Controls.Add(documentFileNameData, 0, 2);
-            fileLayout.Controls.Add(documentData, 0, 1);
-            fileLayout.Dock = DockStyle.Fill;
-            fileLayout.Location = new Point(3, 3);
-            fileLayout.Name = "fileLayout";
-            fileLayout.RowCount = 4;
-            fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.Size = new Size(186, 66);
-            fileLayout.TabIndex = 5;
-            // 
-            // documentToolStrip
-            // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
-            documentToolStrip.Location = new Point(0, 0);
-            documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(186, 25);
-            documentToolStrip.TabIndex = 15;
-            documentToolStrip.Text = "Document Tools";
-            // 
-            // documentNewCommand
-            // 
-            documentNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            documentNewCommand.Image = (Image)resources.GetObject("documentNewCommand.Image");
-            documentNewCommand.ImageTransparentColor = Color.Magenta;
-            documentNewCommand.Name = "documentNewCommand";
-            documentNewCommand.Size = new Size(23, 22);
-            documentNewCommand.Text = "New";
-            documentNewCommand.Click += DocumentNewCommand_Click;
-            // 
-            // documentOpenCommand
-            // 
-            documentOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            documentOpenCommand.Image = (Image)resources.GetObject("documentOpenCommand.Image");
-            documentOpenCommand.ImageTransparentColor = Color.Magenta;
-            documentOpenCommand.Name = "documentOpenCommand";
-            documentOpenCommand.Size = new Size(23, 22);
-            documentOpenCommand.Text = "Open";
-            documentOpenCommand.Click += DocumentOpenCommand_Click;
-            // 
-            // documentObjectData
-            // 
-            documentObjectData.AutoSize = true;
-            documentObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentObjectData.Dock = DockStyle.Fill;
-            documentObjectData.DropDownStyle = ComboBoxStyle.DropDown;
-            documentObjectData.HeaderText = "Source Object (model)";
-            documentObjectData.Location = new Point(3, 17);
-            documentObjectData.Name = "documentObjectData";
-            documentObjectData.ReadOnly = false;
-            documentObjectData.Size = new Size(180, 46);
-            documentObjectData.TabIndex = 12;
-            // 
-            // documentFileNameData
-            // 
-            documentFileNameData.AutoSize = true;
-            documentFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentFileNameData.Dock = DockStyle.Fill;
-            documentFileNameData.HeaderText = "File Name";
-            documentFileNameData.Location = new Point(3, -33);
-            documentFileNameData.Name = "documentFileNameData";
-            documentFileNameData.ReadOnly = false;
-            documentFileNameData.SelectIcon = (Image)resources.GetObject("documentFileNameData.SelectIcon");
-            documentFileNameData.Size = new Size(180, 44);
-            documentFileNameData.TabIndex = 13;
-            // 
-            // documentData
-            // 
-            documentData.AllowUserToAddRows = false;
-            documentData.AllowUserToDeleteRows = false;
-            documentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            documentData.Columns.AddRange(new DataGridViewColumn[] { FileNameColumn });
-            documentData.Dock = DockStyle.Fill;
-            documentData.Location = new Point(3, 28);
-            documentData.Name = "documentData";
-            documentData.ReadOnly = true;
-            documentData.Size = new Size(180, 1);
-            documentData.TabIndex = 9;
-            // 
-            // FileNameColumn
-            // 
-            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            FileNameColumn.DataPropertyName = "FileName";
-            FileNameColumn.HeaderText = "File Name";
-            FileNameColumn.Name = "FileNameColumn";
-            FileNameColumn.ReadOnly = true;
-            // 
-            // schemaTitleData
-            // 
-            schemaTitleData.AutoSize = true;
-            schemaTitleData.Dock = DockStyle.Fill;
-            schemaTitleData.HeaderText = "Schema";
-            schemaTitleData.Location = new Point(3, 53);
-            schemaTitleData.Multiline = false;
-            schemaTitleData.Name = "schemaTitleData";
-            schemaTitleData.ReadOnly = false;
-            schemaTitleData.Size = new Size(552, 44);
-            schemaTitleData.TabIndex = 1;
-            schemaTitleData.WordWrap = true;
-            // 
             // templateObjectLayout
             // 
             templateObjectLayout.ColumnCount = 1;
@@ -582,6 +379,209 @@
             openObjectCommand.Text = "open Object";
             openObjectCommand.Click += OpenObjectCommand_Click;
             // 
+            // nodeTab
+            // 
+            nodeTab.BackColor = SystemColors.Control;
+            nodeTab.Controls.Add(rootNodeLayout);
+            nodeTab.Location = new Point(4, 24);
+            nodeTab.Name = "nodeTab";
+            nodeTab.Padding = new Padding(3);
+            nodeTab.Size = new Size(544, 510);
+            nodeTab.TabIndex = 2;
+            nodeTab.Text = "Nodes";
+            // 
+            // rootNodeLayout
+            // 
+            rootNodeLayout.AutoSize = true;
+            rootNodeLayout.ColumnCount = 1;
+            rootNodeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            rootNodeLayout.Controls.Add(nodesTree, 0, 3);
+            rootNodeLayout.Controls.Add(rootNodeData, 0, 2);
+            rootNodeLayout.Controls.Add(forEachScopeData, 0, 1);
+            rootNodeLayout.Controls.Add(nodeToolStrip, 0, 0);
+            rootNodeLayout.Dock = DockStyle.Fill;
+            rootNodeLayout.Location = new Point(3, 3);
+            rootNodeLayout.Name = "rootNodeLayout";
+            rootNodeLayout.RowCount = 4;
+            rootNodeLayout.RowStyles.Add(new RowStyle());
+            rootNodeLayout.RowStyles.Add(new RowStyle());
+            rootNodeLayout.RowStyles.Add(new RowStyle());
+            rootNodeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            rootNodeLayout.Size = new Size(538, 504);
+            rootNodeLayout.TabIndex = 0;
+            // 
+            // nodesTree
+            // 
+            nodesTree.Dock = DockStyle.Fill;
+            nodesTree.Location = new Point(3, 130);
+            nodesTree.Name = "nodesTree";
+            nodesTree.Size = new Size(532, 371);
+            nodesTree.TabIndex = 2;
+            // 
+            // rootNodeData
+            // 
+            rootNodeData.AutoSize = true;
+            rootNodeData.Dock = DockStyle.Fill;
+            rootNodeData.HeaderText = "Root Node Name (override)";
+            rootNodeData.Location = new Point(3, 80);
+            rootNodeData.Multiline = false;
+            rootNodeData.Name = "rootNodeData";
+            rootNodeData.ReadOnly = false;
+            rootNodeData.Size = new Size(532, 44);
+            rootNodeData.TabIndex = 0;
+            rootNodeData.WordWrap = true;
+            // 
+            // forEachScopeData
+            // 
+            forEachScopeData.AutoSize = true;
+            forEachScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            forEachScopeData.Dock = DockStyle.Fill;
+            forEachScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            forEachScopeData.HeaderText = "Root Node Scope (for each)";
+            forEachScopeData.Location = new Point(3, 28);
+            forEachScopeData.Name = "forEachScopeData";
+            forEachScopeData.ReadOnly = false;
+            forEachScopeData.Size = new Size(532, 46);
+            forEachScopeData.TabIndex = 1;
+            // 
+            // nodeToolStrip
+            // 
+            nodeToolStrip.Items.AddRange(new ToolStripItem[] { openNodeCommand });
+            nodeToolStrip.Location = new Point(0, 0);
+            nodeToolStrip.Name = "nodeToolStrip";
+            nodeToolStrip.Size = new Size(538, 25);
+            nodeToolStrip.TabIndex = 3;
+            nodeToolStrip.Text = "toolStrip1";
+            // 
+            // openNodeCommand
+            // 
+            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            openNodeCommand.Image = (Image)resources.GetObject("openNodeCommand.Image");
+            openNodeCommand.ImageTransparentColor = Color.Magenta;
+            openNodeCommand.Name = "openNodeCommand";
+            openNodeCommand.Size = new Size(23, 22);
+            openNodeCommand.Text = "open Nodes";
+            openNodeCommand.Click += OpenNodeCommand_Click;
+            // 
+            // documentTab
+            // 
+            documentTab.BackColor = SystemColors.Control;
+            documentTab.Controls.Add(fileLayout);
+            documentTab.Location = new Point(4, 24);
+            documentTab.Name = "documentTab";
+            documentTab.Padding = new Padding(3);
+            documentTab.Size = new Size(544, 510);
+            documentTab.TabIndex = 1;
+            documentTab.Text = "Documents";
+            // 
+            // fileLayout
+            // 
+            fileLayout.ColumnCount = 1;
+            fileLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            fileLayout.Controls.Add(documentToolStrip, 0, 0);
+            fileLayout.Controls.Add(documentObjectData, 0, 3);
+            fileLayout.Controls.Add(documentFileNameData, 0, 2);
+            fileLayout.Controls.Add(documentData, 0, 1);
+            fileLayout.Dock = DockStyle.Fill;
+            fileLayout.Location = new Point(3, 3);
+            fileLayout.Name = "fileLayout";
+            fileLayout.RowCount = 4;
+            fileLayout.RowStyles.Add(new RowStyle());
+            fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            fileLayout.RowStyles.Add(new RowStyle());
+            fileLayout.RowStyles.Add(new RowStyle());
+            fileLayout.Size = new Size(538, 504);
+            fileLayout.TabIndex = 5;
+            // 
+            // documentToolStrip
+            // 
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
+            documentToolStrip.Location = new Point(0, 0);
+            documentToolStrip.Name = "documentToolStrip";
+            documentToolStrip.Size = new Size(538, 25);
+            documentToolStrip.TabIndex = 15;
+            documentToolStrip.Text = "Document Tools";
+            // 
+            // documentNewCommand
+            // 
+            documentNewCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentNewCommand.Image = (Image)resources.GetObject("documentNewCommand.Image");
+            documentNewCommand.ImageTransparentColor = Color.Magenta;
+            documentNewCommand.Name = "documentNewCommand";
+            documentNewCommand.Size = new Size(23, 22);
+            documentNewCommand.Text = "New";
+            documentNewCommand.Click += DocumentNewCommand_Click;
+            // 
+            // documentOpenCommand
+            // 
+            documentOpenCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentOpenCommand.Image = (Image)resources.GetObject("documentOpenCommand.Image");
+            documentOpenCommand.ImageTransparentColor = Color.Magenta;
+            documentOpenCommand.Name = "documentOpenCommand";
+            documentOpenCommand.Size = new Size(23, 22);
+            documentOpenCommand.Text = "Open";
+            documentOpenCommand.Click += DocumentOpenCommand_Click;
+            // 
+            // documentObjectData
+            // 
+            documentObjectData.AutoSize = true;
+            documentObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            documentObjectData.Dock = DockStyle.Fill;
+            documentObjectData.DropDownStyle = ComboBoxStyle.DropDown;
+            documentObjectData.HeaderText = "Source Object (model)";
+            documentObjectData.Location = new Point(3, 455);
+            documentObjectData.Name = "documentObjectData";
+            documentObjectData.ReadOnly = false;
+            documentObjectData.Size = new Size(532, 46);
+            documentObjectData.TabIndex = 12;
+            // 
+            // documentFileNameData
+            // 
+            documentFileNameData.AutoSize = true;
+            documentFileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            documentFileNameData.Dock = DockStyle.Fill;
+            documentFileNameData.HeaderText = "File Name";
+            documentFileNameData.Location = new Point(3, 405);
+            documentFileNameData.Name = "documentFileNameData";
+            documentFileNameData.ReadOnly = false;
+            documentFileNameData.SelectIcon = (Image)resources.GetObject("documentFileNameData.SelectIcon");
+            documentFileNameData.Size = new Size(532, 44);
+            documentFileNameData.TabIndex = 13;
+            // 
+            // documentData
+            // 
+            documentData.AllowUserToAddRows = false;
+            documentData.AllowUserToDeleteRows = false;
+            documentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            documentData.Columns.AddRange(new DataGridViewColumn[] { FileNameColumn });
+            documentData.Dock = DockStyle.Fill;
+            documentData.Location = new Point(3, 28);
+            documentData.Name = "documentData";
+            documentData.ReadOnly = true;
+            documentData.Size = new Size(532, 371);
+            documentData.TabIndex = 9;
+            // 
+            // FileNameColumn
+            // 
+            FileNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FileNameColumn.DataPropertyName = "FileName";
+            FileNameColumn.HeaderText = "File Name";
+            FileNameColumn.Name = "FileNameColumn";
+            FileNameColumn.ReadOnly = true;
+            // 
+            // schemaTitleData
+            // 
+            schemaTitleData.AutoSize = true;
+            schemaTitleData.Dock = DockStyle.Fill;
+            schemaTitleData.HeaderText = "Schema";
+            schemaTitleData.Location = new Point(3, 53);
+            schemaTitleData.Multiline = false;
+            schemaTitleData.Name = "schemaTitleData";
+            schemaTitleData.ReadOnly = false;
+            schemaTitleData.Size = new Size(552, 44);
+            schemaTitleData.TabIndex = 1;
+            schemaTitleData.WordWrap = true;
+            // 
             // SchemaDefinition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -603,6 +603,11 @@
             filePatternLayout.ResumeLayout(false);
             filePatternLayout.PerformLayout();
             templateObjectGroup.ResumeLayout(false);
+            templateObjectLayout.ResumeLayout(false);
+            templateObjectLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
+            objectToolStrip.ResumeLayout(false);
+            objectToolStrip.PerformLayout();
             nodeTab.ResumeLayout(false);
             nodeTab.PerformLayout();
             rootNodeLayout.ResumeLayout(false);
@@ -618,11 +623,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingObject).EndInit();
-            templateObjectLayout.ResumeLayout(false);
-            templateObjectLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
-            objectToolStrip.ResumeLayout(false);
-            objectToolStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }

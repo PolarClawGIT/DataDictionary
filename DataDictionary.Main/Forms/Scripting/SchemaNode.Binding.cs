@@ -11,9 +11,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class SchemaDefinition
+    partial class SchemaNode
     {
-        partial class FormBinding
+        class FormBinding
         {
             ITemplateData data = BusinessData.Templates; // Default data location
 
@@ -25,31 +25,31 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public required BindingSource ObjectBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateObjectValue>> GetObjects { get; set; }
-            BindingView<TemplateObjectValue> objectValues =
-                new BindingView<TemplateObjectValue>([])
+            public required BindingSource SchemaBinding { private get; init; }
+            public Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> GetSchemata { get; set; }
+            BindingView<SchemaDefinitionValue> schemaValues =
+                new BindingView<SchemaDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public Func<SchemaDefinitionIndex, BindingView<SchemaDocumentValue>> GetDocuments { get; set; }
+            public required BindingSource NodeBinding { private get; init; }
             public Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> GetNodes { get; set; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> GetOwners { get; set; }
+            BindingView<SchemaNodeValue> nodeValues =
+                new BindingView<SchemaNodeValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public FormBinding() : base()
+            public required BindingSource NodeOwnerBinding { private get; init; }
+            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> GetOwners { get; set; }
+            BindingView<SchemaNodeOwnerValue> nodeOwnerValues =
+                new BindingView<SchemaNodeOwnerValue>([])
+                { AllowEdit = false, AllowNew = false, AllowRemove = false };
+
+
+            public FormBinding()
             {
-                // Default setup
                 GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => key.Equals(w)); };
-                GetObjects = (key) => { return new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w)); };
                 GetSchemata = (key) => { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); };
-                GetDocuments = (key) => { return new BindingView<SchemaDocumentValue>(data.SchemaDocuments, w => key.Equals(w)); };
                 GetNodes = (key) => { return new BindingView<SchemaNodeValue>(data.SchemataNodes, w => key.Equals(w)); };
                 GetOwners = (key) => { return new BindingView<SchemaNodeOwnerValue>(data.SchemataNodeOwners, w => key.Equals(w)); };
-                TryAddSchema = (template, [NotNullWhen(true)] out result) =>
-                {
-                    SchemaDefinitionValue value = new SchemaDefinitionValue(template);
-                    data.Add(value);
-                    result = value; return true;
-                };               
             }
 
             public void Load(ISchemaDefinitionIndex schema)
@@ -59,11 +59,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 TemplateBinding.RaiseListChangedEvents = false;
                 SchemaBinding.RaiseListChangedEvents = false;
-                ObjectBinding.RaiseListChangedEvents = false;
+                NodeBinding.RaiseListChangedEvents = false;
+                NodeOwnerBinding.RaiseListChangedEvents = false;
 
                 templateValues.RaiseListChangedEvents = false;
                 schemaValues.RaiseListChangedEvents = false;
-                objectValues.RaiseListChangedEvents = false;
+                nodeValues.RaiseListChangedEvents = false;
+                nodeOwnerValues.RaiseListChangedEvents = false;
 
                 schemaValues = GetSchemata(schemaKey);
                 if (schemaValues.FirstOrDefault() is SchemaDefinitionValue value)
@@ -76,26 +78,31 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
 
                 templateValues = GetTemplates(templateKey);
-                objectValues = GetObjects(templateKey);
+                nodeValues = GetNodes(schemaKey);
+                nodeOwnerValues = GetOwners(schemaKey);
 
                 if (templateValues.Count > 0)
                 {
                     TemplateBinding.DataSource = templateValues;
                     SchemaBinding.DataSource = schemaValues;
-                    ObjectBinding.DataSource = objectValues;
+                    NodeBinding.DataSource = nodeValues;
+                    NodeOwnerBinding.DataSource = nodeOwnerValues;
 
                     TemplateBinding.RaiseListChangedEvents = true;
                     SchemaBinding.RaiseListChangedEvents = true;
-                    ObjectBinding.RaiseListChangedEvents = true;
+                    NodeBinding.RaiseListChangedEvents = true;
+                    NodeOwnerBinding.RaiseListChangedEvents = true;
 
                     templateValues.RaiseListChangedEvents = true;
                     schemaValues.RaiseListChangedEvents = true;
-                    objectValues.RaiseListChangedEvents = true;
+                    nodeValues.RaiseListChangedEvents = true;
+                    nodeOwnerValues.RaiseListChangedEvents = true;
                 }
 
                 TemplateBinding.ResetBindings(false);
                 SchemaBinding.ResetBindings(false);
-                ObjectBinding.ResetBindings(false);
+                NodeBinding.ResetBindings(false);
+                NodeOwnerBinding.ResetBindings(false);
                 SchemaBinding.MoveFirst();
             }
 
@@ -114,8 +121,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 { result = value; return true; }
                 else { result = null; return false; }
             }
-
-
 
             public Boolean GetAuthorization(Enumerations.ButtonType command)
             {

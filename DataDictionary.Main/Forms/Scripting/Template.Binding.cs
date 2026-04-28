@@ -2,13 +2,8 @@
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -20,13 +15,16 @@ namespace DataDictionary.Main.Forms.Scripting
             /// <summary>
             /// Internal reference to the source of the data.
             /// </summary>
+            /// <remarks>
+            /// By default this points to the main Business Layer data.
+            /// When the data is Temporal, this points to alternate data.
+            /// </remarks>
             ITemplateData data = BusinessData.Templates;
 
             /// <summary>
             /// How to invoke the WorkerQueue.
             /// </summary>
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-
 
             public FormBinding() : base()
             { }

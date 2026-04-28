@@ -8,13 +8,16 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaNode : ApplicationData
     {
+        TemplateIndex templateIndex = new TemplateIndex();
         SchemaDefinitionIndex schemaIndex = new SchemaDefinitionIndex();
-        TemporalIndex? temporalIndex = null;
+        //TemporalIndex? temporalIndex = null;
+        FormBinding formBinding;
 
         public override Boolean IsOpenItem(object? item)
         { return item is ISchemaDefinitionIndex key && schemaIndex.Equals(key); }
@@ -23,7 +26,20 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingNode);
+            formBinding = new FormBinding()
+            {
+                TemplateBinding = bindingTemplate,
+                SchemaBinding = bindingSchema,
+                NodeBinding = bindingNode,
+                NodeOwnerBinding = bindingNodeOwner,
+                DoWork = base.DoWork,
+            };
+
+            SetRowState(
+                bindingNode,
+                bindingNodeOwner);
+            SetTitle(bindingNode);
+            SetIcon(bindingNode, ScopeType.ScriptingNode);
 
             SetCommand(ScopeType.ScriptingNode,
                 Enumerations.ButtonType.Delete,
@@ -36,11 +52,48 @@ namespace DataDictionary.Main.Forms.Scripting
         public SchemaNode(ISchemaDefinitionIndex schema) : this()
         { schemaIndex = new SchemaDefinitionIndex(schema); }
 
-        public SchemaNode(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
-        { temporalIndex = new TemporalIndex(); }
+        public SchemaNode(
+                ITemplateIndex template,
+                ISchemaDefinitionIndex? schema,
+                Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
+                Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> getSchemata,
+                Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> getNodes,
+                Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners)
+        : this()
+        {
+            templateIndex = new TemplateIndex(template);
+            if (schema is ISchemaDefinitionIndex key)
+            { schemaIndex = new SchemaDefinitionIndex(key); }
+
+            formBinding.GetTemplates = getTemplates;
+            formBinding.GetSchemata = getSchemata;
+            formBinding.GetNodes = getNodes;
+            formBinding.GetOwners = getOwners;
+        }
 
         private void SchemaNode_Load(object sender, EventArgs e)
         {
+            if (schemaIndex.HasValue)
+            { formBinding.Load(schemaIndex); }
+            else
+            {   // This should never occur.
+                Exception ex = new InvalidOperationException("Template Schema not found");
+                ex.Data.Add(nameof(templateIndex), templateIndex);
+                ex.Data.Add(nameof(schemaIndex), schemaIndex);
+                throw ex;
+            }
+
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? _))
+            { DoBinding(); }
+            else { IsLocked(true); }
+
+            void DoBinding()
+            {
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.GetAuthorization);
+            }
 
         }
 
