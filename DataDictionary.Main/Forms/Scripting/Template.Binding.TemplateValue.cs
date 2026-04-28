@@ -24,15 +24,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             /// <summary>
-            /// How to get the Template Values from the source Data.
-            /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
-            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
-            public BindingView<TemplateValue> GetTemplates(TemplateIndex key)
-            { return new BindingView<TemplateValue>(data, w => key.Equals(w)); }
-
-            /// <summary>
             /// Get the Current TemplateValue, if it exists.
             /// </summary>
             /// <param name="result"></param>
@@ -56,7 +47,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     || BusinessData.Authorization.IsScriptOwner)
                 {
                     TemplateValue value = new TemplateValue();
-                    data.Add(value);
+                    GetData().Add(value);
                     result = value; return true;
                 }
                 else { result = null; return false; }

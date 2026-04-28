@@ -15,7 +15,6 @@ namespace DataDictionary.Main.Forms.Scripting
             /// </summary>
             public required BindingSource TransformBinding { private get; init; }
 
-
             /// <summary>
             /// Backing field for the Template Transform Values.
             /// </summary>
@@ -23,17 +22,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 new BindingView<TransformValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            /// <summary>
-            /// How to get the Template Transforms Values from the source Data.
-            /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
-            /// <remarks>This is to allow child forms to get the data from the base form.</remarks>
-            public BindingView<TransformValue> GetTransforms(TemplateIndex key)
-            { return new BindingView<TransformValue>(data.Transforms, w => key.Equals(w)); }
-
-            public BindingView<TransformValue> GetTransforms(TransformIndex key)
-            { return new BindingView<TransformValue>(data.Transforms, w => key.Equals(w)); }
         }
     }
 }

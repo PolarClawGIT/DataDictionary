@@ -172,8 +172,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             Activate(() => new Forms.Scripting.TemplateObject(
                 template: templateIndex,
-                getTemplates: formBinding.GetTemplates,
-                getObjects: formBinding.GetObjects));
+                getData: formBinding.GetData));
         }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)
@@ -181,13 +180,7 @@ namespace DataDictionary.Main.Forms.Scripting
             Activate(() => new Forms.Scripting.SchemaDefinition(
                 template: templateIndex,
                 schema: null,
-                getTemplates: formBinding.GetTemplates,
-                getObjects: formBinding.GetObjects,
-                getSchemata: formBinding.GetSchemata,
-                getDocuments: formBinding.GetSchemaDocuments,
-                getNodes: formBinding.GetSchemaNodes,
-                getOwners: formBinding.GetSchemaNodeOwners,
-                tryAddSchema: formBinding.TryAddValue));
+                getData: formBinding.GetData));
         }
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
@@ -197,13 +190,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
                     schema: value,
-                    getTemplates: formBinding.GetTemplates,
-                    getObjects: formBinding.GetObjects,
-                    getSchemata: formBinding.GetSchemata,
-                    getDocuments: formBinding.GetSchemaDocuments,
-                    getNodes: formBinding.GetSchemaNodes,
-                    getOwners: formBinding.GetSchemaNodeOwners,
-                    tryAddSchema: formBinding.TryAddValue));
+                    getData: formBinding.GetData));
             }
         }
 

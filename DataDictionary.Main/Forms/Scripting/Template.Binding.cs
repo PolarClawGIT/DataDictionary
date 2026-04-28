@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -13,13 +14,9 @@ namespace DataDictionary.Main.Forms.Scripting
         partial class FormBinding
         {
             /// <summary>
-            /// Internal reference to the source of the data.
+            /// Returns the Current Template data.
             /// </summary>
-            /// <remarks>
-            /// By default this points to the main Business Layer data.
-            /// When the data is Temporal, this points to alternate data.
-            /// </remarks>
-            ITemplateData data = BusinessData.Templates;
+            public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
             /// <summary>
             /// How to invoke the WorkerQueue.
@@ -44,11 +41,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 transformValues.RaiseListChangedEvents = false;
                 documentValues.RaiseListChangedEvents = false;
 
-                templateValues = GetTemplates(key);
-                objectValues = GetObjects(key);
-                schemaValues = GetSchemata(key);
-                transformValues = GetTransforms(key);
-                documentValues = GetDocuments(key);
+                templateValues = new BindingView<TemplateValue>(GetData(), w => key.Equals(w));
+                objectValues = new BindingView<TemplateObjectValue>(GetData().Objects, w => key.Equals(w));
+                schemaValues = new BindingView<SchemaDefinitionValue>(GetData().Schemata, w => key.Equals(w));
+                transformValues = new BindingView<TransformValue>(GetData().Transforms, w => key.Equals(w));
+
+                DocumentCompare compare = new DocumentCompare();
+                documentValues = new BindingList<DocumentValue>();
+                documentValues.AddRange(
+                    GetData().SchemaDocuments.Select(s => new DocumentValue(s)).
+                    Union(GetData().TransformDocuments.Select(s => new DocumentValue(s)), compare));
 
                 if (templateValues.Count > 0)
                 {
@@ -85,9 +87,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Templates; } });
-                work.AddRange(data.Delete(template));
-                work.AddRange(data.Load(factory, template));
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                work.AddRange(GetData().Delete(template));
+                work.AddRange(GetData().Load(factory, template));
 
                 DoWork(work, completing);
 
@@ -104,8 +106,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { DoWork = () => { data = ITemplateData.Create(); } });
-                work.AddRange(data.Load(factory, template, temporal));
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => ITemplateData.Create(); } });
+                work.AddRange(GetData().Load(factory, template, temporal));
 
                 DoWork(work, completing);
 
@@ -124,10 +126,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 DoWork(work, completing);
 
                 work.Add(factory.OpenConnection());
-                work.AddRange(data.Save(factory, template));
-                work.Add(new WorkItem() { DoWork = () => { data = BusinessData.Templates; } });
-                work.AddRange(data.Delete(template));
-                work.AddRange(data.Load(factory, template));
+                work.AddRange(GetData().Save(factory, template));
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                work.AddRange(GetData().Delete(template));
+                work.AddRange(GetData().Load(factory, template));
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
@@ -137,7 +139,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public ITemporalData GetTemporal(TemplateIndex template)
-            { return data.GetTemporal(template); }
+            { return GetData().GetTemporal(template); }
 
             public Boolean GetAuthorization(Enumerations.ButtonType command)
             {

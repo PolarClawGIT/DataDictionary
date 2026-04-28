@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,29 +69,17 @@ namespace DataDictionary.Main.Forms.Scripting
         //public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
         //{ temporalIndex = new TemporalIndex(); }
 
-        public SchemaDefinition(
+        public SchemaDefinition (
             ITemplateIndex template,
             ISchemaDefinitionIndex? schema,
-            Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
-            Func<TemplateIndex, BindingView<TemplateObjectValue>> getObjects,
-            GetSchemaCallBack getSchemata,
-            Func<SchemaDefinitionIndex, BindingView<SchemaDocumentValue>> getDocuments,
-            Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> getNodes,
-            Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners,
-            TryAddSchemaCallback tryAddSchema)
-            : this()
+            Func<ITemplateData> getData) : this()
         {
             templateIndex = new TemplateIndex(template);
+
             if (schema is ISchemaDefinitionIndex key)
             { schemaIndex = new SchemaDefinitionIndex(key); }
 
-            formBinding.GetTemplates = getTemplates;
-            formBinding.GetSchemata = getSchemata;
-            formBinding.GetObjects = getObjects;
-            formBinding.GetDocuments = getDocuments;
-            formBinding.GetNodes = getNodes;
-            formBinding.GetOwners = getOwners;
-            formBinding.TryAddSchema = tryAddSchema;
+            formBinding.GetData = getData;
         }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
@@ -100,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
             else
             {
                 if (templateIndex.HasValue
-                    && formBinding.TryAddSchema(templateIndex, out SchemaDefinitionValue? value))
+                    && formBinding.TryAddValue(templateIndex, out SchemaDefinitionValue? value))
                 {
                     schemaIndex = new SchemaDefinitionIndex(value);
                     formBinding.Load(schemaIndex);
@@ -199,12 +188,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenNodeCommand_Click(object sender, EventArgs e)
         {
-            Activate(() => new Forms.Scripting.SchemaNode(
-                template: templateIndex, schema: schemaIndex,
-                getTemplates: formBinding.GetTemplates,
-                getSchemata: formBinding.GetSchemata,
-                getNodes: formBinding.GetNodes,
-                getOwners: formBinding.GetOwners));
+            throw new NotImplementedException();
+            //Activate(() => new Forms.Scripting.SchemaNode(
+            //    template: templateIndex, schema: schemaIndex,
+            //    getTemplates: formBinding.GetTemplates,
+            //    getSchemata: formBinding.GetSchemata,
+            //    getNodes: formBinding.GetNodes,
+            //    getOwners: formBinding.GetOwners));
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)
@@ -244,8 +234,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             Activate(() => new Forms.Scripting.TemplateObject(
                 template: templateIndex,
-                getTemplates: formBinding.GetTemplates,
-                getObjects: formBinding.GetObjects));
+                getData: formBinding.GetData));
         }
     }
 }

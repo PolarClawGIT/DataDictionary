@@ -58,13 +58,8 @@ namespace DataDictionary.Main.Forms.Scripting
         //{ temporalIndex = new TemporalIndex(); }
 
         public TemplateObject(ITemplateIndex template,
-            Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
-            Func<TemplateIndex, BindingView<TemplateObjectValue>> getObjects)
-            : this(template)
-        {
-            formBinding.GetTemplates = getTemplates;
-            formBinding.GetObjects = getObjects;
-        }
+            Func<ITemplateData> getData) : this(template)
+        { formBinding.GetData = getData; }
 
 
         private void TemplateObject_Load(object sender, EventArgs e)
@@ -106,11 +101,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 dialog.FilterScopes.Add(ScopeType.ModelAttribute);
                 dialog.FilterScopes.Add(ScopeType.ModelEntity);
                 dialog.FilterScopes.Add(ScopeType.ModelProcess);
-                IEnumerable<PathIndex> selected = formBinding.
-                    GetObjects(templateIndex).
-                    Select(s => s.ObjectPath);
 
-                dialog.BuildData(selected, GetDescription);
+                dialog.BuildData(formBinding.GetObjectPaths(), GetDescription);
 
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 {

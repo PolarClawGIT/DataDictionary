@@ -1,11 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -15,27 +12,22 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
-            ITemplateData data = BusinessData.Templates; // Default data location
+            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource TemplateBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateValue>> GetTemplates { get; set; }
             BindingView<TemplateValue> templateValues =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource ObjectBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateObjectValue>> GetObjects { get; set; }
             BindingView<TemplateObjectValue> objectValues =
                 new BindingView<TemplateObjectValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
-            public FormBinding()
-            {
-                GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => key.Equals(w)); };
-                GetObjects = (key) => { return new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w)); };
-            }
+            public FormBinding() : base()
+            { }
 
             public void Load(ITemplateIndex template)
             {
@@ -46,8 +38,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateValues.RaiseListChangedEvents = false;
                 objectValues.RaiseListChangedEvents = false;
 
-                templateValues = GetTemplates(key);
-                objectValues = GetObjects(key);
+                templateValues = new BindingView<TemplateValue>(GetData(), w => key.Equals(w));
+                objectValues = new BindingView<TemplateObjectValue>(GetData().Objects, w => key.Equals(w));
 
                 if (templateValues.Count > 0)
                 {
@@ -113,6 +105,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
                 else { result = null; return false; }
             }
+
+            public IEnumerable<PathIndex> GetObjectPaths()
+            { return objectValues.Select(s => s.ObjectPath); }
         }
     }
 }

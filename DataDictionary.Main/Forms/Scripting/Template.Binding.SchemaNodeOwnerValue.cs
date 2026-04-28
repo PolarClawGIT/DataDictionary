@@ -10,8 +10,6 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         partial class FormBinding
         {
-            public BindingView<SchemaNodeOwnerValue> GetSchemaNodeOwners(SchemaDefinitionIndex key)
-            { return new BindingView<SchemaNodeOwnerValue>(data.SchemataNodeOwners, w => key.Equals(w)); }
         }
     }
 }

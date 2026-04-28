@@ -15,42 +15,12 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         partial class FormBinding
         {
-            ITemplateData data = BusinessData.Templates; // Default data location
+            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public required BindingSource TemplateBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateValue>> GetTemplates { get; set; }
-            BindingView<TemplateValue> templateValues =
-                new BindingView<TemplateValue>([])
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public required BindingSource ObjectBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateObjectValue>> GetObjects { get; set; }
-            BindingView<TemplateObjectValue> objectValues =
-                new BindingView<TemplateObjectValue>([])
-                { AllowEdit = false, AllowNew = false, AllowRemove = false };
-
-            public Func<SchemaDefinitionIndex, BindingView<SchemaDocumentValue>> GetDocuments { get; set; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> GetNodes { get; set; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> GetOwners { get; set; }
-
             public FormBinding() : base()
-            {
-                // Default setup
-                GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => key.Equals(w)); };
-                GetObjects = (key) => { return new BindingView<TemplateObjectValue>(data.Objects, w => key.Equals(w)); };
-                GetSchemata = (key) => { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); };
-                GetDocuments = (key) => { return new BindingView<SchemaDocumentValue>(data.SchemaDocuments, w => key.Equals(w)); };
-                GetNodes = (key) => { return new BindingView<SchemaNodeValue>(data.SchemataNodes, w => key.Equals(w)); };
-                GetOwners = (key) => { return new BindingView<SchemaNodeOwnerValue>(data.SchemataNodeOwners, w => key.Equals(w)); };
-                TryAddSchema = (template, [NotNullWhen(true)] out result) =>
-                {
-                    SchemaDefinitionValue value = new SchemaDefinitionValue(template);
-                    data.Add(value);
-                    result = value; return true;
-                };               
-            }
+            { }
 
             public void Load(ISchemaDefinitionIndex schema)
             {
@@ -65,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaValues.RaiseListChangedEvents = false;
                 objectValues.RaiseListChangedEvents = false;
 
-                schemaValues = GetSchemata(schemaKey);
+                schemaValues = new BindingView<SchemaDefinitionValue>(GetData().Schemata, w => schemaKey.Equals(w));
                 if (schemaValues.FirstOrDefault() is SchemaDefinitionValue value)
                 { templateKey = new TemplateIndex(value); }
                 else
@@ -75,8 +45,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     throw ex;
                 }
 
-                templateValues = GetTemplates(templateKey);
-                objectValues = GetObjects(templateKey);
+                templateValues = new BindingView<TemplateValue>(GetData(), w => templateKey.Equals(w));
+                objectValues = new BindingView<TemplateObjectValue>(GetData().Objects, w => templateKey.Equals(w));
 
                 if (templateValues.Count > 0)
                 {
@@ -98,24 +68,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 ObjectBinding.ResetBindings(false);
                 SchemaBinding.MoveFirst();
             }
-
-            public Boolean TryGetValue([NotNullWhen(true)] out TemplateValue? result)
-            {
-                if (TemplateBinding.Position >= 0
-                    && TemplateBinding.Current is TemplateValue value)
-                { result = value; return true; }
-                else { result = null; return false; }
-            }
-
-            public Boolean TryGetValue([NotNullWhen(true)] out SchemaDefinitionValue? result)
-            {
-                if (SchemaBinding.Position >= 0
-                    && SchemaBinding.Current is SchemaDefinitionValue value)
-                { result = value; return true; }
-                else { result = null; return false; }
-            }
-
-
 
             public Boolean GetAuthorization(Enumerations.ButtonType command)
             {
