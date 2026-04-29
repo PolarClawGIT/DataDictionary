@@ -151,7 +151,8 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public SchemaNodeItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected SchemaNodeItem() : base()
         {
             if (NodeId is null) { NodeId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(NodeName)) { NodeName = "(new Node)"; }
@@ -167,8 +168,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public SchemaNodeItem(ITemplateKey template) : this()
-        { TemplateId = template.TemplateId; }
+        public SchemaNodeItem(ITemplateKey template, ISchemaDefinitionKey schema) : this()
+        {
+            TemplateId = template.TemplateId;
+            SchemaId = schema.SchemaId;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [

@@ -64,7 +64,8 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Transform Document
         /// </summary>
-        public TransformDocumentItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected TransformDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(FileName)) { FileName = "newDocument"; }
@@ -80,8 +81,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Transform Document
         /// </summary>
-        public TransformDocumentItem(ITemplateKey template) : this()
-        { TemplateId = template.TemplateId; }
+        public TransformDocumentItem(ITemplateKey template, ITransformKey transform) : this()
+        {
+            TemplateId = template.TemplateId;
+            TransformId = transform.TransformId;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [

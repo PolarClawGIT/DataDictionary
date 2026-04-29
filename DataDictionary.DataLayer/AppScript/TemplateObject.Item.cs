@@ -104,10 +104,10 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public TemplateObjectItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected TemplateObjectItem() : base()
         {
             if (ObjectId is null) { ObjectId = Guid.NewGuid(); }
-
 
             Temporal = new TemporalItem()
             {

@@ -151,7 +151,8 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public SchemaDefinitionItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected SchemaDefinitionItem() : base()
         {
             if (SchemaId is null) { SchemaId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(SchemaTitle)) { SchemaTitle = "(new Schema)"; }

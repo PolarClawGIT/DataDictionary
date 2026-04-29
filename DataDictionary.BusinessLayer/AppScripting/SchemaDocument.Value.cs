@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ITemplateIndex,
+    public interface ISchemaDocumentValue : ISchemaDocumentItem, IDocumentIndex, ISchemaComposite,
         IScopeType, ITemporal
     { }
 
@@ -41,8 +41,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             };
         }
 
-        /// <inheritdoc/>
-        public SchemaDocumentValue(ITemplateIndex template) : base (template)
+        /// <inheritdoc cref="SchemaDocumentItem.SchemaDocumentItem(ITemplateKey, ISchemaDefinitionKey)"/>
+        public SchemaDocumentValue(ISchemaComposite schema) : base(schema, schema)
         {
             pathValue = new PathValue(this)
             {
@@ -54,5 +54,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(FileName)
             };
         }
+
     }
 }

@@ -154,7 +154,8 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public TransformItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected TransformItem() : base()
         {
             if (TransformId is null) { TransformId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TransformTitle)) { TransformTitle = "(new Transform)"; }

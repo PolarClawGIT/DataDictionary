@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ITransformDocumentValue : ITransformDocumentItem, IDocumentIndex, ITemplateIndex,
+    public interface ITransformDocumentValue : ITransformDocumentItem, IDocumentIndex, ITransformComposite,
         IScopeType, ITemporal
     { }
 
@@ -41,8 +41,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             };
         }
 
-        /// <inheritdoc/>
-        public TransformDocumentValue(ITemplateIndex template) : base(template)
+        /// <inheritdoc cref="TransformDocumentItem.TransformDocumentItem(ITemplateKey, ITransformKey)"/>
+        public TransformDocumentValue(ITransformComposite transform) : base(transform, transform)
         {
             pathValue = new PathValue(this)
             {

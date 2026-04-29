@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
-            set { SetValue(nameof(SchemaId), value); }
+            protected set { SetValue(nameof(SchemaId), value); }
         }
 
 
@@ -59,7 +59,8 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Document
         /// </summary>
-        public SchemaDocumentItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected SchemaDocumentItem() : base()
         {
             if (DocumentId is null) { DocumentId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(FileName)) { FileName = "newDocument"; }
@@ -75,8 +76,11 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Document
         /// </summary>
-        public SchemaDocumentItem(ITemplateKey template) : this()
-        { TemplateId = template.TemplateId; }
+        public SchemaDocumentItem(ITemplateKey template, ISchemaDefinitionKey schema) : this()
+        {
+            TemplateId = template.TemplateId;
+            SchemaId = schema.SchemaId;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [

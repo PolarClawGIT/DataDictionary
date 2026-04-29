@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaNodeValue : ISchemaNodeItem, ISchemaNodeIndex, ITemplateIndex,
+    public interface ISchemaNodeValue : ISchemaNodeItem, ISchemaNodeIndex, ISchemaComposite,
         IScopeType, ITemporal
     { }
 
@@ -29,6 +29,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public SchemaNodeValue() : base()
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new SchemaNodeIndex(this),
+                GetPath = () => new PathIndex(Scope),
+                GetScope = () => Scope,
+                GetTitle = () => NodeName ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(NodeName),
+                IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
+            };
+        }
+
+        /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
+        public SchemaNodeValue(ISchemaComposite schema) : base(schema, schema)
         {
             pathValue = new PathValue(this)
             {

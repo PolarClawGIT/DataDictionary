@@ -36,14 +36,14 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? SchemaId
         {
             get { return GetValue<Guid>(nameof(SchemaId)); }
-            set { SetValue(nameof(SchemaId), value); }
+            protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
         public Guid? TemplateId
         {
             get { return GetValue<Guid>(nameof(TemplateId)); }
-            set { SetValue(nameof(TemplateId), value); }
+            protected set { SetValue(nameof(TemplateId), value); }
         }
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
@@ -51,6 +51,7 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting SchemaNodeOwner
         /// </summary>
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
         protected SchemaNodeOwnerItem() : base()
         {
             Temporal = new TemporalItem()
@@ -64,18 +65,16 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting SchemaNodeOwner
         /// </summary>
-        public SchemaNodeOwnerItem(ISchemaNodeItem node, ISchemaNodeKey parentNode) : this()
+        public SchemaNodeOwnerItem(ITemplateKey template, ISchemaDefinitionKey schema) : this()
         {
-            NodeOwnerId = parentNode.NodeId;
-            NodeId = node.NodeId;
-            SchemaId = node.SchemaId;
-            TemplateId = node.TemplateId;
+            TemplateId = template.TemplateId;
+            SchemaId = schema.SchemaId;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
-            new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(NodeOwnerId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(NodeOwnerId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
 
