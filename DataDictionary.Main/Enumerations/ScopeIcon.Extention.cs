@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Enumerations
         }
 
         /// <summary>
-        /// Adds a list of Iamges to and ImageList for all the Scopes.
+        /// Adds a list of Images to and ImageList for all the Scopes.
         /// </summary>
         /// <param name="target"></param>
         public static void AddImages(this ImageList target)
