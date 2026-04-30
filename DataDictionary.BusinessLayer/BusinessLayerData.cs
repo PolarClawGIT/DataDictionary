@@ -102,7 +102,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(Model.Delete());
+            work.AddRange(Delete(key));
             work.AddRange(Model.Load(factory, key));
             work.AddRange(CatalogModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
@@ -117,7 +117,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(Model.Delete());
+            work.AddRange(Delete(key));
             work.AddRange(Model.Load(factory, key, asOfUtcDate));
             work.AddRange(CatalogModel.Load(factory, key, asOfUtcDate));
             work.AddRange(LibraryModel.Load(factory, key, asOfUtcDate));

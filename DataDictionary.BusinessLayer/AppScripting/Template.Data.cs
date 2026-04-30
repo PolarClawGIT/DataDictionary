@@ -110,7 +110,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateLoad(this));
-            //work.AddRange(factory.CreateLoad(schemaNodeValues)); 
+            //work.AddRange(factory.CreateLoad(schemaDefinitionValues)); 
             //work.AddRange(factory.CreateLoad(schemaNodeValues));
             //work.AddRange(factory.CreateLoad(schemaNodeOwnerValues));
             //work.AddRange(factory.CreateLoad(templateObjectValues));
@@ -122,8 +122,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, (IModelKey)dataKey));
-            work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateLoad(this, (IModelKey)dataKey));
+            work.AddRange(factory.CreateLoad(schemaDefinitionValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateLoad(templateObjectValues, (IModelKey)dataKey));
@@ -136,8 +136,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(this, (IModelKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(schemaDefinitionValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (IModelKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(templateObjectValues, (IModelKey)dataKey, asOfUtcDate));
@@ -150,8 +150,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateLoad(this, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateLoad(schemaDefinitionValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateLoad(templateObjectValues, (ITemplateKey)dataKey));
@@ -164,8 +164,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate));
-            work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(this, (ITemplateKey)dataKey, asOfUtcDate));
+            work.AddRange(factory.CreateLoad(schemaDefinitionValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(schemaNodeOwnerValues, (ITemplateKey)dataKey, asOfUtcDate));
             work.AddRange(factory.CreateLoad(templateObjectValues, (ITemplateKey)dataKey, asOfUtcDate));
@@ -178,8 +178,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateSave(this, (ITemplateKey)dataKey));
-            work.AddRange(factory.CreateSave(schemaNodeValues, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateSave(this, (ITemplateKey)dataKey));
+            work.AddRange(factory.CreateSave(schemaDefinitionValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (ITemplateKey)dataKey));
             work.AddRange(factory.CreateSave(templateObjectValues, (ITemplateKey)dataKey));
@@ -192,8 +192,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateSave(this, (IModelKey)dataKey));
-            work.AddRange(factory.CreateSave(schemaNodeValues, (IModelKey)dataKey));
+            work.AddRange(factory.CreateSave(this, (IModelKey)dataKey));
+            work.AddRange(factory.CreateSave(schemaDefinitionValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(schemaNodeOwnerValues, (IModelKey)dataKey));
             work.AddRange(factory.CreateSave(templateObjectValues, (IModelKey)dataKey));
@@ -206,9 +206,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Delete(ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Remove(dataKey); } });
-
-            work.AddRange(schemaNodeValues.Delete(dataKey));
+            work.AddRange(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Remove(dataKey); } });
             work.AddRange(schemaNodeValues.Delete(dataKey));
             work.AddRange(schemaNodeOwnerValues.Delete(dataKey));
             work.AddRange(templateObjectValues.Delete(dataKey));
@@ -221,9 +219,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Clear(); } });
-
-            work.AddRange(schemaNodeValues.Delete());
+            work.AddRange(new WorkItem() { WorkName = "Remove Scripting Template", DoWork = () => { Clear(); } });
+            work.AddRange(schemaDefinitionValues.Delete());
             work.AddRange(schemaNodeValues.Delete());
             work.AddRange(schemaNodeOwnerValues.Delete());
             work.AddRange(templateObjectValues.Delete());
@@ -241,7 +238,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             base.Remove(dataKey);
 
-            schemaNodeValues.Remove(dataKey);
+            schemaDefinitionValues.Remove(dataKey);
             schemaNodeValues.Remove(dataKey);
             schemaNodeOwnerValues.Remove(dataKey);
             templateObjectValues.Remove(dataKey);
@@ -254,7 +251,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             base.Clear();
 
-            schemaNodeValues.Clear();
+            schemaDefinitionValues.Clear();
             schemaNodeValues.Clear();
             schemaNodeOwnerValues.Clear();
             templateObjectValues.Clear();
@@ -282,7 +279,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
 
             result.Add(this.ToDataTable());
-            result.Add(schemaNodeValues.ToDataTable());
+            result.Add(schemaDefinitionValues.ToDataTable());
             result.Add(schemaNodeValues.ToDataTable());
             result.Add(schemaNodeOwnerValues.ToDataTable());
             result.Add(templateObjectValues.ToDataTable());
@@ -296,7 +293,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public void Import(DataSet source)
         { 
             this.Import(source);
-            schemaNodeValues.Load(source);
+            schemaDefinitionValues.Load(source);
             schemaNodeValues.Load(source);
             schemaNodeOwnerValues.Load(source);
             templateObjectValues.Load(source);
