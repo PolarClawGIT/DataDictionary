@@ -16,10 +16,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IDeleteData
-    { }
+    {
+        /// <inheritdoc cref="IXElementBuilderList"/>
+        IXElementBuilderList Builders { get; }
+    }
 
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
     {
+        /// <inheritdoc cref="IXElementBuilderList"/>
+        public IXElementBuilderList Builders { get; } = new XElementBuilderList();
+
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)

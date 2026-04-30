@@ -15,42 +15,34 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         class FormBinding
         {
-            ITemplateData data = BusinessData.Templates; // Default data location
+            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             public required BindingSource TemplateBinding { private get; init; }
-            public Func<TemplateIndex, BindingView<TemplateValue>> GetTemplates { get; set; }
             BindingView<TemplateValue> templateValues =
                 new BindingView<TemplateValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource SchemaBinding { private get; init; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> GetSchemata { get; set; }
             BindingView<SchemaDefinitionValue> schemaValues =
                 new BindingView<SchemaDefinitionValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource NodeBinding { private get; init; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> GetNodes { get; set; }
             BindingView<SchemaNodeValue> nodeValues =
                 new BindingView<SchemaNodeValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             public required BindingSource NodeOwnerBinding { private get; init; }
-            public Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> GetOwners { get; set; }
             BindingView<SchemaNodeOwnerValue> nodeOwnerValues =
                 new BindingView<SchemaNodeOwnerValue>([])
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
+            public IXElementBuilderList Builders { get; } = BusinessData.Templates.SchemataNodes.Builders;
 
             public FormBinding()
-            {
-                GetTemplates = (key) => { return new BindingView<TemplateValue>(data, w => key.Equals(w)); };
-                GetSchemata = (key) => { return new BindingView<SchemaDefinitionValue>(data.Schemata, w => key.Equals(w)); };
-                GetNodes = (key) => { return new BindingView<SchemaNodeValue>(data.SchemataNodes, w => key.Equals(w)); };
-                GetOwners = (key) => { return new BindingView<SchemaNodeOwnerValue>(data.SchemataNodeOwners, w => key.Equals(w)); };
-            }
+            { }
 
             public void Load(ISchemaDefinitionIndex schema)
             {
@@ -67,7 +59,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeValues.RaiseListChangedEvents = false;
                 nodeOwnerValues.RaiseListChangedEvents = false;
 
-                schemaValues = GetSchemata(schemaKey);
+                schemaValues = new BindingView<SchemaDefinitionValue>(GetData().Schemata, w => schemaKey.Equals(w));
                 if (schemaValues.FirstOrDefault() is SchemaDefinitionValue value)
                 { templateKey = new TemplateIndex(value); }
                 else
@@ -77,9 +69,9 @@ namespace DataDictionary.Main.Forms.Scripting
                     throw ex;
                 }
 
-                templateValues = GetTemplates(templateKey);
-                nodeValues = GetNodes(schemaKey);
-                nodeOwnerValues = GetOwners(schemaKey);
+                templateValues = new BindingView<TemplateValue>(GetData(), w => templateKey.Equals(w));
+                nodeValues = new BindingView<SchemaNodeValue>(GetData().SchemataNodes, w => schemaKey.Equals(w));
+                nodeOwnerValues = new BindingView<SchemaNodeOwnerValue>(GetData().SchemataNodeOwners, w => schemaKey.Equals(w));
 
                 if (templateValues.Count > 0)
                 {

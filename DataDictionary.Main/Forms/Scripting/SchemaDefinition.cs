@@ -59,28 +59,21 @@ namespace DataDictionary.Main.Forms.Scripting
             openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
         }
 
-        public SchemaDefinition(ISchemaDefinitionIndex schema) : this()
-        {
-            if (schema is ISchemaDefinitionIndex key)
-            { schemaIndex = new SchemaDefinitionIndex(key); }
-        }
-
-        // Temporal is handled by the Template screen and gets past to this screen.
-        //public SchemaDefinition(ISchemaDefinitionIndex schema, ITemporalIndex temporal) : this(schema)
-        //{ temporalIndex = new TemporalIndex(); }
-
-        public SchemaDefinition (
-            ITemplateIndex template,
-            ISchemaDefinitionIndex? schema,
-            Func<ITemplateData> getData) : this()
+        public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
         {
             templateIndex = new TemplateIndex(template);
 
             if (schema is ISchemaDefinitionIndex key)
             { schemaIndex = new SchemaDefinitionIndex(key); }
-
-            formBinding.GetData = getData;
         }
+
+        public SchemaDefinition(ISchemaComposite schema) : this(schema, schema) { }
+
+        public SchemaDefinition(
+            ITemplateIndex template,
+            ISchemaDefinitionIndex? schema,
+            Func<ITemplateData> getData) : this(template, schema)
+        { formBinding.GetData = getData; }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
@@ -188,13 +181,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenNodeCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-            //Activate(() => new Forms.Scripting.SchemaNode(
-            //    template: templateIndex, schema: schemaIndex,
-            //    getTemplates: formBinding.GetTemplates,
-            //    getSchemata: formBinding.GetSchemata,
-            //    getNodes: formBinding.GetNodes,
-            //    getOwners: formBinding.GetOwners));
+            Activate(() => new Forms.Scripting.SchemaNode(
+                template: templateIndex, schema: schemaIndex,
+                getData: formBinding.GetData));
         }
 
         private void RootFolderData_Validated(object sender, EventArgs e)

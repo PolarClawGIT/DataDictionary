@@ -34,11 +34,11 @@
             TableLayoutPanel nodeParentLayout;
             nodeTabs = new TabControl();
             nodeValueTab = new TabPage();
-            nodeRenderAsData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             nodeNameSync = new CheckBox();
             nodeRenderOrderData = new DataDictionary.Main.Controls.TextBoxData();
-            nodeObjectData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodeRenderAsData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodeObjectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeObjectPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeModelPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeFixedValueData = new DataDictionary.Main.Controls.TextBoxData();
@@ -126,7 +126,7 @@
             nodeValueLayout.Controls.Add(nodeNameSync, 2, 0);
             nodeValueLayout.Controls.Add(nodeRenderOrderData, 2, 1);
             nodeValueLayout.Controls.Add(nodeRenderAsData, 0, 1);
-            nodeValueLayout.Controls.Add(nodeObjectData, 0, 2);
+            nodeValueLayout.Controls.Add(nodeObjectScopeData, 0, 2);
             nodeValueLayout.Controls.Add(nodeObjectPropertyData, 1, 3);
             nodeValueLayout.Controls.Add(nodeModelPropertyData, 1, 4);
             nodeValueLayout.Controls.Add(nodeFixedValueData, 0, 5);
@@ -145,20 +145,6 @@
             nodeValueLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             nodeValueLayout.Size = new Size(437, 512);
             nodeValueLayout.TabIndex = 0;
-            // 
-            // nodeRenderAsData
-            // 
-            nodeRenderAsData.AutoSize = true;
-            nodeRenderAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeValueLayout.SetColumnSpan(nodeRenderAsData, 2);
-            nodeRenderAsData.Dock = DockStyle.Fill;
-            nodeRenderAsData.DropDownStyle = ComboBoxStyle.DropDownList;
-            nodeRenderAsData.HeaderText = "Render Value As";
-            nodeRenderAsData.Location = new Point(3, 53);
-            nodeRenderAsData.Name = "nodeRenderAsData";
-            nodeRenderAsData.ReadOnly = false;
-            nodeRenderAsData.Size = new Size(284, 46);
-            nodeRenderAsData.TabIndex = 4;
             // 
             // nodeNameData
             // 
@@ -196,19 +182,33 @@
             nodeRenderOrderData.TabIndex = 5;
             nodeRenderOrderData.WordWrap = true;
             // 
-            // nodeObjectData
+            // nodeRenderAsData
             // 
-            nodeObjectData.AutoSize = true;
-            nodeObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeValueLayout.SetColumnSpan(nodeObjectData, 2);
-            nodeObjectData.Dock = DockStyle.Fill;
-            nodeObjectData.DropDownStyle = ComboBoxStyle.DropDownList;
-            nodeObjectData.HeaderText = "Object Type";
-            nodeObjectData.Location = new Point(3, 105);
-            nodeObjectData.Name = "nodeObjectData";
-            nodeObjectData.ReadOnly = false;
-            nodeObjectData.Size = new Size(284, 46);
-            nodeObjectData.TabIndex = 7;
+            nodeRenderAsData.AutoSize = true;
+            nodeRenderAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeValueLayout.SetColumnSpan(nodeRenderAsData, 2);
+            nodeRenderAsData.Dock = DockStyle.Fill;
+            nodeRenderAsData.DropDownStyle = ComboBoxStyle.DropDownList;
+            nodeRenderAsData.HeaderText = "Render Value As";
+            nodeRenderAsData.Location = new Point(3, 53);
+            nodeRenderAsData.Name = "nodeRenderAsData";
+            nodeRenderAsData.ReadOnly = false;
+            nodeRenderAsData.Size = new Size(284, 46);
+            nodeRenderAsData.TabIndex = 4;
+            // 
+            // nodeObjectScopeData
+            // 
+            nodeObjectScopeData.AutoSize = true;
+            nodeObjectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeValueLayout.SetColumnSpan(nodeObjectScopeData, 2);
+            nodeObjectScopeData.Dock = DockStyle.Fill;
+            nodeObjectScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
+            nodeObjectScopeData.HeaderText = "Object Type";
+            nodeObjectScopeData.Location = new Point(3, 105);
+            nodeObjectScopeData.Name = "nodeObjectScopeData";
+            nodeObjectScopeData.ReadOnly = false;
+            nodeObjectScopeData.Size = new Size(284, 46);
+            nodeObjectScopeData.TabIndex = 7;
             // 
             // nodeObjectPropertyData
             // 
@@ -436,7 +436,7 @@
         private Controls.ComboBoxData nodeParentSelect;
         private Button addNodeParentCommand;
         private Controls.ComboBoxData nodeModelPropertyData;
-        private Controls.ComboBoxData nodeObjectData;
+        private Controls.ComboBoxData nodeObjectScopeData;
         private Controls.TextBoxData nodeFixedValueData;
         private Controls.ComboBoxData nodeObjectPropertyData;
         private Controls.TextBoxData nodeNameData;

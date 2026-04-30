@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -49,27 +50,20 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.HistoryDatabase);
         }
 
-        public SchemaNode(ISchemaDefinitionIndex schema) : this()
-        { schemaIndex = new SchemaDefinitionIndex(schema); }
 
-        public SchemaNode(
-                ITemplateIndex template,
-                ISchemaDefinitionIndex? schema,
-                Func<TemplateIndex, BindingView<TemplateValue>> getTemplates,
-                Func<SchemaDefinitionIndex, BindingView<SchemaDefinitionValue>> getSchemata,
-                Func<SchemaDefinitionIndex, BindingView<SchemaNodeValue>> getNodes,
-                Func<SchemaDefinitionIndex, BindingView<SchemaNodeOwnerValue>> getOwners)
-        : this()
+        public SchemaNode(ITemplateIndex template, ISchemaDefinitionIndex schema) : this ()
         {
             templateIndex = new TemplateIndex(template);
-            if (schema is ISchemaDefinitionIndex key)
-            { schemaIndex = new SchemaDefinitionIndex(key); }
-
-            formBinding.GetTemplates = getTemplates;
-            formBinding.GetSchemata = getSchemata;
-            formBinding.GetNodes = getNodes;
-            formBinding.GetOwners = getOwners;
+            schemaIndex = new SchemaDefinitionIndex(schema);
         }
+
+        public SchemaNode(ISchemaComposite schema) : this(schema, schema) { }
+
+        public SchemaNode(
+            ITemplateIndex template,
+            ISchemaDefinitionIndex schema,
+            Func<ITemplateData> getData) : this(template, schema)
+        { formBinding.GetData = getData; }
 
         private void SchemaNode_Load(object sender, EventArgs e)
         {
@@ -89,6 +83,22 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
+                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
+                schemaTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.SchemaTitle)));
+
+                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ISchemaNodeValue.NodeName)));
+
+                RenderValueAsList.Load(nodeRenderAsData);
+                nodeRenderAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.RenderValueAs)));
+                nodeRenderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ISchemaNodeValue.NodeOrder)));
+
+
+                XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
+                nodeObjectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ObjectScope), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
+                nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ObjectProperty)));
+
+                PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
+                nodeModelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ModelPropertyId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
