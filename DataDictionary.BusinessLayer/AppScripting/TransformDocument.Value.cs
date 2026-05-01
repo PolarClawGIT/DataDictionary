@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(FileName).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),
@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new DocumentIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(FileName).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => this.FileName ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(FileName),

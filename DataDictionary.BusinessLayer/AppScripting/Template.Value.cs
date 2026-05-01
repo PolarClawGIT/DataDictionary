@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new TemplateIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(TemplateTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => TemplateTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TemplateTitle),

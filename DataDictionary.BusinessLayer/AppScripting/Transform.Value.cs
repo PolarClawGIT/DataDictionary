@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new TransformIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(TransformTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => TransformTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TransformTitle),
@@ -80,7 +80,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new TransformIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(TransformTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => TransformTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(TransformTitle),
