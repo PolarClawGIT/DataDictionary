@@ -7,7 +7,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class Template
+    partial class Transform
     {
         partial class FormBinding
         {
@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 { AllowEdit = false, AllowNew = false, AllowRemove = false };
 
             /// <summary>
-            /// Get the Current SchemaDefinitionValue, if it exists.
+            /// Get the Current TransformValue, if it exists.
             /// </summary>
             /// <param name="result"></param>
             /// <returns></returns>
@@ -34,6 +34,13 @@ namespace DataDictionary.Main.Forms.Scripting
                     && TransformBinding.Current is TransformValue value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+            public Boolean TryAddValue(ITemplateIndex template, [NotNullWhen(true)] out TransformValue? result)
+            {
+                TransformValue value = new TransformValue(template);
+                GetData().Transforms.Add(value);
+                result = value; return true;
             }
 
         }

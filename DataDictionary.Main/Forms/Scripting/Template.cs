@@ -4,13 +4,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -185,7 +179,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
         {
-            if(formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
             {
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
@@ -201,13 +195,21 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void AddTransformCommand_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Activate(() => new Forms.Scripting.Transform(
+                template: templateIndex,
+                transform: null,
+                getData: formBinding.GetData));
         }
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Added data
-            Activate(static () => new Forms.Scripting.Transform());
+            if (formBinding.TryGetValue(out TransformValue? value))
+            {
+                Activate(() => new Forms.Scripting.Transform(
+                    template: templateIndex,
+                    transform: value,
+                    getData: formBinding.GetData));
+            }
         }
 
         private void ExecuteTransformCommand_Click(object sender, EventArgs e)

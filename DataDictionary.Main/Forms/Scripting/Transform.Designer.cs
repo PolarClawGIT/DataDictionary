@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel transformLayout;
             TableLayoutPanel detailLayout;
             GroupBox filePatternGroup;
@@ -60,6 +61,8 @@
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             transformTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            bindingTemplate = new BindingSource(components);
+            bindingTransform = new BindingSource(components);
             transformLayout = new TableLayoutPanel();
             detailLayout = new TableLayoutPanel();
             filePatternGroup = new GroupBox();
@@ -79,6 +82,8 @@
             fileLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             documentToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             SuspendLayout();
             // 
             // transformLayout
@@ -367,7 +372,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(503, 444);
+            documentTab.Size = new Size(192, 72);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -387,7 +392,7 @@
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle());
-            fileLayout.Size = new Size(497, 438);
+            fileLayout.Size = new Size(186, 66);
             fileLayout.TabIndex = 5;
             // 
             // sourceDocumentData
@@ -397,10 +402,10 @@
             sourceDocumentData.Dock = DockStyle.Fill;
             sourceDocumentData.DropDownStyle = ComboBoxStyle.DropDown;
             sourceDocumentData.HeaderText = "Source Document (schema)";
-            sourceDocumentData.Location = new Point(3, 389);
+            sourceDocumentData.Location = new Point(3, 17);
             sourceDocumentData.Name = "sourceDocumentData";
             sourceDocumentData.ReadOnly = false;
-            sourceDocumentData.Size = new Size(491, 46);
+            sourceDocumentData.Size = new Size(180, 46);
             sourceDocumentData.TabIndex = 12;
             // 
             // fileNameData
@@ -409,11 +414,11 @@
             fileNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             fileNameData.Dock = DockStyle.Fill;
             fileNameData.HeaderText = "File Name";
-            fileNameData.Location = new Point(3, 339);
+            fileNameData.Location = new Point(3, -33);
             fileNameData.Name = "fileNameData";
             fileNameData.ReadOnly = false;
             fileNameData.SelectIcon = (Image)resources.GetObject("fileNameData.SelectIcon");
-            fileNameData.Size = new Size(491, 44);
+            fileNameData.Size = new Size(180, 44);
             fileNameData.TabIndex = 13;
             // 
             // documentData
@@ -426,7 +431,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(491, 305);
+            documentData.Size = new Size(180, 1);
             documentData.TabIndex = 9;
             // 
             // FileNameColumn
@@ -442,7 +447,7 @@
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(497, 25);
+            documentToolStrip.Size = new Size(186, 25);
             documentToolStrip.TabIndex = 14;
             documentToolStrip.Text = "Document Tools";
             // 
@@ -510,6 +515,8 @@
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             documentToolStrip.ResumeLayout(false);
             documentToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -542,5 +549,7 @@
         private ToolStripButton scriptOpenCommand;
         private ToolStripButton scriptSaveCommand;
         private ToolStripButton documentOpenCommand;
+        private BindingSource bindingTemplate;
+        private BindingSource bindingTransform;
     }
 }

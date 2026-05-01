@@ -1,18 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -67,7 +57,8 @@ namespace DataDictionary.Main.Forms.Scripting
             { schemaIndex = new SchemaDefinitionIndex(key); }
         }
 
-        public SchemaDefinition(ISchemaComposite schema) : this(schema, schema) { }
+        public SchemaDefinition(ISchemaComposite schema) : this(schema, schema) 
+        { }
 
         public SchemaDefinition(
             ITemplateIndex template,
