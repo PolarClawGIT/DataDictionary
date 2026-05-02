@@ -7,10 +7,10 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbCatalog : ApplicationData, IApplicationDataForm
+    partial class DbCatalog : ApplicationData
     {
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ICatalogValue current && ReferenceEquals(current, item); }
 
         protected DbCatalog() : base()
@@ -19,7 +19,8 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetRowState(bindingSource);
             SetTitle(bindingSource);
-            SetCommand(ScopeType.Database, Enumerations.CommandType.Export);
+            SetIcon(bindingSource);
+            SetCommand(ScopeType.Database, Enumerations.ButtonType.Export);
         }
 
         public DbCatalog(ICatalogValue catalogItem) : this()
@@ -32,11 +33,11 @@ namespace DataDictionary.Main.Forms.Catalog
             bindingSource.DataSource = data;
             bindingSource.Position = 0;
 
-            CommandButtons[Enumerations.CommandType.Export].Text = "to Model";
-            CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
-            exportAll.Image = ScopeType.Model.GetImage(Enumerations.CommandType.Add);
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.CommandType.Add);
-            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.CommandType.Add);
+            CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";
+            CommandButtons[Enumerations.ButtonType.Export].DropDown = exportOptions;
+            exportAll.Image = ScopeType.Model.GetImage(Enumerations.ButtonType.Add);
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.ButtonType.Add);
+            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.ButtonType.Add);
 
             exportProcesses.Visible = false; // Disabled until processes are supported
 

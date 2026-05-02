@@ -17,15 +17,15 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetIcon(ScopeType.Scripting);
             SetCommand(
                 ScopeType.Scripting,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase
                 );
-            newTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
-            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
-            newDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Add);
+            newTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
+            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(ButtonType.Add);
+            newDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
 
-            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image, CommandType.Add);
+            AddCommands(templateCommands, ToolStripItemDisplayStyle.Image, ButtonType.Add);
 
             formBinding = new FormBinding()
             {
@@ -37,11 +37,11 @@ namespace DataDictionary.Main.Forms.Obsolete
 
         private void TemplateManager_Load(object sender, EventArgs e)
         {
-            CommandButtons[CommandType.Delete].IsEnabled = false;
+            CommandButtons[ButtonType.Delete].IsEnabled = false;
 
-            CommandButtons[CommandType.OpenDatabase].IsEnabled = false;
-            CommandButtons[CommandType.SaveDatabase].IsEnabled = false;
-            CommandButtons[CommandType.DeleteDatabase].IsEnabled = false;
+            CommandButtons[ButtonType.OpenDatabase].IsEnabled = false;
+            CommandButtons[ButtonType.SaveDatabase].IsEnabled = false;
+            CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
 
             formBinding.Load(doBinding);
 
@@ -55,8 +55,8 @@ namespace DataDictionary.Main.Forms.Obsolete
 
                 // Security
                 SetAuthorization(formBinding.GetAuthorization);
-                newTemplateCommand.Enabled = formBinding.GetAuthorization(CommandType.Add);
-                newDataSourceCommand.Enabled = formBinding.GetAuthorization(CommandType.Add);
+                newTemplateCommand.Enabled = formBinding.GetAuthorization(ButtonType.Add);
+                newDataSourceCommand.Enabled = formBinding.GetAuthorization(ButtonType.Add);
             }
         }
 
@@ -132,11 +132,11 @@ namespace DataDictionary.Main.Forms.Obsolete
         {
             if (formBinding.TryGetValue(out BindingValue? current))
             {
-                CommandButtons[CommandType.Delete].IsEnabled = current.InModel;
+                CommandButtons[ButtonType.Delete].IsEnabled = current.InModel;
 
-                CommandButtons[CommandType.OpenDatabase].IsEnabled = current.InDatabase && !current.InModel;
-                CommandButtons[CommandType.SaveDatabase].IsEnabled = current.InModel;
-                CommandButtons[CommandType.DeleteDatabase].IsEnabled = current.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].IsEnabled = current.InDatabase && !current.InModel;
+                CommandButtons[ButtonType.SaveDatabase].IsEnabled = current.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = current.InDatabase;
             }
         }
 

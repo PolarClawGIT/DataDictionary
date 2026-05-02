@@ -21,6 +21,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public Guid NamedScopeId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return NamedScopeId != Guid.Empty; } }
+
         internal NamedScopeIndex() : base() { }
 
         /// <summary>

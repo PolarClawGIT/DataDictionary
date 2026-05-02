@@ -21,6 +21,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public DbLevelElementType ElementScope { get; init; } = DbLevelElementType.Null;
 
+        /// <inheritdoc/>
+        public override Boolean HasValue { get { return base.HasValue && ElementScope != DbLevelElementType.Null; } }
+
         /// <summary>
         /// Constructor for a Element Scope.
         /// </summary>

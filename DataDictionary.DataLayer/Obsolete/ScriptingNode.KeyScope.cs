@@ -25,6 +25,9 @@ namespace DataDictionary.DataLayer.Obsolete
         /// <inheritdoc/>
         public ScopeType PropertyScope { get; protected set; } = ScopeType.Null;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return PropertyScope != ScopeType.Null; } }
+
         /// <summary>
         /// Constructor for the Unique Key on Property for the Scripting Template Node.
         /// </summary>

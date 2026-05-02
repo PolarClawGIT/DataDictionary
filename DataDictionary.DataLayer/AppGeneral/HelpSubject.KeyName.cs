@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppGeneral
         /// <inheritdoc/>
         public String HelpSubject { get; init; } = String.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(HelpSubject); } }
+
         /// <summary>
         /// Constructor for the Help Subject name key.
         /// </summary>

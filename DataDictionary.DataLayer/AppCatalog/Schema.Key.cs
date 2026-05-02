@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public Guid? SchemaId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return SchemaId.HasValue && SchemaId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Schema Key.
         /// </summary>
@@ -35,7 +38,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(SchemaKey? other)
-        { return other is SchemaKey && EqualityComparer<Guid?>.Default.Equals(SchemaId, other.SchemaId); }
+        {
+            return other is SchemaKey key
+                && SchemaId.HasValue && SchemaId != Guid.Empty
+                && key.SchemaId.HasValue && key.SchemaId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(SchemaId, other.SchemaId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(ISchemaKey? other)

@@ -1,18 +1,9 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Dialogs
 {

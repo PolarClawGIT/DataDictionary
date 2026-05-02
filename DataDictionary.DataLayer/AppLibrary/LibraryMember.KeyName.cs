@@ -30,6 +30,9 @@ public class LibraryMemberKeyName : ILibraryMemberKeyName,
     /// <inheritdoc/>
     public String MemberName { get; init; } = String.Empty;
 
+    /// <inheritdoc/>
+    public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(MemberNameSpace) && !String.IsNullOrEmpty(MemberName); } }
+
     /// <summary>
     /// Constructor for the Library Member Alternate Key
     /// </summary>

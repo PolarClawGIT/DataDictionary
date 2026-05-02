@@ -1,18 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.AppLibrary;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibrarySource : ApplicationData, IApplicationDataForm
+    partial class LibrarySource : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ILibrarySourceValue current && ReferenceEquals(current, item); }
 
         protected LibrarySource() : base()
         {
             InitializeComponent();
+
+            SetIcon(bindingSource, ScopeType.Library);
+            SetTitle(bindingSource);
             SetRowState(bindingSource);
         }
 

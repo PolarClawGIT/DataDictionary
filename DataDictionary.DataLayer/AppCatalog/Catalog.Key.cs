@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public Guid? CatalogId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return CatalogId.HasValue && CatalogId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Catalog Key. Empty Value.
         /// </summary>
@@ -41,7 +44,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(CatalogKey? other)
-        { return other is CatalogKey && EqualityComparer<Guid?>.Default.Equals(CatalogId, other.CatalogId); }
+        {
+            return other is CatalogKey key
+                && CatalogId.HasValue && CatalogId != Guid.Empty
+                && key.CatalogId.HasValue && key.CatalogId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(CatalogId, other.CatalogId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(ICatalogKey? other)

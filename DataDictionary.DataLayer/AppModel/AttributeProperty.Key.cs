@@ -11,32 +11,31 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Implantation for the Domain Attribute Property Key
     /// </summary>
-    public class AttributePropertyKey : IAttributePropertyKey,
-        IKeyEquality<IAttributePropertyKey>, IKeyEquality<AttributePropertyKey>
+    public class AttributePropertyKey : PropertyKey,
+        IAttributePropertyKey, IKeyEquality<IAttributePropertyKey>, IKeyEquality<AttributePropertyKey>
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; init; } = Guid.Empty;
 
         /// <inheritdoc/>
-        public Guid? PropertyId { get; init; } = Guid.Empty;
+        public override Boolean HasValue { get { return base.HasValue && AttributeId.HasValue && AttributeId != Guid.Empty; } }
 
         /// <summary>
         /// Constructor for the Domain Attribute Property Key
         /// </summary>
         /// <param name="source"></param>
-        public AttributePropertyKey(IAttributePropertyKey source)
-        {
-            AttributeId = source.AttributeId;
-            PropertyId = source.PropertyId;
-        }
+        public AttributePropertyKey(IAttributePropertyKey source) : base(source)
+        { AttributeId = source.AttributeId; }
 
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(AttributePropertyKey? other)
         {
-            return other is AttributePropertyKey key &&
-                   EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId) &&
-                   EqualityComparer<Guid?>.Default.Equals(PropertyId, key.PropertyId);
+            return other is AttributePropertyKey key
+                && AttributeId.HasValue && AttributeId != Guid.Empty
+                && key.AttributeId.HasValue && key.AttributeId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(AttributeId, other.AttributeId)
+                && base.Equals(key);
         }
 
         /// <inheritdoc/>

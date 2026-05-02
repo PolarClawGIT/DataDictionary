@@ -9,19 +9,20 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class SubjectArea : ApplicationData, IApplicationDataForm
+    partial class SubjectArea : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingSubject.Current is ISubjectAreaValue current && ReferenceEquals(current, item); }
 
         public SubjectArea() : base()
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.ModelSubjectArea);
             SetTitle(bindingSubject);
             SetRowState(bindingSubject);
             SetCommand(ScopeType.ModelSubjectArea,
-                Enumerations.CommandType.Delete);
+                Enumerations.ButtonType.Delete);
         }
 
         public SubjectArea(ISubjectAreaValue? subjectAreaItem) : this()

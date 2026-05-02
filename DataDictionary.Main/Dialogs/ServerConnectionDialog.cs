@@ -36,7 +36,7 @@ namespace DataDictionary.Main.Dialogs
         public ServerConnectionDialog()
         {
             InitializeComponent();
-            refreshDatabaseCommand.Image = ScopeType.ApplicationConnection.GetImage(Enumerations.CommandType.Refresh);
+            refreshDatabaseCommand.Image = ScopeType.ApplicationConnection.GetImage(Enumerations.ButtonType.Refresh);
             this.Icon = ScopeType.ApplicationConnection.GetIcon();
         }
 

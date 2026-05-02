@@ -10,9 +10,9 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Process : ApplicationData, IApplicationDataForm
+    partial class Process : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IProcessIndex attribute && processIndex.Equals(attribute); }
 
         FormBinding formBinding;
@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Model
                 DoWork = base.DoWork
             };
 
+            SetIcon(ScopeType.ModelProcess);
             SetTitle(bindingProcess);
 
             SetRowState(
@@ -46,21 +47,20 @@ namespace DataDictionary.Main.Forms.Model
                 bindingArgument);
 
             SetCommand(ScopeType.ModelProcess,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
-            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Select);
-            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Add);
+            argumentSelectCommand.Image = ScopeType.ModelProcessArgument.GetImage(ButtonType.Select);
+            argumentNewCommand.Image = ScopeType.ModelProcessArgument.GetImage(ButtonType.Add);
         }
 
         public Process(IProcessIndex? process) : this()
         {
             if (process is IProcessIndex)
             { processIndex = new ProcessIndex(process); }
-            else { processIndex = new ProcessIndex(formBinding.NewValue()); }
         }
 
         public Process(IProcessIndex process, ITemporalIndex temporal) : this(process)
@@ -68,10 +68,24 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Process_Load(object sender, EventArgs e)
         {
+
             if (temporalIndex is null)
             {
-                formBinding.Load(processIndex);
-                DoBinding();
+                if (processIndex.HasValue)
+                { formBinding.Load(processIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out ProcessValue? value))
+                    {
+                        processIndex = new ProcessIndex(value);
+                        formBinding.Load(processIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out ProcessValue? _))
+                { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(processIndex, temporalIndex, onCompleting); }

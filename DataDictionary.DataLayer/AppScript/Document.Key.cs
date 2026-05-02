@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Guid? DocumentId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return DocumentId.HasValue && DocumentId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Document Key
         /// </summary>
@@ -43,7 +46,12 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(DocumentKey? other)
-        { return other is DocumentKey key && key.DocumentId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(DocumentId, key.DocumentId); }
+        {
+            return other is DocumentKey key
+                && DocumentId.HasValue && DocumentId != Guid.Empty
+                && key.DocumentId.HasValue && key.DocumentId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(DocumentId, other.DocumentId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(IDocumentKey? other)

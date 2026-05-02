@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
             void PropertyChanged_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (e.PropertyName is nameof(source.Title) && OnTitleChanged is EventHandler handler)
+                if (OnTitleChanged is EventHandler handler)
                 {
                     Title = GetTitle();
                     Path = GetPath();

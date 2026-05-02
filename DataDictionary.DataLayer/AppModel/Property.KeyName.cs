@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String PropertyTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(PropertyTitle); } }
+
         /// <summary>
         /// Constructor for the Property Unique Key.
         /// </summary>

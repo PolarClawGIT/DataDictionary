@@ -24,13 +24,13 @@ namespace DataDictionary.DataLayer.AppScript
         /// Do not include the matching Object in the results.
         /// NOT filter.
         /// </summary>
-        Boolean? IsExcluded { get; }
+        Boolean IsExcluded { get; }
 
         /// <summary>
         /// Keep Orphaned is an object that is not in the CURRENT model.
         /// This allows a Template to be used in multiple models that are not exactly alike.
         /// </summary>
-        Boolean? KeepOrphaned { get; }
+        Boolean KeepOrphaned { get; }
 
     }
 
@@ -77,17 +77,25 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public Boolean? IsExcluded
+        public Boolean IsExcluded
         {
-            get { return GetValue<Boolean>(nameof(IsExcluded), BindingItemParsers.BooleanTryParse); }
-            set { SetValue(nameof(IsExcluded), value); }
+            get
+            {
+                if (GetValue<bool>(nameof(IsExcluded), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set { SetValue<Boolean>(nameof(IsExcluded), value); }
         }
 
         /// <inheritdoc/>
-        public Boolean? KeepOrphaned
+        public Boolean KeepOrphaned
         {
-            get { return GetValue<Boolean>(nameof(KeepOrphaned), BindingItemParsers.BooleanTryParse); }
-            set { SetValue(nameof(KeepOrphaned), value); }
+            get
+            {
+                if (GetValue<bool>(nameof(KeepOrphaned), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set { SetValue<Boolean>(nameof(KeepOrphaned), value); }
         }
 
         /// <inheritdoc/>
@@ -96,10 +104,10 @@ namespace DataDictionary.DataLayer.AppScript
         /// <summary>
         /// Constructor for Scripting Schema Definition
         /// </summary>
-        public TemplateObjectItem() : base()
+        /// <remarks>This is an incomplete initialization for use in derived classes that require the new() constraint.</remarks>
+        protected TemplateObjectItem() : base()
         {
             if (ObjectId is null) { ObjectId = Guid.NewGuid(); }
-
 
             Temporal = new TemporalItem()
             {

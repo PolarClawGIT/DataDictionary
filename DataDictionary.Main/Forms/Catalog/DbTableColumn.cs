@@ -11,9 +11,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbTableColumn : ApplicationData, IApplicationDataForm
+    partial class DbTableColumn : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingColumn.Current is ITableColumnValue current && ReferenceEquals(current, item); }
 
         public DbTableColumn() : base()
@@ -22,11 +22,12 @@ namespace DataDictionary.Main.Forms.Catalog
 
             SetRowState(bindingColumn, bindingProperties);
             SetTitle(bindingColumn);
-            SetCommand(ScopeType.DatabaseTableColumn, Enumerations.CommandType.Export);
+            SetIcon(bindingColumn);
+            SetCommand(ScopeType.DatabaseTableColumn, Enumerations.ButtonType.Export);
 
-            CommandButtons[Enumerations.CommandType.Export].Text = "to Model";
-            CommandButtons[Enumerations.CommandType.Export].DropDown = exportOptions;
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.CommandType.Add);
+            CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";
+            CommandButtons[Enumerations.ButtonType.Export].DropDown = exportOptions;
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.ButtonType.Add);
         }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()

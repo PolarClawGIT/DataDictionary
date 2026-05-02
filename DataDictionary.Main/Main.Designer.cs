@@ -144,15 +144,17 @@
             menuScriptingDataObject = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
             manageTemplateCommand = new ToolStripSplitButton();
-            bindingModel = new BindingSource(components);
             templateContextMenu = new ContextMenuStrip(components);
+            menuNewTemplate = new ToolStripMenuItem();
             menuTemplate = new ToolStripMenuItem();
-            menuTemplateTransform = new ToolStripMenuItem();
+            menuTemplateObject = new ToolStripMenuItem();
             menuTemplateSchemata = new ToolStripMenuItem();
+            menuTemplateSchemaDocument = new ToolStripMenuItem();
             menuTemplateNode = new ToolStripMenuItem();
             menuTemplateNodeOwner = new ToolStripMenuItem();
-            menuTemplateObject = new ToolStripMenuItem();
-            menuTemplateDocument = new ToolStripMenuItem();
+            menuTemplateTransform = new ToolStripMenuItem();
+            menuTemplateTransformDocument = new ToolStripMenuItem();
+            bindingModel = new BindingSource(components);
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             toolStripStatusBreak = new ToolStripStatusLabel();
@@ -169,8 +171,8 @@
             modelContextMenu.SuspendLayout();
             processContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
             templateContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
             SuspendLayout();
             // 
             // navigationPanel
@@ -998,66 +1000,81 @@
             manageTemplateCommand.Name = "manageTemplateCommand";
             manageTemplateCommand.Size = new Size(72, 22);
             manageTemplateCommand.Text = "Template";
-            // 
-            // bindingModel
-            // 
-            bindingModel.ListChanged += BindingModel_ListChanged;
+            manageTemplateCommand.ButtonClick += ManageTemplateCommand_ButtonClick;
             // 
             // templateContextMenu
             // 
-            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuTemplate, menuTemplateTransform, menuTemplateSchemata, menuTemplateNode, menuTemplateNodeOwner, menuTemplateObject, menuTemplateDocument });
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateObject, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateNodeOwner, menuTemplateTransform, menuTemplateTransformDocument });
             templateContextMenu.Name = "templateContextMenu";
             templateContextMenu.OwnerItem = manageTemplateCommand;
-            templateContextMenu.Size = new Size(188, 158);
+            templateContextMenu.Size = new Size(234, 224);
+            // 
+            // menuNewTemplate
+            // 
+            menuNewTemplate.Name = "menuNewTemplate";
+            menuNewTemplate.Size = new Size(233, 22);
+            menuNewTemplate.Text = "New Template";
+            menuNewTemplate.Click += MenuNewTemplate_Click;
             // 
             // menuTemplate
             // 
             menuTemplate.Name = "menuTemplate";
-            menuTemplate.Size = new Size(187, 22);
+            menuTemplate.Size = new Size(233, 22);
             menuTemplate.Text = "browse Templates";
             menuTemplate.Click += MenuTemplate_Click;
             // 
-            // menuTemplateTransform
+            // menuTemplateObject
             // 
-            menuTemplateTransform.Name = "menuTemplateTransform";
-            menuTemplateTransform.Size = new Size(187, 22);
-            menuTemplateTransform.Text = "browse Transforms";
-            menuTemplateTransform.Click += MenuTemplateTransform_Click;
+            menuTemplateObject.Name = "menuTemplateObject";
+            menuTemplateObject.Size = new Size(233, 22);
+            menuTemplateObject.Text = "browse Objects";
+            menuTemplateObject.Click += MenuTemplateObject_Click;
             // 
             // menuTemplateSchemata
             // 
             menuTemplateSchemata.Name = "menuTemplateSchemata";
-            menuTemplateSchemata.Size = new Size(187, 22);
+            menuTemplateSchemata.Size = new Size(233, 22);
             menuTemplateSchemata.Text = "browse Schemata";
             menuTemplateSchemata.Click += MenuTemplateSchemata_Click;
+            // 
+            // menuTemplateSchemaDocument
+            // 
+            menuTemplateSchemaDocument.Name = "menuTemplateSchemaDocument";
+            menuTemplateSchemaDocument.Size = new Size(233, 22);
+            menuTemplateSchemaDocument.Text = "browse Schema Documents";
+            menuTemplateSchemaDocument.Click += MenuTemplateSchemaDocument_Click;
             // 
             // menuTemplateNode
             // 
             menuTemplateNode.Name = "menuTemplateNode";
-            menuTemplateNode.Size = new Size(187, 22);
-            menuTemplateNode.Text = "browse Nodes";
+            menuTemplateNode.Size = new Size(233, 22);
+            menuTemplateNode.Text = "browse Schema Nodes";
             menuTemplateNode.Click += MenuTemplateNode_Click;
             // 
             // menuTemplateNodeOwner
             // 
             menuTemplateNodeOwner.Name = "menuTemplateNodeOwner";
-            menuTemplateNodeOwner.Size = new Size(187, 22);
-            menuTemplateNodeOwner.Text = "browse Node Owners";
+            menuTemplateNodeOwner.Size = new Size(233, 22);
+            menuTemplateNodeOwner.Text = "browse Schema Node Owners";
             menuTemplateNodeOwner.Click += MenuTemplateNodeOwner_Click;
             // 
-            // menuTemplateObject
+            // menuTemplateTransform
             // 
-            menuTemplateObject.Name = "menuTemplateObject";
-            menuTemplateObject.Size = new Size(187, 22);
-            menuTemplateObject.Text = "browse Objects";
-            menuTemplateObject.Click += MenuTemplateObject_Click;
+            menuTemplateTransform.Name = "menuTemplateTransform";
+            menuTemplateTransform.Size = new Size(233, 22);
+            menuTemplateTransform.Text = "browse Transforms";
+            menuTemplateTransform.Click += MenuTemplateTransform_Click;
             // 
-            // menuTemplateDocument
+            // menuTemplateTransformDocument
             // 
-            menuTemplateDocument.Name = "menuTemplateDocument";
-            menuTemplateDocument.Size = new Size(187, 22);
-            menuTemplateDocument.Text = "browse Documents";
-            menuTemplateDocument.Click += MenuTemplateDocument_Click;
+            menuTemplateTransformDocument.Name = "menuTemplateTransformDocument";
+            menuTemplateTransformDocument.Size = new Size(233, 22);
+            menuTemplateTransformDocument.Text = "browse Transform Documents";
+            menuTemplateTransformDocument.Click += MenuTemplateTransformDocument_Click;
+            // 
+            // bindingModel
+            // 
+            bindingModel.ListChanged += BindingModel_ListChanged;
             // 
             // Main
             // 
@@ -1095,8 +1112,8 @@
             modelContextMenu.ResumeLayout(false);
             processContextMenu.ResumeLayout(false);
             scriptingContextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
             templateContextMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1221,7 +1238,9 @@
         private ToolStripMenuItem menuTemplateNode;
         private ToolStripMenuItem menuTemplateNodeOwner;
         private ToolStripMenuItem menuTemplateObject;
-        private ToolStripMenuItem menuTemplateDocument;
         private ToolStripSplitButton manageTemplateCommand;
+        private ToolStripMenuItem menuNewTemplate;
+        private ToolStripMenuItem menuTemplateSchemaDocument;
+        private ToolStripMenuItem menuTemplateTransformDocument;
     }
 }

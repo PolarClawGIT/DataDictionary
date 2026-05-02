@@ -617,14 +617,10 @@
     <Build Include="AppScript\Stored Procedures\procSetSchemaNode.sql" />
     <Build Include="AppScript\Stored Procedures\procSetSchemaNodeOwner.sql" />
     <Build Include="AppScript\Tables\Transform.sql" />
-    <Build Include="AppScript\Tables\Document.sql" />
     <Build Include="AppScript\Tables\TemplateObject.sql" />
-    <Build Include="AppScript\User Defined Table Types\udttDocument.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTransform.sql" />
-    <Build Include="AppScript\Triggers\trigDocument.sql" />
     <Build Include="AppScript\Triggers\trigTemplateObject.sql" />
     <Build Include="AppScript\Triggers\trigTransform.sql" />
-    <Build Include="HsScript\Tables\Document.sql" />
     <Build Include="HsScript\Tables\TemplateObject.sql" />
     <Build Include="HsScript\Tables\Transform.sql" />
     <Build Include="AppScript\Views\Transform.HS.sql" />
@@ -635,12 +631,24 @@
     <Build Include="AppScript\Functions\funcObjectPath.sql" />
     <Build Include="AppScript\User Defined Table Types\udttTemplateObject.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTransform.sql" />
-    <Build Include="AppScript\Stored Procedures\procGetDocument.sql" />
-    <Build Include="AppScript\Stored Procedures\procSetDocument.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTransform.sql" />
     <Build Include="AppScript\Stored Procedures\procGetTemplateObject.sql" />
     <Build Include="AppScript\Stored Procedures\procSetTemplateObject.sql" />
     <Build Include="AppGeneral\Functions\funcConcatPath.sql" />
+    <Build Include="AppScript\Tables\TransformDocument.sql" />
+    <Build Include="AppScript\Tables\SchemaDocument.sql" />
+    <Build Include="AppScript\Views\TransformDocument.HS.sql" />
+    <Build Include="AppScript\Views\SchemaDocument.HS.sql" />
+    <Build Include="AppScript\Triggers\trigTransformDocument.sql" />
+    <Build Include="AppScript\Triggers\trigSchemaDocument.sql" />
+    <Build Include="HsScript\Tables\SchemaDocument.sql" />
+    <Build Include="HsScript\Tables\TransformDocument.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttSchemaDocument.sql" />
+    <Build Include="AppScript\User Defined Table Types\udttTransformDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetSchemaDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetSchemaDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procGetTransformDocument.sql" />
+    <Build Include="AppScript\Stored Procedures\procSetTransformDocument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

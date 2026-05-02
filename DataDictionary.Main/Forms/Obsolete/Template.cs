@@ -1,7 +1,6 @@
 ﻿//using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Main.Controls;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
@@ -11,9 +10,9 @@ using System.ComponentModel;
 namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete]
-    partial class Template : ApplicationData, IApplicationDataForm
+    partial class Template : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return templateIndex.Equals(item); }
 
         FormBinding formBinding;
@@ -23,13 +22,13 @@ namespace DataDictionary.Main.Forms.Obsolete
         public Template() : base()
         {
             InitializeComponent();
-            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
+            newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(ButtonType.Default);
 
-            documentCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
-            transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
-            addNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Add);
-            deleteNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Delete);
-            addNodeParentCommand.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Add);
+            documentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
+            transformCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
+            addNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(ButtonType.Add);
+            deleteNodeCommand.Image = ScopeType.ScriptingTemplateNode.GetImage(ButtonType.Delete);
+            addNodeParentCommand.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(ButtonType.Add);
             nodeDetailLayout.Enabled = false;
 
             formBinding = new FormBinding()
@@ -45,11 +44,11 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetRowState(bindingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase,
+                Enumerations.ButtonType.HistoryDatabase);
         }
 
         public Template(ITemplateIndex? template) : this()

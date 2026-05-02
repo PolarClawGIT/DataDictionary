@@ -16,24 +16,18 @@ namespace DataDictionary.DataLayer.AppModel
     /// <summary>
     /// Implementation of the ProcessArgument Key 
     /// </summary>
-    public class ProcessArgumentKey : IProcessArgumentKey,
-        IKeyEquality<IProcessArgumentKey>, IKeyEquality<ProcessArgumentKey>
+    public class ProcessArgumentKey : ProcessKey,
+        IProcessArgumentKey, IKeyEquality<IProcessArgumentKey>, IKeyEquality<ProcessArgumentKey>
     {
         /// <inheritdoc/>
-        public Guid? ProcessId { get; init; }
-
-        /// <inheritdoc/>
-        public Guid? ArgumentId { get; init; }
+        public Guid? ArgumentId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the DomainProcessArgument Key 
         /// </summary>
         /// <param name="source"></param>
-        public ProcessArgumentKey(IProcessArgumentKey source) : base()
+        public ProcessArgumentKey(IProcessArgumentKey source) : base(source)
         {
-            if (source.ProcessId is Guid) { ProcessId = source.ProcessId; }
-            else { ProcessId = Guid.Empty; }
-
             if (source.ArgumentId is Guid) { ArgumentId = source.ArgumentId; }
             else { ArgumentId = Guid.Empty; }
         }
@@ -42,9 +36,11 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Boolean Equals(ProcessArgumentKey? other)
         {
-            return other is IProcessArgumentKey key
-                && EqualityComparer<Guid?>.Default.Equals(ProcessId, key.ProcessId)
-                && EqualityComparer<Guid?>.Default.Equals(ArgumentId, key.ArgumentId);
+            return other is ProcessArgumentKey key
+                && ArgumentId.HasValue && ArgumentId != Guid.Empty
+                && key.ArgumentId.HasValue && key.ArgumentId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(ArgumentId, other.ArgumentId)
+                && base.Equals(key);
         }
 
         /// <inheritdoc/>

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource;
 
@@ -12,6 +13,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class TemplateIndex : TemplateKey, ITemplateIndex,
         IKeyEquality<ITemplateIndex>, IKeyEquality<TemplateIndex>
     {
+        /// <inheritdoc cref="TemplateKey()"/>
+        public TemplateIndex() : base() { }
+
         /// <inheritdoc cref="TemplateKey(ITemplateKey)"/>
         public TemplateIndex(ITemplateIndex source) : base(source) { }
 
@@ -29,5 +33,12 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <param name="source"></param>
         public static implicit operator DataIndex(TemplateIndex source)
         { return new DataIndex() { SystemId = source.TemplateId ?? Guid.Empty }; }
+
+        /// <summary>
+        /// Convert ModelIndex to a SecurableIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator SecurableIndex(TemplateIndex source)
+        { return new SecurableIndex() { SecurableId = source.TemplateId ?? Guid.Empty }; }
     }
 }

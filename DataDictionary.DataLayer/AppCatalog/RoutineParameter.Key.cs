@@ -16,10 +16,14 @@ namespace DataDictionary.DataLayer.AppCatalog
     /// <summary>
     /// Implementation for the Database Routine Parameter Key.
     /// </summary>
-    public class RoutineParameterKey : IRoutineParameterKey, IKeyEquality<IRoutineParameterKey>
+    public class RoutineParameterKey : IRoutineParameterKey,
+        IKeyEquality<IRoutineParameterKey>, IKeyEquality<RoutineParameterKey>
     {
         /// <inheritdoc/>
         public Guid? RoutineParameterId { get; init; } = Guid.Empty;
+
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return RoutineParameterId.HasValue && RoutineParameterId != Guid.Empty; } }
 
         /// <summary>
         /// Constructor for the RoutineParameter Key.
@@ -33,8 +37,17 @@ namespace DataDictionary.DataLayer.AppCatalog
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IRoutineParameterKey? other)
-        { return other is IRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(RoutineParameterId, other.RoutineParameterId); }
+        public virtual bool Equals(RoutineParameterKey? other)
+        {
+            return other is IRoutineParameterKey key
+                && RoutineParameterId.HasValue && RoutineParameterId != Guid.Empty
+                && key.RoutineParameterId.HasValue && key.RoutineParameterId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(RoutineParameterId, other.RoutineParameterId);
+        }
+
+        /// <inheritdoc/>
+        public virtual Boolean Equals(IRoutineParameterKey? other)
+        { return other is IRoutineParameterKey value && Equals(new RoutineParameterKey(value)); }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)

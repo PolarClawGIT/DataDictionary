@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public Guid? RoutineColumnId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return RoutineColumnId.HasValue && RoutineColumnId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the RoutineColumn Key.
         /// </summary>
@@ -36,7 +39,12 @@ namespace DataDictionary.DataLayer.AppCatalog
         #region IEquatable
         /// <inheritdoc/>
         public virtual Boolean Equals(RoutineColumnKey? other)
-        { return other is RoutineColumnKey && EqualityComparer<Guid?>.Default.Equals(RoutineColumnId, other.RoutineColumnId); }
+        {
+            return other is RoutineColumnKey key
+                && RoutineColumnId.HasValue && RoutineColumnId != Guid.Empty
+                && key.RoutineColumnId.HasValue && key.RoutineColumnId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(RoutineColumnId, other.RoutineColumnId);
+        }
 
         /// <inheritdoc/>
         public virtual Boolean Equals(IRoutineColumnKey? other)

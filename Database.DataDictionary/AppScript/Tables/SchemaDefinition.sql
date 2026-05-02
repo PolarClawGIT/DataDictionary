@@ -1,5 +1,7 @@
 ﻿CREATE TABLE [AppScript].[SchemaDefinition]
 (	-- Defines an XSD
+	-- Note: The Suffix 'Definition' is redundent to avoid Name collesions in the application.
+	-- It is not needed at the Database Layer.
 	[SchemaId]				UniqueIdentifier Not Null CONSTRAINT [DF_SchemaId] DEFAULT (newid()),
 	[TemplateId]            UniqueIdentifier Not Null,
 	[SchemaTitle]			[AppGeneral].[uddtTitle] Not Null,

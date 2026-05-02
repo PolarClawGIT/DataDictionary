@@ -4,18 +4,48 @@ With [Dates] As (
 	Select	[DocumentId],
 			[SysStart],
 			[SysEnd]
-	From	[AppScript].[Document]
+	From	[AppScript].[SchemaDocument]
 	Union
 	Select	[DocumentId],
 			[SysStart],
 			[SysEnd]
-	From	[HsScript].[Document]
-	Where	[SysStart] != [SysEnd])
+	From	[HsScript].[SchemaDocument]
+	Where	[SysStart] != [SysEnd]
+	Union
+	Select	[DocumentId],
+			[SysStart],
+			[SysEnd]
+	From	[AppScript].[TransformDocument]
+	Union
+	Select	[DocumentId],
+			[SysStart],
+			[SysEnd]
+	From	[HsScript].[TransformDocument]
+	Where	[SysStart] != [SysEnd]),
+[Document] As (
+	-- Rolls the Sub-Type of Document back into the Super-Type
+	Select	D.[DocumentId],
+			S.[RootFolder],
+			S.[RelativePath],
+			D.[FileName],
+			D.[SysStart],
+			D.[SysEnd]
+	From	[AppScript].[SchemaDocument] D
+			Inner Join [AppScript].[SchemaDefinition] S
+			On	D.[SchemaId] = S.[SchemaId]
+	Union
+	Select	D.[DocumentId],
+			S.[RootFolder],
+			S.[RelativePath],
+			D.[FileName],
+			D.[SysStart],
+			D.[SysEnd]
+	From	[AppScript].[TransformDocument] D
+			Inner Join [AppScript].[Transform] S
+			On	D.[TransformId] = S.[TransformId])
 Select	D.[DocumentId], -- PK
-		D.[TemplateId],
-		D.[SchemaId],
-		D.[TransformId],
-		D.[ObjectId],
+		D.[RootFolder],
+		D.[RelativePath],
 		D.[FileName],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
@@ -28,7 +58,7 @@ Select	D.[DocumentId], -- PK
 		Convert(Bit, IIF([PriorDate] = D.[SysStart], 1, 0)) As [IsUpdated],
 		Convert(Bit, IIF([NextDate] is Null And D.[SysEnd] < SysUtcDateTime(), 1, 0)) As [IsDeleted],
 		Convert(Bit, IIF(SysUtcDateTime() >= D.[SysStart] And SysUtcDateTime() < D.[SysEnd], 1, 0)) As [IsCurrent]
-From	[AppScript].[Document] D
+From	[Document] D
 		Outer Apply (
 			Select	Max([SysEnd]) As [PriorDate]
 			From	[Dates]

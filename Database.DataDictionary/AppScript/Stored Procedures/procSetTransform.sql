@@ -26,7 +26,6 @@ Begin Try
 		[TransformId]			UniqueIdentifier Not NULL,
 		[TransformTitle]		[AppGeneral].[uddtTitle] Not Null,
 		[TemplateId]            UniqueIdentifier Not Null,
-		[SchemaId]				UniqueIdentifier Null,
 		[TransformScript]		XML Null,
 		[TransformFileName]		[AppGeneral].[uddtFileName] Null,
 		[RootFolder]			[AppGeneral].[uddtFileRoot] Null,
@@ -40,7 +39,6 @@ Begin Try
 	Select	X.[TransformId],
 			NullIf(Trim(D.[TransformTitle]),'') As [TransformTitle],
 			D.[TemplateId],
-			D.[SchemaId],
 			Case
 				When NullIf(D.[TransformScript],'') is Null Then Null
 				When SubString(Trim(D.[TransformScript]),1,1) Not In ('<') Then Null -- First Character not a tag start
@@ -88,7 +86,6 @@ Begin Try
 		Select	[TransformId],
 				[TransformTitle],
 				--[TemplateId],
-				[SchemaId],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
 				[TransformFileName],
 				[RootFolder],
@@ -101,7 +98,6 @@ Begin Try
 		Select	[TransformId],
 				[TransformTitle],
 				--[TemplateId],
-				[SchemaId],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript],
 				[TransformFileName],
 				[RootFolder],
@@ -130,7 +126,6 @@ Begin Try
 			[TransformId],
 			[TransformTitle],
 			[TemplateId],
-			[SchemaId],
 			[TransformScript],
 			[TransformFileName],
 			[RootFolder],
@@ -141,7 +136,6 @@ Begin Try
 	Select	S.[TransformId],
 			S.[TransformTitle],
 			S.[TemplateId],
-			S.[SchemaId],
 			S.[TransformScript],
 			S.[TransformFileName],
 			S.[RootFolder],

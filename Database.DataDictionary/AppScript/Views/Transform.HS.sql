@@ -14,7 +14,6 @@ With [Dates] As (
 Select	D.[TransformId], -- PK
 		D.[TransformTitle], -- AK
 		D.[TemplateId],
-		D.[SchemaId],
 		D.[TransformScript],
 		D.[TransformFileName],
 		D.[RootFolder],

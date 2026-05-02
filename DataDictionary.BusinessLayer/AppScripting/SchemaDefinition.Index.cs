@@ -8,10 +8,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ISchemaDefinitionIndex : ISchemaDefinitionKey
     { }
 
+    /// <summary>
+    /// Composite Index for the Template/Schema
+    /// </summary>
+    public interface ISchemaComposite : ITemplateIndex, ISchemaDefinitionIndex
+    { }
+
     /// <inheritdoc/>
     public class SchemaDefinitionIndex : SchemaDefinitionKey, ISchemaDefinitionIndex,
         IKeyEquality<ISchemaDefinitionIndex>, IKeyEquality<SchemaDefinitionIndex>
     {
+        /// <inheritdoc cref="SchemaDefinitionKey()"/>
+        public SchemaDefinitionIndex() : base() { }
+
         /// <inheritdoc cref="SchemaDefinitionKey(ISchemaDefinitionKey)"/>
         public SchemaDefinitionIndex(ISchemaDefinitionIndex source) : base(source) { }
 

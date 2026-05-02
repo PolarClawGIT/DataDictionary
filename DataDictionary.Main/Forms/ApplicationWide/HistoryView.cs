@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
                 ScopeType.ApplicationHelp,
-                Enumerations.CommandType.Open);
+                Enumerations.ButtonType.Open);
 
             historyValuesData.ResizeColumns();
             historyModificationData.ResizeColumns();
@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     formData.GetDetails(group).LastOrDefault() is TemporalValue value)
                 { bindingHistory.Position = formData.IndexOf(value); }
 
-                CommandButtons[Enumerations.CommandType.Open].IsEnabled = (OpenForm is not null);
+                CommandButtons[Enumerations.ButtonType.Open].IsEnabled = (OpenForm is not null);
             }
         }
 

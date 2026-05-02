@@ -11,28 +11,28 @@ using System.Xml.Linq;
 namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete]
-    partial class Document : ApplicationData, IApplicationDataForm
+    partial class Document : ApplicationData
     {
         FormBinding formBinding;
         DocumentIndex documentIndex = new DocumentIndex();
         TemporalIndex? temporalIndex = null;
 
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return formBinding.Equals(item); }
 
         public Document()
         {
             InitializeComponent();
 
-            inputOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Open);
-            inputSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Save);
+            inputOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
+            inputSaveCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Save);
 
-            openTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Open);
-            saveTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Save);
-            getTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Import);
+            openTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Open);
+            saveTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Save);
+            getTransformCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Import);
 
-            saveResultCommand.Image = ScopeType.ApplicationDocument.GetImage(CommandType.Save);
-            refreshResultCommand.Image = ScopeType.ApplicationDocument.GetImage(CommandType.Refresh);
+            saveResultCommand.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Save);
+            refreshResultCommand.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Refresh);
 
             SetIcon(ScopeType.ScriptingDocument);
 
@@ -47,13 +47,13 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetRowState(bindingDocument);
 
             SetCommand(ScopeType.ScriptingDocument,
-                CommandType.Delete,
-                CommandType.Save,
-                CommandType.Open,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.Save,
+                ButtonType.Open,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
         }
 
         public Document(IDocumentIndex? document) : this()

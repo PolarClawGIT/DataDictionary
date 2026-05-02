@@ -7,6 +7,7 @@ namespace DataDictionary.Main.Enumerations
     {
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
         {
+            { ScopeType.Null,                       Resources.Icon_SoftwareDefinitionModel },
             { ScopeType.Application,                Resources.Icon_SoftwareDefinitionModel },
             { ScopeType.ApplicationHelp,            Resources.Icon_Help },
             { ScopeType.ApplicationHelpPage,        Resources.Icon_HelpIndexFile },
@@ -88,7 +89,7 @@ namespace DataDictionary.Main.Enumerations
             {ScopeType.ScriptingNodeOwner,          Resources.Icon_XMLDescendant},
             {ScopeType.ScriptingObject,             Resources.Icon_Tag},
             {ScopeType.ScriptingSchema,             Resources.Icon_XMLSchema},
-            {ScopeType.ScriptingTransform,          Resources.Icon_XSLTransform},
+            {ScopeType.ScriptingTransform,          Resources.Icon_XMLTransformation},
             {ScopeType.ScriptingDocument,           Resources.Icon_XMLFile},
 
 

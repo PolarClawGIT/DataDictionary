@@ -10,16 +10,18 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.General
 {
-    partial class HelpSubject : ApplicationData, IApplicationDataForm
+    partial class HelpSubject : ApplicationData
     {
         FormBinding formBinding;
         Boolean needsData = false;
 
-        public Boolean IsOpenItem(IHelpSubjectIndex helpSubject)
+        public override Boolean IsOpenItem(object? item)
         {
-            HelpSubjectIndex key = new HelpSubjectIndex(helpSubject);
-            return formBinding.TryGetValue(out HelpSubjectValue? subject) && key.Equals(subject);
+            return item is IHelpSubjectIndex key
+                && formBinding.TryGetValue(out HelpSubjectValue? subject)
+                && key.Equals(subject);
         }
+
 
         public HelpSubject() : base()
         {
@@ -29,13 +31,14 @@ namespace DataDictionary.Main.Forms.General
 
             SetRowState(helpBinding);
             SetTitle(helpBinding);
+            SetIcon(ScopeType.ApplicationHelpPage);
             SetCommand(ScopeType.ApplicationHelpPage,
-                Enumerations.CommandType.Add,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.SecurityDatabase);
+                Enumerations.ButtonType.Add,
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase,
+                Enumerations.ButtonType.SecurityDatabase);
 
             // Store and recompute column sizes for List views
             controlData.ResizeColumns();

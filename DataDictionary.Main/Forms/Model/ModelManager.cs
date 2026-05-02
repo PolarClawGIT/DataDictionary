@@ -17,14 +17,14 @@ namespace DataDictionary.Main.Forms.Model
         public ModelManager()
         {
             InitializeComponent();
-            newModelCommand.Image = ScopeType.Model.GetImage(CommandType.Add);
+            newModelCommand.Image = ScopeType.Model.GetImage(ButtonType.Add);
 
             SetIcon(ScopeType.Model);
 
             SetCommand(ScopeType.Model,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase);
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase);
 
             formBinding = new FormBinding()
             {
@@ -93,11 +93,11 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                CommandButtons[CommandType.Delete].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
 
-                CommandButtons[CommandType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
-                CommandButtons[CommandType.SaveDatabase].IsEnabled = binding.InModel;
-                CommandButtons[CommandType.DeleteDatabase].IsEnabled = binding.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
         }
     }

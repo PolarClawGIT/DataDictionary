@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public String DefinitionTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(DefinitionTitle); } }
+
         /// <summary>
         /// Constructor for the Definition Unique Key.
         /// </summary>

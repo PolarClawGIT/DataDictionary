@@ -11,10 +11,19 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public interface ITransformIndex : ITransformKey
     { }
 
+    /// <summary>
+    /// Composite Index for the Template/Transform
+    /// </summary>
+    public interface ITransformComposite: ITemplateIndex, ITransformIndex
+    { }
+
     /// <inheritdoc/>
     public class TransformIndex : TransformKey, ITransformIndex,
         IKeyEquality<ITransformIndex>, IKeyEquality<TransformIndex>
     {
+        /// <inheritdoc cref="TransformKey()"/>
+        public TransformIndex() : base() { }
+
         /// <inheritdoc cref="TransformKey(ITransformKey)"/>
         public TransformIndex(ITransformIndex source) : base(source) { }
 

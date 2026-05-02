@@ -39,6 +39,17 @@ public class ReferencedKeyObject : IReferencedKeyObject,
     /// <inheritdoc/>
     public String ReferencedObjectName { get; init; } = string.Empty;
 
+    /// <inheritdoc/>
+    public virtual Boolean HasValue
+    {
+        get
+        {
+            return !String.IsNullOrEmpty(ReferencedDatabaseName)
+                && !String.IsNullOrEmpty(ReferencedSchemaName)
+                && !String.IsNullOrEmpty(ReferencedObjectName);
+        }
+    }
+
     /// <summary>
     /// Constructor for Referenced Object Name
     /// </summary>

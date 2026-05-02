@@ -11,9 +11,9 @@ using System.ComponentModel;
 namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete]
-    partial class DataSource : ApplicationData, IApplicationDataForm
+    partial class DataSource : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return dataSourceIndex.Equals(item); }
 
         FormBinding formBinding;
@@ -36,14 +36,14 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetRowState(bindingDataSource, bindingDataObject);
 
             SetCommand(ScopeType.ScriptingData,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
-            newObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Add);
-            selectObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(CommandType.Select);
+            newObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(ButtonType.Add);
+            selectObjectCommand.Image = ScopeType.ScriptingDataObject.GetImage(ButtonType.Select);
         }
 
         public DataSource(IDataSourceIndex? dataSource) : this()

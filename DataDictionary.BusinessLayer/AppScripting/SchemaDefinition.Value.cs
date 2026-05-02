@@ -6,7 +6,7 @@ using DataDictionary.Resource.Enumerations;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    public interface ISchemaDefinitionValue : ISchemaDefinitionItem, ISchemaDefinitionIndex, ITemplateIndex,
+    public interface ISchemaDefinitionValue : ISchemaDefinitionItem, ISchemaComposite,
         IScopeType, ITemporal
     {
         /// <summary>
@@ -35,13 +35,34 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public IDirectoryValue SchemaDirectory { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public SchemaDefinitionValue() : base()
         {
             pathValue = new PathValue(this)
             {
                 GetIndex = () => new SchemaDefinitionIndex(this),
-                GetPath = () => new PathIndex(Scope),
+                GetPath = () => new PathIndex(PathIndex.Parse(SchemaTitle).ToArray()),
+                GetScope = () => Scope,
+                GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
+                IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),
+                IsTitleChanged = (e) => e.PropertyName is nameof(SchemaTitle)
+            };
+
+            SchemaDirectory = new DirectoryValue()
+            {
+                GetRootFolder = () => RootFolder,
+                GetDirectory = () => RelativePath ?? String.Empty,
+                SetDirectory = (value) => RelativePath = value
+            };
+        }
+
+        /// <inheritdoc cref="SchemaDefinitionItem(ITemplateKey)"/>
+        public SchemaDefinitionValue(ITemplateIndex template) : base(template)
+        {
+            pathValue = new PathValue(this)
+            {
+                GetIndex = () => new SchemaDefinitionIndex(this),
+                GetPath = () => new PathIndex(PathIndex.Parse(SchemaTitle).ToArray()),
                 GetScope = () => Scope,
                 GetTitle = () => SchemaTitle ?? Scope.GetEnumeration().Name,
                 IsPathChanged = (e) => e.PropertyName is nameof(SchemaTitle),

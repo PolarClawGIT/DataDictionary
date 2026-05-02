@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms
             /// <summary>
             /// Command Type assocated with the CommandState
             /// </summary>
-            public CommandType Command
+            public ButtonType Command
             {
                 get { return commandValue; }
                 set
@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Forms
                     Image = Scope.GetImage(value);
                 }
             }
-            CommandType commandValue;
+            ButtonType commandValue;
 
             public CommandState(ToolStripItem control) : base()
             {
@@ -83,7 +83,7 @@ namespace DataDictionary.Main.Forms
                 control.VisibleChanged += Control_VisibleChanged;
             }
 
-            public void AddTo(IDictionary<CommandType, CommandState> target)
+            public void AddTo(IDictionary<ButtonType, CommandState> target)
             { target.Add(this.Command, this); }
 
             /// <summary>

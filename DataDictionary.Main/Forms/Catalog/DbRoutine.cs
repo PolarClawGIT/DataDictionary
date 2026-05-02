@@ -1,15 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
-using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Catalog
 {
-    partial class DbRoutine : ApplicationData, IApplicationDataForm
+    partial class DbRoutine : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingRoutine.Current is IRoutineValue current && ReferenceEquals(current, item); }
 
         protected DbRoutine() : base()
@@ -21,6 +19,7 @@ namespace DataDictionary.Main.Forms.Catalog
                 bindingParameters,
                 bindingProperties,
                 bindingDependencies);
+            SetIcon(bindingRoutine);
             SetTitle(bindingRoutine);
         }
 

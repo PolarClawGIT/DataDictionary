@@ -214,7 +214,7 @@ namespace DataDictionary.Main.Forms.Obsolete
             }
 
 
-            public Boolean GetAuthorization(DocumentIndex document, Enumerations.CommandType command)
+            public Boolean GetAuthorization(DocumentIndex document, Enumerations.ButtonType command)
             {
                 Boolean isGrant = false;
 
@@ -231,13 +231,13 @@ namespace DataDictionary.Main.Forms.Obsolete
 
                 switch (command)
                 {
-                    case Enumerations.CommandType.Default: return true;
-                    case Enumerations.CommandType.Add: return isGrant;
-                    case Enumerations.CommandType.Delete: return isGrant;
-                    case Enumerations.CommandType.OpenDatabase: return isGrant;
-                    case Enumerations.CommandType.SaveDatabase: return isGrant;
-                    case Enumerations.CommandType.DeleteDatabase: return isGrant;
-                    case Enumerations.CommandType.HistoryDatabase: return isGrant;
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Add: return isGrant;
+                    case Enumerations.ButtonType.Delete: return isGrant;
+                    case Enumerations.ButtonType.OpenDatabase: return isGrant;
+                    case Enumerations.ButtonType.SaveDatabase: return isGrant;
+                    case Enumerations.ButtonType.DeleteDatabase: return isGrant;
+                    case Enumerations.ButtonType.HistoryDatabase: return isGrant;
                     default: return false;
                 }
             }

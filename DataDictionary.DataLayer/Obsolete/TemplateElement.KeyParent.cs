@@ -31,6 +31,9 @@ namespace DataDictionary.DataLayer.Obsolete
         public Guid? ParentElementId { get; init; } = Guid.Empty;
 
         /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return ParentElementId.HasValue && ParentElementId != Guid.Empty; } }
+
+        /// <inheritdoc/>
         Guid? ITemplateElementKey.ElementId { get { return ParentElementId; } }
 
         /// <summary>

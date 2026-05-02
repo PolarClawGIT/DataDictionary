@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
-            syncTextToSummary.Image = ScopeType.ModelDefinition.GetImage(CommandType.Sync);
+            syncTextToSummary.Image = ScopeType.ModelDefinition.GetImage(ButtonType.Sync);
 
             definitionTextData.AddTools(fullTextTools);
         }

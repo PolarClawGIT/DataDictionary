@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Guid? NodeId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return NodeId.HasValue && NodeId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty SchemaNode Key
         /// </summary>
@@ -43,7 +46,12 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(SchemaNodeKey? other)
-        { return other is SchemaNodeKey key && key.NodeId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(NodeId, key.NodeId); }
+        {
+            return other is SchemaNodeKey key
+                && NodeId.HasValue && NodeId != Guid.Empty
+                && key.NodeId.HasValue && key.NodeId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(NodeId, other.NodeId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ISchemaNodeKey? other)

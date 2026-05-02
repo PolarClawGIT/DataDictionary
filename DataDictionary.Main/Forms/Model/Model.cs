@@ -1,20 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Model : ApplicationData, IApplicationDataForm
+    partial class Model : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return bindingModel.Current is IModelValue current && ReferenceEquals(current, item); }
 
         public Model() : base()
         {
             InitializeComponent();
 
+            SetIcon(ScopeType.Model);
             SetTitle(bindingModel);
             SetRowState(bindingModel);
         }

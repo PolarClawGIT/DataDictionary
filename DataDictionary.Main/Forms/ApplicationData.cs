@@ -7,17 +7,29 @@ using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Text;
 using System.ComponentModel;
-using CommandType = DataDictionary.Main.Enumerations.CommandType;
+using ButtonType = DataDictionary.Main.Enumerations.ButtonType;
 
 namespace DataDictionary.Main.Forms
 {
+
     partial class ApplicationData : ApplicationBase
     {
         /// <summary>
+        /// Is the object passed the item the form is using for data.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// By default the function always returns true.
+        /// Override this if the from is specific to data item.
+        /// </remarks>
+        public virtual Boolean IsOpenItem(Object? item) { return true; }
+
+        /// <summary>
         /// The set of Command Buttons
         /// </summary>
-        protected IReadOnlyDictionary<CommandType, CommandState> CommandButtons { get { return commandButtons; } }
-        Dictionary<CommandType, CommandState> commandButtons = new Dictionary<CommandType, CommandState>();
+        protected IReadOnlyDictionary<ButtonType, CommandState> CommandButtons { get { return commandButtons; } }
+        Dictionary<ButtonType, CommandState> commandButtons = new Dictionary<ButtonType, CommandState>();
 
         /// <summary>
         /// Constructor called when in Form Design mode
@@ -34,61 +46,61 @@ namespace DataDictionary.Main.Forms
             InitializeComponent();
 
 
-            helpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
+            helpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
 
             new CommandState(browseCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Browse,
+                Command = ButtonType.Browse,
                 IsVisible = false,
             }.AddTo(commandButtons);
 
             new CommandState(selectCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Select,
+                Command = ButtonType.Select,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(newCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Add,
+                Command = ButtonType.Add,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(deleteCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Delete,
+                Command = ButtonType.Delete,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(saveCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Save,
+                Command = ButtonType.Save,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(openCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Open,
+                Command = ButtonType.Open,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(importCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Import,
+                Command = ButtonType.Import,
                 IsVisible = false
             }.AddTo(commandButtons);
 
             new CommandState(exportCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
-                Command = CommandType.Export,
+                Command = ButtonType.Export,
                 IsVisible = false
             }.AddTo(commandButtons);
 
@@ -97,7 +109,7 @@ namespace DataDictionary.Main.Forms
             new CommandState(openFromDatabaseCommand)
             {
                 Scope = ScopeType.Database,
-                Command = CommandType.OpenDatabase,
+                Command = ButtonType.OpenDatabase,
                 IsVisible = true,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
@@ -105,7 +117,7 @@ namespace DataDictionary.Main.Forms
             new CommandState(saveToDatabaseCommand)
             {
                 Scope = ScopeType.Database,
-                Command = CommandType.SaveDatabase,
+                Command = ButtonType.SaveDatabase,
                 IsVisible = true,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
@@ -113,7 +125,7 @@ namespace DataDictionary.Main.Forms
             new CommandState(deleteFromDatabaseCommand)
             {
                 Scope = ScopeType.Database,
-                Command = CommandType.DeleteDatabase,
+                Command = ButtonType.DeleteDatabase,
                 IsVisible = true,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
@@ -121,7 +133,7 @@ namespace DataDictionary.Main.Forms
             new CommandState(securityCommand)
             {
                 Scope = ScopeType.Security,
-                Command = CommandType.SecurityDatabase,
+                Command = ButtonType.SecurityDatabase,
                 IsVisible = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
@@ -129,7 +141,7 @@ namespace DataDictionary.Main.Forms
             new CommandState(historyCommand)
             {
                 Scope = ScopeType.ApplicationTimeLine,
-                Command = CommandType.HistoryDatabase,
+                Command = ButtonType.HistoryDatabase,
                 IsVisible = false,
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
             }.AddTo(commandButtons);
@@ -284,20 +296,22 @@ namespace DataDictionary.Main.Forms
 
 
         /// <summary>
-        /// Sets the Title text and Icon based on the BindingSource provided.
+        /// Sets the Title based on the BindingSource provided.
+        /// Allows for the Title to be changed if the Title of the object changes.
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="defaultTitle"></param>
         /// <remarks>
-        /// This sets up the CurrentChanged and Disposed events.
-        /// Title and Icon are updated based on what record is being viewed.
-        /// Override behavior of SetIcon.
+        /// The data in the BindingSource must be an IDataValue.
         /// </remarks>
-        protected void SetTitle(BindingSource data)
+        protected void SetTitle(BindingSource data, String? defaultTitle = null)
         {
-            Data_CurrentChanged(data, EventArgs.Empty);
+            //Data_CurrentChanged(data, EventArgs.Empty);
             data.CurrentChanged += Data_CurrentChanged;
             data.Disposed += Data_Disposed;
             data.DataSourceChanged += Data_DataSourceChanged;
+
+            SetTitle(defaultTitle ?? String.Empty);
 
             void Data_DataSourceChanged(Object? sender, EventArgs e)
             { Data_CurrentChanged(data, EventArgs.Empty); }
@@ -305,10 +319,48 @@ namespace DataDictionary.Main.Forms
             void Data_CurrentChanged(Object? sender, EventArgs e)
             {
                 if (data.Position >= 0 && data.Current is IDataValue dataValue)
-                {
-                    Text = dataValue.Title;
-                    SetIcon(dataValue.Scope);
-                }
+                { SetTitle(dataValue.Title); }
+                else { SetTitle(defaultTitle ?? String.Empty); }
+            }
+
+            void Data_Disposed(Object? sender, EventArgs e)
+            {
+                data.CurrentChanged -= Data_CurrentChanged;
+                data.Disposed -= Data_Disposed;
+            }
+        }
+
+        /// <summary>
+        /// /// Sets the Title text to the string provided.
+        /// </summary>
+        /// <param name="value"></param>
+        protected void SetTitle(String value)
+        { Text = value; }
+
+        /// <summary>
+        /// Sets the Icon based on the BindingSource provided.
+        /// Allows for the Icon to be changed if the Scope of the object changes.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="defaultScope"></param>
+        /// <remarks>
+        /// The data in the BindingSource must be an IScopeType.
+        /// </remarks>
+        protected void SetIcon(BindingSource data, ScopeType defaultScope = ScopeType.Null)
+        {
+            data.CurrentChanged += Data_CurrentChanged;
+            data.Disposed += Data_Disposed;
+            data.DataSourceChanged += Data_DataSourceChanged;
+            SetIcon(defaultScope);
+
+            void Data_DataSourceChanged(Object? sender, EventArgs e)
+            { Data_CurrentChanged(data, EventArgs.Empty); }
+
+            void Data_CurrentChanged(Object? sender, EventArgs e)
+            {
+                if (data.Position >= 0 && data.Current is IScopeType dataValue)
+                { SetIcon(dataValue.Scope); }
+                else { SetIcon(defaultScope); }
             }
 
             void Data_Disposed(Object? sender, EventArgs e)
@@ -322,7 +374,7 @@ namespace DataDictionary.Main.Forms
         /// Sets the Icon based on Scope Provided
         /// </summary>
         /// <param name="scope"></param>
-        /// <remarks>Icon is static unless SetTitle is used.</remarks>
+        /// <remarks>This applies icon that is expected to be static.</remarks>
         protected void SetIcon(ScopeType scope)
         { Icon = scope.GetIcon(); }
 
@@ -332,7 +384,7 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="scope"></param>
         /// <param name="commands"></param>
-        protected void SetCommand(ScopeType scope, params CommandType[]? commands)
+        protected void SetCommand(ScopeType scope, params ButtonType[]? commands)
         {
             if (commands is not null)
             {
@@ -355,15 +407,15 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="commands"></param>
         /// <param name="displayStyle">default is Image and Text</param>
-        /// <param name="positionOf">Postion the toolstrip to the Left of the command specfied</param>
+        /// <param name="positionOf">Position the toolstrip to the Left of the command specified</param>
         protected void AddCommands(ToolStrip commands,
             ToolStripItemDisplayStyle displayStyle = ToolStripItemDisplayStyle.ImageAndText,
-            CommandType positionOf = CommandType.Default)
+            ButtonType positionOf = ButtonType.Default)
         {
             Int32 mergeIndex = -1;
             if (toolStrip.Items.OfType<ToolStripSeparator>().FirstOrDefault() is ToolStripSeparator separator)
             {
-                if (positionOf is CommandType.Default)
+                if (positionOf is ButtonType.Default)
                 { // Place the items before the Database Commands
                     mergeIndex = toolStrip.Items.IndexOf(separator);
                     separator.Visible = true;
@@ -381,6 +433,7 @@ namespace DataDictionary.Main.Forms
                 item.DisplayStyle = displayStyle;
                 item.MergeIndex = mergeIndex++;
                 item.MergeAction = MergeAction.Insert;
+                item.ToolTipText = item.Text;
             }
 
             ToolStripManager.Merge(commands, toolStrip);
@@ -390,7 +443,7 @@ namespace DataDictionary.Main.Forms
         /// Set the IsEnabled based on security function.
         /// </summary>
         /// <param name="getAuthorization"></param>
-        public virtual void SetAuthorization(Func<Enumerations.CommandType, Boolean> getAuthorization)
+        public virtual void SetAuthorization(Func<Enumerations.ButtonType, Boolean> getAuthorization)
         {
             foreach (var item in CommandButtons)
             { item.Value.IsEnabled = getAuthorization(item.Key); }
@@ -500,9 +553,9 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            commandButtons[Enumerations.CommandType.OpenDatabase].Refresh();
-            commandButtons[Enumerations.CommandType.SaveDatabase].Refresh();
-            commandButtons[Enumerations.CommandType.DeleteDatabase].Refresh();
+            commandButtons[Enumerations.ButtonType.OpenDatabase].Refresh();
+            commandButtons[Enumerations.ButtonType.SaveDatabase].Refresh();
+            commandButtons[Enumerations.ButtonType.DeleteDatabase].Refresh();
         }
 
 

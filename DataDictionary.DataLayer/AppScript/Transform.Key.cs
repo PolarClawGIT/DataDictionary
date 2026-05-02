@@ -23,6 +23,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Guid? TransformId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return TransformId.HasValue && TransformId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Transform Key
         /// </summary>
@@ -43,7 +46,12 @@ namespace DataDictionary.DataLayer.AppScript
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(TransformKey? other)
-        { return other is TransformKey key && key.TransformId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(TransformId, key.TransformId); }
+        {
+            return other is TransformKey key
+                && TransformId.HasValue && TransformId != Guid.Empty
+                && key.TransformId.HasValue && key.TransformId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(TransformId, other.TransformId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(ITransformKey? other)

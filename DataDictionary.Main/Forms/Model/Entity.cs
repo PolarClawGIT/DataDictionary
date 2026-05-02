@@ -7,13 +7,13 @@ using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Messages;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.BusinessLayer.AppModel;
-using CommandType = DataDictionary.Main.Enumerations.CommandType;
+using ButtonType = DataDictionary.Main.Enumerations.ButtonType;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Entity : ApplicationData, IApplicationDataForm
+    partial class Entity : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IEntityIndex entity && entityIndex.Equals(entity); }
 
         FormBinding formBinding;
@@ -38,6 +38,7 @@ namespace DataDictionary.Main.Forms.Model
             };
 
             SetTitle(bindingEntity);
+            SetIcon(ScopeType.ModelEntity);
 
             SetRowState(
                 bindingEntity,
@@ -48,21 +49,20 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAttribute);
             
             SetCommand(ScopeType.ModelEntity,
-                CommandType.Delete,
-                CommandType.OpenDatabase,
-                CommandType.SaveDatabase,
-                CommandType.DeleteDatabase,
-                CommandType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
-            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Select);
-            attributeNewCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            attributeSelectCommand.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Select);
+            attributeNewCommand.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
         }
 
         public Entity(IEntityIndex? entity) : this()
         {
             if (entity is IEntityIndex)
             { entityIndex = new EntityIndex(entity); }
-            else { entityIndex = new EntityIndex(formBinding.NewValue()); }
         }
 
         public Entity(IEntityIndex entity, ITemporalIndex temporal) : this(entity)
@@ -72,8 +72,21 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (temporalIndex is null)
             {
-                formBinding.Load(entityIndex);
-                DoBinding();
+                if (entityIndex.HasValue)
+                { formBinding.Load(entityIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out EntityValue? value))
+                    {
+                        entityIndex = new EntityIndex(value);
+                        formBinding.Load(entityIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out EntityValue? _))
+                { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(entityIndex, temporalIndex, onCompleting); }

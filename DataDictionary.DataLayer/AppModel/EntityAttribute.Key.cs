@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Guid? AttributeId { get; init; }
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { throw new NotImplementedException("Obsolete"); } }
+
         /// <summary>
         /// Constructor for the DomainEntityAttribute Key 
         /// </summary>

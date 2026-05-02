@@ -15,6 +15,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
     public class DocumentIndex : DocumentKey, IDocumentIndex,
         IKeyEquality<IDocumentIndex>, IKeyEquality<DocumentIndex>
     {
+        /// <inheritdoc cref="DocumentKey()"/>
+        public DocumentIndex() : base() { }
+
         /// <inheritdoc cref="DocumentKey(IDocumentKey)"/>
         public DocumentIndex(IDocumentIndex source) : base(source) { }
 

@@ -165,8 +165,8 @@ namespace DataDictionary.Main.Controls
         {
             Int32 totalWork = 0;
             Int32 completedWork = 0;
-            NamedScopeNode rootnode = new NamedScopeNode(treeData.GetValue(rootIndex));
-            List<NamedScopeNode> values = BuildPath(rootnode, treeData).ToList();
+            NamedScopeNode rootNode = new NamedScopeNode(treeData.GetValue(rootIndex));
+            List<NamedScopeNode> values = BuildPath(rootNode, treeData).ToList();
 
             Dictionary<PathIndex, List<NamedScopeNode>> pathGroup = values.
                 SelectMany(s => s.Path.Group()).

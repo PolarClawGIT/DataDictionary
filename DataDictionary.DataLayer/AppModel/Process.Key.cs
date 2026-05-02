@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Guid? ProcessId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return ProcessId.HasValue && ProcessId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Blank/Empty Process Key
         /// </summary>
@@ -42,7 +45,12 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public Boolean Equals(ProcessKey? other)
-        { return other is ProcessKey key && key.ProcessId != Guid.Empty && EqualityComparer<Guid?>.Default.Equals(ProcessId, key.ProcessId); }
+        {
+            return other is ProcessKey key
+                && ProcessId.HasValue && ProcessId != Guid.Empty
+                && key.ProcessId.HasValue && key.ProcessId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(ProcessId, other.ProcessId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(IProcessKey? other)

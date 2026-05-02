@@ -228,7 +228,7 @@ namespace DataDictionary.Main.Forms.Obsolete
                 else { return false; }
             }
 
-            public Boolean GetAuthorization(Enumerations.CommandType command)
+            public Boolean GetAuthorization(Enumerations.ButtonType command)
             {
                 Boolean isGrant = false;
                 Boolean isNode = TryGetValue(out TemplateValue? _);
@@ -243,13 +243,13 @@ namespace DataDictionary.Main.Forms.Obsolete
 
                 switch (command)
                 {
-                    case Enumerations.CommandType.Default: return true;
-                    case Enumerations.CommandType.Add: return isGrant;
-                    case Enumerations.CommandType.Delete: return isGrant && isNode;
-                    case Enumerations.CommandType.OpenDatabase: return isGrant && isNode;
-                    case Enumerations.CommandType.SaveDatabase: return isGrant && isNode;
-                    case Enumerations.CommandType.DeleteDatabase: return isGrant && isNode;
-                    case Enumerations.CommandType.HistoryDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Add: return isGrant;
+                    case Enumerations.ButtonType.Delete: return isGrant && isNode;
+                    case Enumerations.ButtonType.OpenDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.SaveDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.DeleteDatabase: return isGrant && isNode;
+                    case Enumerations.ButtonType.HistoryDatabase: return isGrant && isNode;
                     default: return false;
                 }
             }

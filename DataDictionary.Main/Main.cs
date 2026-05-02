@@ -33,87 +33,89 @@ namespace DataDictionary.Main
             BindingPropertyChanged.ValidateInit();
 
             // Set the button images based on Scope.
-            optionsToolStripMenuItem.Image = ScopeType.ApplicationOption.GetImage(CommandType.Default);
+            optionsToolStripMenuItem.Image = ScopeType.ApplicationOption.GetImage(ButtonType.Default);
 
-            newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(CommandType.Add);
+            newAttributeCommand.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
             newAttributeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newEntityCommand.Image = ScopeType.ModelEntity.GetImage(CommandType.Add);
+            newEntityCommand.Image = ScopeType.ModelEntity.GetImage(ButtonType.Add);
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newProcessCommand.Image = ScopeType.ModelProcess.GetImage(CommandType.Add);
+            newProcessCommand.Image = ScopeType.ModelProcess.GetImage(ButtonType.Add);
             newProcessCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Add);
+            newSubjectAreaCommand.Image = ScopeType.ModelSubjectArea.GetImage(ButtonType.Add);
             newSubjectAreaCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
-            manageModelCommand.Image = ScopeType.Model.GetImage(CommandType.Default);
+            manageModelCommand.Image = ScopeType.Model.GetImage(ButtonType.Default);
             manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            manageScriptingCommand.Image = ScopeType.Scripting.GetImage(CommandType.Default);
+            manageScriptingCommand.Image = ScopeType.Scripting.GetImage(ButtonType.Default);
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            securitySetAuthorization.Image = ScopeType.Security.GetImage(CommandType.Default);
-            browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(CommandType.Default);
-            databaseMessagesCommand.Image = ScopeType.ApplicationLog.GetImage(CommandType.Default);
+            securitySetAuthorization.Image = ScopeType.Security.GetImage(ButtonType.Default);
+            browseHelpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
+            databaseMessagesCommand.Image = ScopeType.ApplicationLog.GetImage(ButtonType.Default);
 
-            securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(CommandType.Default);
+            securityAuthorization.Image = ScopeType.SecuritySecurable.GetImage(ButtonType.Default);
 
-            manageLibrariesCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
+            manageLibrariesCommand.Image = ScopeType.Library.GetImage(ButtonType.Default);
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(CommandType.Default);
-            viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(CommandType.Default);
+            viewLibraryMemberCommand.Image = ScopeType.LibraryType.GetImage(ButtonType.Default);
+            viewLibrarySourceCommand.Image = ScopeType.Library.GetImage(ButtonType.Default);
 
-            menuAttributes.Image = ScopeType.ModelAttribute.GetImage(CommandType.Default);
-            menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(CommandType.Default);
-            menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(CommandType.Default);
-            menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(CommandType.Default);
+            menuAttributes.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Default);
+            menuAttributeAlaises.Image = ScopeType.ModelAttributeAlias.GetImage(ButtonType.Default);
+            menuAttributeProperties.Image = ScopeType.ModelAttributeProperty.GetImage(ButtonType.Default);
+            menuAttributeDefinitions.Image = ScopeType.ModelAttributeDefinition.GetImage(ButtonType.Default);
 
-            menuEntities.Image = ScopeType.ModelEntity.GetImage(CommandType.Default);
-            menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(CommandType.Default);
-            menuEntityAlias.Image = ScopeType.ModelEntityAlias.GetImage(CommandType.Default);
-            menuEntityProperties.Image = ScopeType.ModelEntityProperty.GetImage(CommandType.Default);
-            menuEntityDefinitions.Image = ScopeType.ModelEntityDefinition.GetImage(CommandType.Default);
+            menuEntities.Image = ScopeType.ModelEntity.GetImage(ButtonType.Default);
+            menuEntityAttributes.Image = ScopeType.ModelEntityAttribute.GetImage(ButtonType.Default);
+            menuEntityAlias.Image = ScopeType.ModelEntityAlias.GetImage(ButtonType.Default);
+            menuEntityProperties.Image = ScopeType.ModelEntityProperty.GetImage(ButtonType.Default);
+            menuEntityDefinitions.Image = ScopeType.ModelEntityDefinition.GetImage(ButtonType.Default);
 
-            menuProcess.Image = ScopeType.ModelProcess.GetImage(CommandType.Default);
-            menuProcessArgument.Image = ScopeType.ModelProcessArgument.GetImage(CommandType.Default);
-            menuProcessAlias.Image = ScopeType.ModelProcessAlias.GetImage(CommandType.Default);
-            menuProcessProperty.Image = ScopeType.ModelProcessProperty.GetImage(CommandType.Default);
-            menuProcessDefinition.Image = ScopeType.ModelProcessDefinition.GetImage(CommandType.Default);
+            menuProcess.Image = ScopeType.ModelProcess.GetImage(ButtonType.Default);
+            menuProcessArgument.Image = ScopeType.ModelProcessArgument.GetImage(ButtonType.Default);
+            menuProcessAlias.Image = ScopeType.ModelProcessAlias.GetImage(ButtonType.Default);
+            menuProcessProperty.Image = ScopeType.ModelProcessProperty.GetImage(ButtonType.Default);
+            menuProcessDefinition.Image = ScopeType.ModelProcessDefinition.GetImage(ButtonType.Default);
 
-            menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(CommandType.Default);
-            menuModelProperty.Image = ScopeType.ModelProperty.GetImage(CommandType.Default);
-            menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(CommandType.Default);
+            menuSubjectArea.Image = ScopeType.ModelSubjectArea.GetImage(ButtonType.Default);
+            menuModelProperty.Image = ScopeType.ModelProperty.GetImage(ButtonType.Default);
+            menuModelDefinition.Image = ScopeType.ModelDefinition.GetImage(ButtonType.Default);
 
-            manageDatabasesCommand.Image = ScopeType.Database.GetImage(CommandType.Default);
+            manageDatabasesCommand.Image = ScopeType.Database.GetImage(ButtonType.Default);
             manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
 
-            menuCatalogItem.Image = ScopeType.Database.GetImage(CommandType.Default);
-            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(CommandType.Default);
-            menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(CommandType.Default);
-            menuTableItem.Image = ScopeType.DatabaseTable.GetImage(CommandType.Default);
-            menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(CommandType.Default);
-            menuRoutineColumnItem.Image = ScopeType.DatabaseFunctionColumn.GetImage(CommandType.Default);
-            menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(CommandType.Default);
-            menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(CommandType.Default);
-            menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(CommandType.Default);
-            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintCheck.GetImage(CommandType.Default);
-            menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(CommandType.Default); ;
-            menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(CommandType.Default);
+            menuCatalogItem.Image = ScopeType.Database.GetImage(ButtonType.Default);
+            menuSchemaItem.Image = ScopeType.DatabaseSchema.GetImage(ButtonType.Default);
+            menuReferenceItem.Image = ScopeType.DatabaseReference.GetImage(ButtonType.Default);
+            menuTableItem.Image = ScopeType.DatabaseTable.GetImage(ButtonType.Default);
+            menuTableColumnItem.Image = ScopeType.DatabaseTableColumn.GetImage(ButtonType.Default);
+            menuRoutineColumnItem.Image = ScopeType.DatabaseFunctionColumn.GetImage(ButtonType.Default);
+            menuDomainItem.Image = ScopeType.DatabaseDomain.GetImage(ButtonType.Default);
+            menuPropertyItem.Image = ScopeType.DatabaseProperty.GetImage(ButtonType.Default);
+            menuConstraintItem.Image = ScopeType.DatabaseConstraint.GetImage(ButtonType.Default);
+            menuConstraintColumnItem.Image = ScopeType.DatabaseConstraintCheck.GetImage(ButtonType.Default);
+            menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(ButtonType.Default); ;
+            menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(ButtonType.Default);
 
-            menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
-            menuScriptingAddTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Add);
-            menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(CommandType.Default);
-            menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(CommandType.Default);
-            menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
-            menuScriptingAddDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Add);
-            menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(CommandType.Default);
-            menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(CommandType.Add);
+            menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
+            menuScriptingAddTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
+            menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(ButtonType.Default);
+            menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(ButtonType.Default);
+            menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
+            menuScriptingAddDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
+            menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(ButtonType.Default);
+            menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(ButtonType.Add);
 
-            manageTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
+            manageTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
             manageTemplateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            menuTemplate.Image = ScopeType.ScriptingTemplate.GetImage(CommandType.Default);
-            menuTemplateDocument.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
-            menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(CommandType.Default);
-            menuTemplateNodeOwner.Image = ScopeType.ScriptingNodeOwner.GetImage(CommandType.Default);
-            menuTemplateObject.Image = ScopeType.ScriptingObject.GetImage(CommandType.Default);
-            menuTemplateSchemata.Image = ScopeType.ScriptingSchema.GetImage(CommandType.Default);
-            menuTemplateTransform.Image = ScopeType.ScriptingTransform.GetImage(CommandType.Default);
+            menuNewTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
+            menuTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
+            menuTemplateSchemaDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
+            menuTemplateTransformDocument.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Default);
+            menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Default);
+            menuTemplateNodeOwner.Image = ScopeType.ScriptingNodeOwner.GetImage(ButtonType.Default);
+            menuTemplateObject.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Default);
+            menuTemplateSchemata.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Default);
+            menuTemplateTransform.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Default);
 
             namedScopeData.DoWork = DoWork; // Pass the work method to the control
 
@@ -371,6 +373,7 @@ namespace DataDictionary.Main
 
             securityAuthorization.Enabled = true;
         }
+
 
     }
 }

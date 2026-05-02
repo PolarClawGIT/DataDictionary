@@ -20,6 +20,9 @@ namespace DataDictionary.DataLayer.AppCatalog
         /// <inheritdoc/>
         public DbLevelCatalogType CatalogScope { get; init; } = DbLevelCatalogType.Null;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return CatalogScope != DbLevelCatalogType.Null; } }
+
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>

@@ -9,9 +9,9 @@ using DataDictionary.Main.Controls.ComboBoxList;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Attribute : ApplicationData, IApplicationDataForm
+    partial class Attribute : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
+        public override Boolean IsOpenItem(object? item)
         { return item is IAttributeIndex attribute && attributeIndex.Equals(attribute); }
 
         FormBinding formBinding;
@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
-            xElementRenderCommand.Image = ScopeType.ScriptingDocument.GetImage(CommandType.Default);
+            xElementRenderCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
 
             formBinding = new FormBinding()
             {
@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Model
             };
 
             SetTitle(bindingAttribute);
+            SetIcon(ScopeType.ModelAttribute);
 
             SetRowState(
                 bindingAttribute,
@@ -44,18 +45,17 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea);
             
             SetCommand(ScopeType.ModelAttribute,
-                Enumerations.CommandType.Delete,
-                Enumerations.CommandType.OpenDatabase,
-                Enumerations.CommandType.SaveDatabase,
-                Enumerations.CommandType.DeleteDatabase,
-                Enumerations.CommandType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.OpenDatabase,
+                Enumerations.ButtonType.SaveDatabase,
+                Enumerations.ButtonType.DeleteDatabase,
+                Enumerations.ButtonType.HistoryDatabase);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()
         {
             if (attribute is IAttributeIndex)
             { attributeIndex = new AttributeIndex(attribute); }
-            else { attributeIndex = new AttributeIndex(formBinding.NewValue()); }
         }
 
         public Attribute(IAttributeIndex attribute, ITemporalIndex temporal) : this(attribute)
@@ -65,8 +65,21 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (temporalIndex is null)
             {
-                formBinding.Load(attributeIndex);
-                DoBinding();
+                if (attributeIndex.HasValue)
+                { formBinding.Load(attributeIndex); }
+                else
+                {
+                    if (formBinding.TryAddValue(out AttributeValue? value))
+                    {
+                        attributeIndex = new AttributeIndex(value);
+                        formBinding.Load(attributeIndex);
+                        SendMessage(new RefreshNavigation());
+                    }
+                }
+
+                if (formBinding.TryGetValue(out AttributeValue? _))
+                { DoBinding(); }
+                else { IsLocked(true); }
             }
             else
             { formBinding.Load(attributeIndex, temporalIndex, onCompleting); }

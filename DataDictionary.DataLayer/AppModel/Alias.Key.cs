@@ -24,6 +24,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public ScopeType AliasScope { get; init; } = ScopeType.Null;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return AliasScope != ScopeType.Null; } }
+
         /// <summary>
         /// Constructor for the Key used by Aliases
         /// </summary>

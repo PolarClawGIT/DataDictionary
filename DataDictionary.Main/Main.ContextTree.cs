@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.AppCatalog;
 using DataDictionary.BusinessLayer.AppLibrary;
 using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Obsolete;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 
@@ -131,21 +131,59 @@ namespace DataDictionary.Main
                 (form) => form.IsOpenItem(modelItem));
         }
 
-        void OpenForm(ITemplateValue template)
+        void OpenForm(ISchemaDocumentValue documentItem)
+        {
+            Activate(
+                () => new Forms.Scripting.Document(documentItem),
+                (form) => form.IsOpenItem(documentItem));
+        }
+
+        void OpenForm(ITransformDocumentValue documentItem)
+        {
+            Activate(
+                () => new Forms.Scripting.Document(documentItem),
+                (form) => form.IsOpenItem(documentItem));
+        }
+
+        void OpenForm(ISchemaDefinitionValue schemaItem)
+        {
+            Activate(
+                () => new Forms.Scripting.SchemaDefinition(schemaItem),
+                (form) => form.IsOpenItem(schemaItem));
+        }
+
+        void OpenForm(ITemplateValue templateItem)
+        {
+            Activate(
+                () => new Forms.Scripting.Template(templateItem),
+                (form) => form.IsOpenItem(templateItem));
+        }
+
+        void OpenForm(ITransformValue transformItem)
+        {
+            Activate(
+                () => new Forms.Scripting.Transform(transformItem),
+                (form) => form.IsOpenItem(transformItem));
+        }
+
+        [Obsolete]
+        void OpenForm(BusinessLayer.Obsolete.ITemplateValue template)
         {
             Activate(
                 () => new Forms.Obsolete.Template(template),
                 (form) => form.IsOpenItem(template));
         }
 
-        void OpenForm(IDataSourceValue dataSource)
+        [Obsolete]
+        void OpenForm(BusinessLayer.Obsolete.IDataSourceValue dataSource)
         {
             Activate(
                 () => new Forms.Obsolete.DataSource(dataSource),
                 (form) => form.IsOpenItem(dataSource));
         }
 
-        void OpenForm(IDocumentValue document)
+        [Obsolete]
+        void OpenForm(BusinessLayer.Obsolete.IDocumentValue document)
         {
             Activate(
                 () => new Forms.Obsolete.Document(document),

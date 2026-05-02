@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public String TemplateTitle { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(TemplateTitle); } }
+
         /// <summary>
         /// Constructor for the Template Unique Key.
         /// </summary>

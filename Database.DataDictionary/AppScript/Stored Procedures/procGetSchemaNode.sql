@@ -25,7 +25,7 @@ Select	[NodeId],
 		[IsUpdated],
 		[IsDeleted],
 		[IsCurrent]
-From	[AppScript].[SchemaNodeHs] For System_Time All D
+From	[AppScript].[SchemaNodeHS] For System_Time All D
 Where	(@IncludeHistory = 1 Or ([SysStart] <= @AsOfUtcDate And [SysEnd] > @AsOfUtcDate)) And
 		(@TemplateId is Null Or @TemplateId = [TemplateId]) And
 		(@ModelId is Null Or @ModelId In (

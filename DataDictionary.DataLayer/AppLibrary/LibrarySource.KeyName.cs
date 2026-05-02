@@ -22,6 +22,9 @@ public class LibrarySourceKeyName : ILibrarySourceKeyName,
     /// <inheritdoc/>
     public string AssemblyName { get; } = string.Empty;
 
+    /// <inheritdoc/>
+    public virtual Boolean HasValue { get { return !String.IsNullOrEmpty(AssemblyName); } }
+
     /// <summary>
     /// Constructor for the Domain Attribute Alias
     /// </summary>

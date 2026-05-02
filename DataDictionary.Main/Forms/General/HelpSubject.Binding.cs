@@ -166,7 +166,7 @@ namespace DataDictionary.Main.Forms.General
                 }
             }
 
-            public Boolean GetAuthorization(CommandType command)
+            public Boolean GetAuthorization(ButtonType command)
             {
                 Boolean isGrant = false;
 
@@ -178,13 +178,13 @@ namespace DataDictionary.Main.Forms.General
 
                 switch (command)
                 {
-                    case CommandType.Default: return true;
-                    case CommandType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandType.Delete: return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
-                    case CommandType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
-                    case CommandType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
+                    case ButtonType.Default: return true;
+                    case ButtonType.Add: return BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case ButtonType.Delete: return BusinessData.Authorization.IsHelpAdmin;
+                    case ButtonType.OpenDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case ButtonType.SaveDatabase: return isGrant || BusinessData.Authorization.IsHelpAdmin || BusinessData.Authorization.IsHelpOwner;
+                    case ButtonType.DeleteDatabase: return BusinessData.Authorization.IsHelpAdmin;
+                    case ButtonType.SecurityDatabase: return BusinessData.Authorization.IsSecurityAdmin;
                     default: return false;
                 }
             }

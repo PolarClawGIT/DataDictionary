@@ -10,7 +10,8 @@
     /// This allows the implementation of IEquatable and inheritance restricted by the other types.
     /// It is the intention that the Key is implemented with Immutability in mind.
     /// </remarks>
-    public interface IKey { }
+    public interface IKey
+    { }
 
     /// <summary>
     /// Interface common to all Keys with Equality.
@@ -21,7 +22,15 @@
     /// </remarks>
     public interface IKeyEquality<T> : IEquatable<T>
         where T : IKey
-    { }
+    {
+        /// <summary>
+        /// Returns if the Key has a valid value (not null or empty).
+        /// </summary>
+        /// <remarks>Make this Virtual/Override.<br/>
+        /// <see cref="Nullable{T}.HasValue"/>
+        /// </remarks>
+        Boolean HasValue { get; }
+    }
 
     /// <summary>
     /// Interface common to all Keys with Comparable.

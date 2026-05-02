@@ -13,33 +13,7 @@ using static System.Windows.Forms.Control;
 namespace DataDictionary.Main.Forms
 {
 
-    interface IApplicationForm
-    {
-        /// <summary>
-        /// Locks (disable) and Unlock (enable) the Form.
-        /// </summary>
-        /// <param name="newState">Sets the new Value. If Null, the value is not set, only returned.</param>
-        /// <returns>
-        /// True disables the top most controls.
-        /// False enables the top most controls.
-        /// </returns>
-        Boolean IsLocked(Boolean? newState = null);
-
-        /// <summary>
-        /// Controls the UseWaitCursor of the top most controls.
-        /// </summary>
-        /// <param name="newState"></param>
-        /// <returns></returns>
-        Boolean IsWaitCursor(Boolean? newState = null);
-
-        /// <summary>
-        ///  Collection of child controls.
-        /// </summary>
-        /// <remarks>Implemented by the Control classes, including Form.</remarks>
-        ControlCollection Controls { get; }
-    }
-
-    partial class ApplicationBase : Form, IColleague, IApplicationForm
+    partial class ApplicationBase : Form, IColleague
     {
 
         /// <summary>
@@ -272,24 +246,6 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="message"></param>
         protected virtual void HandleMessage(FormAddMdiChild message) { }
-
-        /// <summary>
-        /// Message sent when all forms should call the UnBindData method.
-        /// This method call the UnbindData of all forms EXCEPT the form that sent the message.
-        /// </summary>
-        /// <param name="message"></param>
-        [Obsolete("Not Used", true)]
-        protected virtual void HandleMessage(DoUnbindData message)
-        { if (this is IApplicationDataBind form) { form.UnbindData(); } }
-
-        /// <summary>
-        /// Message sent when all forms should call the BindData method.
-        /// This method calls the BindData of all forms EXCEPT the form that sent the message.
-        /// </summary>
-        /// <param name="message"></param>
-        [Obsolete("Not Used", true)]
-        protected virtual void HandleMessage(DoBindData message)
-        { if (this is IApplicationDataBind form) { form.BindData(); } }
 
         protected virtual void HandleMessage(DbApplicationBatchStarting message) { }
         protected virtual void HandleMessage(DbApplicationBatchCompleted message) { }

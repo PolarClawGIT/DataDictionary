@@ -22,6 +22,9 @@ namespace DataDictionary.DataLayer.AppModel
         /// <inheritdoc/>
         public Guid? DefinitionId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Boolean HasValue { get { return DefinitionId.HasValue && DefinitionId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Model Definition Key
         /// </summary>
@@ -35,7 +38,12 @@ namespace DataDictionary.DataLayer.AppModel
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(DefinitionKey? other)
-        { return other is DefinitionKey key && EqualityComparer<Guid?>.Default.Equals(DefinitionId, key.DefinitionId); }
+        {
+            return other is DefinitionKey key
+                && DefinitionId.HasValue && DefinitionId != Guid.Empty
+                && key.DefinitionId.HasValue && key.DefinitionId != Guid.Empty
+                && EqualityComparer<Guid?>.Default.Equals(DefinitionId, other.DefinitionId);
+        }
 
         /// <inheritdoc/>
         public Boolean Equals(IDefinitionKey? other)
