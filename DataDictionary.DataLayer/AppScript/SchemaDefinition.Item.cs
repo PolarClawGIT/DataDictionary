@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.AppScript
                 else { return ScopeType.Null; }
             }
             set
-            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
+            { SetValue(nameof(ForEachScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
