@@ -13,31 +13,32 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDefinition
     {
-        partial class FormBinding
+        partial class FormBinding : DataBinding
         {
-            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
+            public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            public DataBinding<TemplateValue> TemplateData { get; }
+            public DataBinding<SchemaDefinitionValue> SchemaData { get; }
+            public DataBinding<TemplateObjectValue> ObjectData { get; }
 
-            public FormBinding() : base()
-            { }
+            public FormBinding(
+                BindingSource templateBinding,
+                BindingSource schemaBinding,
+                BindingSource objectBinding) : base()
+            {
+                TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
+                SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
+                ObjectData = new DataBinding< TemplateObjectValue>(objectBinding, () => GetData().Objects);
+            }
 
             public void Load(ISchemaDefinitionIndex schema)
             {
                 TemplateIndex templateKey;
                 SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(schema);
 
-                TemplateBinding.RaiseListChangedEvents = false;
-                SchemaBinding.RaiseListChangedEvents = false;
-                ObjectBinding.RaiseListChangedEvents = false;
-
-                templateValues.RaiseListChangedEvents = false;
-                schemaValues.RaiseListChangedEvents = false;
-                objectValues.RaiseListChangedEvents = false;
-
-                schemaValues = new BindingView<SchemaDefinitionValue>(GetData().Schemata, w => schemaKey.Equals(w));
-                if (schemaValues.FirstOrDefault() is SchemaDefinitionValue value)
-                { templateKey = new TemplateIndex(value); }
+                SchemaData.LoadBinding(w => schemaKey.Equals(w));
+                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+                { templateKey = new TemplateIndex(schemaValue); }
                 else
                 {   // This should never occur.
                     Exception ex = new InvalidOperationException("Template not found");
@@ -45,37 +46,17 @@ namespace DataDictionary.Main.Forms.Scripting
                     throw ex;
                 }
 
-                templateValues = new BindingView<TemplateValue>(GetData(), w => templateKey.Equals(w));
-                objectValues = new BindingView<TemplateObjectValue>(GetData().Objects, w => templateKey.Equals(w));
-
-                if (templateValues.Count > 0)
-                {
-                    TemplateBinding.DataSource = templateValues;
-                    SchemaBinding.DataSource = schemaValues;
-                    ObjectBinding.DataSource = objectValues;
-
-                    TemplateBinding.RaiseListChangedEvents = true;
-                    SchemaBinding.RaiseListChangedEvents = true;
-                    ObjectBinding.RaiseListChangedEvents = true;
-
-                    templateValues.RaiseListChangedEvents = true;
-                    schemaValues.RaiseListChangedEvents = true;
-                    objectValues.RaiseListChangedEvents = true;
-                }
-
-                TemplateBinding.ResetBindings(false);
-                SchemaBinding.ResetBindings(false);
-                ObjectBinding.ResetBindings(false);
-                SchemaBinding.MoveFirst();
+                TemplateData.LoadBinding(w => templateKey.Equals(w));
+                ObjectData.LoadBinding(w => templateKey.Equals(w));
             }
 
-            public Boolean GetAuthorization(Enumerations.ButtonType command)
+            public override Boolean GetAuthorization(Enumerations.ButtonType command)
             {
                 Boolean isGrant = false;
-                Boolean isNode = TryGetValue(out TemplateValue? _);
+                Boolean isNode = TemplateData.TryGetValue(out TemplateValue? _);
 
                 SecurableIndex? templateKey = null;
-                if (TryGetValue(out TemplateValue? templateValue))
+                if (TemplateData.TryGetValue(out TemplateValue? templateValue))
                 { templateKey = new TemplateIndex(templateValue); }
 
                 isGrant = BusinessData.Authorization.IsScriptAdmin
@@ -95,9 +76,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            public Boolean GetLocked()
+            public override Boolean GetLocked()
             {
-                if (TryGetValue(out TemplateValue? value))
+                if (TemplateData.TryGetValue(out TemplateValue? value))
                 {
                     return value.RowState() is DataRowState.Detached
                         or DataRowState.Deleted;
@@ -105,5 +86,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 else return true;
             }
         }
+
     }
 }
