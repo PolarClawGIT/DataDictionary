@@ -4,7 +4,6 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -21,15 +20,13 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                DoWork = base.DoWork,
-                TemplateBinding = bindingTemplate,
-                ObjectBinding = bindingObject,
-                SchemaBinding = bindingSchema,
-                TransformBinding = bindingTransform,
-                DocumentBinding = bindingDocument
-            };
+            formBinding = new FormBinding(
+                templateBinding: bindingTemplate,
+                schemaBinding: bindingSchema,
+                transformBinding: bindingTransform,
+                objectBinding: bindingObject,
+                documentBinding: bindingDocument)
+            { DoWork = base.DoWork };
 
             SetRowState(
                 bindingTemplate,
@@ -76,35 +73,34 @@ namespace DataDictionary.Main.Forms.Scripting
                 { formBinding.Load(templateIndex); }
                 else
                 {
-                    if (formBinding.TryAddValue(out TemplateValue? value))
-                    {
-                        templateIndex = new TemplateIndex(value);
-                        formBinding.Load(templateIndex);
-                        SendMessage(new RefreshNavigation());
-                    }
+                    TemplateValue value = new TemplateValue();
+                    formBinding.TemplateData.AddValue(value);
+                    templateIndex = new TemplateIndex(value);
+                    formBinding.Load(templateIndex);
+                    SendMessage(new RefreshNavigation());
                 }
 
-                if (formBinding.TryGetValue(out TemplateValue? _))
+                if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                 { DoBinding(); }
                 else { IsLocked(true); }
             }
-            else
-            { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
+            //else
+            //{ formBinding.Load(templateIndex, temporalIndex, onCompleting); }
 
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error is null)
-                {
-                    if (formBinding.TryGetValue(out TemplateValue? _))
-                    { DoBinding(); }
-                    else { IsLocked(true); }
-                }
-            }
+            //void onCompleting(RunWorkerCompletedEventArgs args)
+            //{
+            //    if (args.Error is null)
+            //    {
+            //        if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+            //        { DoBinding(); }
+            //        else { IsLocked(true); }
+            //    }
+            //}
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.TemplateData.AddBinding(templateDescriptionData, nameof(ITemplateValue.TemplateDescription));
 
                 ScopeNameList.Load(objectScopeColumn);
                 objectData.AutoGenerateColumns = false;
@@ -179,7 +175,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
@@ -203,7 +199,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out TransformValue? value))
+            if (formBinding.TransformData.TryGetValue(out TransformValue? value))
             {
                 Activate(() => new Forms.Scripting.Transform(
                     template: templateIndex,
