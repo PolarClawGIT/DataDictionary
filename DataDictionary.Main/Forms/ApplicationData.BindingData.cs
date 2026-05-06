@@ -1,42 +1,16 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Controls;
-using DataDictionary.Resource;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
     partial class ApplicationData
-    {   // POC: build a Binding Helper using the pattern used by the application
-
+    {
         /// <summary>
-        /// DataBinding Helper.
-        /// </summary>
-        protected abstract class DataBinding
-        {
-            /// <summary>
-            /// Command that performs the DoWork function.
-            /// </summary>
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-
-            /// <summary>
-            /// Gets the Authorization of a Button passed.
-            /// </summary>
-            /// <param name="command"></param>
-            /// <returns></returns>
-            public abstract Boolean GetAuthorization(Enumerations.ButtonType command);
-
-            /// <summary>
-            /// Gets if the form should be Locked.
-            /// </summary>
-            /// <returns></returns>
-            public abstract Boolean GetLocked();
-        }
-
-        /// <summary>
-        /// DataBinding Helper.
+        /// DataBinding Helper.<br/>
+        /// Provides functionality for managing a set of Data used by DataBinding.
         /// </summary>
         /// <typeparam name="TRow"></typeparam>
         protected class DataBinding<TRow>
@@ -141,13 +115,23 @@ namespace DataDictionary.Main.Forms
                 { completeHandler(this, new EventArgs()); }
             }
 
-            private void OnLoadBindingStart(Object? sender, EventArgs e)
+            /// <summary>
+            /// Called by LoadBinding as part of the LoadBindingStart event.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            protected virtual void OnLoadBindingStart(Object? sender, EventArgs e)
             {
                 BindingData.RaiseListChangedEvents = false;
                 bindingValues.RaiseListChangedEvents = false;
             }
 
-            private void OnLoadBindingComplete(Object? sender, EventArgs e)
+            /// <summary>
+            /// Called by LoadBinding as part of the LoadBindingComplete event.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            protected virtual void OnLoadBindingComplete(Object? sender, EventArgs e)
             {
                 BindingData.RaiseListChangedEvents = true;
                 bindingValues.RaiseListChangedEvents = true;
@@ -157,12 +141,16 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
-            /// Helper Method to Bind a Control to a DataField
+            /// Helper Method to create the Binding class for a DataField
             /// </summary>
             /// <param name="controlField"></param>
             /// <param name="dataField"></param>
             /// <param name="nullValue"></param>
             /// <returns></returns>
+            /// <remarks>
+            /// When GetGoodRow executes (Microsoft code) it can throw exceptions but rarely identifies the issue.
+            /// This tries to catch some of those issues and provide information to help resolve the actual issue.
+            /// </remarks>
             protected virtual Binding CreateBinding(String controlField, String dataField, Object? nullValue = null)
             {
                 if (BindingData.DataSource is null)
@@ -171,8 +159,7 @@ namespace DataDictionary.Main.Forms
                 if (BindingData.GetItemProperties(null).Find(dataField, false) is PropertyDescriptor bindField)
                 {
                     return new Binding(controlField, BindingData, bindField.Name)
-                    { DataSourceNullValue = nullValue }
-                        ;
+                    { DataSourceNullValue = nullValue };
                 }
                 else
                 {

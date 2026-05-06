@@ -25,8 +25,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaBinding: bindingSchema,
                 transformBinding: bindingTransform,
                 objectBinding: bindingObject,
-                documentBinding: bindingDocument)
-            { DoWork = base.DoWork };
+                documentBinding: bindingDocument);
 
             SetRowState(
                 bindingTemplate,

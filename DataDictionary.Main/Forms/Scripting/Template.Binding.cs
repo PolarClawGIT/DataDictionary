@@ -6,7 +6,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Template
     {
-        class FormBinding : DataBinding
+        class FormBinding : DataModel<TemplateIndex>
         {
             public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
@@ -30,9 +30,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 
             }
 
-            public void Load(ITemplateIndex template)
+            public override void Load(TemplateIndex key)
             {
-                TemplateIndex key = new TemplateIndex(template);
                 TemplateData.LoadBinding(w => key.Equals(w));
                 SchemaData.LoadBinding(w => key.Equals(w));
                 TransformData.LoadBinding(w => key.Equals(w));

@@ -6,7 +6,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDefinition
     {
-        partial class FormBinding : DataBinding
+        partial class FormBinding : DataModel<SchemaDefinitionIndex>
         {
             public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
@@ -24,18 +24,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 ObjectData = new DataBinding< TemplateObjectValue>(objectBinding, () => GetData().Objects);
             }
 
-            public void Load(ISchemaDefinitionIndex schema)
+            public override void Load(SchemaDefinitionIndex key)
             {
                 TemplateIndex templateKey;
-                SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(schema);
 
-                SchemaData.LoadBinding(w => schemaKey.Equals(w));
+                SchemaData.LoadBinding(w => key.Equals(w));
                 if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
                 { templateKey = new TemplateIndex(schemaValue); }
                 else
                 {   // This should never occur.
                     Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(schema), schema);
+                    ex.Data.Add(nameof(key), key);
                     throw ex;
                 }
 
