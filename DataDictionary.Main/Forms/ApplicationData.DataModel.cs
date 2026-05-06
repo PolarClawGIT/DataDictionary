@@ -17,6 +17,9 @@ namespace DataDictionary.Main.Forms
         // The intent is to logically do the same concept.
         // The classes below performs the function of the ViewModel of MVVM or Presenter in MVP.
         // Each form has its own implementation normally called the FormBinding class (file= FormName.Binding.CS).
+        // The calls to the Business Layer are localized here and specialized for the Binding of the Form.
+        // The Business Layer calls the Data Layer, which turns the business logic into database calls.
+        // The Database Layer (implemented in the database) turns the Data Layer into SQL operations.
         // Common functionality, when possible, is placed here to reduce copy/paste errors.
         //
         // As this was developed after many screens where created, not every screen uses these classes.
