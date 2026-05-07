@@ -20,12 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                TemplateBinding = bindingTemplate,
-                TransformBinding = bindingTransform,
-                DoWork = base.DoWork,
-            };
+            formBinding = new FormBinding(bindingTemplate, bindingTransform);
 
             SetRowState(
                 bindingTransform);
@@ -68,9 +63,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { formBinding.Load(transformIndex); }
             else
             {
-                if (templateIndex.HasValue
-                    && formBinding.TryAddValue(templateIndex, out TransformValue? value))
+                if (templateIndex.HasValue)
                 {
+                    TransformValue value = new TransformValue(templateIndex);
+                    formBinding.TransformData.AddValue(value);
                     transformIndex = new TransformIndex(value);
                     formBinding.Load(transformIndex);
                     SendMessage(new RefreshNavigation());
@@ -83,27 +79,22 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            if (formBinding.TryGetValue(out TransformValue? _))
+            if (formBinding.TransformData.TryGetValue(out TransformValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                transformTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.TransformTitle)));
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.TransformData.AddBinding(transformTitleData, nameof(ITransformValue.TransformTitle));
 
                 DirectoryTypeList.Load(rootFolderData);
-                rootFolderData.DataBindings.Add(new Binding(
-                    nameof(ComboBox.SelectedValue),
-                    bindingTransform,
-                    nameof(ISchemaDefinitionValue.RootFolder),
-                    true, DataSourceUpdateMode.OnValidation));
+                formBinding.TransformData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder));
 
-                relativePathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.RelativePath)));
-                filePrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FilePrefix)));
-                fileSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FileSuffix)));
-                fileExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FileExtension)));
-
+                formBinding.TransformData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
+                formBinding.TransformData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
+                formBinding.TransformData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
+                formBinding.TransformData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
 
                 // Security
                 IsLocked(formBinding.GetLocked());

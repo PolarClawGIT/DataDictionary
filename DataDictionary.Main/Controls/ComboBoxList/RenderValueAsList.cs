@@ -7,6 +7,9 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public NodeRenderAsType ValueMember { get; init; } = NodeRenderAsType.none;
         public String DisplayMember { get { return ValueMember.GetEnumeration().DisplayName; } }
 
+        public static RenderValueAsList Empty { get; } = new RenderValueAsList();
+        public static NodeRenderAsType NullValue { get; } = NodeRenderAsType.none;
+
         static IReadOnlyList<RenderValueAsList> data = 
             [..Enum.GetValues<NodeRenderAsType>().
                Select(s => new RenderValueAsList() { ValueMember = s })];

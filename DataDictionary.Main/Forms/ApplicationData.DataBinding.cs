@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms
             /// Backing field for the data.
             /// Initialized as an empty BindingView not associated with any external entity.
             /// </summary>
-            BindingView<TRow> bindingValues = new BindingView<TRow>(new List<TRow>());
+            protected BindingView<TRow> bindingValues = new BindingView<TRow>(new List<TRow>());
 
             /// <summary>
             /// Constructor

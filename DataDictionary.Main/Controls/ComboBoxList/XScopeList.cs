@@ -14,6 +14,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
         public String ScopeName { get; init; } = String.Empty;
 
         public List<XPropertyList> Properties { get; } = new List<XPropertyList>();
+        public static XScopeList Empty { get; } = new XScopeList();
+        public static ScopeType NullValue { get; } = ScopeType.Null;
 
         protected XScopeList() : base() { }
 
