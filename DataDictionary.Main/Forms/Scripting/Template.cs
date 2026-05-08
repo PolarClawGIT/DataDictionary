@@ -116,7 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Security
                 IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetAuthorization(formBinding.Authorize);
             }
         }
 

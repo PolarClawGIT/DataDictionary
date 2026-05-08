@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
@@ -7,7 +8,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
     public interface ITemplateValue : ITemplateItem, ITemplateIndex, ITemplateIndexName,
-        IScopeType, ITemporal
+        IScopeType, ITemporal, IAuthorization
     { }
 
     /// <inheritdoc/>
@@ -40,5 +41,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsTitleChanged = (e) => e.PropertyName is nameof(TemplateTitle)
             };
         }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        { return new TemplateIndex(this).GetAuthorization(authorizations); }
     }
 }

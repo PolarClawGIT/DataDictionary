@@ -1,8 +1,12 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
@@ -33,9 +37,22 @@ namespace DataDictionary.Main.Forms
         /// Used by forms to provide data for data binding and execute work against the Business Layer.<br/>
         /// </summary>
         /// <remarks>Base Class</remarks>
-        protected abstract class DataModel<TKey> 
+        protected abstract class DataModel<TKey>
             where TKey : class, IKey, IKeyEquality<TKey>
         {
+            /// <summary>
+            /// Function that gets the Authorization for the current Value.
+            /// </summary>
+            /// <remarks>Used by Authorize.</remarks>
+            /// <example>GetAuthorization = () => {DataBinding}.GetAuthorization(BusinessData.Authorization);</example>
+            protected Func<(Boolean isAdmin, Boolean isOwner, Boolean isGrant)> GetAuthorization { private get; init; } =() => (false,false,false);
+
+            /// <summary>
+            /// Function that checks if current value should be Locked (Read-only)
+            /// </summary>
+            /// <remarks>Set this to point to the GetLocked function of a DataBinding{TRow}.</remarks>
+            public Func<Boolean> GetLocked { get; init; } = () => true;
+
             /// <summary>
             /// Load the data from the main data store to the local.
             /// </summary>
@@ -47,13 +64,27 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="command"></param>
             /// <returns></returns>
-            public abstract Boolean GetAuthorization(Enumerations.ButtonType command);
+            public virtual Boolean Authorize(Enumerations.ButtonType command)
+            {
+                Boolean isAdmin = false;
+                Boolean isOwner = false;
+                Boolean isGrant = false;
 
-            /// <summary>
-            /// Gets if the form should be Locked.
-            /// </summary>
-            /// <returns></returns>
-            public abstract Boolean GetLocked();
+                (isAdmin, isOwner, isGrant) = GetAuthorization();
+
+                switch (command)
+                {
+                    case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Delete: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.OpenDatabase: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.SaveDatabase: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.DeleteDatabase: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.HistoryDatabase: return isAdmin || isOwner || isGrant;
+                    default: return false;
+                }
+            }
+
+
         }
 
         /// <inheritdoc/>

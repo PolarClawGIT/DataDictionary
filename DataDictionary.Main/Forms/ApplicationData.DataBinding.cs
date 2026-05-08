@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Toolbox.BindingTable;
 
@@ -69,6 +71,32 @@ namespace DataDictionary.Main.Forms
                     && BindingData.Current is TRow value)
                 { result = value; return true; }
                 else { result = null; return false; }
+            }
+
+            /// <summary>
+            /// Get if the Current Value should be Locked (ReadOnly).
+            /// </summary>
+            /// <returns></returns>
+            /// <remarks>Use with DataModel{TKey}.GetLocked</remarks>
+            public virtual Boolean GetLocked()
+            {
+                if (TryGetValue(out TRow? value) && value is IBindingRowState rowState)
+                { return value.RowState() is DataRowState.Detached or DataRowState.Deleted; }
+                else { return true; }
+            }
+
+            /// <summary>
+            /// Get the Authorization data for the Current Value.
+            /// If the Current Value does not support IAuthorization, false is returned.
+            /// </summary>
+            /// <param name="authorizations"></param>
+            /// <returns></returns>
+            /// <remarks>Use with DataModel{TKey}.GetAuthorization</remarks>
+            public virtual (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+            {
+                if (TryGetValue(out TRow? value) && value is IAuthorization authorization)
+                { return authorization.GetAuthorization(authorizations); }
+                else { return (false, false, false); }
             }
 
             /// <summary>
