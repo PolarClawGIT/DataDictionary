@@ -38,11 +38,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ScopeType.ScriptingObject,
                 Enumerations.ButtonType.Add,
-                Enumerations.ButtonType.Select,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.Select);
         }
 
         public TemplateObject(ITemplateIndex template) : this()

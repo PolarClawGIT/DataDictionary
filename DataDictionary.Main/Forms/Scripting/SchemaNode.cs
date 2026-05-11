@@ -40,11 +40,8 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(bindingNode, ScopeType.ScriptingNode);
 
             SetCommand(ScopeType.ScriptingNode,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Add,
+                Enumerations.ButtonType.Delete);
         }
 
 

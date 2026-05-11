@@ -31,11 +31,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingSchema);
 
             SetCommand(ScopeType.ScriptingSchema,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Delete);
 
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
