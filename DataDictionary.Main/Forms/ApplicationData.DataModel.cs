@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <remarks>Used by Authorize.</remarks>
             /// <example>GetAuthorization = () => {DataBinding}.GetAuthorization(BusinessData.Authorization);</example>
-            protected Func<(Boolean isAdmin, Boolean isOwner, Boolean isGrant)> GetAuthorization { private get; init; } =() => (false,false,false);
+            protected Func<(Boolean isAdmin, Boolean isOwner, Boolean isGrant)> GetAuthorization { private get; init; } = () => (false, false, false);
 
             /// <summary>
             /// Function that checks if current value should be Locked (Read-only)
@@ -75,16 +75,24 @@ namespace DataDictionary.Main.Forms
                 switch (command)
                 {
                     case Enumerations.ButtonType.Default: return true;
+                    case Enumerations.ButtonType.Browse: return true;
+                    case Enumerations.ButtonType.Select: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.Add: return isAdmin || isOwner || isGrant;
                     case Enumerations.ButtonType.Delete: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.Save: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.Open: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.Refresh: return true;
+                    case Enumerations.ButtonType.Sync: return true;
+                    case Enumerations.ButtonType.Import: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.Export: return true;
                     case Enumerations.ButtonType.OpenDatabase: return isAdmin || isOwner || isGrant;
                     case Enumerations.ButtonType.SaveDatabase: return isAdmin || isOwner || isGrant;
-                    case Enumerations.ButtonType.DeleteDatabase: return isAdmin || isOwner || isGrant;
-                    case Enumerations.ButtonType.HistoryDatabase: return isAdmin || isOwner || isGrant;
+                    case Enumerations.ButtonType.DeleteDatabase: return isAdmin || isOwner;
+                    case Enumerations.ButtonType.HistoryDatabase: return isAdmin || isOwner;
+                    case Enumerations.ButtonType.SecurityDatabase: return isAdmin;
                     default: return false;
                 }
             }
-
-
         }
 
         /// <inheritdoc/>

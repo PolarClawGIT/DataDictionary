@@ -32,6 +32,11 @@ namespace DataDictionary.Main.Forms
         Dictionary<ButtonType, CommandState> commandButtons = new Dictionary<ButtonType, CommandState>();
 
         /// <summary>
+        /// Function called to determine if a given Button has authorization.
+        /// </summary>
+        protected Func<Enumerations.ButtonType, Boolean> GetAuthorization { get; private set; } = (button) => true;
+
+        /// <summary>
         /// Constructor called when in Form Design mode
         /// </summary>
         /// <remarks>
@@ -45,7 +50,6 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
 
-
             helpCommand.Image = ScopeType.ApplicationHelp.GetImage(ButtonType.Default);
 
             new CommandState(browseCommand)
@@ -53,55 +57,63 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Browse,
                 IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(selectCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Select,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(newCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Add,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(deleteCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Delete,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(saveCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Save,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(openCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Open,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(importCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Import,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(exportCommand)
             {
                 Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Export,
-                IsVisible = false
+                IsVisible = false,
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             toolStripSeparator.Visible = false;
@@ -111,7 +123,9 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = ButtonType.OpenDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
+                IsEnabled = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(saveToDatabaseCommand)
@@ -119,7 +133,9 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = ButtonType.SaveDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
+                IsEnabled = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(deleteFromDatabaseCommand)
@@ -127,7 +143,9 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Database,
                 Command = ButtonType.DeleteDatabase,
                 IsVisible = true,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
+                IsEnabled = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(securityCommand)
@@ -135,7 +153,9 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.Security,
                 Command = ButtonType.SecurityDatabase,
                 IsVisible = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
+                IsEnabled = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
             new CommandState(historyCommand)
@@ -143,7 +163,9 @@ namespace DataDictionary.Main.Forms
                 Scope = ScopeType.ApplicationTimeLine,
                 Command = ButtonType.HistoryDatabase,
                 IsVisible = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached)
+                IsEnabled = false,
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
         }
 
@@ -397,6 +419,7 @@ namespace DataDictionary.Main.Forms
 
                         value.IsVisible = true;
                         value.IsEnabled = true;
+                        value.Refresh();
                     }
                 }
             }
@@ -445,8 +468,9 @@ namespace DataDictionary.Main.Forms
         /// <param name="getAuthorization"></param>
         public virtual void SetAuthorization(Func<Enumerations.ButtonType, Boolean> getAuthorization)
         {
+            GetAuthorization = getAuthorization;
             foreach (var item in CommandButtons)
-            { item.Value.IsEnabled = getAuthorization(item.Key); }
+            { item.Value.Refresh(); }
         }
 
         /// <summary>
