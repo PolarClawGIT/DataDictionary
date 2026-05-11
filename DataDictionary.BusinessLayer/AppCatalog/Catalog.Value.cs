@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource.Enumerations;
@@ -10,7 +11,7 @@ namespace DataDictionary.BusinessLayer.AppCatalog
     /// <inheritdoc/>
     public interface ICatalogValue : ICatalogItem, ICatalogIndex, ICatalogIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged,
-        IScopeType, ITemporal
+        IScopeType, ITemporal, IAuthorization
     { }
 
     /// <inheritdoc/>
@@ -46,5 +47,9 @@ namespace DataDictionary.BusinessLayer.AppCatalog
                 IsTitleChanged = (e) => e.PropertyName is nameof(CatalogTitle)
             };
         }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        { return new CatalogIndex(this).GetAuthorization(authorizations); }
     }
 }

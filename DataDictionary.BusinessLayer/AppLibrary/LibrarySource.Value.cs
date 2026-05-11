@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppLibrary;
 using DataDictionary.Resource.Enumerations;
@@ -9,7 +10,7 @@ namespace DataDictionary.BusinessLayer.AppLibrary
 {
     /// <inheritdoc/>
     public interface ILibrarySourceValue : ILibrarySourceItem, ILibrarySourceIndex,
-        IBindingTableRow, IBindingRowState, IBindingPropertyChanged
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged, IAuthorization
     { }
 
     /// <inheritdoc/>
@@ -42,5 +43,9 @@ namespace DataDictionary.BusinessLayer.AppLibrary
                 IsTitleChanged = (e) => e.PropertyName is nameof(LibraryTitle)
             };
         }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        { return new LibrarySourceIndex(this).GetAuthorization(authorizations); }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppLibrary;
 using DataDictionary.Resource;
 
@@ -10,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppLibrary
 
     /// <inheritdoc/>
     public class LibrarySourceIndex : LibrarySourceKey, ILibrarySourceIndex,
-        IKeyEquality<ILibrarySourceIndex>, IKeyEquality<LibrarySourceIndex>
+        IKeyEquality<ILibrarySourceIndex>, IKeyEquality<LibrarySourceIndex>,
+        IAuthorization
     {
         /// <inheritdoc cref="LibrarySourceKey(ILibrarySourceKey)"/>
         public LibrarySourceIndex(ILibrarySourceIndex source) : base(source)
@@ -30,5 +32,18 @@ namespace DataDictionary.BusinessLayer.AppLibrary
         /// <param name="source"></param>
         public static implicit operator DataIndex(LibrarySourceIndex source)
         { return new DataIndex() { SystemId = source.LibraryId ?? Guid.Empty }; }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        {
+            if (HasValue)
+            {
+                return (
+                IsAdmin: authorizations.IsLibraryAdmin,
+                IsOwner: authorizations.IsLibraryOwner,
+                IsGrant: authorizations.IsGrant(new SecurableIndex() { SecurableId = LibraryId }));
+            }
+            else { return (false, false, false); }
+        }
     }
 }

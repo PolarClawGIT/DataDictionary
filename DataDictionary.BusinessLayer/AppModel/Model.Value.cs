@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.Resource.Enumerations;
@@ -43,5 +44,9 @@ namespace DataDictionary.BusinessLayer.AppModel
                 IsTitleChanged = (e) => e.PropertyName is nameof(ModelTitle)
             };
         }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        { return new ModelIndex(this).GetAuthorization(authorizations); }
     }
 }
