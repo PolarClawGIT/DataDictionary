@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Forms
             /// Load the data from the main data store to the local.
             /// </summary>
             /// <param name="key"></param>
-            public abstract void Load(TKey key);
+            public abstract void LoadValue(TKey key);
 
             /// <summary>
             /// Gets the Authorization of a Button passed.
@@ -136,7 +136,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             /// <param name="onComplete"></param>
-            public virtual void Load(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public virtual void LoadData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -148,7 +148,7 @@ namespace DataDictionary.Main.Forms
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Load(key);
+                    LoadValue(key);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -159,7 +159,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="key"></param>
             /// <param name="temporal"></param>
             /// <param name="onComplete"></param>
-            public virtual void Load(TKey key, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public virtual void LoadData(TKey key, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -171,7 +171,7 @@ namespace DataDictionary.Main.Forms
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Load(key);
+                    LoadValue(key);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             /// <param name="onComplete"></param>
-            public virtual void Save(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public virtual void SaveData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -193,7 +193,7 @@ namespace DataDictionary.Main.Forms
 
                 void completing(RunWorkerCompletedEventArgs args)
                 {
-                    Load(key);
+                    LoadValue(key);
                     if (onComplete is not null) { onComplete(args); }
                 }
             }

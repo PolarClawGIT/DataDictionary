@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public override void Load(TemplateIndex key)
+            public override void LoadValue(TemplateIndex key)
             {
                 TemplateData.LoadBinding(w => key.Equals(w));
                 ObjectData.LoadBinding(w => key.Equals(w));

@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void Transform_Load(object sender, EventArgs e)
         {
             if (transformIndex.HasValue)
-            { formBinding.Load(transformIndex); }
+            { formBinding.LoadValue(transformIndex); }
             else
             {
                 if (templateIndex.HasValue)
@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     TransformValue value = new TransformValue(templateIndex);
                     formBinding.TransformData.AddValue(value);
                     transformIndex = new TransformIndex(value);
-                    formBinding.Load(transformIndex);
+                    formBinding.LoadValue(transformIndex);
                     SendMessage(new RefreshNavigation());
                 }
                 else

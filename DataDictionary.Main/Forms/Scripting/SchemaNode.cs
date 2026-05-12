@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaNode_Load(object sender, EventArgs e)
         {
             if (schemaIndex.HasValue)
-            { formBinding.Load(schemaIndex); }
+            { formBinding.LoadValue(schemaIndex); }
             else
             {   // This should never occur.
                 Exception ex = new InvalidOperationException("Template Schema not found");

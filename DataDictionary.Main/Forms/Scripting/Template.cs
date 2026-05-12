@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -25,7 +26,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaBinding: bindingSchema,
                 transformBinding: bindingTransform,
                 objectBinding: bindingObject,
-                documentBinding: bindingDocument);
+                documentBinding: bindingDocument)
+            { DoWork = base.DoWork };
 
             SetRowState(
                 bindingTemplate,
@@ -69,13 +71,13 @@ namespace DataDictionary.Main.Forms.Scripting
             if (temporalIndex is null)
             {
                 if (templateIndex.HasValue)
-                { formBinding.Load(templateIndex); }
+                { formBinding.LoadValue(templateIndex); }
                 else
                 {
                     TemplateValue value = new TemplateValue();
                     formBinding.TemplateData.AddValue(value);
                     templateIndex = new TemplateIndex(value);
-                    formBinding.Load(templateIndex);
+                    formBinding.LoadValue(templateIndex);
                     SendMessage(new RefreshNavigation());
                 }
 
@@ -141,7 +143,11 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            formBinding.SaveData(templateIndex, complete);
+
+            void complete(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)

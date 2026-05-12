@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public override void Load(TransformIndex key)
+            public override void LoadValue(TransformIndex key)
             {
                 TemplateIndex templateKey;
 

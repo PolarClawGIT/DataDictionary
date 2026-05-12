@@ -1,12 +1,16 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.ToolSet;
+using System.ComponentModel;
 using System.Data;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Template
     {
-        class FormBinding : DataModel<TemplateIndex>
+        class FormBinding : DataModelDatabase<TemplateIndex>
         {
             public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
@@ -31,12 +35,43 @@ namespace DataDictionary.Main.Forms.Scripting
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public override void Load(TemplateIndex key)
+            public override void LoadValue(TemplateIndex key)
             {
                 TemplateData.LoadBinding(w => key.Equals(w));
                 SchemaData.LoadBinding(w => key.Equals(w));
                 TransformData.LoadBinding(w => key.Equals(w));
                 ObjectData.LoadBinding(w => key.Equals(w));
+            }
+
+            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                ITemplateData target = BusinessData.Templates;
+
+                work.AddRange(target.Delete(key));
+                work.AddRange(target.Load(factory, key));
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                return work;
+            }
+
+            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                ITemplateData target = ITemplateData.Create();
+
+                work.AddRange(target.Load(factory, key, temporal));
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                return work;
+            }
+
+            protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                ITemplateData target = GetData();
+
+                work.AddRange(target.Save(factory, key));
+                work.AddRange(LoadWork(factory, key));
+                return work;
             }
         }
     }

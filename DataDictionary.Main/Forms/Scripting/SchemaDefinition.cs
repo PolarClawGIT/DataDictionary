@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
             if (schemaIndex.HasValue)
-            { formBinding.Load(schemaIndex); }
+            { formBinding.LoadValue(schemaIndex); }
             else
             {
                 if (templateIndex.HasValue)
@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     SchemaDefinitionValue value = new SchemaDefinitionValue(templateIndex);
                     formBinding.SchemaData.AddValue(value);
                     schemaIndex = new SchemaDefinitionIndex(value);
-                    formBinding.Load(schemaIndex);
+                    formBinding.LoadValue(schemaIndex);
                     SendMessage(new RefreshNavigation());
                 }
                 else

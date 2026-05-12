@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TemplateObject_Load(object sender, EventArgs e)
         {
-            formBinding.Load(templateIndex);
+            formBinding.LoadValue(templateIndex);
 
             DoBinding();
 
