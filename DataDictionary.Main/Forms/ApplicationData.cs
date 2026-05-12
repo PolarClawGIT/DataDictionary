@@ -134,7 +134,8 @@ namespace DataDictionary.Main.Forms
                 Command = ButtonType.SaveDatabase,
                 IsVisible = true,
                 IsEnabled = false,
-                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                //AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
+                AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
 
