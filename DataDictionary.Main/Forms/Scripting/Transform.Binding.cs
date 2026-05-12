@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Transform
     {
-        partial class FormBinding : DataModel<TransformIndex>
+        partial class FormBinding : PresenterData<TransformIndex>
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 

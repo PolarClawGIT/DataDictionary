@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaNode
     {
-        class FormBinding : DataModel<SchemaDefinitionIndex>
+        class FormBinding : PresenterData<SchemaDefinitionIndex>
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 

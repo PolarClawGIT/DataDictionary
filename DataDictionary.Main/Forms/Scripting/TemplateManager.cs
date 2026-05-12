@@ -67,21 +67,25 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         private void BindingTemplate_CurrentItemChanged(object sender, EventArgs e)

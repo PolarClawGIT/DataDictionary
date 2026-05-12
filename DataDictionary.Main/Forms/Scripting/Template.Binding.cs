@@ -10,7 +10,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Template
     {
-        class FormBinding : DataModelDatabase<TemplateIndex>
+        class FormBinding : PresenterDatabase<TemplateIndex>
         {
             public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
