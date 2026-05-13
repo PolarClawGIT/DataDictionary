@@ -81,7 +81,7 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            formBinding.ObjectData.AddValue(new TemplateObjectValue(templateIndex));
+            formBinding.ObjectData.Add(new TemplateObjectValue(templateIndex));
         }
 
         protected override void SelectCommand_Click(Object sender, EventArgs e)
@@ -99,7 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 {
                     foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
-                    { formBinding.ObjectData.AddValue(new TemplateObjectValue(templateIndex)); }
+                    { formBinding.ObjectData.Add(new TemplateObjectValue(templateIndex)); }
 
                     bindingObject.ResetCurrentItem();
                 }

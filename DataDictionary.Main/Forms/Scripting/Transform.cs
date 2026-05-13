@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (templateIndex.HasValue)
                 {
                     TransformValue value = new TransformValue(templateIndex);
-                    formBinding.TransformData.AddValue(value);
+                    formBinding.TransformData.Add(value);
                     transformIndex = new TransformIndex(value);
                     formBinding.LoadValue(transformIndex);
                     SendMessage(new RefreshNavigation());

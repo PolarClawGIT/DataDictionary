@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 else
                 {
                     TemplateValue value = new TemplateValue();
-                    formBinding.TemplateData.AddValue(value);
+                    formBinding.TemplateData.Add(value);
                     templateIndex = new TemplateIndex(value);
                     formBinding.LoadValue(templateIndex);
                     SendMessage(new RefreshNavigation());

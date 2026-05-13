@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (templateIndex.HasValue)
                 {
                     SchemaDefinitionValue value = new SchemaDefinitionValue(templateIndex);
-                    formBinding.SchemaData.AddValue(value);
+                    formBinding.SchemaData.Add(value);
                     schemaIndex = new SchemaDefinitionIndex(value);
                     formBinding.LoadValue(schemaIndex);
                     SendMessage(new RefreshNavigation());

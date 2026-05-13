@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.Main.Controls;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -15,7 +16,7 @@ namespace DataDictionary.Main.Forms
         /// Provides functionality for managing a set of Data used by DataBinding.
         /// </summary>
         /// <typeparam name="TRow"></typeparam>
-        protected class DataBinding<TRow>
+        protected class DataBinding<TRow> : ICollection<TRow>
             where TRow : class, IBindingPropertyChanged, IBindingRowState
         {
             /// <summary>
@@ -27,7 +28,7 @@ namespace DataDictionary.Main.Forms
             /// Function called during Load to get the data.
             /// </summary>
             /// <remarks>Use LoadBinding to reset the data.</remarks>
-            public Func<IBindingData<TRow>> GetData { get; set; }
+            public Func<IBindingList<TRow>> GetData { get; set; }
 
             /// <summary>
             /// Backing field for the data.
@@ -41,7 +42,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="binding">Binding Source linked with this data.</param>
             /// <param name="getData">Functions used called to get data.</param>
             /// <remarks>The getData called but filtered to no rows. Allows AddValue to work.</remarks>
-            public DataBinding(BindingSource binding, Func<IBindingData<TRow>> getData)
+            public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData)
             {
                 GetData = getData;
                 bindingValues = new BindingView<TRow>(getData(), w => 1 == 2);
@@ -105,6 +106,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="value"></param>
             /// <returns></returns>
             /// <remarks>Uses the BindingSource backing field.</remarks>
+            [Obsolete("Use Add", true)]
             public virtual void AddValue(TRow value)
             { bindingValues.Add(value); }
 
@@ -131,7 +133,7 @@ namespace DataDictionary.Main.Forms
             /// Part of the Load process linking to the data values and restarts binding.
             /// </summary>
             /// <remarks>Call StopBinding First.</remarks>
-            public virtual void LoadBinding(Func<TRow, Boolean>? filter)
+            public virtual void LoadBinding(Func<TRow, Boolean>? filter = null)
             {
                 if (LoadBindingStart is EventHandler startHandler)
                 { startHandler(this, new EventArgs()); }
@@ -241,6 +243,42 @@ namespace DataDictionary.Main.Forms
                 else
                 { checkBoxControl.DataBindings.Add(CreateBinding(nameof(CheckBox.Checked), dataField)); }
             }
+
+            #region ICollection
+            /// <inheritdoc/>
+            public void Add(TRow item)
+            { ((ICollection<TRow>)bindingValues).Add(item); }
+
+            /// <inheritdoc/>
+            public void Clear()
+            { ((ICollection<TRow>)bindingValues).Clear(); }
+
+            /// <inheritdoc/>
+            public Boolean Contains(TRow item)
+            { return ((ICollection<TRow>)bindingValues).Contains(item); }
+
+            /// <inheritdoc/>
+            public void CopyTo(TRow[] array, Int32 arrayIndex)
+            { ((ICollection<TRow>)bindingValues).CopyTo(array, arrayIndex); }
+
+            /// <inheritdoc/>
+            public Boolean Remove(TRow item)
+            { return ((ICollection<TRow>)bindingValues).Remove(item); }
+
+            /// <inheritdoc/>
+            public IEnumerator<TRow> GetEnumerator()
+            { return ((IEnumerable<TRow>)bindingValues).GetEnumerator(); }
+
+            /// <inheritdoc/>
+            IEnumerator IEnumerable.GetEnumerator()
+            { return ((IEnumerable)bindingValues).GetEnumerator(); }
+
+            /// <inheritdoc/>
+            public Int32 Count => ((ICollection<TRow>)bindingValues).Count;
+
+            /// <inheritdoc/>
+            public Boolean IsReadOnly => ((ICollection<TRow>)bindingValues).IsReadOnly;
+            #endregion
         }
 
     }
