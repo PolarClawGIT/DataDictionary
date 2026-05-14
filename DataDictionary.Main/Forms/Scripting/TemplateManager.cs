@@ -1,13 +1,8 @@
-﻿using DataDictionary.Main.Enumerations;
+﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-//using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -28,17 +23,13 @@ namespace DataDictionary.Main.Forms.Scripting
                 Enumerations.ButtonType.SaveDatabase,
                 Enumerations.ButtonType.DeleteDatabase);
 
-            formBinding = new FormBinding()
-            {
-                ManagerBinding = bindingTemplate,
-                DoWork = base.DoWork,
-                OnRefresh = () => { SendMessage(new RefreshNavigation()); }
-            };
+            formBinding = new FormBinding(bindingTemplate)
+            { DoWork = base.DoWork, };
         }
 
         private void TemplateManager_Load(object sender, EventArgs e)
         {
-            formBinding.Load(doBinding);
+            formBinding.LoadData(doBinding);
 
             void doBinding(RunWorkerCompletedEventArgs args)
             {
@@ -60,14 +51,18 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
 
-            if(formBinding.TryGetValue(out BindingValue? value))
-            { formBinding.Remove(value); }
+            if (formBinding.ManagerData.TryGetValue(out BindingValue? value))
+            { formBinding.ManagerData.Remove(value); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+            if (formBinding.ManagerData.TryGetValue(out BindingValue? value))
+            { formBinding.LoadData(new TemplateIndex(value), onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -90,7 +85,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingTemplate_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out BindingValue? binding))
+            if (formBinding.ManagerData.TryGetValue(out BindingValue? binding))
             {
                 CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
 

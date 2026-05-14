@@ -1,12 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.Main.Properties;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -14,86 +11,115 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class TemplateManager
     {
-        class FormBinding
+        class FormBinding : PresenterDatabase<TemplateIndex>
         {
-            public required BindingSource ManagerBinding { private get; init; }
+            ITemplateData modelData = BusinessData.Templates;
+            ITemplateData databaseData = ITemplateData.Create();
+            BindingData managerValues = new BindingData();
 
-            BindingList<BindingValue> managerData { get; } = new BindingList<BindingValue>();
+            public DataBinding<BindingValue> ManagerData { get; }
 
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-            public required Action OnRefresh { get; init; }
+            public FormBinding(BindingSource managerBinding) : base()
+            { ManagerData = new DataBinding<BindingValue>(managerBinding, () => managerValues); }
 
-            public Boolean TryGetValue([NotNullWhen(true)] out BindingValue? result)
+            public void LoadValue()
             {
-                if (ManagerBinding.Position >= 0 && ManagerBinding.Current is BindingValue value)
-                { result = value; return true; }
-                else { result = null; return false; }
+                managerValues.Clear();
+                BindingCompare bindingCompare = new BindingCompare();
+
+                managerValues.AddRange(
+                    modelData.Select(s => new BindingValue(s)).
+                    Union(databaseData.Select(s => new BindingValue(s)), bindingCompare));
+
+                foreach (var item in managerValues)
+                {
+                    item.InDatabase = false;
+                    item.InModel = false;
+
+                    if (databaseData.Any(a => item.Equals(a)))
+                    { item.InDatabase = true; }
+
+                    if (modelData.Any(a => item.Equals(a)))
+                    { item.InModel = true; }
+                }
+
+                ManagerData.LoadBinding();
             }
 
-            public void Load(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            public override void LoadValue(TemplateIndex key)
             {
-                var templates = ITemplateData.Create();
-                ManagerBinding.RaiseListChangedEvents = false;
+                foreach (BindingValue item in managerValues.Where(w => key.Equals(w)))
+                {
+                    item.InDatabase = false;
+                    item.InModel = false;
 
+                    if (databaseData.Any(a => item.Equals(a)))
+                    { item.InDatabase = true; }
+
+                    if (modelData.Any(a => item.Equals(a)))
+                    { item.InModel = true; }
+                }
+            }
+
+            public virtual void LoadData(Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
-                if (Settings.Default.IsOnLineMode)
+                work.Add(factory.OpenConnection());
+                work.AddRange(LoadWork(factory));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
                 {
-                    work.Add(factory.OpenConnection());
-                    work.AddRange(templates.Load(factory));
-                }
-
-                DoWork(work, StartBinding);
-
-                void StartBinding(RunWorkerCompletedEventArgs args)
-                {
-                    managerData.Clear();
-
-                    BindingCompare bindingCompare = new BindingCompare();
-                    managerData.AddRange(
-                        BusinessData.Templates.Select(s => new BindingValue(s)).
-                        Union(templates.Select(s => new BindingValue(s)), bindingCompare));
-
-                    foreach (var item in managerData)
-                    {
-                        if (templates.Any(a => item.Equals(a)))
-                        { item.InDatabase = true; }
-                    }
-
-                    RefreshInModel();
-
-                    ManagerBinding.DataSource = managerData;
-                    ManagerBinding.RaiseListChangedEvents = true;
-                    ManagerBinding.ResetBindings(false);
+                    LoadValue();
                     if (onComplete is not null) { onComplete(args); }
                 }
             }
 
-            public void Remove(BindingValue value)
+            protected IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory)
             {
-                TemplateIndex key = new TemplateIndex(value);
-                BusinessData.Templates.Remove(key);
+                List<WorkItem> work = new List<WorkItem>();
 
-                RefreshInModel();
-                OnRefresh();
+                work.AddRange(databaseData.Delete());
+                work.AddRange(databaseData.Load(factory));
+
+                return work;
             }
 
-            private void RefreshInModel()
+            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
             {
-                foreach (var item in managerData)
-                {
-                    if (BusinessData.Model.Models.Any(a => item.Equals(a))
-                        || BusinessData.Model.Models.Any(a => item.Equals(a)))
-                    { item.InModel = true; }
-                    else { item.InModel = false; }
-                }
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.AddRange(modelData.Delete(key));
+                work.AddRange(modelData.Load(factory, key));
+                //work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                return work;
+            }
+
+            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.AddRange(modelData.Save(factory, key));
+                work.AddRange(LoadWork(factory, key));
+                return work;
             }
         }
 
+
+        class BindingData : BindingList<BindingValue>, IBindingList<BindingValue>
+        { }
+
         class BindingValue : IBindingPropertyChanged,
-            ITemplateIndex,
-            IKeyEquality<ITemplateIndex>
+            ITemplateIndex, IKeyEquality<ITemplateIndex>,
+            IBindingRowState
         {
             ITemplateValue dataSource;
 
@@ -127,6 +153,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
+            public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
             public BindingValue(ITemplateValue value)
             {
@@ -195,6 +222,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public override String ToString()
             { return TemplateTitle ?? String.Empty; }
+
+            public System.Data.DataRowState RowState()
+            { throw new NotImplementedException(); }
         }
 
         class BindingCompare : IEqualityComparer<BindingValue>
