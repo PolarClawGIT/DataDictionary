@@ -330,7 +330,7 @@ namespace DataDictionary.Main
         }
 
         private void ManageTemplateCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(static () => new Forms.Scripting.TemplateManager()); }
+        { Activate(static () => new Forms.Scripting.ScriptingManager()); }
 
 
         private void MenuNewTemplate_Click(object sender, EventArgs e)

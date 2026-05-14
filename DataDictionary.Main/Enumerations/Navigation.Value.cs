@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Enumerations
         Boolean GroupBy { get; }
     }
 
-    static partial class NavigationExtention
+    static partial class NavigationExtension
     {
         partial class NavigationValue
         {
@@ -91,7 +91,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ModelProcessDefinition),
                 new NavigationValue(ScopeType.ModelProcessSubjectArea),
 
-                new NavigationValue(ScopeType.Scripting) { GroupBy = false},
+                new NavigationValue(ScopeType.Scripting),
                 new NavigationValue(ScopeType.ScriptingData),
                 new NavigationValue(ScopeType.ScriptingDataObject),
                 new NavigationValue(ScopeType.ScriptingTemplateNode),

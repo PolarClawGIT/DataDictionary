@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox },
             { ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram },
 
-            { ScopeType.Scripting,                  Resources.Icon_XSLTransform },
+            { ScopeType.Scripting,                  Resources.Icon_Script },
             //{ ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema },
             { ScopeType.ScriptingData,              Resources.Icon_XPath },
             { ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant },

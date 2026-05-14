@@ -9,7 +9,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateManager
+    partial class ScriptingManager
     {
         class FormBinding : PresenterDatabase<TemplateIndex>
         {

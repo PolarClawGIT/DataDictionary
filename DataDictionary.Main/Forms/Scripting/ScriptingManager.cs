@@ -6,15 +6,17 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateManager : ApplicationData
+    partial class ScriptingManager : ApplicationData
     {
         FormBinding formBinding;
 
-        public TemplateManager()
+        public ScriptingManager()
         {
             InitializeComponent();
 
-            SetIcon(ScopeType.ScriptingTemplate);
+            SetIcon(ScopeType.Scripting);
+
+            SetTitle("Scripting Manager");
 
             SetCommand(ScopeType.ScriptingTemplate,
                 Enumerations.ButtonType.Add,

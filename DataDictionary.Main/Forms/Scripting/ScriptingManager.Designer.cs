@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class TemplateManager
+    partial class ScriptingManager
     {
         /// <summary>
         /// Required designer variable.

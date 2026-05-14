@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.Main.Enumerations
 {
-    static partial class NavigationExtention
+    static partial class NavigationExtension
     {
         /// <summary>
         /// Try/Get the Navigation information for the Scope enum.
@@ -11,7 +11,7 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="scope"></param>
         /// <param name="navigation"></param>
         /// <returns></returns>
-        public static Boolean TryGetValue(this ScopeType scope, [NotNullWhen(true)] INavigationValue? navigation)
+        public static Boolean TryGetValue(this ScopeType scope, [NotNullWhen(true)] out INavigationValue? navigation)
         {
             if (NavigationValue.TryGetValue(scope, out NavigationValue? result))
             { navigation = result; return true; }

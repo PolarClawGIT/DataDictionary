@@ -105,7 +105,7 @@ namespace DataDictionary.Main
             menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(ButtonType.Default);
             menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(ButtonType.Add);
 
-            manageTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
+            manageTemplateCommand.Image = ScopeType.Scripting.GetImage(ButtonType.Default);
             manageTemplateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             menuNewTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
             menuTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
