@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.DatabaseReference),
                 new NavigationValue(ScopeType.DatabaseProperty),
 
-                new NavigationValue(ScopeType.Model) { GroupBy = false},
+                new NavigationValue(ScopeType.Model),
                 new NavigationValue(ScopeType.ModelNameSpace) { GroupBy = false},
                 new NavigationValue(ScopeType.ModelSubjectArea) { GroupBy = false},
                 new NavigationValue(ScopeType.ModelDefinition),
@@ -102,8 +102,8 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ScriptingNode),
                 new NavigationValue(ScopeType.ScriptingNodeOwner),
                 new NavigationValue(ScopeType.ScriptingObject),
-                new NavigationValue(ScopeType.ScriptingSchema),
-                new NavigationValue(ScopeType.ScriptingTransform),
+                new NavigationValue(ScopeType.ScriptingSchema) { GroupBy = false},
+                new NavigationValue(ScopeType.ScriptingTransform) { GroupBy = false},
                 new NavigationValue(ScopeType.ScriptingDocument),
 
                 new NavigationValue(ScopeType.Security),
