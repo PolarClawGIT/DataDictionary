@@ -20,12 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                TemplateBinding = bindingTemplate,
-                TransformBinding = bindingTransform,
-                DoWork = base.DoWork,
-            };
+            formBinding = new FormBinding(bindingTemplate, bindingTransform);
 
             SetRowState(
                 bindingTransform);
@@ -33,11 +28,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingTransform);
 
             SetCommand(ScopeType.ScriptingTransform,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Delete);
 
             scriptOpenCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             scriptSaveCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Save);
@@ -65,14 +56,15 @@ namespace DataDictionary.Main.Forms.Scripting
         private void Transform_Load(object sender, EventArgs e)
         {
             if (transformIndex.HasValue)
-            { formBinding.Load(transformIndex); }
+            { formBinding.LoadValue(transformIndex); }
             else
             {
-                if (templateIndex.HasValue
-                    && formBinding.TryAddValue(templateIndex, out TransformValue? value))
+                if (templateIndex.HasValue)
                 {
+                    TransformValue value = new TransformValue(templateIndex);
+                    formBinding.TransformData.Add(value);
                     transformIndex = new TransformIndex(value);
-                    formBinding.Load(transformIndex);
+                    formBinding.LoadValue(transformIndex);
                     SendMessage(new RefreshNavigation());
                 }
                 else
@@ -83,31 +75,26 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            if (formBinding.TryGetValue(out TransformValue? _))
+            if (formBinding.TransformData.TryGetValue(out TransformValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                transformTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.TransformTitle)));
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.TransformData.AddBinding(transformTitleData, nameof(ITransformValue.TransformTitle));
 
                 DirectoryTypeList.Load(rootFolderData);
-                rootFolderData.DataBindings.Add(new Binding(
-                    nameof(ComboBox.SelectedValue),
-                    bindingTransform,
-                    nameof(ISchemaDefinitionValue.RootFolder),
-                    true, DataSourceUpdateMode.OnValidation));
+                formBinding.TransformData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder));
 
-                relativePathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.RelativePath)));
-                filePrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FilePrefix)));
-                fileSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FileSuffix)));
-                fileExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTransform, nameof(ITransformValue.FileExtension)));
-
+                formBinding.TransformData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
+                formBinding.TransformData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
+                formBinding.TransformData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
+                formBinding.TransformData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetAuthorization(formBinding.Authorize);
             }
         }
 

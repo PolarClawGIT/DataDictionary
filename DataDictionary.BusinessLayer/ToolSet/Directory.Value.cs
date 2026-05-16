@@ -82,7 +82,11 @@ namespace DataDictionary.BusinessLayer.ToolSet
 
                 if (value.StartsWith(rootPath))
                 {
-                    String path = Path.GetRelativePath(rootPath, value);
+                    String path;
+                    if (String.IsNullOrWhiteSpace(rootPath))
+                    { path = value; }
+                    else { path = Path.GetRelativePath(rootPath, value); }
+
                     if (path is "." || String.IsNullOrWhiteSpace(path))
                     { SetDirectory(String.Empty); }
                     else { SetDirectory(path); }

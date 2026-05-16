@@ -11,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     /// <inheritdoc/>
     public class ModelIndex : ModelKey, IModelIndex,
-        IKeyEquality<IModelIndex>, IKeyEquality<ModelIndex>
+        IKeyEquality<IModelIndex>, IKeyEquality<ModelIndex>,
+        IAuthorization
     {
         /// <inheritdoc cref="ModelKey(IModelKey)"/>
         public ModelIndex(IModelIndex source) : base(source) { }
@@ -35,7 +36,21 @@ namespace DataDictionary.BusinessLayer.AppModel
         /// Convert ModelIndex to a SecurableIndex
         /// </summary>
         /// <param name="source"></param>
+        [Obsolete]
         public static implicit operator SecurableIndex(ModelIndex source)
         { return new SecurableIndex() { SecurableId = source.ModelId ?? Guid.Empty }; }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        {
+            if (HasValue)
+            {
+                return (
+                IsAdmin: authorizations.IsModelAdmin,
+                IsOwner: authorizations.IsModelOwner,
+                IsGrant: authorizations.IsGrant(new SecurableIndex() { SecurableId = ModelId }));
+            }
+            else { return (false, false, false); }
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DataDictionary.Main.Enumerations
 {
-    static partial class NavigationExtention
+    static partial class NavigationExtension
     {
         /// <summary>
         /// ScopeEnumeration with Images and Icons.

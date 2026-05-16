@@ -29,12 +29,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                DoWork = base.DoWork,
-                TemplateBinding = bindingTemplate,
-                ObjectBinding = bindingObject
-            };
+            formBinding = new FormBinding(bindingTemplate, bindingObject);
 
             SetRowState(
                 bindingTemplate,
@@ -43,11 +38,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ScopeType.ScriptingObject,
                 Enumerations.ButtonType.Add,
-                Enumerations.ButtonType.Select,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Delete,
+                Enumerations.ButtonType.Select);
         }
 
         public TemplateObject(ITemplateIndex template) : this()
@@ -64,7 +56,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void TemplateObject_Load(object sender, EventArgs e)
         {
-            formBinding.Load(templateIndex);
+            formBinding.LoadValue(templateIndex);
 
             DoBinding();
 
@@ -89,7 +81,7 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            formBinding.TryAddValue(out TemplateObjectValue? _);
+            formBinding.ObjectData.Add(new TemplateObjectValue(templateIndex));
         }
 
         protected override void SelectCommand_Click(Object sender, EventArgs e)
@@ -107,7 +99,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 {
                     foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
-                    { formBinding.TryAddValue(item, out TemplateObjectValue? _); }
+                    { formBinding.ObjectData.Add(new TemplateObjectValue(templateIndex)); }
 
                     bindingObject.ResetCurrentItem();
                 }
@@ -157,7 +149,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void BindingObject_CurrentChanged(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out TemplateObjectValue? objectValue))
+            if (formBinding.ObjectData.TryGetValue(out TemplateObjectValue? objectValue))
             {
                 objectScopeData.ReadOnly = false;
                 objectNameData.ReadOnly = false;

@@ -17,15 +17,16 @@ namespace DataDictionary.Main.Forms
                 get { return Control.Enabled; }
                 set
                 {
-                    Control.Enabled = value && AllowEnabled();
+                    Control.Enabled = value && AllowEnabled() && IsAuthorized(Command);
                     isEnabled = value;
                 }
             }
             Boolean isEnabled = false; // Intended State
-            public Func<Boolean> AllowEnabled { get; init; } = () => { return true; };
+            public Func<Boolean> AllowEnabled { get; init; } = () => true;
+            public Func<ButtonType, Boolean> IsAuthorized { get; init; } = (command) => true;
 
             public void Refresh()
-            { Control.Enabled = isEnabled && AllowEnabled(); }
+            { Control.Enabled = isEnabled && AllowEnabled() && IsAuthorized(Command); }
 
             /// <summary>
             /// Is the Command Button Visible
@@ -50,7 +51,7 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
-            /// Scope assocated with the CommandState
+            /// Scope associated with the CommandState
             /// </summary>
             public ScopeType Scope
             {
@@ -64,7 +65,7 @@ namespace DataDictionary.Main.Forms
             ScopeType scopeValue;
 
             /// <summary>
-            /// Command Type assocated with the CommandState
+            /// Command Type associated with the CommandState
             /// </summary>
             public ButtonType Command
             {

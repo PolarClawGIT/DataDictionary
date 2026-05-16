@@ -21,6 +21,16 @@ namespace DataDictionary.Main.Controls
             public String Title { get { return NamedScope.Title; } }
             public Int32 OrdinalPosition { get { return NamedScope.OrdinalPosition; } }
 
+            public Boolean GroupBy
+            {   
+                get
+                {
+                    if (Scope.TryGetValue(out INavigationValue? value))
+                    { return value.GroupBy; }
+                    else { return false; }
+                }
+            }
+
             public NamedScopeNode(INamedScopeValue value)
             {
                 NamedScope = value;
@@ -215,8 +225,9 @@ namespace DataDictionary.Main.Controls
                             treeNodes.Add(groupNode);
                             completedWork = completedWork + 1;
 
+                            // TODO: Group By option may not be working as expected. Need more checking.
                             var scopes = pathGroup.
-                               Where(w => node.Path.Equals(w.Key.ParentPath)).
+                               Where(w => node.Path.Equals(w.Key.ParentPath) && node.GroupBy).
                                SelectMany(s => s.Value).
                                GroupBy(g => g.Scope).
                                Select(s => s.Key).

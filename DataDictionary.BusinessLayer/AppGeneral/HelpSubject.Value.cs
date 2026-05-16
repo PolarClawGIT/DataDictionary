@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppGeneral;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
@@ -8,7 +9,7 @@ namespace DataDictionary.BusinessLayer.AppGeneral
     /// <inheritdoc/>
     public interface IHelpSubjectValue : IHelpSubjectItem, IScopeType,
         IHelpSubjectIndex, IHelpSubjectIndexNameSpace,
-        IDataValue, ITemporal
+        IDataValue, ITemporal, IAuthorization
     { }
 
     /// <inheritdoc/>
@@ -58,6 +59,8 @@ namespace DataDictionary.BusinessLayer.AppGeneral
             }
         }
 
-
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        { return new HelpSubjectIndex(this).GetAuthorization(authorizations); }
     }
 }

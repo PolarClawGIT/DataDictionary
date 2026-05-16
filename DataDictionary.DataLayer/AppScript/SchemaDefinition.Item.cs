@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.AppScript
                 else { return ScopeType.Null; }
             }
             set
-            { SetValue(nameof(RootFolder), value.GetEnumeration().Name); }
+            { SetValue(nameof(ForEachScope), value.GetEnumeration().Name); }
         }
 
         /// <inheritdoc/>
@@ -175,8 +175,8 @@ namespace DataDictionary.DataLayer.AppScript
         static readonly IReadOnlyList<DataColumn> columnDefinitions =
         [
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(SchemaTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SchemaTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(ForEachScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RootNodeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(RootFolder), typeof(String)){ AllowDBNull = true},

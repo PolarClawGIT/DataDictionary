@@ -11,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     /// <inheritdoc/>
     public class TemplateIndex : TemplateKey, ITemplateIndex,
-        IKeyEquality<ITemplateIndex>, IKeyEquality<TemplateIndex>
+        IKeyEquality<ITemplateIndex>, IKeyEquality<TemplateIndex>,
+        IAuthorization
     {
         /// <inheritdoc cref="TemplateKey()"/>
         public TemplateIndex() : base() { }
@@ -34,11 +35,17 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public static implicit operator DataIndex(TemplateIndex source)
         { return new DataIndex() { SystemId = source.TemplateId ?? Guid.Empty }; }
 
-        /// <summary>
-        /// Convert ModelIndex to a SecurableIndex
-        /// </summary>
-        /// <param name="source"></param>
-        public static implicit operator SecurableIndex(TemplateIndex source)
-        { return new SecurableIndex() { SecurableId = source.TemplateId ?? Guid.Empty }; }
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        {
+            if (HasValue)
+            {
+                return (
+                IsAdmin: authorizations.IsScriptAdmin,
+                IsOwner: authorizations.IsScriptOwner,
+                IsGrant: authorizations.IsGrant(new SecurableIndex() { SecurableId = TemplateId }));
+            }
+            else { return (false, false, false); }
+        }
     }
 }

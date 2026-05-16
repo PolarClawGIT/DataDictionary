@@ -27,14 +27,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                TemplateBinding = bindingTemplate,
-                SchemaBinding = bindingSchema,
-                NodeBinding = bindingNode,
-                NodeOwnerBinding = bindingNodeOwner,
-                DoWork = base.DoWork,
-            };
+            formBinding = new FormBinding(
+                templateBinding: bindingTemplate,
+                schemaBinding: bindingSchema,
+                nodeBinding: bindingNode,
+                ownerBinding: bindingNodeOwner);
 
             SetRowState(
                 bindingNode,
@@ -43,11 +40,8 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(bindingNode, ScopeType.ScriptingNode);
 
             SetCommand(ScopeType.ScriptingNode,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                Enumerations.ButtonType.Add,
+                Enumerations.ButtonType.Delete);
         }
 
 
@@ -68,7 +62,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void SchemaNode_Load(object sender, EventArgs e)
         {
             if (schemaIndex.HasValue)
-            { formBinding.Load(schemaIndex); }
+            { formBinding.LoadValue(schemaIndex); }
             else
             {   // This should never occur.
                 Exception ex = new InvalidOperationException("Template Schema not found");
@@ -77,32 +71,30 @@ namespace DataDictionary.Main.Forms.Scripting
                 throw ex;
             }
 
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? _))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                schemaTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.SchemaTitle)));
-
-                nodeNameData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ISchemaNodeValue.NodeName)));
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.SchemaData.AddBinding(schemaTitleData, nameof(ISchemaDefinitionValue.SchemaTitle));
+                formBinding.NodeData.AddBinding(nodeNameData, nameof(ISchemaNodeValue.NodeName));
 
                 RenderValueAsList.Load(nodeRenderAsData);
-                nodeRenderAsData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.RenderValueAs)));
-                nodeRenderOrderData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingNode, nameof(ISchemaNodeValue.NodeOrder)));
-
+                formBinding.NodeData.AddBinding(nodeRenderAsData, nameof(ISchemaNodeValue.RenderValueAs), RenderValueAsList.NullValue);
+                formBinding.NodeData.AddBinding(nodeRenderOrderData, nameof(ISchemaNodeValue.NodeOrder));
 
                 XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                nodeObjectScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ObjectScope), true, DataSourceUpdateMode.OnValidation, ScopeNameList.NullValue));
-                nodeObjectPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ObjectProperty)));
+                formBinding.NodeData.AddBinding(nodeObjectScopeData, nameof(ISchemaNodeValue.ObjectScope), ScopeNameList.NullValue);
+                formBinding.NodeData.AddBinding(nodeObjectPropertyData, nameof(ISchemaNodeValue.ObjectProperty));
 
                 PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
-                nodeModelPropertyData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingNode, nameof(ISchemaNodeValue.ModelPropertyId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
+                formBinding.NodeData.AddBinding(nodeModelPropertyData, nameof(ISchemaNodeValue.ModelPropertyId), PropertyNameList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetAuthorization(formBinding.Authorize);
             }
 
         }
