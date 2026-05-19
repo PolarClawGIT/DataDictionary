@@ -13,6 +13,7 @@ namespace DataDictionary.Main.Forms
     {
         /// <inheritdoc/>
         /// <remarks>Base Class with Database Support.</remarks>
+        [Obsolete("Not needed?", true)]
         protected abstract class PresenterDatabase : PresenterData
         {
             /// <summary>
@@ -114,8 +115,8 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <inheritdoc/>
-        /// <remarks>Base Class with Database Support.</remarks>
-        protected abstract class PresenterDatabase<TKey> : PresenterData<TKey>
+        /// <remarks>Base Presenter Class with Database Support.</remarks>
+        protected abstract class PresenterDatabase<TKey> : PresenterData//<TKey>
             where TKey : class, IKey, IKeyEquality<TKey>
         {
             /// <summary>
@@ -129,6 +130,16 @@ namespace DataDictionary.Main.Forms
             /// <param name="factory"></param>
             /// <param name="key"></param>
             /// <returns></returns>
+            /// <example><![CDATA[
+            /// protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
+            /// {
+            ///     List<WorkItem> work = new List<WorkItem>();
+            ///     ITemplateData target = BusinessData.Templates;
+            /// 
+            ///     work.AddRange(target.Load(factory, key));
+            ///     work.Add(new WorkItem() { DoWork = () => { GetData = () => target; } });
+            ///     return work;
+            /// }]]></example>
             protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TKey key);
 
             /// <summary>
@@ -138,7 +149,17 @@ namespace DataDictionary.Main.Forms
             /// <param name="key"></param>
             /// <param name="temporal"></param>
             /// <returns></returns>
-            protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TKey key, TemporalIndex temporal);
+            /// <remarks>Be sure to create a separate data object for the temporal data.</remarks>
+            /// <example><![CDATA[
+            /// protected override IReadOnlyList<WorkItem> TemporalWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
+            /// {
+            ///   List<WorkItem> work = new List<WorkItem>();
+            ///   ITemplateData target = ITemplateData.Create();
+            ///   work.AddRange(target.Load(factory, key, temporal));
+            ///   work.Add(new WorkItem() { DoWork = () => { GetData = () => target; } });
+            ///   return work;
+            /// }]]></example>
+            protected abstract IReadOnlyList<WorkItem> TemporalWork(IDatabaseWork factory, TKey key, TemporalIndex temporal);
 
             /// <summary>
             /// Returns the Work Items needed to Save the Item to the Database.
@@ -146,6 +167,11 @@ namespace DataDictionary.Main.Forms
             /// <param name="factory"></param>
             /// <param name="key"></param>
             /// <returns></returns>
+            /// <remarks>When used with DeleteWork, this becomes a Delete on the Database.</remarks>
+            /// <example><![CDATA[
+            /// protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
+            /// { return GetData().Save(factory, key); }
+            /// ]]></example>
             protected abstract IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TKey key);
 
             /// <summary>
@@ -153,13 +179,28 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
+            /// <remarks>
+            /// When used with SaveWork, this will cause the data to be deleted from the Database.<br/>
+            /// When used without SaveWork (aka Remove), this will only remove the data  from the application.
+            /// </remarks>
+            /// <example><![CDATA[
+            /// protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
+            /// { return GetData().Delete(factory, key); }
+            /// ]]></example>
             protected abstract IReadOnlyList<WorkItem> DeleteWork(TKey key);
+
+            /// <summary>
+            /// Load the data from the main data store to the local.
+            /// </summary>
+            /// <param name="key"></param>
+            public abstract void LoadValue(TKey key);
 
             /// <summary>
             /// Loads the data from the Database by Key.
             /// </summary>
             /// <param name="key"></param>
             /// <param name="onComplete"></param>
+            /// <remarks>Calls DeleteWork and LoadWork</remarks>
             public virtual void LoadData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -184,13 +225,14 @@ namespace DataDictionary.Main.Forms
             /// <param name="key"></param>
             /// <param name="temporal"></param>
             /// <param name="onComplete"></param>
+            /// <remarks>Calls TemporalWork</remarks>
             public virtual void LoadData(TKey key, TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
-                work.AddRange(LoadWork(factory, key, temporal));
+                work.AddRange(TemporalWork(factory, key, temporal));
 
                 DoWork(work, completing);
 
@@ -206,6 +248,7 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             /// <param name="onComplete"></param>
+            /// <remarks>Calls SaveWork, DeleteWork, and LoadWork</remarks>
             public virtual void SaveData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -213,6 +256,7 @@ namespace DataDictionary.Main.Forms
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(SaveWork(factory, key));
+                work.AddRange(DeleteWork(key));
                 work.AddRange(LoadWork(factory, key));
 
                 DoWork(work, completing);
@@ -224,6 +268,12 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
+            /// <summary>
+            /// Deletes the data to the Database by Key.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="onComplete"></param>
+            /// <remarks>Calls DeleteWork and SaveWork</remarks>
             public virtual void DeleteData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -239,6 +289,12 @@ namespace DataDictionary.Main.Forms
                 { if (onComplete is not null) { onComplete(args); } }
             }
 
+            /// <summary>
+            /// Removes the data from the data store by Key. (Not a database call)
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="onComplete"></param>
+            /// <remarks>Class DeleteWork</remarks>
             public virtual void RemoveData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 List<WorkItem> work = new List<WorkItem>();

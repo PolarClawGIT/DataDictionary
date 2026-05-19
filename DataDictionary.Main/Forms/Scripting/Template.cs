@@ -42,8 +42,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,
-                ButtonType.DeleteDatabase,
-                ButtonType.HistoryDatabase);
+                ButtonType.DeleteDatabase);
 
             openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
@@ -64,7 +63,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         public Template(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
+        { temporalIndex = new TemporalIndex(temporal); }
 
         private void Template_Load(object sender, EventArgs e)
         {
@@ -90,10 +89,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                var x = formBinding.GetData();
-
                 if (args.Error is null)
                 {
+                    formBinding.LoadValue(templateIndex);
+                    CommandButtons[ButtonType.Delete].IsEnabled = false;
+                    CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+
                     if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                     { DoBinding(); }
                     else { IsLocked(true); }
@@ -128,7 +129,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
 
-            formBinding.DeleteData(templateIndex, complete);
+            formBinding.RemoveData(templateIndex, complete);
 
             void complete(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -138,7 +139,9 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            formBinding.LoadData(templateIndex, complete);
+            if (temporalIndex is null)
+            { formBinding.LoadData(templateIndex, complete); }
+            else { formBinding.LoadData(templateIndex, temporalIndex, complete); }
 
             void complete(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
@@ -157,15 +160,12 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
 
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
+            formBinding.DeleteData(templateIndex, complete);
 
+            void complete(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
+        }
 
         private void OpenObjectCommand_Click(object sender, EventArgs e)
         {

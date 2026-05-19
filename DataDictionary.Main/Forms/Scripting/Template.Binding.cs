@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 BindingSource objectBinding,
                 BindingSource documentBinding) : base()
             {
-                TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
+                TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
                 ObjectData = new DataBinding<TemplateObjectValue>(objectBinding, () => GetData().Objects);
@@ -53,7 +53,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 return work;
             }
 
-            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
+            protected override IReadOnlyList<WorkItem> TemporalWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
             {
                 List<WorkItem> work = new List<WorkItem>();
                 ITemplateData target = ITemplateData.Create();

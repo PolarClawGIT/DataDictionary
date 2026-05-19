@@ -40,8 +40,9 @@ namespace DataDictionary.Main.Forms
             /// Constructor
             /// </summary>
             /// <param name="binding">Binding Source linked with this data.</param>
-            /// <param name="getData">Functions used called to get data.</param>
+            /// <param name="getData">Functions used called to get data. Use "() => GetData()" syntax.</param>
             /// <remarks>The getData called but filtered to no rows. Allows AddValue to work.</remarks>
+            /// <example><![CDATA[TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());]]></example>
             public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData)
             {
                 GetData = getData;
@@ -99,16 +100,6 @@ namespace DataDictionary.Main.Forms
                 { return authorization.GetAuthorization(authorizations); }
                 else { return (false, false, false); }
             }
-
-            /// <summary>
-            /// Add a Value to the Binding Values.
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            /// <remarks>Uses the BindingSource backing field.</remarks>
-            [Obsolete("Use Add", true)]
-            public virtual void AddValue(TRow value)
-            { bindingValues.Add(value); }
 
             [Obsolete("not needed?", true)]
             public virtual void StopBinding()

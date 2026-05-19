@@ -84,7 +84,7 @@ namespace DataDictionary.Main.Forms.Scripting
             protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
             { return modelData.Load(factory, key); }
 
-            protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
+            protected override IReadOnlyList<WorkItem> TemporalWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
             { throw new NotImplementedException(); }
 
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)

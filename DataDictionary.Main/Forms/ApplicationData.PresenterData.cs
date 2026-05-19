@@ -95,6 +95,7 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <inheritdoc/>
+        [Obsolete("Place Holder, switch to the database presenter", false)]
         protected abstract class PresenterData<TKey>: PresenterData
             where TKey : class, IKey, IKeyEquality<TKey>
         {
