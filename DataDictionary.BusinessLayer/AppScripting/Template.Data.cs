@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     public interface ITemplateData :
         IBindingData<TemplateValue>,
-        IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
+        IGetTemporal, IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IDeleteData
@@ -274,6 +274,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public ITemporalData GetTemporal()
+        {
+            return new TemporalData<TemplateData, TemplateValue>()
+            { CreateLoad = (factory, data) => factory.CreateHistory(data) };
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyList<DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
@@ -299,6 +306,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             templateObjectValues.Load(source);
             schemaDocumentValues.Load(source);
             transformDocumentValues.Load(source);
-        }        
+        }
+
     }
 }

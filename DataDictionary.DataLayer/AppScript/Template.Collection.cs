@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.AppScript
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,
         IRemoveItem<ITemplateKey>,
-        IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
+        IReadTemporal, IReadTemporal<IModelKey>, IReadTemporal<ITemplateKey>
         where TItem : BindingTableRow, ITemplateItem, new()
     {
         /// <inheritdoc/>
@@ -43,6 +43,10 @@ namespace DataDictionary.DataLayer.AppScript
         /// <inheritdoc/>
         public Command HistoryCommand(IConnection connection, ITemplateKey key)
         { return LoadCommand(connection, templateId: key.TemplateId, includeHistory: true); }
+
+        /// <inheritdoc/>
+        public Command HistoryCommand(IConnection connection)
+        { return LoadCommand(connection, includeHistory: true); }
 
         private Command LoadCommand(IConnection connection,
             Guid? modelId = null, Guid? templateId = null,
@@ -88,5 +92,6 @@ namespace DataDictionary.DataLayer.AppScript
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
+
     }
 }

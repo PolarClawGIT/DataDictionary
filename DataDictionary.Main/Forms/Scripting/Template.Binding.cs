@@ -48,9 +48,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 List<WorkItem> work = new List<WorkItem>();
                 ITemplateData target = BusinessData.Templates;
 
-                work.AddRange(target.Delete(key));
                 work.AddRange(target.Load(factory, key));
-                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => target; } });
                 return work;
             }
 
@@ -60,19 +59,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 ITemplateData target = ITemplateData.Create();
 
                 work.AddRange(target.Load(factory, key, temporal));
-                work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
+                work.Add(new WorkItem() { DoWork = () => { GetData = () => target; } });
                 return work;
             }
 
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                ITemplateData target = GetData();
+            { return GetData().Save(factory, key); }
 
-                work.AddRange(target.Save(factory, key));
-                work.AddRange(LoadWork(factory, key));
-                return work;
-            }
+            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
+            { return GetData().Delete(key); }
+
         }
     }
 }

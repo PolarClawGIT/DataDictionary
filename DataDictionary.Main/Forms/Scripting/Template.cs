@@ -39,11 +39,11 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingTemplate);
 
             SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
             openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
@@ -85,18 +85,20 @@ namespace DataDictionary.Main.Forms.Scripting
                 { DoBinding(); }
                 else { IsLocked(true); }
             }
-            //else
-            //{ formBinding.Load(templateIndex, temporalIndex, onCompleting); }
+            else
+            { formBinding.LoadData(templateIndex, temporalIndex, onCompleting); }
 
-            //void onCompleting(RunWorkerCompletedEventArgs args)
-            //{
-            //    if (args.Error is null)
-            //    {
-            //        if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
-            //        { DoBinding(); }
-            //        else { IsLocked(true); }
-            //    }
-            //}
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                var x = formBinding.GetData();
+
+                if (args.Error is null)
+                {
+                    if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
+                    { DoBinding(); }
+                    else { IsLocked(true); }
+                }
+            }
 
             void DoBinding()
             {
@@ -122,22 +124,24 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        protected override void AddCommand_Click(Object? sender, EventArgs e)
-        {
-            base.AddCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            formBinding.DeleteData(templateIndex, complete);
+
+            void complete(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            formBinding.LoadData(templateIndex, complete);
+
+            void complete(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)

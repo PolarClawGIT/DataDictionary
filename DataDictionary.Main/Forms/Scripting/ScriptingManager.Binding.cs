@@ -79,38 +79,22 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             protected IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.AddRange(databaseData.Delete());
-                work.AddRange(databaseData.Load(factory));
-
-                return work;
-            }
+            { return databaseData.Load(factory); }
 
             protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.AddRange(modelData.Delete(key));
-                work.AddRange(modelData.Load(factory, key));
-                //work.Add(new WorkItem() { DoWork = () => { GetData = () => BusinessData.Templates; } });
-                return work;
-            }
+            { return modelData.Load(factory, key); }
 
             protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key, TemporalIndex temporal)
-            {
-                throw new NotImplementedException();
-            }
+            { throw new NotImplementedException(); }
 
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
-            {
-                List<WorkItem> work = new List<WorkItem>();
+            { return modelData.Save(factory, key); }
 
-                work.AddRange(modelData.Save(factory, key));
-                work.AddRange(LoadWork(factory, key));
-                return work;
-            }
+            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
+            { return modelData.Delete(key); }
+
+            public ITemporalData GetTemporal()
+            { return databaseData.GetTemporal(); }
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
@@ -19,11 +20,12 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle("Scripting Manager");
 
             SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.ButtonType.Add,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase);
+                ButtonType.Add,
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
 
             formBinding = new FormBinding(bindingTemplate)
             { DoWork = base.DoWork, };
@@ -54,7 +56,13 @@ namespace DataDictionary.Main.Forms.Scripting
             base.DeleteCommand_Click(sender, e);
 
             if (formBinding.ManagerData.TryGetValue(out BindingValue? value))
-            { formBinding.ManagerData.Remove(value); }
+            { formBinding.RemoveData(new TemplateIndex(value), onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            {
+                formBinding.LoadValue();
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -82,7 +90,16 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            Activate(() => new ApplicationWide.HistoryView(formBinding.GetTemporal())
+            {
+                OpenForm = (temporal) =>
+                {
+                    if (temporal.TryGetValue(out TemplateValue? template))
+                    { return new Template(template, new TemporalIndex(temporal)); }
+                    else { throw new InvalidOperationException("Could not convert TemporalValue back to HelpSubjectValue"); }
+                }
+            });
         }
 
         private void BindingTemplate_CurrentItemChanged(object sender, EventArgs e)

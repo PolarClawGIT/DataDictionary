@@ -124,7 +124,7 @@ namespace DataDictionary.Main.Forms
             public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
             /// <summary>
-            /// Returns the Work Items needed to Load the data from the Database.
+            /// Returns the Work Items needed to Load the Item from the Database.
             /// </summary>
             /// <param name="factory"></param>
             /// <param name="key"></param>
@@ -132,7 +132,7 @@ namespace DataDictionary.Main.Forms
             protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TKey key);
 
             /// <summary>
-            /// Returns the Work Items needed to Load the historical data from the Database.
+            /// Returns the Work Items needed to Load the historical Item from the Database.
             /// </summary>
             /// <param name="factory"></param>
             /// <param name="key"></param>
@@ -141,12 +141,19 @@ namespace DataDictionary.Main.Forms
             protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TKey key, TemporalIndex temporal);
 
             /// <summary>
-            /// Returns the Work Items needed to Save the data from the Database.
+            /// Returns the Work Items needed to Save the Item to the Database.
             /// </summary>
             /// <param name="factory"></param>
             /// <param name="key"></param>
             /// <returns></returns>
             protected abstract IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TKey key);
+
+            /// <summary>
+            /// Returns the Work Items needed to Remove an Item from the data store.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            protected abstract IReadOnlyList<WorkItem> DeleteWork(TKey key);
 
             /// <summary>
             /// Loads the data from the Database by Key.
@@ -159,6 +166,7 @@ namespace DataDictionary.Main.Forms
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
+                work.AddRange(DeleteWork(key));
                 work.AddRange(LoadWork(factory, key));
 
                 DoWork(work, completing);
@@ -205,6 +213,7 @@ namespace DataDictionary.Main.Forms
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(SaveWork(factory, key));
+                work.AddRange(LoadWork(factory, key));
 
                 DoWork(work, completing);
 
@@ -213,6 +222,32 @@ namespace DataDictionary.Main.Forms
                     LoadValue(key);
                     if (onComplete is not null) { onComplete(args); }
                 }
+            }
+
+            public virtual void DeleteData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(DeleteWork(key));
+                work.AddRange(SaveWork(factory, key));
+
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
+            }
+
+            public virtual void RemoveData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.AddRange(DeleteWork(key));
+                DoWork(work, completing);
+
+                void completing(RunWorkerCompletedEventArgs args)
+                { if (onComplete is not null) { onComplete(args); } }
             }
         }
     }
