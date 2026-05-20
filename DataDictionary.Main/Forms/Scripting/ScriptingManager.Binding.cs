@@ -20,7 +20,19 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<BindingValue> ManagerData { get; }
 
             public FormBinding(BindingSource managerBinding) : base()
-            { ManagerData = new DataBinding<BindingValue>(managerBinding, () => managerValues); }
+            {
+                ManagerData = new DataBinding<BindingValue>(managerBinding, () => managerValues);
+                modelData.ListChanged += ModelData_ListChanged;
+
+                void ModelData_ListChanged(Object? sender, ListChangedEventArgs e)
+                {
+                    if(e.ListChangedType is 
+                        ListChangedType.Reset or 
+                        ListChangedType.ItemAdded or 
+                        ListChangedType.ItemDeleted)
+                    { LoadValue(); }
+                }
+            }
 
             public void LoadValue()
             {
@@ -95,6 +107,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public ITemporalData GetTemporal()
             { return databaseData.GetTemporal(); }
+
+            public virtual Boolean TryGetValue([NotNullWhen(true)] out BindingValue? result)
+            {
+                if (ManagerData.TryGetValue(out BindingValue? value))
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
         }
 
 
@@ -105,16 +124,32 @@ namespace DataDictionary.Main.Forms.Scripting
             ITemplateIndex, IKeyEquality<ITemplateIndex>,
             IBindingRowState
         {
-            ITemplateValue dataSource;
+            TemplateValue dataSource;
 
             public Guid? TemplateId { get { return dataSource.TemplateId; } }
 
             /// <inheritdoc/>
             public virtual Boolean HasValue { get { return TemplateId.HasValue && TemplateId != Guid.Empty; } }
 
-            public String? TemplateTitle { get { return dataSource.TemplateTitle; } }
+            public String? TemplateTitle
+            {
+                get { return dataSource.TemplateTitle; }
+                set
+                {
+                    dataSource.TemplateTitle = value;
+                    this.OnPropertyChanged(PropertyChanged, nameof(TemplateTitle));
+                }
+            }
 
-            public String? TemplateDescription { get { return dataSource.TemplateDescription; } }
+            public String? TemplateDescription
+            {
+                get { return dataSource.TemplateDescription; }
+                set
+                {
+                    dataSource.TemplateDescription = value;
+                    this.OnPropertyChanged(PropertyChanged, nameof(TemplateDescription));
+                }
+            }
 
             public Boolean InModel
             {
@@ -139,7 +174,7 @@ namespace DataDictionary.Main.Forms.Scripting
             public event PropertyChangedEventHandler? PropertyChanged;
             public event EventHandler<RowStateEventArgs>? RowStateChanged;
 
-            public BindingValue(ITemplateValue value)
+            public BindingValue(TemplateValue value)
             {
                 dataSource = value;
                 value.PropertyChanged += Value_PropertyChanged;

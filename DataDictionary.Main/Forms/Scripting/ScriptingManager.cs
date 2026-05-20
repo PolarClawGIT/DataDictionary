@@ -42,20 +42,23 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(BindingValue.TemplateTitle)));
                 templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(BindingValue.TemplateDescription)));
+
+                // Security
+                SetButtons();
             }
         }
 
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            Activate(static () => new Forms.Scripting.Template());
+            Activate(static () => new Forms.Scripting.Template(null));
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
 
-            if (formBinding.ManagerData.TryGetValue(out BindingValue? value))
+            if (formBinding.TryGetValue(out BindingValue? value))
             { formBinding.RemoveData(new TemplateIndex(value), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
@@ -68,7 +71,8 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
-            if (formBinding.ManagerData.TryGetValue(out BindingValue? value))
+
+            if (formBinding.TryGetValue(out BindingValue? value))
             { formBinding.LoadData(new TemplateIndex(value), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
@@ -78,13 +82,23 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            if (formBinding.TryGetValue(out BindingValue? value))
+            { formBinding.SaveData(new TemplateIndex(value), onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            if (formBinding.TryGetValue(out BindingValue? value))
+            { formBinding.DeleteData(new TemplateIndex(value), onComplete); }
+
+            void onComplete(RunWorkerCompletedEventArgs args)
+            { SendMessage(new RefreshNavigation()); }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
@@ -102,7 +116,10 @@ namespace DataDictionary.Main.Forms.Scripting
             });
         }
 
-        private void BindingTemplate_CurrentItemChanged(object sender, EventArgs e)
+        private void BindingTemplate_CurrentChanged(object sender, EventArgs e)
+        { SetButtons(); }
+
+        void SetButtons()
         {
             if (formBinding.ManagerData.TryGetValue(out BindingValue? binding))
             {
@@ -112,6 +129,16 @@ namespace DataDictionary.Main.Forms.Scripting
                 CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
                 CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
             }
+            else
+            {
+                CommandButtons[ButtonType.Delete].IsEnabled = false;
+
+                CommandButtons[ButtonType.OpenDatabase].IsEnabled = false;
+                CommandButtons[ButtonType.SaveDatabase].IsEnabled = false;
+                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+            }
+
+            SetAuthorization(formBinding.Authorize);
         }
     }
 }

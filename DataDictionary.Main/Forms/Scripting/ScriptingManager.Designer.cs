@@ -138,15 +138,15 @@
             // 
             // bindingTemplate
             // 
-            bindingTemplate.CurrentItemChanged += BindingTemplate_CurrentItemChanged;
+            bindingTemplate.CurrentChanged += BindingTemplate_CurrentChanged;
             // 
-            // TemplateManager
+            // ScriptingManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(458, 450);
             Controls.Add(templateLayout);
-            Name = "TemplateManager";
+            Name = "ScriptingManager";
             Text = "TemplateManager";
             Load += TemplateManager_Load;
             Controls.SetChildIndex(templateLayout, 0);
