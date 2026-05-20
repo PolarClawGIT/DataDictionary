@@ -66,9 +66,8 @@ namespace DataDictionary.Main.Forms.Scripting
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return GetData().Save(factory, key); }
 
-            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
-            { return GetData().Delete(key); }
-
+            public override void RemoveValue(TemplateIndex key)
+            { GetData().Remove(key); }
         }
     }
 }

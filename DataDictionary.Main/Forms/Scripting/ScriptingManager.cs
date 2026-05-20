@@ -59,13 +59,7 @@ namespace DataDictionary.Main.Forms.Scripting
             base.DeleteCommand_Click(sender, e);
 
             if (formBinding.TryGetValue(out BindingValue? value))
-            { formBinding.RemoveData(new TemplateIndex(value), onComplete); }
-
-            void onComplete(RunWorkerCompletedEventArgs args)
-            {
-                formBinding.LoadValue();
-                SendMessage(new RefreshNavigation());
-            }
+            { formBinding.RemoveValue(new TemplateIndex(value)); }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)

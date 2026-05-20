@@ -116,7 +116,7 @@ namespace DataDictionary.Main.Forms
 
         /// <inheritdoc/>
         /// <remarks>Base Presenter Class with Database Support.</remarks>
-        protected abstract class PresenterDatabase<TKey> : PresenterData//<TKey>
+        protected abstract class PresenterDatabase<TKey> : PresenterData
             where TKey : class, IKey, IKeyEquality<TKey>
         {
             /// <summary>
@@ -168,10 +168,6 @@ namespace DataDictionary.Main.Forms
             /// <param name="key"></param>
             /// <returns></returns>
             /// <remarks>When used with DeleteWork, this becomes a Delete on the Database.</remarks>
-            /// <example><![CDATA[
-            /// protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
-            /// { return GetData().Save(factory, key); }
-            /// ]]></example>
             protected abstract IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TKey key);
 
             /// <summary>
@@ -179,21 +175,21 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             /// <returns></returns>
-            /// <remarks>
-            /// When used with SaveWork, this will cause the data to be deleted from the Database.<br/>
-            /// When used without SaveWork (aka Remove), this will only remove the data  from the application.
-            /// </remarks>
-            /// <example><![CDATA[
-            /// protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
-            /// { return GetData().Delete(factory, key); }
-            /// ]]></example>
-            protected abstract IReadOnlyList<WorkItem> DeleteWork(TKey key);
+            /// <remarks>Default wrappers the RemoveValue into a WorkItem.</remarks>
+            protected virtual IReadOnlyList<WorkItem> DeleteWork(TKey key)
+            { return new WorkItem() { WorkName = "Remove by Key", DoWork = () => { RemoveValue(key); } }.ToList(); }
 
             /// <summary>
             /// Load the data from the main data store to the local.
             /// </summary>
             /// <param name="key"></param>
             public abstract void LoadValue(TKey key);
+
+            /// <summary>
+            /// Remove an Item from the data store by Key.
+            /// </summary>
+            /// <param name="key"></param>
+            public abstract void RemoveValue(TKey key);
 
             /// <summary>
             /// Loads the data from the Database by Key.
@@ -283,23 +279,6 @@ namespace DataDictionary.Main.Forms
                 work.AddRange(DeleteWork(key));
                 work.AddRange(SaveWork(factory, key));
 
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                { if (onComplete is not null) { onComplete(args); } }
-            }
-
-            /// <summary>
-            /// Removes the data from the data store by Key. (Not a database call)
-            /// </summary>
-            /// <param name="key"></param>
-            /// <param name="onComplete"></param>
-            /// <remarks>Class DeleteWork</remarks>
-            public virtual void RemoveData(TKey key, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.AddRange(DeleteWork(key));
                 DoWork(work, completing);
 
                 void completing(RunWorkerCompletedEventArgs args)

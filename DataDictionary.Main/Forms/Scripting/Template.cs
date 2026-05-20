@@ -129,10 +129,8 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             base.DeleteCommand_Click(sender, e);
 
-            formBinding.RemoveData(templateIndex, complete);
-
-            void complete(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
+            formBinding.RemoveValue(templateIndex);
+            IsLocked(true);
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)

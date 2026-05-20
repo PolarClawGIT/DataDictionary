@@ -26,9 +26,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 void ModelData_ListChanged(Object? sender, ListChangedEventArgs e)
                 {
-                    if(e.ListChangedType is 
-                        ListChangedType.Reset or 
-                        ListChangedType.ItemAdded or 
+                    if (e.ListChangedType is
+                        ListChangedType.Reset or
+                        ListChangedType.ItemAdded or
                         ListChangedType.ItemDeleted)
                     { LoadValue(); }
                 }
@@ -36,6 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public void LoadValue()
             {
+                managerValues.RaiseListChangedEvents = false;
                 managerValues.Clear();
                 BindingCompare bindingCompare = new BindingCompare();
 
@@ -54,6 +55,7 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (modelData.Any(a => item.Equals(a)))
                     { item.InModel = true; }
                 }
+                managerValues.RaiseListChangedEvents = true;
 
                 ManagerData.LoadBinding();
             }
@@ -102,8 +104,8 @@ namespace DataDictionary.Main.Forms.Scripting
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return modelData.Save(factory, key); }
 
-            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
-            { return modelData.Delete(key); }
+            public override void RemoveValue(TemplateIndex key)
+            { modelData.Remove(key); }
 
             public ITemporalData GetTemporal()
             { return databaseData.GetTemporal(); }
@@ -115,7 +117,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 else { result = null; return false; }
             }
         }
-
 
         class BindingData : BindingList<BindingValue>, IBindingList<BindingValue>
         { }
