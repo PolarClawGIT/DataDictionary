@@ -432,6 +432,8 @@ namespace DataDictionary.Main.Forms
 
         protected virtual void HandleMessage(RefreshNavigation message) { }
 
+        protected virtual void HandleMessage(RefreshRow message) { }
+
         #endregion
 
     }

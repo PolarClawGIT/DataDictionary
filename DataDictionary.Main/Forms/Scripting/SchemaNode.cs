@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        public SchemaNode(ITemplateIndex template, ISchemaDefinitionIndex schema) : this ()
+        public SchemaNode(ITemplateIndex template, ISchemaDefinitionIndex schema) : this()
         {
             templateIndex = new TemplateIndex(template);
             schemaIndex = new SchemaDefinitionIndex(schema);
@@ -127,6 +128,15 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
         {
             base.HistoryCommand_Click(sender, e);
+        }
+
+        protected override void HandleMessage(RefreshRow message)
+        {
+            base.HandleMessage(message);
+
+            if (message is RefreshRow<SchemaDefinitionIndex> rowMessage
+                && rowMessage.Key.Equals(schemaIndex))
+            { formBinding.LoadValue(schemaIndex); }
         }
     }
 }

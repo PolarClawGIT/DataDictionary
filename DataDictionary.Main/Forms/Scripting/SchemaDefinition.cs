@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 DirectoryTypeList.Load(rootFolderData);
                 formBinding.SchemaData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder), DirectoryTypeList.NullValue);
-                  
+
                 formBinding.SchemaData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
                 formBinding.SchemaData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
                 formBinding.SchemaData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
@@ -205,6 +205,19 @@ namespace DataDictionary.Main.Forms.Scripting
             Activate(() => new Forms.Scripting.TemplateObject(
                 template: templateIndex,
                 getData: formBinding.GetData));
+        }
+
+
+        protected override void HandleMessage(RefreshRow message)
+        {
+            base.HandleMessage(message);
+
+            if (message is RefreshRow<TemplateIndex> rowMessage
+                && rowMessage.Key.Equals(templateIndex))
+            {
+                formBinding.LoadValue(schemaIndex);
+                SendMessage(new RefreshRow<SchemaDefinitionIndex>(schemaIndex));
+            }
         }
     }
 }

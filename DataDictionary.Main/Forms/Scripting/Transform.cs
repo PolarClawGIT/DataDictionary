@@ -150,6 +150,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
+        protected override void HandleMessage(RefreshRow message)
+        {
+            base.HandleMessage(message);
 
+            if (message is RefreshRow<TemplateIndex> rowMessage
+                && rowMessage.Key.Equals(templateIndex))
+            {
+                formBinding.LoadValue(transformIndex);
+                SendMessage(new RefreshRow<TransformIndex>(transformIndex));
+            }
+        }
     }
 }

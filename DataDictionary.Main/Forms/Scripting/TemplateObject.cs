@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
 using DataDictionary.Main.Dialogs;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -173,6 +174,15 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             PathIndex path = new PathIndex(PathIndex.Parse(objectNameData.Text).ToArray());
             objectNameData.Text = path.MemberFullPath;
+        }
+
+        protected override void HandleMessage(RefreshRow message)
+        {
+            base.HandleMessage(message);
+
+            if (message is RefreshRow<TemplateIndex> rowMessage
+                && rowMessage.Key.Equals(templateIndex))
+            { formBinding.LoadValue(templateIndex); }
         }
     }
 }

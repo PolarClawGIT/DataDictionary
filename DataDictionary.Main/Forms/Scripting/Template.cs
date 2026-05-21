@@ -142,7 +142,10 @@ namespace DataDictionary.Main.Forms.Scripting
             else { formBinding.LoadData(templateIndex, temporalIndex, complete); }
 
             void complete(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
+            {
+                IsLocked(formBinding.GetLocked());
+                SendMessage(new RefreshRow<TemplateIndex>(templateIndex));
+            }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -152,7 +155,10 @@ namespace DataDictionary.Main.Forms.Scripting
             formBinding.SaveData(templateIndex, complete);
 
             void complete(RunWorkerCompletedEventArgs args)
-            { IsLocked(formBinding.GetLocked()); }
+            {
+                IsLocked(formBinding.GetLocked());
+                SendMessage(new RefreshRow<TemplateIndex>(templateIndex));
+            }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
