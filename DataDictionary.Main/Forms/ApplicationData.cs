@@ -247,8 +247,13 @@ namespace DataDictionary.Main.Forms
                     }
                 }
 
-                result.AppendLine(lastTemporal);
-                return result.ToString();
+                if (String.IsNullOrWhiteSpace(result.ToString()))
+                { return "empty dataset"; }
+                else
+                {
+                    result.AppendLine(lastTemporal);
+                    return result.ToString();
+                }
             }
 
             Image GetToolImage()
@@ -273,7 +278,9 @@ namespace DataDictionary.Main.Forms
                     }
                 }
 
-                return result.GetImage();
+                if (result is BindingRowState.Null)
+                { return Resources.Icon_Row.MergeImage(Resources.StatusInvalid, default, System.Drawing.Drawing2D.CompositingMode.SourceOver); }
+                else { return result.GetImage(); }
             }
 
             void Item_CurrentItemChanged(Object? sender, EventArgs e)
@@ -286,7 +293,14 @@ namespace DataDictionary.Main.Forms
             { // Update the RowState of the form to reflect the RowState of the first binding.
                 if (sender is BindingSource binding
                     && ReferenceEquals(bindings.FirstOrDefault(), binding))
-                { RowState = binding.GetRowState().AsDataRowState(); }
+                {
+                    BindingRowState rowState = binding.GetRowState();
+                    RowState = rowState.AsDataRowState();
+
+                    if (rowState is BindingRowState.Null or BindingRowState.Detached or BindingRowState.Deleted)
+                    { IsLocked(true); }
+                    else { IsLocked(false); }
+                }
             }
 
             void Item_DataSourceChanged(Object? sender, EventArgs e)
