@@ -1,13 +1,4 @@
-﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.Resource;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
+﻿using DataDictionary.Resource;
 
 namespace DataDictionary.Main.Forms
 {
@@ -95,15 +86,22 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <inheritdoc/>
-        [Obsolete("Place Holder, switch to the database presenter", false)]
         protected abstract class PresenterData<TKey>: PresenterData
             where TKey : class, IKey, IKeyEquality<TKey>
-        {
+        {   // This is the simple form of the Presenter.
+            // This is used with Child Forms where anouther form provides the data.
+
             /// <summary>
             /// Load the data from the main data store to the local.
             /// </summary>
             /// <param name="key"></param>
             public abstract void LoadValue(TKey key);
+
+            /// <summary>
+            /// Remove the item by Key from the data store.
+            /// </summary>
+            /// <param name="key"></param>
+            public abstract void RemoveValue(TKey key);
         }
 
 

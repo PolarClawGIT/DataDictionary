@@ -22,8 +22,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             formBinding = new FormBinding(bindingTemplate, bindingTransform);
 
-            SetRowState(
-                bindingTransform);
+            SetRowState(bindingTransform);
             SetTitle(bindingTransform);
             SetIcon(ScopeType.ScriptingTransform);
 
@@ -101,31 +100,6 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-        }
-
-        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteCommand_Click(sender, e);
-        }
-
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
         }
 
         private void DocumentNewCommand_Click(object sender, EventArgs e)

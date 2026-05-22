@@ -59,6 +59,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 NodeData.LoadBinding(w => schemaKey.Equals(w));
                 OwnerData.LoadBinding(w => schemaKey.Equals(w));
             }
+
+            public override void RemoveValue(SchemaDefinitionIndex key)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

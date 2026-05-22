@@ -32,6 +32,11 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public IEnumerable<PathIndex> GetObjectPaths()
             { return ObjectData.GetData().Select(s => s.ObjectPath); }
+
+            public override void RemoveValue(TemplateIndex key)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -47,6 +47,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
             }
+
+
+            public override void RemoveValue(TransformIndex key)
+            {
+                GetData().Transforms.Remove(key);
+                GetData().TransformDocuments.Remove(key);
+            }
         }
     }
 }

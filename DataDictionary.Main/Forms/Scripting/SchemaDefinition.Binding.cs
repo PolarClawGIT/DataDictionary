@@ -44,6 +44,15 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
                 ObjectData.LoadBinding(w => templateKey.Equals(w));
             }
+
+            public override void RemoveValue(SchemaDefinitionIndex key)
+            {
+                GetData().Schemata.Remove(key);
+                GetData().SchemataNodeOwners.Remove(key);
+                GetData().SchemataNodes.Remove(key);
+                GetData().SchemaDocuments.Remove(key);
+                throw new NotImplementedException();
+            }
         }
     }
 }

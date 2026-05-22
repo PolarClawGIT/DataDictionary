@@ -12,111 +12,8 @@ namespace DataDictionary.Main.Forms
     partial class ApplicationData
     {
         /// <inheritdoc/>
-        /// <remarks>Base Class with Database Support.</remarks>
-        [Obsolete("Not needed?", true)]
-        protected abstract class PresenterDatabase : PresenterData
-        {
-            /// <summary>
-            /// Command that performs the DoWork function.
-            /// </summary>
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-
-            /// <summary>
-            /// Returns the Work Items needed to Load the data from the Database.
-            /// </summary>
-            /// <param name="factory"></param>
-            /// <returns></returns>
-            protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory);
-
-            /// <summary>
-            /// Load the data from the main data store to the local.
-            /// </summary>
-            public abstract void LoadValue();
-
-            /// <summary>
-            /// Returns the Work Items needed to Load the historical data from the Database.
-            /// </summary>
-            /// <param name="factory"></param>
-            /// <param name="temporal"></param>
-            /// <returns></returns>
-            protected abstract IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemporalIndex temporal);
-
-            /// <summary>
-            /// Returns the Work Items needed to Save the data from the Database.
-            /// </summary>
-            /// <param name="factory"></param>
-            /// <returns></returns>
-            protected abstract IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory);
-
-            /// <summary>
-            /// Loads the data from the Database by Key.
-            /// </summary>
-            /// <param name="onComplete"></param>
-            public virtual void LoadData(Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(LoadWork(factory));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    LoadValue();
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            /// <summary>
-            /// Loads the historical data from the Database by Key.
-            /// </summary>
-            /// <param name="temporal"></param>
-            /// <param name="onComplete"></param>
-            public virtual void LoadData(TemporalIndex temporal, Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(LoadWork(factory, temporal));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    LoadValue();
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-            /// <summary>
-            /// Saves the data to the Database by Key.
-            /// </summary>
-            /// <param name="onComplete"></param>
-            public virtual void SaveData(Action<RunWorkerCompletedEventArgs>? onComplete = null)
-            {
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<WorkItem> work = new List<WorkItem>();
-
-                work.Add(factory.OpenConnection());
-                work.AddRange(SaveWork(factory));
-
-                DoWork(work, completing);
-
-                void completing(RunWorkerCompletedEventArgs args)
-                {
-                    LoadValue();
-                    if (onComplete is not null) { onComplete(args); }
-                }
-            }
-
-        }
-
-        /// <inheritdoc/>
         /// <remarks>Base Presenter Class with Database Support.</remarks>
-        protected abstract class PresenterDatabase<TKey> : PresenterData
+        protected abstract class PresenterDatabase<TKey> : PresenterData<TKey>
             where TKey : class, IKey, IKeyEquality<TKey>
         {
             /// <summary>
@@ -178,18 +75,6 @@ namespace DataDictionary.Main.Forms
             /// <remarks>Default wrappers the RemoveValue into a WorkItem.</remarks>
             protected virtual IReadOnlyList<WorkItem> DeleteWork(TKey key)
             { return new WorkItem() { WorkName = "Remove by Key", DoWork = () => { RemoveValue(key); } }.ToList(); }
-
-            /// <summary>
-            /// Load the data from the main data store to the local.
-            /// </summary>
-            /// <param name="key"></param>
-            public abstract void LoadValue(TKey key);
-
-            /// <summary>
-            /// Remove an Item from the data store by Key.
-            /// </summary>
-            /// <param name="key"></param>
-            public abstract void RemoveValue(TKey key);
 
             /// <summary>
             /// Loads the data from the Database by Key.

@@ -21,6 +21,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetCommand(ScopeType.ScriptingTemplate,
                 ButtonType.Add,
+                ButtonType.Open,
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,
@@ -51,7 +52,18 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            Activate(static () => new Forms.Scripting.Template(null));
+            Activate(() => new Forms.Scripting.Template(null), (f) => f.IsOpenItem(null));
+        }
+
+        protected override void OpenCommand_Click(Object? sender, EventArgs e)
+        {
+            base.OpenCommand_Click(sender, e);
+            if (formBinding.TryGetValue(out BindingValue? value)) 
+            {
+                TemplateIndex key = new TemplateIndex(value);
+                Activate(() => new Forms.Scripting.Template(key), (f) => f.IsOpenItem(key));
+            }
+
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
@@ -59,7 +71,10 @@ namespace DataDictionary.Main.Forms.Scripting
             base.DeleteCommand_Click(sender, e);
 
             if (formBinding.TryGetValue(out BindingValue? value))
-            { formBinding.RemoveValue(new TemplateIndex(value)); }
+            {
+                formBinding.RemoveValue(new TemplateIndex(value));
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -70,7 +85,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { formBinding.LoadData(new TemplateIndex(value), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            {
+                SetButtons();
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -81,7 +99,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { formBinding.SaveData(new TemplateIndex(value), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            {
+                SetButtons();
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
@@ -92,7 +113,10 @@ namespace DataDictionary.Main.Forms.Scripting
             { formBinding.DeleteData(new TemplateIndex(value), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new RefreshNavigation()); }
+            {
+                SetButtons();
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void HistoryCommand_Click(Object sender, EventArgs e)
@@ -115,9 +139,10 @@ namespace DataDictionary.Main.Forms.Scripting
 
         void SetButtons()
         {
-            if (formBinding.ManagerData.TryGetValue(out BindingValue? binding))
+            if (formBinding.TryGetValue(out BindingValue? binding))
             {
                 CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Open].IsEnabled = binding.InModel;
 
                 CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
                 CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
@@ -126,6 +151,7 @@ namespace DataDictionary.Main.Forms.Scripting
             else
             {
                 CommandButtons[ButtonType.Delete].IsEnabled = false;
+                CommandButtons[ButtonType.Open].IsEnabled = false;
 
                 CommandButtons[ButtonType.OpenDatabase].IsEnabled = false;
                 CommandButtons[ButtonType.SaveDatabase].IsEnabled = false;
