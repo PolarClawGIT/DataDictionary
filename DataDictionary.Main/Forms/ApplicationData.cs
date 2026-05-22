@@ -201,6 +201,7 @@ namespace DataDictionary.Main.Forms
                 item.Disposed += Item_Disposed;
             }
 
+            rowStateCommand.Visible = true;
             rowStateCommand.Image = GetToolImage();
             rowStateCommand.ToolTipText = GetToolTip();
 

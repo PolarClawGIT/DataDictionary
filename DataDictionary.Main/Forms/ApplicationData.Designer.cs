@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationData));
             toolStripSeparator = new ToolStripSeparator();
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
@@ -59,6 +58,7 @@
             // 
             openFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             openFromDatabaseCommand.Enabled = false;
+            openFromDatabaseCommand.Image = Properties.Resources.ItemOpen;
             openFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             openFromDatabaseCommand.Name = "openFromDatabaseCommand";
             openFromDatabaseCommand.Size = new Size(23, 22);
@@ -69,6 +69,7 @@
             // 
             saveToDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             saveToDatabaseCommand.Enabled = false;
+            saveToDatabaseCommand.Image = Properties.Resources.ItemSave;
             saveToDatabaseCommand.ImageTransparentColor = Color.Magenta;
             saveToDatabaseCommand.Name = "saveToDatabaseCommand";
             saveToDatabaseCommand.Size = new Size(23, 22);
@@ -79,6 +80,7 @@
             // 
             deleteFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             deleteFromDatabaseCommand.Enabled = false;
+            deleteFromDatabaseCommand.Image = Properties.Resources.ItemDelete;
             deleteFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             deleteFromDatabaseCommand.Name = "deleteFromDatabaseCommand";
             deleteFromDatabaseCommand.Size = new Size(23, 22);
@@ -98,6 +100,7 @@
             // 
             browseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             browseCommand.Enabled = false;
+            browseCommand.Image = Properties.Resources.ItemBrowse;
             browseCommand.ImageTransparentColor = Color.Magenta;
             browseCommand.Name = "browseCommand";
             browseCommand.Size = new Size(23, 22);
@@ -108,6 +111,7 @@
             // 
             selectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             selectCommand.Enabled = false;
+            selectCommand.Image = Properties.Resources.ItemSelect;
             selectCommand.ImageTransparentColor = Color.Magenta;
             selectCommand.Name = "selectCommand";
             selectCommand.Size = new Size(23, 22);
@@ -118,6 +122,7 @@
             // 
             newCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newCommand.Enabled = false;
+            newCommand.Image = Properties.Resources.ItemNew;
             newCommand.ImageTransparentColor = Color.Magenta;
             newCommand.Name = "newCommand";
             newCommand.Size = new Size(23, 22);
@@ -128,6 +133,7 @@
             // 
             deleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             deleteCommand.Enabled = false;
+            deleteCommand.Image = Properties.Resources.ItemDelete;
             deleteCommand.ImageTransparentColor = Color.Magenta;
             deleteCommand.Name = "deleteCommand";
             deleteCommand.Size = new Size(23, 22);
@@ -138,6 +144,7 @@
             // 
             openCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             openCommand.Enabled = false;
+            openCommand.Image = Properties.Resources.ItemOpen;
             openCommand.ImageTransparentColor = Color.Magenta;
             openCommand.Name = "openCommand";
             openCommand.Size = new Size(23, 22);
@@ -148,6 +155,7 @@
             // 
             saveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             saveCommand.Enabled = false;
+            saveCommand.Image = Properties.Resources.ItemSave;
             saveCommand.ImageTransparentColor = Color.Magenta;
             saveCommand.Name = "saveCommand";
             saveCommand.Size = new Size(23, 22);
@@ -161,7 +169,7 @@
             importCommand.ImageTransparentColor = Color.Magenta;
             importCommand.Name = "importCommand";
             importCommand.ShowDropDownArrow = false;
-            importCommand.Size = new Size(20, 22);
+            importCommand.Size = new Size(4, 22);
             importCommand.Text = "Import";
             importCommand.Click += ImportCommand_Click;
             // 
@@ -172,7 +180,7 @@
             exportCommand.ImageTransparentColor = Color.Magenta;
             exportCommand.Name = "exportCommand";
             exportCommand.ShowDropDownArrow = false;
-            exportCommand.Size = new Size(20, 22);
+            exportCommand.Size = new Size(4, 22);
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
@@ -180,6 +188,7 @@
             // 
             securityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             securityCommand.Enabled = false;
+            securityCommand.Image = Properties.Resources.ItemSecurity;
             securityCommand.ImageTransparentColor = Color.Magenta;
             securityCommand.Name = "securityCommand";
             securityCommand.Size = new Size(23, 22);
@@ -190,6 +199,7 @@
             // 
             historyCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             historyCommand.Enabled = false;
+            historyCommand.Image = Properties.Resources.ItemHistory;
             historyCommand.ImageTransparentColor = Color.Magenta;
             historyCommand.Name = "historyCommand";
             historyCommand.Size = new Size(23, 22);
@@ -200,6 +210,7 @@
             // 
             helpCommand.Alignment = ToolStripItemAlignment.Right;
             helpCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            helpCommand.Image = Properties.Resources.ItemHelp;
             helpCommand.ImageTransparentColor = Color.Magenta;
             helpCommand.Name = "helpCommand";
             helpCommand.Size = new Size(23, 22);
@@ -211,15 +222,16 @@
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             rowStateCommand.Enabled = false;
+            rowStateCommand.Image = Properties.Resources.StatusInvalid;
             rowStateCommand.Name = "rowStateCommand";
             rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";
+            rowStateCommand.Visible = false;
             // 
             // helpToolStripButton
             // 
             helpToolStripButton.Alignment = ToolStripItemAlignment.Right;
             helpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            helpToolStripButton.Image = (Image)resources.GetObject("helpToolStripButton.Image");
             helpToolStripButton.ImageTransparentColor = Color.Magenta;
             helpToolStripButton.Name = "helpToolStripButton";
             helpToolStripButton.Size = new Size(23, 22);
