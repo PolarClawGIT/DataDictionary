@@ -76,6 +76,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 objectKeepOrphaned.DataBindings.Add(new Binding(nameof(CheckBox.Checked), bindingObject, nameof(ITemplateObjectValue.KeepOrphaned)));
 
                 BindingObject_CurrentChanged(bindingObject, new EventArgs());
+
+                // Security
+                IsLocked(formBinding.GetLocked());
+                SetAuthorization(formBinding.Authorize);
             }
         }
 
@@ -99,9 +103,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (dialog.ShowDialog(this) is DialogResult.OK)
                 {
-                    foreach (INamedScopeValue item in dialog.SelectedByNamedScope())
-                    { formBinding.ObjectData.Add(new TemplateObjectValue(templateIndex)); }
-
+                    formBinding.AddValues(templateIndex, dialog.SelectedByNamedScope());
                     bindingObject.ResetCurrentItem();
                 }
             }
@@ -123,29 +125,10 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-            throw new NotImplementedException();
+            base.DeleteCommand_Click(sender, e);
+            formBinding.RemoveValue();
         }
 
         private void BindingObject_CurrentChanged(object sender, EventArgs e)

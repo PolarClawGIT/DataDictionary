@@ -8,18 +8,8 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting TemplateObject
     /// </summary>
-    public interface ITemplateObjectItem : ITemplateObjectKey, ITemplateKey
+    public interface ITemplateObjectItem : ITemplateObjectKey, ITemplateKey, ITemplateObjectKeyName
     {
-        /// <summary>
-        ///  Scope of the Object being referenced.
-        /// </summary>
-        ScopeType ObjectScope { get; }
-
-        /// <summary>
-        /// The Object Name and Path being referenced.
-        /// </summary>
-        String? ObjectName { get; }
-
         /// <summary>
         /// Do not include the matching Object in the results.
         /// NOT filter.
@@ -31,7 +21,6 @@ namespace DataDictionary.DataLayer.AppScript
         /// This allows a Template to be used in multiple models that are not exactly alike.
         /// </summary>
         Boolean KeepOrphaned { get; }
-
     }
 
     /// <summary>

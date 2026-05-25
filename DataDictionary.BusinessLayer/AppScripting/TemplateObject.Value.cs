@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
 
@@ -7,7 +6,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
 
     /// <inheritdoc/>
-    public interface ITemplateObjectValue : ITemplateObjectItem, ITemplateObjectIndex, ITemplateIndex,
+    public interface ITemplateObjectValue : ITemplateObjectItem, 
+        ITemplateObjectIndex, ITemplateObjectNameIndex, ITemplateIndex,
         IScopeType, ITemporal
     {
         /// <summary>

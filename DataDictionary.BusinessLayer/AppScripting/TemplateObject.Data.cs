@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.AppScript;
 using Toolbox.Threading;
@@ -15,13 +16,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
+        IRemoveItem<ITemplateObjectIndex>,
         IDeleteData
     { }
 
     class TemplateObjectData : TemplateObjectCollection<TemplateObjectValue>, ITemplateObjectData
     {
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -30,7 +31,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -39,7 +39,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -48,7 +47,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -57,7 +55,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITemplateIndex dataKey, ITemporalIndex asOfUtcDate)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -66,7 +63,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ITemplateIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -75,7 +71,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -93,7 +88,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -102,7 +96,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelIndex dataKey)
         { return Delete(); }
 
@@ -112,12 +105,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         { base.Remove(dataKey); }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingTemplate</remarks>
         public void Remove(IModelIndex dataKey)
         { Clear(); }
 
+        public void Remove(ITemplateObjectIndex key)
+        {   base.Remove(key); }
+
         /// <inheritdoc/>
-        /// <remarks>ScriptingDataSource</remarks>
         public ITemporalData GetTemporal(IModelIndex model)
         {
             return new TemporalData<TemplateData, TemplateValue>()
@@ -125,7 +119,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        /// <remarks>ScriptingDataSource</remarks>
         public ITemporalData GetTemporal(ITemplateIndex template)
         {
             return new TemporalData<TemplateData, TemplateValue>()
