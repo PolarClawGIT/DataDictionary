@@ -33,26 +33,13 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public override void LoadValue(TransformIndex key)
             {
-                TemplateIndex templateKey;
+                TemplateIndex templateKey = new TemplateIndex();
 
                 TransformData.LoadBinding(w => key.Equals(w));
                 if (TransformData.TryGetValue(out TransformValue? transformValue))
                 { templateKey = new TemplateIndex(transformValue); }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(key), key);
-                    throw ex;
-                }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
-            }
-
-
-            public override void RemoveValue(TransformIndex key)
-            {
-                GetData().Transforms.Remove(key);
-                GetData().TransformDocuments.Remove(key);
             }
         }
     }

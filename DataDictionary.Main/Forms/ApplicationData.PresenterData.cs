@@ -96,12 +96,6 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             /// <param name="key"></param>
             public abstract void LoadValue(TKey key);
-
-            /// <summary>
-            /// Remove the item by Key from the data store.
-            /// </summary>
-            /// <param name="key"></param>
-            public abstract void RemoveValue(TKey key);
         }
 
 

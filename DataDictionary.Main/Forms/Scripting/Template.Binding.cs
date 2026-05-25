@@ -43,6 +43,19 @@ namespace DataDictionary.Main.Forms.Scripting
                 ObjectData.LoadBinding(w => key.Equals(w));
             }
 
+            public Boolean RemoveValue()
+            {
+                if(TemplateData.TryGetValue(out TemplateValue? value))
+                {
+                    TemplateIndex key = new TemplateIndex(value);
+                    ITemplateData target = GetData();
+
+                    target.Remove(key);
+                    return true;
+                }
+                else { return false; }
+            }
+
             protected override IReadOnlyList<WorkItem> LoadWork(IDatabaseWork factory, TemplateIndex key)
             {
                 List<WorkItem> work = new List<WorkItem>();
@@ -63,11 +76,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 return work;
             }
 
+            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
+            { return GetData().Delete(key); }
+
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return GetData().Save(factory, key); }
-
-            public override void RemoveValue(TemplateIndex key)
-            { GetData().Remove(key); }
         }
     }
 }

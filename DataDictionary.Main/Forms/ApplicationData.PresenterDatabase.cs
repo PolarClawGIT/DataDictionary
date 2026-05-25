@@ -73,8 +73,7 @@ namespace DataDictionary.Main.Forms
             /// <param name="key"></param>
             /// <returns></returns>
             /// <remarks>Default wrappers the RemoveValue into a WorkItem.</remarks>
-            protected virtual IReadOnlyList<WorkItem> DeleteWork(TKey key)
-            { return new WorkItem() { WorkName = "Remove by Key", DoWork = () => { RemoveValue(key); } }.ToList(); }
+            protected abstract IReadOnlyList<WorkItem> DeleteWork(TKey key);
 
             /// <summary>
             /// Loads the data from the Database by Key.

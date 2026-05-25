@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public override void LoadValue(TemplateObjectIndex key)
-            {   throw new NotImplementedException(); }
+            { throw new NotImplementedException(); }
 
             public void AddValues(TemplateIndex key, IEnumerable<INamedScopeValue> values)
             {
@@ -49,19 +49,10 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public Boolean RemoveValue()
-            {
-                if (ObjectData.TryGetValue(out TemplateObjectValue? value))
-                { return ObjectData.Remove(value); }
-                else { return false; }
-            }
+            { return ObjectData.Remove(); }
 
             public IEnumerable<PathIndex> GetObjectPaths()
             { return ObjectData.GetData().Select(s => s.ObjectPath); }
-
-            public override void RemoveValue(TemplateObjectIndex key)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

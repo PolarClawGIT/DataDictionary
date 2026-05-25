@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.DataLayer;
 using DataDictionary.Main.Controls;
+using DataDictionary.Resource;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
@@ -19,11 +21,6 @@ namespace DataDictionary.Main.Forms
         protected class DataBinding<TRow> : ICollection<TRow>
             where TRow : class, IBindingPropertyChanged, IBindingRowState
         {
-            /// <summary>
-            /// BindingSource used by this class
-            /// </summary>
-            public BindingSource BindingData { get; private set; }
-
             /// <summary>
             /// Function called during Load to get the data.
             /// </summary>
@@ -62,6 +59,12 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
+            #region BindingSource Support
+            /// <summary>
+            /// BindingSource used by this class
+            /// </summary>
+            protected BindingSource BindingData { get; private set; }
+
             /// <summary>
             /// Try/Get to find the Value that is the Current Value for the BindingSource.
             /// </summary>
@@ -75,6 +78,18 @@ namespace DataDictionary.Main.Forms
                 else { result = null; return false; }
             }
 
+            /// <summary>
+            /// Removes the Value that is the Current Value for the BindingSource.
+            /// </summary>
+            /// <returns></returns>
+            public virtual Boolean Remove()
+            {
+                if (TryGetValue(out TRow? value))
+                { return bindingValues.Remove(value); }
+                else { return false; }
+            }
+            #endregion
+            #region Security
             /// <summary>
             /// Get if the Current Value should be Locked (ReadOnly).
             /// </summary>
@@ -100,7 +115,8 @@ namespace DataDictionary.Main.Forms
                 { return authorization.GetAuthorization(authorizations); }
                 else { return (false, false, false); }
             }
-
+            #endregion
+            #region Binding Helpers
             [Obsolete("not needed?", true)]
             public virtual void StopBinding()
             {
@@ -234,7 +250,7 @@ namespace DataDictionary.Main.Forms
                 else
                 { checkBoxControl.DataBindings.Add(CreateBinding(nameof(CheckBox.Checked), dataField)); }
             }
-
+            #endregion
             #region ICollection
             /// <inheritdoc/>
             public void Add(TRow item)
@@ -272,5 +288,39 @@ namespace DataDictionary.Main.Forms
             #endregion
         }
 
+        [Obsolete("POC, not currently used", true)]
+        protected class DataBinding<TKey, TRow> : DataBinding<TRow>
+            where TKey : IKey, IEquatable<TKey>
+            where TRow : class, IBindingPropertyChanged, IBindingRowState,
+                IEquatable<TKey>, IRemoveItem<TKey>
+        {
+            public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData) : base(binding, getData)
+            { }
+
+            /// <summary>
+            /// Try to get the Value by Key.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="result"></param>
+            /// <returns></returns>
+            public virtual Boolean TryGetValue(TKey key, [NotNullWhen(true)] out TRow? result)
+            {
+                if (bindingValues.FirstOrDefault(w => key.Equals(w)) is TRow value)
+                { result = value; return true; }
+                else { result = null; return false; }
+            }
+
+            /// <summary>
+            /// Remove a value by Key.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public virtual Boolean Remove(TKey key)
+            {
+                if (TryGetValue(key, out TRow? value))
+                { return bindingValues.Remove(value); }
+                else { return false; }
+            }
+        }
     }
 }

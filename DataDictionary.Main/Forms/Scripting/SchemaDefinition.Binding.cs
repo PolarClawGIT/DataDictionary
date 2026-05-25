@@ -29,23 +29,17 @@ namespace DataDictionary.Main.Forms.Scripting
 
             public override void LoadValue(SchemaDefinitionIndex key)
             {
-                TemplateIndex templateKey;
+                TemplateIndex templateKey = new TemplateIndex();
 
                 SchemaData.LoadBinding(w => key.Equals(w));
                 if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
                 { templateKey = new TemplateIndex(schemaValue); }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(key), key);
-                    throw ex;
-                }
 
                 TemplateData.LoadBinding(w => templateKey.Equals(w));
                 ObjectData.LoadBinding(w => templateKey.Equals(w));
             }
 
-            public override void RemoveValue(SchemaDefinitionIndex key)
+            protected void RemoveValue(SchemaDefinitionIndex key)
             {
                 GetData().Schemata.Remove(key);
                 GetData().SchemataNodeOwners.Remove(key);

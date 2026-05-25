@@ -75,6 +75,17 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            public virtual Boolean RemoveValue()
+            {
+                if(ManagerData.TryGetValue(out BindingValue? value))
+                {
+                    TemplateIndex key = new TemplateIndex(value);
+                    modelData.Remove(key);
+                    return true;
+                }
+                else { return false; }
+            }
+
             public virtual void LoadData(Action<RunWorkerCompletedEventArgs>? onComplete = null)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -104,9 +115,6 @@ namespace DataDictionary.Main.Forms.Scripting
             protected override IReadOnlyList<WorkItem> SaveWork(IDatabaseWork factory, TemplateIndex key)
             { return modelData.Save(factory, key); }
 
-            public override void RemoveValue(TemplateIndex key)
-            { modelData.Remove(key); }
-
             public ITemporalData GetTemporal()
             { return databaseData.GetTemporal(); }
 
@@ -116,6 +124,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 { result = value; return true; }
                 else { result = null; return false; }
             }
+
+            protected override IReadOnlyList<WorkItem> DeleteWork(TemplateIndex key)
+            { return modelData.Delete(key); }
         }
 
         class BindingData : BindingList<BindingValue>, IBindingList<BindingValue>
