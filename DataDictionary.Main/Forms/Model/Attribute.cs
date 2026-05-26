@@ -44,12 +44,12 @@ namespace DataDictionary.Main.Forms.Model
                 bindingAlias,
                 bindingSubjectArea);
             
-            SetCommand(ScopeType.ModelAttribute,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
         }
 
         public Attribute(IAttributeIndex? attribute) : this()

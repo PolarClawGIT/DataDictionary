@@ -25,8 +25,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ScopeType.ScriptingDocument,
-                Enumerations.ButtonType.Delete);
+            SetCommand(Enumerations.ButtonType.Delete);
         }
 
         private void TransformDocument_Load(object sender, EventArgs e)

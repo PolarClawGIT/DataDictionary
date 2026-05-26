@@ -43,12 +43,12 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetTitle(bindingTemplate);
             SetRowState(bindingTemplate);
 
-            SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase,
+                ButtonType.HistoryDatabase);
         }
 
         public Template(ITemplateIndex? template) : this()

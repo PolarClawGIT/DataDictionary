@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.Library
             InitializeComponent();
 
             SetIcon(ScopeType.Library);
-            SetCommand(ScopeType.Library,
+            SetCommand(
                 ButtonType.Add,
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,

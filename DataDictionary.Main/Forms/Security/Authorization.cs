@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Security
 
             SetIcon(ScopeType.Security);
 
-            SetCommand(ScopeType.Security,
+            SetCommand(
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase);
 

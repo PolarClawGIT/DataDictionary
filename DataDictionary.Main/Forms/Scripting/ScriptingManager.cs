@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetTitle("Scripting Manager");
 
-            SetCommand(ScopeType.ScriptingTemplate,
+            SetCommand(
                 ButtonType.Add,
                 ButtonType.Open,
                 ButtonType.Delete,

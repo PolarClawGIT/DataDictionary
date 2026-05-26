@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetTitle(bindingDataSource);
             SetRowState(bindingDataSource, bindingDataObject);
 
-            SetCommand(ScopeType.ScriptingData,
+            SetCommand(
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,

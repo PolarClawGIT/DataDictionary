@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingNode);
             SetIcon(bindingNode, ScopeType.ScriptingNode);
 
-            SetCommand(ScopeType.ScriptingNode,
+            SetCommand(
                 Enumerations.ButtonType.Add,
                 Enumerations.ButtonType.Delete);
         }

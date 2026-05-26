@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Obsolete
             SetTitle(bindingDocument);
             SetRowState(bindingDocument);
 
-            SetCommand(ScopeType.ScriptingDocument,
+            SetCommand(
                 ButtonType.Delete,
                 ButtonType.Save,
                 ButtonType.Open,

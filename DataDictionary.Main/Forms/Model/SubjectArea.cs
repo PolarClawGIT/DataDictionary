@@ -21,8 +21,7 @@ namespace DataDictionary.Main.Forms.Model
             SetIcon(ScopeType.ModelSubjectArea);
             SetTitle(bindingSubject);
             SetRowState(bindingSubject);
-            SetCommand(ScopeType.ModelSubjectArea,
-                Enumerations.ButtonType.Delete);
+            SetCommand(ButtonType.Delete);
         }
 
         public SubjectArea(ISubjectAreaValue? subjectAreaItem) : this()

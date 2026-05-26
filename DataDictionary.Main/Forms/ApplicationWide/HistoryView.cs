@@ -27,9 +27,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             InitializeComponent();
             SetIcon(ScopeType.ApplicationHelp);
-            SetCommand(
-                ScopeType.ApplicationHelp,
-                Enumerations.ButtonType.Open);
+            SetCommand(Enumerations.ButtonType.Open);
 
             historyValuesData.ResizeColumns();
             historyModificationData.ResizeColumns();
@@ -60,7 +58,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 isUpdatedData.DataBindings.Add(new Binding(nameof(isUpdatedData.Checked), bindingHistory, nameof(ITemporalValue.IsUpdated)));
                 isCurrentData.DataBindings.Add(new Binding(nameof(isCurrentData.Checked), bindingHistory, nameof(ITemporalValue.IsCurrent)));
                 createdByData.DataBindings.Add(new Binding(nameof(createdByData.Text), bindingHistory, nameof(ITemporalValue.CreatedBy)));
-                createdOnDate.DataBindings.Add(new Binding(nameof(createdOnDate.Text), bindingHistory, nameof(ITemporalValue.CreatedOn),true, DataSourceUpdateMode.OnPropertyChanged,String.Empty, "MM'/'dd'/'yyyy HH':'mm':'ss zzz"));
+                createdOnDate.DataBindings.Add(new Binding(nameof(createdOnDate.Text), bindingHistory, nameof(ITemporalValue.CreatedOn), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty, "MM'/'dd'/'yyyy HH':'mm':'ss zzz"));
                 removedByData.DataBindings.Add(new Binding(nameof(removedByData.Text), bindingHistory, nameof(ITemporalValue.RemovedBy)));
                 removedOnData.DataBindings.Add(new Binding(nameof(removedOnData.Text), bindingHistory, nameof(ITemporalValue.RemovedOn), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty, "MM'/'dd'/'yyyy HH':'mm':'ss zzz"));
 

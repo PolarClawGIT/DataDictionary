@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingObject);
             SetIcon(ScopeType.ScriptingObject);
 
-            SetCommand(ScopeType.ScriptingObject,
+            SetCommand(
                 Enumerations.ButtonType.Add,
                 Enumerations.ButtonType.Delete,
                 Enumerations.ButtonType.Select);

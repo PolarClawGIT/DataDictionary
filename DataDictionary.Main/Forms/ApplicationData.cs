@@ -54,7 +54,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(browseCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Browse,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -62,7 +61,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(selectCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Select,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -70,7 +68,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(newCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Add,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -78,7 +75,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(deleteCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Delete,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -86,7 +82,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(saveCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Save,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -94,7 +89,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(openCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Open,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -102,7 +96,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(importCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Import,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -110,7 +103,6 @@ namespace DataDictionary.Main.Forms
 
             new CommandState(exportCommand)
             {
-                Scope = ScopeType.ApplicationDocument,
                 Command = ButtonType.Export,
                 IsVisible = false,
                 IsAuthorized = GetAuthorization
@@ -134,7 +126,6 @@ namespace DataDictionary.Main.Forms
                 Command = ButtonType.SaveDatabase,
                 IsVisible = true,
                 IsEnabled = false,
-                //AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Added or DataRowState.Detached),
                 AllowEnabled = () => Settings.Default.IsOnLineMode && RowState is not (DataRowState.Detached),
                 IsAuthorized = GetAuthorization
             }.AddTo(commandButtons);
@@ -332,7 +323,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-
         /// <summary>
         /// Sets the Title based on the BindingSource provided.
         /// Allows for the Title to be changed if the Title of the object changes.
@@ -414,28 +404,31 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>This applies icon that is expected to be static.</remarks>
         protected void SetIcon(ScopeType scope)
-        { Icon = scope.GetIcon(); }
+        { 
+            Icon = scope.GetIcon();
+
+            foreach (var item in CommandButtons.Values)
+            {
+                if (item.Scope is ScopeType.Null)
+                { item.Scope = scope; }
+            }
+        }
 
         /// <summary>
         /// Sets the Icon and Command Button Images. 
         /// Sets the buttons to visible and enabled.
         /// </summary>
-        /// <param name="scope"></param>
         /// <param name="commands"></param>
-        protected void SetCommand(ScopeType scope, params ButtonType[]? commands)
+        protected void SetCommand(params ButtonType[]? commands)
         {
             if (commands is not null)
             {
-                foreach (var item in commands)
+                foreach (ButtonType item in commands)
                 {
                     if (CommandButtons.TryGetValue(item, out CommandState? value))
                     {
-                        if (value.Scope is ScopeType.ApplicationDocument)
-                        { value.Scope = scope; }
-
                         value.IsVisible = true;
                         value.IsEnabled = true;
-                        value.Refresh();
                     }
                 }
             }

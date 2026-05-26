@@ -26,8 +26,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ScopeType.ScriptingDocument,
-                Enumerations.ButtonType.Delete);
+            SetCommand(ButtonType.Delete);
 
             documentOpenSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             documentOpenTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);

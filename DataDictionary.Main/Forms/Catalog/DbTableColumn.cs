@@ -23,11 +23,11 @@ namespace DataDictionary.Main.Forms.Catalog
             SetRowState(bindingColumn, bindingProperties);
             SetTitle(bindingColumn);
             SetIcon(bindingColumn);
-            SetCommand(ScopeType.DatabaseTableColumn, Enumerations.ButtonType.Export);
+            SetCommand(ButtonType.Export);
 
-            CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";
-            CommandButtons[Enumerations.ButtonType.Export].DropDown = exportOptions;
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.ButtonType.Add);
+            CommandButtons[ButtonType.Export].Text = "to Model";
+            CommandButtons[ButtonType.Export].DropDown = exportOptions;
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
         }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()

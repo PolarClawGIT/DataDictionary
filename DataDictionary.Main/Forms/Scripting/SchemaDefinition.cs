@@ -30,8 +30,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingSchema);
             SetIcon(ScopeType.ScriptingSchema);
 
-            SetCommand(ScopeType.ScriptingSchema,
-                Enumerations.ButtonType.Delete);
+            SetCommand(ButtonType.Delete);
 
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);

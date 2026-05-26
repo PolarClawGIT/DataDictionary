@@ -16,11 +16,10 @@ namespace DataDictionary.Main.Forms.Obsolete
 
             SetIcon(ScopeType.Scripting);
             SetCommand(
-                ScopeType.Scripting,
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,
-                ButtonType.DeleteDatabase
-                );
+                ButtonType.DeleteDatabase);
+
             newTemplateCommand.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
             newDataSourceCommand.Image = ScopeType.ScriptingData.GetImage(ButtonType.Add);
             newDocumentCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);

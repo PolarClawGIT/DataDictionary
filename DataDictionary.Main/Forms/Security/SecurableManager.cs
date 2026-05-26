@@ -31,9 +31,9 @@ namespace DataDictionary.Main.Forms.Security
             InitializeComponent();
 
             SetIcon(ScopeType.SecuritySecurable);
-            SetCommand(ScopeType.SecurityPrincipal,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase);
+            SetCommand(
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase);
             SetTitle(bindingSecurable);
 
             securableOwnerData.AutoGenerateColumns = false;
