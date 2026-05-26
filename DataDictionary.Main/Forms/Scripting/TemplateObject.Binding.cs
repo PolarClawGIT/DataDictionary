@@ -11,7 +11,6 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
-            //public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<TemplateObjectValue> ObjectData { get; }
 
@@ -32,7 +31,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             public override void LoadValue(TemplateObjectIndex key)
-            { throw new NotImplementedException(); }
+            { throw new NotSupportedException(); }
 
             public void AddValues(TemplateIndex key, IEnumerable<INamedScopeValue> values)
             {

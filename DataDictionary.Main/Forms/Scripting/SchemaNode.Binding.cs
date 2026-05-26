@@ -17,8 +17,6 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
-            //public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
-
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<SchemaNodeValue> NodeData { get; }
