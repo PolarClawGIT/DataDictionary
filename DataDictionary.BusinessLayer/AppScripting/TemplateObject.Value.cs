@@ -6,6 +6,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
 
     /// <inheritdoc/>
+    [Obsolete("Merged to Schema Document")]
     public interface ITemplateObjectValue : ITemplateObjectItem, 
         ITemplateObjectIndex, ITemplateObjectNameIndex, ITemplateIndex,
         IScopeType, ITemporal
@@ -17,6 +18,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("Merged to Schema Document")]
     public class TemplateObjectValue : TemplateObjectItem, ITemplateObjectValue
     {
         IDataValue dataValue; // Backing field for IDataValue

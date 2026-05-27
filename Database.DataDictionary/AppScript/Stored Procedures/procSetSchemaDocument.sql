@@ -30,11 +30,80 @@ Begin Try
 		[FileName]			[AppGeneral].[uddtFileName] Null,
 		Primary Key([DocumentId]))
 
+	-- Handles Objects
+	Declare @Objects [AppScript].[udttTemplateObject]
+
+	;With [Object] As (
+		Select	[TemplateId],
+				[ObjectId],
+				[ObjectScope],
+				[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectName],
+				Convert(Int, NullIf([IsExcluded],0)) As [IsExcluded],
+				Convert(Int, NullIf([KeepOrphaned],0)) As [KeepOrphaned]
+		From	[AppScript].[TemplateObject]
+		Where	[ObjectScope] is Not Null And
+				[TemplateId] In (
+					Select	[TemplateId]
+					From	@Data
+					Union	
+					Select	@TemplateId
+					Where	@TemplateId is Not Null) And
+				([IsExcluded] = 1 Or [KeepOrphaned] = 1)),
+	[Data] As (
+		Select	IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
+				D.[ObjectScope],
+				P.[QualifiedName] As [ObjectName],
+				Convert(Int, IsNull(D.[IsExcluded],0)) As [IsExcluded],
+				Convert(Int, IsNull(D.[KeepOrphaned],0)) As [KeepOrphaned]
+		From	@Data D
+				Cross Apply [AppGeneral].[funcParseName](D.[ObjectName]) P
+		Where	P.[IsBase] = 1 And
+				D.[ObjectName] is Not Null And
+				D.[ObjectScope] is Not Null),
+	[Combine] As (
+		Select	[TemplateId],
+				[ObjectScope],
+				[ObjectName]
+		From	[Object]
+		Union	
+		Select	[TemplateId],
+				[ObjectScope],
+				[ObjectName]
+		From	[Data] D)
+	Insert Into @Objects (
+		[TemplateId],
+		[ObjectId],
+		[ObjectScope],
+		[ObjectName],
+		[IsExcluded],
+		[KeepOrphaned])
+	Select	C.[TemplateId],
+			IsNull(O.[ObjectId], NewId()) As [ObjectId],
+			C.[ObjectScope],
+			C.[ObjectName],
+			Max(Coalesce(D.[IsExcluded], O.[IsExcluded], 0)) As [IsExcluded],
+			Max(Coalesce(D.[KeepOrphaned], O.[KeepOrphaned], 0)) As [KeepOrphaned]
+	From	[Combine] C
+			Left Join [Data] D
+			On	C.[TemplateId] = D.[TemplateId] And
+				C.[ObjectScope] = D.[ObjectScope] And
+				C.[ObjectName] = D.[ObjectName]
+			Left Join [Object] O
+			On	C.[TemplateId] = O.[TemplateId] And
+				C.[ObjectScope] = O.[ObjectScope] And
+				C.[ObjectName] = O.[ObjectName]
+	Group By C.[TemplateId],
+			O.[ObjectId],
+			C.[ObjectScope],
+			C.[ObjectName]
+	Print FormatMessage ('@Objects: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	-- Build Values
 	Insert Into @Values
 	Select	X.[DocumentId],
-			D.[TemplateId],
+			IsNull(D.[TemplateId], @TemplateId) As [TemplateId],
 			D.[SchemaId],
-			D.[ObjectId],
+			O.[ObjectId],
 			NullIf(Trim(D.[FileName]),'') As [FileName]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
@@ -42,7 +111,13 @@ Begin Try
 				@ModelId = M.[ModelId]
 			Cross Apply (
 				Select	Coalesce(D.[DocumentId], NewId()) As [DocumentId]) X
-	Where	(@TemplateId is Null Or @TemplateId = D.[TemplateId]) And
+			Cross Apply  [AppGeneral].[funcParseName](D.[ObjectName]) P
+			Left Join @Objects O
+			On	IsNull(D.[TemplateId], @TemplateId)  = O.[TemplateId] And
+				D.[ObjectScope] = O.[ObjectScope] And
+				P.[QualifiedName] = O.[ObjectName]
+	Where	P.[IsBase] = 1 And
+			(@TemplateId is Null Or @TemplateId = IsNull(D.[TemplateId], @TemplateId)) And
 			(@ModelId is Null Or M.[ModelId] is Not Null)
 	Print FormatMessage ('@Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -50,6 +125,8 @@ Begin Try
 	Exec [AppGeneral].[procRecordTransactionLog] @ProcId = @@ProcId
 
 	-- Apply Changes
+	Exec [AppScript].[procSetTemplateObject] @ModelId = @ModelId, @TemplateId = @TemplateId, @Data = @Objects
+
 	Delete From [AppScript].[SchemaDocument]
 	From	[AppScript].[SchemaDocument] T
 			Left Join @Values S

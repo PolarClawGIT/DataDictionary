@@ -6,6 +6,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting TemplateObject Key
     /// </summary>
+    [Obsolete("Merged to Schema Document")]
     public interface ITemplateObjectKey : IKey
     {
         /// <summary>
@@ -17,6 +18,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting TemplateObject Key
     /// </summary>
+    [Obsolete("Merged to Schema Document")]
     public class TemplateObjectKey : ITemplateObjectKey,
         IKeyEquality<TemplateObjectKey>,
         IKeyEquality<ITemplateObjectKey>

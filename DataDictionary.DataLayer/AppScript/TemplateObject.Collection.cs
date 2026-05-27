@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// Generic Base class for Scripting TemplateObject
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
+    [Obsolete("Merged to Schema Document")]
     public class TemplateObjectCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,

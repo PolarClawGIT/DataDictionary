@@ -11,6 +11,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface component for the Scripting TemplateObject
     /// </summary>
+    [Obsolete("Merged to Schema Document")]
     public interface ITemplateObjectData :
         IBindingData<TemplateObjectValue>,
         IGetTemporal<IModelIndex>, IGetTemporal<ITemplateIndex>,
@@ -20,6 +21,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         IDeleteData
     { }
 
+    [Obsolete("Merged to Schema Document")]
     class TemplateObjectData : TemplateObjectCollection<TemplateObjectValue>, ITemplateObjectData
     {
         /// <inheritdoc/>

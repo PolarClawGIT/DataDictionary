@@ -37,6 +37,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <summary>
         /// Objects for the Templates
         /// </summary>
+        [Obsolete("Merged to Schema Document")]
         ITemplateObjectData Objects { get; }
 
         /// <summary>
@@ -78,7 +79,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         SchemaNodeOwnerData schemaNodeOwnerValues;
 
         /// <inheritdoc/>
+        [Obsolete("Merged to Schema Document")]
         public ITemplateObjectData Objects { get { return templateObjectValues; } }
+
+        [Obsolete("Merged to Schema Document")]
         TemplateObjectData templateObjectValues;
 
         /// <inheritdoc/>
@@ -95,13 +99,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         public TemplateData() : base()
         {
+            templateObjectValues = new TemplateObjectData();
             schemaDefinitionValues = new SchemaDefinitionData();
             schemaNodeValues = new SchemaNodeData();
             schemaNodeOwnerValues = new SchemaNodeOwnerData();
             schemaDocumentValues = new SchemaDocumentData();
             transformValues = new TransformData();
             transformDocumentValues = new TransformDocumentData();
-            templateObjectValues = new TemplateObjectData();
         }
 
         /// <inheritdoc/>

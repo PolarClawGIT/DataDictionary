@@ -17,6 +17,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("Merged to Schema Document")]
     partial class TemplateObject : ApplicationData
     {
         TemplateIndex templateIndex = new TemplateIndex();

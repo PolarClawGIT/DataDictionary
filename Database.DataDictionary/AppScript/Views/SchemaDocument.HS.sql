@@ -14,13 +14,15 @@ With [Dates] As (
 Select	D.[DocumentId], -- PK
 		D.[TemplateId], -- AK
 		D.[SchemaId],
-		D.[ObjectId],
 		-- Useful Data
 		F.[RootFolder], -- AK
 		F.[RelativePath], -- Ak
 		D.[FileName], -- AK
+		O.[ObjectId],
 		O.[ObjectScope],
 		O.[ObjectMember],
+		O.[IsExcluded],
+		O.[KeepOrphaned],
 		-- Temporal Status
 		D.[SysStart], -- AK, PK
 		D.[SysEnd],

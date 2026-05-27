@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.Resource.Enumerations;
+using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
@@ -7,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Schema Document
     /// </summary>
-    public interface ISchemaDocumentItem : IDocumentItem, ISchemaDefinitionKey, ITemplateObjectKey
+    public interface ISchemaDocumentItem : IDocumentItem, ISchemaDefinitionKey, ITemplateObjectItem
     { }
 
     /// <summary>
@@ -39,14 +40,6 @@ namespace DataDictionary.DataLayer.AppScript
 
 
         /// <inheritdoc/>
-        public Guid? ObjectId
-        {
-            get { return GetValue<Guid>(nameof(ObjectId)); }
-            set { SetValue(nameof(ObjectId), value); }
-        }
-
-
-        /// <inheritdoc/>
         public String? FileName
         {
             get { return GetValue(nameof(FileName)); }
@@ -55,6 +48,50 @@ namespace DataDictionary.DataLayer.AppScript
 
         /// <inheritdoc/>
         public ITemporal Temporal { get; }
+
+        /// <inheritdoc/>
+        public String? ObjectName
+        {
+            get { return GetValue(nameof(ObjectName)); }
+            set { SetValue(nameof(ObjectName), value); }
+        }
+
+        /// <inheritdoc/>
+        public ScopeType ObjectScope
+        {
+            get
+            {
+                String? value = GetValue(nameof(ObjectScope));
+                if (value.TryParse(out ScopeType result))
+                { return result; }
+                else { return ScopeType.Null; }
+            }
+            set
+            { SetValue(nameof(ObjectScope), value.GetEnumeration().Name); }
+        }
+
+
+        /// <inheritdoc/>
+        public Boolean IsExcluded
+        {
+            get
+            {
+                if (GetValue<bool>(nameof(IsExcluded), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set { SetValue<Boolean>(nameof(IsExcluded), value); }
+        }
+
+        /// <inheritdoc/>
+        public Boolean KeepOrphaned
+        {
+            get
+            {
+                if (GetValue<bool>(nameof(KeepOrphaned), BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set { SetValue<Boolean>(nameof(KeepOrphaned), value); }
+        }
 
         /// <summary>
         /// Constructor for Scripting Schema Document
@@ -87,7 +124,10 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(DocumentId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(ObjectId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ObjectName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(IsExcluded), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(KeepOrphaned), typeof(Boolean)){ AllowDBNull = true},
             new DataColumn(nameof(FileName), typeof(String)){ AllowDBNull = true},
             ..TemporalItem.columnDefinitions,
         ];

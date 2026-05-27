@@ -8,10 +8,12 @@ using System.Text;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
+    [Obsolete("Merged to Schema Document")]
     public interface ITemplateObjectIndex : ITemplateObjectKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("Merged to Schema Document")]
     public class TemplateObjectIndex : TemplateObjectKey, ITemplateObjectIndex,
         IKeyEquality<ITemplateObjectIndex>, IKeyEquality<TemplateObjectIndex>
     {

@@ -8,7 +8,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting TemplateObject
     /// </summary>
-    public interface ITemplateObjectItem : ITemplateObjectKey, ITemplateKey, ITemplateObjectKeyName
+    public interface ITemplateObjectItem : ITemplateKey, ITemplateObjectKeyName
     {
         /// <summary>
         /// Do not include the matching Object in the results.
@@ -26,7 +26,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Implementation for the Scripting TemplateObject.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete("Merged to Schema Document")]
     public class TemplateObjectItem : BindingTableRow, ITemplateObjectItem, ISerializable
     {
         /// <inheritdoc/>

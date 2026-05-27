@@ -3,7 +3,10 @@
 	[DocumentId]			UniqueIdentifier Null,
 	[TemplateId]			UniqueIdentifier Null,
 	[SchemaId]				UniqueIdentifier Null,
-	[ObjectId]				UniqueIdentifier Null,
+	[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
+	[ObjectName]			[AppGeneral].[uddtPath] Null, -- Full Name including Member Name
+	[IsExcluded]			Bit Null,
+	[KeepOrphaned]			Bit Null,
 	[FileName]				[AppGeneral].[uddtFileName] Null,
 	-- Temporal Data
 	[CreatedOn]             DateTime2 (7) Null,
