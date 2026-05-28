@@ -44,7 +44,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 ButtonType.SaveDatabase,
                 ButtonType.DeleteDatabase);
 
-            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
@@ -105,10 +104,6 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
                 formBinding.TemplateData.AddBinding(templateDescriptionData, nameof(ITemplateValue.TemplateDescription));
-
-                ScopeNameList.Load(objectScopeColumn);
-                objectData.AutoGenerateColumns = false;
-                objectData.DataSource = bindingObject;
 
                 schemaData.AutoGenerateColumns = false;
                 schemaData.DataSource = bindingSchema;
@@ -172,13 +167,6 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void complete(RunWorkerCompletedEventArgs args)
             { IsLocked(formBinding.GetLocked()); }
-        }
-
-        private void OpenObjectCommand_Click(object sender, EventArgs e)
-        {
-            Activate(() => new Forms.Scripting.TemplateObject(
-                template: templateIndex,
-                getData: formBinding.GetData));
         }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)

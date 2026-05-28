@@ -30,20 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel templateLayout;
-            TableLayoutPanel templateObjectLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
             TableLayoutPanel schemaLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Template));
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentLayout;
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             templateTabs = new TabControl();
-            objectTab = new TabPage();
-            objectData = new DataGridView();
-            objectScopeColumn = new DataGridViewComboBoxColumn();
-            objectNameColumn = new DataGridViewTextBoxColumn();
-            objectToolStrip = new ToolStrip();
-            openObjectCommand = new ToolStripButton();
             schemaTab = new TabPage();
             schemaData = new DataGridView();
             schemaTitleColumn = new DataGridViewTextBoxColumn();
@@ -70,16 +63,11 @@
             bindingDocument = new BindingSource(components);
             contextTemplate = new ContextMenuStrip(components);
             templateLayout = new TableLayoutPanel();
-            templateObjectLayout = new TableLayoutPanel();
             schemaLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             templateLayout.SuspendLayout();
             templateTabs.SuspendLayout();
-            objectTab.SuspendLayout();
-            templateObjectLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)objectData).BeginInit();
-            objectToolStrip.SuspendLayout();
             schemaTab.SuspendLayout();
             schemaLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)schemaData).BeginInit();
@@ -144,7 +132,6 @@
             // 
             // templateTabs
             // 
-            templateTabs.Controls.Add(objectTab);
             templateTabs.Controls.Add(schemaTab);
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(documentTab);
@@ -154,83 +141,6 @@
             templateTabs.SelectedIndex = 0;
             templateTabs.Size = new Size(464, 329);
             templateTabs.TabIndex = 2;
-            // 
-            // objectTab
-            // 
-            objectTab.BackColor = SystemColors.Control;
-            objectTab.Controls.Add(templateObjectLayout);
-            objectTab.Location = new Point(4, 24);
-            objectTab.Name = "objectTab";
-            objectTab.Padding = new Padding(3);
-            objectTab.Size = new Size(456, 301);
-            objectTab.TabIndex = 2;
-            objectTab.Text = "Objects";
-            // 
-            // templateObjectLayout
-            // 
-            templateObjectLayout.ColumnCount = 1;
-            templateObjectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            templateObjectLayout.Controls.Add(objectData, 0, 1);
-            templateObjectLayout.Controls.Add(objectToolStrip, 0, 0);
-            templateObjectLayout.Dock = DockStyle.Fill;
-            templateObjectLayout.Location = new Point(3, 3);
-            templateObjectLayout.Name = "templateObjectLayout";
-            templateObjectLayout.RowCount = 2;
-            templateObjectLayout.RowStyles.Add(new RowStyle());
-            templateObjectLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            templateObjectLayout.Size = new Size(450, 295);
-            templateObjectLayout.TabIndex = 9;
-            // 
-            // objectData
-            // 
-            objectData.AllowUserToAddRows = false;
-            objectData.AllowUserToDeleteRows = false;
-            objectData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            objectData.Columns.AddRange(new DataGridViewColumn[] { objectScopeColumn, objectNameColumn });
-            templateObjectLayout.SetColumnSpan(objectData, 2);
-            objectData.Dock = DockStyle.Fill;
-            objectData.Location = new Point(3, 28);
-            objectData.Name = "objectData";
-            objectData.ReadOnly = true;
-            objectData.Size = new Size(444, 264);
-            objectData.TabIndex = 10;
-            // 
-            // objectScopeColumn
-            // 
-            objectScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectScopeColumn.DataPropertyName = "ObjectScope";
-            objectScopeColumn.FillWeight = 40F;
-            objectScopeColumn.HeaderText = "Object Scope";
-            objectScopeColumn.Name = "objectScopeColumn";
-            objectScopeColumn.ReadOnly = true;
-            // 
-            // objectNameColumn
-            // 
-            objectNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            objectNameColumn.DataPropertyName = "ObjectName";
-            objectNameColumn.FillWeight = 60F;
-            objectNameColumn.HeaderText = "Object Name";
-            objectNameColumn.Name = "objectNameColumn";
-            objectNameColumn.ReadOnly = true;
-            // 
-            // objectToolStrip
-            // 
-            objectToolStrip.Items.AddRange(new ToolStripItem[] { openObjectCommand });
-            objectToolStrip.Location = new Point(0, 0);
-            objectToolStrip.Name = "objectToolStrip";
-            objectToolStrip.Size = new Size(450, 25);
-            objectToolStrip.TabIndex = 0;
-            objectToolStrip.Text = "toolStrip1";
-            // 
-            // openObjectCommand
-            // 
-            openObjectCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openObjectCommand.Image = (Image)resources.GetObject("openObjectCommand.Image");
-            openObjectCommand.ImageTransparentColor = Color.Magenta;
-            openObjectCommand.Name = "openObjectCommand";
-            openObjectCommand.Size = new Size(23, 22);
-            openObjectCommand.Text = "open Object";
-            openObjectCommand.Click += OpenObjectCommand_Click;
             // 
             // schemaTab
             // 
@@ -487,12 +397,6 @@
             templateLayout.ResumeLayout(false);
             templateLayout.PerformLayout();
             templateTabs.ResumeLayout(false);
-            objectTab.ResumeLayout(false);
-            templateObjectLayout.ResumeLayout(false);
-            templateObjectLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)objectData).EndInit();
-            objectToolStrip.ResumeLayout(false);
-            objectToolStrip.PerformLayout();
             schemaTab.ResumeLayout(false);
             schemaLayout.ResumeLayout(false);
             schemaLayout.PerformLayout();
@@ -534,7 +438,6 @@
         private TabControl templateTabs;
         private TabPage schemaTab;
         private TabPage transformTab;
-        private TabPage objectTab;
         private TabPage documentTab;
         private BindingSource bindingSchema;
         private BindingSource bindingTransform;
@@ -542,8 +445,6 @@
         private BindingSource bindingDocument;
         private ContextMenuStrip contextTemplate;
         private ToolStripMenuItem templateOpenDocumentCommand;
-        private ToolStrip objectToolStrip;
-        private ToolStripButton openObjectCommand;
         private ToolStrip schemaToolStrip;
         private ToolStripButton addSchemaCommand;
         private ToolStripButton openSchemaCommand;
@@ -555,8 +456,5 @@
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStrip documentToolStrip;
         private ToolStripButton openDocumentCommand;
-        private DataGridView objectData;
-        private DataGridViewComboBoxColumn objectScopeColumn;
-        private DataGridViewTextBoxColumn objectNameColumn;
     }
 }

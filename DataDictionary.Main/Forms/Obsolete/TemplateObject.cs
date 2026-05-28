@@ -15,7 +15,7 @@ using System.Text;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.Obsolete
 {
     [Obsolete("Merged to Schema Document")]
     partial class TemplateObject : ApplicationData

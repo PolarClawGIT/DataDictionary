@@ -31,11 +31,12 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(ScopeType.ScriptingSchema);
 
             SetCommand(ButtonType.Delete);
+            AddCommands(nodeMenu);
 
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
+            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
-            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -97,9 +98,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.SchemaData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
                 formBinding.SchemaData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
 
-                ScopeNameList.Load(objectScopeColumn);
-                objectData.AutoGenerateColumns = false;
-                objectData.DataSource = bindingObject;
+
 
                 ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
                 formBinding.SchemaData.AddBinding(forEachScopeData, nameof(ISchemaDefinitionValue.ForEachScope), ScopeNameList.NullValue);
@@ -198,14 +197,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
         }
-
-        private void OpenObjectCommand_Click(object sender, EventArgs e)
-        {
-            Activate(() => new Forms.Scripting.TemplateObject(
-                template: templateIndex,
-                getData: formBinding.GetData));
-        }
-
 
         protected override void HandleMessage(RefreshRow message)
         {
