@@ -50,13 +50,6 @@ namespace DataDictionary.DataLayer.AppScript
         public ITemporal Temporal { get; }
 
         /// <inheritdoc/>
-        public String? ObjectName
-        {
-            get { return GetValue(nameof(ObjectName)); }
-            set { SetValue(nameof(ObjectName), value); }
-        }
-
-        /// <inheritdoc/>
         public ScopeType ObjectScope
         {
             get
@@ -70,6 +63,12 @@ namespace DataDictionary.DataLayer.AppScript
             { SetValue(nameof(ObjectScope), value.GetEnumeration().Name); }
         }
 
+        /// <inheritdoc/>
+        public String? ObjectName
+        {
+            get { return GetValue(nameof(ObjectName)); }
+            set { SetValue(nameof(ObjectName), value); }
+        }
 
         /// <inheritdoc/>
         public Boolean IsExcluded

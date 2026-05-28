@@ -1,15 +1,16 @@
 ﻿using DataDictionary.DataLayer.AppModel;
+using DataDictionary.DataLayer.AppScript;
 using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.AppScript
+namespace DataDictionary.DataLayer.Obsolete
 {
     /// <summary>
     /// Generic Base class for Scripting TemplateObject
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    [Obsolete("Merged to Schema Document")]
+    [Obsolete("Merged to Schema Document", true)]
     public class TemplateObjectCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ITemplateKey>,
         IWriteData<IModelKey>, IWriteData<ITemplateKey>,

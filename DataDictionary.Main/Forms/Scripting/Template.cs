@@ -25,7 +25,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 templateBinding: bindingTemplate,
                 schemaBinding: bindingSchema,
                 transformBinding: bindingTransform,
-                objectBinding: bindingObject,
                 documentBinding: bindingDocument)
             { DoWork = base.DoWork };
 

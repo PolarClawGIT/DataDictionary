@@ -165,29 +165,5 @@ namespace DataDictionary.Main
                 () => new Forms.Scripting.Transform(transformItem),
                 (form) => form.IsOpenItem(transformItem));
         }
-
-        [Obsolete]
-        void OpenForm(BusinessLayer.Obsolete.ITemplateValue template)
-        {
-            Activate(
-                () => new Forms.Obsolete.Template(template),
-                (form) => form.IsOpenItem(template));
-        }
-
-        [Obsolete]
-        void OpenForm(BusinessLayer.Obsolete.IDataSourceValue dataSource)
-        {
-            Activate(
-                () => new Forms.Obsolete.DataSource(dataSource),
-                (form) => form.IsOpenItem(dataSource));
-        }
-
-        [Obsolete]
-        void OpenForm(BusinessLayer.Obsolete.IDocumentValue document)
-        {
-            Activate(
-                () => new Forms.Obsolete.Document(document),
-                (form) => form.IsOpenItem(document));
-        }
     }
 }

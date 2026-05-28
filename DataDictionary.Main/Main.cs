@@ -96,15 +96,6 @@ namespace DataDictionary.Main
             menuRoutineItem.Image = ScopeType.DatabaseProcedure.GetImage(ButtonType.Default); ;
             menuRoutineParameterItem.Image = ScopeType.DatabaseProcedureParameter.GetImage(ButtonType.Default);
 
-            menuScriptingTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Default);
-            menuScriptingAddTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
-            menuScriptingNode.Image = ScopeType.ScriptingTemplateNode.GetImage(ButtonType.Default);
-            menuScriptingNodeOwner.Image = ScopeType.ScriptingTemplateNodeOwner.GetImage(ButtonType.Default);
-            menuScriptingDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Default);
-            menuScriptingAddDocument.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
-            menuScriptingDataSource.Image = ScopeType.ScriptingData.GetImage(ButtonType.Default);
-            menuScriptingAddData.Image = ScopeType.ScriptingData.GetImage(ButtonType.Add);
-
             manageTemplateCommand.Image = ScopeType.Scripting.GetImage(ButtonType.Default);
             manageTemplateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             menuNewTemplate.Image = ScopeType.ScriptingTemplate.GetImage(ButtonType.Add);
@@ -113,7 +104,6 @@ namespace DataDictionary.Main
             menuTemplateTransformDocument.Image = ScopeType.ApplicationDocument.GetImage(ButtonType.Default);
             menuTemplateNode.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Default);
             menuTemplateNodeOwner.Image = ScopeType.ScriptingNodeOwner.GetImage(ButtonType.Default);
-            menuTemplateObject.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Default);
             menuTemplateSchemata.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Default);
             menuTemplateTransform.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Default);
 

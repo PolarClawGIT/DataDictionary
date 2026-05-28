@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding(bindingTemplate, bindingSchema, bindingObject);
+            formBinding = new FormBinding(bindingTemplate, bindingSchema);
 
             SetRowState(
                 bindingSchema

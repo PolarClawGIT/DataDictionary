@@ -61,7 +61,6 @@
             bindingSchema = new BindingSource(components);
             bindingTemplate = new BindingSource(components);
             folderBrowserDialog = new FolderBrowserDialog();
-            bindingObject = new BindingSource(components);
             nodeMenu = new ContextMenuStrip(components);
             openNodeCommand = new ToolStripMenuItem();
             schemaLayout = new TableLayoutPanel();
@@ -85,7 +84,6 @@
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingObject).BeginInit();
             nodeMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -450,12 +448,12 @@
             // 
             nodeMenu.Items.AddRange(new ToolStripItem[] { openNodeCommand });
             nodeMenu.Name = "nodeMenu";
-            nodeMenu.Size = new Size(181, 48);
+            nodeMenu.Size = new Size(142, 26);
             // 
             // openNodeCommand
             // 
             openNodeCommand.Name = "openNodeCommand";
-            openNodeCommand.Size = new Size(180, 22);
+            openNodeCommand.Size = new Size(141, 22);
             openNodeCommand.Text = "Node Details";
             openNodeCommand.Click += OpenNodeCommand_Click;
             // 
@@ -491,7 +489,6 @@
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingObject).EndInit();
             nodeMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -525,7 +522,6 @@
         private BindingSource bindingSchema;
         private BindingSource bindingTemplate;
         private FolderBrowserDialog folderBrowserDialog;
-        private BindingSource bindingObject;
         private DataGridViewTextBoxColumn objectNameColumn;
         private DataGridViewTextBoxColumn FileNameColumn;
         private TableLayoutPanel nodeLayout;

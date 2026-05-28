@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using System.ComponentModel;
@@ -17,20 +16,17 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<TemplateValue> TemplateData { get; }
             public DataBinding<SchemaDefinitionValue> SchemaData { get; }
             public DataBinding<TransformValue> TransformData { get; }
-            public DataBinding<TemplateObjectValue> ObjectData { get; }
             //public DataBinding<DocumentValue> DocumentData { get; }
 
             public FormBinding(
                 BindingSource templateBinding,
                 BindingSource schemaBinding,
                 BindingSource transformBinding,
-                BindingSource objectBinding,
                 BindingSource documentBinding) : base()
             {
                 TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());
                 SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
                 TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
-                ObjectData = new DataBinding<TemplateObjectValue>(objectBinding, () => GetData().Objects);
                 GetLocked = TemplateData.GetLocked;
                 GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
@@ -40,7 +36,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 TemplateData.LoadBinding(w => key.Equals(w));
                 SchemaData.LoadBinding(w => key.Equals(w));
                 TransformData.LoadBinding(w => key.Equals(w));
-                ObjectData.LoadBinding(w => key.Equals(w));
             }
 
             public Boolean RemoveValue()

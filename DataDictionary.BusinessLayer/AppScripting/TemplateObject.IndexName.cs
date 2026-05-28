@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.AppScript;
+using DataDictionary.DataLayer.Obsolete;
 using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
@@ -7,12 +8,10 @@ using System.Text;
 namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <inheritdoc/>
-    [Obsolete("Merged to Schema Document")]
     public interface ITemplateObjectNameIndex : ITemplateObjectKeyName
     { }
 
     /// <inheritdoc/>
-    [Obsolete("Merged to Schema Document")]
     public class TemplateObjectNameIndex : TemplateObjectKeyName, ITemplateObjectNameIndex,
         IKeyEquality<TemplateObjectNameIndex>,
         IKeyEquality<ITemplateObjectNameIndex>

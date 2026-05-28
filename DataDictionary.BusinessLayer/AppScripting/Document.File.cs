@@ -5,12 +5,11 @@ using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Obsolete
+namespace DataDictionary.BusinessLayer.AppScripting
 {
     /// <summary>
     /// Interface for Single File of a Document.
     /// </summary>
-    [Obsolete]
     public interface IDocumentFile : IFileValue, IBindingPropertyChanged
     {
         /// <summary>
@@ -41,7 +40,6 @@ namespace DataDictionary.BusinessLayer.Obsolete
     /// Used to hold Input, Transform, and Output file information.
     /// This is a Wrapper around the fields in the main Document so that they can be treated as a single unit.
     /// </summary>
-    [Obsolete]
     public class DocumentFile : FileValue, IDocumentFile
     {
         /// <inheritdoc/>

@@ -1,8 +1,5 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataDictionary.DataLayer.AppScript
 {

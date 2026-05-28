@@ -221,62 +221,6 @@ namespace DataDictionary.Main
                 (ScopeType.ModelDefinition, BusinessData.Model.Definitions));
         }
 
-        [Obsolete]
-        private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(static () => new Forms.Obsolete.TemplateManager()); }
-
-        private void menuScriptingTemplates_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                <BusinessLayer.Obsolete.TemplateValue, Forms.Obsolete.Template>
-                (ScopeType.ScriptingTemplate, BusinessData.Scripting.Templates)
-            { SelectedForm = (data) => new Forms.Obsolete.Template(data) });
-        }
-
-        [Obsolete]
-        private void menuScriptingPath_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                <BusinessLayer.Obsolete.DataSourceValue, Forms.Obsolete.DataSource>
-                (ScopeType.ScriptingData, BusinessData.Scripting.DataSources)
-            { SelectedForm = (data) => new Forms.Obsolete.DataSource(data) });
-        }
-
-        [Obsolete]
-        private void menuScriptingDocument_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                <BusinessLayer.Obsolete.DocumentValue, Forms.Obsolete.Document>
-                (ScopeType.ScriptingDocument, BusinessData.Scripting.Documents)
-            { SelectedForm = (data) => new Forms.Obsolete.Document(data) });
-        }
-
-        [Obsolete]
-        private void menuScriptingNode_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplateNode, BusinessData.Scripting.TemplateNodes));
-        }
-
-        [Obsolete]
-        private void menuScriptingNodeOwner_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingTemplateNodeOwner, BusinessData.Scripting.TemplateNodeOwners));
-        }
-
-        [Obsolete]
-        private void MenuScriptingAddTemplate_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Obsolete.Template(null)); }
-
-        [Obsolete]
-        private void MenuScriptingAddDocument_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Obsolete.Document(null)); }
-
-        [Obsolete]
-        private void MenuScriptingAddData_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Obsolete.DataSource(null)); }
-
         private void MenuProcess_Click(object sender, EventArgs e)
         {
             Activate(static () => new DetailDataView
@@ -371,12 +315,6 @@ namespace DataDictionary.Main
         {
             Activate(static () => new DetailDataView
                 (ScopeType.ScriptingNodeOwner, BusinessData.Templates.SchemataNodeOwners));
-        }
-
-        private void MenuTemplateObject_Click(object sender, EventArgs e)
-        {
-            Activate(static () => new DetailDataView
-                (ScopeType.ScriptingObject, BusinessData.Templates.Objects));
         }
 
         private void MenuTemplateSchemaDocument_Click(object sender, EventArgs e)
