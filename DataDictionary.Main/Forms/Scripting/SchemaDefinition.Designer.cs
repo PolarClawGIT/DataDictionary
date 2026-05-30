@@ -52,6 +52,7 @@
             documentTab = new TabPage();
             fileLayout = new TableLayoutPanel();
             documentToolStrip = new ToolStrip();
+            documentBuildCommand = new ToolStripButton();
             documentNewCommand = new ToolStripButton();
             documentOpenCommand = new ToolStripButton();
             documentData = new DataGridView();
@@ -354,7 +355,7 @@
             documentTab.Location = new Point(4, 24);
             documentTab.Name = "documentTab";
             documentTab.Padding = new Padding(3);
-            documentTab.Size = new Size(192, 72);
+            documentTab.Size = new Size(502, 510);
             documentTab.TabIndex = 1;
             documentTab.Text = "Documents";
             // 
@@ -370,17 +371,26 @@
             fileLayout.RowCount = 2;
             fileLayout.RowStyles.Add(new RowStyle());
             fileLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            fileLayout.Size = new Size(186, 66);
+            fileLayout.Size = new Size(496, 504);
             fileLayout.TabIndex = 5;
             // 
             // documentToolStrip
             // 
-            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentNewCommand, documentOpenCommand });
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildCommand, documentNewCommand, documentOpenCommand });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(186, 25);
+            documentToolStrip.Size = new Size(496, 25);
             documentToolStrip.TabIndex = 15;
             documentToolStrip.Text = "Document Tools";
+            // 
+            // documentBuildCommand
+            // 
+            documentBuildCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentBuildCommand.Image = (Image)resources.GetObject("documentBuildCommand.Image");
+            documentBuildCommand.ImageTransparentColor = Color.Magenta;
+            documentBuildCommand.Name = "documentBuildCommand";
+            documentBuildCommand.Size = new Size(23, 22);
+            documentBuildCommand.Text = "Build";
             // 
             // documentNewCommand
             // 
@@ -412,7 +422,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(180, 35);
+            documentData.Size = new Size(490, 473);
             documentData.TabIndex = 9;
             // 
             // objectNameColumn
@@ -527,5 +537,6 @@
         private TableLayoutPanel nodeLayout;
         private ContextMenuStrip nodeMenu;
         private ToolStripMenuItem openNodeCommand;
+        private ToolStripButton documentBuildCommand;
     }
 }

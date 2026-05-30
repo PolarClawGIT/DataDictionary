@@ -35,6 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
             openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
         }
