@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Model
                 bindingSubjectArea,
                 bindingArgument);
 
-            SetCommand(ScopeType.ModelProcess,
+            SetCommand(
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,

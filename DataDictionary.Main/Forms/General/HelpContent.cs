@@ -25,7 +25,6 @@ namespace DataDictionary.Main.Forms.General
 
             SetIcon(ScopeType.ApplicationHelp);
             SetCommand(
-                ScopeType.ApplicationHelp,
                 ButtonType.Add,
                 ButtonType.Open,
                 ButtonType.OpenDatabase,

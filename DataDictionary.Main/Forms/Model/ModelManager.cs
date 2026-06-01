@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Model
 
             SetIcon(ScopeType.Model);
 
-            SetCommand(ScopeType.Model,
+            SetCommand(
                 ButtonType.OpenDatabase,
                 ButtonType.SaveDatabase,
                 ButtonType.DeleteDatabase);

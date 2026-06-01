@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Catalog
             InitializeComponent();
 
             SetIcon(ScopeType.Database);
-            SetCommand(ScopeType.Database,
+            SetCommand(
                 ButtonType.Add,
                 ButtonType.Delete,
                 ButtonType.OpenDatabase,

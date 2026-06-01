@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.AppScript;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -8,6 +9,7 @@ namespace DataDictionary.DataLayer.Obsolete
     /// <summary>
     /// Template Node Interface. Represents an XML Attribute or XML Element.
     /// </summary>
+    [Obsolete]
     public interface ITemplateNodeItem :
         ITemplateKey, ITemplateNodeKey,
         ITemporalItem

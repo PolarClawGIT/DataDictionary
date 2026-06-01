@@ -1,108 +1,47 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaDefinition
     {
-        partial class FormBinding
+        partial class FormBinding : PresenterData<SchemaDefinitionIndex>
         {
-            public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
+            public Func<ITemplateData> GetData { get; private set; } = () => BusinessData.Templates;
 
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            public DataBinding<TemplateValue> TemplateData { get; }
+            public DataBinding<SchemaDefinitionValue> SchemaData { get; }
 
-            public FormBinding() : base()
-            { }
-
-            public void Load(ISchemaDefinitionIndex schema)
+            public FormBinding(
+                BindingSource templateBinding,
+                BindingSource schemaBinding) : base()
             {
-                TemplateIndex templateKey;
-                SchemaDefinitionIndex schemaKey = new SchemaDefinitionIndex(schema);
-
-                TemplateBinding.RaiseListChangedEvents = false;
-                SchemaBinding.RaiseListChangedEvents = false;
-                ObjectBinding.RaiseListChangedEvents = false;
-
-                templateValues.RaiseListChangedEvents = false;
-                schemaValues.RaiseListChangedEvents = false;
-                objectValues.RaiseListChangedEvents = false;
-
-                schemaValues = new BindingView<SchemaDefinitionValue>(GetData().Schemata, w => schemaKey.Equals(w));
-                if (schemaValues.FirstOrDefault() is SchemaDefinitionValue value)
-                { templateKey = new TemplateIndex(value); }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(schema), schema);
-                    throw ex;
-                }
-
-                templateValues = new BindingView<TemplateValue>(GetData(), w => templateKey.Equals(w));
-                objectValues = new BindingView<TemplateObjectValue>(GetData().Objects, w => templateKey.Equals(w));
-
-                if (templateValues.Count > 0)
-                {
-                    TemplateBinding.DataSource = templateValues;
-                    SchemaBinding.DataSource = schemaValues;
-                    ObjectBinding.DataSource = objectValues;
-
-                    TemplateBinding.RaiseListChangedEvents = true;
-                    SchemaBinding.RaiseListChangedEvents = true;
-                    ObjectBinding.RaiseListChangedEvents = true;
-
-                    templateValues.RaiseListChangedEvents = true;
-                    schemaValues.RaiseListChangedEvents = true;
-                    objectValues.RaiseListChangedEvents = true;
-                }
-
-                TemplateBinding.ResetBindings(false);
-                SchemaBinding.ResetBindings(false);
-                ObjectBinding.ResetBindings(false);
-                SchemaBinding.MoveFirst();
+                TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
+                SchemaData = new DataBinding<SchemaDefinitionValue>(schemaBinding, () => GetData().Schemata);
+                GetLocked = TemplateData.GetLocked;
+                GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public Boolean GetAuthorization(Enumerations.ButtonType command)
+            public override void LoadValue(SchemaDefinitionIndex key)
             {
-                Boolean isGrant = false;
-                Boolean isNode = TryGetValue(out TemplateValue? _);
+                TemplateIndex templateKey = new TemplateIndex();
 
-                SecurableIndex? templateKey = null;
-                if (TryGetValue(out TemplateValue? templateValue))
-                { templateKey = new TemplateIndex(templateValue); }
+                SchemaData.LoadBinding(w => key.Equals(w));
+                if (SchemaData.TryGetValue(out SchemaDefinitionValue? schemaValue))
+                { templateKey = new TemplateIndex(schemaValue); }
 
-                isGrant = BusinessData.Authorization.IsScriptAdmin
-                    || BusinessData.Authorization.IsScriptOwner
-                    || BusinessData.Authorization.IsGrant(templateKey);
-
-                switch (command)
-                {
-                    case Enumerations.ButtonType.Default: return true;
-                    case Enumerations.ButtonType.Add: return isGrant;
-                    case Enumerations.ButtonType.Delete: return isGrant && isNode;
-                    case Enumerations.ButtonType.OpenDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.SaveDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.DeleteDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.HistoryDatabase: return isGrant && isNode;
-                    default: return false;
-                }
+                TemplateData.LoadBinding(w => templateKey.Equals(w));
             }
 
-            public Boolean GetLocked()
+            protected void RemoveValue(SchemaDefinitionIndex key)
             {
-                if (TryGetValue(out TemplateValue? value))
-                {
-                    return value.RowState() is DataRowState.Detached
-                        or DataRowState.Deleted;
-                }
-                else return true;
+                GetData().Schemata.Remove(key);
+                GetData().SchemataNodeOwners.Remove(key);
+                GetData().SchemataNodes.Remove(key);
+                GetData().SchemaDocuments.Remove(key);
+                throw new NotImplementedException();
             }
         }
     }

@@ -27,13 +27,13 @@ namespace DataDictionary.Main.Forms.Catalog
                 bindingDependencies);
             SetTitle(bindingTable);
             SetIcon(bindingTable);
-            SetCommand(ScopeType.DatabaseTable, Enumerations.ButtonType.Export);
+            SetCommand(ButtonType.Export);
 
-            CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";
-            CommandButtons[Enumerations.ButtonType.Export].DropDown = exportOptions;
+            CommandButtons[ButtonType.Export].Text = "to Model";
+            CommandButtons[ButtonType.Export].DropDown = exportOptions;
 
-            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.ButtonType.Add);
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.ButtonType.Add);
+            exportEntites.Image = ScopeType.ModelEntity.GetImage(ButtonType.Add);
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
         }
 
         public DbTable(ITableValue tableItem) : this()

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -25,12 +26,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ScopeType.ScriptingDocument,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(ButtonType.Delete);
         }
 
         public SchemaDocument(IDocumentIndex document) : this()

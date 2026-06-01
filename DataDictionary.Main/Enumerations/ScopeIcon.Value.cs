@@ -6,15 +6,22 @@ namespace DataDictionary.Main.Enumerations
     partial class ScopeIcon
     {
         static Dictionary<ScopeType, Icon> scopeIconMap = new Dictionary<ScopeType, Icon>()
-        {
+        {   // Most images are set using the Resource file.
+            // There is an alteritive using: SystemIcons.GetStockIcon(StockIconId)
+            // This allows the application to use icon for the current version of Windows.
+            // The number of icons is limited and does not include things like copy/paste.
+            // Other images are simply blank.
+
             { ScopeType.Null,                       Resources.Icon_SoftwareDefinitionModel },
             { ScopeType.Application,                Resources.Icon_SoftwareDefinitionModel },
-            { ScopeType.ApplicationHelp,            Resources.Icon_Help },
+            //{ ScopeType.ApplicationHelp,            Resources.Icon_Help },
+            { ScopeType.ApplicationHelp,            SystemIcons.GetStockIcon(StockIconId.Help) },
             { ScopeType.ApplicationHelpPage,        Resources.Icon_HelpIndexFile },
             { ScopeType.ApplicationHelpGroup,       Resources.Icon_HelpTableOfContent },
             { ScopeType.ApplicationHelpForm,        Resources.Icon_HelpApplication },
             { ScopeType.ApplicationOption,          Resources.Icon_Settings },
             { ScopeType.ApplicationDocument,        Resources.Icon_Document },
+            //{ ScopeType.ApplicationDocument,        SystemIcons.GetStockIcon(StockIconId.DocumentWithAssociation) },
             { ScopeType.ApplicationTimeLine,        Resources.Icon_TimeLine },
             { ScopeType.ApplicationLog,             Resources.Icon_Log },
             { ScopeType.ApplicationConnection,      Resources.Icon_ServerDatabase },
@@ -75,7 +82,7 @@ namespace DataDictionary.Main.Enumerations
             { ScopeType.ModelProcessDefinition,     Resources.Icon_RichTextBox },
             { ScopeType.ModelProcessSubjectArea,    Resources.Icon_Diagram },
 
-            { ScopeType.Scripting,                  Resources.Icon_XSLTransform },
+            { ScopeType.Scripting,                  Resources.Icon_Script },
             //{ ScopeType.ScriptingTemplate,          Resources.Icon_XMLSchema },
             { ScopeType.ScriptingData,              Resources.Icon_XPath },
             { ScopeType.ScriptingDataObject,        Resources.Icon_XMLDescendant },

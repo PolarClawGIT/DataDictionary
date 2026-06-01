@@ -133,21 +133,10 @@
             menuProcessProperty = new ToolStripMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
             manageScriptingCommand = new ToolStripSplitButton();
-            scriptingContextMenu = new ContextMenuStrip(components);
-            menuScriptingAddTemplate = new ToolStripMenuItem();
-            menuScriptingAddDocument = new ToolStripMenuItem();
-            menuScriptingAddData = new ToolStripMenuItem();
-            menuScriptingTemplate = new ToolStripMenuItem();
-            menuScriptingNode = new ToolStripMenuItem();
-            menuScriptingNodeOwner = new ToolStripMenuItem();
-            menuScriptingDataSource = new ToolStripMenuItem();
-            menuScriptingDataObject = new ToolStripMenuItem();
-            menuScriptingDocument = new ToolStripMenuItem();
             manageTemplateCommand = new ToolStripSplitButton();
             templateContextMenu = new ContextMenuStrip(components);
             menuNewTemplate = new ToolStripMenuItem();
             menuTemplate = new ToolStripMenuItem();
-            menuTemplateObject = new ToolStripMenuItem();
             menuTemplateSchemata = new ToolStripMenuItem();
             menuTemplateSchemaDocument = new ToolStripMenuItem();
             menuTemplateNode = new ToolStripMenuItem();
@@ -170,7 +159,6 @@
             mainToolStrip.SuspendLayout();
             modelContextMenu.SuspendLayout();
             processContextMenu.SuspendLayout();
-            scriptingContextMenu.SuspendLayout();
             templateContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingModel).BeginInit();
             SuspendLayout();
@@ -916,82 +904,11 @@
             // 
             // manageScriptingCommand
             // 
-            manageScriptingCommand.DropDown = scriptingContextMenu;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(70, 22);
             manageScriptingCommand.Text = "Scripting";
             manageScriptingCommand.Visible = false;
-            manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
-            // 
-            // scriptingContextMenu
-            // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingAddTemplate, menuScriptingAddDocument, menuScriptingAddData, menuScriptingTemplate, menuScriptingNode, menuScriptingNodeOwner, menuScriptingDataSource, menuScriptingDataObject, menuScriptingDocument });
-            scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(235, 202);
-            // 
-            // menuScriptingAddTemplate
-            // 
-            menuScriptingAddTemplate.Name = "menuScriptingAddTemplate";
-            menuScriptingAddTemplate.Size = new Size(234, 22);
-            menuScriptingAddTemplate.Text = "add Template";
-            menuScriptingAddTemplate.Click += MenuScriptingAddTemplate_Click;
-            // 
-            // menuScriptingAddDocument
-            // 
-            menuScriptingAddDocument.Name = "menuScriptingAddDocument";
-            menuScriptingAddDocument.Size = new Size(234, 22);
-            menuScriptingAddDocument.Text = "add Document";
-            menuScriptingAddDocument.Click += MenuScriptingAddDocument_Click;
-            // 
-            // menuScriptingAddData
-            // 
-            menuScriptingAddData.Name = "menuScriptingAddData";
-            menuScriptingAddData.Size = new Size(234, 22);
-            menuScriptingAddData.Text = "add Data Source";
-            menuScriptingAddData.Click += MenuScriptingAddData_Click;
-            // 
-            // menuScriptingTemplate
-            // 
-            menuScriptingTemplate.Name = "menuScriptingTemplate";
-            menuScriptingTemplate.Size = new Size(234, 22);
-            menuScriptingTemplate.Text = "browse Templates";
-            menuScriptingTemplate.Click += menuScriptingTemplates_Click;
-            // 
-            // menuScriptingNode
-            // 
-            menuScriptingNode.Name = "menuScriptingNode";
-            menuScriptingNode.Size = new Size(234, 22);
-            menuScriptingNode.Text = "browse Template Node";
-            menuScriptingNode.Click += menuScriptingNode_Click;
-            // 
-            // menuScriptingNodeOwner
-            // 
-            menuScriptingNodeOwner.Name = "menuScriptingNodeOwner";
-            menuScriptingNodeOwner.Size = new Size(234, 22);
-            menuScriptingNodeOwner.Text = "browse Template Node Owner";
-            menuScriptingNodeOwner.Click += menuScriptingNodeOwner_Click;
-            // 
-            // menuScriptingDataSource
-            // 
-            menuScriptingDataSource.Name = "menuScriptingDataSource";
-            menuScriptingDataSource.Size = new Size(234, 22);
-            menuScriptingDataSource.Text = "browse Data Sources";
-            menuScriptingDataSource.Click += menuScriptingPath_Click;
-            // 
-            // menuScriptingDataObject
-            // 
-            menuScriptingDataObject.Name = "menuScriptingDataObject";
-            menuScriptingDataObject.Size = new Size(234, 22);
-            menuScriptingDataObject.Text = "browse Data Objects";
-            // 
-            // menuScriptingDocument
-            // 
-            menuScriptingDocument.Name = "menuScriptingDocument";
-            menuScriptingDocument.Size = new Size(234, 22);
-            menuScriptingDocument.Text = "browse Documents";
-            menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
             // manageTemplateCommand
             // 
@@ -1004,10 +921,9 @@
             // 
             // templateContextMenu
             // 
-            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateObject, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateNodeOwner, menuTemplateTransform, menuTemplateTransformDocument });
+            templateContextMenu.Items.AddRange(new ToolStripItem[] { menuNewTemplate, menuTemplate, menuTemplateSchemata, menuTemplateSchemaDocument, menuTemplateNode, menuTemplateNodeOwner, menuTemplateTransform, menuTemplateTransformDocument });
             templateContextMenu.Name = "templateContextMenu";
-            templateContextMenu.OwnerItem = manageTemplateCommand;
-            templateContextMenu.Size = new Size(234, 224);
+            templateContextMenu.Size = new Size(234, 202);
             // 
             // menuNewTemplate
             // 
@@ -1022,13 +938,6 @@
             menuTemplate.Size = new Size(233, 22);
             menuTemplate.Text = "browse Templates";
             menuTemplate.Click += MenuTemplate_Click;
-            // 
-            // menuTemplateObject
-            // 
-            menuTemplateObject.Name = "menuTemplateObject";
-            menuTemplateObject.Size = new Size(233, 22);
-            menuTemplateObject.Text = "browse Objects";
-            menuTemplateObject.Click += MenuTemplateObject_Click;
             // 
             // menuTemplateSchemata
             // 
@@ -1111,7 +1020,6 @@
             mainToolStrip.PerformLayout();
             modelContextMenu.ResumeLayout(false);
             processContextMenu.ResumeLayout(false);
-            scriptingContextMenu.ResumeLayout(false);
             templateContextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingModel).EndInit();
             ResumeLayout(false);
@@ -1197,7 +1105,6 @@
         private ToolStripSplitButton manageDatabasesCommand;
         private ToolStripSplitButton manageLibrariesCommand;
         private ToolStripSplitButton manageScriptingCommand;
-        private ContextMenuStrip scriptingContextMenu;
         private ToolStripSplitButton newProcessCommand;
         private ToolStripSplitButton manageModelCommand;
         private ToolStripMenuItem menuAttributeDefinitions;
@@ -1205,9 +1112,6 @@
         private ContextMenuStrip modelContextMenu;
         private ToolStripMenuItem menuModelProperty;
         private ToolStripMenuItem menuModelDefinition;
-        private ToolStripMenuItem menuScriptingTemplate;
-        private ToolStripMenuItem menuScriptingDocument;
-        private ToolStripMenuItem menuScriptingNode;
         private ToolStripMenuItem windowToolStripMenuItem;
         private ToolStripMenuItem menuEntityAttributes;
         private BindingSource bindingModel;
@@ -1222,22 +1126,15 @@
         private ToolStripMenuItem menuProcessDefinition;
         private ToolStripMenuItem menuProcessProperty;
         private ToolStripMenuItem securityAuthorization;
-        private ToolStripMenuItem menuScriptingDataSource;
-        private ToolStripMenuItem menuScriptingDataObject;
-        private ToolStripMenuItem menuScriptingNodeOwner;
         private Controls.NamedScopeTreeView namedScopeData;
         private ToolStripMenuItem securitySetAuthorization;
         private ToolStripMenuItem databaseMessagesCommand;
-        private ToolStripMenuItem menuScriptingAddTemplate;
-        private ToolStripMenuItem menuScriptingAddDocument;
-        private ToolStripMenuItem menuScriptingAddData;
         private ContextMenuStrip templateContextMenu;
         private ToolStripMenuItem menuTemplate;
         private ToolStripMenuItem menuTemplateTransform;
         private ToolStripMenuItem menuTemplateSchemata;
         private ToolStripMenuItem menuTemplateNode;
         private ToolStripMenuItem menuTemplateNodeOwner;
-        private ToolStripMenuItem menuTemplateObject;
         private ToolStripSplitButton manageTemplateCommand;
         private ToolStripMenuItem menuNewTemplate;
         private ToolStripMenuItem menuTemplateSchemaDocument;

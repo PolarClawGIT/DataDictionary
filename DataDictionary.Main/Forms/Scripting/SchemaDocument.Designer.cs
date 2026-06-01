@@ -29,14 +29,27 @@
         private void InitializeComponent()
         {
             TableLayoutPanel schemaDocumentLayout;
+            GroupBox objectGroupBox;
+            TableLayoutPanel objectLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaDocument));
+            TableLayoutPanel objectBehaviorLayout;
             documentFileContentData = new DataDictionary.Main.Controls.TextBoxData();
             documentFileData = new DataDictionary.Main.Controls.SelectTextBoxData();
-            sourceObjectData = new DataDictionary.Main.Controls.ComboBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            objectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            objectNameData = new DataDictionary.Main.Controls.SelectTextBoxData();
+            isInModelData = new CheckBox();
+            objectIsExcluded = new CheckBox();
+            objectKeepOrphaned = new CheckBox();
             schemaDocumentLayout = new TableLayoutPanel();
+            objectGroupBox = new GroupBox();
+            objectLayout = new TableLayoutPanel();
+            objectBehaviorLayout = new TableLayoutPanel();
             schemaDocumentLayout.SuspendLayout();
+            objectGroupBox.SuspendLayout();
+            objectLayout.SuspendLayout();
+            objectBehaviorLayout.SuspendLayout();
             SuspendLayout();
             // 
             // schemaDocumentLayout
@@ -44,8 +57,8 @@
             schemaDocumentLayout.ColumnCount = 1;
             schemaDocumentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             schemaDocumentLayout.Controls.Add(documentFileContentData, 0, 4);
+            schemaDocumentLayout.Controls.Add(objectGroupBox, 0, 2);
             schemaDocumentLayout.Controls.Add(documentFileData, 0, 3);
-            schemaDocumentLayout.Controls.Add(sourceObjectData, 0, 2);
             schemaDocumentLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaDocumentLayout.Controls.Add(templateTitleData, 0, 0);
             schemaDocumentLayout.Dock = DockStyle.Fill;
@@ -57,7 +70,7 @@
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle());
             schemaDocumentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            schemaDocumentLayout.Size = new Size(508, 411);
+            schemaDocumentLayout.Size = new Size(508, 610);
             schemaDocumentLayout.TabIndex = 4;
             // 
             // documentFileContentData
@@ -65,11 +78,11 @@
             documentFileContentData.AutoSize = true;
             documentFileContentData.Dock = DockStyle.Fill;
             documentFileContentData.HeaderText = "Document Content";
-            documentFileContentData.Location = new Point(3, 205);
+            documentFileContentData.Location = new Point(3, 314);
             documentFileContentData.Multiline = true;
             documentFileContentData.Name = "documentFileContentData";
             documentFileContentData.ReadOnly = false;
-            documentFileContentData.Size = new Size(502, 203);
+            documentFileContentData.Size = new Size(502, 293);
             documentFileContentData.TabIndex = 6;
             documentFileContentData.WordWrap = false;
             // 
@@ -79,25 +92,12 @@
             documentFileData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             documentFileData.Dock = DockStyle.Fill;
             documentFileData.HeaderText = "Document (Local Path)";
-            documentFileData.Location = new Point(3, 155);
+            documentFileData.Location = new Point(3, 264);
             documentFileData.Name = "documentFileData";
             documentFileData.ReadOnly = false;
             documentFileData.SelectIcon = (Image)resources.GetObject("documentFileData.SelectIcon");
             documentFileData.Size = new Size(502, 44);
             documentFileData.TabIndex = 5;
-            // 
-            // sourceObjectData
-            // 
-            sourceObjectData.AutoSize = true;
-            sourceObjectData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            sourceObjectData.Dock = DockStyle.Fill;
-            sourceObjectData.DropDownStyle = ComboBoxStyle.DropDownList;
-            sourceObjectData.HeaderText = "Source Object";
-            sourceObjectData.Location = new Point(3, 103);
-            sourceObjectData.Name = "sourceObjectData";
-            sourceObjectData.ReadOnly = false;
-            sourceObjectData.Size = new Size(502, 46);
-            sourceObjectData.TabIndex = 4;
             // 
             // schemaTitleData
             // 
@@ -125,11 +125,116 @@
             templateTitleData.TabIndex = 2;
             templateTitleData.WordWrap = true;
             // 
+            // objectGroupBox
+            // 
+            objectGroupBox.AutoSize = true;
+            objectGroupBox.Controls.Add(objectLayout);
+            objectGroupBox.Dock = DockStyle.Fill;
+            objectGroupBox.Location = new Point(3, 103);
+            objectGroupBox.Name = "objectGroupBox";
+            objectGroupBox.Size = new Size(502, 155);
+            objectGroupBox.TabIndex = 5;
+            objectGroupBox.TabStop = false;
+            objectGroupBox.Text = "Model Object";
+            // 
+            // objectLayout
+            // 
+            objectLayout.AutoSize = true;
+            objectLayout.ColumnCount = 1;
+            objectLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            objectLayout.Controls.Add(objectBehaviorLayout, 0, 2);
+            objectLayout.Controls.Add(objectScopeData, 0, 0);
+            objectLayout.Controls.Add(objectNameData, 0, 1);
+            objectLayout.Dock = DockStyle.Fill;
+            objectLayout.Location = new Point(3, 19);
+            objectLayout.Name = "objectLayout";
+            objectLayout.RowCount = 3;
+            objectLayout.RowStyles.Add(new RowStyle());
+            objectLayout.RowStyles.Add(new RowStyle());
+            objectLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            objectLayout.Size = new Size(496, 133);
+            objectLayout.TabIndex = 0;
+            // 
+            // objectScopeData
+            // 
+            objectScopeData.AutoSize = true;
+            objectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectScopeData.Dock = DockStyle.Fill;
+            objectScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            objectScopeData.HeaderText = "Scope";
+            objectScopeData.Location = new Point(3, 3);
+            objectScopeData.Name = "objectScopeData";
+            objectScopeData.ReadOnly = false;
+            objectScopeData.Size = new Size(490, 46);
+            objectScopeData.TabIndex = 2;
+            // 
+            // objectNameData
+            // 
+            objectNameData.AutoSize = true;
+            objectNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            objectNameData.Dock = DockStyle.Fill;
+            objectNameData.HeaderText = "Object";
+            objectNameData.Location = new Point(3, 55);
+            objectNameData.Name = "objectNameData";
+            objectNameData.ReadOnly = false;
+            objectNameData.SelectIcon = (Image)resources.GetObject("objectNameData.SelectIcon");
+            objectNameData.Size = new Size(490, 44);
+            objectNameData.TabIndex = 3;
+            // 
+            // objectBehaviorLayout
+            // 
+            objectBehaviorLayout.AutoSize = true;
+            objectBehaviorLayout.ColumnCount = 3;
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            objectBehaviorLayout.Controls.Add(objectKeepOrphaned, 2, 0);
+            objectBehaviorLayout.Controls.Add(objectIsExcluded, 1, 0);
+            objectBehaviorLayout.Controls.Add(isInModelData, 0, 0);
+            objectBehaviorLayout.Dock = DockStyle.Fill;
+            objectBehaviorLayout.Location = new Point(3, 105);
+            objectBehaviorLayout.Name = "objectBehaviorLayout";
+            objectBehaviorLayout.RowCount = 1;
+            objectBehaviorLayout.RowStyles.Add(new RowStyle());
+            objectBehaviorLayout.Size = new Size(490, 25);
+            objectBehaviorLayout.TabIndex = 5;
+            // 
+            // isInModelData
+            // 
+            isInModelData.AutoSize = true;
+            isInModelData.Enabled = false;
+            isInModelData.Location = new Point(3, 3);
+            isInModelData.Name = "isInModelData";
+            isInModelData.Size = new Size(73, 19);
+            isInModelData.TabIndex = 1;
+            isInModelData.Text = "in Model";
+            isInModelData.UseVisualStyleBackColor = true;
+            // 
+            // objectIsExcluded
+            // 
+            objectIsExcluded.AutoSize = true;
+            objectIsExcluded.Location = new Point(166, 3);
+            objectIsExcluded.Name = "objectIsExcluded";
+            objectIsExcluded.Size = new Size(84, 19);
+            objectIsExcluded.TabIndex = 2;
+            objectIsExcluded.Text = "Is Excluded";
+            objectIsExcluded.UseVisualStyleBackColor = true;
+            // 
+            // objectKeepOrphaned
+            // 
+            objectKeepOrphaned.AutoSize = true;
+            objectKeepOrphaned.Location = new Point(329, 3);
+            objectKeepOrphaned.Name = "objectKeepOrphaned";
+            objectKeepOrphaned.Size = new Size(108, 19);
+            objectKeepOrphaned.TabIndex = 3;
+            objectKeepOrphaned.Text = "Keep Orphaned";
+            objectKeepOrphaned.UseVisualStyleBackColor = true;
+            // 
             // SchemaDocument
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(508, 436);
+            ClientSize = new Size(508, 635);
             Controls.Add(schemaDocumentLayout);
             Name = "SchemaDocument";
             Text = "SchemaDocument";
@@ -137,6 +242,12 @@
             Controls.SetChildIndex(schemaDocumentLayout, 0);
             schemaDocumentLayout.ResumeLayout(false);
             schemaDocumentLayout.PerformLayout();
+            objectGroupBox.ResumeLayout(false);
+            objectGroupBox.PerformLayout();
+            objectLayout.ResumeLayout(false);
+            objectLayout.PerformLayout();
+            objectBehaviorLayout.ResumeLayout(false);
+            objectBehaviorLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -148,5 +259,12 @@
         private Controls.ComboBoxData sourceObjectData;
         private Controls.SelectTextBoxData documentFileData;
         private Controls.TextBoxData documentFileContentData;
+        private TableLayoutPanel objectLayout;
+        private Controls.ComboBoxData objectScopeData;
+        private Controls.SelectTextBoxData objectNameData;
+        private TableLayoutPanel objectBehaviorLayout;
+        private CheckBox isInModelData;
+        private CheckBox objectIsExcluded;
+        private CheckBox objectKeepOrphaned;
     }
 }

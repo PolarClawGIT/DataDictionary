@@ -9,7 +9,11 @@ Set	@AsOfUtcDate = IsNull(@AsOfUtcDate, SysUtcDatetime())
 Select	[DocumentId],
 		[TemplateId],
 		[SchemaId],
-		[ObjectId],
+		--[ObjectId],
+		[ObjectScope],
+		[AppScript].[funcObjectPath] ([ObjectId]) As [ObjectName],
+		[IsExcluded],
+		[KeepOrphaned],
 		[FileName],
 		-- Temporal Data
 		[CreatedOn],

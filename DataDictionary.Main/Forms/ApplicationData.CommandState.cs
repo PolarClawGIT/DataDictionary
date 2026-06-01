@@ -14,18 +14,19 @@ namespace DataDictionary.Main.Forms
             /// </summary>
             public Boolean IsEnabled
             {
-                get { return Control.Enabled; }
+                get { return field; }
                 set
                 {
-                    Control.Enabled = value && AllowEnabled();
-                    isEnabled = value;
+                    field = value;
+                    Control.Enabled = value && AllowEnabled() && IsAuthorized(Command);
                 }
             }
-            Boolean isEnabled = false; // Intended State
-            public Func<Boolean> AllowEnabled { get; init; } = () => { return true; };
+
+            public Func<Boolean> AllowEnabled { get; init; } = () => true;
+            public Func<ButtonType, Boolean> IsAuthorized { get; init; } = (command) => true;
 
             public void Refresh()
-            { Control.Enabled = isEnabled && AllowEnabled(); }
+            { Control.Enabled = IsEnabled && AllowEnabled() && IsAuthorized(Command); }
 
             /// <summary>
             /// Is the Command Button Visible
@@ -33,7 +34,20 @@ namespace DataDictionary.Main.Forms
             public Boolean IsVisible
             {
                 get { return Control.Visible; }
-                set { Control.Visible = value; }
+                set
+                {
+                    Control.Visible = value;
+
+                    // Make the first separator after this control also visible.
+                    if (value
+                        && Control.GetCurrentParent() is ToolStrip tools
+                        && tools.Items.
+                            OfType<ToolStripSeparator>().
+                            FirstOrDefault(w => tools.Items.IndexOf(w) > tools.Items.IndexOf(Control))
+                                is ToolStripSeparator separator
+                        && !separator.Visible)
+                    { separator.Visible = true; }
+                }
             }
 
             /// <summary>
@@ -50,38 +64,33 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
-            /// Scope assocated with the CommandState
+            /// Scope associated with the CommandState
             /// </summary>
             public ScopeType Scope
             {
-                get { return scopeValue; }
+                get { return field; }
                 set
                 {
-                    scopeValue = value;
+                    field = value;
                     Image = value.GetImage(Command);
                 }
             }
-            ScopeType scopeValue;
 
             /// <summary>
-            /// Command Type assocated with the CommandState
+            /// Command Type associated with the CommandState
             /// </summary>
             public ButtonType Command
             {
-                get { return commandValue; }
+                get { return field; }
                 set
                 {
-                    commandValue = value;
+                    field = value;
                     Image = Scope.GetImage(value);
                 }
             }
-            ButtonType commandValue;
 
             public CommandState(ToolStripItem control) : base()
-            {
-                Control = control;
-                control.VisibleChanged += Control_VisibleChanged;
-            }
+            { Control = control; }
 
             public void AddTo(IDictionary<ButtonType, CommandState> target)
             { target.Add(this.Command, this); }
@@ -129,29 +138,6 @@ namespace DataDictionary.Main.Forms
                 if (Control.GetCurrentParent() is ToolStrip parent)
                 { return parent.Items.IndexOf(Control); }
                 else { return -1; }
-            }
-
-
-            private void Control_VisibleChanged(Object? sender, EventArgs e)
-            {
-                // Detects if there is anything before the separator and if not, do not show the separator.
-                if (sender is ToolStripItem caller && caller.Owner is ToolStrip tools)
-                {
-                    Int32 before = 0;
-
-                    foreach (ToolStripItem item in tools.Items)
-                    {
-                        if (item is ToolStripSeparator)
-                        {
-                            if (before > 0) { item.Visible = true; }
-                            else { item.Visible = false; }
-                            before = 0;
-                        } // Caller has not yet set the Visible flag
-                        else if (item.Visible || (item == caller && !item.Visible))
-                        { before++; }
-                    }
-
-                }
             }
         }
 

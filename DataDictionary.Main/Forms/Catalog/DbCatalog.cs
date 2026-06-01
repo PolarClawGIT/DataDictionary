@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Catalog
             SetRowState(bindingSource);
             SetTitle(bindingSource);
             SetIcon(bindingSource);
-            SetCommand(ScopeType.Database, Enumerations.ButtonType.Export);
+            SetCommand(ButtonType.Export);
         }
 
         public DbCatalog(ICatalogValue catalogItem) : this()
@@ -33,11 +33,11 @@ namespace DataDictionary.Main.Forms.Catalog
             bindingSource.DataSource = data;
             bindingSource.Position = 0;
 
-            CommandButtons[Enumerations.ButtonType.Export].Text = "to Model";
-            CommandButtons[Enumerations.ButtonType.Export].DropDown = exportOptions;
-            exportAll.Image = ScopeType.Model.GetImage(Enumerations.ButtonType.Add);
-            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(Enumerations.ButtonType.Add);
-            exportEntites.Image = ScopeType.ModelEntity.GetImage(Enumerations.ButtonType.Add);
+            CommandButtons[ButtonType.Export].Text = "to Model";
+            CommandButtons[ButtonType.Export].DropDown = exportOptions;
+            exportAll.Image = ScopeType.Model.GetImage(ButtonType.Add);
+            exportAttributes.Image = ScopeType.ModelAttribute.GetImage(ButtonType.Add);
+            exportEntites.Image = ScopeType.ModelEntity.GetImage(ButtonType.Add);
 
             exportProcesses.Visible = false; // Disabled until processes are supported
 

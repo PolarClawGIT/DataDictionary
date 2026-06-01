@@ -25,12 +25,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetIcon(ScopeType.ScriptingDocument);
 
-            SetCommand(ScopeType.ScriptingDocument,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(Enumerations.ButtonType.Delete);
         }
 
         private void TransformDocument_Load(object sender, EventArgs e)

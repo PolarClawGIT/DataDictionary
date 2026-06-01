@@ -21,15 +21,12 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                DoWork = base.DoWork,
-                TemplateBinding = bindingTemplate,
-                ObjectBinding = bindingObject,
-                SchemaBinding = bindingSchema,
-                TransformBinding = bindingTransform,
-                DocumentBinding = bindingDocument
-            };
+            formBinding = new FormBinding(
+                templateBinding: bindingTemplate,
+                schemaBinding: bindingSchema,
+                transformBinding: bindingTransform,
+                documentBinding: bindingDocument)
+            { DoWork = base.DoWork };
 
             SetRowState(
                 bindingTemplate,
@@ -40,14 +37,12 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingTemplate);
             SetIcon(ScopeType.ScriptingTemplate);
 
-            SetCommand(ScopeType.ScriptingTemplate,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(
+                ButtonType.Delete,
+                ButtonType.OpenDatabase,
+                ButtonType.SaveDatabase,
+                ButtonType.DeleteDatabase);
 
-            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
             openSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Open);
             openTransformCommand.Image = ScopeType.ScriptingTransform.GetImage(ButtonType.Open);
             addSchemaCommand.Image = ScopeType.ScriptingSchema.GetImage(ButtonType.Add);
@@ -66,36 +61,39 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         public Template(ITemplateIndex template, ITemporalIndex temporal) : this(template)
-        { temporalIndex = new TemporalIndex(); }
+        { temporalIndex = new TemporalIndex(temporal); }
 
         private void Template_Load(object sender, EventArgs e)
         {
             if (temporalIndex is null)
             {
                 if (templateIndex.HasValue)
-                { formBinding.Load(templateIndex); }
+                { formBinding.LoadValue(templateIndex); }
                 else
                 {
-                    if (formBinding.TryAddValue(out TemplateValue? value))
-                    {
-                        templateIndex = new TemplateIndex(value);
-                        formBinding.Load(templateIndex);
-                        SendMessage(new RefreshNavigation());
-                    }
+                    TemplateValue value = new TemplateValue();
+                    formBinding.TemplateData.Add(value);
+                    templateIndex = new TemplateIndex(value);
+                    formBinding.LoadValue(templateIndex);
+                    SendMessage(new RefreshNavigation());
                 }
 
-                if (formBinding.TryGetValue(out TemplateValue? _))
+                if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                 { DoBinding(); }
                 else { IsLocked(true); }
             }
             else
-            { formBinding.Load(templateIndex, temporalIndex, onCompleting); }
+            { formBinding.LoadData(templateIndex, temporalIndex, onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 if (args.Error is null)
                 {
-                    if (formBinding.TryGetValue(out TemplateValue? _))
+                    formBinding.LoadValue(templateIndex);
+                    CommandButtons[ButtonType.Delete].IsEnabled = false;
+                    CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+
+                    if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                     { DoBinding(); }
                     else { IsLocked(true); }
                 }
@@ -103,12 +101,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                templateDescriptionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateDescription)));
-
-                ScopeNameList.Load(objectScopeColumn);
-                objectData.AutoGenerateColumns = false;
-                objectData.DataSource = bindingObject;
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.TemplateData.AddBinding(templateDescriptionData, nameof(ITemplateValue.TemplateDescription));
 
                 schemaData.AutoGenerateColumns = false;
                 schemaData.DataSource = bindingSchema;
@@ -121,52 +115,57 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 // Security
                 IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetAuthorization(formBinding.Authorize);
             }
-        }
-
-        protected override void AddCommand_Click(Object? sender, EventArgs e)
-        {
-            base.AddCommand_Click(sender, e);
-            throw new NotImplementedException();
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            formBinding.RemoveValue();
+            IsLocked(true);
+            SendMessage(new RefreshRow<TemplateIndex>(templateIndex));
+            SendMessage(new RefreshNavigation());
         }
 
         protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            if (temporalIndex is null)
+            { formBinding.LoadData(templateIndex, complete); }
+            else { formBinding.LoadData(templateIndex, temporalIndex, complete); }
+
+            void complete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(formBinding.GetLocked());
+                SendMessage(new RefreshRow<TemplateIndex>(templateIndex));
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.SaveToDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
+
+            formBinding.SaveData(templateIndex, complete);
+
+            void complete(RunWorkerCompletedEventArgs args)
+            {
+                IsLocked(formBinding.GetLocked());
+                SendMessage(new RefreshRow<TemplateIndex>(templateIndex));
+            }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
 
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-            throw new NotImplementedException();
-        }
+            formBinding.DeleteData(templateIndex, complete);
 
-
-        private void OpenObjectCommand_Click(object sender, EventArgs e)
-        {
-            Activate(() => new Forms.Scripting.TemplateObject(
-                template: templateIndex,
-                getData: formBinding.GetData));
+            void complete(RunWorkerCompletedEventArgs args)
+            { IsLocked(formBinding.GetLocked()); }
         }
 
         private void AddSchemaCommand_Click(object sender, EventArgs e)
@@ -179,7 +178,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenSchemaCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
                 Activate(() => new Forms.Scripting.SchemaDefinition(
                     template: templateIndex,
@@ -203,7 +202,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void OpenTransformCommand_Click(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out TransformValue? value))
+            if (formBinding.TransformData.TryGetValue(out TransformValue? value))
             {
                 Activate(() => new Forms.Scripting.Transform(
                     template: templateIndex,

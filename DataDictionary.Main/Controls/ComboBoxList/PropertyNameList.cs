@@ -17,6 +17,8 @@ namespace DataDictionary.Main.Controls.ComboBoxList
 
         public Boolean IsChoice { get; init; } = false;
 
+        public static Guid NullValue { get; } = Guid.Empty;
+
         PropertyNameList(IPropertyValue value)
         {
             PropertyId = value.PropertyId;

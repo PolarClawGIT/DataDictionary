@@ -11,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppGeneral
 
     /// <inheritdoc/>
     public class HelpSubjectIndex : HelpSubjectKey, IHelpSubjectIndex,
-        IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>
+        IKeyEquality<IHelpSubjectIndex>, IKeyEquality<HelpSubjectIndex>,
+        IAuthorization
     {
         /// <inheritdoc cref="HelpSubjectKey.HelpSubjectKey()"/>
         public HelpSubjectIndex() : base()
@@ -42,5 +43,18 @@ namespace DataDictionary.BusinessLayer.AppGeneral
         /// <param name="source"></param>
         public static implicit operator SecurableIndex(HelpSubjectIndex source)
         { return new SecurableIndex() { SecurableId = source.HelpId ?? Guid.Empty }; }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        {
+            if (HasValue)
+            {
+                return (
+                IsAdmin: authorizations.IsHelpAdmin,
+                IsOwner: authorizations.IsHelpOwner,
+                IsGrant: authorizations.IsGrant(new SecurableIndex() { SecurableId = HelpId }));
+            }
+            else { return (false, false, false); }
+        }
     }
 }

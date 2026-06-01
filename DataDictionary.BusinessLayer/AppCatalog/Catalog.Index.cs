@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppCatalog;
 using DataDictionary.Resource;
 
@@ -10,7 +11,8 @@ namespace DataDictionary.BusinessLayer.AppCatalog
 
     /// <inheritdoc/>
     public class CatalogIndex : CatalogKey, ICatalogIndex,
-        IKeyEquality<ICatalogIndex>, IKeyEquality<CatalogIndex>
+        IKeyEquality<ICatalogIndex>, IKeyEquality<CatalogIndex>,
+        IAuthorization
     {
         /// <inheritdoc cref="CatalogKey(ICatalogKey)"/>
         public CatalogIndex(ICatalogIndex source) : base(source) { }
@@ -29,7 +31,18 @@ namespace DataDictionary.BusinessLayer.AppCatalog
         /// <param name="source"></param>
         public static implicit operator DataIndex(CatalogIndex source)
         { return new DataIndex() { SystemId = source.CatalogId ?? Guid.Empty }; }
+
+        /// <inheritdoc/>
+        public (Boolean IsAdmin, Boolean IsOwner, Boolean IsGrant) GetAuthorization(IAuthorizationData authorizations)
+        {
+            if (HasValue)
+            {
+                return (
+                IsAdmin: authorizations.IsCatalogAdmin,
+                IsOwner: authorizations.IsCatalogOwner,
+                IsGrant: authorizations.IsGrant(new SecurableIndex() { SecurableId = CatalogId }));
+            }
+            else { return (false, false, false); }
+        }
     }
-
-
 }

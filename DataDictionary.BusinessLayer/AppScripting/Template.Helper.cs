@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +17,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(NameSpaceSource.Load<ITemplateData, TemplateValue>(data, addNamedScope));
+            // Root
+            NameSpaceSource root = new NameSpaceSource(ScopeType.Scripting);
+            if (data.Count > 0)
+            { work.Add(new WorkItem() { DoWork = () => { addNamedScope(null, new NamedScopeValue(root)); } }); }
+
+            // Children
+            work.AddRange(NameSpaceSource.Load<ITemplateData, TemplateValue>(data, addNamedScope,
+                (parent) => root));
 
             work.AddRange(NameSpaceSource.Load<ISchemaDefinitionData, SchemaDefinitionValue>(data.Schemata, addNamedScope,
                 (parent) => data.FirstOrDefault(w => new TemplateIndex(parent).Equals(w))));

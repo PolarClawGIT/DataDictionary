@@ -12,90 +12,34 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Transform
     {
-        partial class FormBinding
+        partial class FormBinding : PresenterData<TransformIndex>
         {
             public Func<ITemplateData> GetData { get; set; } = () => BusinessData.Templates;
 
-            public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
+            public DataBinding<TemplateValue> TemplateData { get; }
+            public DataBinding<TransformValue> TransformData { get; }
 
-            public FormBinding() : base()
-            { }
+            //public required Action<IEnumerable<WorkItem>, Action<RunWorkerCompletedEventArgs>?> DoWork { get; init; }
 
-            public void Load(ITransformIndex transform)
+            public FormBinding(
+                BindingSource templateBinding,
+                BindingSource transformBinding) : base()
             {
-                TemplateIndex templateKey;
-                TransformIndex transformKey = new TransformIndex(transform);
-
-                TemplateBinding.RaiseListChangedEvents = false;
-                TransformBinding.RaiseListChangedEvents = false;
-
-                templateValues.RaiseListChangedEvents = false;
-                transformValues.RaiseListChangedEvents = false;
-
-                transformValues = new BindingView<TransformValue>(GetData().Transforms, w => transformKey.Equals(w));
-                if (transformValues.FirstOrDefault() is TransformValue value)
-                { templateKey = new TemplateIndex(value); }
-                else
-                {   // This should never occur.
-                    Exception ex = new InvalidOperationException("Template not found");
-                    ex.Data.Add(nameof(transform), transform);
-                    throw ex;
-                }
-
-                templateValues = new BindingView<TemplateValue>(GetData(), w => templateKey.Equals(w));
-                
-
-                if (templateValues.Count > 0)
-                {
-                    TemplateBinding.DataSource = templateValues;
-                    TransformBinding.DataSource = transformValues;
-
-                    TemplateBinding.RaiseListChangedEvents = true;
-                    TransformBinding.RaiseListChangedEvents = true;
-
-                    templateValues.RaiseListChangedEvents = true;
-                    templateValues.RaiseListChangedEvents = true;
-                }
-
-                TemplateBinding.ResetBindings(false);
-                TransformBinding.ResetBindings(false);
-                TransformBinding.MoveFirst();
+                TemplateData = new DataBinding<TemplateValue>(templateBinding, GetData);
+                TransformData = new DataBinding<TransformValue>(transformBinding, () => GetData().Transforms);
+                GetLocked = TemplateData.GetLocked;
+                GetAuthorization = () => TemplateData.GetAuthorization(BusinessData.Authorization);
             }
 
-            public Boolean GetAuthorization(Enumerations.ButtonType command)
+            public override void LoadValue(TransformIndex key)
             {
-                Boolean isGrant = false;
-                Boolean isNode = TryGetValue(out TemplateValue? _);
+                TemplateIndex templateKey = new TemplateIndex();
 
-                SecurableIndex? templateKey = null;
-                if (TryGetValue(out TemplateValue? templateValue))
-                { templateKey = new TemplateIndex(templateValue); }
+                TransformData.LoadBinding(w => key.Equals(w));
+                if (TransformData.TryGetValue(out TransformValue? transformValue))
+                { templateKey = new TemplateIndex(transformValue); }
 
-                isGrant = BusinessData.Authorization.IsScriptAdmin
-                    || BusinessData.Authorization.IsScriptOwner
-                    || BusinessData.Authorization.IsGrant(templateKey);
-
-                switch (command)
-                {
-                    case Enumerations.ButtonType.Default: return true;
-                    case Enumerations.ButtonType.Add: return isGrant;
-                    case Enumerations.ButtonType.Delete: return isGrant && isNode;
-                    case Enumerations.ButtonType.OpenDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.SaveDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.DeleteDatabase: return isGrant && isNode;
-                    case Enumerations.ButtonType.HistoryDatabase: return isGrant && isNode;
-                    default: return false;
-                }
-            }
-
-            public Boolean GetLocked()
-            {
-                if (TryGetValue(out TemplateValue? value))
-                {
-                    return value.RowState() is DataRowState.Detached
-                        or DataRowState.Deleted;
-                }
-                else return true;
+                TemplateData.LoadBinding(w => templateKey.Equals(w));
             }
         }
     }

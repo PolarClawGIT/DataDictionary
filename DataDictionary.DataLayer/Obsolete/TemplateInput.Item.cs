@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.DataLayer.AppScript;
+using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 

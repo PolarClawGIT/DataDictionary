@@ -20,13 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
 
-            formBinding = new FormBinding()
-            {
-                TemplateBinding = bindingTemplate,
-                SchemaBinding = bindingSchema,
-                ObjectBinding = bindingObject,
-                DoWork = base.DoWork,
-            };
+            formBinding = new FormBinding(bindingTemplate, bindingSchema);
 
             SetRowState(
                 bindingSchema
@@ -36,17 +30,14 @@ namespace DataDictionary.Main.Forms.Scripting
             SetTitle(bindingSchema);
             SetIcon(ScopeType.ScriptingSchema);
 
-            SetCommand(ScopeType.ScriptingSchema,
-                Enumerations.ButtonType.Delete,
-                Enumerations.ButtonType.OpenDatabase,
-                Enumerations.ButtonType.SaveDatabase,
-                Enumerations.ButtonType.DeleteDatabase,
-                Enumerations.ButtonType.HistoryDatabase);
+            SetCommand(ButtonType.Delete);
+            AddCommands(nodeMenu);
 
             openNodeCommand.Image = ScopeType.ScriptingNode.GetImage(ButtonType.Open);
+            openNodeCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentBuildCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Export);
             documentNewCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Add);
             documentOpenCommand.Image = ScopeType.ScriptingDocument.GetImage(ButtonType.Open);
-            openObjectCommand.Image = ScopeType.ScriptingObject.GetImage(ButtonType.Open);
         }
 
         public SchemaDefinition(ITemplateIndex template, ISchemaDefinitionIndex? schema) : this()
@@ -57,26 +48,30 @@ namespace DataDictionary.Main.Forms.Scripting
             { schemaIndex = new SchemaDefinitionIndex(key); }
         }
 
-        public SchemaDefinition(ISchemaComposite schema) : this(schema, schema) 
+        public SchemaDefinition(ISchemaComposite schema) : this(schema, schema)
         { }
 
         public SchemaDefinition(
             ITemplateIndex template,
             ISchemaDefinitionIndex? schema,
             Func<ITemplateData> getData) : this(template, schema)
-        { formBinding.GetData = getData; }
+        {
+            formBinding.TemplateData.GetData = () => getData();
+            formBinding.SchemaData.GetData = () => getData().Schemata;
+        }
 
         private void SchemaDefinition_Load(object sender, EventArgs e)
         {
             if (schemaIndex.HasValue)
-            { formBinding.Load(schemaIndex); }
+            { formBinding.LoadValue(schemaIndex); }
             else
             {
-                if (templateIndex.HasValue
-                    && formBinding.TryAddValue(templateIndex, out SchemaDefinitionValue? value))
+                if (templateIndex.HasValue)
                 {
+                    SchemaDefinitionValue value = new SchemaDefinitionValue(templateIndex);
+                    formBinding.SchemaData.Add(value);
                     schemaIndex = new SchemaDefinitionIndex(value);
-                    formBinding.Load(schemaIndex);
+                    formBinding.LoadValue(schemaIndex);
                     SendMessage(new RefreshNavigation());
                 }
                 else
@@ -87,38 +82,32 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? _))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? _))
             { DoBinding(); }
             else { IsLocked(true); }
 
             void DoBinding()
             {
-                templateTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingTemplate, nameof(ITemplateValue.TemplateTitle)));
-                schemaTitleData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.SchemaTitle)));
+                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
+                formBinding.SchemaData.AddBinding(schemaTitleData, nameof(ISchemaDefinitionValue.SchemaTitle));
 
                 DirectoryTypeList.Load(rootFolderData);
-                rootFolderData.DataBindings.Add(new Binding(
-                    nameof(ComboBox.SelectedValue),
-                    bindingSchema,
-                    nameof(ISchemaDefinitionValue.RootFolder),
-                    true, DataSourceUpdateMode.OnValidation));
+                formBinding.SchemaData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder), DirectoryTypeList.NullValue);
 
-                relativePathData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.RelativePath)));
-                filePrefixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FilePrefix)));
-                fileSuffixData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FileSuffix)));
-                fileExtensionData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.FileExtension)));
+                formBinding.SchemaData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
+                formBinding.SchemaData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
+                formBinding.SchemaData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
+                formBinding.SchemaData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
 
-                ScopeNameList.Load(objectScopeColumn);
-                objectData.AutoGenerateColumns = false;
-                objectData.DataSource = bindingObject;
+
 
                 ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
-                forEachScopeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), bindingSchema, nameof(ISchemaDefinitionValue.ForEachScope)) { DataSourceNullValue = ScopeNameList.NullValue });
-                rootNodeData.DataBindings.Add(new Binding(nameof(TextBox.Text), bindingSchema, nameof(ISchemaDefinitionValue.RootNodeName)));
+                formBinding.SchemaData.AddBinding(forEachScopeData, nameof(ISchemaDefinitionValue.ForEachScope), ScopeNameList.NullValue);
+                formBinding.SchemaData.AddBinding(rootNodeData, nameof(ISchemaDefinitionValue.RootNodeName));
 
                 // Security
                 IsLocked(formBinding.GetLocked());
-                SetAuthorization(formBinding.GetAuthorization);
+                SetAuthorization(formBinding.Authorize);
             }
         }
 
@@ -179,7 +168,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootFolderData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             {
                 value.RelativePath = String.Empty;
                 localPathData.Text = value.SchemaDirectory.InitialDirectory;
@@ -189,14 +178,14 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RelativePathData_Validated(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? value))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? value))
             { localPathData.Text = value.SchemaDirectory.InitialDirectory; }
             else { localPathData.Text = String.Empty; }
         }
 
         private void RelativePathData_SelectCommand(object sender, EventArgs e)
         {
-            if (formBinding.TryGetValue(out SchemaDefinitionValue? current))
+            if (formBinding.SchemaData.TryGetValue(out SchemaDefinitionValue? current))
             {
                 folderBrowserDialog.Reset();
                 folderBrowserDialog.RootFolder = current.SchemaDirectory.RootFolder;
@@ -210,11 +199,16 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void OpenObjectCommand_Click(object sender, EventArgs e)
+        protected override void HandleMessage(RefreshRow message)
         {
-            Activate(() => new Forms.Scripting.TemplateObject(
-                template: templateIndex,
-                getData: formBinding.GetData));
+            base.HandleMessage(message);
+
+            if (message is RefreshRow<TemplateIndex> rowMessage
+                && rowMessage.Key.Equals(templateIndex))
+            {
+                formBinding.LoadValue(schemaIndex);
+                SendMessage(new RefreshRow<SchemaDefinitionIndex>(schemaIndex));
+            }
         }
     }
 }

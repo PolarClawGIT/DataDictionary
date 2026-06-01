@@ -13,7 +13,7 @@ namespace DataDictionary.Main.Enumerations
         Boolean GroupBy { get; }
     }
 
-    static partial class NavigationExtention
+    static partial class NavigationExtension
     {
         partial class NavigationValue
         {
@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.DatabaseReference),
                 new NavigationValue(ScopeType.DatabaseProperty),
 
-                new NavigationValue(ScopeType.Model) { GroupBy = false},
+                new NavigationValue(ScopeType.Model),
                 new NavigationValue(ScopeType.ModelNameSpace) { GroupBy = false},
                 new NavigationValue(ScopeType.ModelSubjectArea) { GroupBy = false},
                 new NavigationValue(ScopeType.ModelDefinition),
@@ -91,7 +91,7 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ModelProcessDefinition),
                 new NavigationValue(ScopeType.ModelProcessSubjectArea),
 
-                new NavigationValue(ScopeType.Scripting) { GroupBy = false},
+                new NavigationValue(ScopeType.Scripting),
                 new NavigationValue(ScopeType.ScriptingData),
                 new NavigationValue(ScopeType.ScriptingDataObject),
                 new NavigationValue(ScopeType.ScriptingTemplateNode),
@@ -102,8 +102,8 @@ namespace DataDictionary.Main.Enumerations
                 new NavigationValue(ScopeType.ScriptingNode),
                 new NavigationValue(ScopeType.ScriptingNodeOwner),
                 new NavigationValue(ScopeType.ScriptingObject),
-                new NavigationValue(ScopeType.ScriptingSchema),
-                new NavigationValue(ScopeType.ScriptingTransform),
+                new NavigationValue(ScopeType.ScriptingSchema) { GroupBy = false},
+                new NavigationValue(ScopeType.ScriptingTransform) { GroupBy = false},
                 new NavigationValue(ScopeType.ScriptingDocument),
 
                 new NavigationValue(ScopeType.Security),
