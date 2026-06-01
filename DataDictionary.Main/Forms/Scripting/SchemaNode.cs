@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingNode,
                 bindingNodeOwner);
             SetTitle(bindingNode);
-            SetIcon(bindingNode, ScopeType.ScriptingNode);
+            SetIcon(bindingNode);
 
             SetCommand(
                 Enumerations.ButtonType.Add,

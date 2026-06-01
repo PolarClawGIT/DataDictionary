@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             SetRowState(bindingTransform);
             SetTitle(bindingTransform);
-            SetIcon(ScopeType.ScriptingTransform);
+            SetIcon(bindingTransform);
 
             SetCommand(ButtonType.Delete);
 

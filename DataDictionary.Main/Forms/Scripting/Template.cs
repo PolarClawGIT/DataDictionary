@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 bindingTransform,
                 bindingDocument);
             SetTitle(bindingTemplate);
-            SetIcon(ScopeType.ScriptingTemplate);
+            SetIcon(bindingTemplate);
 
             SetCommand(
                 ButtonType.Delete,

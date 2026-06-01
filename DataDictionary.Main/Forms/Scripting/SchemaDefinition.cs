@@ -22,13 +22,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
             formBinding = new FormBinding(bindingTemplate, bindingSchema);
 
-            SetRowState(
-                bindingSchema
-                //bindingTemplate,
-                //bindingObject
-                );
+            SetRowState(bindingSchema);
             SetTitle(bindingSchema);
-            SetIcon(ScopeType.ScriptingSchema);
+            SetIcon(bindingSchema);
 
             SetCommand(ButtonType.Delete);
             AddCommands(nodeMenu);
