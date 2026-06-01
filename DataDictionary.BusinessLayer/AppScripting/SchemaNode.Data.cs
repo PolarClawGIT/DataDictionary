@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.AppScript;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -24,7 +25,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
     {
         /// <inheritdoc cref="IXElementBuilderList"/>
-        public IXElementBuilderList Builders { get; } = new XElementBuilderList();
+        public IXElementBuilderList Builders { get { return builderValues; } }
+        XElementBuilderList builderValues = new XElementBuilderList();
 
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
@@ -136,6 +138,24 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
+        }
+
+        /// <summary>
+        /// Adds XElementBuilders to the list of builders.
+        /// </summary>
+        /// <param name="builders"></param>
+        public void AddBuilders(IXElementBuilderList builders)
+        {
+            foreach (var item in builders)
+            {
+                try
+                { builderValues.Add(item.Key, item.Value); }
+                catch (Exception ex)
+                {
+                    ex.Data.Add(nameof(item.Key), item.Key.GetName());
+                    throw;
+                }
+            }
         }
     }
 }

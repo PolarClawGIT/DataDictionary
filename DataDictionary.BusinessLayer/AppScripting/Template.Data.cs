@@ -288,7 +288,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc/>
         public void Import(DataSet source)
-        { 
+        {
             this.Import(source);
             schemaDefinitionValues.Load(source);
             schemaNodeValues.Load(source);
@@ -298,5 +298,11 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformDocumentValues.Load(source);
         }
 
+        /// <summary>
+        /// Adds XElementBuilders to the list of builders.
+        /// </summary>
+        /// <param name="builders"></param>
+        public void AddBuilders(IXElementBuilderList builders)
+        { schemaNodeValues.AddBuilders(builders); }
     }
 }
