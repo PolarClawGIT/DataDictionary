@@ -22,13 +22,13 @@ namespace DataDictionary.BusinessLayer.AppModel
     partial class Entity
     {
         public static IXElementBuilderList CreateXElements(
-            TryGetValue<IPropertyIndex, IPropertyValue> PropertyGet,
-            TryGetValue<IDefinitionIndex, IDefinitionValue> DefinitionGet)
+            TryGetValue<IPropertyIndex, IPropertyValue> propertyGet,
+            TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
         {
             XElementBuilderList builders = new XElementBuilderList();
             builders.Add(ScopeType.ModelEntity, EntityValue.CreateXElements());
-            builders.Add(ScopeType.ModelEntityProperty, EntityPropertyValue.CreateXElements(PropertyGet));
-            builders.Add(ScopeType.ModelEntityDefinition, EntityDefinitionValue.CreateXElements(DefinitionGet));
+            builders.Add(ScopeType.ModelEntityProperty, EntityPropertyValue.CreateXElements(propertyGet));
+            builders.Add(ScopeType.ModelEntityDefinition, EntityDefinitionValue.CreateXElements(definitionGet));
 
             return builders;
         }

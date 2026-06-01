@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
@@ -27,6 +28,9 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingNode; } }
 
+        /// <inheritdoc cref="SchemaNodeFixedValue"/>
+        public SchemaNodeFixedValue FixedNodeValue { get; } 
+
         /// <inheritdoc/>
         public SchemaNodeValue() : base()
         {
@@ -39,6 +43,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(NodeName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
+
+            FixedNodeValue = new SchemaNodeFixedValue(this);
         }
 
         /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
@@ -53,6 +59,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
                 IsPathChanged = (e) => e.PropertyName is nameof(NodeName),
                 IsTitleChanged = (e) => e.PropertyName is nameof(NodeName)
             };
+
+            FixedNodeValue = new SchemaNodeFixedValue(this);
         }
     }
 

@@ -1,19 +1,14 @@
-﻿using DataDictionary.DataLayer.AppModel;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.AppScript
 {
-
     /// <summary>
-    /// Interface for the Scripting SchemaNode
+    /// Interface for the Scripting Base SchemaNode (common to sub-types)
     /// </summary>
-    public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaDefinitionKey, ITemplateKey
+    public interface ISchemaNodeBaseValue
     {
         /// <summary>
         /// Title of the Scripting Schema (aka Name of the Schema)
@@ -29,12 +24,24 @@ namespace DataDictionary.DataLayer.AppScript
         /// How the Value of the Node is to be rendered.
         /// </summary>
         NodeRenderAsType RenderValueAs { get; }
+    }
 
+    /// <summary>
+    /// Interface for the Scripting Fixed Value SchemaNode (sub-type)
+    /// </summary>
+    public interface ISchemaNodeFixedValue : ISchemaNodeBaseValue
+    {
         /// <summary>
         /// Render the value as a fixed value instead of a Object drive value.
         /// </summary>
         String? FixedValue { get; }
+    }
 
+    /// <summary>
+    /// Interface for the Scripting Object Value SchemaNode (sub-type)
+    /// </summary>
+    public interface ISchemaNodeObjectValue : ISchemaNodeBaseValue
+    {
         /// <summary>
         /// Object Scope of the item to be rendered. (not fixed value)
         /// </summary>
@@ -44,12 +51,25 @@ namespace DataDictionary.DataLayer.AppScript
         /// The Property within the Object to render. (not fixed value)
         /// </summary>
         String? ObjectProperty { get; }
+    }
 
+    /// <summary>
+    /// Interface for the Scripting Property Value SchemaNode (sub-type)
+    /// </summary>
+    public interface ISchemaNodePropertyValue : ISchemaNodeBaseValue
+    {
         /// <summary>
         /// The PropertyID of the Model Property for the object to be rendered.
         /// </summary>
         Guid? ModelPropertyId { get; }
     }
+
+    /// <summary>
+    /// Interface for the Scripting SchemaNode (super-type)
+    /// </summary>
+    public interface ISchemaNodeItem : ISchemaNodeKey, ISchemaDefinitionKey, ITemplateKey,
+        ISchemaNodeBaseValue, ISchemaNodeFixedValue, ISchemaNodeObjectValue, ISchemaNodePropertyValue
+    { }
 
     /// <summary>
     /// Implementation for the Scripting SchemaNode.
@@ -89,7 +109,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Int32? NodeOrder
         {
             get { return GetValue<Int32>(nameof(NodeOrder)); }
-            protected set { SetValue(nameof(NodeOrder), value); }
+            set { SetValue(nameof(NodeOrder), value); }
         }
 
         /// <inheritdoc/>
@@ -142,7 +162,7 @@ namespace DataDictionary.DataLayer.AppScript
         public Guid? ModelPropertyId
         {
             get { return GetValue<Guid>(nameof(ModelPropertyId)); }
-            protected set { SetValue(nameof(ModelPropertyId), value); }
+            set { SetValue(nameof(ModelPropertyId), value); }
         }
 
         /// <inheritdoc/>

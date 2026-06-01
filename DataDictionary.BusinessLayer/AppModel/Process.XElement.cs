@@ -22,13 +22,13 @@ namespace DataDictionary.BusinessLayer.AppModel
     partial class Process
     {
         public static IXElementBuilderList CreateXElements(
-            TryGetValue<IPropertyIndex, IPropertyValue> PropertyGet,
-            TryGetValue<IDefinitionIndex, IDefinitionValue> DefinitionGet)
+            TryGetValue<IPropertyIndex, IPropertyValue> propertyGet,
+            TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
         {
             XElementBuilderList builders = new XElementBuilderList();
             builders.Add(ScopeType.ModelProcess, ProcessValue.CreateXElements());
-            builders.Add(ScopeType.ModelProcessProperty, ProcessPropertyValue.CreateXElements(PropertyGet));
-            builders.Add(ScopeType.ModelProcessDefinition, ProcessDefinitionValue.CreateXElements(DefinitionGet));
+            builders.Add(ScopeType.ModelProcessProperty, ProcessPropertyValue.CreateXElements(propertyGet));
+            builders.Add(ScopeType.ModelProcessDefinition, ProcessDefinitionValue.CreateXElements(definitionGet));
 
             return builders;
         }
