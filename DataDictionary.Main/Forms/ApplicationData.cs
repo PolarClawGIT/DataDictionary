@@ -8,6 +8,7 @@ using System.Data;
 using System.Text;
 using System.ComponentModel;
 using ButtonType = DataDictionary.Main.Enumerations.ButtonType;
+using System.Linq.Expressions;
 
 namespace DataDictionary.Main.Forms
 {
@@ -509,6 +510,21 @@ namespace DataDictionary.Main.Forms
             }
 
             return result;
+        }
+
+        [Obsolete("Don't think this will be needed. Use DataBinding.AddBinding instead.")]
+        public virtual String NavigationPath<T, TProperty>(Expression<Func<T, TProperty>> expression)
+        {
+            var members = new Stack<string>();
+            var memberExpr = expression.Body as MemberExpression;
+
+            while (memberExpr != null)
+            {
+                members.Push(memberExpr.Member.Name);
+                memberExpr = memberExpr.Expression as MemberExpression;
+            }
+
+            return string.Join(".", members);
         }
 
         private void ToolStrip_VisibleChanged(object? sender, EventArgs e)

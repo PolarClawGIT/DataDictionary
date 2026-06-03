@@ -7,6 +7,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -188,6 +189,7 @@ namespace DataDictionary.Main.Forms
             /// When GetGoodRow executes (Microsoft code) it can throw exceptions but rarely identifies the issue.
             /// This tries to catch some of those issues and provide information to help resolve the actual issue.
             /// </remarks>
+            [Obsolete]
             protected virtual Binding CreateBinding(String controlField, String dataField, Object? nullValue = null)
             {
                 if (BindingData.DataSource is null)
@@ -210,6 +212,92 @@ namespace DataDictionary.Main.Forms
             }
 
             /// <summary>
+            /// Helper Method to create the Binding class for a DataField
+            /// </summary>
+            /// <typeparam name="TClass">The Class Type of the expected BindingData DataSource</typeparam>
+            /// <typeparam name="TProperty">Data Type of the property of the expression.</typeparam>
+            /// <param name="controlField">Property of the Control that is too be bound</param>
+            /// <param name="expression">The Expression that returns the name of the property.</param>
+            /// <param name="nullValue">Value that represents Null</param>
+            /// <returns>Binding object</returns>
+            /// <exception cref="ArgumentNullException">The DataSource of the BindingData is null. Assign a DataSource before calling this method.</exception>
+            /// <exception cref="ArgumentException">The property could not be found in the BindingData.</exception>
+            protected virtual Binding CreateBinding<TClass, TProperty>(String controlField, Expression<Func<TClass, TProperty>> expression, Object? nullValue = null)
+            {
+                if (BindingData.DataSource is null)
+                { throw new ArgumentNullException(nameof(BindingData.DataSource), "DataSource is Null. Binding has not been loaded"); }
+
+                Stack<String> members = new Stack<string>();
+                MemberExpression? memberExpr = expression.Body as MemberExpression;
+                var properties = BindingData.GetItemProperties(null);
+
+                while (memberExpr != null)
+                {
+                    members.Push(memberExpr.Member.Name);
+                    memberExpr = memberExpr.Expression as MemberExpression;
+                }
+
+                String bindField = String.Join(".", members);
+
+                while (members.Count > 0)
+                {
+                    String fieldName = members.Pop();
+
+                    // Property Name check
+                    if (properties.Find(fieldName, false) is PropertyDescriptor property)
+                    {
+
+                        // Property Type Check
+                        if (members.Count == 0 && property.PropertyType != typeof(TProperty))
+                        {
+                            Exception ex = new ArgumentException("Type does not match expected", bindField);
+                            ex.Data.Add(nameof(TProperty), typeof(TProperty).ToString());
+                            ex.Data.Add(nameof(property.PropertyType), property.PropertyType.ToString());
+                            throw ex;
+                        }
+
+                        properties = property.GetChildProperties(); 
+                    }
+                    else
+                    {
+                        Exception ex = new ArgumentException("Data Field Not Found", bindField);
+                        foreach (PropertyDescriptor item in BindingData.GetItemProperties(null).OfType<PropertyDescriptor>())
+                        { ex.Data.Add(item.Name, item.PropertyType); }
+                        throw ex;
+                    }
+                }
+
+                return new Binding(controlField, BindingData, bindField)
+                { DataSourceNullValue = nullValue };
+            }
+
+
+            /// <summary>
+            /// Helper Method that binds a data field to a Control
+            /// </summary>
+            /// <typeparam name="TClass">The Class Type of the expected BindingData DataSource</typeparam>
+            /// <typeparam name="TProperty">Data Type of the property of the expression.</typeparam>
+            /// <param name="formControl">Control that is to be Bound</param>
+            /// <param name="expression">The Expression that returns the name of the property.</param>
+            /// <example><![CDATA[dataBinding.AddBinding<Interface, propertyType>(control, e => e.PropertyName);]]></example>
+            public virtual void AddBinding<TClass, TProperty>(Control formControl, Expression<Func<TClass, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(Control.Text), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TClass, TProperty}(Control, Expression{Func{TClass, TProperty}})"/>
+            public virtual void AddBinding<TClass, TProperty>(TextBoxData formControl, Expression<Func<TClass, TProperty>> expression)
+            { formControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TClass, TProperty}(Control, Expression{Func{TClass, TProperty}})"/>
+            public virtual void AddBinding<TClass, TProperty>(ComboBoxData comboBoxControl, Expression<Func<TClass, TProperty>> expression)
+            { comboBoxControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression)); }
+
+            /// <inheritdoc cref="AddBinding{TClass, TProperty}(Control, Expression{Func{TClass, TProperty}})"/>
+            public virtual void AddBinding<TClass, TProperty>(ComboBoxData comboBoxControl, Expression<Func<TClass, TProperty>> expression, TProperty nullValue)
+            { comboBoxControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), expression, nullValue)); }
+
+            //--------------------------------------------
+
+            /// <summary>
             /// Helper Method that binds a data field to a Control
             /// </summary>
             /// <param name="formControl"></param>
@@ -218,8 +306,10 @@ namespace DataDictionary.Main.Forms
             /// This covers common scenarios for consistent binding setups.<br/>
             /// Common exceptions are also caught to help identify issues.
             /// </remarks>
+            [Obsolete]
             public virtual void AddBinding(Control formControl, String dataField)
             { formControl.DataBindings.Add(CreateBinding(nameof(Control.Text), dataField)); }
+
 
             /// <inheritdoc cref="AddBinding(Control, string)"/>
             public virtual void AddBinding(TextBox textBoxControl, String dataField)
@@ -229,6 +319,8 @@ namespace DataDictionary.Main.Forms
             public virtual void AddBinding(TextBoxData textBoxControl, String dataField)
             { textBoxControl.DataBindings.Add(CreateBinding(nameof(TextBox.Text), dataField)); }
 
+
+
             /// <inheritdoc cref="AddBinding(Control, string)"/>
             public virtual void AddBinding(ComboBox comboBoxControl, String dataField)
             { comboBoxControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), dataField)); }
@@ -236,6 +328,8 @@ namespace DataDictionary.Main.Forms
             /// <inheritdoc cref="AddBinding(Control, string)"/>
             public virtual void AddBinding(ComboBoxData comboBoxControl, String dataField, Object nullValue)
             { comboBoxControl.DataBindings.Add(CreateBinding(nameof(ComboBox.SelectedValue), dataField, nullValue)); }
+
+
 
             /// <inheritdoc cref="AddBinding(Control, string)"/>
             public virtual void AddBinding(CheckBox checkBoxControl, String dataField)

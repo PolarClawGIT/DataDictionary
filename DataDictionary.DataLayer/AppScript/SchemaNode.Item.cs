@@ -38,15 +38,22 @@ namespace DataDictionary.DataLayer.AppScript
     }
 
     /// <summary>
-    /// Interface for the Scripting Object Value SchemaNode (sub-type)
+    /// Interface for the Scripting Object Scope Value SchemaNode (sub-type)
     /// </summary>
-    public interface ISchemaNodeObjectValue : ISchemaNodeBaseValue
+    /// <remarks>Use ISchemaNodeObjectValue or ISchemaNodePropertyValue</remarks>
+    public interface ISchemaNodeObjectScopeValue : ISchemaNodeBaseValue
     {
         /// <summary>
         /// Object Scope of the item to be rendered. (not fixed value)
         /// </summary>
         ScopeType ObjectScope { get; }
+    }
 
+    /// <summary>
+    /// Interface for the Scripting Object Value SchemaNode (sub-type)
+    /// </summary>
+    public interface ISchemaNodeObjectValue : ISchemaNodeObjectScopeValue
+    {
         /// <summary>
         /// The Property within the Object to render. (not fixed value)
         /// </summary>
@@ -56,7 +63,7 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Property Value SchemaNode (sub-type)
     /// </summary>
-    public interface ISchemaNodePropertyValue : ISchemaNodeBaseValue
+    public interface ISchemaNodePropertyValue : ISchemaNodeObjectScopeValue
     {
         /// <summary>
         /// The PropertyID of the Model Property for the object to be rendered.

@@ -57,6 +57,18 @@ namespace DataDictionary.Main.Controls.ComboBoxList
             }
         }
 
+        public static void Load(
+            ComboBoxData scopeControl,
+            IXElementBuilderList builders,
+            String? emptyText = null)
+        {
+            List<XScopeList> list = BuildList(builders, emptyText);
+
+            scopeControl.ValueMember = nameof(XScopeList.ScopeType);
+            scopeControl.DisplayMember = nameof(XScopeList.ScopeName);
+            scopeControl.DataSource = list;
+        }
+
 
         static List<XScopeList> BuildList(IXElementBuilderList builders, String? emptyText = null)
         {

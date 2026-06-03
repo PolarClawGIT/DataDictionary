@@ -78,20 +78,23 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.SchemaData.AddBinding(schemaTitleData, nameof(ISchemaDefinitionValue.SchemaTitle));
-                formBinding.NodeData.AddBinding(nodeNameData, nameof(ISchemaNodeValue.NodeName));
+                formBinding.TemplateData.AddBinding<ITemplateValue, String?>(templateTitleData, e => e.TemplateTitle);
+                formBinding.SchemaData.AddBinding<ISchemaDefinitionValue, String?>(schemaTitleData, e => e.SchemaTitle);
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, String?>(nodeNameData, e => e.NodeName);
 
                 RenderValueAsList.Load(nodeRenderAsData);
-                formBinding.NodeData.AddBinding(nodeRenderAsData, nameof(ISchemaNodeValue.RenderValueAs), RenderValueAsList.NullValue);
-                formBinding.NodeData.AddBinding(nodeRenderOrderData, nameof(ISchemaNodeValue.NodeOrder));
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, NodeRenderAsType>(nodeRenderAsData, e => e.RenderValueAs);
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, Int32?>(nodeRenderOrderData, e => e.NodeOrder);
 
                 XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding(nodeObjectScopeData, nameof(ISchemaNodeValue.ObjectScope), ScopeNameList.NullValue);
-                formBinding.NodeData.AddBinding(nodeObjectPropertyData, nameof(ISchemaNodeValue.ObjectProperty));
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, ScopeType>(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, String?>(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
+
+                XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, ScopeType>(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
 
                 PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
-                formBinding.NodeData.AddBinding(nodeModelPropertyData, nameof(ISchemaNodeValue.ModelPropertyId), PropertyNameList.NullValue);
+                formBinding.NodeData.AddBinding<ISchemaNodeValue, Guid?>(nodeModelPropertyData, e => e.PropertyNodeValue.ModelPropertyId, PropertyNameList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
@@ -103,32 +106,15 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
+            throw new NotImplementedException();
         }
 
-        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.OpenFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.SaveToDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
-        {
-            base.DeleteFromDatabaseCommand_Click(sender, e);
-        }
-
-        protected override void HistoryCommand_Click(Object sender, EventArgs e)
-        {
-            base.HistoryCommand_Click(sender, e);
-        }
 
         protected override void HandleMessage(RefreshRow message)
         {

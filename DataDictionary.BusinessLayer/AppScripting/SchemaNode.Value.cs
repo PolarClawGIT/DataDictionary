@@ -9,7 +9,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <inheritdoc/>
     public interface ISchemaNodeValue : ISchemaNodeItem, ISchemaNodeIndex, ISchemaComposite,
         IScopeType, ITemporal
-    { }
+    {
+        /// <inheritdoc cref="SchemaNodeFixedValue"/>
+        SchemaNodeFixedValue FixedNodeValue { get; }
+
+        /// <inheritdoc cref="SchemaNodeObjectValue"/>
+        SchemaNodeObjectValue ObjectNodeValue { get; }
+
+        /// <inheritdoc cref="SchemaNodeObjectValue"/>
+        SchemaNodePropertyValue PropertyNodeValue { get; }
+    }
 
     /// <inheritdoc/>
     public class SchemaNodeValue : SchemaNodeItem, ISchemaNodeValue, IPathValue, INamedScopeSourceValue
@@ -28,8 +37,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingNode; } }
 
-        /// <inheritdoc cref="SchemaNodeFixedValue"/>
-        public SchemaNodeFixedValue FixedNodeValue { get; } 
+        /// <inheritdoc/>
+        public SchemaNodeFixedValue FixedNodeValue { get; }
+
+        /// <inheritdoc/>
+        public SchemaNodeObjectValue ObjectNodeValue { get; }
+
+        /// <inheritdoc/>
+        public SchemaNodePropertyValue PropertyNodeValue { get; }
 
         /// <inheritdoc/>
         public SchemaNodeValue() : base()
@@ -45,6 +60,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             };
 
             FixedNodeValue = new SchemaNodeFixedValue(this);
+            ObjectNodeValue = new SchemaNodeObjectValue(this);
+            PropertyNodeValue = new SchemaNodePropertyValue(this);
         }
 
         /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
@@ -61,6 +78,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             };
 
             FixedNodeValue = new SchemaNodeFixedValue(this);
+            ObjectNodeValue = new SchemaNodeObjectValue(this);
+            PropertyNodeValue = new SchemaNodePropertyValue(this);
         }
     }
 

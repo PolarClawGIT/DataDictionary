@@ -24,6 +24,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
+        public ScopeType ObjectScope
+        {
+            get { return baseValue.ObjectScope; }
+            set { baseValue.ObjectScope = value; }
+        }
+
+        /// <inheritdoc/>
         public Guid? ModelPropertyId
         {
             get { return baseValue.ModelPropertyId; }
@@ -51,7 +58,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (e.PropertyName is nameof(ModelPropertyId) or nameof(NodeOrder) or nameof(RenderValueAs))
+                if (e.PropertyName is nameof(ObjectScope) or nameof(ModelPropertyId) or nameof(NodeOrder) or nameof(RenderValueAs))
                 { this.OnPropertyChanged(PropertyChanged, e.PropertyName); }
             }
         }
