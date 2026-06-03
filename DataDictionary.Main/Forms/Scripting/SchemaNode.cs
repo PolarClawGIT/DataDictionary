@@ -78,23 +78,23 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding<ITemplateValue, String?>(templateTitleData, e => e.TemplateTitle);
-                formBinding.SchemaData.AddBinding<ISchemaDefinitionValue, String?>(schemaTitleData, e => e.SchemaTitle);
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, String?>(nodeNameData, e => e.NodeName);
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
+                formBinding.NodeData.AddBinding(nodeNameData, e => e.NodeName);
 
                 RenderValueAsList.Load(nodeRenderAsData);
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, NodeRenderAsType>(nodeRenderAsData, e => e.RenderValueAs);
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, Int32?>(nodeRenderOrderData, e => e.NodeOrder);
+                formBinding.NodeData.AddBinding(nodeRenderAsData, e => e.RenderValueAs);
+                formBinding.NodeData.AddBinding(nodeRenderOrderData, e => e.NodeOrder);
 
                 XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, ScopeType>(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, String?>(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
+                formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
+                formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
 
                 XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, ScopeType>(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
+                formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
 
                 PropertyNameList.Load(nodeModelPropertyData, "(n/a)");
-                formBinding.NodeData.AddBinding<ISchemaNodeValue, Guid?>(nodeModelPropertyData, e => e.PropertyNodeValue.ModelPropertyId, PropertyNameList.NullValue);
+                formBinding.NodeData.AddBinding(nodeModelPropertyData, e => e.PropertyNodeValue.ModelPropertyId, PropertyNameList.NullValue);
 
                 // Security
                 IsLocked(formBinding.GetLocked());

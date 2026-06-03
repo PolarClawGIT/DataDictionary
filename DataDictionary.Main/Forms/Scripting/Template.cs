@@ -101,8 +101,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.TemplateData.AddBinding(templateDescriptionData, nameof(ITemplateValue.TemplateDescription));
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.TemplateData.AddBinding(templateDescriptionData, e => e.TemplateDescription);
 
                 schemaData.AutoGenerateColumns = false;
                 schemaData.DataSource = bindingSchema;

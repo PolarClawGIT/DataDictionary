@@ -84,22 +84,21 @@ namespace DataDictionary.Main.Forms.Scripting
 
             void DoBinding()
             {
-                formBinding.TemplateData.AddBinding(templateTitleData, nameof(ITemplateValue.TemplateTitle));
-                formBinding.SchemaData.AddBinding(schemaTitleData, nameof(ISchemaDefinitionValue.SchemaTitle));
+                formBinding.TemplateData.AddBinding(templateTitleData, e => e.TemplateTitle);
+                formBinding.SchemaData.AddBinding(schemaTitleData, e => e.SchemaTitle);
 
                 DirectoryTypeList.Load(rootFolderData);
-                formBinding.SchemaData.AddBinding(rootFolderData, nameof(ISchemaDefinitionValue.RootFolder), DirectoryTypeList.NullValue);
+                formBinding.SchemaData.AddBinding(rootFolderData, e => e.RootFolder, DirectoryTypeList.NullValue);
 
-                formBinding.SchemaData.AddBinding(relativePathData, nameof(ISchemaDefinitionValue.RelativePath));
-                formBinding.SchemaData.AddBinding(filePrefixData, nameof(ISchemaDefinitionValue.FilePrefix));
-                formBinding.SchemaData.AddBinding(fileSuffixData, nameof(ISchemaDefinitionValue.FileSuffix));
-                formBinding.SchemaData.AddBinding(fileExtensionData, nameof(ISchemaDefinitionValue.FileExtension));
-
-
+                formBinding.SchemaData.AddBinding(relativePathData, e => e.RelativePath);
+                formBinding.SchemaData.AddBinding(filePrefixData, e => e.FilePrefix);
+                formBinding.SchemaData.AddBinding(fileSuffixData, e => e.FileSuffix);
+                formBinding.SchemaData.AddBinding(fileExtensionData, e => e.FileExtension);
 
                 ScopeNameList.Load(forEachScopeData, ScopeType.Model, ScopeType.ModelAttribute, ScopeType.ModelEntity, ScopeType.ModelProcess);
-                formBinding.SchemaData.AddBinding(forEachScopeData, nameof(ISchemaDefinitionValue.ForEachScope), ScopeNameList.NullValue);
-                formBinding.SchemaData.AddBinding(rootNodeData, nameof(ISchemaDefinitionValue.RootNodeName));
+                formBinding.SchemaData.AddBinding(forEachScopeData, e => e.ForEachScope, ScopeNameList.NullValue);
+
+                formBinding.SchemaData.AddBinding(rootNodeData, e => e.RootNodeName);
 
                 // Security
                 IsLocked(formBinding.GetLocked());
