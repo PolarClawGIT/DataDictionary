@@ -16,7 +16,7 @@
 	[ObjectScope]			[AppGeneral].[uddtScopeName] Null, -- Application Scope to match to. Defines the Object type. Maps to a TableName
 	[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null, -- Name (object) Property within the Entity/Attribute/Process. Maps to a ColumName
 	-- Model Property Value
-	[ModelPropertyId]		UniqueIdentifier NULL, -- Use the Model Property value of the Entity/Attribute/Process. Uses [AppModel].[PropertyEnumeration].
+	[PropertyId]			UniqueIdentifier NULL, -- Use the Model Property value of the Entity/Attribute/Process. Uses [AppModel].[PropertyEnumeration].
 	-- Temporal History Support
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_SchemaNode_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_SchemaNode_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
@@ -25,7 +25,7 @@
 	CONSTRAINT [PK_SchemaNode] PRIMARY KEY CLUSTERED ([NodeId] ASC),
 	CONSTRAINT [AK_SchemaNodeID] UNIQUE ([SchemaId] ASC, [NodeId] ASC), -- Used for FK refrence to insure everything belong TemplateData
 	CONSTRAINT [FK_SchemaNodeSchema] FOREIGN KEY ([SchemaId]) REFERENCES [AppScript].[SchemaDefinition] ([SchemaId]),
-	CONSTRAINT [FK_SchemaNodeProperty] FOREIGN KEY ([ModelPropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
+	CONSTRAINT [FK_SchemaNodeProperty] FOREIGN KEY ([PropertyId]) REFERENCES [AppModel].[PropertyEnumeration] ([PropertyId]),
     CONSTRAINT [CK_SchemaNodeName] CHECK ([NodeName] like '[A-Z]%' AND NOT [NodeName] like '%[^-,^_^:^.,^A-Z,^0-9]%'),
     CONSTRAINT [CK_SchemaNodeValueAs] CHECK ([RenderValueAs]='Element' OR [RenderValueAs]='Element.Text' OR [RenderValueAs]='Element.XML' OR [RenderValueAs]='Element.CData' OR [RenderValueAs]='Attribute' OR [RenderValueAs]='Attribute.Text'),
 )	WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [HsScript].[SchemaNode]))

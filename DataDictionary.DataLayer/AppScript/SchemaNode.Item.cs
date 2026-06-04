@@ -1,4 +1,5 @@
-﻿using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.DataLayer.AppModel;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -63,13 +64,8 @@ namespace DataDictionary.DataLayer.AppScript
     /// <summary>
     /// Interface for the Scripting Property Value SchemaNode (sub-type)
     /// </summary>
-    public interface ISchemaNodePropertyValue : ISchemaNodeObjectScopeValue
-    {
-        /// <summary>
-        /// The PropertyID of the Model Property for the object to be rendered.
-        /// </summary>
-        Guid? ModelPropertyId { get; }
-    }
+    public interface ISchemaNodePropertyValue : ISchemaNodeObjectScopeValue, IPropertyKey
+    { }
 
     /// <summary>
     /// Interface for the Scripting SchemaNode (super-type)
@@ -166,10 +162,10 @@ namespace DataDictionary.DataLayer.AppScript
         }
 
         /// <inheritdoc/>
-        public Guid? ModelPropertyId
+        public Guid? PropertyId
         {
-            get { return GetValue<Guid>(nameof(ModelPropertyId)); }
-            set { SetValue(nameof(ModelPropertyId), value); }
+            get { return GetValue<Guid>(nameof(PropertyId)); }
+            set { SetValue(nameof(PropertyId), value); }
         }
 
         /// <inheritdoc/>
@@ -212,7 +208,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ObjectProperty), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ModelPropertyId), typeof(Guid)){ AllowDBNull =true},
+            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull =true},
             ..TemporalItem.columnDefinitions,
         ];
 

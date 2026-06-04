@@ -31,7 +31,7 @@ Begin Try
 		[FixedValue]			NVarChar(250) Null,
 		[ObjectScope]			[AppGeneral].[uddtScopeName] Null,
 		[ObjectProperty]		[AppGeneral].[uddtQualifiedName] Null,
-		[ModelPropertyId]		UniqueIdentifier NULL,
+		[PropertyId]			UniqueIdentifier NULL,
 		Primary Key([NodeId]))
 
 	Insert Into @Values
@@ -43,7 +43,7 @@ Begin Try
 			NullIf(Trim(D.[FixedValue]),'') As [FixedValue],
 			NullIf(Trim(D.[ObjectScope]),'') As [ObjectScope],
 			NullIf(Trim(D.[ObjectProperty]),'') As [ObjectProperty],
-			D.[ModelPropertyId]
+			D.[PropertyId]
 	From	@Data D
 			Left Join [AppScript].[TemplateModel] M
 			On	D.[TemplateId] = M.[TemplateId] And
@@ -86,7 +86,7 @@ Begin Try
 				[FixedValue],
 				[ObjectScope],
 				[ObjectProperty],
-				[ModelPropertyId]
+				[PropertyId]
 		From	@Values
 		Except
 		Select	[NodeId],
@@ -97,7 +97,7 @@ Begin Try
 				[FixedValue],
 				[ObjectScope],
 				[ObjectProperty],
-				[ModelPropertyId]
+				[PropertyId]
 		From	[AppScript].[SchemaNode])
 	Update [AppScript].[SchemaNode]
 	Set		[SchemaId] = S.[SchemaId],
@@ -107,7 +107,7 @@ Begin Try
 			[FixedValue] = S.[FixedValue],
 			[ObjectScope] = S.[ObjectScope],
 			[ObjectProperty] = S.[ObjectProperty],
-			[ModelPropertyId] = S.[ModelPropertyId]
+			[PropertyId] = S.[PropertyId]
 	From	[AppScript].[SchemaNode] T
 			Inner Join [Delta] S
 			On	T.[SchemaId] = S.[SchemaId]
@@ -125,7 +125,7 @@ Begin Try
 			[FixedValue],
 			[ObjectScope],
 			[ObjectProperty],
-			[ModelPropertyId])
+			[PropertyId])
 	Select	S.[NodeId],
 			S.[SchemaId],
 			S.[NodeName],
@@ -134,7 +134,7 @@ Begin Try
 			S.[FixedValue],
 			S.[ObjectScope],
 			S.[ObjectProperty],
-			S.[ModelPropertyId]
+			S.[PropertyId]
 	From	@Values S
 			Inner Join [AppScript].[SchemaDefinition] F
 			On	S.[SchemaId] = F.[SchemaId]

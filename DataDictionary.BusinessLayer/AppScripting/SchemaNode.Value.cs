@@ -1,8 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.DataLayer.AppModel;
 using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
+using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
@@ -18,6 +21,26 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         /// <inheritdoc cref="SchemaNodeObjectValue"/>
         SchemaNodePropertyValue PropertyNodeValue { get; }
+
+        /// <summary>
+        /// Is the Node Value an Object Property.
+        /// </summary>
+        Boolean IsObjectValue { get; }
+
+        /// <summary>
+        /// Is the Node Value an Object Model Property (AppModel.Property)
+        /// </summary>
+        Boolean IsPropertyValue { get; }
+
+        /// <summary>
+        /// Is the Node Value fixed.
+        /// </summary>
+        Boolean IsFixedValue { get; }
+
+        /// <summary>
+        /// Is the Node Name to be Overriden
+        /// </summary>
+        Boolean IsNameOverride { get; }
     }
 
     /// <inheritdoc/>
@@ -47,6 +70,78 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public SchemaNodePropertyValue PropertyNodeValue { get; }
 
         /// <inheritdoc/>
+        public Boolean IsObjectValue
+        {
+            get { return field; }
+            set
+            {
+                if (value)
+                {
+                    field = true;
+                    IsPropertyValue = false;
+                    IsFixedValue = false;
+
+                    FixedValue = String.Empty;
+                    PropertyId = null;
+                }
+                else { field = false; }
+                this.OnPropertyChanged(PropertyChanged, nameof(IsObjectValue));
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsPropertyValue
+        {
+            get { return field; }
+            set
+            {
+                if (value)
+                {
+                    field = true;
+                    IsObjectValue = false;
+                    IsFixedValue = false;
+
+                    ObjectProperty = String.Empty;
+                    FixedValue = String.Empty;
+                }
+                else { field = false; }
+                this.OnPropertyChanged(PropertyChanged, nameof(IsPropertyValue));
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsFixedValue
+        {
+            get { return field; }
+            set
+            {
+                if (value)
+                {
+                    field = true;
+                    IsObjectValue = false;
+                    IsPropertyValue = false;
+
+                    ObjectScope = ScopeType.Null;
+                    ObjectProperty = String.Empty;
+                    PropertyId = null;
+                }
+                else { field = false; }
+                this.OnPropertyChanged(PropertyChanged, nameof(IsFixedValue));
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsNameOverride
+        {
+            get { return field; }
+            set
+            {
+                field = value;
+                this.OnPropertyChanged(PropertyChanged, nameof(IsObjectValue));
+            }
+        }
+
+        /// <inheritdoc/>
         public SchemaNodeValue() : base()
         {
             pathValue = new PathValue(this)
@@ -62,6 +157,16 @@ namespace DataDictionary.BusinessLayer.AppScripting
             FixedNodeValue = new SchemaNodeFixedValue(this);
             ObjectNodeValue = new SchemaNodeObjectValue(this);
             PropertyNodeValue = new SchemaNodePropertyValue(this);
+
+            if (!String.IsNullOrWhiteSpace(ObjectProperty))
+            { IsObjectValue = true; }
+            else if (new PropertyKey(this).HasValue)
+            { IsPropertyValue = true; }
+            else if (!String.IsNullOrWhiteSpace(FixedValue))
+            { IsFixedValue = true; }
+
+            if(!String.IsNullOrWhiteSpace(FixedValue))
+            { IsNameOverride = true; }
         }
 
         /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
@@ -80,7 +185,20 @@ namespace DataDictionary.BusinessLayer.AppScripting
             FixedNodeValue = new SchemaNodeFixedValue(this);
             ObjectNodeValue = new SchemaNodeObjectValue(this);
             PropertyNodeValue = new SchemaNodePropertyValue(this);
+
+            if (!String.IsNullOrWhiteSpace(ObjectProperty))
+            { IsObjectValue = true; }
+            else if (new PropertyKey(this).HasValue)
+            { IsPropertyValue = true; }
+            else if (!String.IsNullOrWhiteSpace(FixedValue))
+            { IsFixedValue = true; }
+
+            if (!String.IsNullOrWhiteSpace(FixedValue))
+            { IsNameOverride = true; }
         }
+
+        /// <inheritdoc/>
+        public override event PropertyChangedEventHandler? PropertyChanged;
     }
 
 }

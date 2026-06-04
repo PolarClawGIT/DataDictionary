@@ -30,18 +30,18 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel schemaNodeLayout;
+            TableLayoutPanel valueSourceLayout;
             TableLayoutPanel objectValueLayout;
             TableLayoutPanel nodeParentLayout;
             groupBox1 = new GroupBox();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            isObjectValueData = new CheckBox();
-            isObjectProperty = new CheckBox();
-            isFixedValueData = new CheckBox();
+            isObjectValueData = new RadioButton();
+            isPropertyValueData = new RadioButton();
+            isFixedValueData = new RadioButton();
             tableLayoutPanel4 = new TableLayoutPanel();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             nodeRenderAsData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeRenderOrderData = new DataDictionary.Main.Controls.TextBoxData();
-            checkBox1 = new CheckBox();
+            isNameOverrideData = new CheckBox();
             templateTitleData = new DataDictionary.Main.Controls.TextBoxData();
             schemaTitleData = new DataDictionary.Main.Controls.TextBoxData();
             nodeTreeView = new TreeView();
@@ -52,13 +52,13 @@
             nodePropertyValueTab = new TabPage();
             tableLayoutPanel1 = new TableLayoutPanel();
             nodePropertyScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            nodeModelPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodePropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeFixedValueTab = new TabPage();
             tableLayoutPanel2 = new TableLayoutPanel();
             nodeFixedValueData = new DataDictionary.Main.Controls.TextBoxData();
             nodeParentTab = new TabPage();
             nodeOwnershipData = new DataGridView();
-            nodeParentColumn = new DataGridViewComboBoxColumn();
+            nodeOwnerColumn = new DataGridViewComboBoxColumn();
             nodeParentSelect = new DataDictionary.Main.Controls.ComboBoxData();
             addNodeParentCommand = new Button();
             bindingTemplate = new BindingSource(components);
@@ -66,11 +66,12 @@
             bindingNode = new BindingSource(components);
             bindingNodeOwner = new BindingSource(components);
             schemaNodeLayout = new TableLayoutPanel();
+            valueSourceLayout = new TableLayoutPanel();
             objectValueLayout = new TableLayoutPanel();
             nodeParentLayout = new TableLayoutPanel();
             schemaNodeLayout.SuspendLayout();
             groupBox1.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
+            valueSourceLayout.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             nodeTabs.SuspendLayout();
             nodeObjectValueTab.SuspendLayout();
@@ -115,7 +116,7 @@
             // groupBox1
             // 
             groupBox1.AutoSize = true;
-            groupBox1.Controls.Add(tableLayoutPanel3);
+            groupBox1.Controls.Add(valueSourceLayout);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Location = new Point(182, 213);
             groupBox1.Name = "groupBox1";
@@ -124,54 +125,55 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Value Source";
             // 
-            // tableLayoutPanel3
+            // valueSourceLayout
             // 
-            tableLayoutPanel3.AutoSize = true;
-            tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.Controls.Add(isObjectValueData, 0, 0);
-            tableLayoutPanel3.Controls.Add(isObjectProperty, 1, 0);
-            tableLayoutPanel3.Controls.Add(isFixedValueData, 2, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(3, 19);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 1;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.Size = new Size(483, 25);
-            tableLayoutPanel3.TabIndex = 5;
+            valueSourceLayout.AutoSize = true;
+            valueSourceLayout.ColumnCount = 4;
+            valueSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            valueSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            valueSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            valueSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            valueSourceLayout.Controls.Add(isObjectValueData, 0, 0);
+            valueSourceLayout.Controls.Add(isPropertyValueData, 1, 0);
+            valueSourceLayout.Controls.Add(isFixedValueData, 2, 0);
+            valueSourceLayout.Dock = DockStyle.Fill;
+            valueSourceLayout.Location = new Point(3, 19);
+            valueSourceLayout.Name = "valueSourceLayout";
+            valueSourceLayout.RowCount = 1;
+            valueSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            valueSourceLayout.Size = new Size(483, 25);
+            valueSourceLayout.TabIndex = 5;
             // 
             // isObjectValueData
             // 
             isObjectValueData.AutoSize = true;
-            isObjectValueData.Enabled = false;
             isObjectValueData.Location = new Point(3, 3);
             isObjectValueData.Name = "isObjectValueData";
-            isObjectValueData.Size = new Size(103, 19);
-            isObjectValueData.TabIndex = 18;
+            isObjectValueData.Size = new Size(102, 19);
+            isObjectValueData.TabIndex = 20;
+            isObjectValueData.TabStop = true;
             isObjectValueData.Text = "is Object Value";
             isObjectValueData.UseVisualStyleBackColor = true;
             // 
-            // isObjectProperty
+            // isPropertyValue
             // 
-            isObjectProperty.AutoSize = true;
-            isObjectProperty.Enabled = false;
-            isObjectProperty.Location = new Point(112, 3);
-            isObjectProperty.Name = "isObjectProperty";
-            isObjectProperty.Size = new Size(113, 19);
-            isObjectProperty.TabIndex = 19;
-            isObjectProperty.Text = "is Property Value";
-            isObjectProperty.UseVisualStyleBackColor = true;
+            isPropertyValueData.AutoSize = true;
+            isPropertyValueData.Location = new Point(123, 3);
+            isPropertyValueData.Name = "isPropertyValue";
+            isPropertyValueData.Size = new Size(112, 19);
+            isPropertyValueData.TabIndex = 21;
+            isPropertyValueData.TabStop = true;
+            isPropertyValueData.Text = "is Property Value";
+            isPropertyValueData.UseVisualStyleBackColor = true;
             // 
-            // isFixedValueData
+            // isFixedValue
             // 
             isFixedValueData.AutoSize = true;
-            isFixedValueData.Enabled = false;
-            isFixedValueData.Location = new Point(231, 3);
-            isFixedValueData.Name = "isFixedValueData";
-            isFixedValueData.Size = new Size(95, 19);
-            isFixedValueData.TabIndex = 17;
+            isFixedValueData.Location = new Point(243, 3);
+            isFixedValueData.Name = "isFixedValue";
+            isFixedValueData.Size = new Size(94, 19);
+            isFixedValueData.TabIndex = 22;
+            isFixedValueData.TabStop = true;
             isFixedValueData.Text = "is Fixed Value";
             isFixedValueData.UseVisualStyleBackColor = true;
             // 
@@ -184,7 +186,7 @@
             tableLayoutPanel4.Controls.Add(nodeNameData, 0, 0);
             tableLayoutPanel4.Controls.Add(nodeRenderAsData, 0, 1);
             tableLayoutPanel4.Controls.Add(nodeRenderOrderData, 1, 1);
-            tableLayoutPanel4.Controls.Add(checkBox1, 1, 0);
+            tableLayoutPanel4.Controls.Add(isNameOverrideData, 1, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(182, 103);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -233,15 +235,15 @@
             nodeRenderOrderData.TabIndex = 5;
             nodeRenderOrderData.WordWrap = true;
             // 
-            // checkBox1
+            // isNameOverrideData
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(328, 3);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(138, 19);
-            checkBox1.TabIndex = 16;
-            checkBox1.Text = "Override Node Name";
-            checkBox1.UseVisualStyleBackColor = true;
+            isNameOverrideData.AutoSize = true;
+            isNameOverrideData.Location = new Point(328, 3);
+            isNameOverrideData.Name = "isNameOverrideData";
+            isNameOverrideData.Size = new Size(138, 19);
+            isNameOverrideData.TabIndex = 16;
+            isNameOverrideData.Text = "Override Node Name";
+            isNameOverrideData.UseVisualStyleBackColor = true;
             // 
             // templateTitleData
             // 
@@ -352,7 +354,7 @@
             nodePropertyValueTab.Location = new Point(4, 24);
             nodePropertyValueTab.Name = "nodePropertyValueTab";
             nodePropertyValueTab.Padding = new Padding(3);
-            nodePropertyValueTab.Size = new Size(481, 355);
+            nodePropertyValueTab.Size = new Size(192, 72);
             nodePropertyValueTab.TabIndex = 2;
             nodePropertyValueTab.Text = "Property Value";
             // 
@@ -361,14 +363,14 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(nodePropertyScopeData, 0, 0);
-            tableLayoutPanel1.Controls.Add(nodeModelPropertyData, 0, 1);
+            tableLayoutPanel1.Controls.Add(nodePropertyData, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(3, 3);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(475, 349);
+            tableLayoutPanel1.Size = new Size(186, 66);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // nodePropertyScopeData
@@ -381,21 +383,21 @@
             nodePropertyScopeData.Location = new Point(3, 3);
             nodePropertyScopeData.Name = "nodePropertyScopeData";
             nodePropertyScopeData.ReadOnly = false;
-            nodePropertyScopeData.Size = new Size(469, 46);
+            nodePropertyScopeData.Size = new Size(180, 46);
             nodePropertyScopeData.TabIndex = 7;
             // 
-            // nodeModelPropertyData
+            // nodePropertyData
             // 
-            nodeModelPropertyData.AutoSize = true;
-            nodeModelPropertyData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeModelPropertyData.Dock = DockStyle.Fill;
-            nodeModelPropertyData.DropDownStyle = ComboBoxStyle.DropDownList;
-            nodeModelPropertyData.HeaderText = "Value of";
-            nodeModelPropertyData.Location = new Point(3, 55);
-            nodeModelPropertyData.Name = "nodeModelPropertyData";
-            nodeModelPropertyData.ReadOnly = false;
-            nodeModelPropertyData.Size = new Size(469, 291);
-            nodeModelPropertyData.TabIndex = 11;
+            nodePropertyData.AutoSize = true;
+            nodePropertyData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodePropertyData.Dock = DockStyle.Fill;
+            nodePropertyData.DropDownStyle = ComboBoxStyle.DropDownList;
+            nodePropertyData.HeaderText = "Value of";
+            nodePropertyData.Location = new Point(3, 55);
+            nodePropertyData.Name = "nodePropertyData";
+            nodePropertyData.ReadOnly = false;
+            nodePropertyData.Size = new Size(180, 46);
+            nodePropertyData.TabIndex = 11;
             // 
             // nodeFixedValueTab
             // 
@@ -467,7 +469,7 @@
             // 
             nodeOwnershipData.AllowUserToAddRows = false;
             nodeOwnershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            nodeOwnershipData.Columns.AddRange(new DataGridViewColumn[] { nodeParentColumn });
+            nodeOwnershipData.Columns.AddRange(new DataGridViewColumn[] { nodeOwnerColumn });
             nodeParentLayout.SetColumnSpan(nodeOwnershipData, 2);
             nodeOwnershipData.Dock = DockStyle.Fill;
             nodeOwnershipData.Location = new Point(3, 3);
@@ -476,12 +478,12 @@
             nodeOwnershipData.Size = new Size(180, 8);
             nodeOwnershipData.TabIndex = 1;
             // 
-            // nodeParentColumn
+            // nodeOwnerColumn
             // 
-            nodeParentColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            nodeParentColumn.HeaderText = "Parent Node";
-            nodeParentColumn.Name = "nodeParentColumn";
-            nodeParentColumn.ReadOnly = true;
+            nodeOwnerColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            nodeOwnerColumn.HeaderText = "Parent Node";
+            nodeOwnerColumn.Name = "nodeOwnerColumn";
+            nodeOwnerColumn.ReadOnly = true;
             // 
             // nodeParentSelect
             // 
@@ -521,8 +523,8 @@
             schemaNodeLayout.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
+            valueSourceLayout.ResumeLayout(false);
+            valueSourceLayout.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
             nodeTabs.ResumeLayout(false);
@@ -556,10 +558,10 @@
         private Controls.ComboBoxData nodeRenderAsData;
         private Controls.TextBoxData nodeRenderOrderData;
         private DataGridView nodeOwnershipData;
-        private DataGridViewComboBoxColumn nodeParentColumn;
+        private DataGridViewComboBoxColumn nodeOwnerColumn;
         private Controls.ComboBoxData nodeParentSelect;
         private Button addNodeParentCommand;
-        private Controls.ComboBoxData nodeModelPropertyData;
+        private Controls.ComboBoxData nodePropertyData;
         private Controls.ComboBoxData nodeObjectScopeData;
         private Controls.TextBoxData nodeFixedValueData;
         private Controls.ComboBoxData nodeObjectPropertyData;
@@ -568,9 +570,6 @@
         private TabControl nodeTabs;
         private TabPage nodeObjectValueTab;
         private TabPage nodeParentTab;
-        private CheckBox isFixedValueData;
-        private CheckBox isObjectValueData;
-        private CheckBox isObjectProperty;
         private BindingSource bindingTemplate;
         private BindingSource bindingSchema;
         private BindingSource bindingNode;
@@ -578,11 +577,14 @@
         private TabPage nodePropertyValueTab;
         private TabPage nodeFixedValueTab;
         private Controls.ComboBoxData nodePropertyScopeData;
-        private TableLayoutPanel tableLayoutPanel3;
+        private TableLayoutPanel valueSourceLayout;
         private TableLayoutPanel tableLayoutPanel4;
         private GroupBox groupBox1;
-        private CheckBox checkBox1;
+        private CheckBox isNameOverrideData;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
+        private RadioButton isObjectValueData;
+        private RadioButton isPropertyValueData;
+        private RadioButton isFixedValueData;
     }
 }

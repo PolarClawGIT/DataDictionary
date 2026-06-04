@@ -1,13 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.AppSecurity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {

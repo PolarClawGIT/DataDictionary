@@ -1,9 +1,6 @@
 ﻿using DataDictionary.DataLayer.AppScript;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -31,10 +28,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc/>
-        public Guid? ModelPropertyId
+        public Guid? PropertyId
         {
-            get { return baseValue.ModelPropertyId; }
-            set { baseValue.ModelPropertyId = value; }
+            get { return baseValue.PropertyId; }
+            set { baseValue.PropertyId = value; }
         }
 
         /// <inheritdoc/>
@@ -58,7 +55,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
             void Value_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
             {
-                if (e.PropertyName is nameof(ObjectScope) or nameof(ModelPropertyId) or nameof(NodeOrder) or nameof(RenderValueAs))
+                if (e.PropertyName is nameof(ObjectScope) or nameof(PropertyId) or nameof(NodeOrder) or nameof(RenderValueAs))
                 { this.OnPropertyChanged(PropertyChanged, e.PropertyName); }
             }
         }
