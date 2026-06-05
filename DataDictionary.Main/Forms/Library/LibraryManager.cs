@@ -168,11 +168,11 @@ namespace DataDictionary.Main.Forms.Library
         {
             if (formBinding.TryGetValue(out BindingValue? binding))
             {
-                CommandButtons[ButtonType.Delete].IsEnabled = binding.InModel;
+                CommandButtons[ButtonType.Delete].Enabled = binding.InModel;
 
-                CommandButtons[ButtonType.OpenDatabase].IsEnabled = binding.InDatabase && !binding.InModel;
-                CommandButtons[ButtonType.SaveDatabase].IsEnabled = binding.InModel;
-                CommandButtons[ButtonType.DeleteDatabase].IsEnabled = binding.InDatabase;
+                CommandButtons[ButtonType.OpenDatabase].Enabled = binding.InDatabase && !binding.InModel;
+                CommandButtons[ButtonType.SaveDatabase].Enabled = binding.InModel;
+                CommandButtons[ButtonType.DeleteDatabase].Enabled = binding.InDatabase;
             }
         }
     }

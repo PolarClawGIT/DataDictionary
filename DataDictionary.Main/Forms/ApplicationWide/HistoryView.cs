@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     formData.GetDetails(group).LastOrDefault() is TemporalValue value)
                 { bindingHistory.Position = formData.IndexOf(value); }
 
-                CommandButtons[Enumerations.ButtonType.Open].IsEnabled = (OpenForm is not null);
+                CommandButtons[Enumerations.ButtonType.Open].Enabled = (OpenForm is not null);
             }
         }
 

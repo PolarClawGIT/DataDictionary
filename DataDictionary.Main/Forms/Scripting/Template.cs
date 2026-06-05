@@ -90,8 +90,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 if (args.Error is null)
                 {
                     formBinding.LoadValue(templateIndex);
-                    CommandButtons[ButtonType.Delete].IsEnabled = false;
-                    CommandButtons[ButtonType.DeleteDatabase].IsEnabled = false;
+                    CommandButtons[ButtonType.Delete].Enabled = false;
+                    CommandButtons[ButtonType.DeleteDatabase].Enabled = false;
 
                     if (formBinding.TemplateData.TryGetValue(out TemplateValue? _))
                     { DoBinding(); }

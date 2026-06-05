@@ -12,7 +12,7 @@ namespace DataDictionary.Main.Forms
             /// <summary>
             /// Is the Command Button Enabled
             /// </summary>
-            public Boolean IsEnabled
+            public Boolean Enabled
             {
                 get { return field; }
                 set
@@ -26,17 +26,18 @@ namespace DataDictionary.Main.Forms
             public Func<ButtonType, Boolean> IsAuthorized { get; init; } = (command) => true;
 
             public void Refresh()
-            { Control.Enabled = IsEnabled && AllowEnabled() && IsAuthorized(Command); }
+            { Control.Enabled = Enabled && AllowEnabled() && IsAuthorized(Command); }
 
             /// <summary>
             /// Is the Command Button Visible
             /// </summary>
-            public Boolean IsVisible
+            public Boolean Visible
             {
-                get { return Control.Visible; }
+                get { return field; }
                 set
                 {
                     Control.Visible = value;
+                    field = value;
 
                     // Make the first separator after this control also visible.
                     if (value
