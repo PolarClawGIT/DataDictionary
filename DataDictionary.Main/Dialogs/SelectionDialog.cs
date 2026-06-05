@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Dialogs
             InitializeComponent();
             formData = new SelectionDialogData(FilterScopes, FilterPaths);
             selectionData.SmallImageList = new ImageList();
-            selectionData.SmallImageList.AddImages();
+            selectionData.SmallImageList.AddImages(Enum.GetValues<ScopeType>().ToList());
         }
 
         public SelectionDialog(Form source) : this()

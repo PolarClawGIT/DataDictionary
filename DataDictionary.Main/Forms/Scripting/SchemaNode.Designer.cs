@@ -29,15 +29,21 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel schemaNodeLayout;
-            TableLayoutPanel valueSourceLayout;
             TableLayoutPanel objectValueLayout;
             TableLayoutPanel nodeParentLayout;
+            TableLayoutPanel schemaNodeLayout;
+            nodeObjectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodeObjectPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
+            nodeOwnershipData = new DataGridView();
+            nodeOwnerColumn = new DataGridViewComboBoxColumn();
+            nodeParentSelect = new DataDictionary.Main.Controls.ComboBoxData();
+            addNodeParentCommand = new Button();
             groupBox1 = new GroupBox();
+            valueSourceLayout = new TableLayoutPanel();
             isObjectValueData = new RadioButton();
             isPropertyValueData = new RadioButton();
             isFixedValueData = new RadioButton();
-            tableLayoutPanel4 = new TableLayoutPanel();
+            nodeOverviewLayout = new TableLayoutPanel();
             nodeNameData = new DataDictionary.Main.Controls.TextBoxData();
             nodeRenderAsData = new DataDictionary.Main.Controls.ComboBoxData();
             nodeRenderOrderData = new DataDictionary.Main.Controls.TextBoxData();
@@ -47,8 +53,6 @@
             nodeTreeView = new TreeView();
             nodeTabs = new TabControl();
             nodeObjectValueTab = new TabPage();
-            nodeObjectScopeData = new DataDictionary.Main.Controls.ComboBoxData();
-            nodeObjectPropertyData = new DataDictionary.Main.Controls.ComboBoxData();
             nodePropertyValueTab = new TabPage();
             tableLayoutPanel1 = new TableLayoutPanel();
             nodePropertyScopeData = new DataDictionary.Main.Controls.ComboBoxData();
@@ -57,37 +61,135 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             nodeFixedValueData = new DataDictionary.Main.Controls.TextBoxData();
             nodeParentTab = new TabPage();
-            nodeOwnershipData = new DataGridView();
-            nodeOwnerColumn = new DataGridViewComboBoxColumn();
-            nodeParentSelect = new DataDictionary.Main.Controls.ComboBoxData();
-            addNodeParentCommand = new Button();
             bindingTemplate = new BindingSource(components);
             bindingSchema = new BindingSource(components);
             bindingNode = new BindingSource(components);
             bindingNodeOwner = new BindingSource(components);
-            schemaNodeLayout = new TableLayoutPanel();
-            valueSourceLayout = new TableLayoutPanel();
             objectValueLayout = new TableLayoutPanel();
             nodeParentLayout = new TableLayoutPanel();
+            schemaNodeLayout = new TableLayoutPanel();
+            objectValueLayout.SuspendLayout();
+            nodeParentLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nodeOwnershipData).BeginInit();
             schemaNodeLayout.SuspendLayout();
             groupBox1.SuspendLayout();
             valueSourceLayout.SuspendLayout();
-            tableLayoutPanel4.SuspendLayout();
+            nodeOverviewLayout.SuspendLayout();
             nodeTabs.SuspendLayout();
             nodeObjectValueTab.SuspendLayout();
-            objectValueLayout.SuspendLayout();
             nodePropertyValueTab.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             nodeFixedValueTab.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             nodeParentTab.SuspendLayout();
-            nodeParentLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nodeOwnershipData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNodeOwner).BeginInit();
             SuspendLayout();
+            // 
+            // objectValueLayout
+            // 
+            objectValueLayout.ColumnCount = 1;
+            objectValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            objectValueLayout.Controls.Add(nodeObjectScopeData, 0, 0);
+            objectValueLayout.Controls.Add(nodeObjectPropertyData, 0, 1);
+            objectValueLayout.Dock = DockStyle.Fill;
+            objectValueLayout.Location = new Point(3, 3);
+            objectValueLayout.Name = "objectValueLayout";
+            objectValueLayout.RowCount = 2;
+            objectValueLayout.RowStyles.Add(new RowStyle());
+            objectValueLayout.RowStyles.Add(new RowStyle());
+            objectValueLayout.Size = new Size(475, 349);
+            objectValueLayout.TabIndex = 6;
+            // 
+            // nodeObjectScopeData
+            // 
+            nodeObjectScopeData.AutoSize = true;
+            nodeObjectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeObjectScopeData.Dock = DockStyle.Fill;
+            nodeObjectScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
+            nodeObjectScopeData.HeaderText = "Object Type";
+            nodeObjectScopeData.Location = new Point(3, 3);
+            nodeObjectScopeData.Name = "nodeObjectScopeData";
+            nodeObjectScopeData.ReadOnly = false;
+            nodeObjectScopeData.Size = new Size(469, 46);
+            nodeObjectScopeData.TabIndex = 7;
+            // 
+            // nodeObjectPropertyData
+            // 
+            nodeObjectPropertyData.AutoSize = true;
+            nodeObjectPropertyData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeObjectPropertyData.Dock = DockStyle.Fill;
+            nodeObjectPropertyData.DropDownStyle = ComboBoxStyle.DropDown;
+            nodeObjectPropertyData.HeaderText = "Value of";
+            nodeObjectPropertyData.Location = new Point(3, 55);
+            nodeObjectPropertyData.Name = "nodeObjectPropertyData";
+            nodeObjectPropertyData.ReadOnly = false;
+            nodeObjectPropertyData.Size = new Size(469, 291);
+            nodeObjectPropertyData.TabIndex = 14;
+            // 
+            // nodeParentLayout
+            // 
+            nodeParentLayout.AutoSize = true;
+            nodeParentLayout.ColumnCount = 2;
+            nodeParentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            nodeParentLayout.ColumnStyles.Add(new ColumnStyle());
+            nodeParentLayout.Controls.Add(nodeOwnershipData, 0, 0);
+            nodeParentLayout.Controls.Add(nodeParentSelect, 0, 1);
+            nodeParentLayout.Controls.Add(addNodeParentCommand, 1, 1);
+            nodeParentLayout.Dock = DockStyle.Fill;
+            nodeParentLayout.Location = new Point(3, 3);
+            nodeParentLayout.Name = "nodeParentLayout";
+            nodeParentLayout.RowCount = 2;
+            nodeParentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            nodeParentLayout.RowStyles.Add(new RowStyle());
+            nodeParentLayout.Size = new Size(186, 66);
+            nodeParentLayout.TabIndex = 0;
+            // 
+            // nodeOwnershipData
+            // 
+            nodeOwnershipData.AllowUserToAddRows = false;
+            nodeOwnershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            nodeOwnershipData.Columns.AddRange(new DataGridViewColumn[] { nodeOwnerColumn });
+            nodeParentLayout.SetColumnSpan(nodeOwnershipData, 2);
+            nodeOwnershipData.Dock = DockStyle.Fill;
+            nodeOwnershipData.Location = new Point(3, 3);
+            nodeOwnershipData.Name = "nodeOwnershipData";
+            nodeOwnershipData.ReadOnly = true;
+            nodeOwnershipData.Size = new Size(180, 8);
+            nodeOwnershipData.TabIndex = 1;
+            // 
+            // nodeOwnerColumn
+            // 
+            nodeOwnerColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            nodeOwnerColumn.HeaderText = "Parent Node";
+            nodeOwnerColumn.Name = "nodeOwnerColumn";
+            nodeOwnerColumn.ReadOnly = true;
+            // 
+            // nodeParentSelect
+            // 
+            nodeParentSelect.AutoSize = true;
+            nodeParentSelect.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeParentSelect.Dock = DockStyle.Fill;
+            nodeParentSelect.DropDownStyle = ComboBoxStyle.DropDown;
+            nodeParentSelect.HeaderText = "Parent Node";
+            nodeParentSelect.Location = new Point(3, 17);
+            nodeParentSelect.Name = "nodeParentSelect";
+            nodeParentSelect.ReadOnly = false;
+            nodeParentSelect.Size = new Size(99, 46);
+            nodeParentSelect.TabIndex = 4;
+            // 
+            // addNodeParentCommand
+            // 
+            addNodeParentCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            addNodeParentCommand.Location = new Point(108, 40);
+            addNodeParentCommand.Name = "addNodeParentCommand";
+            addNodeParentCommand.Size = new Size(75, 23);
+            addNodeParentCommand.TabIndex = 5;
+            addNodeParentCommand.Text = "Add";
+            addNodeParentCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            addNodeParentCommand.UseVisualStyleBackColor = true;
             // 
             // schemaNodeLayout
             // 
@@ -96,7 +198,7 @@
             schemaNodeLayout.ColumnStyles.Add(new ColumnStyle());
             schemaNodeLayout.ColumnStyles.Add(new ColumnStyle());
             schemaNodeLayout.Controls.Add(groupBox1, 2, 3);
-            schemaNodeLayout.Controls.Add(tableLayoutPanel4, 2, 2);
+            schemaNodeLayout.Controls.Add(nodeOverviewLayout, 2, 2);
             schemaNodeLayout.Controls.Add(templateTitleData, 0, 0);
             schemaNodeLayout.Controls.Add(schemaTitleData, 0, 1);
             schemaNodeLayout.Controls.Add(nodeTreeView, 0, 2);
@@ -155,46 +257,46 @@
             isObjectValueData.Text = "is Object Value";
             isObjectValueData.UseVisualStyleBackColor = true;
             // 
-            // isPropertyValue
+            // isPropertyValueData
             // 
             isPropertyValueData.AutoSize = true;
             isPropertyValueData.Location = new Point(123, 3);
-            isPropertyValueData.Name = "isPropertyValue";
+            isPropertyValueData.Name = "isPropertyValueData";
             isPropertyValueData.Size = new Size(112, 19);
             isPropertyValueData.TabIndex = 21;
             isPropertyValueData.TabStop = true;
             isPropertyValueData.Text = "is Property Value";
             isPropertyValueData.UseVisualStyleBackColor = true;
             // 
-            // isFixedValue
+            // isFixedValueData
             // 
             isFixedValueData.AutoSize = true;
             isFixedValueData.Location = new Point(243, 3);
-            isFixedValueData.Name = "isFixedValue";
+            isFixedValueData.Name = "isFixedValueData";
             isFixedValueData.Size = new Size(94, 19);
             isFixedValueData.TabIndex = 22;
             isFixedValueData.TabStop = true;
             isFixedValueData.Text = "is Fixed Value";
             isFixedValueData.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel4
+            // nodeOverviewLayout
             // 
-            tableLayoutPanel4.AutoSize = true;
-            tableLayoutPanel4.ColumnCount = 2;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            tableLayoutPanel4.Controls.Add(nodeNameData, 0, 0);
-            tableLayoutPanel4.Controls.Add(nodeRenderAsData, 0, 1);
-            tableLayoutPanel4.Controls.Add(nodeRenderOrderData, 1, 1);
-            tableLayoutPanel4.Controls.Add(isNameOverrideData, 1, 0);
-            tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(182, 103);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 2;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel4.Size = new Size(489, 104);
-            tableLayoutPanel4.TabIndex = 6;
+            nodeOverviewLayout.AutoSize = true;
+            nodeOverviewLayout.ColumnCount = 2;
+            nodeOverviewLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
+            nodeOverviewLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            nodeOverviewLayout.Controls.Add(nodeNameData, 0, 0);
+            nodeOverviewLayout.Controls.Add(nodeRenderAsData, 0, 1);
+            nodeOverviewLayout.Controls.Add(nodeRenderOrderData, 1, 1);
+            nodeOverviewLayout.Controls.Add(isNameOverrideData, 1, 0);
+            nodeOverviewLayout.Dock = DockStyle.Fill;
+            nodeOverviewLayout.Location = new Point(182, 103);
+            nodeOverviewLayout.Name = "nodeOverviewLayout";
+            nodeOverviewLayout.RowCount = 2;
+            nodeOverviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            nodeOverviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            nodeOverviewLayout.Size = new Size(489, 104);
+            nodeOverviewLayout.TabIndex = 6;
             // 
             // nodeNameData
             // 
@@ -306,47 +408,6 @@
             nodeObjectValueTab.TabIndex = 0;
             nodeObjectValueTab.Text = "Object Value";
             // 
-            // objectValueLayout
-            // 
-            objectValueLayout.ColumnCount = 1;
-            objectValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            objectValueLayout.Controls.Add(nodeObjectScopeData, 0, 0);
-            objectValueLayout.Controls.Add(nodeObjectPropertyData, 0, 1);
-            objectValueLayout.Dock = DockStyle.Fill;
-            objectValueLayout.Location = new Point(3, 3);
-            objectValueLayout.Name = "objectValueLayout";
-            objectValueLayout.RowCount = 2;
-            objectValueLayout.RowStyles.Add(new RowStyle());
-            objectValueLayout.RowStyles.Add(new RowStyle());
-            objectValueLayout.Size = new Size(475, 349);
-            objectValueLayout.TabIndex = 6;
-            // 
-            // nodeObjectScopeData
-            // 
-            nodeObjectScopeData.AutoSize = true;
-            nodeObjectScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeObjectScopeData.Dock = DockStyle.Fill;
-            nodeObjectScopeData.DropDownStyle = ComboBoxStyle.DropDownList;
-            nodeObjectScopeData.HeaderText = "Object Type";
-            nodeObjectScopeData.Location = new Point(3, 3);
-            nodeObjectScopeData.Name = "nodeObjectScopeData";
-            nodeObjectScopeData.ReadOnly = false;
-            nodeObjectScopeData.Size = new Size(469, 46);
-            nodeObjectScopeData.TabIndex = 7;
-            // 
-            // nodeObjectPropertyData
-            // 
-            nodeObjectPropertyData.AutoSize = true;
-            nodeObjectPropertyData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeObjectPropertyData.Dock = DockStyle.Fill;
-            nodeObjectPropertyData.DropDownStyle = ComboBoxStyle.DropDown;
-            nodeObjectPropertyData.HeaderText = "Value of";
-            nodeObjectPropertyData.Location = new Point(3, 55);
-            nodeObjectPropertyData.Name = "nodeObjectPropertyData";
-            nodeObjectPropertyData.ReadOnly = false;
-            nodeObjectPropertyData.Size = new Size(469, 291);
-            nodeObjectPropertyData.TabIndex = 14;
-            // 
             // nodePropertyValueTab
             // 
             nodePropertyValueTab.BackColor = SystemColors.Control;
@@ -447,67 +508,10 @@
             nodeParentTab.TabIndex = 1;
             nodeParentTab.Text = "Node Parents";
             // 
-            // nodeParentLayout
+            // bindingNode
             // 
-            nodeParentLayout.AutoSize = true;
-            nodeParentLayout.ColumnCount = 2;
-            nodeParentLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            nodeParentLayout.ColumnStyles.Add(new ColumnStyle());
-            nodeParentLayout.Controls.Add(nodeOwnershipData, 0, 0);
-            nodeParentLayout.Controls.Add(nodeParentSelect, 0, 1);
-            nodeParentLayout.Controls.Add(addNodeParentCommand, 1, 1);
-            nodeParentLayout.Dock = DockStyle.Fill;
-            nodeParentLayout.Location = new Point(3, 3);
-            nodeParentLayout.Name = "nodeParentLayout";
-            nodeParentLayout.RowCount = 2;
-            nodeParentLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nodeParentLayout.RowStyles.Add(new RowStyle());
-            nodeParentLayout.Size = new Size(186, 66);
-            nodeParentLayout.TabIndex = 0;
-            // 
-            // nodeOwnershipData
-            // 
-            nodeOwnershipData.AllowUserToAddRows = false;
-            nodeOwnershipData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            nodeOwnershipData.Columns.AddRange(new DataGridViewColumn[] { nodeOwnerColumn });
-            nodeParentLayout.SetColumnSpan(nodeOwnershipData, 2);
-            nodeOwnershipData.Dock = DockStyle.Fill;
-            nodeOwnershipData.Location = new Point(3, 3);
-            nodeOwnershipData.Name = "nodeOwnershipData";
-            nodeOwnershipData.ReadOnly = true;
-            nodeOwnershipData.Size = new Size(180, 8);
-            nodeOwnershipData.TabIndex = 1;
-            // 
-            // nodeOwnerColumn
-            // 
-            nodeOwnerColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            nodeOwnerColumn.HeaderText = "Parent Node";
-            nodeOwnerColumn.Name = "nodeOwnerColumn";
-            nodeOwnerColumn.ReadOnly = true;
-            // 
-            // nodeParentSelect
-            // 
-            nodeParentSelect.AutoSize = true;
-            nodeParentSelect.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nodeParentSelect.Dock = DockStyle.Fill;
-            nodeParentSelect.DropDownStyle = ComboBoxStyle.DropDown;
-            nodeParentSelect.HeaderText = "Parent Node";
-            nodeParentSelect.Location = new Point(3, 17);
-            nodeParentSelect.Name = "nodeParentSelect";
-            nodeParentSelect.ReadOnly = false;
-            nodeParentSelect.Size = new Size(99, 46);
-            nodeParentSelect.TabIndex = 4;
-            // 
-            // addNodeParentCommand
-            // 
-            addNodeParentCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            addNodeParentCommand.Location = new Point(108, 40);
-            addNodeParentCommand.Name = "addNodeParentCommand";
-            addNodeParentCommand.Size = new Size(75, 23);
-            addNodeParentCommand.TabIndex = 5;
-            addNodeParentCommand.Text = "Add";
-            addNodeParentCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
-            addNodeParentCommand.UseVisualStyleBackColor = true;
+            bindingNode.CurrentChanged += BindingNode_CurrentChanged;
+            bindingNode.ListChanged += BindingNode_ListChanged;
             // 
             // SchemaNode
             // 
@@ -519,18 +523,21 @@
             Text = "SchemaNode";
             Load += SchemaNode_Load;
             Controls.SetChildIndex(schemaNodeLayout, 0);
+            objectValueLayout.ResumeLayout(false);
+            objectValueLayout.PerformLayout();
+            nodeParentLayout.ResumeLayout(false);
+            nodeParentLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nodeOwnershipData).EndInit();
             schemaNodeLayout.ResumeLayout(false);
             schemaNodeLayout.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             valueSourceLayout.ResumeLayout(false);
             valueSourceLayout.PerformLayout();
-            tableLayoutPanel4.ResumeLayout(false);
-            tableLayoutPanel4.PerformLayout();
+            nodeOverviewLayout.ResumeLayout(false);
+            nodeOverviewLayout.PerformLayout();
             nodeTabs.ResumeLayout(false);
             nodeObjectValueTab.ResumeLayout(false);
-            objectValueLayout.ResumeLayout(false);
-            objectValueLayout.PerformLayout();
             nodePropertyValueTab.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -539,9 +546,6 @@
             tableLayoutPanel2.PerformLayout();
             nodeParentTab.ResumeLayout(false);
             nodeParentTab.PerformLayout();
-            nodeParentLayout.ResumeLayout(false);
-            nodeParentLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nodeOwnershipData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
@@ -578,7 +582,7 @@
         private TabPage nodeFixedValueTab;
         private Controls.ComboBoxData nodePropertyScopeData;
         private TableLayoutPanel valueSourceLayout;
-        private TableLayoutPanel tableLayoutPanel4;
+        private TableLayoutPanel nodeOverviewLayout;
         private GroupBox groupBox1;
         private CheckBox isNameOverrideData;
         private TableLayoutPanel tableLayoutPanel1;
@@ -586,5 +590,6 @@
         private RadioButton isObjectValueData;
         private RadioButton isPropertyValueData;
         private RadioButton isFixedValueData;
+        private TableLayoutPanel schemaNodeLayout;
     }
 }

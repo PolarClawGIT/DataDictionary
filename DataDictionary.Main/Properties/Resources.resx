@@ -454,4 +454,13 @@
   <data name="Underline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Image\Underline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_XMLCDataTag" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Icon\XMLCDataTag.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XMLElementText" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Icon\XMLElementText.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XMLElementNone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Icon\XMLElementNone.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

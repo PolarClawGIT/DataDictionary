@@ -1,8 +1,5 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.AppSecurity;
-using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.Main.Controls;
-using DataDictionary.Resource;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
@@ -41,11 +38,13 @@ namespace DataDictionary.Main.Forms
             /// <param name="getData">Functions used called to get data. Use "() => GetData()" syntax.</param>
             /// <remarks>The getData called but filtered to no rows. Allows AddValue to work.</remarks>
             /// <example><![CDATA[TemplateData = new DataBinding<TemplateValue>(templateBinding, () => GetData());]]></example>
-            public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData)
+            public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData) : base()
             {
                 GetData = getData;
                 bindingValues = new BindingView<TRow>(getData(), w => 1 == 2);
+
                 BindingData = binding;
+                BindingData.RaiseListChangedEvents = false; // No data so don't call change event during Init.
                 BindingData.DataSource = bindingValues;
 
                 LoadBindingStart += OnLoadBindingStart;
@@ -527,39 +526,5 @@ namespace DataDictionary.Main.Forms
             #endregion
         }
 
-        [Obsolete("POC, not currently used", true)]
-        protected class DataBinding<TKey, TRow> : DataBinding<TRow>
-            where TKey : IKey, IEquatable<TKey>
-            where TRow : class, IBindingPropertyChanged, IBindingRowState,
-                IEquatable<TKey>, IRemoveItem<TKey>
-        {
-            public DataBinding(BindingSource binding, Func<IBindingList<TRow>> getData) : base(binding, getData)
-            { }
-
-            /// <summary>
-            /// Try to get the Value by Key.
-            /// </summary>
-            /// <param name="key"></param>
-            /// <param name="result"></param>
-            /// <returns></returns>
-            public virtual Boolean TryGetValue(TKey key, [NotNullWhen(true)] out TRow? result)
-            {
-                if (bindingValues.FirstOrDefault(w => key.Equals(w)) is TRow value)
-                { result = value; return true; }
-                else { result = null; return false; }
-            }
-
-            /// <summary>
-            /// Remove a value by Key.
-            /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
-            public virtual Boolean Remove(TKey key)
-            {
-                if (TryGetValue(key, out TRow? value))
-                { return bindingValues.Remove(value); }
-                else { return false; }
-            }
-        }
     }
 }

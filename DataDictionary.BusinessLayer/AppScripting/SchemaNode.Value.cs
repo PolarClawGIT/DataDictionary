@@ -170,7 +170,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
         }
 
         /// <inheritdoc cref="SchemaNodeItem.SchemaNodeItem(ITemplateKey, ISchemaDefinitionKey)"/>
-        public SchemaNodeValue(ISchemaComposite schema) : base(schema, schema)
+        public SchemaNodeValue(ITemplateIndex template, ISchemaDefinitionIndex schema) : base(template, schema)
         {
             pathValue = new PathValue(this)
             {

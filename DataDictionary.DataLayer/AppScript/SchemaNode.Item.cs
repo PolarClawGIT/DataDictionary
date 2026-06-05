@@ -202,7 +202,7 @@ namespace DataDictionary.DataLayer.AppScript
             new DataColumn(nameof(NodeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(NodeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(NodeOrder), typeof(Int32)){ AllowDBNull = true},
             new DataColumn(nameof(RenderValueAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(FixedValue), typeof(String)){ AllowDBNull = true},

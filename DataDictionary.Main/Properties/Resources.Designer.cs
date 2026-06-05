@@ -813,6 +813,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_XMLCDataTag {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLCDataTag", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_XMLDescendant {
             get {
                 object obj = ResourceManager.GetObject("Icon_XMLDescendant", resourceCulture);
@@ -826,6 +836,26 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_XMLElement {
             get {
                 object obj = ResourceManager.GetObject("Icon_XMLElement", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_XMLElementNone {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLElementNone", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_XMLElementText {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLElementText", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

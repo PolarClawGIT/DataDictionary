@@ -62,12 +62,5 @@ namespace DataDictionary.Main.Enumerations
                 { target.Images.Add(item.GetName(), value); }
             }
         }
-
-        /// <summary>
-        /// Adds a list of Images to and ImageList for all the Scopes.
-        /// </summary>
-        /// <param name="target"></param>
-        public static void AddImages(this ImageList target)
-        { target.AddImages(Enum.GetValues<ScopeType>().ToList()); }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Main.Controls.ComboBoxList;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System;
@@ -41,8 +42,14 @@ namespace DataDictionary.Main.Forms.Scripting
             SetIcon(bindingNode);
 
             SetCommand(
-                Enumerations.ButtonType.Add,
-                Enumerations.ButtonType.Delete);
+                ButtonType.Add,
+                ButtonType.Delete);
+
+            nodeTreeView.ImageList = new ImageList();
+            nodeTreeView.ImageList.AddImages(Enum.GetValues<NodeRenderAsType>().ToList());
+
+            CommandButtons[ButtonType.Delete].Enabled = false;
+            IsEnabled(false);
         }
 
 
@@ -109,6 +116,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 nodeOwnershipData.AutoGenerateColumns = false;
                 nodeOwnershipData.DataSource = formBinding.OwnerData;
 
+                BuildTree();
+
                 // Security
                 IsLocked(formBinding.GetLocked());
                 SetAuthorization(formBinding.Authorize);
@@ -119,13 +128,13 @@ namespace DataDictionary.Main.Forms.Scripting
         protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
             base.AddCommand_Click(sender, e);
-            throw new NotImplementedException();
+            formBinding.AddNew(templateIndex, schemaIndex);
         }
 
         protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
             base.DeleteCommand_Click(sender, e);
-            throw new NotImplementedException();
+            formBinding.RemoveCurrent();
         }
 
 
@@ -136,6 +145,61 @@ namespace DataDictionary.Main.Forms.Scripting
             if (message is RefreshRow<SchemaDefinitionIndex> rowMessage
                 && rowMessage.Key.Equals(schemaIndex))
             { formBinding.LoadValue(schemaIndex); }
+        }
+
+        private void BindingNode_CurrentChanged(object sender, EventArgs e)
+        {
+            if (formBinding.NodeData.TryGetValue(out SchemaNodeValue? value))
+            {
+                CommandButtons[ButtonType.Delete].Enabled = true;
+                IsEnabled(true);
+            }
+            else
+            {
+                CommandButtons[ButtonType.Delete].Enabled = false;
+                IsEnabled(false);
+            }
+        }
+
+        void IsEnabled(Boolean newState)
+        {
+            foreach (Control item in nodeOverviewLayout.Controls)
+            { item.Enabled = newState; }
+
+            foreach (Control item in valueSourceLayout.Controls)
+            { item.Enabled = newState; }
+
+            nodeTabs.Enabled = newState;
+        }
+
+        void BuildTree()
+        {
+            // TODO: Currently simple, just list the nodes
+
+            nodeTreeView.BeginUpdate();
+            nodeTreeView.Nodes.Clear();
+
+            foreach (SchemaNodeValue item in
+                formBinding.NodeData.
+                OrderBy(o => o.NodeOrder).
+                ThenBy(o => o.NodeName ?? String.Empty))
+            {
+                TreeNode newNode = new TreeNode(item.NodeName ?? "(no node name)")
+                {
+                    ImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs),
+                    SelectedImageKey = Enum.GetName<NodeRenderAsType>(item.RenderValueAs)
+                };
+
+                nodeTreeView.Nodes.Add(newNode);
+            }
+
+            nodeTreeView.EndUpdate();
+        }
+
+        private void BindingNode_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if(formBinding.TryGetValue(out _))
+            { BuildTree(); }
         }
     }
 }
