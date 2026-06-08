@@ -190,7 +190,65 @@ namespace DataDictionary.Main.Forms
                 item.CurrentItemChanged += Item_CurrentItemChanged;
                 item.CurrentChanged += Item_CurrentChanged;
                 item.DataSourceChanged += Item_DataSourceChanged;
+                item.BindingComplete += Item_BindingComplete;
+                item.DataError += Item_DataError;
                 item.Disposed += Item_Disposed;
+
+                void Item_CurrentItemChanged(Object? sender, EventArgs e)
+                {
+                    rowStateCommand.Image = GetToolImage();
+                    rowStateCommand.ToolTipText = GetToolTip();
+                }
+
+                void Item_CurrentChanged(Object? sender, EventArgs e)
+                { // Update the RowState of the form to reflect the RowState of the first binding.
+                    if (sender is BindingSource binding
+                        && ReferenceEquals(bindings.FirstOrDefault(), binding))
+                    {
+                        BindingRowState rowState = binding.GetRowState();
+                        RowState = rowState.AsDataRowState();
+
+                        if (rowState is BindingRowState.Null or BindingRowState.Detached or BindingRowState.Deleted)
+                        { IsLocked(true); }
+                        else { IsLocked(false); }
+                    }
+                }
+
+                void Item_DataSourceChanged(Object? sender, EventArgs e)
+                {
+                    item.CurrentItemChanged -= Item_CurrentItemChanged;
+                    item.CurrentChanged -= Item_CurrentChanged;
+                    item.DataSourceChanged -= Item_DataSourceChanged;
+                    item.Disposed -= Item_Disposed;
+
+                    item.CurrentItemChanged += Item_CurrentItemChanged;
+                    item.CurrentChanged += Item_CurrentChanged;
+                    item.DataSourceChanged += Item_DataSourceChanged;
+                    item.Disposed += Item_Disposed;
+                }
+
+                void Item_DataError(Object? sender, BindingManagerDataErrorEventArgs e)
+                {   // This is only a basic trap to try to get more information when binding errors occur.
+                    // Currently this is not providing useful information.
+                    e.Exception.Data.Add(nameof(item), item.GetType().Name);
+                }
+
+                void Item_BindingComplete(Object? sender, BindingCompleteEventArgs e)
+                {   // This is only a basic trap to try to get more information when binding errors occur.
+                    // Currently this is not providing useful information.
+                    if (e.Exception is not null)
+                    { e.Exception.Data.Add(nameof(item), item.GetType().Name); }
+                }
+
+                void Item_Disposed(Object? sender, EventArgs e)
+                {
+                    item.CurrentItemChanged -= Item_CurrentItemChanged;
+                    item.CurrentChanged -= Item_CurrentChanged;
+                    item.Disposed -= Item_Disposed;
+                    item.DataSourceChanged -= Item_DataSourceChanged;
+                    item.BindingComplete -= Item_BindingComplete;
+                    item.DataError -= Item_DataError;
+                }
             }
 
             rowStateCommand.Visible = true;
@@ -276,53 +334,14 @@ namespace DataDictionary.Main.Forms
                 else { return result.GetImage(); }
             }
 
-            void Item_CurrentItemChanged(Object? sender, EventArgs e)
-            {
-                rowStateCommand.Image = GetToolImage();
-                rowStateCommand.ToolTipText = GetToolTip();
-            }
 
-            void Item_CurrentChanged(Object? sender, EventArgs e)
-            { // Update the RowState of the form to reflect the RowState of the first binding.
-                if (sender is BindingSource binding
-                    && ReferenceEquals(bindings.FirstOrDefault(), binding))
-                {
-                    BindingRowState rowState = binding.GetRowState();
-                    RowState = rowState.AsDataRowState();
 
-                    if (rowState is BindingRowState.Null or BindingRowState.Detached or BindingRowState.Deleted)
-                    { IsLocked(true); }
-                    else { IsLocked(false); }
-                }
-            }
 
-            void Item_DataSourceChanged(Object? sender, EventArgs e)
-            {
-                if (sender is BindingSource binding)
-                {
-                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
-                    binding.CurrentChanged -= Item_CurrentChanged;
-                    binding.DataSourceChanged -= Item_DataSourceChanged;
-                    binding.Disposed -= Item_Disposed;
 
-                    binding.CurrentItemChanged += Item_CurrentItemChanged;
-                    binding.CurrentChanged += Item_CurrentChanged;
-                    binding.DataSourceChanged += Item_DataSourceChanged;
-                    binding.Disposed += Item_Disposed;
-                }
-            }
 
-            void Item_Disposed(Object? sender, EventArgs e)
-            {
-                if (sender is BindingSource binding)
-                {
-                    binding.CurrentItemChanged -= Item_CurrentItemChanged;
-                    binding.CurrentChanged -= Item_CurrentChanged;
-                    binding.Disposed -= Item_Disposed;
-                    binding.DataSourceChanged -= Item_DataSourceChanged;
-                }
-            }
         }
+
+
 
         /// <summary>
         /// Sets the Title based on the BindingSource provided.
@@ -405,7 +424,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         /// <remarks>This applies icon that is expected to be static.</remarks>
         protected void SetIcon(ScopeType scope)
-        { 
+        {
             Icon = scope.GetIcon();
 
             foreach (var item in CommandButtons.Values)
