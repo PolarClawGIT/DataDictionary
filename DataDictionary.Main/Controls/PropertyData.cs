@@ -23,8 +23,8 @@ namespace DataDictionary.Main.Controls
             PropertyNameList.Load(propertyTypeData, "(select property Type)");
             PropertyNameList.Load(propertyIdColumn, "(select property Type)");
 
-            propertyTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IPropertySubType.PropertyId), false, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            propertyValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IPropertySubType.PropertyValue), false, DataSourceUpdateMode.OnPropertyChanged));
+            propertyTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IPropertySubType.PropertyId)));
+            propertyValueData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IPropertySubType.PropertyValue)));
 
             propertyGrid.AutoGenerateColumns = false;
             propertyGrid.DataSource = dataBinding;

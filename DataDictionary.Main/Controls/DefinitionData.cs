@@ -27,9 +27,9 @@ namespace DataDictionary.Main.Controls
             DefinitionNameList.Load(definitionTypeData);
             DefinitionNameList.Load(definitionColumn);
 
-            definitionTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), binding, nameof(IDefinitionSubType.DefinitionText), false, DataSourceUpdateMode.OnPropertyChanged));
-            definitionSummaryData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IDefinitionSubType.DefinitionSummary), false, DataSourceUpdateMode.OnPropertyChanged));
+            definitionTypeData.DataBindings.Add(new Binding(nameof(ComboBox.SelectedValue), binding, nameof(IDefinitionSubType.DefinitionId)));
+            definitionTextData.DataBindings.Add(new Binding(nameof(RichTextBoxData.RichText), binding, nameof(IDefinitionSubType.DefinitionText)));
+            definitionSummaryData.DataBindings.Add(new Binding(nameof(TextBox.Text), binding, nameof(IDefinitionSubType.DefinitionSummary)));
             
             definitionGrid.AutoGenerateColumns = false;
             definitionGrid.DataSource = dataBinding;
