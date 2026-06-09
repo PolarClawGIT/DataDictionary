@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -87,7 +88,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             String name,
             Func<Object, String> getValue,
             NodeRenderAsType renderAs = NodeRenderAsType.Element)
-            : this(name)
+            : this(name, renderAs)
         { GetValue = getValue; }
 
         /// <summary>
@@ -115,16 +116,59 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// with its value set to <see cref="NodeRenderAsType.ElementText"/>.
         /// </remarks>
         /// <param name="value">The <see cref="Type"/> whose properties will be used to create the <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="properties">List of Property Names to include.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="XElementBuilder"/> objects,  where each node corresponds to a property of the specified type.</returns>
-        public static IEnumerable<XElementBuilder> Create(Type value)
+        public static IEnumerable<XElementBuilder> Create(
+            Type value,
+            params IEnumerable<String> properties)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
 
-            foreach (PropertyInfo property in value.GetProperties().ToList())
+            foreach (PropertyInfo property in value.GetProperties().
+                Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
             {
                 result.Add(
                 new XElementBuilder(property)
                 { NodeValueAs = NodeRenderAsType.ElementText });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a collection of <see cref="XElementBuilder"/> objects based on the properties of the specified type.
+        /// </summary>
+        /// <remarks>
+        /// Each <see cref="XElementBuilder"/> in the returned collection represents a property of the specified type,
+        /// with its value set to <see cref="NodeRenderAsType.ElementText"/>.
+        /// </remarks>
+        /// <param name="value">The <see cref="Type"/> whose properties will be used to create the <see cref="XElementBuilder"/> objects.</param>
+        /// <param name="getValue">Method to get the Value to appear in the element.</param>
+        /// <param name="properties">List of Property Names to include.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing <see cref="XElementBuilder"/> objects,  where each node corresponds to a property of the specified type.</returns>
+        public static IEnumerable<XElementBuilder> Create<TKey, TValue>(
+            Type value,
+            TryGetValue<TKey, TValue> getValue,
+            params IEnumerable<String> properties)
+            where TKey : IKey
+        {
+            List<XElementBuilder> result = new List<XElementBuilder>();
+
+            foreach (PropertyInfo property in value.GetProperties().
+                Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
+            {
+                result.Add(
+                new XElementBuilder(property)
+                {
+                    NodeValueAs = NodeRenderAsType.ElementText,
+                    GetValue = (o) =>
+                    {
+                        if (o is TKey key && getValue(key, out TValue? item))
+                        { return item.ToString(); }
+                        else
+                        { return String.Empty; }
+                    }
+                });
             }
 
             return result;
