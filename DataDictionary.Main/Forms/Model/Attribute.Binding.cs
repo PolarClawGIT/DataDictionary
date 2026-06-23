@@ -265,6 +265,9 @@ namespace DataDictionary.Main.Forms.Model
                 result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
                 result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
 
+
+                var x = BusinessData.XmlBuilders.Build(attributeValue);
+
                 return result;
             }
         }
