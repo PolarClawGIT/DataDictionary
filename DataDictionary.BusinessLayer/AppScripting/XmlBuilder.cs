@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
@@ -32,30 +33,36 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { Add(item.ObjectPath, item); }
         }
 
-        public XElement? Build(IScopeType item)
+        public XElement Build(IScopeType root, params IEnumerable<IEnumerable<IScopeType>> childData)
         {
-            PathIndex key = new PathIndex(item.Scope);
+            PathIndex key = new PathIndex(root.Scope);
 
-            if (TryGetValue(key, out XmlBuilder? value)
-                && value.Build(item) is XElement result)
+            if (TryGetValue(key, out XmlBuilder? rootBuilder)
+                && rootBuilder.Build(root) is XElement result)
             {
-                Type source = item.GetType();
 
-                foreach (var property in source.GetProperties())
+                foreach (var data in childData)
                 {
-                    PathIndex childKey = new PathIndex(property.Name).Merge(key);
+                    foreach (var child in data)
+                    {
+                        PathIndex childKey = new PathIndex(child.Scope);
 
-                    if (TryGetValue(childKey, out XmlBuilder? child))
-                    { result.Add(child.Build(item)); }
-
+                        if (TryGetValue(childKey, out XmlBuilder? childBuilder))
+                        {
+                            result.Add(childBuilder.Build(child));
+                        }
+                    }
                 }
+
 
                 return result;
             }
-
-            return null;
+            else
+            { return new XElement(new XmlBuilder(root.Scope).NodeName); }
         }
 
+        // TODO: Need to return a list including children so a tree structure can be built.
+        // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
     }
 
     /// <summary>
@@ -83,24 +90,33 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             get
             {
-                String result = field;
+                String value = field;
 
-                if (String.IsNullOrWhiteSpace(result))
-                { result = ObjectPath.Format("{0}"); }
-
-                try
-                {   // TODO: How do I catch name excpetions and return result.
-                    XElement element = new XElement(result);
-                    return element.Name.LocalName;
+                if (String.IsNullOrWhiteSpace(value))
+                {   // Use the ObjectPath after it has been cleaned up for XML.
+                    value = String.Concat(ObjectPath.Format("{0}").Where(c => !Char.IsWhiteSpace(c)));
+                    value = XmlConvert.EncodeName(value);
                 }
-                catch (Exception ex)
-                { return ex.GetType().Name; }
+
+                return value;
             }
             set
             {
                 if (String.IsNullOrWhiteSpace(value))
                 { field = String.Empty; }
-                else { field = value; }
+                else
+                {   // Clean up the value before storing.
+                    value = String.Concat(value.Where(c => !Char.IsWhiteSpace(c)));
+                    value = XmlConvert.EncodeName(value);
+
+                    // compare this to the ObjectPath
+                    String path = String.Concat(ObjectPath.Format("{0}").Where(c => !Char.IsWhiteSpace(c)));
+                    path = XmlConvert.EncodeName(value);
+
+                    if (value == path) // Set to use the ObjectPath instead.
+                    { field = String.Empty; }
+                    else { field = value; }
+                }
             }
         }
 
@@ -153,8 +169,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
             else { return null; }
         }
 
-        public virtual XObject? Build<TValue>(TValue value)
-            where TValue : class
+        public virtual XObject? Build<TMethod>(TMethod value)
+            where TMethod : class
         {
             if (value is not IScopeType scope || scope.Scope != ObjectScope)
             {
@@ -207,30 +223,84 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
         //TODO: These belong to diffrent classes?
 
-        public virtual IEnumerable<XmlBuilder> CreateChildren<TValue>(params IEnumerable<String> properties)
-        {
-            List<XmlBuilder> result = new List<XmlBuilder>();
-            Type value = typeof(TValue);
 
-            foreach (PropertyInfo property in value.GetProperties().
-                Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
-            { result.Add(new XmlBuilder(ObjectScope, property)); }
-
-            return result;
-        }
-
-        public virtual IEnumerable<XmlBuilder> CreateProperties(IEnumerable<IPropertyValue> values)
-        {
-            List<XmlBuilder> result = new List<XmlBuilder>();
-
-            foreach (IPropertyValue item in values)
-            { result.Add(new XmlBuilder(ObjectScope, item)); }
-
-            return result;
-        }
 
         /// <inheritdoc/>
         public override String ToString()
         { return ObjectPath.MemberFullPath; }
+
+        // --------------------------------------------- Sub Types --------------------------
+
+        public class ValueType<TValue> : XmlBuilder
+            where TValue : class, IScopeType
+        {
+            public Dictionary<PropertyInfo, XmlBuilder> Children = new Dictionary<PropertyInfo, XmlBuilder>();
+
+            public ValueType(ScopeType scope, params IEnumerable<String> properties) : base(scope)
+            {
+                GetValue = (value) => GetValueDelegate((dynamic)value);
+
+                Type value = typeof(TValue);
+
+                foreach (PropertyInfo item in value.GetProperties().
+                    Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
+                {
+                    XmlBuilder child = new XmlBuilder(ObjectScope, item);
+                    Children.Add(item, child);
+                }
+            }
+
+            public override XObject? Build<TMethod>(TMethod value)
+            {
+                XObject? result = base.Build(value);
+
+                if (result is XElement element)
+                {
+                    foreach (var item in Children.Values)
+                    { element.Add(item.Build(value)); }
+                }
+                else
+                {
+                    throw new NotImplementedException(); // Not sure what to do here.
+                }
+
+                return result;
+            }
+        }
+
+        public class PropertyType<TValue> : XmlBuilder
+            where TValue : IPropertySubType
+        {
+            public Dictionary<PropertyIndex, XmlBuilder> Children = new Dictionary<PropertyIndex, XmlBuilder>();
+
+            public PropertyType(ScopeType scope, IEnumerable<PropertyValue> properties) : base(scope)
+            {
+                foreach (PropertyValue item in properties)
+                {
+                    XmlBuilder child = new XmlBuilder(ObjectScope, item);
+                    Children.Add(new PropertyIndex(item), child);
+                }
+            }
+
+            public override XObject? Build<TMethod>(TMethod value)
+            {
+                XObject? result = base.Build(value);
+
+                if (result is XElement element
+                    && value is IPropertySubType property)
+                {
+                    PropertyIndex key = new PropertyIndex(property);
+                    if (Children.TryGetValue(key, out XmlBuilder? builder))
+                    { result = builder.Build(value); }
+                }
+                else
+                {
+                    throw new NotImplementedException(); // Not sure what to do here.
+                }
+
+                return result;
+            }
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,10 +25,11 @@ namespace DataDictionary.BusinessLayer
         {
             List<XmlBuilder> result = new List<XmlBuilder>();
 
-            XmlBuilder attributes = new XmlBuilder(Resource.Enumerations.ScopeType.ModelAttribute);
+            XmlBuilder attributes = new XmlBuilder.ValueType<AttributeValue>(ScopeType.ModelAttribute);
             result.Add(attributes);
-            result.AddRange(attributes.CreateChildren<AttributeValue>());
-            result.AddRange(attributes.CreateProperties(Model.Properties));
+
+            XmlBuilder attributeProperty = new XmlBuilder.PropertyType<AttributePropertyValue>(ScopeType.ModelAttributeProperty, Model.Properties);
+            result.Add(attributeProperty);
 
             return new XmlBuilderDictionary(result);
         }

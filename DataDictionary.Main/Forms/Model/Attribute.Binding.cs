@@ -257,18 +257,21 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
-            public XElement GetXElement()
+            public XElement? GetXElement()
             {
                 AttributeValue attributeValue = data.Attributes.First();
+                return BusinessData.XmlBuilders.Build(attributeValue, Properties);
+
+
+
 
                 XElement result = AttributeValue.CreateXElements().Build(attributeValue);
                 result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
                 result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
 
+                
 
-                var x = BusinessData.XmlBuilders.Build(attributeValue);
-
-                return result;
+                //return result;
             }
         }
     }
