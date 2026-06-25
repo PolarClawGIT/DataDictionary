@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.AppScripting;
 using DataDictionary.BusinessLayer.AppSecurity;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -257,17 +258,17 @@ namespace DataDictionary.Main.Forms.Model
                 else return true;
             }
 
-            public XElement? GetXElement()
+            public XElement GetXElement()
             {
-                AttributeValue attributeValue = data.Attributes.First();
-                return BusinessData.XmlBuilders.Build(attributeValue, Properties);
+                XElement result = BusinessData.XmlBuilders.Build(ScopeType.ModelAttribute, Attribute);
+                result.Add(BusinessData.XmlBuilders.Build(ScopeType.ModelAttributeProperty, Properties));
+                return result;
 
 
 
-
-                XElement result = AttributeValue.CreateXElements().Build(attributeValue);
-                result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
-                result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
+                //XElement result = AttributeValue.CreateXElements().Build(attributeValue);
+                //result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
+                //result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
 
                 
 

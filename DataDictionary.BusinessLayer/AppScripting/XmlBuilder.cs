@@ -18,57 +18,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
     public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
 
-
-    public class XmlBuilderDictionary : Dictionary<PathIndex, XmlBuilder>
-    {
-        //public required TryGetProperty GetProperty { get; init; } 
-
-        //public required TryGetDefinition GetDefinition { get; init; }
-
-
-
-        public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : base()
-        {
-            foreach (XmlBuilder item in builders)
-            { Add(item.ObjectPath, item); }
-        }
-
-        public XElement Build(IScopeType root, params IEnumerable<IEnumerable<IScopeType>> childData)
-        {
-            PathIndex key = new PathIndex(root.Scope);
-
-            if (TryGetValue(key, out XmlBuilder? rootBuilder)
-                && rootBuilder.Build(root) is XElement result)
-            {
-
-                foreach (var data in childData)
-                {
-                    foreach (var child in data)
-                    {
-                        PathIndex childKey = new PathIndex(child.Scope);
-
-                        if (TryGetValue(childKey, out XmlBuilder? childBuilder))
-                        {
-                            result.Add(childBuilder.Build(child));
-                        }
-                    }
-                }
-
-
-                return result;
-            }
-            else
-            { return new XElement(new XmlBuilder(root.Scope).NodeName); }
-        }
-
-        // TODO: Need to return a list including children so a tree structure can be built.
-        // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
-    }
-
     /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-    public class XmlBuilder
+     public partial class XmlBuilder
     {
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.
@@ -228,79 +181,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// <inheritdoc/>
         public override String ToString()
         { return ObjectPath.MemberFullPath; }
-
-        // --------------------------------------------- Sub Types --------------------------
-
-        public class ValueType<TValue> : XmlBuilder
-            where TValue : class, IScopeType
-        {
-            public Dictionary<PropertyInfo, XmlBuilder> Children = new Dictionary<PropertyInfo, XmlBuilder>();
-
-            public ValueType(ScopeType scope, params IEnumerable<String> properties) : base(scope)
-            {
-                GetValue = (value) => GetValueDelegate((dynamic)value);
-
-                Type value = typeof(TValue);
-
-                foreach (PropertyInfo item in value.GetProperties().
-                    Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
-                {
-                    XmlBuilder child = new XmlBuilder(ObjectScope, item);
-                    Children.Add(item, child);
-                }
-            }
-
-            public override XObject? Build<TMethod>(TMethod value)
-            {
-                XObject? result = base.Build(value);
-
-                if (result is XElement element)
-                {
-                    foreach (var item in Children.Values)
-                    { element.Add(item.Build(value)); }
-                }
-                else
-                {
-                    throw new NotImplementedException(); // Not sure what to do here.
-                }
-
-                return result;
-            }
-        }
-
-        public class PropertyType<TValue> : XmlBuilder
-            where TValue : IPropertySubType
-        {
-            public Dictionary<PropertyIndex, XmlBuilder> Children = new Dictionary<PropertyIndex, XmlBuilder>();
-
-            public PropertyType(ScopeType scope, IEnumerable<PropertyValue> properties) : base(scope)
-            {
-                foreach (PropertyValue item in properties)
-                {
-                    XmlBuilder child = new XmlBuilder(ObjectScope, item);
-                    Children.Add(new PropertyIndex(item), child);
-                }
-            }
-
-            public override XObject? Build<TMethod>(TMethod value)
-            {
-                XObject? result = base.Build(value);
-
-                if (result is XElement element
-                    && value is IPropertySubType property)
-                {
-                    PropertyIndex key = new PropertyIndex(property);
-                    if (Children.TryGetValue(key, out XmlBuilder? builder))
-                    { result = builder.Build(value); }
-                }
-                else
-                {
-                    throw new NotImplementedException(); // Not sure what to do here.
-                }
-
-                return result;
-            }
-        }
 
     }
 }
