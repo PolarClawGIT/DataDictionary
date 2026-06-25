@@ -94,7 +94,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
 
                 if (String.IsNullOrWhiteSpace(value))
                 {   // Use the ObjectPath after it has been cleaned up for XML.
-                    value = String.Concat(ObjectPath.Format("{0}").Where(c => !Char.IsWhiteSpace(c)));
+                    value = String.Concat(ObjectPath.Member.Where(c => !Char.IsWhiteSpace(c)));
                     value = XmlConvert.EncodeName(value);
                 }
 
@@ -110,7 +110,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     value = XmlConvert.EncodeName(value);
 
                     // compare this to the ObjectPath
-                    String path = String.Concat(ObjectPath.Format("{0}").Where(c => !Char.IsWhiteSpace(c)));
+                    String path = String.Concat(ObjectPath.Member.Where(c => !Char.IsWhiteSpace(c)));
                     path = XmlConvert.EncodeName(value);
 
                     if (value == path) // Set to use the ObjectPath instead.
