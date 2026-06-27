@@ -260,9 +260,24 @@ namespace DataDictionary.Main.Forms.Model
 
             public XElement GetXElement()
             {
-                XElement result = BusinessData.XmlBuilders.Build(ScopeType.ModelAttribute, Attribute);
-                result.Add(BusinessData.XmlBuilders.Build(ScopeType.ModelAttributeProperty, Properties));
-                return result;
+                //XElement? build = BusinessData.XmlBuilders.Build<AttributeValue, IAttributeIndex>(
+                //    ScopeType.ModelAttribute, Attribute,
+                //        (ScopeType.ModelAttributeProperty, Properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c))),
+                //        (ScopeType.ModelAttributeDefinition, Definitions, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
+                //    );
+
+                XElement? build = BusinessData.XmlBuilders.Build<AttributeValue, IAttributeIndex>(
+                    ScopeType.ModelAttribute, BusinessData.Model.Attribute.Attributes,
+                        (ScopeType.ModelAttributeProperty, BusinessData.Model.Attribute.Properties, (r, c) => new AttributeIndex(r).Equals(new AttributeIndex(c)))
+                    );
+
+                if (build is XElement) { return build; }
+                else { return new XElement(ScopeType.ModelAttribute.GetName()); }
+
+
+                //XElement result = BusinessData.XmlBuilders.Build(ScopeType.ModelAttribute, Attribute);
+                //result.Add(BusinessData.XmlBuilders.Build(ScopeType.ModelAttributeProperty, Properties));
+                //return result;
 
 
 
@@ -270,7 +285,7 @@ namespace DataDictionary.Main.Forms.Model
                 //result.Add(AttributePropertyValue.CreateXElements(BusinessData.Model.Properties.TryGetValue).Build(data.Properties));
                 //result.Add(AttributeDefinitionValue.CreateXElements(BusinessData.Model.Definitions.TryGetValue).Build(data.Definitions));
 
-                
+
 
                 //return result;
             }

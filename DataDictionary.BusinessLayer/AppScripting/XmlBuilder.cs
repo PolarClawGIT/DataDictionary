@@ -14,14 +14,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     // TODO: Thinking things thru. XElementBuilder is not exactly what is needed.
 
-    public delegate Boolean TryGetProperty(IPropertyIndex key, [NotNullWhen(true)] out IPropertyValue? value);
-
-    public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
+    //public delegate Boolean TryGetProperty(IPropertyIndex key, [NotNullWhen(true)] out IPropertyValue? value);
+    //public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
 
     /// <summary>
     /// Definition to Build an Xml Element
     /// </summary>
-     public partial class XmlBuilder
+    public partial class XmlBuilder
     {
         /// <summary>
         /// Path to the Object to be Rendered. This is normally a Property of the Object.
@@ -37,13 +36,13 @@ namespace DataDictionary.BusinessLayer.AppScripting
         public NodeRenderAsType NodeRenderAs { get; set; } = NodeRenderAsType.Element;
 
         /// <summary>
-        /// The Name of the Node. Default is the Object Path.
+        /// The Name of the Node. Default is the MemberName of the ObjectPath.
         /// </summary>
         public String NodeName
         {
             get
             {
-                String value = field;
+                String value = field ?? String.Empty;
 
                 if (String.IsNullOrWhiteSpace(value))
                 {   // Use the ObjectPath after it has been cleaned up for XML.
@@ -78,6 +77,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// </summary>
         protected Func<Object, String> GetValue { get; set; }
 
+        /// <summary>
+        /// Basic XmlBuilder constructor. The value is set to the ToString of the Build object.
+        /// </summary>
+        /// <param name="scope"></param>
         public XmlBuilder(ScopeType scope) : base()
         {
             ObjectScope = scope;
@@ -86,42 +89,36 @@ namespace DataDictionary.BusinessLayer.AppScripting
             GetValue = (value) => GetValueDelegate((dynamic)value);
         }
 
-        protected XmlBuilder(ScopeType scope, PropertyInfo property) : this(scope)
-        {
-            ObjectPath = new PathIndex(property.Name).Merge(ObjectPath);
-            NodeRenderAs = NodeRenderAsType.ElementText;
-            GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
-        }
-
-        protected XmlBuilder(ScopeType scope, IPropertyValue property) : this(scope)
-        {
-            ObjectPath = new PathIndex(property.PropertyTitle).Merge(ObjectPath);
-            NodeRenderAs = NodeRenderAsType.ElementText;
-            GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
-        }
-
+        /// <summary>
+        /// GetValue function that returns the ToString of the object passed.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Override this method to return something other then ToString.
+        /// Overloads handle specfic data types.
+        /// When calling use: GetValueDelegate((dynamic)objectValue);
+        /// </remarks>
         protected virtual String? GetValueDelegate(Object value)
         {
             if (value is null) { return null; }
             else { return value.ToString(); }
         }
 
-        protected virtual String? GetValueDelegate(Object value, PropertyInfo property)
-        {
-            if (property.GetValue(value) is Object objectValue)
-            { return GetValueDelegate((dynamic)objectValue); ; }
-            else { return null; }
-        }
+        /// <summary>
+        /// GetValue function to handle ScopeType.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected virtual String? GetValueDelegate(ScopeType value)
+        { return value.GetName(); }
 
-        protected virtual String? GetValueDelegate(Object value, IPropertyIndex property)
-        {
-            PropertyIndex key = new PropertyIndex(property);
-
-            if (value is IPropertySubType propertyValue && key.Equals(propertyValue))
-            { return propertyValue.PropertyValue; }
-            else { return null; }
-        }
-
+        /// <summary>
+        /// Build an XML Object using the builder for the Object passed.
+        /// </summary>
+        /// <typeparam name="TMethod"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public virtual XObject? Build<TMethod>(TMethod value)
             where TMethod : class
         {
@@ -173,10 +170,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
                     throw ex;
             }
         }
-
-        //TODO: These belong to diffrent classes?
-
-
 
         /// <inheritdoc/>
         public override String ToString()

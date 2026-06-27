@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
+using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,23 @@ namespace DataDictionary.BusinessLayer.AppScripting
 {
     partial class XmlBuilder
     {
+
+        private XmlBuilder(ScopeType scope, IPropertyValue property) : this(scope)
+        {
+            ObjectPath = new PathIndex(property.PropertyTitle).Merge(ObjectPath);
+            NodeRenderAs = NodeRenderAsType.ElementText;
+            GetValue = (value) => GetValueDelegate((dynamic)value, property) ?? String.Empty;
+        }
+
+        private String? GetValueDelegate(Object value, IPropertyIndex property)
+        {
+            PropertyIndex key = new PropertyIndex(property);
+
+            if (value is IPropertySubType propertyValue && key.Equals(propertyValue))
+            { return propertyValue.PropertyValue; }
+            else { return null; }
+        }
+
         public class PropertyType<TValue> : XmlBuilder
             where TValue : IPropertySubType
         {
