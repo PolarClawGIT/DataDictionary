@@ -17,18 +17,10 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ILoadData, ILoadData<IModelIndex>, ISaveData<IModelIndex>,
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IDeleteData
-    {
-        [Obsolete("switch to XmlBuilder", true)]
-        IXElementBuilderList Builders { get; }
-    }
+    { }
 
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
     {
-        [Obsolete("switch to XmlBuilder", true)]
-        public IXElementBuilderList Builders { get { return builderValues; } }
-        [Obsolete("switch to XmlBuilder", true)]
-        XElementBuilderList builderValues = new XElementBuilderList();
-
         /// <inheritdoc/>
         /// <remarks>ScriptingTemplate</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -139,21 +131,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
         {
             return new TemporalData<TemplateData, TemplateValue>()
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
-        }
-
-        [Obsolete("switch to XmlBuilder", true)]
-        public void AddBuilders(IXElementBuilderList builders)
-        {
-            foreach (var item in builders)
-            {
-                try
-                { builderValues.Add(item.Key, item.Value); }
-                catch (Exception ex)
-                {
-                    ex.Data.Add(nameof(item.Key), item.Key.GetName());
-                    throw;
-                }
-            }
         }
     }
 }

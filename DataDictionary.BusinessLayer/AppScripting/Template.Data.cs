@@ -297,9 +297,5 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformValues.Load(source);
             transformDocumentValues.Load(source);
         }
-
-        [Obsolete("switch to XmlBuilder", true)]
-        public void AddBuilders(IXElementBuilderList builders)
-        { schemaNodeValues.AddBuilders(builders); }
     }
 }

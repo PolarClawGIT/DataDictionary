@@ -14,9 +14,6 @@ namespace DataDictionary.Main.Forms.Scripting
             public DataBinding<SchemaNodeValue> NodeData { get; }
             public DataBinding<SchemaNodeOwnerValue> OwnerData { get; }
 
-            [Obsolete("switch to XmlBuilder", true)]
-            public IXElementBuilderList Builders { get; } = BusinessData.Templates.SchemataNodes.Builders;
-
             public FormBinding(
                 BindingSource templateBinding,
                 BindingSource schemaBinding,
