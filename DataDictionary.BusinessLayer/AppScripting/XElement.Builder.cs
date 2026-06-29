@@ -10,12 +10,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Interface for results of the factory method that builds the XElement Builders.
     /// </summary>
+    [Obsolete ("switch to XmlBuilder", true)]
     public interface IXElementBuilderList : IReadOnlyDictionary<ScopeType, IEnumerable<XElementBuilder>>
     { }
 
     /// <summary>
     /// Base Class used for the factory method that builds the XElement Builders.
     /// </summary>
+    [Obsolete("switch to XmlBuilder", true)]
     class XElementBuilderList : Dictionary<ScopeType, IEnumerable<XElementBuilder>>, IXElementBuilderList
     { }
 
@@ -28,6 +30,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// and CDATA sections. Instances of this class can be created directly or generated from types and
     /// properties.
     /// </remarks>
+    [Obsolete("switch to XmlBuilder", true)]
     public class XElementBuilder
     {
         /// <summary>
@@ -284,6 +287,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// using <see cref="XElementBuilder"/> objects. These methods support scenarios such as constructing XML elements from
     /// data models, updating node definitions, and retrieving specific nodes by property name.
     /// </remarks>
+    [Obsolete("switch to XmlBuilder", true)]
     public static class XElementBuilderExtension
     {
         /// <summary>

@@ -18,14 +18,15 @@ namespace DataDictionary.BusinessLayer.AppScripting
         ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>,
         IDeleteData
     {
-        /// <inheritdoc cref="IXElementBuilderList"/>
+        [Obsolete("switch to XmlBuilder", true)]
         IXElementBuilderList Builders { get; }
     }
 
     class SchemaNodeData : SchemaNodeCollection<SchemaNodeValue>, ISchemaNodeData
     {
-        /// <inheritdoc cref="IXElementBuilderList"/>
+        [Obsolete("switch to XmlBuilder", true)]
         public IXElementBuilderList Builders { get { return builderValues; } }
+        [Obsolete("switch to XmlBuilder", true)]
         XElementBuilderList builderValues = new XElementBuilderList();
 
         /// <inheritdoc/>
@@ -140,10 +141,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             { CreateLoad = (factory, data) => factory.CreateHistory(data, (ITemplateKey)template) };
         }
 
-        /// <summary>
-        /// Adds XElementBuilders to the list of builders.
-        /// </summary>
-        /// <param name="builders"></param>
+        [Obsolete("switch to XmlBuilder", true)]
         public void AddBuilders(IXElementBuilderList builders)
         {
             foreach (var item in builders)

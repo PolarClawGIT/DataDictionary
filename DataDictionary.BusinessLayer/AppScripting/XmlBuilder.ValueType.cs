@@ -36,9 +36,8 @@ namespace DataDictionary.BusinessLayer.AppScripting
         /// Sub-Type of the XmlBuilder intended to handle the Properties of an Class.
         /// Uses reflection to get the PropertyInfo.
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        public class ValueType<TValue> : XmlBuilder
-            where TValue : class, IScopeType
+        public class ValueType : XmlBuilder
+            //where TValue : class, IScopeType
         {
             /// <summary>
             /// List of Child Properties of the Class and the builders to go with them.
@@ -48,15 +47,14 @@ namespace DataDictionary.BusinessLayer.AppScripting
             /// <summary>
             /// Specialized constructor for handling generic classes.
             /// </summary>
+            /// <param name="source"></param>
             /// <param name="scope"></param>
             /// <param name="properties"></param>
-            public ValueType(ScopeType scope, params IEnumerable<String> properties) : base(scope)
+            public ValueType(Type source, ScopeType scope, params IEnumerable<String> properties) : base(scope)
             {
                 GetValue = (value) => GetValueDelegate((dynamic)value);
-
-                Type value = typeof(TValue);
-
-                foreach (PropertyInfo item in value.GetProperties().
+                
+                foreach (PropertyInfo item in source.GetProperties().
                     Where(w => properties.Count() == 0 || properties.Any(a => String.Equals(a, w.Name))))
                 {
                     XmlBuilder child = new XmlBuilder(ObjectScope, item);

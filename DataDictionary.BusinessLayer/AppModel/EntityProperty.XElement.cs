@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class EntityPropertyValue : IXElementFactory<IPropertyIndex, IPropertyValue>
+    partial class EntityPropertyValue
     {
-        /// <inheritdoc/>
+        [Obsolete("switch to XmlBuilder", true)]
         public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IPropertyIndex, IPropertyValue> propertyGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();

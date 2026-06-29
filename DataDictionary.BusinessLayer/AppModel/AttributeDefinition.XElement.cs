@@ -3,9 +3,9 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributeDefinitionValue: IXElementFactory<IDefinitionIndex, IDefinitionValue>
+    partial class AttributeDefinitionValue
     {
-        /// <inheritdoc/>
+        [Obsolete("switch to XmlBuilder", true)]
         public static IEnumerable<XElementBuilder> CreateXElements(TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)
         {
             List<XElementBuilder> result = new List<XElementBuilder>();

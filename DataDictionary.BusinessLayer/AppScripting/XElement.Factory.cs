@@ -9,6 +9,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// <summary>
     /// Base compoents for a XElement Builder Factory.
     /// </summary>
+    [Obsolete("switch to XmlBuilder", true)]
     public interface IXElementFactory
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// Base compoents for a XElement Builder Factory that has a generic parameter.
     /// </summary>
     /// <typeparam name="T">generic parameter</typeparam>
+    [Obsolete("switch to XmlBuilder", true)]
     public interface IXElementFactory<T>
     {
         /// <summary>
@@ -36,6 +38,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
     /// </summary>
     /// <typeparam name="TIndex"></typeparam>
     /// <typeparam name="TValue"></typeparam>
+    [Obsolete("switch to XmlBuilder", true)]
     public interface IXElementFactory<TIndex, TValue>
         where TValue : TIndex
     {

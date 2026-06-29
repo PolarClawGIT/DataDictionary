@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Controls.ComboBoxList
 {
+    [Obsolete("switch to XmlBuilder", true)]
     record XScopeList
     {
         public ScopeType ScopeType { get; set; } = ScopeType.Null;

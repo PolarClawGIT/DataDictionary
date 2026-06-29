@@ -1,33 +1,53 @@
 ﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
 
-    // TODO: Need to return a list including children so a tree structure can be built.
-    // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
 
+    /// <summary>
+    /// Provides a list of XML Builders.
+    /// </summary>
     public class XmlBuilderDictionary : Dictionary<PathIndex, XmlBuilder>
     {
+        // TODO: Need to return a list including children so a tree structure can be built.
+        // TODO: Need a way to load and save to the database. Rebuild into SchemaNode?
+        // TODO: This seems to work but it could use some refinement.
+
         //public required TryGetProperty GetProperty { get; init; } 
-
         //public required TryGetDefinition GetDefinition { get; init; }
-
-
 
         public XmlBuilderDictionary(IEnumerable<XmlBuilder> builders) : base()
         {
             foreach (XmlBuilder item in builders)
-            { Add(item.ObjectPath, item); }
+            {
+                Add(item.ObjectPath, item);
+
+                if (item is XmlBuilder.PropertyType propType)
+                {
+                    foreach (var child in propType.Children.Values)
+                    { Add(child.ObjectPath, child); }
+                }
+                else if (item is XmlBuilder.ValueType valType)
+                {
+                    foreach (var child in valType.Properties.Values)
+                    { Add(child.ObjectPath, child); }
+                }
+
+
+            }
         }
 
-        // TODO: This seems to work but it could use some refinement.
-
-
+        /// <summary>
+        /// Uses the XMLBuilder to create an XML Element.
+        /// </summary>
+        /// <typeparam name="TRoot"></typeparam>
+        /// <typeparam name="TChild"></typeparam>
+        /// <param name="scope"></param>
+        /// <param name="roots"></param>
+        /// <param name="children"></param>
+        /// <returns></returns>
         public XElement? Build<TRoot, TChild>(ScopeType scope, IEnumerable<TRoot> roots,
             params IEnumerable<(ScopeType scope, IEnumerable<TChild> values, Func<TRoot, TChild, Boolean> filter)> children)
             where TRoot : class, IScopeType
@@ -106,47 +126,6 @@ namespace DataDictionary.BusinessLayer.AppScripting
             }
 
             return root;
-        }
-
-
-
-
-        public XElement Build(ScopeType scope, IEnumerable<IScopeType> values)
-        {
-            PathIndex key = new PathIndex(scope);
-
-            if (TryGetValue(key, out XmlBuilder? builder))
-            {
-                var valueCount = values.Count();
-
-                if (valueCount == 0)
-                {
-                    return new XElement(builder.NodeName);
-                }
-                else if (valueCount == 1)
-                {
-                    XObject? first = builder.Build(values.First());
-
-                    if (first is XElement element)
-                    { return element; }
-                    else
-                    {
-                        XElement root = new XElement(builder.NodeName);
-                        root.Add(first);
-                        return root;
-                    }
-                }
-                else
-                {
-                    XElement root = new XElement(builder.NodeName);
-                    foreach (var item in values.Where(w => w.Scope == scope))
-                    { root.Add(builder.Build(item)); }
-
-                    return root;
-                }
-            }
-            else { return new XElement(new XmlBuilder(scope).NodeName); }
-
         }
 
     }

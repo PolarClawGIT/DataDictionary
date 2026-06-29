@@ -1,34 +1,38 @@
 ﻿using DataDictionary.BusinessLayer.AppModel;
 using DataDictionary.BusinessLayer.AppScripting;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataDictionary.BusinessLayer
 {
     partial class BusinessLayerData
     {
+        /// <summary>
+        /// List of XmlBuilders supported by the application.
+        /// </summary>
+        /// <remarks>Initialized when the Get is first called.</remarks>
         public XmlBuilderDictionary XmlBuilders
         {
             get
             {
                 if (field is null || field.Count == 0)
-                { field = GetXmlBuilders(); }
+                { field = InitXmlBuilders(); }
 
                 return field;
             }
         }
 
-        protected XmlBuilderDictionary GetXmlBuilders()
+        /// <summary>
+        /// Initializes all the XML Builders.
+        /// </summary>
+        /// <returns></returns>
+        protected XmlBuilderDictionary InitXmlBuilders()
         {
             List<XmlBuilder> result = new List<XmlBuilder>();
 
-            XmlBuilder attributes = new XmlBuilder.ValueType<AttributeValue>(ScopeType.ModelAttribute);
+            XmlBuilder attributes = new XmlBuilder.ValueType(typeof(AttributeValue), ScopeType.ModelAttribute);
             result.Add(attributes);
 
-            XmlBuilder attributeProperty = new XmlBuilder.PropertyType<AttributePropertyValue>(ScopeType.ModelAttributeProperty, Model.Properties);
+            XmlBuilder attributeProperty = new XmlBuilder.PropertyType(ScopeType.ModelAttributeProperty, Model.Properties);
             result.Add(attributeProperty);
 
             return new XmlBuilderDictionary(result);

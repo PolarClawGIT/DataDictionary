@@ -298,10 +298,7 @@ namespace DataDictionary.BusinessLayer.AppScripting
             transformDocumentValues.Load(source);
         }
 
-        /// <summary>
-        /// Adds XElementBuilders to the list of builders.
-        /// </summary>
-        /// <param name="builders"></param>
+        [Obsolete("switch to XmlBuilder", true)]
         public void AddBuilders(IXElementBuilderList builders)
         { schemaNodeValues.AddBuilders(builders); }
     }

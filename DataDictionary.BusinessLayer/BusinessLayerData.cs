@@ -77,11 +77,7 @@ namespace DataDictionary.BusinessLayer
             modelValues = new AppModel.Model();
             catalogValue = new AppCatalog.Catalog();
             libraryValues = new AppLibrary.LibraryModel();
-
             templateValues = new AppScripting.TemplateData();
-            templateValues.AddBuilders(AppModel.Attribute.CreateXElements(modelValues.Properties.TryGetValue, modelValues.Definitions.TryGetValue));
-            templateValues.AddBuilders(AppModel.Entity.CreateXElements(modelValues.Properties.TryGetValue, modelValues.Definitions.TryGetValue));
-            templateValues.AddBuilders(AppModel.Process.CreateXElements(modelValues.Properties.TryGetValue, modelValues.Definitions.TryGetValue));
         }
 
         /// <summary>

@@ -1,19 +1,10 @@
-﻿using DataDictionary.BusinessLayer.AppModel;
-using DataDictionary.BusinessLayer.ToolSet;
+﻿using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.AppScripting
 {
-    // TODO: Thinking things thru. XElementBuilder is not exactly what is needed.
-
     //public delegate Boolean TryGetProperty(IPropertyIndex key, [NotNullWhen(true)] out IPropertyValue? value);
     //public delegate Boolean TryGetDefinition(IDefinitionIndex key, [NotNullWhen(true)] out IDefinitionValue? value);
 

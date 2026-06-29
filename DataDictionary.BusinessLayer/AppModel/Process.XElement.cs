@@ -3,9 +3,9 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class ProcessValue : IXElementFactory
+    partial class ProcessValue
     {
-        /// <inheritdoc/>
+        [Obsolete("switch to XmlBuilder", true)]
         public static IEnumerable<XElementBuilder> CreateXElements()
         {
             List<XElementBuilder> result = new List<XElementBuilder>();
@@ -21,6 +21,7 @@ namespace DataDictionary.BusinessLayer.AppModel
 
     partial class Process
     {
+        [Obsolete("switch to XmlBuilder", true)]
         public static IXElementBuilderList CreateXElements(
             TryGetValue<IPropertyIndex, IPropertyValue> propertyGet,
             TryGetValue<IDefinitionIndex, IDefinitionValue> definitionGet)

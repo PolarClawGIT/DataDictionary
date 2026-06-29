@@ -99,12 +99,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 formBinding.NodeData.AddBinding(isPropertyValueData, e => e.IsPropertyValue);
                 formBinding.NodeData.AddBinding(isFixedValueData, e => e.IsFixedValue);
 
-                XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
+                //XScopeList.Load(nodeObjectScopeData, nodeObjectPropertyData, formBinding.Builders, "(n/a)");
                 formBinding.NodeData.AddBinding(nodeObjectScopeData, e => e.ObjectNodeValue.ObjectScope);
                 formBinding.NodeData.AddBinding(nodeObjectPropertyData, e => e.ObjectNodeValue.ObjectProperty);
 
-                XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
-                formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
+                //XScopeList.Load(nodePropertyScopeData, formBinding.Builders, "(n/a)");
+                //formBinding.NodeData.AddBinding(nodePropertyScopeData, e => e.PropertyNodeValue.ObjectScope, XScopeList.NullValue);
 
                 PropertyNameList.Load(nodePropertyData, "(n/a)");
                 formBinding.NodeData.AddBinding(nodePropertyData, e => e.PropertyNodeValue.PropertyId, PropertyNameList.NullValue);

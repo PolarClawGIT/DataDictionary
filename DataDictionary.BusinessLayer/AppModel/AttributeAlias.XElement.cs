@@ -3,9 +3,9 @@ using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.AppModel
 {
-    partial class AttributeAliasValue : IXElementFactory
+    partial class AttributeAliasValue 
     {
-        /// <inheritdoc/>
+        [Obsolete("switch to XmlBuilder", true)]
         public static IEnumerable<XElementBuilder> CreateXElements()
         {
             IEnumerable<XElementBuilder> result = XElementBuilder.Create(typeof(AttributeValue));
